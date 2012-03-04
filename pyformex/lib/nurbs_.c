@@ -36,7 +36,8 @@ static char __doc__[] = "nurbs_ module\n\
 \n\
 This module provides accelerated versions of the pyFormex NURBS\n\
 functions.\n\
-\n";
+";
+
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
 
@@ -90,17 +91,17 @@ static double distance4d(double *a, double *b, int n)
    to the start of each row. As a result the array elements can be addressed
    as p[i][j], and operations can be done on the whole row.
 */
-static double **matrix(double*a, int nrows, int ncols) 
-{
-  int row;
-  double **mat;
+/* static double **matrix(double*a, int nrows, int ncols)  */
+/* { */
+/*   int row; */
+/*   double **mat; */
 
-  mat = (double**) malloc (nrows*sizeof(double*));
-  mat[0] = a;
-  for (row = 1; row < nrows; row++)
-    mat[row] = mat[row-1] + ncols;  
-  return mat;
-}
+/*   mat = (double**) malloc (nrows*sizeof(double*)); */
+/*   mat[0] = a; */
+/*   for (row = 1; row < nrows; row++) */
+/*     mat[row] = mat[row-1] + ncols;   */
+/*   return mat; */
+/* } */
 
 static double **newmatrix(int nrows, int ncols) 
 {
@@ -147,7 +148,6 @@ static double _gammaln(double xx)
 }
 
 // computes ln(n!)
-// Numerical Recipes in C
 // Algorithm from 'Numerical Recipes in C, 2nd Edition' pg215.
 static double _factln(int n)
 {
@@ -162,6 +162,13 @@ static double _factln(int n)
   }
   return a[n];
 }
+
+//Computes the binomial coefficient.
+//
+//  ( n )      n!
+//  (   ) = --------
+//  ( k )   k!(n-k)!
+// Algorithm from 'Numerical Recipes in C, 2nd Edition' pg215.
 
 static double _binomial(int n, int k)
 {
@@ -192,103 +199,6 @@ static double _horner(double *a, int n, double u)
   for (i = n-1; i>=0; --i) c = c * u + a[i];
   return c;
 }
-
-
-/* /\* _horner */
-
-/* Compute the value of a polynom using Horner's rule. */
-
-/* Input: */
-/* - a: double(n+1,nd), nd-dimensional coefficients of the polynom, starting  */
-/*      from lowest degree */
-/* - n: int, degree of the polynom */
-/* - nd: int, number of dimensions  */
-/* - u: double(nu), parametric values where the polynom is evaluated */
-
-/* Output: */
-/* - c: double(nu,nd), nd-dimensional values of the polynom */
-/* *\/ */
-
-/* static void _horner(double *a, int n, int nd, double *u, int nu) */
-/* { */
-/*   int i,j,k; */
-/*   double c; */
-/*   for (i=0; i<nu; ++i) { */
-/*     for (j=0; j<nd; ++j) { */
-/*       c = a[n,j]; */
-/*       for (k=n-1; i>=0; --k) c = c * u[i] + a[k,j]; */
-/*       u[i,j] = c; */
-/*     } */
-/*   } */
-/* } */
-
-/* static char horner_doc[] = */
-/* "Evaluate a polynom using Horner's rule.\n\ */
-/* \n\ */
-/* Params:\n\ */
-/* - a: double(n+1,nd), nd-dimensional coefficients of the polynom of degree n,\n\ */
-/*      starting from lowest degree\n\ */
-/* - u: double(nu), parametric values where the polynom is evaluated\n\ */
-/* \n\ */
-/* Returns:\n\ */
-/* - p: double(nu,3), nu nd-dimensonal points\n\ */
-/* \n\ */
-/* Extended algorithm A1.1 from 'The NURBS Book' p7.\n\ */
-/* \n"; */
-
-/* static PyObject * nurbs_horner(PyObject *self, PyObject *args) */
-/* { */
-/*   int n, nd, nu; */
-/*   npy_intp *a_dim, *u_dim, dim[2]; */
-/*   double *a, *u, *pnt; */
-/*   PyObject *arg1, *arg2; */
-/*   PyObject *arr1=NULL, *arr2=NULL, *ret=NULL; */
-
-/*   if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) */
-/*     return NULL; */
-/*   arr1 = PyArray_FROM_OTF(arg1, NPY_DOUBLE, NPY_IN_ARRAY); */
-/*   if(arr1 == NULL) */
-/*     return NULL; */
-/*   arr2 = PyArray_FROM_OTF(arg2, NPY_DOUBLE, NPY_IN_ARRAY); */
-/*   if(arr2 == NULL) */
-/*     goto fail; */
-
-/*   /\* We suppose the dimensions are correct*\/ */
-/*   a_dim = PyArray_DIMS(arr1); */
-/*   u_dim = PyArray_DIMS(arr2); */
-/*   n = a_dim[0]; */
-/*   nd = a_dim[1]; */
-/*   nu = u_dim[0]; */
-/*   a = (double *)PyArray_DATA(arr1); */
-/*   u = (double *)PyArray_DATA(arr2); */
-
-/*   /\* Create the return array *\/ */
-/*   dim[0] = nu; */
-/*   dim[1] = nd; */
-/*   ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE); */
-/*   pnt = (double *)PyArray_DATA(ret); */
-
-/*   /\* Compute *\/ */
-/*   int i,j; */
-/*   for (i=0; i<nu; i */
-/*   _bspeval(d, ctrl, nc, mc, k, u, nu, pnt); */
-/*   //printf("pnt(%d,%d)\n",nu,mc); */
-/*   //print_mat(pnt,nu,mc); */
-
-/*   /\* Clean up and return *\/ */
-/*   Py_DECREF(arr1); */
-/*   Py_DECREF(arr2); */
-/*   Py_DECREF(arr3); */
-/*   return ret; */
-
-/*  fail: */
-/*   printf("error cleanup and return\n"); */
-/*   Py_XDECREF(arr1); */
-/*   Py_XDECREF(arr2); */
-/*   Py_XDECREF(arr3); */
-/*   return NULL; */
-/* } */
-
 
 /* _bernstein */
 /*
@@ -671,7 +581,7 @@ Output:
 - newP: (nc+nu,nd) new control points
 - newU: (nc+p+nu) new knot vector
 
-Modified algorithm A5.1 from 'The NURBS Book' pg164.
+Modified algorithm A5.4 from 'The NURBS Book' pg164.
 */
 
 static void curve_knot_refine(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *newP, double *newU)
@@ -933,7 +843,7 @@ static int curve_knot_remove(double *P, int nc, int nd, double *U, int nk, doubl
 /*  nh,Uh,Qw\n\ */
 /* \n\ */
 /* Modified version of Algorithm A5.9 from 'The NURBS BOOK' pg206.\n\ */
-/* \n"; */
+/* "; */
 
 
 /* static void _bspdegelev(int p, double **P, int nd, int nc, double *U,  */
@@ -1277,6 +1187,7 @@ Input:
 - nu: number of parametric values
 
 Output:
+
 - pnt: (mu+1,mv+1,nu,nd) points and derivatives on the B-spline surface
 
 Modified algorithm A3.6 from 'The NURBS Book' pg111.
@@ -1433,13 +1344,6 @@ Modified algorithm A5.7 from 'The NURBS Book' pg177.
 /********************************************************/
 
 
-
-static char _doc_[] = "nurbs_ module. Version 0.1\n\
-\n\
-This module implements low level NURBS functions for pyFormex.\n\
-\n";
-
-
 static char binomial_doc[] =
 "Computes the binomial coefficient.\n\
 \n\
@@ -1447,7 +1351,8 @@ static char binomial_doc[] =
  (   ) = --------\n\
  ( k )   k!(n-k)!\n\
 \n\
- Algorithm from 'Numerical Recipes in C, 2nd Edition' pg215.\n";
+ Algorithm from 'Numerical Recipes in C, 2nd Edition' pg215.\n\
+";
 
 static PyObject * binomial(PyObject *self, PyObject *args)
 {
@@ -1456,6 +1361,97 @@ static PyObject * binomial(PyObject *self, PyObject *args)
   if(!PyArg_ParseTuple(args, "ii", &n, &k))
     return NULL;
   ret = _binomial(n, k);
+  return Py_BuildValue("d",ret);
+}
+
+
+static char horner_doc[] =
+"Compute points on a power base curve using Horner's rule.\n\
+\n\
+Input:\n\
+- a: double(nd,n+1), nd-dimensional coefficients of the polynom of\n\
+     degree n, starting from lowest degree\n\
+- u: double(nu), parametric values where the polynom is evaluated\n\
+\n\
+Returns: double(nu,nd), nu nd-dimensonal points\n\
+\n\
+Extended algorithm A1.1 from 'The NURBS Book' p7.\n\
+";
+
+static PyObject * horner(PyObject *self, PyObject *args)
+{
+  int n, nd, nu;
+  npy_intp *a_dim, *u_dim, dim[2];
+  double *a, *u, *pnt;
+  PyObject *arg1, *arg2;
+  PyObject *arr1=NULL, *arr2=NULL, *ret=NULL;
+
+  if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(arg2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+
+  /* We suppose the dimensions are correct*/
+  a_dim = PyArray_DIMS(arr1);
+  u_dim = PyArray_DIMS(arr2);
+  n = a_dim[1];
+  nd = a_dim[0];
+  nu = u_dim[0];
+  a = (double *)PyArray_DATA(arr1);
+  u = (double *)PyArray_DATA(arr2);
+
+  /* Create the return array */
+  dim[0] = nu;
+  dim[1] = nd;
+  ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  pnt = (double *)PyArray_DATA(ret);
+
+  /* Compute */
+  int i,j;
+  for (i=0; i<nu; ++i)
+    for (j=0; j<nd; ++j)
+      *pnt++ = _horner(a+n*i, n-1, *u++);
+  printf("pnt(%d,%d)\n",nu,nd);
+  print_mat(pnt,nu,nd);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  return ret;
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
+
+static char bernstein_doc[] =
+"Compute the value of a Bernstein polynomial.\n\
+\n\
+Input:\n\
+- i: int, index of the polynomial\n\
+- n: int, degree of the polynomial\n\
+- u: double, parametric value where the polynomial is evaluated\n\
+\n\
+Returns:\n\
+  The value of the Bernstein polynomial B(i,n) at parameter value u.\n\
+\n\
+Algorithm A1.2 from 'The NURBS Book' p20.\n\
+";
+
+static PyObject * bernstein(PyObject *self, PyObject *args)
+{
+  int n, k;
+  double u, ret;
+  if(!PyArg_ParseTuple(args, "iid", &n, &k, &u))
+    return NULL;
+  ret = _bernstein(n,k,u);
   return Py_BuildValue("d",ret);
 }
 
@@ -1471,7 +1467,8 @@ Returns:\n\
 double(n+1), the value of all n-th degree Bernstein polynomials B(i,n)\n\
 at parameter value u.\n\
 \n\
-Algorithm A1.3 from The NURBS Book.\n";
+Algorithm A1.3 from The NURBS Book.\n\
+";
 
 static PyObject * allBernstein(PyObject *self, PyObject *args)
 {
@@ -1513,7 +1510,7 @@ Output:\n\
 - pnt: (nu,nd) points on the B-spline\n\
 \n\
 Modified algorithm A3.1 from 'The NURBS Book' pg82.\n\
-\n";
+";
 
 static PyObject * curvePoints(PyObject *self, PyObject *args)
 {
@@ -1588,7 +1585,7 @@ Output:\n\
 - pnt: (n+1,nu,nd) points and derivatives on the B-spline\n\
 \n\
 Modified algorithm A3.2 from 'The NURBS Book' pg93.\n\
-\n";
+";
 
 static PyObject * curveDerivs(PyObject *self, PyObject *args)
 {
@@ -1660,7 +1657,7 @@ Output:\n\
 - newU: (m+nu) new knot vector\n\
 \n\
 Modified algorithm A5.1 from 'The NURBS Book' pg164.\n\
-\n";
+";
 
 static PyObject * curveKnotRefine(PyObject *self, PyObject *args)
 {
@@ -1736,7 +1733,7 @@ Returns:\n\
 - newP: (nb*p+1,nd) new control points defining nb Bezier segments\n\
 \n\
 Modified algorithm A5.6 from 'The NURBS Book' pg173.\n\
-\n";
+";
 
 static PyObject * curveDecompose(PyObject *self, PyObject *args)
 {
@@ -1820,7 +1817,7 @@ Output:\n\
 P and U are replaced with the new control points and knot vector\n\
 \n\
 Modified algorithm A5.8 from 'The NURBS Book' pg185.\n\
-\n";
+";
 
 static PyObject * curveKnotRemove(PyObject *self, PyObject *args)
 {
@@ -1924,7 +1921,7 @@ Output:\n\
 - A: coefficient matrix (nc,nc)\n\
 \n\
 Modified algorithm A9.1 from 'The NURBS Book' pg369.\n\
-\n";
+";
 
 static PyObject * curveGlobalInterpolationMatrix(PyObject *self, PyObject *args)
 {
@@ -1998,7 +1995,7 @@ Output:\n\
 - pnt: (nu,nd) points on the B-spline\n\
 \n\
 Modified algorithm A3.5 from 'The NURBS Book' pg103.\n\
-\n";
+";
 
 
 static PyObject * surfacePoints(PyObject *self, PyObject *args)
@@ -2085,17 +2082,17 @@ Output:\n\
 - pnt: (n+1,nu,nd) points and derivatives on the B-spline surface\n\
 \n\
 Modified algorithm A3.6 from 'The NURBS Book' pg111.\n\
-\n";
+";
 
 static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
 {
-  int nc, nd, nk, nu, n;
-  npy_intp *P_dim, *U_dim, *u_dim, dim[3];
-  double *P, *U, *u, *pnt;
-  PyObject *a1, *a2, *a3;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
+  int ns, nt, nd, nU, nV, nu, mu, mv;
+  npy_intp *P_dim, *U_dim, *V_dim, *u_dim, dim[4];
+  double *P, *U, *V, *u, *pnt;
+  PyObject *a1, *a2, *a3, *a4;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL, *ret=NULL;
 
-  if(!PyArg_ParseTuple(args, "OOOi", &a1, &a2, &a3, &n))
+  if(!PyArg_ParseTuple(args, "OOOOii", &a1, &a2, &a3, &a4, &mu, &mv))
     return NULL;
   arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
   if(arr1 == NULL)
@@ -2106,32 +2103,41 @@ static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
   arr3 = PyArray_FROM_OTF(a3, NPY_DOUBLE, NPY_IN_ARRAY);
   if(arr3 == NULL)
     goto fail;
+  arr4 = PyArray_FROM_OTF(a4, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr4 == NULL)
+    goto fail;
 
   P_dim = PyArray_DIMS(arr1);
   U_dim = PyArray_DIMS(arr2);
-  u_dim = PyArray_DIMS(arr3);
-  nc = P_dim[0];
-  nd = P_dim[1];
-  nk = U_dim[0];
+  V_dim = PyArray_DIMS(arr3);
+  u_dim = PyArray_DIMS(arr4);
+  ns = P_dim[0];
+  nt = P_dim[1];
+  nd = P_dim[2];
+  nU = U_dim[0];
+  nV = V_dim[0];
   nu = u_dim[0];
   P = (double *)PyArray_DATA(arr1);
   U = (double *)PyArray_DATA(arr2);
-  u = (double *)PyArray_DATA(arr3);
+  V = (double *)PyArray_DATA(arr3);
+  u = (double *)PyArray_DATA(arr4);
 
   /* Create the return array */
-  dim[0] = n+1;
-  dim[1] = nu;
-  dim[2] = nd;
-  ret = PyArray_SimpleNew(3,dim, NPY_DOUBLE);
+  dim[0] = mu+1;
+  dim[1] = mv+1;
+  dim[2] = nu;
+  dim[3] = nd;
+  ret = PyArray_SimpleNew(4,dim, NPY_DOUBLE);
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curve_derivs(n, P, nc, nd, U, nk, u, nu, pnt);
+  surface_derivs(mu,mv,P,ns,nt,nd,U,nU,V,nV,u,nu,pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
   Py_DECREF(arr2);
   Py_DECREF(arr3);
+  Py_DECREF(arr4);
   return ret;
 
  fail:
@@ -2139,6 +2145,7 @@ static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
   return NULL;
 }
 
@@ -2146,6 +2153,8 @@ static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
 static PyMethodDef _methods_[] =
 {
 	{"binomial", binomial, METH_VARARGS, binomial_doc},
+	{"horner", horner, METH_VARARGS, horner_doc},
+	{"bernstein", bernstein, METH_VARARGS, bernstein_doc},
 	{"allBernstein", allBernstein, METH_VARARGS, allBernstein_doc},
 	{"curvePoints", curvePoints, METH_VARARGS, curvePoints_doc},
 	{"curveDerivs", curveDerivs, METH_VARARGS, curveDerivs_doc},
@@ -2155,6 +2164,7 @@ static PyMethodDef _methods_[] =
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
 	{"curveGlobalInterpolationMatrix", curveGlobalInterpolationMatrix, METH_VARARGS, curveGlobalInterpolationMatrix_doc},
 	{"surfacePoints", surfacePoints, METH_VARARGS, surfacePoints_doc},
+	{"surfaceDerivs", surfaceDerivs, METH_VARARGS, surfaceDerivs_doc},
 	{NULL, NULL}
 };
 

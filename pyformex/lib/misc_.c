@@ -364,7 +364,7 @@ static void nodal_sum(float *val, int *elems, float *out, int nelems, int nplex,
   }
   /* Divide by count */
   if (avg)
-    for (i=0; i<=maxnod; i++)
+    for (n=0; n<=maxnod; n++)
       if (cnt[n] > 0)
   	for (k=0; k<nval; k++) work[n*nval+k] /= cnt[n];
   

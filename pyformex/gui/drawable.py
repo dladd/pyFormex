@@ -816,7 +816,6 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     The return value is a (nelems,nplex,nval) array where each value is
     replaced with the sum of its value at that node.
     If avg=True, the values are replaced with the average instead.
-    (DOES NOT WORK YET)
     If return_all==True(default), returns an array with shape (nelems,nplex,3),
     else, returns an array with shape (maxnodenr+1,3). In the latter case,
     nodes not occurring in elems will have all zero values.
@@ -833,12 +832,9 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     elems = elems.astype(int32)
     if val.shape[2] > 1 and direction_treshold is not None:
         #nodalSum2(val,elems,direction_treshold)
-        print "NEW NODALSUM"
         val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
     else:
-        print "NEW NODALSUM"
         val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
-    print val.shape
     return val
 
 
