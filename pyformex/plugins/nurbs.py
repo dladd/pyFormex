@@ -377,7 +377,7 @@ class NurbsCurve(Geometry4):
         return pts
 
     
-    def derivatives(self,at,d=1):
+    def derivs(self,at,d=1):
         """Returns the points and derivatives up to d at parameter values at"""
         if type(at) is int:
             u = uniformParamValues(at,self.knots[0],self.knots[-1])
@@ -523,7 +523,10 @@ class NurbsSurface(Geometry4):
                     deg = len(kn) - nctrl -1
                     if deg <= 0:
                         raise ValueError,"Length of knot vector (%s) must be at least number of control points (%s) plus 2" % (len(knots),nctrl)
-
+                # make degree changeable
+                degree = list(degree)
+                degree[d] = deg
+                
             order = deg+1
 
             if nctrl < order:
@@ -565,7 +568,7 @@ class NurbsSurface(Geometry4):
 
         Parameters:
 
-        `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
+        - `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
           a point is to be placed.
 
         Returns: (nu,3) shaped Coords with `nu` points at the specified
@@ -587,6 +590,47 @@ class NurbsSurface(Geometry4):
 
         if pts.shape[-1] == 4:
             pts = Coords4(pts).toCoords()
+        else:
+            pts = Coords(pts)
+        return pts
+
+
+    def derivs(self,u,m):
+        """Return points and derivatives at given parametric values.
+
+        Parameters:
+
+        - `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
+          the points and derivatives are evaluated.
+        - `m`: tuple of two int values (mu,mv). The points and derivatives up
+          to order mu in u direction and mv in v direction are returned.
+
+        Returns: (nu+1,nv+1,nu,3) shaped Coords with `nu` points at the
+          specified parametric values. The slice (0,0,:,:) contains the
+          points.
+        
+        """     
+        # sanitize arguments for library call
+        ctrl = self.coords.astype(double)
+        U = self.vknots.astype(double)
+        V = self.uknots.astype(double)
+        u = asarray(u).astype(double)
+        mu,mv = m
+        mu = int(mu)
+        mv = int(mv)
+        
+        try:
+            pts = nurbs.surfaceDerivs(ctrl,U,V,u,mu,mv)
+            if isnan(pts).any():
+                print "We got a NaN"
+                raise RuntimeError
+        except:
+            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs surface"
+
+        if pts.shape[-1] == 4:
+            pts = Coords4(pts)
+            pts[0][0].normalize()
+            pts = Coords(pts[...,:3])
         else:
             pts = Coords(pts)
         return pts

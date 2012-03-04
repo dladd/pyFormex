@@ -1132,7 +1132,7 @@ Modified algorithm A3.5 from 'The NURBS Book' pg103.
 */
 static void surface_points(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt)
 {
-  int i, j, k, p, q, su, sv, iu, iv;
+  int i, j, p, q, r, su, sv, iu, iv;
   double S;
   
   /* degrees of the spline */
@@ -1158,8 +1158,8 @@ static void surface_points(double *P, int ns, int nt, int nd, double *U, int nU,
     iv = sv-q;
     for (i=0; i<nd; ++i) {
       S = 0.0;
-      for (k=0; k<=p; ++k) {
-	S += Nu[k] * dotprod(Nv,1,P+((iu+k)*nt+iv)*nd+i,nd,q+1);
+      for (r=0; r<=p; ++r) {
+	S += Nu[r] * dotprod(Nv,1,P+((iu+r)*nt+iv)*nd+i,nd,q+1);
       }
       pnt[j*nd+i] = S;
     }
@@ -1218,25 +1218,33 @@ static void surface_derivs(int mu, int mv, double *P,int ns, int nt, int nd, dou
     /* find the span index of u[j] */
     su = find_span(U,u[2*j],p,ns-1);
     basis_derivs(U,u[2*j],p,su,du,Nu);
+    //printf("Nu (%d,%d)\n",du+1,p+1);
+    //print_mat(Nu,du+1,p+1);
 
     /* find the span index of v[j] */
     sv = find_span(V,u[2*j+1],q,nt-1);
     basis_derivs(V,u[2*j+1],q,sv,dv,Nv);
+    //printf("Nv (%d,%d)\n",du+1,p+1);
+    //print_mat(Nv,dv+1,q+1);
 
-    /* for each nonzero dervative */
+    /* for each nonzero derivative */
     for (k=0; k<=du; ++k) {
       for (l=0; l<=dv; ++l) {
 	qnt = pnt + (k*(mv+1) + l) *nu*nd;
 
 	iu = su-p;
 	iv = sv-q;
+	//printf("k=%d, l=%d\n",k,l);
+	//printf("offset %d\n", (k*(mv+1) + l) *nu*nd);
 	for (i=0; i<nd; ++i) {
 	  S = 0.0;
 	  for (r=0; r<=p; ++r) {
-	    S += Nu[r] * dotprod(Nv,1,P+((iu+r)*nt+iv)*nd+i,nd,q+1);
+	    S += Nu[k*(p+1)+r] * dotprod(Nv+l*(q+1),1,P+((iu+r)*nt+iv)*nd+i,nd,q+1);
 	  }
+	  //printf("S = %f\n",S);
 	  qnt[j*nd+i] = S;
 	}
+	//print_mat(pnt,(mu+1)*(mv+1)*nu,nd);
       }      
     }
   }

@@ -25,15 +25,28 @@
 
 """NurbsSurface
 
-level = 'advanced'
-topics = ['geometry', 'surface']
-techniques = ['nurbs']
+This example illustrates the functionalities of the nurbs plugin for
+drawing Nurbs surfaces.
 
-.. Description
+As the nurbs plugin is still under development, so is this example.
 
-Nurbs
-=====
-This example is under development.
+The example creates a Nurbs surface from a 6x4 grid of control points.
+The grid is originally created in the x,y plane, but two points of it
+are moved out of the plane: one in positive z-direction, one in negative
+direction. The Nurbs surface has degree 3 in the x-direction and degree 2
+in the y-direction.
+
+Several parts can be drawn on request of the user:
+
+- points: the control points used to construct the Nurbs
+- surf: the Nurbs surface
+- curves: Nurbs curves created by using the grid points in single
+  parametric directions
+- curvepoints: points on the Nurbs curves, at fixed parametric values
+- isocurves: curves on the surface for given parametric values. These curves
+  are actually Nurbs curves with the above curvepoints as control points.
+- randompoints: a set of randomly distributed points on the surface.
+
 """
 _status = 'unchecked'
 _level = 'advanced'
@@ -43,7 +56,22 @@ _techniques = ['nurbs']
 from gui.draw import *
 from plugins.nurbs import *
 
+# Default data
+
+draw_points = True
+draw_surf = True
+draw_curves = False
+draw_curvepoints = False
+draw_isocurves = False
+draw_tangents = False
+draw_randompoints = False
+
+
+
 def run():
+
+    global options
+    
     clear()
     smooth()
 
@@ -74,19 +102,22 @@ def run():
     nP = 100
 
     # what to draw
-    res = askItems([
-        ('draw_points',True),
-        ('draw_surf',True),
-        ('draw_curves',False),
-        ('draw_curvepoints',False),
-        ('draw_isocurves',True),
-        ('draw_randompoints',True),
+    options = askItems(store=globals(),items=[
+        ('draw_points',),
+        ('draw_surf',),
+        ('draw_curves',),
+        ('draw_curvepoints', ),
+        ('draw_isocurves', ),
+        ('draw_tangents', ),
+        ('draw_randompoints', ),
         ])
-    if not res:
+    
+    if not options:
         return
 
-    globals().update(res)
-
+    globals().update(options)
+    print options
+    
     ###########################
     ####   CONTROL GRID
     ###########################
@@ -111,8 +142,6 @@ def run():
         # draw the Nurbs surface, with random colors
         colors = 0.5*random.rand(*S.coords.shape)
         draw(S,color=colors[...,:3])
-
-    #return
 
     ###########################
     ####   ISOPARAMETRIC CURVES
@@ -155,7 +184,22 @@ def run():
         print color
         draw(Uc,color=[red,yellow,green,cyan,blue,magenta],linewidth=3,nolight=True)#,ontop=True)
 
+    ###########################
+    ####   POINTS and TANGENTS
+    ###########################
 
+    if draw_tangents:
+        uv = zeros((len(u),len(v),2))
+        uv[...,0] = u.reshape(-1,1)
+        uv[:,:,1] = v
+        uv = uv.reshape(-1,2)
+        D = S.derivs(uv,(1,1))
+        P = D[0,0]
+        U = D[1,0]
+        V = D[0,1]
+        drawVectors(P,U,size=1,color=red,ontop=True)
+        drawVectors(P,V,size=1,color=blue,ontop=True)
+    
 
     ###########################
     ####   RANDOM POINTS

@@ -54,7 +54,7 @@ def drawThePoints(N,n,color=None):
     draw(P,color=color,marksize=5)
     drawNumbers(P,color=color)
     
-    XD = N.derivatives(u,5)[:4]
+    XD = N.derivs(u,5)[:4]
     if XD.shape[-1] == 4:
         XD = XD.toCoords()
     x,d1,d2,d3 = XD[:4]
