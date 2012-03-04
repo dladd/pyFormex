@@ -620,7 +620,7 @@ from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
  
 - A PDF version of the full manual can be created with ::
 
-   make pdf
+   make latexpdf
  
   This will put the PDF manual in ``sphinx/_build/latex``. 
 
@@ -913,9 +913,14 @@ for the full procedure to make and publish an official release tarball.
 
    make bumpversion
 
-- Publish the documentation on the website ::
+Publish the documentation
+-------------------------
+- Put the html documention on the website ::
 
    make pubdoc
+   make listwww
+   # now add the missing files by hand : cvs add FILE
+   make commit
 
 - Publish a PDF manual ::
 

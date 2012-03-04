@@ -1543,7 +1543,8 @@ class Coords(ndarray):
         # avoid error message on the global sz/nx calculation
         errh = seterr(all='ignore')
         nboxes = nnod // nodesperbox # ideal total number of boxes
-        boxsz = (vol/nboxes) ** (1./esz.shape[0])
+        # set ideal box size, but not smaller than atol
+        boxsz = max(atol,(vol/nboxes) ** (1./esz.shape[0]))
         nx = (sz/boxsz).astype(int32)
         dx = where(nx>0,sz/nx,boxsz)
         seterr(**errh)
