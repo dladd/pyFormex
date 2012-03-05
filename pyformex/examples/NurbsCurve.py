@@ -25,14 +25,8 @@
 
 """NurbsCurve
 
-level = 'advanced'
-topics = ['geometry', 'curve']
-techniques = ['nurbs','connect','border']
-
-.. Description
-
-Nurbs
-=====
+This example illustrates the use of the NurbsCurve class from the nurbs
+plugin.
 """
 _status = 'unchecked'
 _level = 'advanced'

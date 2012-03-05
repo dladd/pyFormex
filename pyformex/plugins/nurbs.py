@@ -346,6 +346,14 @@ class NurbsCurve(Geometry4):
         return self.coords.toCoords().bbox()
 
 
+    def __str__(self):
+        return """NURBS Curve, degree = %s, nctrl = %s, nknots = %s 
+  Control points:
+%s,
+  knots = %s
+"""  % ( self.degree, len(self.coords), len(self.knots), self.coords, self.knots)
+
+
     def pointsAt(self,u):
         """Return the points on the Nurbs curve at given parametric values.
 
@@ -444,6 +452,22 @@ class NurbsCurve(Geometry4):
         """
         X = nurbs.curveDecompose(self.coords,self.knots)
         return NurbsCurve(X,degree=self.degree,blended=False)
+
+
+    def removeKnots(self,u,tol):
+        """Remove a knots in the curve.
+
+        u is a vector with knot parameter values to be inserted into the
+        curve. The control points are adapted to keep the curve unchanged.
+
+        Returns a Nurbs curve equivalent with the original but with the
+        specified knot values inserted in the knot vector, and the control
+        points adapted.
+        """
+        if self.closed:
+            raise ValueError,"insertKnots currently does not work on closed curves"
+        newP,newU = nurbs.curveKnotRemove(self.coords,self.knots,u)
+        return NurbsCurve(newP,degree=self.degree,knots=newU,closed=self.closed)
 
 
     def approx(self,ndiv=None,ntot=None):

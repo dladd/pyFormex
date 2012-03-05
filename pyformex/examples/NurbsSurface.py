@@ -48,7 +48,7 @@ Several parts can be drawn on request of the user:
 - randompoints: a set of randomly distributed points on the surface.
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'surface']
 _techniques = ['nurbs']

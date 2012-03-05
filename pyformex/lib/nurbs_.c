@@ -562,7 +562,6 @@ static void curve_derivs(int n, double *P, int nc, int nd, double *U, int nk, do
 }
 
 
-
 /* curve_knot_refine */
 /*
 Refine curve knot vector. 
@@ -1253,7 +1252,6 @@ static void surface_derivs(int mu, int mv, double *P,int ns, int nt, int nd, dou
 }
 
 
-
 /* surfaceDecompose */
 /*
 Decompose a Nurbs surface in Bezier patches. 
@@ -1664,7 +1662,7 @@ Output:\n\
 - newP: (nc+nu,nd) new control points\n\
 - newU: (m+nu) new knot vector\n\
 \n\
-Modified algorithm A5.1 from 'The NURBS Book' pg164.\n\
+Modified algorithm A5.4 from 'The NURBS Book' pg164.\n\
 ";
 
 static PyObject * curveKnotRefine(PyObject *self, PyObject *args)

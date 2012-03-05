@@ -279,8 +279,7 @@ class InputItem(QtGui.QWidget):
         ##     pass
 
         if 'buttons' in kargs and kargs['buttons']:
-            #print kargs
-            self.buttons = dialogButtons(self,kargs['buttons'])
+            self.buttons = ButtonBox(actions=kargs['buttons'],parent=self)
             layout.addItem(self.buttons)
 
     def name(self):
@@ -753,7 +752,10 @@ class InputRadio(InputItem):
                 rb.setChecked(True)
                 break
 
-    
+
+#
+# TODO: THIS SHOULD BE MERGED WITH ButtonBox
+#
 class InputPush(InputItem):
     """A pushbuttons InputItem.
 
@@ -1449,8 +1451,9 @@ class InputDialog(QtGui.QDialog):
         self.add_items(items,self.form,self.prefix)
 
         # add the action buttons
-        but = dialogButtons(self,actions,default)
-        self.form.addLayout(but)
+        but = ButtonBox(actions=actions,default=default,parent=self,stretch=[0,1])
+        self.form.addWidget(but)
+        
         self.setLayout(self.form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
 
@@ -2308,8 +2311,8 @@ class GenericDialog(QtGui.QDialog):
         self.add(widgets)
 
         if actions is not None:
-            but = dialogButtons(self,actions,default)
-            self.form.addLayout(but)
+            but = ButtonBox(actions=actions,default=default,parent=self)
+            self.form.addWidget(but)
         
         self.setLayout(self.form)
 
@@ -2739,7 +2742,7 @@ class TextBox(QtGui.QDialog):
         self._t = QtGui.QTextEdit()
         self._t.setReadOnly(True)
         updateText(self._t,text,format)
-        self._b = ButtonBox('',actions,parent=self,stretch=[1,1]) 
+        self._b = ButtonBox('',actions,parent=self)#,stretch=[1,1]) 
         l = QtGui.QVBoxLayout()
         l.addWidget(self._t)
         l.addWidget(self._b)
@@ -2759,30 +2762,14 @@ class TextBox(QtGui.QDialog):
         updateText(self._t,text,format)
 
 
-## ############################# Input box ###########################
-
-## class InputBox(QtGui.QWidget):
-##     """A widget accepting a line of input.
-
-##     """
-##     def __init__(self,*args):
-##         QtGui.QWidget.__init__(self,*args)
-##         layout = InputString('Input:','')
-##         self.setLayout(layout)
-
-
-
 ############################# Button box ###########################
 
-#
-# THESE TWO SHOULD BE MERGED
-#
 
+def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
+                     parent=None):
+    """Add a set of action buttons to a layout
 
-def dialogButtons(dialog,actions=None,default=None):
-    """Create a set of dialog buttons
-
-    dia is a dialog widget
+    layout is a QLayout
 
     actions is a list of tuples (name,) or (name,function).
     If a function is specified, it will be executed on pressing the button.
@@ -2798,33 +2785,31 @@ def dialogButtons(dialog,actions=None,default=None):
 
     Returns a horizontal box layout with the buttons.
     """
-    if actions is None:
-        actions = [('Cancel',),('OK',)]
     if actions and default is None:
         default = actions[-1][0].lower()
-    but = QtGui.QHBoxLayout()
-    spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
-    but.addItem(spacer)
+    blist = []
     for a in actions:
         name = a[0]
-        b = QtGui.QPushButton(name,dialog)
+        b = QtGui.QPushButton(name,parent)
         n = name.lower()
-        if len(a) > 1:
+        if len(a) > 1 and callable(a[1]):
             slot = (a[1],)
-        elif n == 'ok':
-            slot = (dialog,Accept)
-        elif n == 'cancel':
-            slot = (dialog,Reject)
-        else:
-            slot = (dialog,Reject)
-        dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+        elif parent:
+            if n == 'ok':
+                slot = (parent,Accept)
+            elif n == 'cancel':
+                slot = (parent,Reject)
+            else:
+                slot = (parent,Reject)
+        b.connect(b,QtCore.SIGNAL("clicked()"),*slot)
         if n == default.lower():
             b.setDefault(True)
-        but.addWidget(b)
-    return but
+        layout.addWidget(b)
+        blist.append(b)
+    return blist
 
 
-class ButtonBox(InputPush):
+class ButtonBox(QtGui.QWidget):
     """A box with action buttons.
 
     - `name`: a label to be displayed in front of the button box. An empty
@@ -2833,32 +2818,37 @@ class ButtonBox(InputPush):
       function can be a normal callable function, or one of the values
       widgets.ACCEPTED or widgets.REJECTED. In the latter case, `parent`
       should be specified.
+    - `default`: name of the action to set as the default. If no default
+      is given, it will be set to the LAST button.
     - `parent`: the parent dialog holding this button box. It should be
-      specified if one of the buttons actions is widgets.ACCEPTED or
-      widgets.REJECTED.
+      specified if one of the buttons actions is not specified or is
+      widgets.ACCEPTED or widgets.REJECTED.
     """
-    def __init__(self,name,actions=[],parent=None,stretch=[-1,-1]):
-        InputPush.__init__(self,name,None,[a[0] for a in actions])
-        s = self.layout()
+    def __init__(self,name='',actions=[('Cancel',),('OK',)],default=None,
+                 parent=None,spacer=False,stretch=[-1,-1]):
+        QtGui.QWidget.__init__(self,parent=parent)
+        layout = QtGui.QHBoxLayout()
+        if name:
+            self.label = QtGui.QLabel(name)
+            layout.addWidget(self.label)
+        if spacer:
+            spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
+            layout.addItem(spacer)
         for i in [0,-1]:
             if stretch[i] >= 0:
-                s.insertStretch(i,stretch[i])
-        s.setSpacing(0)
-        s.setMargin(0)
-        for r,f in zip(self.rb,[a[1] for a in actions]):
-            if f is None:
-                f = Accept
-            if callable(f):
-                self.connect(r,QtCore.SIGNAL("clicked()"),f)
-            else:
-                self.connect(r,QtCore.SIGNAL("clicked()"),parent,f)
-        self.buttons = s
+                layout.insertStretch(i,stretch[i])
+        layout.setSpacing(0)
+        layout.setMargin(-1)
+        self.buttons = addActionButtons(layout,actions,default,parent)
+        self.setLayout(layout)
 
-    def __str__(self):
-        s = ''
-        for a in ['rect','minimumHeight']:
-            s += "%s = %s\n" % (a,getattr(self,a)())
-        return s
+    def setText(self,text,index=0):
+        """Change the text on button index."""
+        self.buttons[index].setText(text)
+
+    def setIcon(self,icon,index=0):
+        """Change the icon on button index."""
+        self.buttons[index].setIcon(icon)
 
 
 ############################# Coords box ###########################

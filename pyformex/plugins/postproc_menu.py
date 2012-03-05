@@ -139,8 +139,8 @@ class Table(QtGui.QDialog):
         #print(table.size())
         form.addWidget(table)
 
-        but = widgets.dialogButtons(self,actions,default)
-        form.addLayout(but)
+        but = widgets.ButtonBox(actions,default,parent=self)
+        form.addWidget(but)
         self.setLayout(form)
         #print(table.size())
         #print(form.size())
