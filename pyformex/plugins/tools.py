@@ -32,7 +32,10 @@ import pyformex as pf
 from coords import *
 from collection import Collection
 from gui.actors import GeomActor
-
+from mesh import Mesh
+from formex import Formex
+from plugins.trisurface import TriSurface
+from plugins.nurbs import NurbsCurve,NurbsSurface
 
 class Plane(object):
 
@@ -117,10 +120,10 @@ def reportElements(K):
         A = pf.canvas.actors[k]
         t = A.getType()
         s += "Actor %s (type %s); Elements %s\n" % (k,t,v)
-        if t == 'Formex':
-            e = A
-        elif t == 'TriSurface':
-            e = A.getElems()
+        if t == Formex:
+            e = A.coords
+        elif t == TriSurface or  t == Mesh :
+            e = A.elems
         for p in v:
             s += "  Element %s: %s\n" % (p,e[p])
     return s
