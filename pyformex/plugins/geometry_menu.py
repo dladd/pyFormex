@@ -278,7 +278,7 @@ def importModel(fn=None):
         
     for f in fn:
         d = readMesh(f)
-        print(type(d))
+        #print(type(d))
         x = d['coords']
         e = d['elems']
 
@@ -306,10 +306,10 @@ def convertInp(fn):
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
-    print(cmd)
+    #print(cmd)
     pf.GUI.setBusy()
     sta, out = utils.runCommand(cmd)
-    print out
+    #print out
     pf.GUI.setBusy(False)
 
     
@@ -333,8 +333,10 @@ def importDxf(convert=False,keep=False):
     if not fn:
         return
 
-    pf.GUI.setBusy()    
+    pf.GUI.setBusy()
+    #print "========== OK, WILL NOW READDXF ==========="
     text = dxf.readDXF(fn)
+    #print "========== OK, RETURNED FROM READDXF ==========="
     pf.GUI.setBusy(False)
     if text:
         if convert or keep:
@@ -342,7 +344,9 @@ def importDxf(convert=False,keep=False):
             f.write(text)
             f.close()
         if not convert:
+            #print "========== OK, WILL NOW IMPORTDXFTEXT ==========="
             return importDxftext(text)
+            #print "========== OK, RETURN FROM IMPORTDXFTEXT ==========="
 
 
 def importSaveDxf():
@@ -376,7 +380,7 @@ def importDxftext(text=None):
     elif '\n' not in text:
         text = open(text).read()
         
-    pf.GUI.setBusy()    
+    pf.GUI.setBusy()
     dxf_parts = dxf.convertDXF(text)
     pf.GUI.setBusy(False)
     export({'_dxf_import_':dxf_parts})

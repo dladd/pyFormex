@@ -71,15 +71,22 @@ def readDXF(filename):
     with the pyFormex distribution. It currently recognizes entities of
     type 'Arc', 'Line', 'Polyline', 'Vertex'.
     """
-    import utils
+    #print "============ dxf.readDXF =============="
+    import utils,commands
     if utils.hasExternal('dxfparser'):
-        sta,out = utils.runCommand('dxfparser %s 2>/dev/null' % filename)
+        cmd = 'dxfparser %s 2>/dev/null' % filename
+        sta,out = utils.runCommand(cmd)
+        #sta,out = commands.getstatusoutput(cmd)
+        #print out
         if sta==0:
+            #print "============ dxf.readDXF DONE =============="
             return out
         else:
+            #print "============ dxf.readDXF DONE =============="
             return ''
     else:
         utils.warn('warn_no_dxfparser')
+        #print "============ dxf.readDXF DONE =============="
         return ''
 
 
@@ -124,6 +131,7 @@ def convertDXF(text):
     vertices of a PolyLine.
       
     """
+    #print "============ dxf.convertDXF =============="
     import types
     global Entities,Vertices
     
@@ -179,6 +187,7 @@ def convertDXF(text):
     l = {'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex}
     exec text in l
     EndEntity()
+    #print "============ dxf.convertDXF DONE =============="
     return Entities
 
 

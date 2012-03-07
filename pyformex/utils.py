@@ -31,15 +31,6 @@ from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
 
-### execute a system command ###
-def system(cmd):
-    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
-    import subprocess
-    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE) # or .STDOUT to redirect 
-    sta = P.wait() # wait for the process to finish
-    out = P.communicate()[0] # get the stdout
-    return sta,out
-
 
 # versions of detected modules/external commands
 the_version = {
@@ -617,6 +608,20 @@ def countLines(fn):
 ## Running external commands ##
 ###############################
 
+### execute a system command ###
+def system(cmd):
+    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
+    import subprocess
+    P = subprocess.Popen(cmd,shell=True,bufsize=-1,stdout=subprocess.PIPE, stderr=subprocess.PIPE) # or .STDOUT to redirect 
+    sta = P.wait() # wait for the process to finish
+    out = P.communicate()[0] # get the stdout
+    return sta,out
+
+
+### execute a system command ###
+def system1(cmd):
+    import commands
+    return commands.getstatusoutput(cmd)
 
 def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error.
@@ -626,10 +631,9 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     the exit status and stdout are returned.
     Else an error is raised by default.
     """
-    import subprocess
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    sta,out = system(cmd)
+    sta,out = system1(cmd)
     if sta != 0:
         if not quiet:
             pf.message(out)
