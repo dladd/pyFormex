@@ -2728,7 +2728,7 @@ class TextBox(QtGui.QDialog):
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    def __init__(self,text,format=None,actions=['OK',None],modal=None,parent=None,caption=None,mono=False,timeout=None,flags=None):
+    def __init__(self,text,format=None,actions=[('OK',)],modal=None,parent=None,caption=None,mono=False,timeout=None,flags=None):
         if parent is None:
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
@@ -2742,7 +2742,7 @@ class TextBox(QtGui.QDialog):
         self._t = QtGui.QTextEdit()
         self._t.setReadOnly(True)
         updateText(self._t,text,format)
-        self._b = ButtonBox('',actions,parent=self)#,stretch=[1,1]) 
+        self._b = ButtonBox(actions=actions,parent=self)#,stretch=[1,1]) 
         l = QtGui.QVBoxLayout()
         l.addWidget(self._t)
         l.addWidget(self._b)
@@ -2785,6 +2785,8 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
 
     Returns a horizontal box layout with the buttons.
     """
+    if actions is None:
+        actions = [('Cancel',),('OK',)]
     if actions and default is None:
         default = actions[-1][0].lower()
     blist = []
@@ -2824,7 +2826,7 @@ class ButtonBox(QtGui.QWidget):
       specified if one of the buttons actions is not specified or is
       widgets.ACCEPTED or widgets.REJECTED.
     """
-    def __init__(self,name='',actions=[('Cancel',),('OK',)],default=None,
+    def __init__(self,name='',actions=None,default=None,
                  parent=None,spacer=False,stretch=[-1,-1]):
         QtGui.QWidget.__init__(self,parent=parent)
         layout = QtGui.QHBoxLayout()

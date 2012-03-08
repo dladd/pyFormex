@@ -71,22 +71,16 @@ def readDXF(filename):
     with the pyFormex distribution. It currently recognizes entities of
     type 'Arc', 'Line', 'Polyline', 'Vertex'.
     """
-    #print "============ dxf.readDXF =============="
     import utils,commands
     if utils.hasExternal('dxfparser'):
         cmd = 'dxfparser %s 2>/dev/null' % filename
         sta,out = utils.runCommand(cmd)
-        #sta,out = commands.getstatusoutput(cmd)
-        #print out
         if sta==0:
-            #print "============ dxf.readDXF DONE =============="
             return out
         else:
-            #print "============ dxf.readDXF DONE =============="
             return ''
     else:
         utils.warn('warn_no_dxfparser')
-        #print "============ dxf.readDXF DONE =============="
         return ''
 
 
@@ -131,7 +125,6 @@ def convertDXF(text):
     vertices of a PolyLine.
       
     """
-    #print "============ dxf.convertDXF =============="
     import types
     global Entities,Vertices
     
@@ -187,8 +180,31 @@ def convertDXF(text):
     l = {'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex}
     exec text in l
     EndEntity()
-    #print "============ dxf.convertDXF DONE =============="
     return Entities
+
+
+def collectByType(entities):
+    """Collect the dxf entities by type."""
+    coll = {}
+    types = set([ type(i) for i in entities ])
+    print "DXF collection:"
+    for t in types:
+        n = t.__name__
+        cn = [ i for i in entities if type(i) == t ]
+        print "  items of type %s: %s" % (n,len(cn))
+        coll[n] = cn
+    return coll
+
+
+def toLines(coll,arcdiv=8):
+    """Convert the dxf entities in a dxf collection to a plex-2 Formex""" 
+    Lines = []
+    for k,v in coll.items():
+        if k in [ 'Line', 'PolyLine' ]:
+            Lines.extend([ a.toFormex() for a in v ] )
+        elif k == 'Arc':
+            Lines.extend([ a.toFormex() for a in v ])
+    return Formex.concatenate(Lines) 
 
 
 class DxfExporter(object):

@@ -334,9 +334,7 @@ def importDxf(convert=False,keep=False):
         return
 
     pf.GUI.setBusy()
-    #print "========== OK, WILL NOW READDXF ==========="
     text = dxf.readDXF(fn)
-    #print "========== OK, RETURNED FROM READDXF ==========="
     pf.GUI.setBusy(False)
     if text:
         if convert or keep:
@@ -344,9 +342,7 @@ def importDxf(convert=False,keep=False):
             f.write(text)
             f.close()
         if not convert:
-            #print "========== OK, WILL NOW IMPORTDXFTEXT ==========="
             return importDxftext(text)
-            #print "========== OK, RETURN FROM IMPORTDXFTEXT ==========="
 
 
 def importSaveDxf():
@@ -382,11 +378,19 @@ def importDxftext(text=None):
         
     pf.GUI.setBusy()
     dxf_parts = dxf.convertDXF(text)
+    print [ type(i) for i in dxf_parts ]
     pf.GUI.setBusy(False)
     export({'_dxf_import_':dxf_parts})
-    draw(dxf_parts,color='black')
+    #draw(dxf_parts,color='black')
     return dxf_parts
+
            
+def drawDxf():
+    """Draw the imported dxf model"""
+    dxf_parts = named('_dxf_import_')
+    if dxf_parts:
+        draw(dxf_parts,color='black',nolight=True)
+        
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):
     """Write the geometry items in objdict to the specified file.
@@ -969,6 +973,7 @@ def create_menu():
                 ("&Import AutoCAD .dxf and save .dxftext",importSaveDxf),
                 ("&Convert AutoCAD .dxf to .dxftext",convertDxf,dict(tooltip="Parse a .DXF file and output dxftext script.")),
                 ("&Import .dxftext",importDxftext),
+                ("&Draw imported dxf model",drawDxf),
                 ]),
             ('&Upgrade pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
             ]),
