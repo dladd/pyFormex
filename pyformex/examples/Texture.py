@@ -26,11 +26,6 @@
 """Texture
 
 Shows how to draw with textures and how to set a background image.
-
-level = 'normal'
-topics = ['Image','Geometry']
-techniques = ['texture']
-
 """
 _status = 'checked'
 _level = 'normal'

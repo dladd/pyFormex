@@ -105,7 +105,7 @@ class Collection(object):
                 else:
                     del self.d[key]
             else:
-                pf.debug("Not removing from non-existing selection for actor %s" % key,pf.DEBUG.CANVAS)
+                pf.debug("Not removing from non-existing selection for actor %s" % key,pf.DEBUG.DRAW)
     
     def has_key(self,key):
         """Check whether the collection has an entry for the key."""

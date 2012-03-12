@@ -48,6 +48,7 @@ _techniques = ['dialog']
 from gui.draw import *
 
 def run():
+    global barrel
     reset()
     wireframe()
     

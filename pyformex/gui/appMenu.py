@@ -37,7 +37,65 @@ from gettext import gettext as _
     
 catname = 'apps.cat'
 
+
+
+def sortSets(d):
+    """Turn the set values in d into sorted lists.
+
+    - `d`: a Python dictionary
+
+    All the values in the dictionary are checked. Those that are of type
+    `set` are converted to a sorted list.
+    """
+    for k in d:
+        if type(d[k]) == set:
+            d[k] = list(d[k])
+            d[k].sort()
  
+
+def classify(appdir,pkg):
+    """Classify the files in submenus according to keywords."""
+    kat = ['status','level','topics','techniques','all']
+    cat = dict([ (k,set()) for k in kat])
+    cat['status'] = [ 'failed', 'checked', 'unchecked' ]
+    cat['level'] = [ 'beginner', 'normal', 'advanced' ]
+    col = {'all':set()}
+
+    class failed(object):
+        _status = 'failed'
+
+    
+    for appname in apps.detect(appdir):
+        
+        col['all'].update([appname])
+        try:
+            app = apps.load(pkg+'.'+appname)
+        except:
+            app = failed
+            pf.debug("Failed to load app '%s'" % (pkg+'.'+appname),pf.DEBUG.APPS)
+        for k in kat:
+            if hasattr(app,'_'+k):
+                v = getattr(app,'_'+k)
+                if type(v) is list:
+                    v = [ vi.lower() for vi in v ]
+                else:
+                    v = v.lower()
+                if k in ['status','level']:
+                    v = [v]
+                else:
+                    cat[k].update(v)
+                for i in v:
+                    ki = '%s/%s' % (k,i)
+                    if not ki in col.keys():
+                        col[ki] = set()
+                    col[ki].update([appname])
+
+    sortSets(cat)
+    sortSets(col)
+
+    return kat,cat,col
+
+
 class AppMenu(QtGui.QMenu):
     """A menu of pyFormex applications in a directory or list.
 
@@ -242,7 +300,7 @@ class AppMenu(QtGui.QMenu):
             i = 0
             print("You should first run a app from the menu, to define the next")
             return
-        pf.debug("This is app %s out of %s" % (i,len(self.files)))
+        pf.debug("This is app %s out of %s" % (i,len(self.files)),pf.DEBUG.APPS|pf.DEBUG.MENU)
         if i < len(self.files):
             script.run(self.files[i])
 
@@ -255,16 +313,14 @@ class AppMenu(QtGui.QMenu):
             i = 0
             print("You should first run a app from the menu, to define the following")
             return
-        pf.debug("Running apps %s-%s" % (i,len(self.files)))
+        pf.debug("Running apps %s-%s" % (i,len(self.files)),pf.DEBUG.APPS|pf.DEBUG.MENU)
         self.runAllFiles(self.files[i:])
-        pf.debug("Exiting runAllNext")
+        pf.debug("Exiting runAllNext",pf.DEBUG.APPS|pf.DEBUG.MENU)
         
 
     def runAll(self):
         """Run all apps."""
-        pf.debug("Playing all apps in order")
         self.runAllFiles(self.files)
-        pf.debug("Finished playing all apps")
 
 
     ### THIS should be moved to a playAll function in draw/app module
@@ -296,10 +352,8 @@ class AppMenu(QtGui.QMenu):
 
 
     def runAllRandom(self):
-        """Run all scripts in a random order."""
-        pf.debug("Playing all scripts in random order")
+        """Run all apps in a random order."""
         self.runAllFiles(self.files,randomize=True)
-        pf.debug("Finished playing all scripts")
                        
 
     def reload(self):
@@ -308,7 +362,6 @@ class AppMenu(QtGui.QMenu):
         This is only available if a directory path was specified and
         no files.
         """
-        pf.debug("RELOADING THIS MENU")
         if self.dir:
             self.clear()
             self.menus = []
@@ -340,10 +393,12 @@ class AppMenu(QtGui.QMenu):
 
     def _classify(self):
         """Classify, symlink and reload the scripts"""
+        pf.debug("Classifying scripts",pf.DEBUG.APPS)
         if self.dir:
             f = os.path.join(self.dir,catname)
-            kat,cat,col = apps.classify(self.dir)
+            kat,cat,col = classify(self.dir,self.pkg)
             s = "kat = %r\ncat = %r\ncol = %r\n" % (kat,cat,col)
+            pf.debug("Writing catalog %s" % s,pf.DEBUG.APPS)
             open(f,'w').writelines(s)
             self.reload()
 

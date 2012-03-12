@@ -129,6 +129,28 @@ the *app* can not only be run, but also executed as a *script*. Thus transition
 to *apps* should be fast and easy. If in the end we decide to keep the *script* 
 executor anyway, nothing has been lost by changing your code to the *app* model.
 
+If you have a script that should work both with and without the pyFormex GUI,
+you may structure this as follows::
+
+  import pyformex as pf
+  if pg.GUI:
+     from gui.draw import *
+     < DEFINITIONS FOR GUI VERSION >
+  else:
+     from gui.script import *
+     < DEFINITIONS FOR NONGUI VERSION >
+
+  < COMMON DEFINITIONS >
+
+Of course, when your definitions become long it may be better to put them in
+separate files::
+
+  import pyformex as pf
+  if pg.GUI:
+     import myapp_gui
+  else:
+     import myapp_nongui
+  
 
 .. raw:: pdf
 
@@ -186,6 +208,7 @@ In favor of *script*:
 +-------------------------------------+---------------------------------------+
 | Globals of previous scripts are     | Communication between scripts needs   |
 | accessible (may be unwanted)        | explicit exports (but is more sound)  |
+| (IS THIS STILL TRUE?)               |                                       |
 +-------------------------------------+---------------------------------------+
 | Users are used to it since longtime | The difference is not large though.   |
 +-------------------------------------+---------------------------------------+
@@ -208,16 +231,17 @@ would like to see changed.
 Problems with known solution
 ............................
 
-- Apps creating a dialog often us a global variable 'dialog' to store and
+- Apps creating a dialog often use a global variable 'dialog' to store and
   access the dialog from different functions. Make sure that all functions
   that assign the dialog variable declare it to be global. 
   This needs to fixed mostly in the 'Run' functions, which contains the code
   previously not inside a function.
 
-- Apps with errors can not be loaded nor run. Errors will show up while trying
-  to load, but currently these errors are filtered. Running the app as a
-  script will show the errors. (This may be a good reason to keep the
-  script execution mode next to the app run mode).
+- Apps with (syntax?) errors can not be loaded nor run. Errors will show up
+  while trying to load, but currently these errors are filtered. Running
+  the app as a script will show the errors. 
+  (This may be a good reason to keep the script execution mode next to 
+  the app run mode).
 
 
 Unsolved problems

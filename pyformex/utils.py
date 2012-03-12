@@ -280,7 +280,7 @@ def matchAll(regexps,target):
     return matchCount(regexps,target) == len(regexps)
 
 
-def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[]):
+def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[],symlinks=True):
     """List all files in path.
 
     If ``dirs==False``, directories are not listed.
@@ -294,6 +294,8 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
     directories, resp. files matching any of those patterns.
 
     Note that 'excludedirs' and 'includedirs' force top down handling.
+
+    If `symlinks` is set False, symbolic links are removed from the list.
     """
     filelist = []
     if excludedirs or includedirs:
@@ -319,6 +321,8 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
         filelist.extend(prefixFiles(root,files))
         if listdirs and not topdown:
             filelist.append(root)
+    if not symlinks:
+        filelist = [ f for f in filelist if not os.path.islink(f) ]
     return filelist
 
 
@@ -333,14 +337,14 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
-def pyformexFiles(relative=False):  # WE COULD ADD other=None):
+def pyformexFiles(relative=False,symlinks=True):  # WE COULD ADD other=None):
     """Return a list of the pyformex source .py files.
 
     """
     path = pf.cfg['pyformexdir']
     if relative:
         path = os.path.relpath(path)
-    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'])
+    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'],symlinks=False)
     return files
 
 

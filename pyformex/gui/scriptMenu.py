@@ -365,7 +365,7 @@ class ScriptMenu(QtGui.QMenu):
         pf.GUI.setcurfile(selected)
         if play:
             pf.debug("Playing script %s" % selected,pf.DEBUG.SCRIPT)
-            pf.debug("Drawing Options: %s" % pf.canvas.options,pf.DEBUG.CANVAS)
+            pf.debug("Drawing Options: %s" % pf.canvas.options,pf.DEBUG.DRAW)
             draw.reset()
             draw.run()
 

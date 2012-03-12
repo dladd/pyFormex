@@ -87,9 +87,9 @@ class DebugLevels(object):
     ALL = -1
     NONE = 0
     INFO, WARNING, OPTION, CONFIG, MEM, SCRIPT, GUI, MENU, DRAW, \
-          CANVAS, OPENGL, LIB, MOUSE, APPS, MISC = \
+          OPENGL, LIB, MOUSE, APPS, MISC = \
           1,    2,      4,      8,  16,    32,   64, 128,  256, \
-          512,    1024,   2048, 4096, 8192, 16384
+          512,    1024,   2048, 4096, 8192 
 
 DEBUG = DebugLevels
 

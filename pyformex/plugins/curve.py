@@ -789,7 +789,7 @@ class BezierSpline(Curve):
             raise ValueError,"Degree of BezierSpline should be >= 0!"
 
         if degree > 3:
-            raise ValueError,"Currently, the highest degree of BezierSpline cureves is limited to 3!"
+            raise ValueError,"Currently, the highest degree of BezierSpline curves is limited to 3!"
 
         if endzerocurv in [False,True]:
             endzerocurv = (endzerocurv,endzerocurv)
