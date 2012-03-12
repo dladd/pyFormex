@@ -1,1 +1,0 @@
-../examples/BezierSpline.py

@@ -1,1 +1,0 @@
-../examples/ColoredText.py

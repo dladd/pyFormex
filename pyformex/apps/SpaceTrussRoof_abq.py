@@ -1,1 +1,0 @@
-../examples/SpaceTrussRoof_abq.py

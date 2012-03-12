@@ -1,4 +1,4 @@
-# $Id$
+# $Id$    *** pyformex ***
 ##
 ##  This file is part of pyFormex
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -37,7 +37,6 @@ _techniques = ['image','icon']
 
 from gui.draw import *
 
-from apps.Clock import AnalogClock
 from gui.actors import CubeActor
 from gui.image import saveIcon
 from plugins.curve import *
@@ -52,6 +51,7 @@ def icon_smooth():
     
 
 def icon_clock():
+    from examples.Clock import AnalogClock
     view('front')
     F = AnalogClock()
     F.draw()
@@ -60,7 +60,7 @@ def icon_clock():
 
 def icon_run():
     view('front')
-    F = Formex('3:016045').trl([-0.3,0.,0.]
+    F = Formex('3:016045').trl([-0.3,0.,0.])
     draw(F)
 
 
@@ -82,17 +82,17 @@ def icon_rerun():
 
 def icon_script():
     icon_run()
-    A = Arc(radius=1.5,angles=(45.,135.)).setProp(1)
-    B = A.scale(0.8)
-    MA = A.approx().toMesh()
-    MB = B.approx().toMesh()
-    C = MA.connect(MB)
-    draw(C)
-    D = F.scale(0.7).rotate(-45).setProp(1).trl(A.coords[0].scale(0.9))
-    draw(D)
-    E = C.rotate(180)
-    F = D.rotate(180)
-    draw([E,F])
+    from examples import FontForge
+    okfonts = [ f for f in FontForge.fonts if 'Sans' in f and 'Oblique' in f ]
+    res = askItems([
+        _I('fontname',None,choices=okfonts),
+        ])
+    if res:
+        fontname = res['fontname']
+        curve = FontForge.charCurve(fontname,'S')
+        curve = curve.scale(2.5/curve.sizes()[1]).centered()
+        FontForge.drawCurve(curve,color=red,fill=True,with_border=False,with_points=False)
+        print curve.bbox()
     zoomAll()
 
 

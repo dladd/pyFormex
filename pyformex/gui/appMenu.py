@@ -289,6 +289,7 @@ class AppMenu(QtGui.QMenu):
         app = str(action.text())
         if app in self.files:
             appname = self.fullAppName(app)
+            pf.debug("Running application %s" % appname,pf.DEBUG.APPS|pf.DEBUG.MENU)
             script.run(appname)
 
 

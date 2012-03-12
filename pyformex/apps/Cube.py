@@ -1,1 +1,0 @@
-../examples/Cube.py

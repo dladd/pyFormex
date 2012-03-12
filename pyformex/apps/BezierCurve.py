@@ -1,1 +1,0 @@
-../examples/BezierCurve.py

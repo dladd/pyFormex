@@ -1,1 +1,0 @@
-../examples/NurbsCircle.py

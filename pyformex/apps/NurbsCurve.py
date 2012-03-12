@@ -1,1 +1,0 @@
-../examples/NurbsCurve.py

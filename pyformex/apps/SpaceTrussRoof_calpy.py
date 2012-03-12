@@ -1,1 +1,0 @@
-../examples/SpaceTrussRoof_calpy.py

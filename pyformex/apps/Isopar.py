@@ -1,1 +1,0 @@
-../examples/Isopar.py

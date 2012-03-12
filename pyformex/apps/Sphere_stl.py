@@ -1,1 +1,0 @@
-../examples/Sphere_stl.py

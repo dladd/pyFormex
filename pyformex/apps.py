@@ -40,7 +40,6 @@ class AppDir(object):
     When creatig an AppDir, its path is added to sys.path
     """
     known_dirs = {
-        'apps': pf.cfg['appdir'],
         'examples': pf.cfg['examplesdir'],
         }
 
@@ -154,7 +153,10 @@ def load(appname,refresh=False):
             reload(app)
         return app
     except:
-        return None
+        if pf.cfg['gui/showapploaderrors']:
+            raise
+        else:
+            return None
 
 
 def findmodule(mod):

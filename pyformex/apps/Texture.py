@@ -1,1 +1,0 @@
-../examples/Texture.py

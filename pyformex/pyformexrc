@@ -50,18 +50,17 @@ workdir = "."
 icondir = os.path.join(pyformexdir,'icons')
 examplesdir = os.path.join(pyformexdir,'examples')
 datadir = os.path.join(pyformexdir,'data')
-appdir = os.path.join(pyformexdir,'apps')
 bindir = os.path.join(pyformexdir,'bin')
 userconfdir = os.path.join(homedir,'.pyformex')
 siteprefs = '/etc/pyformexrc'
-localprefs = '.pyformexrc'
+localprefs = '.pyformex/pyformexrc'
 scripttemplate = os.path.join(pyformexdir,'template.py')
 curfile = ''
 
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
 scriptdirs = [ ('Examples','') ]
-appdirs = [ ('Apps','') ]
+appdirs = [ ('Examples','') ]
 
 # extra paths to append tot sys.path
 syspath = []
@@ -142,6 +141,7 @@ easter_egg = ()
 
 layout = 1
 showfocus = True
+showapploaderrors = False
 
 # Default canvas settings
 [canvas]

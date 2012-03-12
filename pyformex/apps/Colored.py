@@ -1,1 +1,0 @@
-../examples/Colored.py

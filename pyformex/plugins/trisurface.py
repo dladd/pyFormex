@@ -346,6 +346,7 @@ def fillBorder(border,method='radial'):
       returned surface will use the same point coordinate array as the input
       object.
     """
+    from plugins.curve import PolyLine
     if method != 'border':
         border = border.compact()
     if isinstance(border,Mesh) and border.nplex()==2:
@@ -388,13 +389,13 @@ def fillBorder(border,method='radial'):
             i = (j - 1) % n
             k = (j + 1) % n
             tri[itri] = [ e[i],e[j],e[k]]
-            # remove the point j
+            # remove the point j of triangle i,j,k
+            # recompute adjacent angles of edge i,k
             ii = (i-1) % n
-            kk = (k+1) % n
             v1 = normalize([ v[e[ii]], x[e[k]] - x[e[i]] ])
             v2 = normalize([ x[e[k]] - x[e[i]], v[e[k]] ])
             cnew = vectorPairCosAngle(v1,v2)
-            c = roll(concatenate([cnew,roll(c,-i)[3:]]),i)
+            c = roll(concatenate([cnew,roll(c,1-j)[3:]]),j-1)
             e = roll(roll(e,-j)[1:],j)
             n -= 1
             itri += 1
