@@ -174,8 +174,8 @@ def findmodule(mod):
     return path
 
 
-def findAppFile(appname):
-    """Find the source file of an applicaication"""
+def findAppSource(appname):
+    """Find the source file of an application"""
     path = findmodule(appname)
     fn = os.path.join(path,appname.split('.')[-1]+'.py')
     return fn

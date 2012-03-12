@@ -60,14 +60,28 @@ def icon_clock():
 
 def icon_run():
     view('front')
-    F = Formex('3:016045')
+    F = Formex('3:016045').trl([-0.3,0.,0.]
     draw(F)
 
 
 def icon_rerun():
-    view('front')
-    F = Formex('3:016045')
-    draw(F.trl([-0.3,0.,0.]))
+    icon_run()
+    A = Arc(radius=1.5,angles=(45.,135.)).setProp(1)
+    B = A.scale(0.8)
+    MA = A.approx().toMesh()
+    MB = B.approx().toMesh()
+    C = MA.connect(MB)
+    draw(C)
+    D = F.scale(0.7).rotate(-45).setProp(1).trl(A.coords[0].scale(0.9))
+    draw(D)
+    E = C.rotate(180)
+    F = D.rotate(180)
+    draw([E,F])
+    zoomAll()
+
+
+def icon_script():
+    icon_run()
     A = Arc(radius=1.5,angles=(45.,135.)).setProp(1)
     B = A.scale(0.8)
     MA = A.approx().toMesh()

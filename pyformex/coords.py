@@ -1852,7 +1852,7 @@ def pattern(s,aslist=False):
 
     - 0: goto origin (0.,0.,0.)
     - 1..8: move in the x,y plane
-    - 9: remain at the same place (and duplicate the last point)
+    - 9 or .: remain at the same place (i.e. duplicate the last point)
     - A..I: same as 1..9 plus step +1. in z-direction
     - a..i: same as 1..9 plus step -1. in z-direction
     - /: do not insert the next point
@@ -1943,7 +1943,7 @@ def pattern(s,aslist=False):
             elif i == 8:
                 x += 1
                 y -= 1
-            elif i == 9:
+            elif i == 9 or i == 14:
                 pass
             else:
                 raise RuntimeError,"Unknown pattern character %c ignored" % c

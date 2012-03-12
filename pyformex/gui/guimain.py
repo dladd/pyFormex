@@ -1208,9 +1208,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         if sta == 0:
             draw.showInfo(out)
 
-
-    warnings.warn('warn_quadratic_drawing')
-
     pf.app_started = True
     pf.GUI.processEvents()
     return 0

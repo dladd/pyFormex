@@ -436,18 +436,20 @@ def export_selection():
     if len(sel) == 0:
         warning("Nothing to export!")
         return
-    options = ['list','single item']
+    options = ['List','Single items']
     default = options[0]
     if len(sel) == 1:
         default = options[1]
-    res = askItems([('Export with name',''),
-                    ('Export as',default,'radio',options),
-                    ])
+    res = askItems([
+        _I('Export with name',''),
+        _I('Export as',default,'radio',options),
+        ])
     if res:
         name = res['Export with name']
-        if res['Export as'] == options[0]:
+        opt = res['Export as'][0]
+        if opt == 'L':
             export({name:sel})
-        elif res['Export as'] == options[1]:
+        elif opt == 'S':
             export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
      
 

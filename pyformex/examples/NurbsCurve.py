@@ -177,7 +177,8 @@ input_enablers = [
     ('pointtype','Control','closed'),
     ('pointtype','Control','blended'),
     ('pointtype','Control','weighted'),
-#    ('closed',False,'blended'),
+    ('closed',False,'blended'),
+#    ('blended',True,'closed'),
     ]
 
 

@@ -1361,15 +1361,15 @@ class Arc(Curve):
             if self.coords.shape != (3,3):
                 raise ValueError,"Expected 3 points"
 
-            self.center = self.coords[1]
-            v = self.coords-self.center
+            self._center = self.coords[1]
+            v = self.coords-self._center
             self.radius = length(self.coords[0]-self.coords[1])
             try:
                 self.normal = unitVector(cross(v[0],v[2]))
             except:
                 pf.warning("The three points defining the Arc seem to be colinear: I will use a random orientation.")
                 self.normal = anyPerpendicularVector(v[0])
-            self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,2]] ]
+            self._angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self._center) for x in self.coords[[0,2]] ]
 
         else:
             if center is None:
@@ -1379,19 +1379,25 @@ class Arc(Curve):
             if angles is None:
                 angles = (0.,360.)
             try:
-                self.center = center
+                self._center = center
                 self.radius = radius
                 self.normal = [0.,0.,1.]
-                self.angles = [ a * angle_spec for a in angles ]
-                while self.angles[1] < self.angles[0]:
-                    self.angles[1] += 2*pi
-                while self.angles[1] > self.angles[0] + 2*pi:
-                    self.angles[1] -= 2*pi
+                self._angles = [ a * angle_spec for a in angles ]
+                while self._angles[1] < self._angles[0]:
+                    self._angles[1] += 2*pi
+                while self._angles[1] > self._angles[0] + 2*pi:
+                    self._angles[1] -= 2*pi
                 begin,end = self.sub_points(array([0.0,1.0]),0)
-                self.coords = Coords([begin,self.center,end])
+                self.coords = Coords([begin,self._center,end])
             except:
                 print "Invalid data for Arc"
                 raise
+
+    def getCenter(self):
+        return self._center
+
+    def getAngles(self,angle_spec=Deg):
+        return (self._angles[0]/angle_spec,self._angles[1]/angle_spec)
                
 
 
@@ -1412,16 +1418,16 @@ class Arc(Curve):
   Center %s, Radius %s, Normal %s
   Angles=%s
   Pt0=%s; Pt1=%s; Pt2=%s
-"""  % ( self.center,self.radius,self.normal,
-         self.angles,
+"""  % ( self._center,self.radius,self.normal,
+         self._angles,
          self.coords[0],self.coords[1],self.coords[2]
        )
 
 
     def sub_points(self,t,j):
-        a = t*(self.angles[-1]-self.angles[0])
+        a = t*(self._angles[-1]-self._angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
-        X = X.scale(self.radius).rotate(self.angles[0]/Deg).translate(self.center)
+        X = X.scale(self.radius).rotate(self._angles[0]/Deg).translate(self._center)
         return X
 
 
@@ -1441,7 +1447,7 @@ class Arc(Curve):
         """
         if ndiv is None:
             phi = 2.*arccos(1.-chordal)
-            rng = abs(self.angles[1] - self.angles[0])
+            rng = abs(self._angles[1] - self._angles[0])
             ndiv = int(ceil(rng/phi))
         return Curve.approx(self,ndiv)
 

@@ -1476,6 +1476,7 @@ class InputDialog(QtGui.QDialog):
                         signal = None
                         if isinstance(src,InputBool):
                             signal = QtCore.SIGNAL("stateChanged(int)")
+                            print "SIGNAL",signal
                         elif isinstance(src,InputRadio):
                             utils.warn('radio_enabler')
                             # BV: this does not work

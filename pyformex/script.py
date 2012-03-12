@@ -459,12 +459,19 @@ def runApp(appname,argv=[],reload=False):
         errmsg = "An  error occurred while loading application %s" % appname
         if pf.GUI:
             from gui import draw
-            fn = apps.findAppFile(appname)
+            fn = apps.findAppSource(appname)
             if os.path.exists(fn):
-                errmsg += "\n\nDo you want to load the source file in the editor?"
-                if draw.ack(errmsg):
-                    draw.editFile(fn)
+                errmsg += "\n\nYou may try executing the application as a script,\n  or you can load the source file in the editor."
+                res = draw.ask(errmsg,choices=['Run as script', 'Load in editor', "Don't bother"])
+                if res[0] in 'RL':
+                    pf.GUI.setcurfile(fn)
+                    if res[0] == 'L':
+                        draw.editFile(fn)
+                    #
+                    # TODO: for 'R', we could emit a play event here 
+                    #
             else:
+                errmsg += "and I can not find the application source file."
                 draw.error(errmsg)
         else:
             error(errmsg)

@@ -378,7 +378,6 @@ def importDxftext(text=None):
         
     pf.GUI.setBusy()
     dxf_parts = dxf.convertDXF(text)
-    print [ type(i) for i in dxf_parts ]
     pf.GUI.setBusy(False)
     export({'_dxf_import_':dxf_parts})
     #draw(dxf_parts,color='black')
