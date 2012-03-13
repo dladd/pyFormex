@@ -1674,7 +1674,16 @@ def updateGUI():
 
 
 ######### Highlighting ###############
+
+def highlightActor(i):
+    """Highlight the i-th actor in the scene."""
+    if pf.options.debuglevel & pf.DEBUG.DRAW:
+        print("  Highlighting actor %s/%s" % (i,len(pf.canvas.actors)))
+    actor = pf.canvas.actors[i]
+    FA = actors.GeomActor(actor,color=pf.canvas.settings.slcolor)
+    pf.canvas.addHighlight(FA)
     
+
 def highlightActors(K):
     """Highlight a selection of actors on the canvas.
 
@@ -1683,11 +1692,7 @@ def highlightActors(K):
     the Collection K.
     """
     pf.canvas.removeHighlights()
-    for i in K.get(-1,[]):
-        pf.message("%s/%s" % (i,len(pf.canvas.actors)))
-        actor = pf.canvas.actors[i]
-        FA = actors.GeomActor(actor,color=pf.canvas.settings.slcolor)
-        pf.canvas.addHighlight(FA)
+    [ highlightActor(i) for i in K.get(-1,[]) ]
     pf.canvas.update()
 
 

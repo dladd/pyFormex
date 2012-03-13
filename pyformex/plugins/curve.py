@@ -150,7 +150,7 @@ class Curve(Geometry):
 
 
     def directionsAt(self,t):
-        """Return the points at parameter values t.
+        """Return the directions at parameter values t.
 
         Parameter values are floating point values. Their integer part
         is interpreted as the curve segment number, and the decimal part
@@ -686,6 +686,10 @@ class Line(PolyLine):
         PolyLine.__init__(self,coords)
         if self.coords.shape[0] != 2:
             raise ValueError, "Expected exactly two points, got %s" % coords.shape[0]
+
+
+    def dxftext(self):
+        return "Line(%s,%s,%s,%s,%s,%s)" % tuple(self.coords.ravel().tolist())
 
 
 ##############################################################################
@@ -1424,10 +1428,20 @@ class Arc(Curve):
        )
 
 
+    def dxftext(self):
+        return "Arc(%s,%s,%s,%s,%s,%s)" % tuple(list(self._center)+[self.radius]+list(self.getAngles()))
+
+
     def sub_points(self,t,j):
         a = t*(self._angles[-1]-self._angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
         X = X.scale(self.radius).rotate(self._angles[0]/Deg).translate(self._center)
+        return X
+
+
+    def sub_directions(self,t,j):
+        a = t*(self._angles[-1]-self._angles[0])
+        X = Coords(column_stack([-sin(a),cos(a),zeros_like(a)]))
         return X
 
 

@@ -1112,43 +1112,91 @@ def findConnectedLineElems(elems):
     Parameters:
 
     - `elems`: Connectivity-like. Any plexitude is allowed, but only the
-      first and the last columna are relevant. 
+      first and the last column are relevant. 
 
-    Returns: a Connectivity with a single chain extracted from the input
-      Connectivity. The result will not necessarily be the longest path.
-      It will however contain the first element of the input table.
+    Returns: a tuple of:
 
-      As a side-effect, all elements contained in the output chain will
-      have their entries in the input table `elems` changed to -1.
+    - `con`: a Connectivity with the same shape as the input Connectivity
+      `elems`, holding a single chain extracted from the input and filled
+      with -1 for the remainder (if any). The chain will not necessarily
+      be the longest path. It will however at least contain the first element
+      of the input table.
+
+    - `inv`: an int array with two columns and number of rows equal to that of
+      `con`. The first column holds the row number in `elems` of the entries
+      in `con`. The second column holds a value +1 or -1, flagging whether
+      the element is traversed in original direction (+1) in the chain or in
+      the reverse direction (-1).
+
+    .. warning:
+
+       As a side-effect, all elements contained in the output Connectivity 
+       will have their entries in the input table `elems` changed to -1.
 
     Example:
 
-      >>> findConnectedLineElems([[0,1],[1,2],[0,4],[4,2]])
-      Connectivity([[0, 1],
-             [1, 2],
-             [2, 4],
-             [4, 0]])
+      >>> con,inv = findConnectedLineElems([[0,1],[1,2],[0,4],[4,2]])
+      >>> print con
+      [[0 1]
+       [1 2]
+       [2 4]
+       [4 0]]
+      >>> print inv
+      [[ 0  1]
+       [ 1  1]
+       [ 3 -1]
+       [ 2 -1]]
              
-      >>> findConnectedLineElems([[0,1],[1,2],[0,4]])
-      Connectivity([[2, 1],
-             [1, 0],
-             [0, 4]])
+      >>> con,inv = findConnectedLineElems([[0,1],[1,2],[0,4]])
+      >>> print con
+      [[2 1]
+       [1 0]
+       [0 4]]
+      >>> print inv
+      [[ 1 -1]
+       [ 0 -1]
+       [ 2  1]]
              
       >>> C = Connectivity([[0,1],[0,2],[0,3],[4,5]])
-      >>> findConnectedLineElems(C)
-      Connectivity([[ 1,  0],
-             [ 0,  2],
-             [-1, -1],
-             [-1, -1]])
+      >>> con,inv = findConnectedLineElems(C)
+      >>> print con
+      [[ 1  0]
+       [ 0  2]
+       [-1 -1]
+       [-1 -1]]
+      >>> print inv
+      [[ 0 -1]
+       [ 1  1]
+       [-1  0]
+       [-1  0]]
       >>> print C
       [[-1 -1]
        [-1 -1]
        [ 0  3]
        [ 4  5]]
     """
+
+    #
+    # BV: The side effect in this function could be removed,
+    #     because we now have the information on the used elements
+    #     in the ind array
+    #     That would avoid the need to make a copy in connectedLineElems
+    #
+    
     if not isinstance(elems,Connectivity):
         elems = Connectivity(elems)
+    #
+    # srt will store the sorted connectivity
+    #    initialize to -1 to make all invalid
+    # ind will store the implicated element numbers and the direction
+    #    first column element number, second 1 or -1 (reverse)
+    #    first column initialized to -1, second to 0
+    # ind is only needed for the return_indices argument in connectedLineElems
+    #    but we compute it always for simplicity of the code
+    #
     srt = zeros_like(elems) - 1
+    ind = zeros((elems.shape[0],2),dtype=Int)
+    ind[:,0] = -1
     ie = 0
     je = 0
     rev = False
@@ -1157,15 +1205,17 @@ def findConnectedLineElems(elems):
         # Store an element that has been found ok
         if rev:
             srt[ie] = elems[je,::-1]
+            ind[ie] = ( je, -1 )
         else:
             srt[ie] = elems[je]
+            ind[ie] = ( je, +1 )
         elems[je] = -1 # Done with this one
         j = srt[ie][-1] # remember endpoint
         if j == k:
             break
         ie += 1
 
-        # Look for the next connected element (only thru fist or last node!)
+        # Look for the next connected element (only thru first or last node!)
         w = where(elems[:,[0,-1]] == j)
         #print w
         if w[0].size == 0:
@@ -1178,21 +1228,33 @@ def findConnectedLineElems(elems):
                 j,k = k,j
                 # reverse the table (colums and rows)
                 srt[:ie] = srt[ie-1::-1,::-1].copy()  # copy needed!!
+                ind[:ie] = ind[ie-1::-1].copy() # rows only
+                ind[:ie,1] *= -1 # change sign of 2nd column
         je = w[0][0]
         rev = w[-1][0] > 0 #check if the target node is the first or last
 
-    return srt
+    return srt,ind
 
 
 # BV: this could become a Connectivity function splitByConnection
 
-def connectedLineElems(elems):
+def connectedLineElems(elems,return_indices=False):
     """Partition a segmented curve into connected segments.
     
     The input argument is a (nelems,2) shaped array of integers.
     Each row holds the two vertex numbers of a single line segment.
 
-    The return value is a list of (nsegi,2) shaped array of integers.
+    The return value is a list of Connectivity tables of plexitude 2.
+    The subsequent line elements of each Connectivity form a continuous
+    connected segment, i.e. the first vertex of each line elements in a
+    table is equal to the last vertex of the previous element.
+
+    If return_indices = True, a second list of tables is returned, with
+    the same shape as those in the first list. The tables of the second
+    list contain in the first column the original element number of the
+    entries, and in the second column a value +1 or -1 depending on
+    whether the element traversal in the connected segment is in the
+    original direction (+1) or the reverse (-1).
 
     Example:
     
@@ -1211,114 +1273,47 @@ def connectedLineElems(elems):
       [Connectivity([[1, 0],
              [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]
              
+      >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
+      [Connectivity([[1, 0],
+             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]
+             
+      >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]],True)
+      ([Connectivity([[1, 0],
+             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])], [array([[ 0, -1],
+             [ 1,  1]], dtype=int32), array([[2, 1]], dtype=int32), array([[3, 1]], dtype=int32)])
+             
       >>> connectedLineElems([[0,1,2],[2,0,3],[0,3,1],[4,5,2]])
       [Connectivity([[3, 0, 2],
              [2, 1, 0],
              [0, 3, 1]]), Connectivity([[4, 5, 2]])]
+    
+    Obviously, from the input elems table and the second return value,
+    the first return value could be reconstructed::
+
+      first = [
+          where(i[:,-1:] > 0, elems[i[:,0]], elems[i[:,0],::-1]) \
+          for i in second
+      ]
+    But since the construction of the first list is required by the algorithm,
+    it is returned anyway.
     """
     elems = Connectivity(elems).copy() # make copy to avoid side effects
+    elnrs =  arange(elems.shape[0]) # needed to return indices 
     parts = []
+    chains = []
     while elems.size != 0:
-        loop = findConnectedLineElems(elems)
+        loop,ind = findConnectedLineElems(elems)
+        ind[:,0] = elnrs[ind[:,0]]
         parts.append(loop[(loop!=-1).any(axis=1)])
-        elems = elems[(elems!=-1).any(axis=1)]
-    return parts
+        chains.append(ind[(loop!=-1).any(axis=1)])
+        todo = (elems!=-1).any(axis=1)
+        elems = elems[todo]
+        elnrs = elnrs[todo]
+    if return_indices:
+        return parts,chains
+    else:
+        return parts
 
-
-## # This is an experimental replacement for connectedLineElems
-## def splitConnectedLines(elems):
-##     """Split and order a set of line segments into connected componenents.
-
-##     Parameters:
-
-##     - `elems`: Connectivity-like with plexitude 2 (for eltype line2 ) or 3 (for eltype line3)
-
-##     Returns: a tuple (return_code,table):
-    
-##     - `return_code`: an integer with one of the following values:
-    
-##       - 0: the segments form a closed loop
-##       - 1: the segments form a single non-closed path
-##       - 2: the segments form multiple not connected paths
-      
-##     - `table`:
-
-##       - if return_code is 0 or 1: a Connectivity table equivalent
-##         to the input, but with the elements and their nodes sorted in order.
-##       - if return_code is 2: a table with a singly connected part in the
-##         top rows, followed by -1 values for the unconnected elements.
-
-##     Example:
-
-##       >>> splitConnectedLines([[0,1],[1,2],[0,4],[4,2]])
-##       (0, Connectivity([[0, 1],
-##              [1, 2],
-##              [2, 4],
-##              [4, 0]]))
-             
-##       >>> splitConnectedLines([[0,1],[1,2],[0,4]])
-##       (1, Connectivity([[2, 1],
-##              [1, 0],
-##              [0, 4]]))
-             
-##       >>> splitConnectedLines([[0,1],[0,2],[0,3],[4,5]])
-##       (2, Connectivity([[ 1,  0],
-##              [ 0,  2],
-##              [-1, -1],
-##              [-1, -1]]))
-##     """
-##     elems = Connectivity(elems)
-
-##     def findOneComponent(elems):
-##         # Sorted list of elements: -1 is unused, >= 0 is element number
-##         srt = zeros(elems.shape[0],dtype=Int) -1
-##         # Status of elements:
-##         # -1 is unused,
-##         #  0 is used in forward direction
-##         #  1 is used in backward direction
-##         sta = zeros(elems.shape[0],dtype=Int) - 1
-##         ie = 0
-##         je = 0
-##         rev = False
-##         k = elems[0][0] # startpoint
-##         while True:
-##             # Store an element that has been found ok
-##             # store new endpoint in j
-##             # disable the element for further searches
-##             srt[ie] = je
-##             ie += 1
-##             if rev:
-##                 sta[je] = 1
-##                 j = elems[je][0]
-##             else:
-##                 sta[je] = 0
-##                 j = elems[je][-1]
-##             elems[je] = [ -1, -1 ]
-
-##             # check for a loop
-##             if j == k:
-##                 break
-
-##             # Look for the next connected element
-##             w = where(elems == j)
-##             #print w
-##             if w[0].size == 0:
-##                 # Try other end of chain
-##                 w = where(elems == k)
-##                 #print w
-##                 if w[0].size == 0:
-##                     break
-##                 else:
-##                     j,k = k,j
-##                     srt[:ie] = srt[ie-1::-1].copy() # copy needed !!!
-##                     sta[:ie] = 1-sta[:ie]
-##             je = w[0][0]
-##             rev = w[1][0] == 1
-##         if any(srt == -1):
-##             ret = 2
-##         else:
-##             ret = 0
-##         return ret,srt,sta
 
 
 ############################################################################
@@ -1395,9 +1390,10 @@ def demagic2(codes,magic):
     return cols
 
 
-@deprecation("partitionSegmentedCurve is deprecated. Use connectedLineElems instead.")
-def partitionSegmentedCurve(*args,**kargs):
-    return connectedLineElems(*args,**karg)
+# Removed in 0.9
+## @deprecation("partitionSegmentedCurve is deprecated. Use connectedLineElems instead.")
+## def partitionSegmentedCurve(*args,**kargs):
+##     return connectedLineElems(*args,**karg)
 
 
 #
@@ -1415,9 +1411,10 @@ def adjacencyList(elems):
     return [ list(elems[w[0],1-w[1]]) for w in ok ]
 
 
-@deprecation("adjacencyArray is deprecated. Use Connectivity().adjaccency('n')")
-def adjacencyArray(index,maxcon=5):
-    return Connectivity(index).adjacency('n')
+# Removed in 0.9
+## @deprecation("adjacencyArray is deprecated. Use Connectivity().adjacency('n')")
+## def adjacencyArray(index,maxcon=5):
+##     return Connectivity(index).adjacency('n')
 
     
 # BV: Can this be replaced with a nodefront walker?

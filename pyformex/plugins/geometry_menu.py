@@ -368,6 +368,7 @@ def importDxftext(text=None):
     - If `text` contains at least one newline character, it is interpreted
       as the dxf script text.
     """
+    import types
     if text is None:
         fn = askFilename(filter=utils.fileDescription('dxftext'))
         if not fn:
@@ -378,6 +379,10 @@ def importDxftext(text=None):
         
     pf.GUI.setBusy()
     dxf_parts = dxf.convertDXF(text)
+    print "Imported %s entities" % len(dxf_parts)
+    coll = dxf.collectByType(dxf_parts)
+    dxf_parts = [ p for p in dxf_parts if type(p) is not types.FunctionType ]
+    print "Kept %s entities" % len(dxf_parts)
     pf.GUI.setBusy(False)
     export({'_dxf_import_':dxf_parts})
     #draw(dxf_parts,color='black')
