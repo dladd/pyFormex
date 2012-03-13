@@ -280,7 +280,7 @@ class InputItem(QtGui.QWidget):
 
         if 'buttons' in kargs and kargs['buttons']:
             self.buttons = ButtonBox(actions=kargs['buttons'],parent=self)
-            layout.addItem(self.buttons)
+            layout.addWidget(self.buttons)
 
     def name(self):
         """Return the name of the InputItem."""
