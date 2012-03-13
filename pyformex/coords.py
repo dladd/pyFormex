@@ -1636,7 +1636,10 @@ class Coords(ndarray):
         sure the result is a :class:`Coords` object,and the default axis
         is the first one instead of the last.
         """
-        return Coords(concatenate(atleast_2d(*L),axis=axis))
+        if len(L)==1:
+            return Coords(data=atleast_2d(*L))
+        else:
+            return Coords(data=concatenate(atleast_2d(*L),axis=axis))
 
 
     @classmethod
