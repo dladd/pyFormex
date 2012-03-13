@@ -1635,11 +1635,30 @@ class Coords(ndarray):
         This function is equivalent to the numpy concatenate, but makes
         sure the result is a :class:`Coords` object,and the default axis
         is the first one instead of the last.
+
+        The result is at least a 2D array, even when the list contains
+        a single Coords with a single point.
+
+        >>> X = Coords([1.,1.,0.])
+        >>> Y = Coords([[2.,2.,0.],[3.,3.,0.]])
+        >>> print Coords.concatenate([X,Y])
+        [[ 1.  1.  0.]
+         [ 2.  2.  0.]
+         [ 3.  3.  0.]]
+        >>> print Coords.concatenate([X,X])
+        [[ 1.  1.  0.]
+         [ 1.  1.  0.]]
+        >>> print Coords.concatenate([Y])
+        [[ 2.  2.  0.]
+         [ 3.  3.  0.]]
+        >>> print Coords.concatenate([X])
+        [[ 1.  1.  0.]]
         """
+        L2 = atleast_2d(*L)
         if len(L)==1:
-            return Coords(data=atleast_2d(*L))
+            return L2
         else:
-            return Coords(data=concatenate(atleast_2d(*L),axis=axis))
+            return Coords(data=concatenate(L2,axis=axis))
 
 
     @classmethod
