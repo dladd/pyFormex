@@ -561,7 +561,7 @@ def _show_stats(domain,dist):
     key = res['Value']
     if dist and res['Cumulative Distribution']:
         cumdist = True
-        dist = Fals/e
+        dist = False
     else:
         cumdist = False
     clip = res['clip']
