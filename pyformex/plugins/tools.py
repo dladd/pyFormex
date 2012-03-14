@@ -187,17 +187,20 @@ def reportAngles(K):
         return ''
     s = "Angle report:\n"
     for F in getCollection(K):
-        if isinstance(F,GeomActor):
+        if isinstance(F,Mesh):
+            F=F.toFormex()
+        if isinstance(F,Formex):
             x = F.coords
-            #print(x)
-            if F.elems is None:
-                #print(x.shape)
-                v = x[:,1,:] - x[:,0,:]
-                v = normalize(v)
+            if len(x)!=2:
+                raise ValueError,"You didn't select 2 elements"
+            v = x[:,1,:] - x[:,0,:]
+            v = normalize(v)
             cosa = dotpr(v[0],v[1])
             #print(cosa)
             a = arccosd(cosa)
             s += "  a = %s" % a
+        else:
+            raise TypeError,"Angle measurement only possible with Formex or Mesh"
     return s
 
     
