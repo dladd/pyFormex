@@ -237,18 +237,19 @@ Problems with known solution
   This needs to fixed mostly in the 'Run' functions, which contains the code
   previously not inside a function.
 
-- Apps with (syntax?) errors can not be loaded nor run. Errors will show up
-  while trying to load, but currently these errors are filtered. Running
-  the app as a script will show the errors. 
-  (This may be a good reason to keep the script execution mode next to 
-  the app run mode).
+- Apps with syntax errors can not be loaded nor run. Exceptions raised
+  during application load are filtered out by default. Setting the 
+  configuration variable 'raiseapploadexc' to True will make such errors
+  be shown.
 
 
 Unsolved problems
 .................
 
 - Apps creating a permanent (non-blocking, modeless) dialog can currently
-  not be rerun (reload and run). 
+  not be rerun (reload and run). We could add such facility if we use
+  a default attribute name, e.g. _dialog. Reloading would then close the
+  dialog, and running would reopen it.
 
 
 

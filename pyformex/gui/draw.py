@@ -1800,9 +1800,11 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
         s = str(s)
         if pf.canvas.selection_mode is not None and s in pf.canvas.selection_filters:
             pf.canvas.start_selection(None,s)
-        if pf.canvas.selection_mode is not None:
-            warning("You need to finish the previous picking operation first!")
-            return
+
+            
+    if pf.canvas.selection_mode is not None:
+        warning("You need to finish the previous picking operation first!")
+        return
 
     if mode not in pf.canvas.getPickModes():
         warning("Invalid picking mode: %s. Expected one of %s." % (mode,pf.canvas.getPickModes()))

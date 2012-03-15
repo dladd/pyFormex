@@ -174,6 +174,7 @@ def settings():
                 _I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
                 _I('appdirs',text='Applicationt Paths',tooltip='pyFormex will look for applications in these directories',buttons=[('Edit',changeAppDirs)]),
                 _I('autoglobals',text='Auto Globals',tooltip='If checked, global Application variables of any Geometry type will automatically be copied to the pyFormex global variable dictionary (PF), and thus become available in the GUI'),
+                _I('raiseapploadexc',text='Raise Application Load Exceptions',tooltip='If checked, exceptions occruuing at Application Load time will be raised. If unchecked, such exceptions will be suppressed, but the application may not run normally, if at all.'),
                 ],
              ),
             _T('GUI',[

@@ -153,7 +153,7 @@ def load(appname,refresh=False):
             reload(app)
         return app
     except:
-        if pf.cfg['gui/showapploaderrors']:
+        if pf.cfg['raiseapploadexc']:
             raise
         else:
             return None

@@ -75,6 +75,7 @@ fortune = 'fortune -s' # command to generate a fortune cookie
 
 autoglobals = True
 uselib = True
+raiseapploadexc = False
 
 [warnings]
 nice = True
@@ -141,7 +142,6 @@ easter_egg = ()
 
 layout = 1
 showfocus = True
-showapploaderrors = False
 
 # Default canvas settings
 [canvas]
