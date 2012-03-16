@@ -1402,6 +1402,9 @@ class Arc(Curve):
 
     def getAngles(self,angle_spec=Deg):
         return (self._angles[0]/angle_spec,self._angles[1]/angle_spec)
+
+    def getAngleRange(self,angle_spec=Deg):
+        return ((self._angles[1]-self._angles[0])/angle_spec)
                
 
 

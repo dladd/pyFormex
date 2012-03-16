@@ -13,7 +13,7 @@
 ##  it under the terms of the GNU General Public License as published by
 ##  the Free Software Foundation, either version 3 of the License, or
 ##  (at your option) any later version.
-##
+#
 ##  This program is distributed in the hope that it will be useful,
 ##  but WITHOUT ANY WARRANTY; without even the implied warranty of
 ##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -1391,7 +1391,7 @@ Size: %s
         if type(coordslist) is list:
             clist = coordslist
         elif isinstance(coordslist,Mesh):
-            utils.warn("Mesh.connect does no longer automatically compact the Meshes. You may have to use the Mesh.compact method to do so.")
+            utils.warn("warn_mesh_connect")
             clist = [ self.coords, coordslist.coords ]
         else:
             raise ValueError,"Invalid coordslist argument"

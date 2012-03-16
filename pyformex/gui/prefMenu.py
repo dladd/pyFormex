@@ -446,8 +446,9 @@ def createDirsDialog(dircfg):
         scr = pf.cfg[dircfg]
         if row > 0:
             a,b = scr[row-1:row+1]
-            scr[row-1] = b
-            scr[row] = a
+            scr[row-1:row+1] = b,a
+#            scr[row-1] = b
+#            scr[row] = a
         _table.setFocus() # For some unkown reason, this seems needed to
                           # immediately update the widget
         _table.update()

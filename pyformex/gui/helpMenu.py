@@ -187,10 +187,13 @@ def showFileOrURL(link):
 
 def searchText():
     from widgets import simpleInputItem as _I
-    res = draw.askItems([_I('text','',text='String to grep')])
+    res = draw.askItems([
+        _I('pattern','',text='String to grep'),
+        _I('options','',text='Options',tooltip="Some cool options: -a (extended search), -i (ignore case), -f (literal string), -e (extended regexp)"),
+        ])
+
     if res:
-        text = res['text']
-        out = draw.grepSource(text)
+        out = utils.grepSource(relative=False,quiet=True,**res)
         draw.showText(out,mono=True,modal=False)
  
 

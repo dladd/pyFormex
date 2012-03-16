@@ -37,6 +37,7 @@ _techniques = ['color','bump']
 from gui.draw import *
 
 def run():
+    global a1,a2,a3,a4
     clear()
     m = 12 # number of cells in direction 0
     n = 36 # number of cells in direction 1

@@ -31,7 +31,6 @@ from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
 
-
 # versions of detected modules/external commands
 the_version = {
     'pyformex':pf.__version__,
@@ -337,15 +336,47 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
-def pyformexFiles(relative=False,symlinks=True):  # WE COULD ADD other=None):
-    """Return a list of the pyformex source .py files.
+def sourceFiles(relative=False,symlinks=True,extended=False):
+    """Return a list of the pyFormex source .py files.
 
+    - `symlinks`: if False, files that are symbolic links are retained in the
+      list. The default is to remove them.
+    - `extended`: if True, the .py files in all the paths in the configured
+      appdirs and scriptdirs are also added.
     """
     path = pf.cfg['pyformexdir']
     if relative:
         path = os.path.relpath(path)
-    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'],symlinks=False)
+    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'],symlinks=symlinks)
+    if extended:
+        searchdirs = [ i[1] for i in pf.cfg['appdirs'] + pf.cfg['scriptdirs'] ]
+        for path in set(searchdirs):
+            if os.path.exists(path):
+                files += listTree(path,listdirs=False,sorted=True,includefiles=['.*\.py$'],symlinks=symlinks)
     return files
+
+
+def grepSource(pattern,options='',relative=True,quiet=False):
+    """Finds pattern in the pyFormex source .py files.
+
+    Uses the `grep` program to find all occurrences of some specified
+    pattern text in the pyFormex source .py files (including the examples).
+    Extra options can be passed to the grep command. See `man grep` for
+    more info.
+    
+    Returns the output of the grep command.
+    """
+    opts = options.split(' ')
+    if '-a' in opts:
+        opts.remove('-a')
+        options = ' '.join(opts)
+        extended = True
+    else:
+        extended = False
+    files = sourceFiles(relative=relative,extended=extended,symlinks=False)
+    cmd = "grep %s '%s' %s" % (options,pattern,' '.join(files))
+    sta,out = runCommand(cmd,quiet=quiet) 
+    return out
 
 
 ###################### locale ###################

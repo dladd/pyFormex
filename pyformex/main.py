@@ -405,7 +405,7 @@ def run(argv=[]):
            ),
         MO("--search",
            action="store_true", dest="search", default=False,
-           help="search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. The final argument is the pattern to search.",
+           help="search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. Adding -a  will use the extended search path. The final argument is the pattern to search.",
            ),
         MO("--remove",
            action="store_true", dest="remove", default=False,
@@ -434,24 +434,6 @@ def run(argv=[]):
 
     ########## Process special options which will not start pyFormex #######
 
-    if pf.options.listfiles:
-        print '\n'.join(utils.pyformexFiles(relative=True))
-        return
-
-    if pf.options.search:
-        if len(args) > 0:
-            #from script import grepSource
-            #print grepSource(args[-1],' '.join(args[:-1]),quiet=True)
-            options = [ a for a in args if a.startswith('-') ]
-            args = [ a for a in args if not a in options ]
-            if len(args) > 1:
-                files = args[1:]
-            else:
-                files = utils.pyformexFiles(relative=True)
-            cmd = "grep %s '%s' %s" % (' '.join(options),args[0],' '.join(files))
-            os.system(cmd)
-        return
-
     if pf.options.testmodule:
         for a in pf.options.testmodule.split(','):
             test_module(a)
@@ -464,8 +446,8 @@ def run(argv=[]):
     if pf.options.whereami or pf.options.detect :
         pf.options.debuglevel |= pf.DEBUG.INFO
             
-    pf.debug("Script started from %s" % pf.bindir,pf.DEBUG.INFO)
-    pf.debug("I found pyFormex in %s " %  pyformexdir,pf.DEBUG.INFO)
+    pf.debug("pyformex script started from %s" % pf.bindir,pf.DEBUG.INFO)
+    pf.debug("I found pyFormex installed in %s " %  pyformexdir,pf.DEBUG.INFO)
     pf.debug("Current Python sys.path: %s" % sys.path,pf.DEBUG.INFO)
 
     if pf.options.detect:
@@ -528,6 +510,35 @@ def run(argv=[]):
     # Create an empty one for the session settings
     pf.cfg = Config(default=prefLookup)
 
+    ####################################################################
+    ## Post config initialization ##
+
+    # process non-starting options dependent on config
+
+    if pf.options.search or pf.options.listfiles:
+        if len(args) > 0:
+            opts = [ a for a in args if a.startswith('-') ]
+            args = [ a for a in args if not a in opts ]
+            if '-a' in opts:
+                opts.remove('-a')
+                extended = True
+            else:
+                extended = False
+            if len(args) > 1:
+                files = args[1:]
+            else:
+                files = utils.sourceFiles(relative=True,extended=extended)
+            if pf.options.listfiles:
+                print '\n'.join(files)
+            else:
+                cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],' '.join(files))
+                os.system(cmd)
+        return
+
+
+    ###################################################################
+
+    
     # This should probably be changed to options overriding config
     # Set option from config if it was not explicitely given
     if pf.options.uselib is None:
