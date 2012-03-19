@@ -115,12 +115,12 @@ def glEnable(facility,onoff):
     onoff can be True or False to enable, resp. disable the facility, or
     None to leave it unchanged.
     """
-    pf.debug("%s: %s" % (facility,onoff))
+    pf.debug("%s: %s" % (facility,onoff),pf.DEBUG.DRAW)
     if onOff(onoff):
-        pf.debug("ENABLE")
+        pf.debug("ENABLE",pf.DEBUG.DRAW)
         GL.glEnable(facility)
     else:
-        pf.debug("DISABLE")
+        pf.debug("DISABLE",pf.DEBUG.DRAW)
         GL.glDisable(facility)
         
 
@@ -162,7 +162,7 @@ def glShadeModel(model):
             glFlat()
         
 def glSettings(settings):
-    pf.debug("GL SETTINGS: %s" % settings)
+    pf.debug("GL SETTINGS: %s" % settings,pf.DEBUG.DRAW)
     glCulling(settings.get('Culling',None))
     glLighting(settings.get('Lighting',None))
     glShadeModel(settings.get('Shading',None))
@@ -497,7 +497,7 @@ class Canvas(object):
         self.view_angles = camera.view_angles
         self.cursor = None
         self.focus = False
-        pf.debug("Canvas Setting:\n%s"% self.settings)
+        pf.debug("Canvas Setting:\n%s"% self.settings,pf.DEBUG.DRAW)
 
 
     def Size(self):
@@ -689,7 +689,7 @@ class Canvas(object):
         """
         if on is None:
             on = self.triade is None
-        pf.debug("SETTING TRIADE %s" % on)
+        pf.debug("SETTING TRIADE %s" % on,pf.DEBUG.DRAW)
         if self.triade:
             self.removeAnnotation(self.triade)
             self.triade = None
@@ -785,7 +785,7 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
-        #pf.debugt("UPDATING CURRENT OPENGL CANVAS")
+        #pf.debugt("UPDATING CURRENT OPENGL CANVAS",pf.DEBUG.DRAW)
         #print "DISPLAY"
         self.makeCurrent()
         self.clear()
@@ -794,7 +794,7 @@ class Canvas(object):
         self.begin_2D_drawing()
         
         if self.background:
-            #pf.debug("Displaying background")
+            #pf.debug("Displaying background",pf.DEBUG.DRAW)
             self.background.draw(mode='smooth')
 
         if len(self.decorations) > 0:
@@ -867,9 +867,9 @@ class Canvas(object):
         It is assumed that you will not try to change/refresh the normal
         3D drawing cycle during this operation.
         """
-        #pf.debug("Start 2D drawing")
+        #pf.debug("Start 2D drawing",pf.DEBUG.DRAW)
         if self.mode2D:
-            #pf.debug("WARNING: ALREADY IN 2D MODE")
+            #pf.debug("WARNING: ALREADY IN 2D MODE",pf.DEBUG.DRAW)
             return
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
@@ -885,7 +885,7 @@ class Canvas(object):
  
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
-        #pf.debug("End 2D drawing")
+        #pf.debug("End 2D drawing",pf.DEBUG.DRAW)
         if self.mode2D:
             GL.glEnable(GL.GL_DEPTH_TEST)    
             GL.glMatrixMode(GL.GL_PROJECTION)
@@ -899,7 +899,7 @@ class Canvas(object):
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
-        #pf.debug("BBOX WAS: %s" % self.bbox)
+        #pf.debug("BBOX WAS: %s" % self.bbox,pf.DEBUG.DRAW)
         if bbox is None:
             if len(self.actors) > 0:
                 bbox = self.actors[-1].bbox()
@@ -911,7 +911,7 @@ class Canvas(object):
         except:
         # if bbox.any() == nan:
             pf.message("Invalid Bbox: %s" % bbox)
-        #pf.debug("BBOX BECOMES: %s" % self.bbox)
+        #pf.debug("BBOX BECOMES: %s" % self.bbox,pf.DEBUG.DRAW)
 
          
     def addActor(self,actor):
@@ -938,7 +938,7 @@ class Canvas(object):
     def removeAnnotation(self,actor):
         """Remove an annotation from the 3D scene."""
         if actor == self.triade:
-            pf.debug("REMOVING TRIADE")
+            pf.debug("REMOVING TRIADE",pf.DEBUG.DRAW)
             self.triade = None
         self.annotations.delete(actor)
          
@@ -1035,9 +1035,9 @@ class Canvas(object):
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
         if bbox is not None:
-            pf.debug("SETTING BBOX: %s" % self.bbox)
+            pf.debug("SETTING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
             self.setBbox(bbox)
-        pf.debug("USING BBOX: %s" % self.bbox)
+        pf.debug("USING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
         X0,X1 = self.bbox
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
@@ -1052,7 +1052,7 @@ class Canvas(object):
         # Currently, we keep the default fovy/aspect
         # and change the camera distance to focus
         fovy = self.camera.fovy
-        #pf.debug("FOVY: %s" % fovy)
+        #pf.debug("FOVY: %s" % fovy,pf.DEBUG.DRAW)
         self.camera.setLens(fovy,self.aspect)
         # Default correction is sqrt(3)
         correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
@@ -1068,7 +1068,7 @@ class Canvas(object):
         dist = (vsize/tf + offset) / correction
         
         if dist == nan or dist == inf:
-            pf.debug("DIST: %s" % dist)
+            pf.debug("DIST: %s" % dist,pf.DEBUG.DRAW)
             return
         if dist <= 0.0:
             dist = 1.0

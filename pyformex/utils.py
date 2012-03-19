@@ -1022,6 +1022,7 @@ def filterWarning(message,module='',category='U',action='ignore'):
         category = DeprecationWarning
     else:
         category = UserWarning
+    pf.debug("Filter Warning '%s' from module '%s'" % (message,module),pf.DEBUG.WARNING)
     warnings.filterwarnings(action,message,category,module)
 
 

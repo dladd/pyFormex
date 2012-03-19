@@ -35,56 +35,56 @@ accelerated = []
 required_drawgl_version = 1
 
     
-from pyformex import options,debug
+import pyformex as pf
 
 
 accelerate = gui = False
-if options:
+if pf.options:
     # testing for not False makes other values than T/F (like None) pass
-    accelerate = options.uselib is not False
-    gui = options.gui
+    accelerate = pf.options.uselib is not False
+    gui = pf.options.gui
 
 if accelerate:
 
     try:
         import misc_ as misc
-        debug("Succesfully loaded the pyFormex compiled misc library")
+        pf.debug("Succesfully loaded the pyFormex compiled misc library",pf.DEBUG.LIB)
         accelerated.append(misc)
     except ImportError:
-        debug("Error while loading the pyFormex compiled misc library")
+        pf.debug("Error while loading the pyFormex compiled misc library",pf.DEBUG.LIB)
 
     try:
         import nurbs_ as nurbs
-        debug("Succesfully loaded the pyFormex compiled nurbs library")
+        pf.debug("Succesfully loaded the pyFormex compiled nurbs library",pf.DEBUG.LIB)
         accelerated.append(nurbs)
     except ImportError:
-        debug("Error while loading the pyFormex compiled nurbs library")
+        pf.debug("Error while loading the pyFormex compiled nurbs library",pf.DEBUG.LIB)
 
     if gui: 
         try:
             import drawgl_ as drawgl
-            debug("Succesfully loaded the pyFormex compiled drawgl library")
+            pf.debug("Succesfully loaded the pyFormex compiled drawgl library",pf.DEBUG.LIB)
             drawgl_version = drawgl.get_version()
-            debug("Drawing library version %s" % drawgl_version)
+            pf.debug("Drawing library version %s" % drawgl_version,pf.DEBUG.LIB)
             if not drawgl_version == required_drawgl_version:
                 raise RuntimeError,"Incorrect acceleration library version (have %s, required %s)\nIf you are running pyFormex directly from sources, this might mean you have to run 'make lib' in the top directory of your pyFormex source tree.\nElse, this probably means pyFormex was not correctly installed."
             accelerated.append(drawgl)
         except ImportError:
-            debug("Error while loading the pyFormex compiled drawgl library")
+            pf.debug("Error while loading the pyFormex compiled drawgl library",pf.DEBUG.LIB)
 
 if misc is None:
-    debug("Using the (slower) Python misc functions")
+    pf.debug("Using the (slower) Python misc functions",pf.DEBUG.LIB)
     import misc
 
 if nurbs is None:
-    debug("Using the (slower) Python nurbs functions")
+    pf.debug("Using the (slower) Python nurbs functions",pf.DEBUG.LIB)
     import nurbs
 
 if gui and drawgl is None:
-    debug("Using the (slower) Python draw functions")
+    pf.debug("Using the (slower) Python draw functions",pf.DEBUG.LIB)
     import drawgl
 
 
-debug("Accelerated: %s" % accelerated)
+pf.debug("Accelerated: %s" % accelerated,pf.DEBUG.LIB|pf.DEBUG.INFO)
 
 # End

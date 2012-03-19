@@ -93,6 +93,7 @@ from config import Config
 ###########################  main  ################################
 
 def filterWarnings():
+    pf.debug("Current warning filters: %s" % pf.cfg['warnings/filters'],pf.DEBUG.WARNING)
     try:
         for w in pf.cfg['warnings/filters']:
             utils.filterWarning(*w)
@@ -105,7 +106,7 @@ def refLookup(key):
     try:
         return pf.refcfg[key]
     except:
-        pf.debug("!There is no key '%s' in the reference config!"%key,pf.DEBUG.WARNING)
+        pf.debug("!There is no key '%s' in the reference config!"%key,pf.DEBUG.CONFIG)
         return None
 
 

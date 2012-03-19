@@ -66,7 +66,7 @@ def initialize():
     # Find interesting supporting software
     utils.hasExternal('ImageMagick')
     # Set some globals
-    pf.debug("LOADING IMAGE FORMATS")
+    pf.debug("Loading Image Formats",pf.DEBUG.IMAGE)
     image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
     ## if pf.cfg.get('imagesfromeps',False):
@@ -95,7 +95,7 @@ def initialize():
 Qt image types for saving: %s
 Qt image types for input: %s
 gl2ps image types: %s
-image types converted from EPS: %s""" % (image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps))
+image types converted from EPS: %s""" % (image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps),pf.DEBUG.IMAGE|pf.DEBUG.INFO)
              
  
 def imageFormats():
@@ -114,8 +114,8 @@ def checkImageFormat(fmt,verbose=False):
 
     Returns the image format, or None if it is not OK.
     """
-    pf.debug("Format requested: %s" % fmt)
-    pf.debug("Formats available: %s" % imageFormats())
+    pf.debug("Format requested: %s" % fmt,pf.DEBUG.IMAGE)
+    pf.debug("Formats available: %s" % imageFormats(),pf.DEBUG.IMAGE)
     if fmt in imageFormats():
         if fmt == 'tex' and verbose:
             pf.warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
@@ -159,7 +159,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
     pf.app.processEvents()
     
     if fmt in image_formats_qt:
-        pf.debug("Image format can be saved by Qt")
+        pf.debug("Image format can be saved by Qt",pf.DEBUG.IMAGE)
         wc,hc = canvas.getSize()
         try:
             w,h = size
@@ -167,11 +167,11 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             w,h = wc,hc
         if (w,h) == (wc,hc):
             # Save directly from current rendering
-            pf.debug("Saving image from canvas with size %sx%s" % (w,h))
+            pf.debug("Saving image from canvas with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
             GL.glFlush()
             qim = canvas.grabFrameBuffer()
         else:
-            pf.debug("Saving image from virtual buffer with size %sx%s" % (w,h))
+            pf.debug("Saving image from virtual buffer with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
             vcanvas = QtOpenGL.QGLFramebufferObject(w,h)
             vcanvas.bind()
             canvas.resize(w,h)
@@ -189,11 +189,11 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             sta = 1
 
     elif fmt in image_formats_gl2ps:
-        pf.debug("Image format can be saved by gl2ps")
+        pf.debug("Image format can be saved by gl2ps",pf.DEBUG.IMAGE)
         sta = save_PS(canvas,fn,fmt)
 
     elif fmt in image_formats_fromeps:
-        pf.debug("Image format can be converted from eps")
+        pf.debug("Image format can be converted from eps",pf.DEBUG.IMAGE)
         fneps = os.path.splitext(fn)[0] + '.eps'
         delete = not os.path.exists(fneps)
         save_PS(canvas,fneps,'eps')
@@ -395,7 +395,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
                 size = None
             sta = save_canvas(pf.canvas,filename,format,quality,size)
         if sta:
-            pf.debug("Error while saving image %s" % filename)
+            pf.debug("Error while saving image %s" % filename,pf.DEBUG.IMAGE)
         else:
             pf.message("Image file %s written" % filename)
         return
@@ -490,7 +490,7 @@ def createMovie(encoder='ffmpeg'):
         cmd = "mencoder \"mf://%s\" -mf fps=10 -o output1.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800" % names.glob()
     else:
         cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % names.glob()
-    pf.debug(cmd)
+    pf.debug(cmd,pf.DEBUG.IMAGE)
     utils.runCommand(cmd)
 
 
@@ -508,7 +508,7 @@ def saveMovie(filename,format,windowname=None):
     pf.app.processEvents()
     windowid = windowname
     cmd = "xvidcap --fps 5 --window %s --file %s" % (windowid,filename)
-    pf.debug(cmd)
+    pf.debug(cmd,pf.DEBUG.IMAGE)
     #sta,out = utils.runCommand(cmd)
     return sta
 
