@@ -31,7 +31,7 @@ syntax.
 """
 
 from coords import *
-from utils import deprecation,functionBecameMethod
+from utils import deprecation,functionBecameMethod,deprec,warn
 from geometry import Geometry
 import re
 
@@ -133,7 +133,7 @@ def lpattern(s,connect=True):
     return l
             
 
-@deprecation("\nFunction mpattern() is deprecated: use xpattern() instead.")
+#@deprecation('depr_mpattern')
 def mpattern(s):
     """This is like pattern, but allowing lists with more than 2 points.
 
@@ -144,6 +144,7 @@ def mpattern(s):
     All lists should have equal length if you want to use the resulting
     list to initialize a Formex.
     """
+    warn('depr_mpattern')
     x = y = z = 0
     li = [[x,y,z]]
     l = []

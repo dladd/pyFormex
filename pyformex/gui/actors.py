@@ -375,7 +375,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -433,7 +433,7 @@ class GeomActor(Actor):
         self.setLineStipple(linestipple)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
-        self.setAlpha(alpha)
+        self.setAlpha(alpha,bkalpha)
         self.marksize = marksize
         self.setTexture(texture)
 
@@ -481,10 +481,12 @@ class GeomActor(Actor):
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
 
 
-    def setAlpha(self,alpha):
+    def setAlpha(self,alpha,bkalpha):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
-        self.trans = self.alpha < 1.0
+        self.bkalpha = float(bkalpha)
+        # TODO: not sure about the following
+        self.trans = self.alpha < 1.0 # or self.bkalpha < 1.0 
             
 
     def bbox(self):
@@ -556,6 +558,9 @@ class GeomActor(Actor):
         alpha = self.alpha
         if alpha is None:
             alpha = canvas.settings.alpha
+        bkalpha = self.bkalpha
+        if bkalpha is None:
+            bkalpha = canvas.settings.alpha
         
         if color is None:
             color,colormap = self.color,self.colormap

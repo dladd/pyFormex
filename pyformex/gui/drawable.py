@@ -1139,9 +1139,9 @@ class Drawable(object):
         drawing function can act differently depending on the rendering mode.
         There are currently 5 modes:
            wireframe, flat, smooth, flatwire, smoothwire.
-      drawGL should only contain OpenGL calls that are allowed inside a display
-      list. This may include calling the display list of another actor but NOT
-      creating a new display list.
+        drawGL should only contain OpenGL calls that are allowed inside a
+        display list. This may include calling the display list of another
+        actor but *not* creating a new display list.
     """
     
     def __init__(self,nolight=False,ontop=False,**kargs):
@@ -1168,6 +1168,7 @@ class Drawable(object):
         self.use_list()
 
     def prepare_list(self,**kargs):
+        #print "PREPARE LIST"
         if 'mode' in kargs:
             mode = kargs['mode']
         else:
@@ -1177,7 +1178,7 @@ class Drawable(object):
         if mode.endswith('wire'):
             mode = mode[:-4]
 
-        if self.list is None or mode != self.mode:
+        if self.list is None: # or mode != self.mode:
             kargs['mode'] = mode
             self.delete_list()
             self.list = self.create_list(**kargs)

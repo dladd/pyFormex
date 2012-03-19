@@ -466,12 +466,11 @@ def runApp(appname,argv=[],reload=False):
                 errmsg += "\n\nYou may try executing the application as a script,\n  or you can load the source file in the editor."
                 res = draw.ask(errmsg,choices=['Run as script', 'Load in editor', "Don't bother"])
                 if res[0] in 'RL':
-                    #pf.GUI.setcurfile(fn)
                     if res[0] == 'L':
                         draw.editFile(fn)
-                    #
-                    # TODO: for 'R', we could emit a play event here 
-                    #
+                    elif res[0] == 'R':
+                        pf.GUI.setcurfile(fn)
+                        draw.runScript(fn)
             else:
                 errmsg += "and I can not find the application source file."
                 draw.error(errmsg)

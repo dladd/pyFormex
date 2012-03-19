@@ -974,12 +974,29 @@ def interrogate(item):
         print("%s %s"% i) 
 
 
+def filterWarning(message,module='',category='U',action='ignore'):
+    import warnings
+    if category == 'D':
+        category = DeprecationWarning
+    else:
+        category = UserWarning
+    pf.debug("Filter Warning '%s' from module '%s'" % (message,module),pf.DEBUG.WARNING)
+    warnings.filterwarnings(action,message,category,module)
+
+
+def warn(message,level=UserWarning,stacklevel=3):
+    import warnings
+    warnings.warn(message,level,stacklevel)
+
+
+def deprec(message,stacklevel=3):
+    warn(message,level=DeprecationWarning,stacklevel=stacklevel)
+
+
 def deprecation(message):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            print func.__name__
-            import warnings
-            warnings.warn(message, Warning, stacklevel=2)
+            deprec(message,stacklevel=2)
             return func(*_args,**_kargs)
         return wrapper
     return decorator
@@ -1014,24 +1031,5 @@ def functionBecameMethod(replacement):
             return repfunc(*args,**kargs)
         return wrapper
     return decorator
-
-
-def filterWarning(message,module='',category='U',action='ignore'):
-    import warnings
-    if category == 'D':
-        category = DeprecationWarning
-    else:
-        category = UserWarning
-    pf.debug("Filter Warning '%s' from module '%s'" % (message,module),pf.DEBUG.WARNING)
-    warnings.filterwarnings(action,message,category,module)
-
-
-def warn(message,level=UserWarning,stacklevel=3):
-    import warnings
-    warnings.warn(message,level,stacklevel)
-
-
-def deprec(message,stacklevel=3):
-    warn(message,level=DeprecationWarning,stacklevel=stacklevel)
 
 ### End

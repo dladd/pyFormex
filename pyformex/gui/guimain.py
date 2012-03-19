@@ -1101,44 +1101,15 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         cfg['warnings/popup'] = False
         """
         full_message = warnings.formatwarning(message,category,filename,lineno,line)
-        ## from widgets import simpleInputItem as I
-        ## res = draw.askItems([
-        ##     I('message',message,itemtype='label',text='warning'),
-        ##     I('filter',False,text='Suppress this message in future sessions'),
-        ##     ],actions=[('OK',)],legacy=False)
-        #print res
         pf.message(full_message)
         res,check = draw.showMessage(full_message,level='warning',check="Do not show this warning anymore in future sessions")
         if check[0]:
+            cat = {DeprecationWarning:'D'}.get(category,'U')
+            print "CATEGORY %s = %s" % (category,cat)
             oldfilters = pf.prefcfg['warnings/filters']
-            newfilters = oldfilters + [(str(message),)]
+            newfilters = oldfilters + [(str(message),'',cat)]
             pf.prefcfg.update({'filters':newfilters},name='warnings')
-
-
-##     def format_warning(message,category,filename,lineno,line=None):
-##         """Replace the default warnings.formatwarning
-
-##         We display the warnings using our interactive warning widget.
-##         This feature can be turned off by setting
-##         cfg['nice_warnings'] = False
-##         """
-##         import messages
-##         message = messages.getMessage(message)
-##         message = """..
-
-## pyFormex Warning
-## ================
-## %s
-
-## `Called from:` %s `line:` %s
-## """ % (message,filename,lineno)
-##         if line:
-##             message += "%s\n" % line
-##         return message
-
-
-##     if pf.cfg['warnings/nice']:
-##         warnings.formatwarning = format_warning
+            pf.debug("Future warning filters: %s" % pf.prefcfg['warnings/filters'],pf.DEBUG.WARNING)
 
     if pf.cfg['warnings/popup']:
         warnings.showwarning = show_warning
