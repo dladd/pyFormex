@@ -90,11 +90,6 @@ Your Python version is %s, but pyFormex has only been tested with Python <= %s. 
 
 from config import Config
 
-
-# Remove unwanted warnings 
-# We have moved this to the config file 
-#utils.filterWarning('.*return_index.*','numpy')
-
 ###########################  main  ################################
 
 def filterWarnings():
@@ -247,6 +242,7 @@ def apply_config_changes(cfg):
     # Rename settings
     for old,new in [
         ('history','gui/history'),
+        ('raiseapploadexc','showapploaderrors'),
         ]:
         if old in cfg.keys():
             if new not in cfg.keys():

@@ -162,6 +162,7 @@ class Gui(QtGui.QMainWindow):
         self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
         self.curdir = widgets.ButtonBox('Cwd:',[('None',draw.askDirname)])
         self.canPlay = False
+        self.canEdit = False
         
         # The menu bar
         self.menu = menu.MenuBar('TopMenu')
@@ -523,22 +524,29 @@ class Gui(QtGui.QMainWindow):
         is_app = not utils.is_script(appname)
         if is_app:
             # application
+            label = 'App:'
+            name = appname
             import apps
             app = apps.load(appname)
-            self.canPlay = hasattr(app,'run')
-            name = appname
-            label = 'App:'
+            if app is None:
+                self.canPlay = False
+                self.canEdit = os.path.exists(apps.findAppSource(appname))
+            else:
+                self.canPlay = hasattr(app,'run')
+                self.canEdit = os.path.exists(apps.findAppSource(app))
         else:
             # script file
-            self.canPlay = utils.is_pyFormex(appname) or appname.endswith('.pye')
-            name = os.path.basename(appname)
             label = 'Script:'
+            name = os.path.basename(appname)
+            self.canPlay = self.canEdit = utils.is_pyFormex(appname) or appname.endswith('.pye')
 
         pf.prefcfg['curfile'] = appname
         self.curfile.label.setText(label)
         self.curfile.setText(name)
-        self.enableButtons(self.actions,['Play','Edit','Info'],self.canPlay)
-        self.enableButtons(self.actions,['ReRun'],self.canPlay and is_app)
+        self.enableButtons(self.actions,['Play','Info'],self.canPlay)
+        self.enableButtons(self.actions,['Edit'],self.canEdit)
+        self.enableButtons(self.actions,['ReRun'],is_app and(self.canEdit or self.canPlay))
+        self.enableButtons(self.actions,['Step','Continue'],False)
         icon = 'ok' if self.canPlay else 'notok'
         self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
 

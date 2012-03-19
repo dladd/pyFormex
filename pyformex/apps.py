@@ -32,6 +32,8 @@ import pyformex as pf
 import utils
 import os,sys
 
+# global variable used of tracing application load errors
+_traceback = ''
 
 class AppDir(object):
     """Application directory
@@ -143,8 +145,11 @@ def load(appname,refresh=False):
 
     If refresh is True, the module will be reloaded if it was already loaded
     before.
-    On succes, returns the loaded module
+    On succes, returns the loaded module, else returns None.
+    In the latter case, if the config variable apptraceback is True, the
+    traceback is store in a module variable _traceback.
     """
+    global _traceback
     pf.debug("Loading %s" % appname,pf.DEBUG.APPS)
     try:
         __import__(appname)
@@ -153,10 +158,12 @@ def load(appname,refresh=False):
             reload(app)
         return app
     except:
-        if pf.cfg['raiseapploadexc']:
-            raise
+        if pf.cfg['showapploaderrors']:
+            import traceback
+            _traceback = traceback.format_exc()
         else:
-            return None
+            _traceback = ''
+        return None
 
 
 def findmodule(mod):
@@ -169,10 +176,23 @@ def findmodule(mod):
     return path
 
 
-def findAppSource(appname):
-    """Find the source file of an application"""
-    path = findmodule(appname)
-    fn = os.path.join(path,appname.split('.')[-1]+'.py')
+def findAppSource(app):
+    """Find the source file of an application.
+
+    app is either an imported application module or an application name.
+    In the first case the name is ectracted from the loaded module.
+    In the second case an attempt is made to find the path that the module
+    would be loaded from, without actually loading the module. This can
+    be used to load the source file when the application can not be loaded.
+    """
+    import types
+    if type(app) is types.ModuleType:
+        fn = app.__file__
+        if fn.endswith('.pyc'):
+            fn = fn[:-1]
+    else:
+        path = findmodule(app)
+        fn = os.path.join(path,app.split('.')[-1]+'.py')
     return fn
 
     

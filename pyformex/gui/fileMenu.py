@@ -353,11 +353,10 @@ def editApp(appname=None):
     else:
         import apps
         app = apps.load(appname)
-        if not app:
-            return
-        fn = app.__file__
-        if fn.endswith('.pyc'):
-            fn = fn[:-1]
+        if app is None:
+            fn = apps.findAppSource(appname)
+        else:
+            fn = apps.findAppSource(app)
         if not os.path.exists(fn):
             draw.warning("The file '%s' does not exist" % fn)
             return

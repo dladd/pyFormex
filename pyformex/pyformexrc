@@ -75,7 +75,7 @@ fortune = 'fortune -s' # command to generate a fortune cookie
 
 autoglobals = True
 uselib = True
-raiseapploadexc = False
+showapploaderrors = False
 
 [warnings]
 nice = True
