@@ -1081,6 +1081,7 @@ You should seriously consider to bail out now!!!
                  )
 
     # set the appearance
+    pf.debug("Setting Appearence",pf.DEBUG.GUI)
     pf.GUI.setAppearence()
 
 
@@ -1104,13 +1105,9 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         pf.message(full_message)
         res,check = draw.showMessage(full_message,level='warning',check="Do not show this warning anymore in future sessions")
         if check[0]:
-            cat = {DeprecationWarning:'D'}.get(category,'U')
-            print "CATEGORY %s = %s" % (category,cat)
-            oldfilters = pf.prefcfg['warnings/filters']
-            newfilters = oldfilters + [(str(message),'',cat)]
-            pf.prefcfg.update({'filters':newfilters},name='warnings')
-            pf.debug("Future warning filters: %s" % pf.prefcfg['warnings/filters'],pf.DEBUG.WARNING)
-
+            #utils.filterWarning(str(message))
+            utils.saveWarningFilter(str(message))
+                  
     if pf.cfg['warnings/popup']:
         warnings.showwarning = show_warning
     
@@ -1119,12 +1116,14 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.warning = draw.warning
 
     # setup the canvas
+    pf.debug("Setting the canvas",pf.DEBUG.GUI)
     pf.GUI.viewports.changeLayout(1)
     pf.GUI.viewports.setCurrent(0)
     pf.canvas = pf.GUI.viewports.current
     draw.reset()
 
     # setup the status bar
+    pf.debug("Setup status bar",pf.DEBUG.GUI)
     pf.GUI.addInputBox()
     pf.GUI.toggleInputBox(False)
     pf.GUI.addCoordsTracker()

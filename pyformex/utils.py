@@ -974,13 +974,23 @@ def interrogate(item):
         print("%s %s"% i) 
 
 
-def filterWarning(message,module='',category='U',action='ignore'):
+def inverseDict(d):
+    return dict([(v,k) for k,v in d.items()])
+
+_warn_category = { 'U': UserWarning, 'D':DeprecationWarning }
+
+def saveWarningFilter(message,module='',category=UserWarning):
+    cat = inverseDict(_warn_category).get(category,'U')
+    oldfilters = pf.prefcfg['warnings/filters']
+    newfilters = oldfilters + [(str(message),'',cat)]
+    pf.prefcfg.update({'filters':newfilters},name='warnings')
+    pf.debug("Future warning filters: %s" % pf.prefcfg['warnings/filters'],pf.DEBUG.WARNING)
+
+
+def filterWarning(message,module='',cat='U',action='ignore'):
     import warnings
-    if category == 'D':
-        category = DeprecationWarning
-    else:
-        category = UserWarning
-    pf.debug("Filter Warning '%s' from module '%s'" % (message,module),pf.DEBUG.WARNING)
+    pf.debug("Filter Warning '%s' from module '%s' cat '%s'" % (message,module,cat),pf.DEBUG.WARNING)
+    category = _warn_category.get(cat,Warning)
     warnings.filterwarnings(action,message,category,module)
 
 
@@ -989,6 +999,7 @@ def warn(message,level=UserWarning,stacklevel=3):
     warnings.warn(message,level,stacklevel)
 
 
+# BEWARE: Do not use yet: DeprecationWarnings are not shown by default
 def deprec(message,stacklevel=3):
     warn(message,level=DeprecationWarning,stacklevel=stacklevel)
 
@@ -996,7 +1007,10 @@ def deprec(message,stacklevel=3):
 def deprecation(message):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            deprec(message,stacklevel=2)
+            warn(message)
+            # For some reason these messages are not auto-appended to
+            # the filters for the currently running program
+            filterWarning(str(message))
             return func(*_args,**_kargs)
         return wrapper
     return decorator

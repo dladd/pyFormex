@@ -1018,6 +1018,27 @@ Most likely because 'python-scipy' is not installed on your system.""")
         L = [ quad(self.length_intgrnd,0.,1.,args=(j,))[0] for j in range(self.nparts) ]
         return array(L)
 
+
+    def parts(self,j,k):
+        """Return a curve containing only parts j to k (k not included).
+
+        The resulting curve is always open.
+        """
+        start = self.degree * j
+        end = self.degree * k + 1
+        return BezierSpline(control=self.coords[start:end],degree=self.degree,closed=False)
+
+
+    def split(self,split):
+        """Split a curve into a list of partial curves
+
+        split is a list of integer values specifying the node numbers
+        where the curve is to be split.
+        """
+        start = [0] + split
+        end = split + [-1]
+        return [ self.parts(j,k) for j,k in zip(start,end) ]
+
     
     def toMesh(self):
         """Convert the BezierSpline to a Mesh.
@@ -1426,7 +1447,7 @@ class Arc(Curve):
   Angles=%s
   Pt0=%s; Pt1=%s; Pt2=%s
 """  % ( self._center,self.radius,self.normal,
-         self._angles,
+         self.getAngles(),
          self.coords[0],self.coords[1],self.coords[2]
        )
 

@@ -133,7 +133,7 @@ def lpattern(s,connect=True):
     return l
             
 
-#@deprecation('depr_mpattern')
+@deprecation('depr_mpattern')
 def mpattern(s):
     """This is like pattern, but allowing lists with more than 2 points.
 
@@ -144,7 +144,6 @@ def mpattern(s):
     All lists should have equal length if you want to use the resulting
     list to initialize a Formex.
     """
-    warn('depr_mpattern')
     x = y = z = 0
     li = [[x,y,z]]
     l = []

@@ -829,9 +829,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 ######## QtOpenGL interface ##############################
         
     def initializeGL(self):
-        if pf.options.debug:
+        if pf.options.debuglevel & pf.DEBUG.GUI:
             p = self.sizePolicy()
-            print(p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch())
+            print("Size policy %s,%s,%s,%s" % (p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()))
         self.initCamera()
         self.glinit()
         self.resizeGL(self.width(),self.height())
@@ -1075,7 +1075,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         By default, the full actor list is used.
         """
         self.picked = []
-        pf.debug('PICK_PARTS %s %s %s' % (obj_type,max_objects,store_closest))
+        pf.debug('PICK_PARTS %s %s %s' % (obj_type,max_objects,store_closest),pf.DEBUG.DRAW)
         if max_objects <= 0:
             pf.message("No such objects to be picked!")
             return
@@ -1121,7 +1121,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the list of actor points inside the pick_window."""
         npickable = 0
         for a in self.actors:
-            pf.debug("ADDING %s pickable points"%a.npoints())
+            pf.debug("ADDING %s pickable points"%a.npoints(),pf.DEBUG.DRAW)
             npickable += a.npoints()
         self.pick_parts('point',npickable,store_closest=\
                         self.selection_filter == 'single' or\
@@ -1315,8 +1315,6 @@ class NewMultiCanvas(QtGui.QGridLayout):
         else:
             nvps = len(pos)
 
-        print nvps,pos
-
         while len(self.all) < nvps:
             # create new viewports
             view = self.createView()
@@ -1344,7 +1342,7 @@ class NewMultiCanvas(QtGui.QGridLayout):
         display lists and textures.
         """
         if shared is not None:
-            pf.debug("SHARING display lists WITH %s" % shared)
+            pf.debug("SHARING display lists WITH %s" % shared,pf.debug.DRAW)
         view = QtCanvas(self.parent,shared)
         if len(self.all) > 0:
             # copy default settings from previous
@@ -1429,7 +1427,7 @@ class NewMultiCanvas(QtGui.QGridLayout):
 
 
     def updateAll(self):
-         pf.debug("UPDATING ALL VIEWPORTS")
+         pf.debug("UPDATING ALL VIEWPORTS",pf.debug.GUI)
          for v in self.all:
              v.update()
          pf.GUI.processEvents()
@@ -1515,7 +1513,7 @@ class MultiCanvas(FramedGridLayout):
         display lists and textures.
         """
         if shared is not None:
-            pf.debug("SHARING display lists WITH %s" % shared)
+            pf.debug("SHARING display lists WITH %s" % shared,pf.debug.DRAW)
         canv = QtCanvas(self.parent,shared)
         return(canv)
 
@@ -1612,7 +1610,7 @@ class MultiCanvas(FramedGridLayout):
 ##         self.current.setCamera(bbox,view)
 
     def updateAll(self):
-         pf.debug("UPDATING ALL VIEWPORTS")
+         pf.debug("UPDATING ALL VIEWPORTS",pf.debug.GUI)
          for v in self.all:
              v.update()
          pf.GUI.processEvents()
