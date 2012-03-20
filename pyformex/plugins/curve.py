@@ -44,29 +44,36 @@ from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPoin
 import utils
 
 ##############################################################################
-# THIS IS A PROPOSAL FOR THE CURVE API!
-#
-# attributes:
-#    coords: coordinates of points defining the curve
-#    parts:  number of parts (e.g. straight segments of a polyline)
-#    closed: is the curve closed or not
-#    range: [min,max] : range of the parameter: default 0..1
-# methods:
-#    subPoints(t): returns points with parameter values t
-#    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
-#           part in ndiv sections at equal parameter distance.
-#    pointsOn(): the defining points placed on the curve
-#    pointsOff(): the defining points placeded off the curve (control points)
-
 
 class Curve(Geometry):
     """Base class for curve type classes.
 
     This is a virtual class intended to be subclassed.
     It defines the common definitions for all curve types.
-    The subclasses should at least define the following::
+    The subclasses should at least define the following attributes and methods
+    or override them if the defaults are not suitable.
+
+    Attributes:
+
+    :coords: coordinates of points defining the curve
+    :parts:  number of parts (e.g. straight segments of a polyline)
+    :closed: is the curve closed or not
+    :range: [min,max] : range of the parameter: default 0..1
     
-      sub_points(t,j)
+    Methods:
+    
+    :sub_points(t,j): returns points at parameter value t,j
+    :sub_directions(t,j): returns direction at parameter value t,j
+    :pointsOn(): the defining points placed on the curve
+    :pointsOff(): the defining points placeded off the curve (control points)
+    :parts(j,k)    
+    :approx(ndiv,ntot)
+
+    Furthermore it may define, for efficiency reasons, the following methods:
+    :sub_points_2:
+    :sub_directions_2:
+    
+    
     """
 
     N_approx = 10
@@ -215,6 +222,25 @@ class Curve(Geometry):
 
         X = concatenate(parts,axis=0)
         return Coords(X) 
+
+
+    def split(self,split=None):
+        """Split a curve into a list of partial curves
+
+        split is a list of integer values specifying the node numbers
+        where the curve is to be split. As a convenience, a single int may
+        be given if the curve is to be split at a single node, or None
+        to split all all nodes.
+
+        Returns a list of open curves of the same type as the original.
+        """
+        if split is None:
+            split = range(1,self.nparts)
+        elif type(split) is int:
+            split = [split]
+        start = [0] + split
+        end = split + [self.nparts]
+        return [ self.parts(j,k) for j,k in zip(start,end) ]
 
 
     def length(self):
@@ -384,7 +410,7 @@ class PolyLine(Curve):
         return X
 
 
-    def sub_points2(self,t,j):
+    def sub_points_2(self,t,j):
         """Return the points at value,part pairs (t,j)"""
         j = int(j)
         t = asarray(t).reshape(-1,1)
@@ -512,21 +538,14 @@ class PolyLine(Curve):
         return PolyLine(reverseAxis(self.coords,axis=0),closed=self.closed)
 
 
-    def split(self,i):
-        """Split the curve at the point i.
+    def parts(self,j,k):
+        """Return a PolyLine containing only segments j to k (k not included).
 
-        Returns a list of open PolyLines: one, if the PolyLine is closed or
-        i is one of the endpoints of an open PolyLine, two in other cases.
+        The resulting PolyLine is always open.
         """
-        res = []
-        if self.closed:
-            res.append(PolyLine(roll(self.coords,-i,axis=0)))
-        else:
-            if i > 0:
-                res.append(PolyLine(self.coords[:i+1]))
-            if i < len(self.coords):
-                res.append(PolyLine(self.coords[i:]))
-        return res
+        start = j
+        end = k + 1
+        return PolyLine(control=self.coords[start:end],closed=False)
 
 
     def cutWithPlane(self,p,n,side=''):
@@ -778,10 +797,17 @@ class BezierSpline(Curve):
             [ 1., -2.,  1.],
             ]),
         3: matrix([
-            [ 1.,  0.,  0., 0.],
-            [-3.,  3.,  0., 0.],
-            [ 3., -6.,  3., 0.],
-            [-1.,  3., -3., 1.],
+            [ 1.,  0.,  0.,  0.],
+            [-3.,  3.,  0.,  0.],
+            [ 3., -6.,  3.,  0.],
+            [-1.,  3., -3.,  1.],
+            ]),
+        4: matrix([
+            [ 1.,  0.,  0.,  0.,  0.],
+            [-4.,  4.,  0.,  0.,  0.],
+            [ 6.,-12.,  6.,  0.,  0.],
+            [-4., 12.,-12.,  4.,  0.],
+            [ 1., -4.,  6., -4.,  1.],
             ]),
         }
 
@@ -791,9 +817,6 @@ class BezierSpline(Curve):
 
         if not degree > 0:
             raise ValueError,"Degree of BezierSpline should be >= 0!"
-
-        if degree > 3:
-            raise ValueError,"Currently, the highest degree of BezierSpline curves is limited to 3!"
 
         if endzerocurv in [False,True]:
             endzerocurv = (endzerocurv,endzerocurv)
@@ -818,6 +841,10 @@ class BezierSpline(Curve):
                 
         else:
             # Oncurve points are specified separately
+
+            if degree > 3:
+                raise ValueError,"BezierSpline of degree > 3 can only be specified by a full set of control points"
+
             coords = Coords(coords)
             ncoords = nparts = coords.shape[0]
             if ncoords < 2:
@@ -928,8 +955,14 @@ class BezierSpline(Curve):
 
 
     def report(self):
-        return "Degree: %s; Parts: %s, Ncoords: %s" % (self.degree,self.nparts,self.coords.shape[0])
+        return """BezierSpline: degree=%s; nparts=%s, ncoords=%s
+  Control points:
+%s
+""" % (self.degree,self.nparts,self.coords.shape[0],self.coords)
 
+
+    __repr__ = report
+    __str__ = report
 
     def pointsOn(self):
         """Return the points on the curve.
@@ -1027,17 +1060,6 @@ Most likely because 'python-scipy' is not installed on your system.""")
         start = self.degree * j
         end = self.degree * k + 1
         return BezierSpline(control=self.coords[start:end],degree=self.degree,closed=False)
-
-
-    def split(self,split):
-        """Split a curve into a list of partial curves
-
-        split is a list of integer values specifying the node numbers
-        where the curve is to be split.
-        """
-        start = [0] + split
-        end = split + [-1]
-        return [ self.parts(j,k) for j,k in zip(start,end) ]
 
     
     def toMesh(self):

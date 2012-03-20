@@ -48,7 +48,7 @@ def run():
 
     C = Formex('12141214').toCurve()
     #C = Formex('214').toCurve()
-    degree = 3
+    degree = 4
 
     clear()
     linewidth(1)
@@ -96,20 +96,17 @@ def run():
         print N1
         _options.linewidth = 5
         _options.color = red
-        _options.knotsize = 20
+        _options.knotsize = 10
+        _options.knot_values = False
         drawNurbs(N1)
         zoomAll()
-
-        ## if ack("Yesho raz?"):
-        ##     N2 = N1.decompose()
-        ##     _options.linewidth = 5
-        ##     _options.color = green
-        ##     _options.knotsize = 30
-        ##     drawNurbs(N2)
-        ##     zoomAll()
-
         C = BezierSpline(control=N1.coords.toCoords(),degree=N1.degree)
         draw(C,color=blue)
+
+
+        if ack("Shift decomposed parts?"):
+            CS = [ c.trl([0.,0.1*(-1)**i,0.]) for i,c in enumerate(C.split()) ]
+            draw(CS)
 
 
 if __name__ == 'draw':
