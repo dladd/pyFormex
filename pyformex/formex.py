@@ -1979,11 +1979,11 @@ maxprop  = %s
 
 
     def actor(self,**kargs):
+        from gui.actors import GeomActor
 
         if self.nelems() == 0:
             return None
         
-        from gui.actors import GeomActor
         return GeomActor(self,**kargs)
 
 

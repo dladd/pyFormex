@@ -375,7 +375,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,mode=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=1.0,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -427,13 +427,13 @@ class GeomActor(Actor):
             self.coords = data
             self.elems = elems
             self.eltype = eltype
-            
+
         self.mode = mode
-        self.setLineWidth(linewidth)
-        self.setLineStipple(linestipple)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha,bkalpha)
+        self.setLineWidth(linewidth)
+        self.setLineStipple(linestipple)
         self.marksize = marksize
         self.setTexture(texture)
 
@@ -495,20 +495,23 @@ class GeomActor(Actor):
 
     def draw(self,**kargs):
         
-        if 'mode' in kargs:
-            mode = kargs['mode']
-        else:
-            canvas = kargs.get('canvas',pf.canvas)
-            mode = canvas.rendermode
+        mode = self.mode
+        if mode is None:
+            if 'mode' in kargs:
+                mode = kargs['mode']
+            else:
+                canvas = kargs.get('canvas',pf.canvas)
+                mode = canvas.rendermode
 
         if mode.endswith('wire'):
             if not hasattr(self,'wire'):
                 import copy
                 wire = copy.copy(self)
+                wire.mode = 'wireframe' # Lock the mode
                 wire.nolight = True
                 wire.ontop = False # True will make objects transparent for edges
                 wire.list = None
-                Drawable.prepare_list(wire,mode='wireframe',color=asarray(black))
+                Drawable.prepare_list(wire,color=asarray(black))
                 self.wire = wire
 
             # Add the existing wire to the extra list, and then draw w/o wire
@@ -523,11 +526,11 @@ class GeomActor(Actor):
             if hasattr(self,'wire') and self.wire in self.extra:
                 self.extra.remove(self.wire)
 
-        if self.list is None or mode != self.mode:
+        if self.list is None or mode != self.listmode:
             kargs['mode'] = mode
             self.delete_list()
             self.list = self.create_list(**kargs)
-            self.mode = mode
+            self.listmode = mode
 
         self.use_list()
 

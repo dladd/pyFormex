@@ -1146,7 +1146,8 @@ class Drawable(object):
     
     def __init__(self,nolight=False,ontop=False,**kargs):
         self.list = None
-        self.mode = None # stores mode of self.list: wireframe/smooth/flat
+        self.listmode = None # stores mode of self.list: wireframe/smooth/flat
+        self.mode = None # subclasses can set a persistent drawing mode
         self.trans = False
         self.nolight = nolight
         self.ontop = ontop
@@ -1168,21 +1169,21 @@ class Drawable(object):
         self.use_list()
 
     def prepare_list(self,**kargs):
-        #print "PREPARE LIST"
-        if 'mode' in kargs:
-            mode = kargs['mode']
-        else:
-            canvas = kargs.get('canvas',pf.canvas)
-            mode = canvas.rendermode
+        mode = self.mode
+        if mode is None:
+            if 'mode' in kargs:
+                mode = kargs['mode']
+            else:
+                canvas = kargs.get('canvas',pf.canvas)
+                mode = canvas.rendermode
 
         if mode.endswith('wire'):
             mode = mode[:-4]
 
-        if self.list is None: # or mode != self.mode:
+        if self.list is None or mode != self.listmode:
             kargs['mode'] = mode
             self.delete_list()
             self.list = self.create_list(**kargs)
-            self.mode = mode
 
     def use_list(self):
         if self.list:
@@ -1206,6 +1207,7 @@ class Drawable(object):
                 pf.debug("Error while creating a display list",pf.DEBUG.DRAW)
                 displist = None
             GL.glEndList()
+        self.listmode = kargs['mode']
         return displist
 
     def delete_list(self):

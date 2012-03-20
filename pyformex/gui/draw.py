@@ -671,7 +671,7 @@ def draw(F,
 
             #print "COLOR OUT",Fcolor
             # Create the actor
-            actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
+            actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop)
             
             actors.append(actor)
             
