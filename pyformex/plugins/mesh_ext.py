@@ -177,6 +177,20 @@ def largestByConnection(self):
         w = array(n).argmax()
         return self.clip(t[w]),nparts
 
+def withNode(self, nod):
+    """Return the elements connected to some nodes."""
+    if self.conn == None:
+        self.conn = self.nodeConnections()
+    ad=self.conn[nod]
+    return self.select(unique(ad[ad>-1]))
+
+def withoutNode(self, nod):
+    """Return the elements not connected to some nodes."""
+    if self.conn == None:
+        self.conn = self.nodeConnections()
+    ad=self.conn[nod]
+    return self.cselect(unique(ad[ad>-1]))
+        
 ########################################
 
 def rings(self, sources, nrings):
@@ -330,18 +344,7 @@ def partitionByAngle(self,**arg):
         return p[:,0]
 
 
-# BV: This is not mesh specific and can probably be achieved by t1 * t2
-@deprecation("Deprecated")
-def tests(t):
-    """Intersection of multiple test operations.
-    
-    t is a list of n 1D boolean list, obtained by n Mesh.test operations.
-    A new 1D boolean list is returned.
-    t1=M.test(nodes=...)
-    t2=M.test(nodes=...)
-    T=tests( [t1, t2] ) is the intersection if t1 and t2 and can be used for Mesh.clip(T)
-    """
-    return array(t, int).sum(axis=0)==len(t)
+
 
 
 ##############################################################################
@@ -376,6 +379,8 @@ def _auto_initialize():
     Mesh.partitionByConnection = partitionByConnection
     Mesh.splitByConnection = splitByConnection
     Mesh.largestByConnection = largestByConnection
+    Mesh.withNode = withNode
+    Mesh.withoutNode = withoutNode
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
