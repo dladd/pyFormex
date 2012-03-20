@@ -1105,7 +1105,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         pf.message(full_message)
         res,check = draw.showMessage(full_message,level='warning',check="Do not show this warning anymore in future sessions")
         if check[0]:
-            #utils.filterWarning(str(message))
+            utils.filterWarning(str(message))
             utils.saveWarningFilter(str(message))
                   
     if pf.cfg['warnings/popup']:

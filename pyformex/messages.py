@@ -97,5 +97,7 @@ warn_mesh_connect = "Mesh.connect does no longer automatically compact the Meshe
 
 
 depr_mpattern = "\nFunction mpattern() is deprecated: use xpattern() instead."
+depr_polygon = "The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead."
+depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."
 
 # End

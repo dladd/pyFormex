@@ -1557,7 +1557,7 @@ Formex.toCurve = convertFormexToCurve
 # DEPRECATED
 #
 class Polygon(PolyLine):
-    @utils.deprecation("The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead.")
+    @utils.deprecation('depr_polygon')
     def __init__(self,coords=[]):
         PolyLine.__init__(self,coords,closed=True)
 
@@ -1567,7 +1567,7 @@ class Polygon(PolyLine):
 
 
 class QuadBezierSpline(BezierSpline):
-    @utils.deprecation("The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead.")
+    @utils.deprecation('depr_quadbezier')
     def __init__(self,coords,**kargs):
         """Create a natural spline through the given points."""
         kargs['degree'] = 2
