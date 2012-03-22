@@ -496,6 +496,40 @@ class Connectivity(ndarray):
         return self.inv
 
 
+    def connectedTo(self,nodes):
+        """Return a list of elements connected to the specified nodes.
+
+        `nodes`: a single node number or a list/array thereof
+
+        Returns: an int array with the numbers of the elements that
+        contain at least one of the specified nodes.
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).connectedTo(2)
+          array([0, 2])
+        """
+        ad = self.inverse()[nodes]
+        return unique(ad[ad >= 0])
+
+
+    def notConnectedTo(self,nodes):
+        """Return a list of elements not connected to the specified nodes.
+
+        `nodes`: a single node number or a list/array thereof
+
+        Returns: an int array with the numbers of the elements that
+        do not contain any of the specified nodes.
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).notConnectedTo(2)
+          array([0, 1])
+        """
+        connected = self.connectedTo(nodes)
+        return complement(nodes,self.nelems())
+
+
     def adjacency(self,kind='e'):
         """Return a table of adjacent items.
 
@@ -666,8 +700,8 @@ class Connectivity(ndarray):
         return hi,lo
     
 
-    # BV: This is currently far from general!!!
-    # should probably be move to Mesh/TriSurface if needed there
+    # TODO: This is currently far from general!!!
+    # should probably be moved to Mesh/TriSurface if needed there
     def combine(self,lo):
         """Combine two hierarchical Connectivity levels to a single one.
 

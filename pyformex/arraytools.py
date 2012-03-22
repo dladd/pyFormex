@@ -1065,7 +1065,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
         ar.sort()
         flag = np.concatenate(([True], ar[1:] != ar[:-1]))
         return ar[flag]
-
+               
 
 def renumberIndex(index):
     """Renumber an index sequentially.
@@ -1108,6 +1108,55 @@ def renumberIndex(index):
     return old
 
 
+def complement(index,n=-1):
+    """Return the complement of an index in a range(0,n).
+
+    The complement is the list of numbers from the range(0,n) that are
+    not included in the index.
+
+    Parameters:
+
+    -  `index`: array_like, 1-D, int or bool. If integer, it is a list with
+      the non-negative numbers to be excluded from the range(0,n).
+      If boolean, it normally has the length of the range and flags the
+      elements to be returned with a False value.
+
+    - `n`: int: the upper limit for the range of numbers. If `index` is of
+      type integer and `n` is not specified or is negative, it will be set
+      equal to the largest number in `index` plus 1. If `index` is of type
+      boolean and `n` is larger than the length of `index`, `index` will be
+      padded with `False` values until length `n`. 
+
+    Returns:
+
+      If `index` is integer: a 1-D integer array with the numbers from
+      range(0,n) that are not included in `index`. If `index` is boolean,
+      the negated `index` padded to or cut at length `n`.
+      
+    Example:
+    
+      >>> print complement([0,5,2,6])
+      [1 3 4]
+      >>> print complement([0,5,2,6],10)
+      [1 3 4 7 8 9]
+      >>> print complement([False,True,True,True],6)
+      [ True False False False  True  True]
+    """
+    index = asarray(index)
+    if index.dtype == bool:
+        m = index.shape[0]
+        if n > m:
+            comp = ones(n,dtype=bool)
+            comp[:m] = ~index
+            return comp
+        else:
+            return ~index[:n]
+    else:
+        if n < 0:
+            n = max(n,1+index.max())
+        return delete(arange(n),index)
+
+
 def inverseUniqueIndex(index):
     """Inverse an index.
 
@@ -1119,7 +1168,7 @@ def inverseUniqueIndex(index):
     Parameters:
     
     - `index`: array_like, 1-D, integer
-      An array with non-negative values, wihch all have to be unique.
+      An array with non-negative values, which all have to be unique.
 
     Returns:
 

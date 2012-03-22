@@ -648,7 +648,12 @@ class Mesh(Geometry):
 
 #############################################################################
     # Adjacency #
-    
+
+    #
+    #  IDEA: Should we move these up to Connectivity ?
+    #        That would also avoid some possible problems 
+    #        with storing conn and econn
+    #
 
     def nodeConnections(self):
         """Find and store the elems connected to nodes."""
@@ -873,13 +878,7 @@ Size: %s
         
         This is the complimentary operation of `select`.
         """
-        selected = asarray(selected)
-        if selected.dtype==bool:
-            return self.select(selected==False,compact=compact)
-        else:
-            wi = range(self.nelems())
-            wi = delete(wi,selected)
-            return self.select(wi,compact=compact)
+        return self.select(complement(idx,self.nelems()),compact=compact)
 
 
     def avgNodes(self,nodsel,wts=None):
@@ -975,7 +974,7 @@ Size: %s
         
     
     def withoutProp(self, val):
-        """Return a Mesh without the elements with property val.
+        """Return a Mesh without the elements with property `val`.
 
         This is the complementary method of Mesh.withProp().
         val is either a single integer, or a list/array of integers.
@@ -993,8 +992,30 @@ Size: %s
         return self.withProp(ps[t==0])
 
 
+    def connectedTo(self,nodes):
+        """Return a Mesh with the elements connected to the specified node(s).
+
+        `nodes`: int or array_like, int.
+
+        Returns a Mesh with all the elements from the original that contain
+        at least one of the specified nodes.
+        """
+        return self.select(self.elems.connectedTo(nod))
+
+
+    def notConnectedTo(self, nod):
+        """Return a Mesh with the elements not connected to the given node(s).
+
+        `nodes`: int or array_like, int.
+
+        Returns a Mesh with all the elements from the original that do not
+        contain any of the specified nodes.
+        """
+        return self.select(self.elems.notConnectedTo(nod))
+
+
     def splitProp(self):
-        """Partition a Mesh according to its propery values.
+        """Partition a Mesh according to its property values.
 
         Returns a dict with the property values as keys and the
         corresponding partitions as values. Each value is a Mesh instance.

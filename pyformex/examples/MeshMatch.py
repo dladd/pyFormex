@@ -24,15 +24,16 @@
 ##
 """MeshMatch
 
-level = 'normal'
-topics = ['mesh']
-techniques = ['draw','replicate','match']
-
+This example illustrates the Mesh.match method.
+It first constructs two Meshes: one with squares (red) and one with
+triangles (green). Then it finds the nodes from the second that coincide
+with nodes from the first. The matching nodes are marked with black
+squares. The matching node numbers from the two meshes are printed out.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
-_techniques = ['draw','replicate','match']
+_techniques = ['draw','replicate','match','cselect']
 
 from gui.draw import *
 

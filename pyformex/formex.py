@@ -1379,9 +1379,7 @@ maxprop  = %s
 
         This is the complementary operation of select
         """
-        keep = arange(self.nelems())
-        keep[idx] = -1
-        return self.select(keep[keep>=0])
+        return self.select(complement(idx,self.nelems()))
 
       
     def selectNodes(self,idx):

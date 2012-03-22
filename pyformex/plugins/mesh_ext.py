@@ -177,19 +177,6 @@ def largestByConnection(self):
         w = array(n).argmax()
         return self.clip(t[w]),nparts
 
-def withNode(self, nod):
-    """Return the elements connected to some nodes."""
-    if self.conn == None:
-        self.conn = self.nodeConnections()
-    ad=self.conn[nod]
-    return self.select(unique(ad[ad>-1]))
-
-def withoutNode(self, nod):
-    """Return the elements not connected to some nodes."""
-    if self.conn == None:
-        self.conn = self.nodeConnections()
-    ad=self.conn[nod]
-    return self.cselect(unique(ad[ad>-1]))
         
 ########################################
 
@@ -326,7 +313,7 @@ def partitionByAngle(self,**arg):
     :meth:`TriSurface.partitionByAngle`.
 
     Currently this only works for 'tri3' and 'quad4' type Meshes.
-    Also, the 'quad4' partitioning method currently only works corectly
+    Also, the 'quad4' partitioning method currently only works correctly
     if the quads are nearly planar.
     """
     from plugins.trisurface import TriSurface
@@ -342,9 +329,6 @@ def partitionByAngle(self,**arg):
         if not (p[:,0] == p[:,1]).all():
             pf.warning("The partitioning may be incorrect due to nonplanar 'quad4' elements")
         return p[:,0]
-
-
-
 
 
 ##############################################################################
@@ -379,8 +363,6 @@ def _auto_initialize():
     Mesh.partitionByConnection = partitionByConnection
     Mesh.splitByConnection = splitByConnection
     Mesh.largestByConnection = largestByConnection
-    Mesh.withNode = withNode
-    Mesh.withoutNode = withoutNode
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
