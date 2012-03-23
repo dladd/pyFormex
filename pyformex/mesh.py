@@ -1919,7 +1919,7 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     coords = [ m.coords for m in meshes ]
     elems = [ m.elems for m in meshes ]
     coords,index = mergeNodes(coords,fuse,**kargs)
-    return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
+    return coords,[Connectivity(i[e],eltype=e.eltype) for i,e in zip(index,elems)]
 
 # 
 # Local utilities: move these to elements.py ??
