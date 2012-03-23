@@ -458,8 +458,9 @@ def runApp(appname,argv=[],reload=False):
     if app is None:
         errmsg = "An  error occurred while loading application %s" % appname
         if pf.GUI:
-            if apps._traceback:
+            if apps._traceback and pf.cfg['showapploaderrors']:
                 print(apps._traceback)
+                
             from gui import draw
             fn = apps.findAppSource(appname)
             if os.path.exists(fn):

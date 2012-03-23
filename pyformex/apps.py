@@ -152,17 +152,15 @@ def load(appname,refresh=False):
     global _traceback
     pf.debug("Loading %s" % appname,pf.DEBUG.APPS)
     try:
+        _traceback = ''
         __import__(appname)
         app = sys.modules[appname]
         if refresh:
             reload(app)
         return app
     except:
-        if pf.cfg['showapploaderrors']:
-            import traceback
-            _traceback = traceback.format_exc()
-        else:
-            _traceback = ''
+        import traceback
+        _traceback = traceback.format_exc()
         return None
 
 
