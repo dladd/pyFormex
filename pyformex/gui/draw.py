@@ -514,13 +514,14 @@ def drawable(objects):
     return [ i for i in r if i is not None ]
     
 
-def draw(F,
+def draw(F,shrink=None,
+         color='prop',colormap=None,alpha=None,
+         bkcolor=None,bkcolormap=None,bkalpha=None,
+         mode=None,linewidth=None,linestipple=None,
+         marksize=None,nolight=False,ontop=False,
          view=None,bbox=None,
-         color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
-         mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
-         highlight=False,nolight=False,ontop=False,
-         silent=True, **kargs):
+         highlight=False,silent=True, **kargs):
     """Draw object(s) with specified settings and direct camera to it.
 
     The first argument is an object to be drawn. All other arguments are
@@ -624,9 +625,6 @@ def draw(F,
     if marksize is None:
         marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
-    if alpha is None:
-        alpha = pf.canvas.options.get('alpha',0.5)
-
     # Shrink the objects if requested
     if shrink is not None:
         FL = [ _shrink(F,shrink) for F in FL ]
@@ -671,7 +669,11 @@ def draw(F,
 
             #print "COLOR OUT",Fcolor
             # Create the actor
-            actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop)
+            actor = F.actor(
+                color=Fcolor,colormap=colormap,alpha=alpha,
+                bkcolor=bkcolor,bkcolormap=bkcolormap,bkalpha=bkalpha,
+                mode=mode,linewidth=linewidth,linestipple=linestipple,
+                marksize=marksize,nolight=nolight,ontop=ontop)
             
             actors.append(actor)
             

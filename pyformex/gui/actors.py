@@ -483,8 +483,12 @@ class GeomActor(Actor):
 
     def setAlpha(self,alpha,bkalpha):
         """Set the Actors alpha value."""
-        self.alpha = float(alpha)
-        self.bkalpha = float(bkalpha)
+        self.alpha = alpha
+        if self.alpha is not None:
+            self.alpha = float(self.alpha)
+        self.bkalpha = bkalpha
+        if self.bkalpha is not None:
+            self.bkalpha = float(self.bkalpha)
         # TODO: not sure about the following
         self.trans = self.alpha < 1.0 # or self.bkalpha < 1.0 
             
@@ -560,10 +564,10 @@ class GeomActor(Actor):
         ############# set drawing attributes #########
         alpha = self.alpha
         if alpha is None:
-            alpha = canvas.settings.alpha
+            alpha = canvas.settings.transparency
         bkalpha = self.bkalpha
         if bkalpha is None:
-            bkalpha = canvas.settings.alpha
+            bkalpha = canvas.settings.transparency
         
         if color is None:
             color,colormap = self.color,self.colormap
@@ -572,6 +576,9 @@ class GeomActor(Actor):
             # THIS OPTION IS ONLY MEANT FOR OVERRIDING THE COLOR
             # WITH THE EDGECOLOR IN ..wire DRAWING MODES
             # SO NO NEED TO SET bkcolor
+            #
+            # NOT SURE IF WE STILL NEED THIS !
+            #
             color,colormap = saneColor(color),None
             bkcolor, bkcolormap = None,None
 
@@ -641,7 +648,7 @@ class GeomActor(Actor):
                 drawPolygons(self.coords,self.elems,mode,color,alpha,self.texture,None)
                 if bkcolor is not None:
                     GL.glCullFace(GL.GL_FRONT)
-                    drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
+                    drawPolygons(self.coords,self.elems,mode,bkcolor,bkalpha)
                     GL.glDisable(GL.GL_CULL_FACE)
                     
         else:
@@ -662,7 +669,7 @@ class GeomActor(Actor):
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
-                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,bkcolor,alpha)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,bkcolor,bkalpha)
                         GL.glDisable(GL.GL_CULL_FACE)
 
    

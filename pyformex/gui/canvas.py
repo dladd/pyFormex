@@ -358,6 +358,7 @@ class CanvasSettings(Dict):
     - bkcolor: the default backface color
     - colormap: the default color map to be used if color is an index
     - bklormap: the default color map to be used if bkcolor is an index
+    - transparency: the default alpha and bkalpha value
     - pointsize: the default size for drawing points
     - marksize: the default size for drawing markers
     - linewidth: the default width for drawing lines
