@@ -769,8 +769,8 @@ class Gui(QtGui.QMainWindow):
                 toolbar[b].setEnabled(enable)
 
 
-    def startScript(self):
-        """Change the GUI when a script starts running.
+    def startRun(self):
+        """Change the GUI when an app/script starts running.
 
         This method enables/disables the parts of the GUI that should or
         should not be available while a script is running
@@ -778,19 +778,19 @@ class Gui(QtGui.QMainWindow):
         """
         self.drawlock.allow()
         pf.canvas.update()
-        self.enableButtons(self.actions,['Play','ReRun'],False)
-        self.enableButtons(self.actions,['Step','Continue','Stop'],True)
+        self.enableButtons(self.actions,['ReRun'],False)
+        self.enableButtons(self.actions,['Play','Step','Continue','Stop'],True)
         pf.app.processEvents()
 
 
-    def stopScript(self):
-        """Change the GUI when a script starts running.
+    def stopRun(self):
+        """Change the GUI when an app/script stops running.
 
         This method enables/disables the parts of the GUI that should or
         should not be available when no script is being executed.
         It is called by the application executor when an application stops.
         """
-        ## STEPMODE SHOULD BE REMOVED
+        ## TODO: STEPMODE SHOULD BE REMOVED COMPLETELY
         global stepmode
         stepmode = False
         self.drawlock.release()

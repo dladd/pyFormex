@@ -64,7 +64,7 @@ class DrawLock(object):
             if time is None:
                 time = pf.GUI.drawwait
             if time > 0:
-                pf.debug('STARTING TIMER')
+                pf.debug('STARTING TIMER',pf.DEBUG.SCRIPT)
                 self.locked = True
                 self.timer = threading.Timer(time,self.release)
                 self.timer.start()
@@ -116,7 +116,7 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
 
     Between each execution of the function, application events are processed.
     """
-    pf.debug("REPEAT: %s, %s" % (duration,maxcount))
+    pf.debug("REPEAT: %s, %s" % (duration,maxcount),pf.DEBUG.SCRIPT)
     global _repeat_timed_out
     _repeat_timed_out = False
     _repeat_count_reached = False
@@ -139,10 +139,10 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
         if maxcount >= 0:
              _repeat_count_reached = count >= maxcount
         if _exit_requested or _repeat_timed_out or _repeat_count_reached:
-            pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out))
+            pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out),pf.DEBUG.SCRIPT)
             break
 
-    pf.debug("BREAK FROM REPEAT")
+    pf.debug("BREAK FROM REPEAT",pf.DEBUG.SCRIPT)
     pf.GUI.drawlock.release()
     
 #### End

@@ -838,9 +838,9 @@ def drawMarks(X,M,color='black',leader='',ontop=True):
 
 def drawFreeEdges(M,color='black'):
     """Draw the feature edges of a Mesh"""
-    print "DRAW FREE EDGES"
+    #print "DRAW FREE EDGES"
     B = M.getFreeEdgesMesh()
-    print B
+    #print B
     draw(B,color=color,nolight=True)
     
 
@@ -1379,7 +1379,7 @@ def pause(timeout=None,msg=None):
 
     When the pause statement is executed, execution of the pyformex script
     is suspended until some external event forces it to proceed again.
-    Clicking the PLAY or CONTINUE button will produce such an event.
+    Clicking the PLAY, STEP or CONTINUE button will produce such an event.
     """
     from gui.drawlock import repeat
 
@@ -1387,7 +1387,7 @@ def pause(timeout=None,msg=None):
         return pf.GUI.drawlock.locked
 
     if msg is None and timeout is None:
-        msg = "Use the Play or Continue button to proceed"
+        msg = "Use the Play/Step/Continue button to proceed"
         
     pf.debug("Pause (%s): %s" % (timeout,msg),pf.DEBUG.SCRIPT)
     if msg:

@@ -118,7 +118,8 @@ modebar = 'top'       # add rendemode toolbar to top toolbar space
 viewbar = 'left'      # add views toolbar to left toolbar space
 
 # Default action buttons for current app
-actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit', 'info' ]
+#actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit', 'info' ]
+actionbuttons = [ 'play', 'rerun', 'continue', 'edit', 'info' ]
 
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar

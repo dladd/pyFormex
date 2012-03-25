@@ -298,7 +298,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     exitrequested = False
 
     if pf.GUI:
-        pf.GUI.startScript()
+        pf.GUI.startRun()
     
     # Get the globals
     g = Globals()
@@ -329,17 +329,10 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                          scr = scr.read() + '\n'
                     n = len(scr) // 2
                     scr = utils.mergeme(scr[:n],scr[n:])
-                if pf.options.executor:
-                    scriptThread = threading.Thread(None,executeScript,'script-0',(scr,g))
-                    scriptThread.daemon = True
-                    print "OK, STARTING THREAD"
-                    scriptThread.start()
-                    print "OK, STARTED THREAD"
-                else:
-                    exec scr in g
+                exec scr in g
 
         except _Exit:
-            print "EXIT FROM SCRIPT"
+            #print "EXIT FROM SCRIPT"
             pass
         except _ExitAll:
             exitall = True
@@ -361,7 +354,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
         scriptRelease('__auto__') # release the lock
         if pf.GUI:
-            pf.GUI.stopScript()
+            pf.GUI.stopRun()
             
     if exitall:
         pf.debug("Calling quit() from playscript",pf.DEBUG.SCRIPT)
@@ -410,7 +403,7 @@ def breakpt(msg=None):
 
 
 def raiseExit():
-    pf.debug("RAISED EXIT",pf.DEBUG.SCRIPT)
+    pf.debug("RAISING _Exit",pf.DEBUG.SCRIPT)
     if pf.GUI:
         pf.GUI.drawlock.release()   
     raise _Exit,"EXIT REQUESTED FROM SCRIPT"
@@ -484,20 +477,24 @@ def runApp(appname,argv=[],reload=False):
     
     scriptLock('__auto__')
     if pf.GUI:
-        pf.GUI.startScript()
+        pf.GUI.startRun()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
         try:
+            #print "RUNNING APP"
             res = app.run()
+            #print "FINISHED RUNNING APP"
         except _Exit:
-            print "EXIT FROM APP"
+            #print "EXIT FROM APP"
             pass
         except:
+            #print "OTHER ERROR IN APP"
             raise
     finally:
+        #print "FINISH APP"
         if hasattr(app,'atExit'):
             app.atExit()
         if pf.cfg['autoglobals']:
@@ -506,7 +503,7 @@ def runApp(appname,argv=[],reload=False):
             pf.PF.update([(k,g[k]) for k in exportNames])
         scriptRelease('__auto__') # release the lock
         if pf.GUI:
-            pf.GUI.stopScript()
+            pf.GUI.stopRun()
 
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
@@ -539,10 +536,12 @@ def run(appname=None,argv=[],step=False,reload=False):
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
+    #print "DRAW.EXIT"
     if len(scriptlock) > 0:
         if all:
             raise _ExitAll # ask exit from pyformex
         else:
+            #print "RAISE _EXIT"
             raise _Exit # ask exit from script only
 
 
@@ -633,7 +632,7 @@ def printLoadedApps():
     import apps,sys
     loaded = apps.listLoaded()
     refcnt = [ sys.getrefcount(sys.modules[k]) for k in loaded ]
-    print ', '.join([ "%s (%s)" % (k,r) for k,r in zip(loaded,refcnt)])
+    print(', '.join([ "%s (%s)" % (k,r) for k,r in zip(loaded,refcnt)]))
 
 
 def vmSize():
@@ -642,7 +641,7 @@ def vmSize():
 
 
 def printVMem(msg='MEMORY'):
-    print '%s: VmSize=%skB'%(msg,vmSize())
+    print('%s: VmSize=%skB'%(msg,vmSize()))
 
 
 ### Utilities
