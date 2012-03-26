@@ -139,16 +139,13 @@ def toggleAppScript():
     import apps
     appname = pf.cfg['curfile']
     if utils.is_script(appname):
-        print pf.appdirs
         appdir = apps.findAppDir(os.path.dirname(appname))
-        print appdir
         if appdir:
             appname = os.path.basename(appname)
             if appname.endswith('.py'):
                 appname = appname[:-3]
             pkgname = appdir.pkg
             appname = "%s.%s" % (pkgname,appname)
-            print appname
             pf.GUI.setcurfile(appname)
         else:
             pf.warning("This script is not in an application directory.\n\nYou should add the directory path '%s' to the application paths before you can run this file as an application.")

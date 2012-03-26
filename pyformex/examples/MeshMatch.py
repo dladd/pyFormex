@@ -29,6 +29,9 @@ It first constructs two Meshes: one with squares (red) and one with
 triangles (green). Then it finds the nodes from the second that coincide
 with nodes from the first. The matching nodes are marked with black
 squares. The matching node numbers from the two meshes are printed out.
+
+Then, after a pause, the parts of both meshes that are connected to the
+common nodes are drawn.
 """
 _status = 'checked'
 _level = 'normal'
@@ -47,25 +50,36 @@ def run():
     nx=4*n
     ny=2*n
 
+    # construct a Quad4 Mesh
     M = Formex('4:0123').replic2(nx,ny).cselect(arange(4*nx,int(7.5*nx))).toMesh().setProp(1)
     draw(M)
     drawNumbers(M.coords,color=red)
 
+    # construct a Tri3 Mesh
     M1 = Formex('3:012').replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1,1.).setProp(2)
     draw(M1)
     zoomAll()
     drawNumbers(M1.coords,color=yellow,trl=[0.,-0.25,0.])
 
+    # find matching nodes
     match = M.matchCoords(M1)
 
-    m = match>=0
-    n1=arange(len(match))
+    # get the matching node numbers
+    n1 = where(match>=0)[0]     # node numbers in Mesh M1
+    n0 = match[n1]              # node numbers in Mesh M
 
-    print "List of the %s matching nodes" % m.sum()
-    print column_stack([match[m],n1[m]])
+    print "List of the %s matching nodes" % len(n1)
+    print column_stack([n0,n1])
 
-    draw(M.coords[match[m]],marksize=10,bbox='last')
+    draw(M.coords[n0],marksize=10,bbox='last',ontop=True)
 
+    # compute and draw parts connected to the common nodes
+    pause(4)
+    clear()
+    draw(M.coords[n0],marksize=10,bbox='last',ontop=True)
+    M = M.connectedTo(n0)
+    M1 = M1.connectedTo(n1)
+    draw([M,M1])
 
 if __name__ == 'draw':
     run()

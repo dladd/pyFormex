@@ -1000,7 +1000,7 @@ Size: %s
         Returns a Mesh with all the elements from the original that contain
         at least one of the specified nodes.
         """
-        return self.select(self.elems.connectedTo(nod))
+        return self.select(self.elems.connectedTo(nodes))
 
 
     def notConnectedTo(self, nod):
