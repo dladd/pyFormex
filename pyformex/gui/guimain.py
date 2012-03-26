@@ -135,6 +135,33 @@ class Board(QtGui.QTextEdit):
 #####################################
 
 
+def toggleAppScript():
+    import apps
+    appname = pf.cfg['curfile']
+    if utils.is_script(appname):
+        print pf.appdirs
+        appdir = apps.findAppDir(os.path.dirname(appname))
+        print appdir
+        if appdir:
+            appname = os.path.basename(appname)
+            if appname.endswith('.py'):
+                appname = appname[:-3]
+            pkgname = appdir.pkg
+            appname = "%s.%s" % (pkgname,appname)
+            print appname
+            pf.GUI.setcurfile(appname)
+        else:
+            pf.warning("This script is not in an application directory.\n\nYou should add the directory path '%s' to the application paths before you can run this file as an application.")
+            
+    else:
+        fn = apps.findAppSource(appname)
+        if os.path.exists(fn):
+            pf.GUI.setcurfile(fn)
+        else:
+            pf.warning("I can not find the source file for this application.")
+
+    
+
 class Gui(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
@@ -159,7 +186,8 @@ class Gui(QtGui.QMainWindow):
         # The status bar
         self.statusbar = self.statusBar()
         self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openProject)])
-        self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
+        #self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
+        self.curfile = widgets.ButtonBox('',[('Script:',toggleAppScript),('None',fileMenu.openScript)])
         self.curdir = widgets.ButtonBox('Cwd:',[('None',draw.askDirname)])
         self.canPlay = False
         self.canEdit = False
@@ -541,14 +569,15 @@ class Gui(QtGui.QMainWindow):
             self.canPlay = self.canEdit = utils.is_pyFormex(appname) or appname.endswith('.pye')
 
         pf.prefcfg['curfile'] = appname
-        self.curfile.label.setText(label)
-        self.curfile.setText(name)
+        #self.curfile.label.setText(label)
+        self.curfile.setText(label,0)
+        self.curfile.setText(name,1)
         self.enableButtons(self.actions,['Play','Info'],self.canPlay)
         self.enableButtons(self.actions,['Edit'],self.canEdit)
         self.enableButtons(self.actions,['ReRun'],is_app and(self.canEdit or self.canPlay))
         self.enableButtons(self.actions,['Step','Continue'],False)
         icon = 'ok' if self.canPlay else 'notok'
-        self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
+        self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),1)
 
 
     def setcurdir(self):

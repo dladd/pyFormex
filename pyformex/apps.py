@@ -140,6 +140,13 @@ directory as a pyFormex application path.
         return None
 
 
+def findAppDir(path):
+    """Return the AppDir for a given path"""
+    for p in pf.appdirs:
+        if p.path == path:
+            return p
+
+
 def load(appname,refresh=False):
     """Load the named app
 
