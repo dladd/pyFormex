@@ -262,9 +262,17 @@ def curvature(coords,elems,edges,neighbours=1):
     # calculate normal curvature
     k = dotpr(vp,vn)/dotpr(vp,vp)
     # calculate maximum normal curvature and corresponding coordinate system
-    imax = nanargmax(k,-1)
-    kmax =  k[range(len(k)),imax]
-    tmax = t[range(len(k)),imax]
+    try:
+        imax = nanargmax(k,-1)
+        kmax =  k[range(len(k)),imax]
+        tmax = t[range(len(k)),imax]
+    except: # bug with numpy.nanargmax: cannot convert float NaN to integer
+        kmax = resize(NaN,(k.shape[0]))
+        tmax = resize(NaN,(t.shape[0],3))
+        w = ~(isnan(k).all(1))
+        imax = nanargmax(k[w],-1)
+        kmax[w] =  k[w,imax]
+        tmax[w] =  t[w,imax]
     tmax1 = tmax
     tmax2 = cross(n,tmax1)
     tmax2 = normalize(tmax2)
