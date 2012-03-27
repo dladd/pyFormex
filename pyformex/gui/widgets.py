@@ -997,10 +997,9 @@ class InputFSlider(InputFloat):
         self.layout().addWidget(self.slider)
 
     def set_value(self,val):
-        print val
         val = float(val)
         value = val*self.scale
-        print value
+        pf.debug("  fslider: %s = %s" % (val,value),pf.DEBUG.GUI)
         self.input.setText(str(value))
         if self.func:
             self.func(self)
@@ -1291,6 +1290,7 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
     and turns them into a dictionary as required by the new
     InputItem format.
     """
+    utils.deprec("depr_compat_input")
     # Create a new dict item!
     # We cannot change kargs directly like in simpleInputItem,
     # that would permanently change the value of the empty dict!
@@ -1505,13 +1505,6 @@ class InputDialog(QtGui.QDialog):
         layout is the widget layout where the input widgets will be added
         """
         for item in items:
-
-            if isinstance(item,list) or isinstance(item,tuple):
-                warnings.warn("warn_deprecated_inputitem")
-                try:
-                    item = compatInputItem(*item)
-                except:
-                    pass
                 
             if isinstance(item,dict):
 
@@ -2186,55 +2179,9 @@ class ListSelection(InputDialog):
 class Selection(ListSelection):
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
         """Create the SelectionList dialog."""
-        import warnings
-        warnings.deprecation("widgets.Selection is deprecated. Please use widgets.ListSelection.")
+        utils.deprec("depr_widgets_selection")
         ListSelection.__init__(self,caption=title,choices=slist,default=selected,single=mode=='single',sort=sort)
         
-    
-# BV Uncommented, because I could only find 1 use: in osteo_menu, to define
-# an InputList, which can probably be replaced by the default InputList
-
-## class ModelessSelection(QtGui.QDialog):
-##     """A modeless dialog for selecting one or more items from a list."""
-    
-##     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
-##         """Create the SelectionList dialog."""
-##         QtGui.QDialog.__init__(self)
-##         self.setWindowTitle(title)
-##         # Selection List
-##         self.listw = QtGui.QListWidget()
-##         if width is not None:
-##             self.listw.setMaximumWidth(width)
-##         if height is not None:
-##             self.listw.setMaximumHeight(height)
-##         self.listw.addItems(slist)
-##         if sort:
-##             self.listw.sortItems()
-##         self.listw.setSelectionMode(selection_mode[mode])
-##         grid = QtGui.QGridLayout()
-##         grid.addWidget(self.listw,0,0,1,1)
-##         self.setLayout(grid)
-##         if func:
-##             self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
-    
-
-##     def setSelected(self,selected,bool):
-##         """Mark the specified items as selected."""
-##         for s in selected:
-##             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-##                 i.setSelected(True)
-##                 i.setCheckState(QtCore.Qt.Checked)
-
-                
-##     def getResult(self):
-##         """Return the list of selected values.
-
-##         If the user cancels the selection operation, the return value is None.
-##         Else, the result is always a list, possibly empty or with a single
-##         value.
-##         """
-##         res = [i.text() for i in self.listw.selectedItems()]
-##         return map(str,res)
 
 # BV uncommented, because I can not find any place where it is used,
 # and probably it would be better to use a generic docked widget and
@@ -2812,6 +2759,15 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
     return blist
 
 
+def addEffect(w,color=None):
+    if color is not None:
+        effect = QtGui.QGraphicsColorizeEffect()
+        effect.setColor(QtGui.QColor(*color))
+        w.setGraphicsEffect(effect)
+        
+    
+
+    
 class ButtonBox(QtGui.QWidget):
     """A box with action buttons.
 
@@ -2827,9 +2783,10 @@ class ButtonBox(QtGui.QWidget):
       specified if one of the buttons actions is not specified or is
       widgets.ACCEPTED or widgets.REJECTED.
     """
-    def __init__(self,name='',actions=None,default=None,
-                 parent=None,spacer=False,stretch=[-1,-1]):
+    def __init__(self,name='',actions=None,default=None,parent=None,
+                 spacer=False,stretch=[-1,-1],cmargin=(2,2,2,2)):
         QtGui.QWidget.__init__(self,parent=parent)
+        self.setContentsMargins(0,0,0,0)
         layout = QtGui.QHBoxLayout()
         if name:
             self.label = QtGui.QLabel(name)
@@ -2841,7 +2798,8 @@ class ButtonBox(QtGui.QWidget):
             if stretch[i] >= 0:
                 layout.insertStretch(i,stretch[i])
         layout.setSpacing(0)
-        layout.setMargin(-1)
+        #layout.setMargin(20)
+        layout.setContentsMargins(*cmargin)
         self.buttons = addActionButtons(layout,actions,default,parent)
         self.setLayout(layout)
 

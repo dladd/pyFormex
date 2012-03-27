@@ -431,11 +431,13 @@ def runScript(fn,argv=[]):
     t = Timer()
     pf.GUI.history.add(fn)
     message("Running script (%s)" % fn)
+    #pf.GUI.statusbar.showMessage("Running")
     pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
     res = playScript(file(fn,'r'),fn,fn,argv,pye)
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
+    #pf.GUI.statusbar.showMessage("Ready")
     return res
 
 
@@ -480,6 +482,7 @@ def runApp(appname,argv=[],reload=False):
         pf.GUI.startRun()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
+    #pf.GUI.statusbar.showMessage("Running")
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
@@ -507,6 +510,7 @@ def runApp(appname,argv=[],reload=False):
 
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
+    #pf.GUI.statusbar.showMessage("Ready")
     pf.debug("Memory: %s" % vmSize(),pf.DEBUG.MEM)
 
 

@@ -182,6 +182,10 @@ class Gui(QtGui.QMainWindow):
 
         # The status bar
         self.statusbar = self.statusBar()
+        #self.statusbar.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        #self.statusbar.setFixedHeight(32)
+        #self.statusbar.setContentsMargins(0,0,0,0)
+        #widgets.addEffect(self.statusbar,color=(255,0,0))
         self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openProject)])
         #self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
         self.curfile = widgets.ButtonBox('',[('Script:',toggleAppScript),('None',fileMenu.openScript)])
@@ -472,12 +476,11 @@ class Gui(QtGui.QMainWindow):
 
 
     def addStatusBarButtons(self):
-        sbh = self.statusbar.height()
-        #self.curproj.setFixedHeight(32)
-        #self.curfile.setFixedHeight(32)
         self.statusbar.addWidget(self.curproj)
         self.statusbar.addWidget(self.curfile)
         self.statusbar.addWidget(self.curdir)
+        r = self.statusbar.childrenRect()
+        self.statusbar.setFixedHeight(r.height()+4)
 
 
     def addInputBox(self):

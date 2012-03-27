@@ -57,11 +57,7 @@ there are several better alternatives:
 - the pause() function,
 """
 
-#warn_old_table_dialog = "The use of OldTableDialog is deprecated. Please use a combination of the Dialog, Tabs and Table widgets."
-
 warn_widgets_updatedialogitems = "gui.widgets.updateDialogItems now expects data in the new InputItem format. Use gui.widgets.updateOldDialogItems for use with old data format."
-
-warn_deprecated_inputitem = "Using a list or tuple as InputItem data is deprecated. Please use the new dict format."
 
 _future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."
 
@@ -99,5 +95,6 @@ warn_mesh_connect = "Mesh.connect does no longer automatically compact the Meshe
 depr_mpattern = "\nFunction mpattern() is deprecated: use xpattern() instead."
 depr_polygon = "The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead."
 depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."
-
+depr_widgets_selection = "widgets.Selection is deprecated. Please use widgets.ListSelection."
+depr_compat_input = "The use of compatInputItem is deprecated. Please use simpleInputItem instead."
 # End

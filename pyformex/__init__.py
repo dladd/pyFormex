@@ -90,8 +90,9 @@ class DebugLevels(object):
           OPENGL, LIB, MOUSE, APPS, IMAGE, MISC = \
           [ 2 ** i for i in range(15) ]
 
-DEBUG = DebugLevels
+delattr(DebugLevels,'i')
 
+DEBUG = DebugLevels
 
 def debugLevel(sl):
     lev = 0

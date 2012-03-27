@@ -485,27 +485,33 @@ def createDirsDialog(dircfg):
     return _dia
         
 
+def setDebug():
+    options = [ o for o in dir(pf.DEBUG) if o[0] != '_' ]
+    options.remove('ALL')
+    options.remove('NONE')
+    values = [ getattr(pf.DEBUG,o) for o in options ]
+    items = [ _I(o,bool(pf.options.debuglevel & v)) for o,v in zip(options,values) ]
+    res = draw.askItems(items)
+    if res:
+        print res
+        debug = 0
+        for o,v in zip(options,values):
+            if res[o]:
+                debug |= v
+        print "debuglevel = %s" % debug
+        pf.options.debuglevel = debug
+        
+
 def setOptions():
-    options = [ 'debug' ] # Currently No user changeable options ['test']
+    options = [ 'debuglevel' ] # Currently no other user changeable options
     options = [ o for o in options if hasattr(pf.options,o) ]
     items = [ _I(o,getattr(pf.options,o)) for o in options ]
-    ## # currently we only have All or None as debug levels
-    ## debug_levels = [ 'All','None' ]
-    ## if pf.options.debug:
-    ##     debug = 'All'
-    ## else:
-    ##     debug = 'None'
-    ## items.append(_I('debug',debug,'vradio',choices=debug_levels))
     res = draw.askItems(items)
     if res:
         print res
         for o in options:
             setattr(pf.options,o,res[o])
-            #setattr(pf.options,'debug',debug_levels.index(res['debug'])-1)
             print("Options: %s" % pf.options)
-            ## if o == 'debug':
-            ##     pf.setDebugFunc()
-    
 
 
 # Functions defined to delay binding
@@ -556,6 +562,7 @@ MenuData = [
     (_('&Settings'),[
         (_('&Settings Dialog'),settings), 
         (_('&Options'),setOptions),
+        (_('&Debug'),setDebug),
         ('---',None),
         (_('&Draw Wait Time'),setDrawWait), 
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
