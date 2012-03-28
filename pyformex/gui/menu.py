@@ -467,10 +467,8 @@ def resetGUI():
     """
     ## resetPick()
     pf.GUI.resetCursor()
-    pf.GUI.actions['Play'].setEnabled(True)
-    pf.GUI.actions['Step'].setEnabled(True)
-    pf.GUI.actions['Continue'].setEnabled(False)
-    pf.GUI.actions['Stop'].setEnabled(False)
+    pf.GUI.enableButtons(pf.GUI.actions,['Play','Step'],True)
+    pf.GUI.enableButtons(pf.GUI.actions,['Continue','Stop'],False)
 
 
 def resetWarnings():

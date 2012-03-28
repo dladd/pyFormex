@@ -256,10 +256,12 @@ scriptlock = set()
 
 def scriptLock(id):
     global scriptlock
+    pf.debug("Setting script lock %s" %id,pf.DEBUG.SCRIPT)
     scriptlock |= set([id])
 
 def scriptRelease(id):
     global scriptlock
+    pf.debug("Releasing script lock %s" %id,pf.DEBUG.SCRIPT)
     scriptlock -= set([id])
     
 

@@ -482,10 +482,11 @@ class Connectivity(ndarray):
            
         Example:
         
-          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
+          >>> Connectivity([[0,1,2],[0,1,4],[0,4,2]]).inverse()
           array([[ 0,  1,  2],
                  [-1,  0,  1],
                  [-1,  0,  2],
+                 [-1, -1, -1],
                  [-1,  1,  2]])
         """
         if self.inv is None:
@@ -495,6 +496,22 @@ class Connectivity(ndarray):
                 self.inv = Connectivity()
         return self.inv
 
+
+    def nParents(self):
+        """Return the number of elements connected to each node.
+
+        Returns a 1-D int array with the number of elements connected
+        to each node. The length of the array is equal to the highest
+        node number + 1. Unused node numbers will have a count of zero.
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,4],[0,4,2]]).nParents()
+          array([3, 2, 2, 0, 2])
+        """
+        r = self.inverse()
+        return (r>=0).sum(axis=1)
+        
 
     def connectedTo(self,nodes):
         """Return a list of elements connected to the specified nodes.
