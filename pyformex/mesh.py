@@ -878,7 +878,7 @@ Size: %s
         
         This is the complimentary operation of `select`.
         """
-        return self.select(complement(idx,self.nelems()),compact=compact)
+        return self.select(complement(selected,self.nelems()),compact=compact)
 
 
     def avgNodes(self,nodsel,wts=None):
