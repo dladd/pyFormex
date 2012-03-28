@@ -589,7 +589,7 @@ class TriSurface(Mesh):
                 
                 # since we have the extra data available, keep them
                 self.edges = edges
-                self.faces = faces
+                self.elem_edges = faces
 
             else:
                 raise RuntimeError,"Too many positional arguments"
@@ -742,9 +742,7 @@ class TriSurface(Mesh):
         if ftype == 'pgf':
             Geometry.write(self,fname)
         elif ftype == 'gts':
-            faces,edges=self.elems.insertLevel([[0,1],[1,2],[2,0]])
-            filewrite.writeGTS(fname,self.coords,edges,faces)
-##            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
+            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','smesh']:
             if ftype == 'stl':
