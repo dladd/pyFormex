@@ -82,7 +82,7 @@ def _init_():
 
 def printall():
     """Print all global variable names."""
-    print(listAll())
+    print(listAll(sort=True))
     
 
 def printval():

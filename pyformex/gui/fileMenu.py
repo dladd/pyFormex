@@ -40,7 +40,7 @@ from prefMenu import updateSettings
 ##################### handle project files ##########################
 
 
-def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default='wr'):
+def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     """Open a (new or old) Project file.
 
     The user is asked for a Project file name and the access modalities.
@@ -57,6 +57,8 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default='wr'):
     If a compression level (1..9) is given, the contents will be compressed,
     resulting in much smaller project files at the cost of  
     """
+    if type(access) == str:
+        access = [access]
     cur = fn if fn else '.'
     typ = utils.fileDescription(['pyf','all'])
     res = widgets.ProjectSelection(cur,typ,exist=exist,access=access,default=default,convert=True).getResult()
@@ -120,8 +122,21 @@ def setProject(proj):
     the adding without asking.
     """
     pf.message("Setting current project to %s" % proj.filename)
-    pf.message("Project contents: %s" % proj.keys())
+    pf.message("Project contents: %s" % utils.sortedKeys(proj))
+    keep = {}
+    if pf.PF:
+        pf.message("Current pyFormex globals: %s" % utils.sortedKeys(pf.PF))
+        _delete = "Delete"
+        _add = "Keep non existing"
+        _overwrite = "Keep all (overwrite project)"
+        res = draw.ask("What shall I do with the current pyFormex globals?",[_delete,_add,_overwrite])
+        if res == _add:
+            keep = utils.removeDict(pf.PF,proj)
+        elif res == _overwrite:
+            keep = pf.PF
     pf.PF = proj
+    if keep:
+        pf.PF.update(keep)
     if pf.PF.filename:
         updateSettings({'workdir':os.path.dirname(pf.PF.filename)},save=True)
     pf.GUI.setcurproj(pf.PF.filename)
@@ -149,7 +164,7 @@ def setProject(proj):
     if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
         draw.processArgs([proj.autofile])
 
-    pf.message("Exported symbols: %s" % pf.PF.keys())
+    pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
 
 
 def createProject():
@@ -183,7 +198,8 @@ def importProject():
     proj = openProject(exist=True,access='r')
     if proj: # only if non-empty
         pf.PF.update(proj)
-    
+        listProject()
+        
 
 def setAutoScript():
     """Set the current script as autoScript in the project"""
@@ -212,7 +228,7 @@ def saveProject():
     This function does nothing if the current project is a temporary one.
     """
     if pf.PF.filename is not None:
-        pf.message("Saving Project contents: %s" % pf.PF.keys())
+        pf.message("Saving Project contents: %s" % utils.sortedKeys(pf.PF))
         pf.GUI.setBusy()
         pf.PF.save()
         pf.GUI.setBusy(False)
@@ -228,7 +244,7 @@ def saveAsProject():
 
 def listProject():
     """Print all global variable names."""
-    pf.message("Exported symbols: %s" % pf.PF.keys())
+    pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
 
 def clearProject():
     """Clear the contents of the current project."""
@@ -251,7 +267,7 @@ def closeProject(save=None):
         if save:
             saveProject()
             if pf.PF:
-                pf.message("Exported symbols: %s" % pf.PF.keys())
+                pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
                 if draw.ask("What shall I do with the exported symbols?",["Delete","Keep"]) == "Delete":
                     pf.PF.clear()
 
@@ -428,6 +444,10 @@ def showImage():
         viewer.show()
 
 
+def listAll():
+    draw.listAll(sort=True)
+
+
 MenuData = [
     ## (_('&Open project'),openProject),
     (_('&Start new project'),createProject),
@@ -437,7 +457,7 @@ MenuData = [
     (_('&Remove the AutoScript'),removeAutoScript),
     (_('&Set current script as AutoFile'),setAutoFile),
     (_('&Remove the AutoFile'),removeAutoFile),
-    (_('&List project contents'),draw.listAll),
+    (_('&List project contents'),listAll),
     (_('&Save project'),saveProject),
     (_('&Save project As'),saveAsProject),
     ## (_('&Close project without saving'),closeProjectWithoutSaving),

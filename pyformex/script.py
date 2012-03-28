@@ -125,7 +125,7 @@ def rename(oldnames,newnames):
             del g[oldname]
 
 
-def listAll(clas=None,like=None,filter=None,dic=None):
+def listAll(clas=None,like=None,filter=None,dic=None,sort=False):
     """Return a list of all objects in dictionay that match criteria.
 
     - dic: a dictionary object, defaults to pyformex.PF
@@ -148,6 +148,8 @@ def listAll(clas=None,like=None,filter=None,dic=None):
         names = [ n for n in names if n.startswith(like) ]
     if filter is not None:
         names = [ n for n in names if filter(n) ]
+    if sort:
+        names.sort()
     return names
 
 

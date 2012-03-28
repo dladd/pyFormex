@@ -925,6 +925,17 @@ def refreshDict(d,src):
     """
     d.update(selectDict(src,d))
 
+
+def sortedKeys(d):
+    """Returns the sorted keys of a dict.
+
+    It is required that the keys of the dict be sortable, e.g. all strings
+    or integers.
+    """
+    k = d.keys()
+    k.sort()
+    return k
+
     
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.
