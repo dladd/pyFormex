@@ -382,10 +382,10 @@ class DrawableObjects(Objects):
     def removeAnnotation(self,f):
         """Remove the annotation f."""
         if f in self._annotations:
-            # pf.canvas.removeAnnotations(self._annotations[f])
-            # Use remove, because some annotations are not canvas
+            # pf.canvas.removeAnnotation(self._annotations[f])
+            # Use removeAny, because some annotations are not canvas
             # annotations but actors!
-            pf.canvas.remove(self._annotations[f])
+            pf.canvas.removeAny(self._annotations[f])
             pf.canvas.update()
             del self._annotations[f]
 

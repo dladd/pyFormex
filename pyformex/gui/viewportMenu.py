@@ -240,7 +240,7 @@ def singleViewport():
 
 def clearAll():
     for vp in pf.GUI.viewports.all:
-        vp.removeAll()
+        vp.removeAny()
         vp.clear()
         vp.update()
     pf.GUI.processEvents()

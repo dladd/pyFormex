@@ -377,7 +377,7 @@ def setprop_selection():
         if prop < 0:
             prop = None
         setpropCollection(selection,prop)
-        removeHighlights()
+        removeHighlight()
 
 
 def grow_selection():
@@ -600,7 +600,7 @@ def create_menu():
             ("&Edges",pick_edges),
             ]),
         ('&Edit Points',edit_points),
-        ("&Remove Highlights",removeHighlights),
+        ("&Remove Highlights",removeHighlight),
         ("---",None),
         ('&Selection',[
             ('&Create Report',report_selection),

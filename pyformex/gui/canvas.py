@@ -173,19 +173,32 @@ def glSettings(settings):
 
     
 class ActorList(list):
+    """A list of drawn objects of the same kind.
 
+    This is used to collect the Actors, Decorations and Annotations
+    in a scene.
+    Currently the implementation does not check that the objects are of
+    the proper type.
+    """
+    
     def __init__(self,canvas):
         self.canvas = canvas
         list.__init__(self)
         
     def add(self,actor):
-        """Add an actor to an actorlist."""
-        self.append(actor)
+        """Add an actor or a list thereof to a ActorList."""
+        if type(actor) is list:
+            self.extend(actor)
+        else:
+            self.append(actor)
 
     def delete(self,actor):
-        """Remove an actor from an actorlist."""
-        if actor in self:
-            self.remove(actor)
+        """Remove an actor or a list thereof from an ActorList."""
+        if not type(actor) in (list,tuple):
+            actor = [ actor ]
+        for a in actor:
+            if a in self:
+                self.remove(a)
 
     def redraw(self):
         """Redraw all actors in the list.
@@ -898,9 +911,12 @@ class Canvas(object):
        
         
     def setBbox(self,bbox=None):
-        """Set the bounding box of the scene you want to be visible."""
-        # TEST: use last actor
-        #pf.debug("BBOX WAS: %s" % self.bbox,pf.DEBUG.DRAW)
+        """Set the bounding box of the scene you want to be visible.
+
+        bbox is a (2,3) shaped array specifying a bounding box.
+        If no bbox is given, the bounding box of all the actors in the
+        scene is used, or if the scene is empty, a default unit bounding box.
+        """
         if bbox is None:
             if len(self.actors) > 0:
                 bbox = self.actors[-1].bbox()
@@ -910,107 +926,84 @@ class Canvas(object):
         try:
             self.bbox = nan_to_num(bbox)
         except:
-        # if bbox.any() == nan:
             pf.message("Invalid Bbox: %s" % bbox)
-        #pf.debug("BBOX BECOMES: %s" % self.bbox,pf.DEBUG.DRAW)
 
          
     def addActor(self,actor):
-        """Add a 3D actor to the 3D scene."""
+        """Add a 3D actor or a list thereof to the 3D scene."""
         self.actors.add(actor)
 
-    def removeActor(self,actor):
-        """Remove a 3D actor from the 3D scene."""
-        self.actors.delete(actor)
-        #self.highlights.delete(actor)
-
     def addHighlight(self,actor):
-        """Add a 3D actor highlight to the 3D scene."""
+        """Add a highlight or a list thereof to the 3D scene."""
         self.highlights.add(actor)
-
-    def removeHighlight(self,actor):
-        """Remove a 3D actor highlight from the 3D scene."""
-        self.highlights.delete(actor)
          
     def addAnnotation(self,actor):
-        """Add an annotation to the 3D scene."""
+        """Add an annotation or a list thereof to the 3D scene."""
         self.annotations.add(actor)
-
-    def removeAnnotation(self,actor):
-        """Remove an annotation from the 3D scene."""
-        if actor == self.triade:
-            pf.debug("REMOVING TRIADE",pf.DEBUG.DRAW)
-            self.triade = None
-        self.annotations.delete(actor)
          
     def addDecoration(self,actor):
-        """Add a 2D decoration to the canvas."""
+        """Add a 2D decoration or a list thereof to the canvas."""
         self.decorations.add(actor)
+        
 
-    def removeDecoration(self,actor):
-        """Remove a 2D decoration from the canvas."""
-        self.decorations.delete(actor)
+    def removeActor(self,itemlist=None):
+        """Remove a 3D actor or a list thereof from the 3D scene.
 
-    def remove(self,itemlist):
+        Without argument, removes all actors from the scene.
+        This also resets the bounding box for the canvas autozoom.
+        """
+        if itemlist == None:
+            itemlist = self.actors[:]
+        self.actors.delete(itemlist)
+        self.setBbox()
+        
+    def removeHighlight(self,itemlist=None):
+        """Remove a highlight or a list thereof from the 3D scene.
+        
+        Without argument, removes all highlights from the scene.
+        """
+        if itemlist == None:
+            itemlist = self.highlights[:]
+        self.highlights.delete(itemlist)
+
+    def removeAnnotation(self,itemlist=None):
+        """Remove an annotation or a list thereof from the 3D scene.
+
+        Without argument, removes all annotations from the scene.
+        """
+        if itemlist == None:
+            itemlist = self.annotations[:]
+        if self.triade in itemlist:
+            pf.debug("REMOVING TRIADE",pf.DEBUG.DRAW)
+            self.triade = None
+        self.annotations.delete(itemlist)
+
+    def removeDecoration(self,itemlist=None):
+        """Remove a 2D decoration or a list thereof from the canvas.
+
+        Without argument, removes all decorations from the scene.
+        """
+        if itemlist == None:
+            itemlist = self.decorations[:]
+        self.decorations.delete(itemlist)
+
+
+    def removeAny(self,itemlist=None):
         """Remove a list of any actor/highlights/annotation/decoration items.
 
         This will remove the items from any of the canvas lists in which the
         item appears.
         itemlist can also be a single item instead of a list.
+        If None is specified, all items from all lists will be removed.
         """
-        if not type(itemlist) in (list,tuple):
-            itemlist = [ itemlist ]
-        for item in itemlist:
-            self.actors.delete(item)
-            self.highlights.delete(item)
-            self.annotations.delete(item)
-            self.decorations.delete(item)
-        
-
-    def removeActors(self,actorlist=None):
-        """Remove all actors in actorlist (default = all) from the scene."""
-        if actorlist == None:
-            actorlist = self.actors[:]
-        for actor in actorlist:
-            self.removeActor(actor)
-        self.setBbox()
-        
-
-    def removeHighlights(self,actorlist=None):
-        """Remove all highlights in actorlist (default = all) from the scene."""
-        if actorlist == None:
-            actorlist = self.highlights[:]
-        for actor in actorlist:
-            self.removeHighlight(actor)
-
-
-    def removeAnnotations(self,actorlist=None):
-        """Remove all annotations in actorlist (default = all) from the scene."""
-        if actorlist == None:
-            actorlist = self.annotations[:]
-        for actor in actorlist:
-            self.removeAnnotation(actor)
-
-
-    def removeDecorations(self,actorlist=None):
-        """Remove all decorations in actorlist (default = all) from the scene."""
-        if actorlist == None:
-            actorlist = self.decorations[:]
-        for actor in actorlist:
-            self.removeDecoration(actor)
-
-
-    def removeAll(self):
-        """Remove all actors and decorations"""
-        self.removeActors()
-        self.removeHighlights()
-        self.removeAnnotations()
-        self.removeDecorations()
-
+        self.removeActor(itemlist)
+        self.removeHighlight(itemlist)
+        self.removeAnnotation(itemlist)
+        self.removeDecoration(itemlist)
+    
 
     def redrawAll(self):
         """Redraw all actors in the scene."""
-        #print "REDRAWALL"
         self.actors.redraw()
         self.highlights.redraw()
         self.annotations.redraw()

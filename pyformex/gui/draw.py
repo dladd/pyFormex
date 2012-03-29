@@ -988,7 +988,7 @@ def undraw(itemlist):
     the item that was drawn from the canvas.
     A single item or a list of items may be specified.
     """
-    pf.canvas.remove(itemlist)
+    pf.canvas.removeAny(itemlist)
     pf.canvas.update()
     pf.app.processEvents()
     
@@ -1238,7 +1238,7 @@ def clear_canvas():
 
     This is a low level function not intended for the user.
     """
-    pf.canvas.removeAll()
+    pf.canvas.removeAny()
     pf.canvas.clear()
 
 
@@ -1693,7 +1693,7 @@ def highlightActors(K):
     colormap is a list of two colors, for the actors not in, resp. in
     the Collection K.
     """
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     [ highlightActor(i) for i in K.get(-1,[]) ]
     pf.canvas.update()
 
@@ -1705,7 +1705,7 @@ def highlightElements(K):
     colormap is a list of two colors, for the elements not in, resp. in
     the Collection K.
     """
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     for i in K.keys():
         pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
@@ -1721,7 +1721,7 @@ def highlightEdges(K):
     colormap is a list of two colors, for the edges not in, resp. in
     the Collection K.
     """
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     for i in K.keys():
         pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
@@ -1736,7 +1736,7 @@ def highlightPoints(K):
 
     K is Collection of actor elements as returned by the pick() method.
     """
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     for i in K.keys():
         pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
@@ -1752,7 +1752,7 @@ def highlightPartitions(K):
     connected to a collection of property numbers, as returned by the
     partitionCollection() method.
     """
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     for i in K.keys():
         pf.debug("Actor %s: Partitions %s" % (i,K[i][0]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
@@ -1769,9 +1769,9 @@ highlight_funcs = { 'actor': highlightActors,
                     }
 
 
-def removeHighlights():
+def removeHighlight():
     """Remove the highlights from the current viewport"""
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     pf.canvas.update()
     
 

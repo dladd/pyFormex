@@ -105,7 +105,7 @@ def run():
         export({'surface':S})
         surface_menu.selection.set(['surface'])
         surface_menu.showSurfaceValue(S,str(conversions),val,False)
-        pf.canvas.removeDecorations()
+        pf.canvas.removeDecoration()
 
 
     clear()

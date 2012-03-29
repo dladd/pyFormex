@@ -282,7 +282,7 @@ def setMaterial():
     if model is None:
         warn()
         return
-    removeHighlights()
+    removeHighlight()
     keys = ['name','sectiontype','young_modulus','poisson_ratio','thickness']
     items = [ (k,section[k]) for k in keys ]
     res = askItems(items)
@@ -311,7 +311,7 @@ def setBoundary():
     if model is None:
         warn()
         return
-    removeHighlights()
+    removeHighlight()
     res = askItems([('x-constraint',xcon),('y-constraint',ycon)])
     if res:
         xcon = res['x-constraint']
@@ -341,7 +341,7 @@ def setCLoad():
     if model is None:
         warn()
         return
-    removeHighlights()
+    removeHighlight()
     res = askItems([
         #('load-case',lc),
         ('x-load',xload),('y-load',yload)])
@@ -371,7 +371,7 @@ def setELoad():
     if model is None:
         warn()
         return
-    removeHighlights()
+    removeHighlight()
     edge_load = askItems([
         ('x',edge_load['x'],{'text':'x-load'}),
         ('y',edge_load['y'],{'text':'y-load'}),

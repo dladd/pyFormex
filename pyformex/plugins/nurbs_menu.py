@@ -137,7 +137,7 @@ def createInteractive():
         return
     print "POINTS %s" % points
     N = drawnObject(points,mode=mode)
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     if N:
         createNurbsCurve(N,name=None)
 

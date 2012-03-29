@@ -124,7 +124,7 @@ def highlightDrawing(points,mode):
     pts is an array of points.
     """
     from gui import actors
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     #print points[-1]
     PA = actors.GeomActor(Formex(points))
     PA.specular=0.0
@@ -178,7 +178,7 @@ def draw_object(mode,npoints=-1):
     print "POINTS %s" % points
     obj = drawnObject(points,mode=mode)
     if obj is None:
-        pf.canvas.removeHighlights()
+        pf.canvas.removeHighlight()
         return
     print "OBJECT IS %s" % obj
     res = askItems([
@@ -193,7 +193,7 @@ def draw_object(mode,npoints=-1):
     if name == autoname[mode].peek():
         autoname[mode].next()
     export({name:obj})
-    pf.canvas.removeHighlights()
+    pf.canvas.removeHighlight()
     draw(points,color='black',nolight=True)
     if mode != 'point':
         draw(obj,color=color,nolight=True)
