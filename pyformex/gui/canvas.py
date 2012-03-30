@@ -848,10 +848,12 @@ class Canvas(object):
                 actor.draw(canvas=self)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
+            GL.glDisable(GL.GL_DEPTH_TEST)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
                 self.setDefaults()
                 actor.draw(canvas=self)
+            GL.glEnable(GL.GL_DEPTH_TEST)
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
         else:
