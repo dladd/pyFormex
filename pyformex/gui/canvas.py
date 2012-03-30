@@ -928,23 +928,40 @@ class Canvas(object):
         except:
             pf.message("Invalid Bbox: %s" % bbox)
 
-         
-    def addActor(self,actor):
-        """Add a 3D actor or a list thereof to the 3D scene."""
-        self.actors.add(actor)
 
-    def addHighlight(self,actor):
+    def addActor(self,itemlist):
+        """Add a 3D actor or a list thereof to the 3D scene."""
+        self.actors.add(itemlist)
+
+    def addHighlight(self,itemlist):
         """Add a highlight or a list thereof to the 3D scene."""
-        self.highlights.add(actor)
+        self.highlights.add(itemlist)
          
-    def addAnnotation(self,actor):
+    def addAnnotation(self,itemlist):
         """Add an annotation or a list thereof to the 3D scene."""
-        self.annotations.add(actor)
+        self.annotations.add(itemlist)
          
-    def addDecoration(self,actor):
+    def addDecoration(self,itemlist):
         """Add a 2D decoration or a list thereof to the canvas."""
-        self.decorations.add(actor)
-        
+        self.decorations.add(itemlist)
+
+    def addAny(self,itemlist=None):
+        """Add any  item or list.
+
+        This will add any actor/annotation/decoration item or a list
+        of any such items  to the canvas. This is the prefered method to add
+        an item to the canvas, because it makes sure that each item is added
+        to the proper list. It can however not be used to add highlights.
+
+        If you have a long list of a single type, it is more efficient to
+        use one of the type specific add methods.
+        """
+        if type(itemlist) not in (tuple,list):
+            itemlist = [ itemlist ]
+        self.addActor([ i for i in itemlist if isinstance(i,actors.Actor)])
+        self.addAnnotation([ i for i in itemlist if isinstance(i,marks.Mark)])
+        self.addDecoration([ i for i in itemlist if isinstance(i,decors.Decoration)])
+
 
     def removeActor(self,itemlist=None):
         """Remove a 3D actor or a list thereof from the 3D scene.

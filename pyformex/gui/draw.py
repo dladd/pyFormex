@@ -980,6 +980,11 @@ def drawActor(A):
     pf.canvas.addActor(A)
     pf.canvas.update()
 
+def drawAny(A):
+    """Draw an Actor/Annotation/Decoration and update the screen."""
+    pf.canvas.addAny(A)
+    pf.canvas.update()
+
 
 def undraw(itemlist):
     """Remove an item or a number of items from the canvas.

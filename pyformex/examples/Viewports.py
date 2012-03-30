@@ -54,7 +54,7 @@ def run():
     drawText('Viewport 1',20,20,size=20)
     pf.GUI.viewports.updateAll()
 
-    pause(msg='NEXT: Create Viewport 2')
+    pause(msg='NEXT: Create Viewport 2 and draw in green')
     layout(3)
     draw(F,color='green')
 

@@ -1342,7 +1342,7 @@ class NewMultiCanvas(QtGui.QGridLayout):
         display lists and textures.
         """
         if shared is not None:
-            pf.debug("SHARING display lists WITH %s" % shared,pf.debug.DRAW)
+            pf.debug("SHARING display lists WITH %s" % shared,pf.DEBUG.DRAW)
         view = QtCanvas(self.parent,shared)
         if len(self.all) > 0:
             # copy default settings from previous
@@ -1427,7 +1427,7 @@ class NewMultiCanvas(QtGui.QGridLayout):
 
 
     def updateAll(self):
-         pf.debug("UPDATING ALL VIEWPORTS",pf.debug.GUI)
+         pf.debug("UPDATING ALL VIEWPORTS",pf.DEBUG.GUI)
          for v in self.all:
              v.update()
          pf.GUI.processEvents()
@@ -1513,7 +1513,7 @@ class MultiCanvas(FramedGridLayout):
         display lists and textures.
         """
         if shared is not None:
-            pf.debug("SHARING display lists WITH %s" % shared,pf.debug.DRAW)
+            pf.debug("SHARING display lists WITH %s" % shared,pf.DEBUG.DRAW)
         canv = QtCanvas(self.parent,shared)
         return(canv)
 
@@ -1610,7 +1610,7 @@ class MultiCanvas(FramedGridLayout):
 ##         self.current.setCamera(bbox,view)
 
     def updateAll(self):
-         pf.debug("UPDATING ALL VIEWPORTS",pf.debug.GUI)
+         pf.debug("UPDATING ALL VIEWPORTS",pf.DEBUG.GUI)
          for v in self.all:
              v.update()
          pf.GUI.processEvents()

@@ -137,10 +137,9 @@ Release 0.9
   :sta: TODO
 
 **Complete the Coords.fromfile and Formex.fromfile arguments**
-      
-**post-install script should not execute pyformex**
-  :dev: bverheg
-  :sta: DONE
+
+**Add DEBUG LEVEL to all debug statements**
+  :sta: PARTIAL
       
 Release 0.9.1
 -------------
@@ -149,13 +148,7 @@ Release 0.9.1
 
 **Finish the tutorial and user guide**
 
-**Add DEBUG LEVEL to all debug statements**
-
 **Set up procedures to follow up submitted bugs/questions**
- 
-**Create Debian packages**
-  :dev: bverheg
-  :sta: DONE
      
 Release 1.0
 -----------
