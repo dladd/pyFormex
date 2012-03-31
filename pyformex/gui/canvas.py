@@ -992,6 +992,10 @@ class Canvas(object):
         """
         if itemlist == None:
             itemlist = self.annotations[:]
+        #
+        # TODO: check whether the removal of the following code
+        # does not have implications
+        #
         ## if self.triade in itemlist:
         ##     pf.debug("REMOVING TRIADE",pf.DEBUG.DRAW)
         ##     self.triade = None

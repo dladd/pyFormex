@@ -315,7 +315,7 @@ def curvature(coords,elems,edges,neighbours=1):
 ############################################################################
 
 
-def fillBorder(border,method='radial'):
+def fillBorder(border,method='radial',dir=[0.,0.,1.]):
     """Create a surface inside a given closed border line.
 
     The border line is a closed polygonal line and can be specified as
@@ -355,9 +355,9 @@ def fillBorder(border,method='radial'):
       object.
     """
     from plugins.curve import PolyLine
-    if method != 'border':
-        border = border.compact()
     if isinstance(border,Mesh) and border.nplex()==2:
+        if method == 'radial':
+            border = border.compact()
         coords = border.coords
         elems = border.elems[:,0]
     elif isinstance(border,PolyLine):
@@ -409,97 +409,112 @@ def fillBorder(border,method='radial'):
             itri += 1
         tri[itri] = e
         elems = elems[tri]
+        
+    elif method == 'planar':
+        import plugins.polygon as pg
+        x = coords[elems]
+        e = arange(x.shape[0])
+        X,C,A,a = pg.projected(x,dir)
+        P = pg.Polygon(Coords(X))
+        if P.area() < 0.0:
+            P = P.reverse()
+            e = reverseAxis(e,0)
+        S = P.fill()
+        elems = e[S.elems]
 
     else:
-        raise ValueError,"Strategy should be either 'radial' or 'border'"
+        raise ValueError,"Strategy should be either 'radial', 'border' or 'planar'"
     
     return TriSurface(coords,elems)
 
+#
+# BV Removed in 0.9
+#
 
-@utils.deprecation("surfaceInsideBorder is deprecated. Please use fillBorder instead.")
-def surfaceInsideBorder(border,method='radial'):
-    """Create a surface inside a closed curve defined by a 2-plex Mesh.
+## @utils.deprecation("surfaceInsideBorder is deprecated. Please use fillBorder instead.")
+## def surfaceInsideBorder(border,method='radial'):
+##     """Create a surface inside a closed curve defined by a 2-plex Mesh.
 
-    border is a 2-plex Mesh representing a closed polyline.
+##     border is a 2-plex Mesh representing a closed polyline.
 
-    The return value is a TriSurface filling the hole inside the border.
+##     The return value is a TriSurface filling the hole inside the border.
 
-    There are two fill methods:
+##     There are two fill methods:
     
-    - 'radial': this method adds a central point and connects all border
-      segments with the center to create triangles. It is fast and works
-      well if the border is smooth, nearly convex and nearly planar.
-    - 'border': this method creates subsequent triangles by connecting the
-      endpoints of two consecutive border segments and thus works its way
-      inwards until the hole is closed. Triangles are created at the segments
-      that form the smallest angle. This method is slower, but works also
-      for most complex borders. Because it does not create any new
-      points, the returned surface uses the same point coordinate array
-      as the input Mesh.
-    """
-    if border.nplex() != 2:
-        raise ValueError,"Expected Mesh with plexitude 2, got %s" % border.nplex()
+##     - 'radial': this method adds a central point and connects all border
+##       segments with the center to create triangles. It is fast and works
+##       well if the border is smooth, nearly convex and nearly planar.
+##     - 'border': this method creates subsequent triangles by connecting the
+##       endpoints of two consecutive border segments and thus works its way
+##       inwards until the hole is closed. Triangles are created at the segments
+##       that form the smallest angle. This method is slower, but works also
+##       for most complex borders. Because it does not create any new
+##       points, the returned surface uses the same point coordinate array
+##       as the input Mesh.
+##     """
+##     if border.nplex() != 2:
+##         raise ValueError,"Expected Mesh with plexitude 2, got %s" % border.nplex()
 
-    if method == 'radial':
-        x = border.getPoints().center()
-        n = zeros_like(border.elems[:,:1]) + border.coords.shape[0]
-        elems = concatenate([border.elems,n],axis=1)
-        coords = Coords.concatenate([border.coords,x])
+##     if method == 'radial':
+##         x = border.getPoints().center()
+##         n = zeros_like(border.elems[:,:1]) + border.coords.shape[0]
+##         elems = concatenate([border.elems,n],axis=1)
+##         coords = Coords.concatenate([border.coords,x])
 
-    elif method == 'border':
-        coords = border.coords
-        segments = border.elems
-        elems = empty((0,3,),dtype=int)
-        while len(segments) != 3:
-            segments,triangle = _create_border_triangle(coords,segments)
-            elems = row_stack([elems,triangle])
-        elems = row_stack([elems,segments[:,0]])
+##     elif method == 'border':
+##         coords = border.coords
+##         segments = border.elems
+##         elems = empty((0,3,),dtype=int)
+##         while len(segments) != 3:
+##             segments,triangle = _create_border_triangle(coords,segments)
+##             elems = row_stack([elems,triangle])
+##         elems = row_stack([elems,segments[:,0]])
 
-    else:
-        raise ValueError,"Strategy should be either 'radial' or 'border'"
+##     else:
+##         raise ValueError,"Strategy should be either 'radial' or 'border'"
     
-    return TriSurface(coords,elems)
+##     return TriSurface(coords,elems)
 
 
-# This should be replaced with an algorith using PolyLine
-def _create_border_triangle(coords,elems):
-    """Create a triangle within a border.
+## # This should be replaced with an algorith using PolyLine
+## def _create_border_triangle(coords,elems):
+##     """Create a triangle within a border.
     
-    The triangle is created from the two border elements with
-    the sharpest angle.
-    Coords is a (npoints,3) shaped array of floats.
-    Elems is a (nelems,2) shaped array of integers representing
-    the border element numbers and must be ordered.
-    A list of two objects is returned: the new border elements and the triangle.
-    """
-    border = coords[elems]
-    # calculate angles between edges of border
-    edges1 = border[:,1]-border[:,0]
-    edges2 = border[:,0]-border[:,1]
-    # roll axes so that edge i of edges1 and edges2 are neighbours
-    edges2 = roll(edges2,-1,0)
-    len1 = length(edges1)
-    len2 = length(edges2)
-    inpr = diagonal(inner(edges1,edges2))
-    cos = inpr/(len1*len2)
-    # angle between 0 and 180 degrees
-    angle = arccosd(cos)
-    # determine sharpest angle
-    i = where(angle == angle.min())[0][0]
-    # create triangle and new border elements
-    j = i + 1
-    n = shape(elems)[0]
-    if j == n:
-        j -= n
-    old_edges = take(elems,[i,j],0)
-    elems = delete(elems,[i,j],0)
-    new_edge = asarray([old_edges[0,0],old_edges[-1,1]])
-    if j == 0:
-        elems = insert(elems,0,new_edge,0)
-    else:
-        elems = insert(elems,i,new_edge,0)
-    triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
-    return elems,triangle
+##     The triangle is created from the two border elements with
+##     the sharpest angle.
+##     Coords is a (npoints,3) shaped array of floats.
+##     Elems is a (nelems,2) shaped array of integers representing
+##     the border element numbers and must be ordered.
+##     A list of two objects is returned: the new border elements and the triangle.
+##     """
+##     border = coords[elems]
+##     # calculate angles between edges of border
+##     edges1 = border[:,1]-border[:,0]
+##     edges2 = border[:,0]-border[:,1]
+##     # roll axes so that edge i of edges1 and edges2 are neighbours
+##     edges2 = roll(edges2,-1,0)
+##     len1 = length(edges1)
+##     len2 = length(edges2)
+##     inpr = diagonal(inner(edges1,edges2))
+##     cos = inpr/(len1*len2)
+##     # angle between 0 and 180 degrees
+##     angle = arccosd(cos)
+##     # determine sharpest angle
+##     i = where(angle == angle.min())[0][0]
+##     # create triangle and new border elements
+##     j = i + 1
+##     n = shape(elems)[0]
+##     if j == n:
+##         j -= n
+##     old_edges = take(elems,[i,j],0)
+##     elems = delete(elems,[i,j],0)
+##     new_edge = asarray([old_edges[0,0],old_edges[-1,1]])
+##     if j == 0:
+##         elems = insert(elems,0,new_edge,0)
+##     else:
+##         elems = insert(elems,i,new_edge,0)
+##     triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
+##     return elems,triangle
 
 
 

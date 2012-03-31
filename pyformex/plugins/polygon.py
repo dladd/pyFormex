@@ -28,14 +28,27 @@
 """
 
 import pyformex as pf
-from coords import *
+from formex import *
 from geometry import Geometry
 from plugins.curve import PolyLine
-from plugins.trisurface import fillBorder
+from plugins.trisurface import TriSurface
 import utils
 
-##############################################################################
-#
+############################################################################
+
+def projected(X,N):
+    """Returns 2-D coordinates of a set of 3D coordinates."""
+    from geomtools import rotationAngle
+    if N is None:
+        N = self.normal
+    a,A = rotationAngle([0.,0.,1.],N)
+    a,A = a[0],A[0]
+    X = X.rotate(angle=-a,axis=A)
+    C = X.center()
+    X = X.translate(-C)
+    return X[...,:2],C,A,a
+
+
 class Polygon(Geometry):
     """A Polygon is a flat surface bounded by a closed PolyLine.
 
@@ -112,12 +125,47 @@ class Polygon(Geometry):
         These angles are the complement of the 
         """
         return 180.-self.externalAngles()
-       
 
-    
+
+    def reverse(self):
+        """Return the Polygon with reversed order of vertices."""
+        return Polygon(Coords(reverseAxis(self.coords,0)))
+
 
     def fill(self):
-        return
+        """Fill the surface inside the polygon with triangles.
+
+        Returns a TriSurface filling the surface inside the polygon.
+        """
+        # creating elems array at once (more efficient than appending)
+        x = self.coords
+        n = x.shape[0]
+        tri = -ones((n-2,3),dtype=Int)
+        # compute all internal angles
+        e = arange(x.shape[0])
+        c = self.internalAngles()
+        # loop in order of smallest angles
+        itri = 0
+        while n > 3:
+            # find minimal angle
+            j = c.argmin()
+            i = (j - 1) % n
+            k = (j + 1) % n
+            tri[itri] = [ e[i],e[j],e[k]]
+            # remove the point j of triangle i,j,k
+            # recompute adjacent angles of edge i,k
+            ii = (i-1) % n
+            kk = (k+1) % n
+            iq = e[[ii,i,k,kk]]
+            PQ = Polygon(x[iq])
+            cn = PQ.internalAngles()
+            cnew = cn[1:3]
+            c = roll(concatenate([cnew,roll(c,1-j)[3:]]),j-1)
+            e = roll(roll(e,-j)[1:],j)
+            n -= 1
+            itri += 1
+        tri[itri] = e
+        return TriSurface(x,tri)
 
 
     def area(self,project=None):
@@ -134,18 +182,10 @@ class Polygon(Geometry):
         Note that if the polygon is nonplanar and no direction is given,
         the area inside the polygon is not well defined.
         """
-        from geomtools import polygonArea
-        return polygonArea(self.coords,project)
+        from plugins.section2d import PlaneSection
+        return PlaneSection(Formex(self.coords)).sectionChar()['A']   
 
 
-def reducePolyline(x,e):
-    """Create a triangle within a border.
-    
-    - coords: (npoints,3) Coords: the ordered vertices of the border.
-    Elems is a (nelems,2) shaped array of integers representing
-    the border element numbers and must be ordered.
-    A list of two objects is returned: the new border elements and the triangle.
-    """
 
 if __name__ == 'draw':
 

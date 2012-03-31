@@ -48,33 +48,36 @@ def areaNormals(x):
     area *= 0.5
     return area,normals
 
+#
+# REMOVED BECAUSE IT IS PLAIN WRONG !!!
+#
 
-def polygonArea(x,project=None):
-    """Compute area inside a polygon.
+## def polygonArea(x,project=None):
+##     """Compute area inside a polygon.
 
-    Parameters:
+##     Parameters:
 
-    - `x`: (nplex,3) Coords array representing the vertices of a
-      (possibly nonplanar) polygon.
-    - `project`: (3,) Coords array representing a unit direction vector.
+##     - `x`: (nplex,3) Coords array representing the vertices of a
+##       (possibly nonplanar) polygon.
+##     - `project`: (3,) Coords array representing a unit direction vector.
     
-    Returns: a single float value with the area inside the polygon. If a
-    direction vector is given, the area projected in that direction is
-    returned.
+##     Returns: a single float value with the area inside the polygon. If a
+##     direction vector is given, the area projected in that direction is
+##     returned.
     
-    Note that if the polygon is nonplanar and no direction is given, the area
-    inside the polygon is not well defined.
-    """
-    if x.shape[1] < 3:
-        return 0.0
+##     Note that if the polygon is nonplanar and no direction is given, the area
+##     inside the polygon is not well defined.
+##     """
+##     if x.shape[1] < 3:
+##         return 0.0
 
-    x1 = roll(x,-1,axis=0)
+##     x1 = roll(x,-1,axis=0)
 
-    if project is None:
-        area = vectorPairArea(x,x1)
-    else:
-        area = vectorTripleProduct(Coords(project),x,x1)
-    return 0.5 *area.sum()
+##     if project is None:
+##         area = vectorPairArea(x,x1)
+##     else:
+##         area = vectorTripleProduct(Coords(project),x,x1)
+##     return 0.5 *area.sum()
 
 
 def polygonNormals(x):

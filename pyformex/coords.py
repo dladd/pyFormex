@@ -436,9 +436,19 @@ class Coords(ndarray):
 
     def inertia(self,mass=None):
         """Return inertia related quantities of the :class:`Coords`.
-        
-        This returns the center of gravity, the principal axes of inertia,
-        the principal moments of inertia and the inertia tensor.
+
+        Parameters:
+
+        - `mass`: float array with ncoords weight values. The default is to
+          attribute a weight 1. to each point.
+
+        Returns a tuple of:
+
+        - `center`: the center of mass: shape (3,)
+        - `axes`: the principal axes of the inertia tensor: shape (3,3)
+        - `principal`: the (prinicipal) moments of inertia: shape (3,)
+        - `tensor`: the full inertia tensor in the global axes: shape (3,3)
+
         """
         from plugins import inertia
         if mass is not None:

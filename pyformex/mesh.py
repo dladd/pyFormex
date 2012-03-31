@@ -1864,7 +1864,6 @@ def replicConnectivity(e,n,inc):
     of the original e, but having the node numbers increased by inc.
     """
     return Connectivity(concatenate([e+i*inc for i in range(n)]),eltype=e.eltype)
-
     
 
 def mergeNodes(nodes,fuse=True,**kargs):
