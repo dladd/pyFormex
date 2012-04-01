@@ -315,7 +315,7 @@ def curvature(coords,elems,edges,neighbours=1):
 ############################################################################
 
 
-def fillBorder(border,method='radial',dir=[0.,0.,1.]):
+def fillBorder(border,method='radial',dir=None):
     """Create a surface inside a given closed border line.
 
     The border line is a closed polygonal line and can be specified as
@@ -414,6 +414,14 @@ def fillBorder(border,method='radial',dir=[0.,0.,1.]):
         import plugins.polygon as pg
         x = coords[elems]
         e = arange(x.shape[0])
+        
+        if dir is None:
+            # Find a good projection direction
+            C,r,Ip,I = x.inertia()
+            X = x.trl(-C).rot(r)
+            i =  X.sizes().argmin()
+            dir = r[:,i]
+        
         X,C,A,a = pg.projected(x,dir)
         P = pg.Polygon(Coords(X))
         if P.area() < 0.0:

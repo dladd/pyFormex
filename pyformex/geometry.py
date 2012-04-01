@@ -85,6 +85,7 @@ class Geometry(object):
     :meth:`sizes`,
     :meth:`dsize`,
     :meth:`bsphere`,
+    :meth:`inertia`,
     :meth:`distanceFromPlane`,
     :meth:`distanceFromLine`,
     :meth:`distanceFromPoint`,
@@ -195,6 +196,8 @@ class Geometry(object):
         return self.coords.dsize()
     def bsphere(self):
         return self.coords.bsphere()
+    def inertia(self):
+        return self.coords.inertia()
 
     def info(self):
         return "coords" + str(self.coords.shape)

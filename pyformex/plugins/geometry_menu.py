@@ -785,16 +785,84 @@ def createSphere():
         
 
 #############################################
+###  Transformations
+#############################################
+
+#
+# TODO: CREATE/USE A STANDARD AXES OBJECT  
+#
+def unitAxes():
+    """Create a set of three axes."""
+    Hx = Formex('l:1',5).translate([-0.5,0.0,0.0])
+    Hy = Hx.rotate(90)
+    Hz = Hx.rotate(-90,1)
+    Hx.setProp(4)
+    Hy.setProp(5)
+    Hz.setProp(6)
+    return Formex.concatenate([Hx,Hy,Hz])    
+
+
+def showPrincipal():
+    """Show the principal axes."""
+    F = selection.check(single=True)
+    if not F:
+        return
+    # compute the axes
+    data = F.inertia()
+    C,Iaxes,Iprin,I = data
+    pf.message("Center of gravity: %s" % C)
+    pf.message("Principal Directions:\n %s" % Iaxes)
+    pf.message("Principal Values: %s" % Iprin)
+    pf.message("Inertia tensor: %s" % I)
+    # now display the axes
+    siz = F.dsize()
+    H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
+    A = 0.1*siz * Iaxes.transpose()
+    G = Formex([[C,C+Ax] for Ax in A],3)
+    draw([G,H],linewidth=2,nolight=True)
+    export({'principalAxes':H,'_principal_data_':data})
+    return data
+
+
+def rotatePrincipal():
+    """Rotate the selection according to the last shown principal axes."""
+    try:
+        data = named('_principal_data_')
+    except:
+        data = showPrincipal() 
+    FL = selection.check()
+    if FL:
+        ctr,rot = data[:2]
+        selection.changeValues([ F.trl(-ctr).rot(rot).trl(ctr) for F in FL ])
+        selection.drawChanges()
+
+
+def transformPrincipal():
+    """Transform the selection according to the last shown principal axes.
+
+    This is analog to rotatePrincipal, but positions the object at its center.
+    """
+    try:
+        data = named('_principal_data_')
+    except:
+        data = showPrincipal() 
+    FL = selection.check()
+    if FL:
+        ctr,rot = data[:2]
+        selection.changeValues([ F.trl(-ctr).rot(rot) for F in FL ])
+        selection.drawChanges()
+
+
+#############################################
 ###  Mesh functions
 #############################################
        
 def narrow_selection(clas):
     global selection
-    print "BEFORE",selection.names
+    print "SELECTION ALL TYPES",selection.names
     selection.set([n for n in selection.names if isinstance(named(n),clas)])
-    print "BEFORE",selection.names
+    print "SELECTION MESH TYPE",selection.names
     
-
 
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
@@ -1050,10 +1118,10 @@ def create_menu():
         ##   ("&Cut With Plane",cutSelection),
         ##   ]),
         ## ("&Undo Last Changes",selection.undoChanges),
-        ## ("---",None),
-        ## ("Show &Principal Axes",showPrincipal),
-        ## ("Rotate to &Principal Axes",rotatePrincipal),
-        ## ("Transform to &Principal Axes",transformPrincipal),
+        ("---",None),
+        ("Show &Principal Axes",showPrincipal),
+        ("Rotate to &Principal Axes",rotatePrincipal),
+        ("Transform to &Principal Axes",transformPrincipal),
         ## ("---",None),
         ## ("&Concatenate Selection",concatenateSelection),
         ## ("&Partition Selection",partitionSelection),

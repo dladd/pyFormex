@@ -138,6 +138,8 @@ class Polygon(Geometry):
         Returns a TriSurface filling the surface inside the polygon.
         """
         # creating elems array at once (more efficient than appending)
+        #from gui.draw import draw,pause,undraw
+        from geomtools import insideTriangle
         x = self.coords
         n = x.shape[0]
         tri = -ones((n-2,3),dtype=Int)
@@ -147,19 +149,38 @@ class Polygon(Geometry):
         # loop in order of smallest angles
         itri = 0
         while n > 3:
-            # find minimal angle
-            j = c.argmin()
-            i = (j - 1) % n
-            k = (j + 1) % n
-            tri[itri] = [ e[i],e[j],e[k]]
-            # remove the point j of triangle i,j,k
-            # recompute adjacent angles of edge i,k
-            ii = (i-1) % n
-            kk = (k+1) % n
-            iq = e[[ii,i,k,kk]]
-            PQ = Polygon(x[iq])
-            cn = PQ.internalAngles()
-            cnew = cn[1:3]
+            #print "ANGLES",c
+            # try minimal angle
+            srt = c.argsort()
+            for j in srt:
+                #print "ANGLE: %s" % c[j]
+                if c[j] > 180.:
+                    print "OOPS, I GOT STUCK"
+                    #
+                    # We could return here also the remaining part
+                    #
+                    return TriSurface(x,tri[:itri])
+                i = (j - 1) % n
+                k = (j + 1) % n
+                newtri = [ e[i],e[j],e[k]]
+                # remove the point j of triangle i,j,k
+                # recompute adjacent angles of edge i,k
+                ii = (i-1) % n
+                kk = (k+1) % n
+                iq = e[[ii,i,k,kk]]
+                PQ = Polygon(x[iq])
+                cn = PQ.internalAngles()
+                cnew = cn[1:3]
+                reme = roll(e,-j)[2:-1]
+                T = x[newtri].reshape(1,3,3)
+                P = x[reme].reshape(-1,1,3)
+                check = insideTriangle(T,P)
+                if not check.any():
+                    # Triangle is ok
+                    break
+            #draw(TriSurface(x,newtri),bbox='last')
+            # accept new triangle
+            tri[itri] = newtri
             c = roll(concatenate([cnew,roll(c,1-j)[3:]]),j-1)
             e = roll(roll(e,-j)[1:],j)
             n -= 1
