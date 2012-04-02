@@ -1493,7 +1493,7 @@ class Coords(ndarray):
         return [ self[i] for i in range(self.shape[0]) ]
 
 
-    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True):
+    def fuse(self,nodesperbox=2,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True):
         """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them

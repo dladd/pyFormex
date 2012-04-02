@@ -430,7 +430,7 @@ def fillBorder(border,method='radial',dir=None):
             P = P.reverse()
             e = reverseAxis(e,0)
         S = P.fill()
-        elems = e[S.elems]
+        elems = elems[S.elems]
 
     else:
         raise ValueError,"Strategy should be either 'radial', 'border' or 'planar'"
@@ -927,7 +927,7 @@ class TriSurface(Mesh):
         return [ Mesh(self.coords,e) for e in self.checkBorder() ]
 
 
-    def fillBorder(self,method='radial'):
+    def fillBorder(self,method='radial',dir=None):
         """Fill the border areas of a surface to make it closed.
 
         Returns a list of surfaces, each of which fills a singly connected
@@ -943,11 +943,11 @@ class TriSurface(Mesh):
             mprop = 1
         else:
             mprop = self.prop.max()+1
-        return [ fillBorder(b,method).setProp(mprop+i) for i,b in enumerate(self.border()) ]
+        return [ fillBorder(b,method,dir).setProp(mprop+i) for i,b in enumerate(self.border()) ]
 
 
-    def close(self,method='radial'):
-        border = self.fillBorder(method)
+    def close(self,method='radial',dir=None):
+        border = self.fillBorder(method,dir)
         return self.concatenate([self]+border)
         
 
