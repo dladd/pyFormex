@@ -427,45 +427,6 @@ def deleteTriangles():
                 export({name:S})
                 selection.draw()
 
-## def fillHoles():
-##     """Fill the holes in the selected surface."""
-##     from connectivity import connectedLineElems
-##     S = selection.check(single=True)
-##     if S:
-##         border_elems = S.getEdges()[S.borderEdges()]
-##         if border_elems.size != 0:
-##             # partition borders
-##             print(border_elems)
-##             border_elems = connectedLineElems(border_elems)
-##             print(border_elems)
-            
-##             # draw borders in new viewport
-##             R = pf.canvas.camera.getRot()
-##             P = pf.canvas.camera.perspective
-##             layout(2)
-##             viewport(1)
-##             pf.canvas.camera.rot = R
-##             toolbar.setPerspective(P)
-##             for i,elems in enumerate(border_elems):
-##                 draw(Formex(S.coords[elems],i))
-##             zoomAll()
-##             # pick borders for which the hole must be filled
-##             info("PICK HOLES WHICH HAVE TO BE FILLED.")
-##             picked = pick(mode='actor')
-##             layout(1)
-##             # fill the holes
-##             triangles = empty((0,3,),dtype=int)
-##             if picked.has_key(-1):
-##                 for i in picked[-1]:
-##                     triangles = row_stack([triangles,fillHole(S.coords,border_elems[int(i)])])
-##                 T = TriSurface(S.coords,triangles)
-##                 S.append(T)
-##                 draw(T,color='red',bbox=None)
-##             else:
-##                 warning("No borders were picked.")
-##         else:
-##             warning("The surface %s does not have a border." % selection[0])
-
 
 # Selectable values for display/histogram
 # Each key is a description of a result

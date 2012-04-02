@@ -24,10 +24,6 @@
 ##
 """Baumkuchen Vault
 
-level = 'beginner'
-topics = ['structure']
-techniques = ['color','bump']
-
 """
 _status = 'checked'
 _level = 'beginner'
