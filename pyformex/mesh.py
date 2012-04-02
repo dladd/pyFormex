@@ -1526,7 +1526,7 @@ Size: %s
         return self.connect(seq,eltype=eltype)
 
 
-    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True):
+    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclude=None):
         """Return a smoothed mesh.
         
         Smoothing algorithm based on lowpass filters.
@@ -1541,7 +1541,10 @@ Size: %s
         if iterations<1: 
             return self
         mu = -lamb/(1-k*lamb)
-        adj=self.getEdges().adjacency(kind='n')
+        adj = self.getEdges().adjacency(kind='n')
+        incl = resize(True, self.ncoords())
+        if exclude is not None:
+            incl[exclude] = False
         if edg:
             externals = resize(False,self.ncoords())
             expoints = unique(self.getFreeEntities())
@@ -1561,8 +1564,8 @@ Size: %s
         w = w.reshape(adj.shape[0],adj.shape[1],1)
         c = self.coords.copy()
         for i in range(iterations):
-            c = (1.-lamb)*c + lamb*(w*c[adj]).sum(1)
-            c = (1.-mu)*c + mu*(w*c[adj]).sum(1)
+            c[incl] = (1.-lamb)*c[incl] + lamb*(w[incl]*c[adj][incl]).sum(1)
+            c[incl] = (1.-mu)*c[incl] + mu*(w[incl]*c[adj][incl]).sum(1)
         return self.__class__(c, self.elems, self.prop, eltype=self.eltype)
 
 
