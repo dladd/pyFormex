@@ -729,14 +729,28 @@ def scale3Selection():
 
 
 def translateSelection():
-    """Translate the selection."""
+    """Translate the selection in axes direction."""
     FL = selection.check()
+    modes = ['Axis direction','General direction']
     if FL:
-        res = askItems([_I('direction',0),
-                        _I('distance','1.0'),
-                        ],caption = 'Translation Parameters')
+        res = askItems(
+            [   _I('mode',choices=modes),
+                _I('axis',0),
+                _I('direction',[1.,0.,0.],itemtype='point'),
+                _I('distance',1.0),
+                ],
+            enablers=[
+                ('mode',modes[0],'axis'),
+                ('mode',modes[1],'direction'),
+                ],
+            caption = 'Translation Parameters',
+            )
         if res:
-            dir = res['direction']
+            mode = res['mode']
+            if mode[0] == 'A':
+                dir = res['axis']
+            else:
+                dir = res['direction']
             dist = res['distance']
             selection.remember(True)
             selection.changeValues([F.translate(dir,dist) for F in FL])

@@ -233,7 +233,7 @@ class GeometryFile(object):
 
         This is equivalent to writeMesh(F,name,sep,objtype='TriSurface')
         """
-        self.writeMesh(F,name=None,sep=None,objtype='TriSurface')
+        self.writeMesh(F,name=name,sep=sep,objtype='TriSurface')
 
 
     def writeCurve(self,F,name=None,sep=None,objtype=None,extra=None):
@@ -262,7 +262,7 @@ class GeometryFile(object):
 
         This is equivalent to writeCurve(F,name,sep,objtype='PolyLine')
         """
-        self.writeCurve(F,name=None,sep=None,objtype='PolyLine')
+        self.writeCurve(F,name=name,sep=sep,objtype='PolyLine')
 
 
     def writeBezierSpline(self,F,name=None,sep=None):
@@ -270,7 +270,7 @@ class GeometryFile(object):
 
         This is equivalent to writeCurve(F,name,sep,objtype='BezierSpline')
         """
-        self.writeCurve(F,name=None,sep=None,objtype='BezierSpline',extra="; degree=%s" % F.degree)
+        self.writeCurve(F,name=name,sep=sep,objtype='BezierSpline',extra="; degree=%s" % F.degree)
 
 
     def writeNurbsCurve(self,F,name=None,sep=None,extra=None):
