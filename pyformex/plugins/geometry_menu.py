@@ -788,19 +788,6 @@ def createSphere():
 ###  Transformations
 #############################################
 
-#
-# TODO: CREATE/USE A STANDARD AXES OBJECT  
-#
-def unitAxes():
-    """Create a set of three axes."""
-    Hx = Formex('l:1',5).translate([-0.5,0.0,0.0])
-    Hy = Hx.rotate(90)
-    Hz = Hx.rotate(-90,1)
-    Hx.setProp(4)
-    Hy.setProp(5)
-    Hz.setProp(6)
-    return Formex.concatenate([Hx,Hy,Hz])    
-
 
 def showPrincipal():
     """Show the principal axes."""
@@ -814,13 +801,11 @@ def showPrincipal():
     pf.message("Principal Directions:\n %s" % Iaxes)
     pf.message("Principal Values: %s" % Iprin)
     pf.message("Inertia tensor: %s" % I)
-    # now display the axes
-    siz = F.dsize()
-    H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
-    A = 0.1*siz * Iaxes.transpose()
-    G = Formex([[C,C+Ax] for Ax in A],3)
-    draw([G,H],linewidth=2,nolight=True)
-    export({'principalAxes':H,'_principal_data_':data})
+    # display the axes
+    CS = CoordinateSystem(origin=C,axes=Iaxes.transpose())
+    size = 0.6*F.dsize()
+    drawAxes(CS,size=size,psize=0.1*size)
+    export({'_principal_data_':data})
     return data
 
 

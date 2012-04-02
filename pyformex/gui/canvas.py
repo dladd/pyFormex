@@ -793,6 +793,12 @@ class Canvas(object):
         self.display()
 
 
+    def drawit(self,a):
+        """_Perform the draawing of a single item"""
+        self.setDefaults()
+        a.draw(self)
+        
+
     def display(self):
         """(Re)display all the actors in the scene.
 
@@ -804,21 +810,22 @@ class Canvas(object):
         self.makeCurrent()
         self.clear()
         
-        # decorations are drawn in 2D mode
+        # draw background decorations in 2D mode
         self.begin_2D_drawing()
         
         if self.background:
             #pf.debug("Displaying background",pf.DEBUG.DRAW)
             self.background.draw(mode='smooth')
 
-        if len(self.decorations) > 0:
-            for actor in self.decorations:
-                self.setDefaults()
-                ## if hasattr(actor,'zoom'):
-                ##     self.zoom_2D(actor.zoom)
-                actor.draw(canvas=self)
-                ## if hasattr(actor,'zoom'):
-                ##     self.zoom_2D()
+        # background decorations
+        back_decors = [ d for d in self.decorations if not d.ontop ]
+        for actor in back_decors:
+            self.setDefaults()
+            ## if hasattr(actor,'zoom'):
+            ##     self.zoom_2D(actor.zoom)
+            actor.draw(canvas=self)
+            ## if hasattr(actor,'zoom'):
+            ##     self.zoom_2D()
 
         # draw the focus rectangle if more than one viewport
         if len(pf.GUI.viewports.all) > 1 and pf.cfg['gui/showfocus']:
@@ -838,8 +845,8 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(canvas=self)
 
-        # draw the scene actors
-        sorted_actors =  [ a for a in self.actors if not a.ontop ] + [ a for a in self.actors if a.ontop ]
+        # draw the scene actors and annotations
+        sorted_actors =  [ a for a in self.actors if not a.ontop ] + [ a for a in self.actors if a.ontop ] + self.annotations
         if self.alphablend:
             opaque = [ a for a in sorted_actors if not a.trans ]
             transp = [ a for a in sorted_actors if a.trans ]
@@ -861,10 +868,23 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(canvas=self)
 
-        # annotations are decorations drawn in 3D space
-        for actor in self.annotations:
+        ## # annotations are decorations drawn in 3D space
+        ## for actor in self.annotations:
+        ##     self.setDefaults()
+        ##     actor.draw(canvas=self)
+
+
+        # draw foreground decorations in 2D mode
+        self.begin_2D_drawing()
+        decors = [ d for d in self.decorations if d.ontop ]
+        for actor in decors:
             self.setDefaults()
+            ## if hasattr(actor,'zoom'):
+            ##     self.zoom_2D(actor.zoom)
             actor.draw(canvas=self)
+            ## if hasattr(actor,'zoom'):
+            ##     self.zoom_2D()
+        self.end_2D_drawing()
 
         # make sure canvas is updated
         GL.glFlush()

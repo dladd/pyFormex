@@ -58,7 +58,7 @@ class Actor(Drawable):
       actor but *not* creating a new display list.
 
     The interactive picking functionality requires the following methods,
-    for which we porvide do-nothing defaults here:
+    for which we provide do-nothing defaults here:
     
     - `npoints()`:
     - `nelems()`:
@@ -198,7 +198,7 @@ class BboxActor(Actor):
             GL.glLineWidth(self.linewidth)
         drawLines(self.vertices,self.edges,self.color)
 
- 
+
 class AxesActor(Actor):
     """An actor showing the three axes of a CoordinateSystem.
 
@@ -214,34 +214,45 @@ class AxesActor(Actor):
     draw_planes = False: do not draw the coordinate planes.
     """
 
-    def __init__(self,cs=None,size=1.0,color=[red,green,blue],colored_axes=True,draw_planes=False,linewidth=None,**kargs):
+    def __init__(self,cs=None,size=1.0,psize=0.5,color=[red,green,blue],colored_axes=True,draw_planes=True,draw_reverse=True,linewidth=2,alpha=0.5,**kargs):
         Actor.__init__(self,**kargs)
         if cs is None:
             cs = CoordinateSystem()
         self.cs = cs
         self.color = saneColorArray(saneColor(color),(3,1))
+        self.alpha = alpha
+        self.trans = True
+        self.nolight = True
         self.colored_axes = colored_axes
         self.draw_planes = draw_planes
+        self.draw_reverse = draw_reverse
         self.linewidth = linewidth
-        self.setSize(size)
+        self.setSize(size,psize)
 
     def bbox(self):
         origin = self.cs[3]
         return array([origin-self.size,origin+self.size])
 
-    def setSize(self,size):
+    def setSize(self,size,psize):
+        self.size = 1.0
         size = float(size)
         if size > 0.0:
             self.size = size
+        if psize is None:
+            self.psize = 0.5 * self.size
+        psize = float(psize)
+        if psize > 0.0:
+            self.psize = psize
         self.delete_list()
 
     def drawGL(self,**kargs):
         """Draw the axes."""
-        x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
         if self.draw_planes:
+            x = self.cs.trl(-self.cs[3]).scale(self.psize).trl(self.cs[3])
             e = array([[3,1,2],[3,2,0],[3,0,1]])
-            drawPolygons(x,e,'flat')
+            drawPolygons(x,e,mode='flat',color=self.color,alpha=self.alpha)
         
+        x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
         e = array([[3,0],[3,1],[3,2]])
         if self.colored_axes:
             c = self.color
@@ -250,6 +261,9 @@ class AxesActor(Actor):
         if self.linewidth:
             GL.glLineWidth(self.linewidth)
         drawLines(x,e,c)
+        if self.draw_reverse:
+            x[:3] = 2*x[3] - x[:3]
+            drawLines(x,e,1.0-c)
 
   
 class GridActor(Actor):
@@ -490,7 +504,7 @@ class GeomActor(Actor):
         if self.bkalpha is not None:
             self.bkalpha = float(self.bkalpha)
         # TODO: not sure about the following
-        self.trans = self.alpha < 1.0 # or self.bkalpha < 1.0 
+        self.trans = self.alpha < 1.0 or self.bkalpha < 1.0 
             
 
     def bbox(self):

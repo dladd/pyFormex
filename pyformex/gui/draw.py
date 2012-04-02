@@ -895,6 +895,29 @@ def drawVertexNumbers(F,color='black',trl=None,ontop=False):
     return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[-2]),(FC.shape[0])),color=color,ontop=ontop)
 
 
+def drawBbox(F):
+    """Draw the bounding box of the geometric object F.
+
+    F is any object that has a `bbox` method.
+    Returns the drawn Annotation.
+    """
+    B = actors.BboxActor(F.bbox())
+    annotate(B)
+    return B
+
+
+def drawPrincipal(F,weight=None):
+    """Draw the principal axes of the geometric object F.
+
+    F is any object that has a `coords` attribute.
+    If specified, weight is an array of weights attributed to the points
+    of F. It should have the same length as `F.coords`.
+    """
+    B = actors.PrincipalActor(F,weight)
+    annotate(B)
+    return B
+
+
 def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     """Draw a text at a 3D point P."""
     M = marks.TextMark(P,text,color=color,font=font,size=size,ontop=ontop)
@@ -903,13 +926,17 @@ def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     return M
         
 
-def drawAxes(*args,**kargs):
+def drawAxes(CS,*args,**kargs):
     """Draw the axes of a CoordinateSystem.
 
-    This draws an AxesActor corresponding to the specified Coordinatesystem.
-    The arguments are the same as those of the AxesActor constructor.
+    CS is a CoordinateSystem. Other arguments can be added just like in the
+    :class:`AxesActor` class.
+
+    While you can draw a CoordinateSystem using the :func:`draw` function,
+    this function gives a better result because it has specialized color
+    and annotation settings and provides reasonable deafults.
     """
-    A = actors.AxesActor(*args,**kargs)
+    A = actors.AxesActor(CS,*args,**kargs)
     drawActor(A)
     return A
         
@@ -966,13 +993,6 @@ def drawViewportAxes3D(pos,color=None):
     M = marks.AxesMark(pos,color)
     annotate(M)
     return M
-
-
-def drawBbox(A):
-    """Draw the bbox of the actor A."""
-    B = actors.BboxActor(A.bbox())
-    annotate(B)
-    return B
 
 
 def drawActor(A):

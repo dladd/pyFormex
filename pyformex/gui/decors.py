@@ -130,6 +130,8 @@ class Decoration(Drawable):
         self.y = int(y)
         if 'nolight' not in kargs:
             kargs['nolight'] = True
+        if 'ontop' not in kargs:
+            kargs['ontop'] = True
         Drawable.__init__(self,**kargs)
 
 

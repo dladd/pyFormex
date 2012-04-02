@@ -25,32 +25,21 @@
 
 """RotoTranslation
 
-level = 'advanced'
-topics = ['geometry']
-techniques = ['transform']
-original idea: gianluca
-
-.. Description
-
-RotoTranslation
----------------
 This example illustrates the use of transformCS() to return to an original
 reference system after a number of affine transformations.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry']
 _techniques = ['transform']
+_author = 'gianluca' 
 
 from gui.draw import *
 import simple
 
 
-savewait = pf.GUI.drawwait
-pf.GUI.drawwait = 2.0
-
 def atExit():
-    pf.GUI.drawwait = savewait
+    delay(savewait)
 
 line = 300
 line_inc = -40
@@ -78,11 +67,15 @@ def createScene(text=None,caged=True,color=None,move=0):
     if text:
         drawText(text,20,line,size=20)
         line += line_inc
-    axes = drawAxes(CS)
+    axes = drawAxes(CS,size=0.4,draw_planes=False)
     zoomAll()
+    zoom(0.7)
     return horse,cage
 
+
 def run():
+    global line,H,C,CS,savewait
+    savewait = delay(2.0)
     clear()
     lights(True)
     view('iso')
@@ -154,6 +147,7 @@ def run():
     T = "And the horse lived happily ever after."
     script += [ createScene(text=T,color=7,caged=False) ]
     undraw(script[-2])
+
 
 if __name__ == 'draw':
     run()

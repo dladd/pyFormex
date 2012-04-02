@@ -420,6 +420,8 @@ def fillBorder(border,method='radial',dir=None):
             C,r,Ip,I = x.inertia()
             X = x.trl(-C).rot(r)
             i =  X.sizes().argmin()
+            # r gives the directions as column vectors!
+            # maybe we should change that
             dir = r[:,i]
         
         X,C,A,a = pg.projected(x,dir)
