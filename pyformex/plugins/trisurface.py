@@ -430,7 +430,8 @@ def fillBorder(border,method='radial',dir=None):
             P = P.reverse()
             e = reverseAxis(e,0)
         S = P.fill()
-        elems = elems[S.elems]
+        e = e[S.elems]
+        elems = elems[e]
 
     else:
         raise ValueError,"Strategy should be either 'radial', 'border' or 'planar'"
