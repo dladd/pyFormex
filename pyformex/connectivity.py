@@ -1290,15 +1290,16 @@ def findConnectedLineElems(elems):
 # BV: this could become a Connectivity function splitByConnection
 
 def connectedLineElems(elems,return_indices=False):
-    """Partition a segmented curve into connected segments.
+    """Partition a collection of line segments into connected polylines.
     
     The input argument is a (nelems,2) shaped array of integers.
     Each row holds the two vertex numbers of a single line segment.
 
     The return value is a list of Connectivity tables of plexitude 2.
-    The subsequent line elements of each Connectivity form a continuous
-    connected segment, i.e. the first vertex of each line elements in a
+    The line elements of each Connectivity are ordered to form a continuous
+    connected segment, i.e. the first vertex of each line element in a
     table is equal to the last vertex of the previous element.
+    The connectivity tables are sorted in order of decreasing length.
 
     If return_indices = True, a second list of tables is returned, with
     the same shape as those in the first list. The tables of the second
@@ -1360,6 +1361,11 @@ def connectedLineElems(elems,return_indices=False):
         todo = (elems!=-1).any(axis=1)
         elems = elems[todo]
         elnrs = elnrs[todo]
+    # sort according to decreasing number of elements
+    nel = [ p.nelems() for p in parts ]
+    srt = argsort(nel)[::-1]
+    parts = [ parts[i] for i in srt ]
+    chains = [ chains[i] for i in srt ]
     if return_indices:
         return parts,chains
     else:

@@ -174,6 +174,20 @@ def read_gambit_neutral(fn):
     return nodes, elems-1
 
 
+def read_gts_intersectioncurve(fn):
+    import re
+    RE = re.compile("^VECT 1 2 0 2 0 (?P<data>.*)$")
+    r = []
+    for line in open(fn,'r'):
+        m = RE.match(line)
+        if m:
+            r.append(m.group('data'))
+    nelems = len(r)
+    x = fromstring('\n'.join(r),sep=' ').reshape(-1,2,3)
+    F = Formex(x)
+    return F
+
+
 # Output of surface file formats
 
 def write_stla(f,x):
@@ -2127,7 +2141,7 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S
 
 
-    def boolean(self,surf,op,intersection_curve=False,check=False,verbose=False):
+    def boolean(self,surf,op,check=False,verbose=False):
         """Perform a boolean operation with another surface.
 
         Boolean operations between surfaces are a basic operation in
@@ -2140,45 +2154,80 @@ Shortest altitude: %s; largest aspect ratio: %s
 
         Parameters:
 
-        - `intersection_curve`: boolean: output an OOGL (Geomview)
-          representation of the curve intersection of the surfaces
+        - `surf`: a closed manifold surface
+        - `op`: boolean operation: one of '+', '-' or '*'.
         - `check`: boolean: check that the surfaces are not self-intersecting;
           if one of them is, the set of self-intersecting faces is written
           (as a GtsSurface) on standard output
         - `verbose`: boolean: print statistics about the surface
+
+        Returns: a closed manifold TriSurface
         """
-        cmd = 'gtsset'
-        ops = {'+':'union', '-':'diff', '*':'inter'}
-        if intersection_curve:
-            cmd += ' -i'
+        return self.gtsset(surf,op,filt = '| gts2stl',ext='.stl',check=check,verbose=verbose)
+
+
+    def intersection(self,surf,check=False,verbose=False):
+        """Return the intersection curve of two surfaces.
+
+        Boolean operations between surfaces are a basic operation in
+        free surface modeling. Both surfaces should be closed orientable
+        non-intersecting manifolds.
+        Use the :meth:`check` method to find out.
+
+        Parameters:
+
+        - `surf`: a closed manifold surface
+        - `check`: boolean: check that the surfaces are not self-intersecting;
+          if one of them is, the set of self-intersecting faces is written
+          (as a GtsSurface) on standard output
+        - `verbose`: boolean: print statistics about the surface
+
+        Returns: a list of intersection curves.
+        """
+        return self.gtsset(surf,op='*',ext='.list',curve=True,check=check,verbose=verbose)
+
+
+    def gtsset(self,surf,op,filt='',ext='.tmp',curve=False,check=False,verbose=False):
+        """_Perform the boolean/intersection methods.
+
+        See the boolean/intersection methods for more info.
+        Parameters not explained there:
+
+        - filt: a filter command to be executed on the gtsset output
+        - ext: extension of the result file
+        - curve: if True, an intersection curve is computed, else the surface.
+
+        Returns the name of the (temporary) results file.
+        """
+        op = {'+':'union', '-':'diff', '*':'inter'}[op]
+        options = ''
+        if curve:
+            options += '-i'
         if check:
-            cmd += ' -s'
-        if verbose:
-            cmd += ' -v'
-        cmd += ' '+ops[op]
+            options += ' -s'
+        if not verbose:
+            options += ' -v'
         tmp = tempfile.mktemp('.gts')
         tmp1 = tempfile.mktemp('.gts')
-        tmp2 = tempfile.mktemp('.stl')
+        tmp2 = tempfile.mktemp(ext)
         pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
         pf.message("Writing temp file %s" % tmp1)
         surf.write(tmp1,'gts')
-        pf.message("Performing boolean operation with command\n %s" % cmd)
-        # read back over stl format
-        tmp2 = tempfile.mktemp('.stl')
-        cmd += ' %s %s | gts2stl > %s' % (tmp,tmp1,tmp2)
-        # direct read back does not work
-        # tmp2 = tempfile.mktemp('.gts')
-        # cmd += ' %s %s > %s' % (tmp,tmp1,tmp2)
+        pf.message("Performing boolean operation")
+        cmd = "gtsset %s %s %s %s %s > %s" % (options,op,tmp,tmp1,filt,tmp2)
         sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         os.remove(tmp1)
         if sta or verbose:
             pf.message(out)
         pf.message("Reading result from %s" % tmp2)
-        S = TriSurface.read(tmp2)        
+        if curve:
+            res = read_gts_intersectioncurve(tmp2)
+        else:
+            res = TriSurface.read(tmp2)        
         os.remove(tmp2)
-        return S
+        return res
 
 
 ##########################################################################

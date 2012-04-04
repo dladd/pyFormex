@@ -29,73 +29,60 @@ Perform boolean operations on surfaces
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']
-_techniques = ['boolean','partition']
+_techniques = ['boolean','intersection']
 
 from gui.draw import *
 from simple import cylinder
 from connectivity import connectedLineElems
+from plugins.trisurface import TriSurface,fillBorder
+
 
 
 def run():
     global F,G
     clear()
     smooth()
-    F = cylinder(L=10.,D=2.,nt=36,nl=20,diag='u').centered()
-    draw(F)
+    view('iso')
+    F = cylinder(L=8.,D=2.,nt=36,nl=20,diag='u').centered()
     F = TriSurface(F).setProp(3).close(method='planar').fixNormals()
     G = F.rotate(90.,0).trl(0,1.).setProp(1)
     export({'F':F,'G':G})
     draw([F,G])
-    return
 
-    I = F.boolean(G,'*')
+    res = askItems(
+        [ _I('op',text='Operation',choices=[
+            '+ (Union)',
+            '- (Difference)',
+            '* Intersection',
+            'Intersection Curve',
+            ],itemtype='vradio'),
+          _I('verbose',False,text='Show stats'),
+        ])
+    
+    if not res:
+        return
+    op = res['op'][0]
+    verbose = res['verbose']
+    if op in '+-*':
+        I = F.boolean(G,op,verbose=verbose)
+    else:
+        I = F.intersection(G,verbose=verbose)
     clear()
     draw(I)
-    I.setProp(I.partitionByAngle())
-    clear()
-    draw(I)
-    S = I.splitProp()
-    K,L = S[0], S[1] # there may be some cruft in the border area
-    clear()
-    draw([K,L.trl(0,0.1*L.dsize())])
 
-    b = K.getBorderMesh().setProp(1)
-    clear()
-    draw(b)
-    drawNumbers(b)
-    drawNumbers(b.coords,color=red)
+    if op in '+-*':
+        return
 
-    # fuse
-    b = b.fuse().compact()
-    clear()
-    draw(b)
-    drawNumbers(b)
-    drawNumbers(b.coords,color=red)
+    else:
+        if ack('Create a surface inside the curve ?'):
+            I = I.toMesh()
+            e = connectedLineElems(I.elems)
+            I = Mesh(I.coords,connectedLineElems(I.elems)[0])
+            clear()
+            draw(I,color=red,linewidth=3)
+            S = fillBorder(I,method='planar')
+            draw(S)
 
-    # chain the segments to continuous curve
-    b = Mesh(b.coords,connectedLineElems(b.elems)[0])
-    clear()
-    draw(b)
-    drawNumbers(b)
-    drawNumbers(b.coords,color=red)
-
-    c = b.toFormex().toCurve()
-    print c.getAngles()
-    return
-
-    # remove cruft
-    b = b.notConnectedTo(30)
-    clear()
-    draw(b)
-    drawNumbers(b)
-    drawNumbers(b.coords,color=red)
-    return
-
-    b = b.fuse().compact()
-    draw(b)
-    drawNumbers(b.coords)
-    print b.nelems()
-    return
 
 if __name__ == 'draw':
     run()

@@ -48,36 +48,70 @@ def areaNormals(x):
     area *= 0.5
     return area,normals
 
-#
-# REMOVED BECAUSE IT IS PLAIN WRONG !!!
-#
 
-## def polygonArea(x,project=None):
-##     """Compute area inside a polygon.
-
-##     Parameters:
-
-##     - `x`: (nplex,3) Coords array representing the vertices of a
-##       (possibly nonplanar) polygon.
-##     - `project`: (3,) Coords array representing a unit direction vector.
+def smallestDirection(x,method='inertia'):
+    """Return the direction of the smallest dimension of a Coords"""
+    x = x.reshape(-1,3)
+    if method == 'inertia':
+        # The idea is to take the smallest dimension in a coordinate
+        # system aligned with the global axes.
+        C,r,Ip,I = x.inertia()
+        X = x.trl(-C).rot(r)
+        i =  X.sizes().argmin()
+        # r gives the directions as column vectors!
+        # TODO: maybe we should change that
+        return r[:,i]
+    elif method == 'random':
+        # Take the mean of the normals on randomly created triangles
+        from plugins.trisurface import TriSurface
+        n = x.shape[0]
+        m = 3 * (n // 3)
+        e = arange(m)
+        random.shuffle(e)
+        if n > m:
+            e = concatenate([e,[0,1,n-1]])
+        el = e[-3:]
+        S = TriSurface(x,e.reshape(-1,3))
+        A,N = S.areaNormals()
+        ok = where(isnan(N).sum(axis=1) == 0)[0]
+        N = N[ok]
+        N = N*N
+        N = N.mean(axis=0)
+        N = sqrt(N)
+        N = normalize(N)
+        return N
     
-##     Returns: a single float value with the area inside the polygon. If a
-##     direction vector is given, the area projected in that direction is
-##     returned.
+
+def projectedArea(x,dir):
+    """Compute projected area inside a polygon.
     
-##     Note that if the polygon is nonplanar and no direction is given, the area
-##     inside the polygon is not well defined.
-##     """
-##     if x.shape[1] < 3:
-##         return 0.0
+    Parameters:
+    
+    - `x`: (npoints,3) Coords with the ordered vertices of a
+      (possibly nonplanar) polygonal contour.
+    - `dir`: either a global axis number (0, 1 or 2) or a direction vector
+      consisting of 3 floats, specifying the projection direction.
+     
+    Returns: a single float value with the area inside the polygon projected
+    in the specified direction.
 
-##     x1 = roll(x,-1,axis=0)
-
-##     if project is None:
-##         area = vectorPairArea(x,x1)
-##     else:
-##         area = vectorTripleProduct(Coords(project),x,x1)
-##     return 0.5 *area.sum()
+    Note that if the polygon is planar and the specified direction is that
+    of the normal on its plane, the returned area is that of the planar
+    figure inside the polygon. If the polygon is nonplanar however, the area
+    inside the polygon is not defined. The projected area in a specified
+    direction is, since the projected polygon is a planar one.
+    """
+    if x.shape[0] < 3:
+        return 0.0
+    if type(dir) is int:
+        dir = unitVector(dir)
+    x1 = roll(x,-1,axis=0)
+    print x.dtype
+    print Coords(dir).dtype
+    area = vectorTripleProduct(Coords(dir),x,x1)
+    print area.dtype
+    print area.sum() / 2
+    return 0.5 * area.sum() 
 
 
 def polygonNormals(x):

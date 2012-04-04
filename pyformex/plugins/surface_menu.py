@@ -1294,7 +1294,6 @@ def boolean():
     res = askItems([_I('surface 1',choices=surfs),
                     _I('surface 2',choices=surfs),
                     _I('operation',choices=ops),
-                    _I('output intersection curve',False),
                     _I('check self intersection',False),
                     _I('verbose',False),
                     ],'Boolean Operation')
@@ -1302,12 +1301,32 @@ def boolean():
         SA = pf.PF[res['surface 1']]
         SB = pf.PF[res['surface 2']]
         SC = SA.boolean(SB,op=res['operation'].strip()[0],
-                        intersection_curve=res['output intersection curve'],
                         check=res['check self intersection'],
                         verbose=res['verbose'])
         export({'__auto__':SC})
-        #selection.draw()
+        selection.set('__auto__')
+        selection.draw()
 
+
+def intersection():
+    """Intersection curve of two surfaces."""
+    surfs = listAll(clas=TriSurface)
+    if len(surfs) == 0:
+        warning("You currently have no exported surfaces!")
+        return
+    
+    res = askItems([_I('surface 1',choices=surfs),
+                    _I('surface 2',choices=surfs),
+                    _I('check self intersection',False),
+                    _I('verbose',False),
+                    ],'Intersection Curve')
+    if res:
+        SA = pf.PF[res['surface 1']]
+        SB = pf.PF[res['surface 2']]
+        SC = SA.intersection(SB,check=res['check self intersection'],
+                             verbose=res['verbose'])
+        export({'__intersection_curve__':SC})
+        draw(SC,color=red,linewidth=3)
 
     
 ################### menu #################
@@ -1397,6 +1416,7 @@ def create_menu():
           ("&Refine surface",refine),
           ("&Smooth surface",smooth),
           ("&Boolean operation on two surfaces",boolean),
+          ("&Intersection curve of two surfaces",intersection),
           ]),
 #        ("&Show volume model",show_volume),
         # ("&Print Nodal Coordinates",show_nodes),

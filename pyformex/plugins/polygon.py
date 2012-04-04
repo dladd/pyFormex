@@ -137,6 +137,7 @@ class Polygon(Geometry):
 
         Returns a TriSurface filling the surface inside the polygon.
         """
+        print "AREA(self) %s" % self.area()
         # creating elems array at once (more efficient than appending)
         #from gui.draw import draw,pause,undraw
         from geomtools import insideTriangle
@@ -189,19 +190,9 @@ class Polygon(Geometry):
         return TriSurface(x,tri)
 
 
-    def area(self,project=None):
+    def area(self):
         """Compute area inside a polygon.
 
-        Parameters:
-
-        - `project`: (3,) Coords array representing a unit direction vector.
-
-        Returns: a single float value with the area inside the polygon. If a
-        direction vector is given, the area projected in that direction is
-        returned.
-
-        Note that if the polygon is nonplanar and no direction is given,
-        the area inside the polygon is not well defined.
         """
         from plugins.section2d import PlaneSection
         return PlaneSection(Formex(self.coords)).sectionChar()['A']   
