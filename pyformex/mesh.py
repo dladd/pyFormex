@@ -1601,9 +1601,9 @@ Size: %s
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
             raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)
-        eltype = set([ m.eltype.name() for m in meshes if m.eltype is not None ])
+        eltype = set([ m.eltype for m in meshes if m.eltype is not None ])
         if len(eltype) > 1:
-            raise ValueError,"Cannot concatenate meshes with different eltype: %s" %eltype
+            raise ValueError,"Cannot concatenate meshes with different eltype: %s" % [ e.name() for e in eltype ]
         if len(eltype) == 1:
             eltype = eltype.pop()
         else:
