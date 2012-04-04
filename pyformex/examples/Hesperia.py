@@ -43,11 +43,7 @@ from plugins.properties import *
 from plugins.fe_abq import *
 from gui.colorscale import ColorScale,ColorLegend
 from gui import menu,decors
-
 import time
-
-smooth()
-lights(False)
 
 
 def howto():
@@ -89,6 +85,8 @@ def createGeometry():
     nplus = n+3
 
     clear()
+    smoothwire()
+    view('front')
     # Start with an equilateral triangle in the x-y-plane
     A = simple.triangle()
     A.setProp(1)
@@ -113,7 +111,7 @@ def createGeometry():
 
     # Get the top vertex and make it the origin
     P = F[0,-1]
-    draw(Formex([P]),bbox=None)
+    draw(Formex([P]),bbox='last')
     F = F.translate(-P)
     draw(F)
 
@@ -149,7 +147,7 @@ def createGeometry():
     
     i = (n-1)*n/2
     P = F[i][0]
-    draw(Formex([P]),marksize=10,bbox=None)
+    draw(Formex([P]),marksize=10,bbox='last')
 
     # Get the radius of the base circle from the point's coordinates
     x,y,z = P
@@ -218,7 +216,7 @@ def assignProperties():
             pf.debug("PICKED NUMBERS:%s" % sel)
             F.prop[sel[0]] = p
         undraw(FA)
-        FA = draw(F,view=None,bbox=None)
+        FA = draw(F,bbox='last')
 
 
 def exportProperties():
@@ -376,11 +374,12 @@ def createFrameModel():
 
 
     ### DEFINE LOAD CASE (ask user) ###
-    res = askItems([('Steel',True),
-                    ('Glass',True),
-                    ('Snow',False),
-                    ('Solver',None,'select',['Calpy','Abaqus']),
-                    ])
+    res = askItems(
+        [ _I('Steel',True),
+          _I('Glass',True),
+          _I('Snow',False),
+          _I('Solver',choices=['Calpy','Abaqus']),
+          ])
     if not res:
         return
 
@@ -953,7 +952,7 @@ def run():
     # However, during development, you might want to change the menu's
     # actions will pyFormex is running, so a 'reload' action seems
     # more appropriate.
-    
+    clear()
     reload_menu()
 
 if __name__ == 'draw':
