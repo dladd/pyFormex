@@ -480,6 +480,9 @@ def runApp(appname,argv=[],reload=False):
         return
     
     message("Loaded application %s in %s seconds" % (appname,t.seconds()))
+    if hasattr(app,'_status') and app._status == 'unchecked':
+        pf.warning("This looks like an Example script that has been automatically converted to the pyFormex Application model, but has not been checked yet as to whether it is working correctly in App mode.\nYou can help here by running and rerunning the example, checking that it works correctly, and where needed fixing it (or reporting the failure to us). If the example runs well, you can change its status to 'checked'")
+
     
     scriptLock('__auto__')
     if pf.GUI:

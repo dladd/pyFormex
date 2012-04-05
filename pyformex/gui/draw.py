@@ -1418,6 +1418,7 @@ def pause(timeout=None,msg=None):
     if msg:
         print(msg)
 
+    pf.GUI.enableButtons(pf.GUI.actions,['Step','Continue'],True)
     pf.GUI.drawlock.release()
     if pf.GUI.drawlock.allowed:
         pf.GUI.drawlock.locked = True

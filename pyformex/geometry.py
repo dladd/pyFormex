@@ -196,8 +196,8 @@ class Geometry(object):
         return self.coords.dsize()
     def bsphere(self):
         return self.coords.bsphere()
-    def inertia(self):
-        return self.coords.inertia()
+    def inertia(self,*args,**kargs):
+        return self.coords.inertia(*args,**kargs)
 
     def info(self):
         return "coords" + str(self.coords.shape)
