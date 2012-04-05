@@ -79,7 +79,7 @@ def createGeometry():
     global F
     # Construct a triangle of an icosahedron oriented with a vertex in
     # the y-direction, and divide its edges in n parts
-    n = 6
+    n = 3
 
     # Add a few extra rows to close the gap after projection
     nplus = n+3
@@ -289,24 +289,27 @@ def createFrameModel():
     # Create edges and faces from edges
     print "The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces())
 
-    # Create the steel structure
-    E = Formex(nodes[S.getEdges()])
-    clear()
-    draw(E)
-    
-    # Get the tri elements that are part of a quadrilateral:
-    prop = F.prop
-    quadtri = S.getElemEdges()[prop==6]
+    # Remove the edges between to quad triangles
+    drawNumbers(S.coords)
+    quadtri = where(S.prop==6)[0]
     nquadtri = quadtri.shape[0]
     print "%s triangles are part of quadrilateral faces" % nquadtri
-    if nquadtri > 0:
-        # Create triangle definitions of the quadtri faces
-        tri = Connectivity.tangle(quadtri,S.getEdges())
-        D = Formex(nodes[tri])
-        clear()
-        flatwire()
-        draw(D,color='yellow')
+    faces = S.getElemEdges()[quadtri]
+    cnt,ind,xbin = histogram2(faces.reshape(-1),arange(faces.max()+1))
+    rem = where(cnt==2)[0]
+    print "Total edges %s" % len(S.edges)
+    print "Removing %s edges" % len(rem)
+    edges = S.edges[complement(rem,n=len(S.edges))]
+    print "Remaining edges %s" % len(edges)
 
+    # Create the steel structure
+    E = Formex(nodes[edges])
+    clear()
+    draw(E)
+
+
+    warning("Beware! This script is currently under revision.")
+    
     conn = connections(quadtri)
     print conn
 
@@ -314,14 +317,14 @@ def createFrameModel():
     internal = [ c[0] for c in conn if len(c[1]) > 1 ]
     print "Internal edges in quadrilaterals: %s" % internal
     
-    E = Formex(nodes[S.getEdges()],1)
+    E = Formex(nodes[edges],1)
     E.prop[internal] = 6
     wireframe()
     clear()
     draw(E)
 
     # Remove internal edges
-    tubes = S.getEdges()[E.prop != 6]
+    tubes = edges[E.prop != 6]
 
     print "Number of tube elements after removing %s internals: %s" % (len(internal),tubes.shape[0])
 
@@ -409,7 +412,7 @@ def createFrameModel():
         
     if res['Snow']:
         # NON UNIFORM SNOW
-        fn = 'hesperia-nieve.prop'
+        fn = '../data/hesperia-nieve.prop'
         snowp = fromfile(fn,sep=',')
         snow_uniform = 320e-6 # N/mm**2
         snow_non_uniform = { 1:333e-6, 2:133e-6, 3:133e-6, 4:266e-6, 5:266e-6, 6:667e-6 }
@@ -551,7 +554,7 @@ def createShellModel():
         step += 1
         NODLoad = zeros((S.ncoords(),3))
         # add NON UNIFORM SNOW
-        fn = 'hesperia-nieve.prop'
+        fn = '../data/hesperia-nieve.prop'
         snowp = fromfile(fn,sep=',')
         snow_uniform = 320e-6 # N/mm**2
         snow_non_uniform = { 1:333e-6, 2:133e-6, 3:133e-6, 4:266e-6, 5:266e-6, 6:667e-6 }
@@ -952,6 +955,7 @@ def run():
     # However, during development, you might want to change the menu's
     # actions will pyFormex is running, so a 'reload' action seems
     # more appropriate.
+    chdir(__file__)
     clear()
     reload_menu()
 
