@@ -603,6 +603,7 @@ def createAbaqusInput():
     It is supposed that the Finite Element model has been created and
     exported under the name 'fe_model'.
     """
+    checkWorkdir()
     try:
         FE = named('fe_model')
         nodes = FE.nodes
@@ -655,6 +656,7 @@ def runCalpyAnalysis():
     It is supposed that the Finite Element model has been created and
     exported under the name 'fe_model'.
     """
+    checkWorkdir()
 
     ############################
     # Load the needed calpy modules

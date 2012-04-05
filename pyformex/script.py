@@ -657,9 +657,13 @@ def printVMem(msg='MEMORY'):
 
 ### Utilities
 
-def writable(path):
-    """Returns True if the specified path is writeable"""
+def isWritable(path):
+    """Check that the specified path is writable.
+
+    BEWARE: this only works if the path exists!
+    """
     return os.access(path,os.W_OK)
+
 
 def chdir(fn):
     """Change the current working directory.
@@ -694,14 +698,6 @@ def startGui(args=[]):
         from gui import guimain
         if guimain.startGUI(args) == 0:
             guimain.runGUI()
-
-
-def isWritable(path):
-    """Check that the specified path is writeable.
-
-    BEWARE: this only works if the path exists!
-    """
-    return os.access(path,os.W_OK)
 
 
 def checkRevision(rev,comp='>='):

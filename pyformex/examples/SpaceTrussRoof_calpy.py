@@ -181,7 +181,7 @@ def run():
                 break
 
     if outfilename is None:
-        error("No writeable path: I can not execute the simulation.\nCopy the script to a writeable path and try running from there.")
+        error("No writable path: I can not execute the simulation.\nCopy the script to a writable path and try running from there.")
         return
 
     outfile = open(outfilename,'w')
