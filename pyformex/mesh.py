@@ -1604,7 +1604,7 @@ Size: %s
         """
         def _force_prop(m):
             if m.prop is None:
-                return zeros(m.nelems())
+                return zeros(m.nelems(),dtype=Int)
             else:
                 return m.prop
             

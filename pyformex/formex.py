@@ -1293,27 +1293,6 @@ maxprop  = %s
 #
 # Create copies, concatenations, subtractions, connections, ...
 #
- 
-    ## def sort(self):
-    ##     """Sorts the elements of a Formex.
-
-    ##     Sorting is done according to the bbox of the elements.
-    ##     !! NOT FULLY IMPLEMENTED: CURRENTLY ONLY SORTS ACCORDING TO
-    ##     !! THE 0-direction OF NODE 0
-    ##     """
-    ##     sel = argsort(self.x()[:,0])
-    ##     f = self.coords[sel]
-    ##     if self.prop:
-    ##         p = self.prop[sel]
-    ##     return Formex(f,p,self.eltype)
-       
-    ## def copy(self):
-    ##     """Return a deep copy of itself."""
-    ##     return Formex(self.coords,self.prop,self.eltype)
-    ##     ## IS THIS CORRECT? Shouldn't this be self.coords.copy() ???
-    ##     ## In all examples it works, I think because the operations on
-    ##     ## the array data cause a copy to be made. Need to explore this.
-
 
     def __add__(self,other):
         """Return the sum of two formices.
@@ -1328,7 +1307,15 @@ maxprop  = %s
 
     @classmethod
     def concatenate(clas,Flist):
-        """Concatenate all formices in Flist.
+        """Concatenate all Formices in Flist.
+
+        All the Formices in the list should have the same plexitude,
+        If any of the Formices has property numbers, the resulting Formex will
+        inherit the properties. In that case, any Formices without properties
+        will be assigned property 0.
+        If all Formices are without properties, so will be the result.
+        The eltype of the resulting Formex will be that of the first Formex in
+        the list.
 
         This is a class method, not an instance method!
 
@@ -1343,19 +1330,24 @@ maxprop  = %s
         We made it a class method and not a global function, because that
         would interfere with NumPy's own concatenate function.
         """
+        def _force_prop(m):
+            if m.prop is None:
+                return zeros(m.nelems(),dtype=Int)
+            else:
+                return m.prop
+
         f = concatenate([ F.coords for F in Flist ])
-        plist = [ F.prop for F in Flist ]
-        hasp = [ p is not None for p in plist ]
-        nhasp = sum(hasp)
-        if nhasp == 0:
-            p = None # No Formices have properties
+
+        # Keep the available props
+        prop = [f.prop for f in Flist if f.prop is not None]
+        if len(prop) == 0:
+            prop = None
+        elif len(prop) < len(Flist):
+            prop = concatenate([_force_prop(f) for f in Flist])
         else:
-            if nhasp < len(Flist):  # Add zero properties where missing
-                for i in range(len(Flist)):
-                    if plist[i] is None:
-                        plist[i] = zeros(shape=(Flist[i].nelems(),),dtype=Int)
-            p = concatenate(plist)
-        return Formex(f,p,Flist[0].eltype)
+            prop = concatenate(prop)
+
+        return Formex(f,prop,Flist[0].eltype)
 
       
     def select(self,idx):
