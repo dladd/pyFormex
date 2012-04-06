@@ -673,7 +673,7 @@ def draw(F,shrink=None,
                 color=Fcolor,colormap=colormap,alpha=alpha,
                 bkcolor=bkcolor,bkcolormap=bkcolormap,bkalpha=bkalpha,
                 mode=mode,linewidth=linewidth,linestipple=linestipple,
-                marksize=marksize,nolight=nolight,ontop=ontop)
+                marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
             
             actors.append(actor)
             

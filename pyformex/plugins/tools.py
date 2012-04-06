@@ -77,9 +77,9 @@ class Plane(object):
     def actor(self,**kargs):
         from gui import actors
         actor = actors.PlaneActor(size=self.s,**kargs)
-        actor.list = actor.create_list()
+        actor.prepare_list()
         actor = actors.RotatedActor(actor,self.n,**kargs)
-        actor.list = actor.create_list()
+        actor.prepare_list()
         actor = actors.TranslatedActor(actor,self.P,**kargs)
         return actor
 
