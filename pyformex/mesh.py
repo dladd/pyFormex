@@ -1593,10 +1593,21 @@ Size: %s
         Merging of the nodes can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
 
+        If any of the meshes has property numbers, the resulting mesh will
+        inherit the properties. In that case, any meshes without properties
+        will be assigned property 0.
+        If all meshes are without properties, so will be the result.
+
         This is a class method, and should be invoked as follows::
 
           Mesh.concatenate([mesh0,mesh1,mesh2])
         """
+        def _force_prop(m):
+            if m.prop is None:
+                return zeros(m.nelems())
+            else:
+                return m.prop
+            
         meshes = [ m for m in meshes if m.nplex() > 0 ]
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
@@ -1608,10 +1619,13 @@ Size: %s
             eltype = eltype.pop()
         else:
             eltype = None
-            
-        prop = [m.prop for m in meshes]
-        if None in prop:
+
+        # Keep the available props
+        prop = [m.prop for m in meshes if m.prop is not None]
+        if len(prop) == 0:
             prop = None
+        elif len(prop) < len(meshes):
+            prop = concatenate([_force_prop(m) for m in meshes])
         else:
             prop = concatenate(prop)
             

@@ -430,16 +430,10 @@ def fillBorder(border,method='radial',dir=None):
         e = arange(x.shape[0])
         
         if dir is None:
-            # Find a good projection direction
-            C,r,Ip,I = x.inertia()
-            X = x.trl(-C).rot(r)
-            i =  X.sizes().argmin()
-            # r gives the directions as column vectors!
-            # maybe we should change that
-            dir = r[:,i]
+            dir = geomtools.smallestDirection(x)
         
         X,C,A,a = pg.projected(x,dir)
-        P = pg.Polygon(Coords(X))
+        P = pg.Polygon(X)
         if P.area() < 0.0:
             P = P.reverse()
             e = reverseAxis(e,0)
@@ -851,9 +845,14 @@ class TriSurface(Mesh):
     
     def inertia(self):
         """Return inertia related quantities of the surface.
-        
-        This returns the center of gravity, the principal axes of inertia,
-        the principal moments of inertia and the inertia tensor.
+
+        This computes the inertia properties of the centroids of the
+        triangles, using the triangle area as a weight. The result is
+        therefore different from self.coords.inertia() and usually better
+        suited for the surface, especially if the triangle areas differ a lot.
+
+        Returns a tuple with the center of gravity, the principal axes of
+        inertia, the principal moments of inertia and the inertia tensor.
         """
         return self.centroids().inertia(mass=self.facetArea())
 
@@ -965,7 +964,6 @@ class TriSurface(Mesh):
         border = self.fillBorder(method,dir)
         return self.concatenate([self]+border)
         
-
 
     def edgeCosAngles(self):
         """Return the cos of the angles over all edges.
@@ -2228,6 +2226,8 @@ Shortest altitude: %s; largest aspect ratio: %s
             res = TriSurface.read(tmp2)        
         os.remove(tmp2)
         return res
+
+    
 
 
 ##########################################################################

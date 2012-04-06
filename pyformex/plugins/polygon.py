@@ -36,8 +36,15 @@ import utils
 
 ############################################################################
 
+#
+# TODO : this should be integrated with CoordinateSystem
+#
 def projected(X,N):
-    """Returns 2-D coordinates of a set of 3D coordinates."""
+    """Returns 2-D coordinates of a set of 3D coordinates.
+
+    The returned 2D coordinates are still stored in a 3D Coords object.
+    The last coordinate will however (approximately) be zero.
+    """
     from geomtools import rotationAngle
     if N is None:
         N = self.normal
@@ -46,28 +53,21 @@ def projected(X,N):
     X = X.rotate(angle=-a,axis=A)
     C = X.center()
     X = X.translate(-C)
-    return X[...,:2],C,A,a
+    return X,C,A,a
 
 
 class Polygon(Geometry):
     """A Polygon is a flat surface bounded by a closed PolyLine.
 
-    The border can be specified as:
-
-    - a Coords-like with shape (nvertex,3) specifying the vertex coordinates
-      in order
-    - an object that has a coords attribute.
+    The border is specified as a Coords object with shape (nvertex,3)
+    specifying the vertex coordinates in order.
+    While the Coords are 3d, only the first 2 components are used.
     """
 
     def __init__(self,border,normal=2,holes=[]):
         """Initialize a Polygon instance"""
         Geometry.__init__(self)
         self.prop = None
-        if border.__class__ != Coords:
-            try:
-                border = border.coords
-            except:
-                raise ValueError,"Invalid border data"
         self.coords = border.reshape(-1,3)
 
 
