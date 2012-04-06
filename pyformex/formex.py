@@ -1339,11 +1339,11 @@ maxprop  = %s
         f = concatenate([ F.coords for F in Flist ])
 
         # Keep the available props
-        prop = [f.prop for f in Flist if f.prop is not None]
+        prop = [F.prop for F in Flist if F.prop is not None]
         if len(prop) == 0:
             prop = None
         elif len(prop) < len(Flist):
-            prop = concatenate([_force_prop(f) for f in Flist])
+            prop = concatenate([_force_prop(F) for F in Flist])
         else:
             prop = concatenate(prop)
 
