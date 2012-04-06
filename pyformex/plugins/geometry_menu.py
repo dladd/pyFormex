@@ -311,89 +311,6 @@ def convertInp(fn):
     sta, out = utils.runCommand(cmd)
     #print out
     pf.GUI.setBusy(False)
-
-    
-def importDxf(convert=False,keep=False):
-    """Import a DXF file.
-
-    The user is asked for the name of a .DXF file. Depending on the
-    parameters, the following processing is done:
-
-    =======     =====     ================================================
-    convert     keep      actions
-    =======     =====     ================================================
-    False       False     import DXF entities to pyFormex (default)
-    False       True      import DXF and save intermediate .dxftext format
-    True        any       convert .dxf to .dxftext only
-    =======     =====     ================================================
-
-    If convert == False, this function returns the list imported DXF entities.
-    """
-    fn = askFilename(filter=utils.fileDescription('dxf'))
-    if not fn:
-        return
-
-    pf.GUI.setBusy()
-    text = dxf.readDXF(fn)
-    pf.GUI.setBusy(False)
-    if text:
-        if convert or keep:
-            f = file(utils.changeExt(fn,'.dxftext'),'w')
-            f.write(text)
-            f.close()
-        if not convert:
-            return importDxftext(text)
-
-
-def importSaveDxf():
-    """Import a DXF file and save the intermediate .dxftext."""
-    importDxf(keep=True)
-
-    
-def convertDxf():
-    """Read a DXF file and convert to dxftext."""
-    importDxf(convert=True)
-
-    
-def importDxftext(text=None):
-    """Import a dxftext script or file.
-
-    A dxftext script is a script containing only function calls that
-    generate dxf entities. See :func:`dxf.convertDXF`.
-
-    - Without parameter, the name of a .dxftext file is asked and the
-      script is read from that file.
-    - If `text` is a single line string, it is used as the filename of the
-      script.
-    - If `text` contains at least one newline character, it is interpreted
-      as the dxf script text.
-    """
-    import types
-    if text is None:
-        fn = askFilename(filter=utils.fileDescription('dxftext'))
-        if not fn:
-            return
-        text = open(fn).read()
-    elif '\n' not in text:
-        text = open(text).read()
-        
-    pf.GUI.setBusy()
-    dxf_parts = dxf.convertDXF(text)
-    print "Imported %s entities" % len(dxf_parts)
-    coll = dxf.collectByType(dxf_parts)
-    dxf_parts = [ p for p in dxf_parts if type(p) is not types.FunctionType ]
-    print "Kept %s entities" % len(dxf_parts)
-    pf.GUI.setBusy(False)
-    export({'_dxf_import_':dxf_parts})
-    #draw(dxf_parts,color='black')
-    return dxf_parts
-
-           
-def drawDxf():
-    """Draw the imported dxf model"""
-    dxf_parts = named('_dxf_import_')
-    if dxf_parts:
-        draw(dxf_parts,color='black',nolight=True)
         
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):
@@ -1012,8 +929,12 @@ def renumberMeshInElemsOrder():
  
 _menu = 'Geometry'
 
+def loadDxfMenu():
+    pass
+
 def create_menu():
     """Create the plugin menu."""
+    from dxf_tools import importDxf
     _init_()
     MenuData = [
         ("&Import ",[
@@ -1025,13 +946,10 @@ def create_menu():
                 ("&Convert Abaqus .inp file",readInp),
                 ("&Import Converted Abaqus Model",importModel),
                 ]),
-            ("AutoCAD .dxf",[
-                ("&Import AutoCAD .dxf",importDxf),
-                ("&Import AutoCAD .dxf and save .dxftext",importSaveDxf),
-                ("&Convert AutoCAD .dxf to .dxftext",convertDxf,dict(tooltip="Parse a .DXF file and output dxftext script.")),
-                ("&Import .dxftext",importDxftext),
-                ("&Draw imported dxf model",drawDxf),
-                ]),
+#            ("AutoCAD .dxf",[
+#                ("&Import .dxf or .dxftext",importDxf),
+#                ("&Load DXF plugin menu",loadDxfMenu),
+#                ]),
             ('&Upgrade pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
             ]),
         ("&Export ",[
@@ -1132,33 +1050,36 @@ def create_menu():
 
     
 def show_menu():
-    """Show the Tools menu."""
+    """Show the menu."""
     if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
-    """Close the Tools menu."""
+    """Close the menu."""
     m = pf.GUI.menu.item(_menu)
     if m :
         m.remove()
       
 
 def reload_menu():
-    """Reload the Postproc menu."""
+    """Reload the menu."""
     from plugins import refresh
     close_menu()
-    refresh('geometry_menu')
+    refresh(_menu)
     show_menu()
 
 
 ####################################################################
 ######### What to do when the script is executed ###################
 
-if __name__ == "draw":
+def run():
     _init_()
     reload_menu()
 
+if __name__ == 'draw':
+    run()
+    
 
 # End
 

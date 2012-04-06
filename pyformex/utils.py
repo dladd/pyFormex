@@ -502,6 +502,7 @@ def all_image_extensions():
 file_description = {
     'all': 'All files (*)',
     'dxf': 'AutoCAD .dxf files (*.dxf)',
+    'dxfall': 'AutoCAD .dxf or converted(*.dxf *.dxftext)',
     'dxftext': 'Converted AutoCAD files (*.dxftext)',
     'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
     'gts': 'GTS files (*.gts)',

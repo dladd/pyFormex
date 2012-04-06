@@ -196,14 +196,20 @@ def collectByType(entities):
     return coll
 
 
-def toLines(coll,arcdiv=8):
-    """Convert the dxf entities in a dxf collection to a plex-2 Formex""" 
+def toLines(coll,chordal=0.01,arcdiv=None):
+    """Convert the dxf entities in a dxf collection to a plex-2 Formex
+
+    This converts Lines, Arcs and PolyLines to plex-2 elements and collects
+    them in a single Formex.
+    The chordal and arcdiv parameters are passed to :meth:`Arc.approx` to set
+    the accuracy for the approximation of the Arc by line segments.
+    """ 
     Lines = []
     for k,v in coll.items():
         if k in [ 'Line', 'PolyLine' ]:
             Lines.extend([ a.toFormex() for a in v ] )
         elif k == 'Arc':
-            Lines.extend([ a.toFormex() for a in v ])
+            Lines.extend([ a.toFormex(chordal=chordal,ndiv=arcdiv) for a in v ])
     return Formex.concatenate(Lines) 
 
 
@@ -298,6 +304,15 @@ def exportDXF(filename,F):
         dxf.line(i)
     dxf.endSection()
     dxf.close()
+
+
+def exportDxfText(filename,parts):
+    """Export a set of dxf entities to a .dxftext file."""
+    fil = open(filename,'w')
+    for p in parts:
+        fil.write(p.dxftext()+'\n')
+        fil.close()
+
 
 # An example
 

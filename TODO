@@ -50,6 +50,10 @@ Each task can have the following keys:
 Release 0.9
 -----------
 
+**Add transparency to wires in smoothwire mode**
+
+**Save object names to pgf file**
+
 
 **Add Layers to the rendering engine**
   :sta: IDEA

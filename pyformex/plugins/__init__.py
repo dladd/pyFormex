@@ -54,15 +54,6 @@ def refresh(plugin):
         reload(module)
     else:
         error("No such module: %s" % plugin)
-   
-
-## def refresh_menu(plugin):
-##     """Reload the named plugin"""
-##     module = globals().get(plugin,None)
-##     if type(module) is ModuleType and hasattr(module,'show_menu'):
-##         reload(module)
-##     else:
-##         print "Type of %s id %s" % (plugin,type(module))
 
 
 def loaded_modules():
@@ -93,6 +84,7 @@ def find_plugin_menus():
         'tools_menu',
         'draw2d_menu',
         'nurbs_menu',
+        'dxf_tools',
         'jobs_menu',
         'postproc_menu',
         ]

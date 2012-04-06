@@ -1491,7 +1491,7 @@ class Arc(Curve):
         return X
 
 
-    def approx(self,chordal=0.001,ndiv=None):
+    def approx(self,ndiv=None,chordal=0.001):
         """Return a PolyLine approximation of the Arc.
 
         Approximates the Arc by a sequence of inscribed straight line

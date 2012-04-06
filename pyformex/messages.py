@@ -91,6 +91,8 @@ This is an old format project file. Unless you need to read this project file fr
 
 warn_mesh_connect = "Mesh.connect does no longer automatically compact the Meshes. You may have to use the Mesh.compact method to do so."
 
+warn_dxf_export = "pyFormex currently only exports DXF entities of type 'LINE'. Other entities will be converted, leading to an approximation of Arcs by straight segments."
+
 
 depr_mpattern = "\nFunction mpattern() is deprecated: use xpattern() instead."
 depr_polygon = "The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead."
