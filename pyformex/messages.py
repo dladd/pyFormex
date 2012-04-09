@@ -91,6 +91,8 @@ This is an old format project file. Unless you need to read this project file fr
 
 warn_mesh_connect = "Mesh.connect does no longer automatically compact the Meshes. You may have to use the Mesh.compact method to do so."
 
+warn_fuse_arg_rename = "The 'nodesperbox' argument has been renamed to 'ppb'. Please stop using the old name."
+
 warn_dxf_export = "pyFormex currently only exports DXF entities of type 'LINE'. Other entities will be converted, leading to an approximation of Arcs by straight segments."
 
 

@@ -1075,7 +1075,7 @@ class Formex(Geometry):
 
     # Data conversion
     
-    def fuse(self,repeat=True,nodesperbox=1,rtol=1.e-5,atol=None):
+    def fuse(self,repeat=True,ppb=1,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -1096,7 +1096,7 @@ class Formex(Geometry):
         if atol is None:
             atol = rtol * self.dsize()
         coords = reshape(self.coords,(self.nnodes(),3))
-        coords,index = coords.fuse(nodesperbox,0.5,rtol=rtol,atol=atol,repeat=repeat)
+        coords,index = coords.fuse(ppb,0.5,rtol=rtol,atol=atol,repeat=repeat)
         index = index.reshape(self.coords.shape[:2])
         return coords,index
 

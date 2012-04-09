@@ -619,7 +619,7 @@ class PolyLine(Curve):
         X = PL.coords
         if fuse:
             x = Coords.concatenate([self.coords[-1],X[0]])
-            x,e = x.fuse(nodesperbox=3) # !!! YES ! > 2 !!!
+            x,e = x.fuse(ppb=3) # !!! YES ! > 2 !!!
             if e[0] == e[1]:
                 X = X[1:]
         return PolyLine(Coords.concatenate([self.coords,X]))

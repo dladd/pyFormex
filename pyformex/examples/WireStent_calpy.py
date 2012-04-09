@@ -98,7 +98,7 @@ def analysis(stent):
     print "Original number of nodes: %s" % stent.nnodes()
     # Create FE model
     message("Creating Finite Element model: this may take some time.")
-    nodes,elems = stent.fuse(nodesperbox=1)
+    nodes,elems = stent.fuse(ppb=1)
 
     nnod = nodes.shape[0]
     print "Compressed number of nodes: %s" % nnod

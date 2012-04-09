@@ -40,7 +40,6 @@ find good reason to use the :class:`Coords` class directly as well.
 
 from arraytools import *
 from lib import misc
-from pyformex import options
 from utils import deprecated,deprecation,warn
 
 
@@ -268,8 +267,8 @@ class Coords(ndarray):
            [ 3.  3.  0.]]
         """
         if self.size > 0:
-            s = self.points()
-            bb = row_stack([ s.min(axis=0), s.max(axis=0) ])
+            x = self.points()
+            bb = row_stack([ x.min(axis=0), x.max(axis=0) ])
         else:
             o = origin()
             bb = [o,o]
@@ -1493,7 +1492,92 @@ class Coords(ndarray):
         return [ self[i] for i in range(self.shape[0]) ]
 
 
-    def fuse(self,nodesperbox=2,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True):
+    def sort(self,order=[0,1,2]):
+        """Sort points in the specified order of their coordinates.
+
+        The points are sorted based on their coordinate values. There is a
+        maximum number of points (above 2 million) that can be sorted. If you
+        need to to sort more, first split up your data according to the first
+        axis.
+
+        Parameters:
+
+        - `order`: permutation of [0,1,2], specifying the order in which
+          the subsequent axes are used to sort the points.
+
+        Returns: int array which is a permutation of range(self.npoints()).
+          If taken in the specified order, it is guaranteed that no point can
+          have a coordinate that is larger that the corresponding coordinate
+          of the next point.
+        """
+        n = self.shape[0]
+        nmax = iinfo('int64').max # max integer, a bit above 2 million
+        if n > nmax:
+            raise ValueError,"I can only sort %s points" % nmax 
+        s0,s1,s2 = [ argsort(self[:,i]) for i in range(3) ]
+        i0,i1,i2 = [ inverseUniqueIndex(i) for i in [s0,s1,s2] ]
+        val = i2 + n * (i1 + n * i0)
+        return argsort(val)
+
+
+    def boxes(self,ppb=1,shift=0.5,minsize=1.e-5):
+        """Create a grid of equally sized boxes spanning the points x.
+
+        A regular 3D grid of equally sized boxes is created spanning all
+        the points `x`. The size, position and number of boxes are determined
+        from the specified parameters.
+
+        Parameters:
+
+        - `ppb`: int: mean number of points per box. The box sizes and
+          number of boxes will be determined to approximate this number.
+        - `shift`: float (0.0 .. 1.0): a relative shift value for the grid.
+          Applying a shift of 0.5 will make the lowest coordinate values fall
+          at the center of the outer boxes.
+        - `minsize`: float: minimum absolute size of the boxes (same in each
+          coordinate direction). 
+
+        Returns a tuple of:
+
+        - `ox`: float array (3): minimal coordinates of the box grid,
+        - `dx`: float array (3): box size in the three axis directions,
+        - `nx`: in array (3): number of boxes in each of the coordinate
+          directions.
+        """
+        # serialize points
+        x = self.reshape(-1,3)
+        nnod = x.shape[0]
+        # Calculate box size
+        lo,hi = x.bbox()
+        sz = hi-lo
+        esz = sz[sz > 0.0]  # only keep the nonzero dimensions
+
+        if esz.size == 0:
+            # All points are coincident
+            ox = zeros(3,dtype=Float)
+            dx = ones(3,dtype=Float)
+            nx = ones(3,dtype=Int)
+
+        else:
+            nboxes = max(1,nnod // ppb) # ideal total number of boxes
+            vol = esz.prod()
+            # avoid error message on the global sz/nx calculation
+            errh = seterr(all='ignore')
+            # set ideal box size, but not smaller than minsize
+            boxsz = max(minsize,(vol/nboxes) ** (1./esz.shape[0]))
+            nx = (sz/boxsz).astype(int32)
+            dx = where(nx>0,sz/nx,boxsz)
+            seterr(**errh)
+
+        # perform the origin shift and adjust nx to make sure we enclose all 
+        ox = lo - dx*shift
+        ex = ox + dx*nx
+        adj = ceil((hi-ex)/dx).astype(Int).clip(min=0)
+        nx += adj
+        return ox,dx,nx
+
+
+    def fuse(self,ppb=1,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True,nodesperbox=None):
         """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them
@@ -1505,7 +1589,7 @@ class Coords(ndarray):
           have the same shape as the pshape() of the coords array.
 
         The procedure works by first dividing the 3D space in a number of
-        equally sized boxes, with a mean population of nodesperbox.
+        equally sized boxes, with a mean population of ppb.
         The boxes are numbered in the 3 directions and a unique integer scalar
         is computed, that is then used to sort the nodes.
         Then only nodes inside the same box are compared on almost equal
@@ -1524,43 +1608,33 @@ class Coords(ndarray):
         a different shift value (they should differ more than the tolerance).
         Specifying repeat=True will automatically do this.
         """
+        if nodesperbox is not None:
+            utils.warn('warn_fuse_arg_rename')
+            ppb = nodesperbox
         if self.size == 0:
             # allow empty coords sets
             return self,array([],dtype=Int).reshape(self.pshape())
         
         if repeat:
-            # Aplly twice with different shift value
-            coords,index = self.fuse(nodesperbox,shift,rtol,atol,repeat=False)
-            coords,index2 = coords.fuse(nodesperbox,shift+0.25,rtol,atol,repeat=False)
+            # Apply twice with different shift value
+            coords,index = self.fuse(ppb,shift,rtol,atol,repeat=False)
+            coords,index2 = coords.fuse(ppb,shift+0.25,rtol,atol,repeat=False)
             index = index2[index]
             return coords,index
 
+        #########################################
         # This is the single pass
         x = self.points()
-        nnod = x.shape[0]
-        # Calculate box size
-        lo = array([ x[:,i].min() for i in range(3) ])
-        hi = array([ x[:,i].max() for i in range(3) ])
-        sz = hi-lo
-        esz = sz[sz > 0.0]  # only keep the nonzero dimensions
-        if esz.size == 0:
+        
+        if (self.sizes()==0.).all():
             # All points are coincident
             x = x[:1]
             e = zeros(nnod,dtype=int32)
             return x,e
 
-        vol = esz.prod()
-        # avoid error message on the global sz/nx calculation
-        errh = seterr(all='ignore')
-        nboxes = nnod // nodesperbox # ideal total number of boxes
-        # set ideal box size, but not smaller than atol
-        boxsz = max(atol,(vol/nboxes) ** (1./esz.shape[0]))
-        nx = (sz/boxsz).astype(int32)
-        dx = where(nx>0,sz/nx,boxsz)
-        seterr(**errh)
-        #
-        nx = array(nx) + 1
-        ox = lo - dx*shift # origin :  0 < shift < 1
+        # Compute boxes
+        ox,dx,nx = self.boxes(ppb=ppb,shift=shift,minsize=atol)
+        
         # Create box coordinates for all nodes
         ind = floor((x-ox)/dx).astype(int32)
         # Create unique box numbers in smallest direction first
@@ -1571,7 +1645,6 @@ class Coords(ndarray):
         # rearrange the data according to the sort order
         val = val[srt]
         x = x[srt]
-        # now compact
         # make sure we use int32 (for the fast fuse function)
         # Using int32 limits this procedure to 10**9 points, which is more
         # than enough for all practical purposes

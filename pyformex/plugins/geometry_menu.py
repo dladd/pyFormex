@@ -781,7 +781,7 @@ def fuseMesh():
         _I('Relative Tolerance',1.e-5),
         _I('Absolute Tolerance',1.e-5),
         _I('Shift',0.5),
-        _I('Nodes per box',1)])
+        _I('Points per box',1)])
 
     if not res:
         return
@@ -791,7 +791,7 @@ def fuseMesh():
         rtol = res['Relative Tolerance'],
         atol = res['Absolute Tolerance'],
         shift = res['Shift'],
-        nodesperbox = res['Nodes per box'],
+        ppb = res['Nodes per box'],
         ) for m in meshes ]
     after = [ m.ncoords() for m in meshes ]
     print "Number of points before fusing: %s" % before
