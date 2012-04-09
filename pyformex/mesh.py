@@ -1538,8 +1538,12 @@ Size: %s
         (up to a point where the mesh expands),
         but will result in less smoothing per iteration.
         """
-        if iterations<1: 
+        if iterations < 1: 
             return self
+        
+        if lamb*k == 1:
+            raise ValueError,"Cannot assign values of lamb and k which result in lamb*k==1"
+        
         mu = -lamb/(1-k*lamb)
         adj = self.getEdges().adjacency(kind='n')
         incl = resize(True, self.ncoords())
