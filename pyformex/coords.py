@@ -1629,7 +1629,7 @@ class Coords(ndarray):
         if (self.sizes()==0.).all():
             # All points are coincident
             x = x[:1]
-            e = zeros(nnod,dtype=int32)
+            e = zeros(x.shape[0],dtype=int32)
             return x,e
 
         # Compute boxes
