@@ -2057,7 +2057,7 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S
    
 
-    def refine(self,method='gts',max_edges=None,min_cost=None,log=False,verbose=False):
+    def refine(self,max_edges=None,min_cost=None,log=False,verbose=False,method='gts'):
         """Refine the TriSurface.
 
         Refining a TriSurface means increasing the number of triangles and
