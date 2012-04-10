@@ -964,7 +964,7 @@ Size: %s
         """
         if self.prop is None:
             return self.__class__(self.coords,self.elems,eltype=self.eltype)
-        elif type(val) == int:
+        elif array(val).size == 1:
             return self.__class__(self.coords,self.elems[self.prop==val],prop=val,eltype=self.eltype)
         else:
             t = zeros(self.prop.shape,dtype=bool)
@@ -1431,7 +1431,7 @@ Size: %s
         ##     raise NotImplementedError,"Quadratic connection is not implemented yet."
 
         # set divisions
-        if type(div) == int:
+        if array(div).size == 1:
             div = arange(1,div+1) / float(div)
         else:
             div = array(div).ravel()
@@ -1680,7 +1680,7 @@ Size: %s
         else:
             nod = nodes
 
-        if type(dir) == int:
+        if array(dir).size == 1:
             if not min is None:
                 T1 = f[:,nod,dir] > min
             if not max is None:

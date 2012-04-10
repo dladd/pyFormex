@@ -511,7 +511,7 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
     if mode == 'all':
         return (dotpr(p,n) - inner(q,n)) / inner(m,n)
     elif mode == 'pair':
-        return (dotpr(p,n) - dotpr(q,n)) / dotpr(m,n)
+        return dotpr(n, (p-q)) / dotpr(m,n)
 
 
 def intersectionPointsLWP(q,m,p,n,mode='all'):

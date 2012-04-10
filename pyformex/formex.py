@@ -1444,7 +1444,7 @@ maxprop  = %s
         If the Formex has no properties, a empty array is returned.
         """
         if self.prop is not None:
-            if type(val) == int:
+            if array(val).size == 1:
                 return where(self.prop==val)[0]
             else:
                 return unique(concatenate([where(self.prop==v)[0] for v in val]))
@@ -1463,7 +1463,7 @@ maxprop  = %s
         """
         if self.prop is None:
             return Formex(self.coords,eltype=self.eltype)
-        elif type(val) == int:
+        elif array(val).size == 1:
             return Formex(self.coords[self.prop==val],val,self.eltype)
         else:
             t = zeros(self.prop.shape,dtype=bool)
@@ -1565,7 +1565,7 @@ maxprop  = %s
         else:
             nod = nodes
 
-        if type(dir) == int:
+        if array(dir).size == 1:
             if min is not None:
                 T1 = f[:,nod,dir] > (min - atol)
             if max is not None:

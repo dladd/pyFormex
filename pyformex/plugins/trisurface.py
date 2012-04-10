@@ -2057,9 +2057,12 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S
    
 
-    def refine(self,max_edges=None,min_cost=None,log=False,verbose=False):
-        """Refine the surface using gtsrefine.
+    def refine(self,method='gts',max_edges=None,min_cost=None,log=False,verbose=False):
+        """Refine the TriSurface.
 
+        Refining a TriSurface means increasing the number of triangles and
+        reducing their size, while keeping the changes to the modeled surface
+        minimal.
         Construct a refined version of the surface.
         This uses the external program `gtsrefine`. The surface
         should be a closed orientable non-intersecting manifold.
@@ -2465,6 +2468,9 @@ def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     candwt= concatenate([cand[i][1] for i in range(len(cand))])
     return candwl, candwt
 
+
+
+@deprecation("intersectLineWithPlaneOne2One is deprecated: use geomtools.intersectionPointsLWP instead")
 def intersectLineWithPlaneOne2One(q,m,p,n):
     """_it returns for each pair of line(q,m) and plane (p,n) the point of intersection. plane: (x-p)n=0, line: x=q+t m. It find the scalar t and returns the point."""
     t=dotpr(n, (p-q))/dotpr(n, m)

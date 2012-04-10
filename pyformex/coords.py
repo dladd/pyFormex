@@ -641,7 +641,7 @@ class Coords(ndarray):
         if min is None and max is None:
             raise ValueError,"At least one of min or max have to be specified."
 
-        if type(dir) == int:
+        if array(dir).size == 1:
             if not min is None:
                 T1 = self[...,dir] > min - atol
             if not max is None:
@@ -1381,7 +1381,7 @@ class Coords(ndarray):
         v1 = anyPerpendicularVector(n)
         v2 = cross(n,v1)
         # Create set of cuts with set of planes
-        print type(S)
+        #print type(S)
         cuts = [ S.intersectionWithPlane(xi,v1) for xi in x ]
         # cut the cuts with second set of planes
         points = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
@@ -1820,7 +1820,7 @@ class Coords(ndarray):
         """
         if self.shape != X.shape:
             raise RuntimeError,"`X` should have same shape as `self`"
-        if type(div) == int:
+        if array(div).size == 1:
             div = arange(div+1) / float(div)
         else:
             div = array(div).ravel()

@@ -475,7 +475,7 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     s = sin(a)
     if axis==None:
         f = [[c,s],[-s,c]]
-    elif type(axis) == int:
+    elif array(axis).size == 1:
         f = [[0.0 for i in range(3)] for j in range(3)]
         axes = range(3)
         i,j,k = axes[axis:]+axes[:axis]
@@ -1603,7 +1603,7 @@ def histogram2(a,bins,range=None):
 
     """
     ar = asarray(a)
-    if type(bins) == int:
+    if array(bins).size == 1:
         nbins = bins
         xbins = linspace(a.min(),a.max(),nbins+1)
     else:
