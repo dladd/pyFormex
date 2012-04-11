@@ -40,7 +40,7 @@ def run():
     smooth()
 
     imagefile = os.path.join(pf.cfg['pyformexdir'],'data','butterfly.png')
-    image = image2numpy(imagefile,expand=True)
+    image = image2numpy(imagefile,indexed=False)
 
     import simple
     F = simple.cuboid().centered()

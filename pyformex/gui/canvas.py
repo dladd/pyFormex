@@ -677,7 +677,7 @@ class Canvas(object):
         if self.settings.bgimage:
             from gui.imagearray import image2numpy
             try:
-                image = image2numpy(self.settings.bgimage,expand=True)
+                image = image2numpy(self.settings.bgimage,indexed=False)
             except:
                 pass
             

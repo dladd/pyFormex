@@ -58,7 +58,9 @@ def run():
 
     # Create the colors
     color,colormap = image2glcolor(im.scaled(nx,ny))
-    print color.shape,colormap
+    print "Size of colors: %s" % str(color.shape)
+    if colormap is not None:
+        print "Size of colormap: %s" % str(colormap.shape)
 
 
     part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])

@@ -95,7 +95,7 @@ warn_fuse_arg_rename = "The 'nodesperbox' argument has been renamed to 'ppb'. Pl
 
 warn_dxf_export = "pyFormex currently only exports DXF entities of type 'LINE'. Other entities will be converted, leading to an approximation of Arcs by straight segments."
 
-
+depr_image2numpy_arg = "The use of the `expand` parameter in image2numpy is deprecated. Please use the `indexed` parameter instead."
 depr_mpattern = "\nFunction mpattern() is deprecated: use xpattern() instead."
 depr_polygon = "The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead."
 depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."

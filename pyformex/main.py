@@ -421,13 +421,17 @@ def run(argv=[]):
     pf.print_help = parser.print_help
 
 
+    # Set debug level
+    if pf.options.debug and not pf.options.debuglevel:
+        pf.options.debuglevel = pf.debugLevel(pf.options.debug.split(','))
+
     # process options
     if pf.options.nodefaultconfig and not pf.options.config:
         print("\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n")
         sys.exit()
 
-    pf.debug("Options: %s" % pf.options,pf.DEBUG.OPTION)
 
+    pf.debug("Options: %s" % pf.options,pf.DEBUG.ALL)
 
     ########## Process special options which will not start pyFormex #######
 
@@ -454,10 +458,6 @@ def run(argv=[]):
 
     if pf.options.whereami or pf.options.detect :
         return
-
-    # Set debug level
-    if pf.options.debug and not pf.options.debuglevel:
-        pf.options.debuglevel = pf.debugLevel(pf.options.debug.split(','))
 
     ########### Read the config files  ####################
 
