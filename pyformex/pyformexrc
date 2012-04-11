@@ -93,6 +93,7 @@ filters = [('.*return_index.*','numpy')]
 [gui]
 #imagesfromeps = True
 fortune = False  # show a fortune cookie on startup
+redirect = True
 history = []
 apphistory = []
 history_max = 20

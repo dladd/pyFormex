@@ -361,8 +361,12 @@ def run(argv=[]):
            help="Skip the default site and user config files. This option can only be used in conjunction with the --config option.",
            ),
         MO("--redirect",
-           action="store_true", dest="redirect", default=False,
+           action="store_true", dest="redirect", default=None,
            help="Redirect standard output to the message board (ignored with --nogui)",
+           ),
+        MO("--noredirect",
+           action="store_false", dest="redirect",
+           help="Do not redirect standard output to the message board.",
            ),
         MO("--debug",
            action="store", dest="debug", default='',
@@ -532,6 +536,12 @@ def run(argv=[]):
                 os.system(cmd)
         return
 
+
+    # process options that override the config
+    if pf.options.redirect is not None:
+        pf.cfg['gui/redirect'] = pf.options.redirect
+    delattr(pf.options,'redirect') # avoid abuse
+    #print "REDIRECT",pf.cfg['gui/redirect']
 
     ###################################################################
 

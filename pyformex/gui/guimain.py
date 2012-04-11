@@ -103,6 +103,7 @@ class Board(QtGui.QTextEdit):
         font = QtGui.QFont("DejaVu Sans Mono")
         #font.setStyle(QtGui.QFont.StyleNormal)
         self.setFont(font)
+        self.stdout = self.stderr = None # redirected streams
         
 
     def write(self,s):
@@ -129,6 +130,22 @@ class Board(QtGui.QTextEdit):
     def flush(self):
         self.update()
 
+
+    def redirect(self,onoff):
+        """Redirect standard and error output to this message board"""
+        if onoff:
+            self.stderr = sys.stderr
+            self.stdout = sys.stdout
+            sys.stderr = self
+            sys.stdout = self
+        else:
+            if self.stderr:
+                sys.stderr = self.stderr
+            if self.stdout:
+                sys.stdout = self.stdout
+            self.stderr = None
+            self.stdout = None
+    
 
 #####################################
 ################# GUI ###############
@@ -157,7 +174,6 @@ def toggleAppScript():
         else:
             pf.warning("I can not find the source file for this application.")
 
-    
 
 class Gui(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
@@ -319,9 +335,9 @@ class Gui(QtGui.QMainWindow):
         self.board.resize(*bdsize)
 
         self.setcurdir()
-        if pf.options.redirect:
-            sys.stderr = self.board
-            sys.stdout = self.board
+
+        # redirect standard/error output if option set
+        self.board.redirect(pf.cfg['gui/redirect'])
 
         if pf.options.debuglevel:
             s = sizeReport(self,'DEBUG: Main:') + \
@@ -340,13 +356,13 @@ class Gui(QtGui.QMainWindow):
 
         # Modeless child dialogs
         self.doc_dialog = None
-    
+
 
     def close_doc_dialog(self):
         """Close the doc_dialog if it is open."""
-        if pf.GUI.doc_dialog is not None:
-            pf.GUI.doc_dialog.close()
-            pf.GUI.doc_dialog = None
+        if self.doc_dialog is not None:
+            self.doc_dialog.close()
+            self.doc_dialog = None
 
 
     def saveView(self,name=None,addtogui=True):
@@ -960,6 +976,7 @@ does not seem to work, use the KILL(9) signal.
 def quitGUI():
     """Quit the GUI"""
     pf.debug("Quit GUI",pf.DEBUG.GUI)
+    # froce reset redirect
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
     #print "QUIT"

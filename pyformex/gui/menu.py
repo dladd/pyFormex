@@ -532,8 +532,14 @@ def createMenuData():
     """Returns the default pyFormex GUI menu data."""
 
     ActionMenuData = [
+        (_('&Play'),draw.play),
+        (_('&Rerun'),draw.replay),
         (_('&Step'),draw.step),
         (_('&Continue'),draw.fforward), 
+        (_('&Stop'),draw.raiseExit),
+        # (_('&Edit',fileMenu.editApp),   # is in file menu
+        (_('&App Info'),draw.showDoc),
+        ("---",None),
         ## (_('&Reset Picking Mode'),resetPick),
         (_('&Reset GUI'),resetGUI),
         (_('&Reset Warning Filters'),resetWarnings),

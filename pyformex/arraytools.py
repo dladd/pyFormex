@@ -440,7 +440,7 @@ def unitVector(v):
     `v` is either an integer specifying one of the global axes (0,1,2),
     or a 3-element array or compatible.
     """
-    if type(v) is int:
+    if array(v).size == 1:
         u = zeros((3),dtype=Float)
         u[v] = 1.0
     else:

@@ -97,6 +97,7 @@ def settings():
     from elements import elementTypes
     
     dia = None
+    _actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit', 'info' ]
 
     def close():
         dia.close()
@@ -108,6 +109,7 @@ def settings():
         pf.debug(res)
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
+        res['gui/actionbuttons'] = [ t for t in _actionbuttons if res['_gui/%sbutton'%t ] ]
         updateSettings(res)
         plugins.loadConfiguredPlugins()
 
@@ -129,9 +131,9 @@ def settings():
 
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
- 
+
+    # Use _ to avoid adding these items in the config
     plugin_items = [ _I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
-    #print plugin_items
 
     appearance = [
         _I('gui/style',pf.GUI.currentStyle(),choices=pf.GUI.getStyles()),
@@ -142,6 +144,11 @@ def settings():
     toolbars = [
         _I('gui/%s'%t,pf.cfg['gui/%s'%t],text=getattr(pf.GUI,t).windowTitle(),choices=['left','right','top','bottom'],tooltip=toolbartip) for t in [ 'camerabar','modebar','viewbar' ]
         ]
+    # Use _ to avoid adding these items in the config
+    actionbuttons = [
+        _I('_gui/%sbutton'%t,t in pf.cfg['gui/actionbuttons'],text="%s Button" % t.capitalize()) for t in _actionbuttons
+        ]
+
 
     cur = pf.cfg['gui/splash']
 #    if not cur:
@@ -179,9 +186,7 @@ def settings():
              ),
             _T('GUI',[
                 _G('Appearance',appearance),
-                _G('Components',toolbars+[
-                    _I('gui/rerunbutton',pf.cfg['gui/rerunbutton']),
-                    _I('gui/stepbutton',pf.cfg['gui/stepbutton']),
+                _G('Components',toolbars+actionbuttons+[
                     _I('gui/coordsbox',pf.cfg['gui/coordsbox']),
                     _I('gui/showfocus',pf.cfg['gui/showfocus']),
                     _I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
@@ -503,7 +508,7 @@ def setDebug():
         
 
 def setOptions():
-    options = [ 'debuglevel' ] # Currently no other user changeable options
+    options = [ 'redirect','debuglevel','rst2html'] 
     options = [ o for o in options if hasattr(pf.options,o) ]
     items = [ _I(o,getattr(pf.options,o)) for o in options ]
     res = draw.askItems(items)
@@ -512,6 +517,9 @@ def setOptions():
         for o in options:
             setattr(pf.options,o,res[o])
             print("Options: %s" % pf.options)
+            if o == 'redirect':
+                pf.GUI.board.redirect(pf.options.redirect)
+
 
 
 # Functions defined to delay binding
