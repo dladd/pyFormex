@@ -99,7 +99,7 @@ for release in keys:
 # Now, create some statistics
 
 def extract(filename):
-    res,out = runCmd("gawk -f slocstats.awk %s" % filename)
+    res,out = runCmd("awk -f slocstats.awk %s" % filename)
     if res:
         raise ValueError,"Error extracting data"
     return dict([ DB.splitKeyValue(line) for line in out.split('\n') ])
@@ -168,7 +168,7 @@ for key in KEYSplot:
 
 gnu = gnu[:-1] + '\n'
 
-gnufile = 'pyformex-test.gnu'
+gnufile = 'pyformex-stats.gnu'
 
 fil = open(gnufile,'w')
 fil.write(gnu)
