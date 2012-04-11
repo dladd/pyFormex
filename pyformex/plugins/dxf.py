@@ -311,7 +311,7 @@ def exportDxfText(filename,parts):
     fil = open(filename,'w')
     for p in parts:
         fil.write(p.dxftext()+'\n')
-        fil.close()
+    fil.close()
 
 
 # An example
