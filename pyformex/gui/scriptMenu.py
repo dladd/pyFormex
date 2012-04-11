@@ -405,11 +405,11 @@ class ScriptMenu(QtGui.QMenu):
 
     ### THIS should be moved to a playAll function in draw/script module
     ### Currently, it is only intended for testing the examples
-    ### THus we can permit to add some adhoc solutions, like resetting
+    ### Thus we can permit to add some adhoc solutions, like resetting
     ### the layout at each new script
     def runAllFiles(self,files,randomize=False,pause=0.):
         """Run all the scripts in given list."""
-        pf.GUI.actions['Stop'].setEnabled(True)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if randomize:
             random.shuffle(files)
         for f in files:
@@ -422,7 +422,7 @@ class ScriptMenu(QtGui.QMenu):
                 break
             ## if pause > 0.:
             ##     sleep(pause)
-        pf.GUI.actions['Stop'].setEnabled(False)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
 
 
     def runRandom(self):

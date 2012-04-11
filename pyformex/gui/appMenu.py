@@ -330,7 +330,7 @@ class AppMenu(QtGui.QMenu):
     ### the layout at each new app
     def runAllFiles(self,files,randomize=False,pause=0.):
         """Run all the apps in given list."""
-        pf.GUI.actions['Stop'].setEnabled(True)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if randomize:
             random.shuffle(files)
         for f in files:
@@ -343,7 +343,7 @@ class AppMenu(QtGui.QMenu):
                 break
             ## if pause > 0.:
             ##     sleep(pause)
-        pf.GUI.actions['Stop'].setEnabled(False)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
 
 
     def runRandom(self):

@@ -1626,7 +1626,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
         sleeptime = pf.cfg['draw/flywait']
     saved = delay(sleeptime)
     saved1 = pf.GUI.actions['Continue'].isEnabled()
-    pf.GUI.actions['Continue'].setEnabled(True)
+    pf.GUI.enableButtons(pf.GUI.actions,['Continue'],True)
 
     for elem in path:
         center,eye = elem[:2]
@@ -1641,7 +1641,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
         image.saveNext()
 
     delay(saved)
-    pf.GUI.actions['Continue'].setEnabled(saved1)
+    pf.GUI.enableButtons(pf.GUI.actions,['Continue'],saved1)
     pf.canvas.camera.setCenter(*center)
     pf.canvas.camera.setDist(length(center-eye))
     pf.canvas.update()

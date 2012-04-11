@@ -414,7 +414,7 @@ def raiseExit():
 
 
 def enableBreak(mode=True):
-    pf.GUI.actions['Stop'].setEnabled(mode)
+    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],mode)
 
 
 def stopatbreakpt():
