@@ -1725,4 +1725,57 @@ def randomNoise(shape,min=0.0,max=1.0):
     """Create an array with random values between min and max"""
     return random.random(shape) * (max-min) + min
 
+
+def unitDivisor(div,start=0):
+    """Divide a unit interval in equal parts.
+
+    div: an integer or a list of floating point values.
+
+    If it is an integer, returns a list of floating point values
+    dividing the interval 0.0 toi 1.0 in div equal parts.
+    If start=1 is given, the first value (0.0) will be skipped.
+    
+    If div is a list, just returns div as a 1D array.
+
+    This function is intended to be used by interpolation functions
+    that accept an input as either an int or a list of floats.
+    """
+    div = asarray(div).ravel()
+    if div.size == 1 and div.dtype.kind=='i':
+        n = div[0]
+        div = arange(start,n+1) / float(n)
+    return div
+    
+    
+def uniformParamValues(n,umin=0.0,umax=1.0):
+    """Create a set of uniformly distributed parameter values in a range.
+
+    Parameters:
+
+    `n`: int: number of intervals in which the range should be divided.
+      The number of values returned is ``n+1``.
+    `umin`,`umax`: float: start and end value of the interval. Default
+      interval is [0.0..1.0].
+
+    Returns: a float array with n+1 equidistant values in the range umin..umax.
+      For n > 0, both of the endpoints are included. For n=0, a single
+      value at the center of the interval will be returned. For n<0, an
+      empty array is returned.
+    
+    Example:
+    
+    >>> uniformParamValues(4).tolist()
+    [0.0, 0.25, 0.5, 0.75, 1.0]
+    >>> uniformParamValues(0).tolist()
+    [0.5]
+    >>> uniformParamValues(-1).tolist()
+    []
+    >>> uniformParamValues(2,1.5,2.5).tolist()
+    [1.5, 2.0, 2.5]
+    """
+    if n == 0:
+        return array([0.5*(umax+umin)])
+    else:
+        return umin + arange(n+1) * (umax-umin) / n
+
 # End

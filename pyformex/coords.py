@@ -1820,10 +1820,7 @@ class Coords(ndarray):
         """
         if self.shape != X.shape:
             raise RuntimeError,"`X` should have same shape as `self`"
-        if array(div).size == 1:
-            div = arange(div+1) / float(div)
-        else:
-            div = array(div).ravel()
+        div = unitDivisor(div)
         return self + outer(div,X-self).reshape((-1,)+self.shape)
 
 

@@ -1803,10 +1803,7 @@ maxprop  = %s
         """
         if self.nplex() != 2:
             raise RuntimeError,"Can only divide plex-2 Formices"
-        div = asarray(div).ravel()
-        if div.size == 1 and div.dtype.kind=='i':
-            div = div[0]
-            div = arange(div+1) / float(div)
+        div = unitDivisor(div)
         A = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[:-1],swap=True)
         B = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[1:],swap=True)
         return connect([A,B])
@@ -2050,7 +2047,7 @@ def interpolate(F,G,div,swap=False):
     """Create interpolations between two formices.
 
     F and G are two Formices with the same shape.
-    v is a list of floating point values.
+    div is a list of floating point values.
     The result is the concatenation of the interpolations of F and G at all
     the values in div.
     An interpolation of F and G at value v is a Formex H where each coordinate

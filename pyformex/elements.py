@@ -791,11 +791,12 @@ Quad6.conversions = {
 #
 #    key = degree of extrusion (1 or 2)
 #  value = tuple (Target element type, Node reordering)
-# If no Node reordering is specified, the nodes of the translated entity are jus append to
-# those of the original entity.
+# If no Node reordering is specified, the nodes of the translated entity
+# are jus append to those of the original entity.
 #
 # NEED TO CHECK THIS !!!!:
-# For degree 2, the default order is:  first plane, intermediate plane, last plane.
+# For degree 2, the default order is:
+#   first plane, intermediate plane, last plane.
 
 Point.extruded = { 1: (Line2, []),
                    2: (Line3, [0,2,1]) }
@@ -821,6 +822,10 @@ Line3.degenerate = {
                 ([[0,2]], [0,1]),
                 ],
     }
+#
+#  TODO: Are these still correct after change of wedge6?
+#
+
 Hex8.degenerate = {
     'wedge6' : [ ([[0,1],[4,5]], [0,2,3,4,6,7]),
                  ([[1,2],[5,6]], [0,1,3,4,5,7]),

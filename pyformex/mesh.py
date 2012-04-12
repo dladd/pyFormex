@@ -1344,8 +1344,6 @@ Size: %s
     # Connection, Extrusion, Sweep, Revolution
     #
 
-    ## BV: THE degree PARAMETER NEEDS TO BE IMPLEMENTED
-
     def connect(self,coordslist,div=1,degree=1,loop=False,eltype=None):
         """Connect a sequence of toplogically congruent Meshes into a hypermesh.
 
@@ -1427,14 +1425,8 @@ Size: %s
         if (len(clist)-1) % degree != 0:
             raise ValueError,"Invalid length of coordslist (%s) for degree %s." % (len(clist),degree)
 
-        ## if degree != 1:
-        ##     raise NotImplementedError,"Quadratic connection is not implemented yet."
-
         # set divisions
-        if array(div).size == 1:
-            div = arange(1,div+1) / float(div)
-        else:
-            div = array(div).ravel()
+        div = unitDivisor(div,start=1)
 
         # For higher order non-lagrangian elements the procedure could be
         # optimized by first compacting the coords and elems.
@@ -1443,24 +1435,14 @@ Size: %s
         # A final compact() throws out the unused points.
 
         # Concatenate the coordinates
-        #print "CLIST = %s" % len(clist)
-        #print "BBOX clist = %s" % bbox(clist)
         x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(clist[:-1:degree],clist[degree::degree]) ]
         x = Coords.concatenate(clist[:1] + x)
-        #print "BBOX x = %s" % bbox(x)
-        #print "X = %s" % x.shape[0]
         
         # Create the connectivity table
         nnod = self.ncoords()
-        #print "NNOD = %s" % nnod
         nrep = (x.shape[0]//nnod - 1) // degree
-        #print "NREP=%s" % nrep
-        #print "INPUT ELEMS",self.elems
         e = extrudeConnectivity(self.elems,nnod,degree)
-        #print "SINGLE EXTRUSION",e
         e = replicConnectivity(e,nrep,nnod*degree)
-        #print "REPLICATED EXTRUSION",e
-        #print "COORDS SHAPE: %s" % x.shape[0]
         
         # Create the Mesh
         M = Mesh(x,e).setProp(self.prop)
