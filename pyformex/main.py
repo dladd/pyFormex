@@ -64,7 +64,18 @@ You should probably exit pyFormex, fix the problem first and then restart pyForm
 """ % pyformexdir
     startup_warnings += msg
 
+
 import utils
+
+# Set the proper revision number when running from svn sources
+if pf.svnversion:
+    sta,out = utils.runCommand('cd %s && svnversion' % pyformexdir,quiet=True)
+    if sta == 0 and not out.startswith('exported'):
+        pf.__revision__ = out.strip()
+
+# Set the Full pyFormex version string
+# This had to be deferred until the __revision__ was set
+pf.FullVersion = '%s (Rev. %s)' % (pf.Version,pf.__revision__)
 
 # intended Python version
 minimal_version = '2.5'
@@ -122,11 +133,6 @@ def printcfg(key):
         pass
     print("!! cfg[%s] = %s" % (key,pf.cfg[key]))
 
-
-def setRevision():
-    sta,out = utils.runCommand('cd %s && svnversion' % pf.cfg['pyformexdir'],quiet=True)
-    if sta == 0 and not out.startswith('exported'):
-        pf.__revision__ = out.strip()
 
 
 def remove_pyFormex(pyformexdir,bindir):
@@ -559,9 +565,9 @@ def run(argv=[]):
     if pf.options.gui:
         pf.options.interactive = True
 
-    # Set Revision and run svnclean if we run from an SVN version
+    #  If we run from an SVN version, we should set the proper revision
+    #  number and run the svnclean procedure.
     if pf.svnversion:
-        setRevision()
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
             try:

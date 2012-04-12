@@ -43,19 +43,24 @@ from prefMenu import updateSettings
 def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     """Open a (new or old) Project file.
 
-    The user is asked for a Project file name and the access modalities.
-    Depending on the parameters and the results of the dialog, either a
-    new project is create or an old is opened, or nothing is done.
-    In case a project is opened, it is returned, else the return value is
-    None.
+    A dialog is presented to ask the user for a Project file name and the
+    access modalities. The parameters help in setting sensible defaults
+    for the user and in delimiting his options.
+    Depending on he results of the dialog, either a new project is created or
+    an old one is opened, or nothing is done.
+    If a project is opened, it is returned, else the return value is None.
 
-    The default will let the user create new project files as well as open
-    existing ones.
-    Use create=False or the convenience function openProject to only accept
-    existing project files.
+    Parameters:
 
-    If a compression level (1..9) is given, the contents will be compressed,
-    resulting in much smaller project files at the cost of  
+    - `fn`: filename: if specified, the Project file dialog will start with
+      the specified file, otherwise it will start in the current directory.
+    - `exist`: boolean: if False (default), the user can create new project
+      files as well as open existing ones. Use exist=True or
+      :func:`openExistingProject` to only accept existing project files.
+    - `access`: a list of :class:`Project` access modes to be presented to
+      the user.
+    - `default`: the access mode that is presented as default to the user.
+      If not specified, the first option of `access` will be the default.
     """
     if type(access) == str:
         access = [access]
@@ -71,13 +76,15 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     access = res.acc
     compression = res.cpr
     convert = res.cvt
-    signature = pf.Version[:pf.Version.rfind('-')]
+    signature = pf.FullVersion
 
     # OK, we have all data, now create/open the project
     pf.message("Opening project %s" % fn)
     pf.GUI.setBusy() # loading  may take a while
     try:
         proj = project.Project(fn,access=access,convert=convert,signature=signature,compression=compression)
+        if proj.signature != signature:
+            pf.warning("The project was written with %s, while you are now running %s. If the latter is the newer one, this should probably not cause any problems. Saving is always done in the current format of the running version. Save your project and this message will be avoided on the next reopening." % (proj.signature,signature))
     except:
         proj = None
         raise
@@ -445,7 +452,7 @@ def showImage():
 
 
 def listAll():
-    draw.listAll(sort=True)
+    print pf.PF
 
 
 MenuData = [

@@ -47,7 +47,7 @@ def updateSettings(res,save=None):
     user's preference file.
     Else, the user will be asked whether he wants to save the changes.
     """
-    pf.debug(res,"\nACCEPTED SETTINGS")
+    pf.debug("\nACCEPTED SETTINGS\n%s"% res,pf.DEBUG.CONFIG)
     if save is None:
         save = res.get('_save_',None)
     if save is None:
@@ -87,8 +87,8 @@ def updateSettings(res,save=None):
         for f in todo:
             f()
 
-    pf.debug(pf.cfg,"\nNEW SETTINGS")
-    pf.debug(pf.prefcfg,"\n\nNEW PREFERENCES")
+    pf.debug("\nNEW SETTINGS\n%s"%pf.cfg,pf.DEBUG.CONFIG)
+    pf.debug("\nNEW PREFERENCES\n%s"%pf.prefcfg,pf.DEBUG.CONFIG)
 
 
 def settings():
@@ -106,7 +106,7 @@ def settings():
         dia.acceptData()
         res = dia.results
         res['_save_'] = save
-        pf.debug(res)
+        #pf.debug(res,pf.DEBUG.CONFIG)
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
         res['gui/actionbuttons'] = [ t for t in _actionbuttons if res['_gui/%sbutton'%t ] ]
@@ -246,7 +246,7 @@ def askConfigPreferences(items,prefix=None,store=None):
         _I('_save_',True,text='Save changes')
         ]
     res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
-    pf.debug(res)
+    #pf.debug(res,pf.DEBUG.CONFIG)
     if res and store==pf.cfg:
         updateSettings(res)
     return res

@@ -33,7 +33,6 @@ import os,sys
 import cPickle
 import gzip
 
-_signature_ = 'pyFormex 0.8.6'
 
 module_relocations = {
     'plugins.mesh' : 'mesh',
@@ -128,7 +127,7 @@ class Project(dict):
       If the string contains an 'r' the data from an existing file will be
       read into the dict. If the string starts with an 'r', the file should
       exist. If the string contains a 'w', the data can be written back to
-      the file. The 'r' access mode is a read-only mode.
+      the file. The 'r' access mode is thus a read-only mode.
       
       ======  ===============  ============  ===================
       access  File must exist  File is read  File can be written
@@ -160,7 +159,7 @@ class Project(dict):
       may override values read from the file.  
     """
 
-    def __init__(self,filename=None,access='wr',convert=True,signature=_signature_,compression=5,binary=True,data={},**kargs):
+    def __init__(self,filename=None,access='wr',convert=True,signature=pf.FullVersion,compression=5,binary=True,data={},**kargs):
         """Create a new project."""
         if 'create' in kargs:
             utils.warn("The create=True argument should be replaced with access='w'")
@@ -168,7 +167,7 @@ class Project(dict):
             utils.warn("The legacy=True argument has become superfluous")
             
         self.filename = filename
-        self.access = access 
+        self.access = access
         self.signature = str(signature)
         self.gzip = compression if compression in range(1,10) else 0
         self.mode = 'b' if binary or compression > 0 else ''
@@ -181,6 +180,22 @@ class Project(dict):
         if filename and access=='w':
             # destroy existing contents
             self.save()
+
+
+    def __str__(self):
+        s = """Project name: %s
+  access: %s    mode: %s     gzip:%s
+  signature: %s
+  contents: %s
+""" % (self.filename,self.access,self.mode,self.gzip,self.signature,
+        self.contents())
+        return s
+
+
+    def contents(self):
+        k = self.keys()
+        k.sort()
+        return k
 
 
     def header_data(self):
@@ -205,6 +220,7 @@ class Project(dict):
             #print("  Contents: %s" % self.keys()) 
         f = open(self.filename,'w'+self.mode)
         # write header
+        self.signature = pf.FullVersion
         f.write("%s\n" % self.header_data())
         f.flush()
         if self.mode == 'b':
