@@ -290,7 +290,7 @@ class AppMenu(QtGui.QMenu):
         if app in self.files:
             appname = self.fullAppName(app)
             pf.debug("Running application %s" % appname,pf.DEBUG.APPS|pf.DEBUG.MENU)
-            script.run(appname)
+            script.runApp(appname)
 
 
     def runNext(self):
@@ -303,7 +303,7 @@ class AppMenu(QtGui.QMenu):
             return
         pf.debug("This is app %s out of %s" % (i,len(self.files)),pf.DEBUG.APPS|pf.DEBUG.MENU)
         if i < len(self.files):
-            script.run(self.files[i])
+            script.runApp(self.files[i])
 
 
     def runAllNext(self):

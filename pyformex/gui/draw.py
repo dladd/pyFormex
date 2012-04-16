@@ -1322,7 +1322,7 @@ def wait(relock=True):
 
 # Functions corresponding with control buttons
 
-def play(step=False):
+def play(step=False,refresh=False):
     """Start the current script or if already running, continue it.
     
     """
@@ -1333,7 +1333,7 @@ def play(step=False):
 
     else:
         # Start current application
-        run(step=step)
+        runAny(step=step,refresh=refresh)
 
 
 def replay():
@@ -1343,17 +1343,12 @@ def replay():
     reload the current application prior to running it.
     This function is especially interesting during development
     of an application.
+    If the current application is a script, then it is equivalent with
+    play().
     """
     appname = pf.cfg['curfile']
+    play(refresh=utils.is_app(appname))
 
-    if utils.is_script(appname):
-        # this is a script, not an app
-        pass
-    else:
-        import apps
-        app = apps.load(appname,refresh=True)
-
-    play()
 
 
 def fforward():
@@ -1667,6 +1662,10 @@ def viewport(n=None):
     pf.canvas = pf.GUI.viewports.current
 
 
+def nViewports():
+    """Return the number of viewports."""
+    return len(pf.GUI.viewports.all)
+
 def layout(nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
     """Set the viewports layout."""
     pf.GUI.viewports.changeLayout(nvps,ncols,nrows,pos,rstretch,cstretch)
@@ -1679,8 +1678,7 @@ def addViewport():
 
 def removeViewport():
     """Remove the last viewport."""
-    n = len(pf.GUI.viewports.all)
-    if n > 1:
+    if nViewports() > 1:
         pf.GUI.viewports.removeView()
     viewport()
 

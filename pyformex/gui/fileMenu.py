@@ -145,7 +145,10 @@ def setProject(proj):
     if keep:
         pf.PF.update(keep)
     if pf.PF.filename:
-        updateSettings({'workdir':os.path.dirname(pf.PF.filename)},save=True)
+        updateSettings({
+            'curproj':pf.PF.filename,
+            'workdir':os.path.dirname(pf.PF.filename),
+            },save=True)
     pf.GUI.setcurproj(pf.PF.filename)
     
     if hasattr(proj,'_autoscript_'):

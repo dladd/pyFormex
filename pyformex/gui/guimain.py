@@ -1211,6 +1211,11 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     appname = pf.cfg['curfile']
     pf.GUI.setcurfile(appname)
 
+    # load last project
+    #
+    #  TODO
+    #
+
     # Last minute menu modifications can go here
 
     # cleanup

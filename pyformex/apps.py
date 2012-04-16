@@ -157,7 +157,7 @@ def load(appname,refresh=False):
     traceback is store in a module variable _traceback.
     """
     global _traceback
-    pf.debug("Loading %s" % appname,pf.DEBUG.APPS)
+    pf.debug("Loading %s with refresh=%s" % (appname,refresh),pf.DEBUG.APPS)
     try:
         _traceback = ''
         __import__(appname)

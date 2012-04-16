@@ -435,17 +435,15 @@ def runScript(fn,argv=[]):
     t = Timer()
     pf.GUI.history.add(fn)
     message("Running script (%s)" % fn)
-    #pf.GUI.statusbar.showMessage("Running")
     pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
     res = playScript(file(fn,'r'),fn,fn,argv,pye)
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
-    #pf.GUI.statusbar.showMessage("Ready")
     return res
 
 
-def runApp(appname,argv=[],reload=False):
+def runApp(appname,argv=[],refresh=False):
     if len(scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
         return
@@ -453,7 +451,8 @@ def runApp(appname,argv=[],reload=False):
     import apps
     from timer import Timer
     t = Timer()
-    app = apps.load(appname,refresh=reload)
+    pf.message("Loading application %s with refresh=%s" % (appname,refresh))
+    app = apps.load(appname,refresh=refresh)
     if app is None:
         errmsg = "An  error occurred while loading application %s" % appname
         if pf.GUI:
@@ -479,7 +478,6 @@ def runApp(appname,argv=[],reload=False):
                
         return
     
-    message("Loaded application %s in %s seconds" % (appname,t.seconds()))
     if hasattr(app,'_status') and app._status == 'unchecked':
         pf.warning("This looks like an Example script that has been automatically converted to the pyFormex Application model, but has not been checked yet as to whether it is working correctly in App mode.\nYou can help here by running and rerunning the example, checking that it works correctly, and where needed fixing it (or reporting the failure to us). If the example runs well, you can change its status to 'checked'")
 
@@ -489,22 +487,16 @@ def runApp(appname,argv=[],reload=False):
         pf.GUI.startRun()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
-    #pf.GUI.statusbar.showMessage("Running")
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
         try:
-            #print "RUNNING APP"
             res = app.run()
-            #print "FINISHED RUNNING APP"
         except _Exit:
-            #print "EXIT FROM APP"
             pass
         except:
-            #print "OTHER ERROR IN APP"
             raise
     finally:
-        #print "FINISH APP"
         if hasattr(app,'atExit'):
             app.atExit()
         if pf.cfg['autoglobals']:
@@ -517,11 +509,10 @@ def runApp(appname,argv=[],reload=False):
 
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
-    #pf.GUI.statusbar.showMessage("Ready")
     pf.debug("Memory: %s" % vmSize(),pf.DEBUG.MEM)
 
 
-def run(appname=None,argv=[],step=False,reload=False):
+def runAny(appname=None,argv=[],step=False,refresh=False):
     """Run the current pyFormex application or script file.
     
     This function does nothing if no appname/filename is passed or no current
@@ -542,7 +533,7 @@ def run(appname=None,argv=[],step=False,reload=False):
         stepmode = step
         return runScript(appname,argv)
     else:
-        return runApp(appname,argv)
+        return runApp(appname,argv,refresh)
   
 
 def exit(all=False):

@@ -70,16 +70,15 @@ class Mesh(Geometry):
       by indices into the Coords array. All values in elems should be in the
       range 0 <= value < ncoords.
     - prop: an array of element property numbers, default None.
-    - eltype: an Element subclass or a string designing the element type,
-      default None.
-    
-    If eltype is None, the eltype of the elems Connectivity table is used,
-    and if that is missing, a default eltype is derived from the plexitude,
-    by a call to the elements.elementType function.
-    In most cases the eltype can be set automatically.
-    The user can override the default value, but an error will occur if
-    the element type does not exist or does not match the plexitude.
-
+    - eltype: an element type (a subclass of :class:`Element`) or the name
+      of an Element type, or None (default).
+      If eltype is None, the eltype of the elems Connectivity table is used,
+      and if that is missing, a default eltype is derived from the plexitude,
+      by a call to :func:`elements.elementType`.
+      In most cases the eltype can be set automatically.
+      The user can override the default value, but an error will occur if
+      the element type does not exist or does not match the plexitude.
+      
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
 
