@@ -116,7 +116,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
-    # Release scriptlock
+    # Release script lock
     scriptRelease(__file__)
 
 
@@ -189,7 +189,7 @@ def run():
     linewidth(2)
     flat()
 
-    ## Closing this dialog should release the scriptlock
+    ## Closing this dialog should release the script lock
     dialog = Dialog(
         data_items,
         enablers = input_enablers,

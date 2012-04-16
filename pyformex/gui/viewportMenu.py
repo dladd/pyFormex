@@ -238,6 +238,7 @@ def lineSmoothOff():
 def singleViewport():
     draw.layout(1)
 
+    
 def clearAll():
     for vp in pf.GUI.viewports.all:
         vp.removeAny()

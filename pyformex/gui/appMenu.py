@@ -334,8 +334,8 @@ class AppMenu(QtGui.QMenu):
         if randomize:
             random.shuffle(files)
         for f in files:
-            while script.scriptlock:
-                print "WAITING BECAUSE OF SCRIPTLOCK"
+            while pf.scriptlock:
+                print "WAITING BECAUSE OF SCRIPT LOCK"
                 draw.sleep(5)
             draw.layout(1)
             self.runScript(f)

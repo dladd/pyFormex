@@ -252,17 +252,13 @@ starttime = 0.0
 # BV: do we need this??
 #pye = False
 
-scriptlock = set()
-
 def scriptLock(id):
-    global scriptlock
     pf.debug("Setting script lock %s" %id,pf.DEBUG.SCRIPT)
-    scriptlock |= set([id])
+    pf.scriptlock |= set([id])
 
 def scriptRelease(id):
-    global scriptlock
     pf.debug("Releasing script lock %s" %id,pf.DEBUG.SCRIPT)
-    scriptlock -= set([id])
+    pf.scriptlock -= set([id])
     
 
 def executeScript(scr,glob):
@@ -294,8 +290,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         return
 
        
-    if len(scriptlock) > 0:
-        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
+    if len(pf.scriptlock) > 0:
+        pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
         return
     
     scriptLock('__auto__')
@@ -308,8 +304,6 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     g = Globals()
     if pf.GUI:
         modname = 'draw'
-        # by default, we run the script in the current GUI viewport
-        pf.canvas = pf.GUI.viewports.current
     else:
         modname = 'script'
     g.update({'__name__':modname})
@@ -366,8 +360,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 
 def force_finish():
-    global scriptlock,stepmode
-    scriptlock = set() # release all script locks (in case of an error)
+    global stepmode
+    pf.scriptlock = set() # release all script locks (in case of an error)
     stepmode = False
 
 
@@ -444,8 +438,8 @@ def runScript(fn,argv=[]):
 
 
 def runApp(appname,argv=[],refresh=False):
-    if len(scriptlock) > 0:
-        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
+    if len(pf.scriptlock) > 0:
+        pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
         return
     
     import apps
@@ -539,7 +533,7 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
     #print "DRAW.EXIT"
-    if len(scriptlock) > 0:
+    if len(pf.scriptlock) > 0:
         if all:
             raise _ExitAll # ask exit from pyformex
         else:

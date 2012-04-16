@@ -66,6 +66,7 @@ PF = {}            # explicitely exported globals
 #_PF_ = {}          # globals that will be offered to scripts
     
 scriptName = None
+scriptlock = set()
 
 
 # define last rescue versions of message, warning and debug

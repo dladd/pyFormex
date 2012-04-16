@@ -480,7 +480,7 @@ def close():
     if explanation:
         explanation.close()
         explanation = None
-    # Release scriptlock
+    # Release script lock
     scriptRelease(__file__)
     
 

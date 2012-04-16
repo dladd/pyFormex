@@ -1326,7 +1326,7 @@ def play(step=False,refresh=False):
     """Start the current script or if already running, continue it.
     
     """
-    if len(scriptlock) > 0:
+    if len(pf.scriptlock) > 0:
         # An application is running
         if pf.GUI.drawlock.locked:
             pf.GUI.drawlock.release()
@@ -1371,7 +1371,7 @@ def step():
     is already running, it continues the script with the next step.
     This is equivalent with the behavior of the play function.
     """
-    if len(scriptlock) > 0:
+    if len(pf.scriptlock) > 0:
         play()
         
     elif ack("""..

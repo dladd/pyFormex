@@ -825,6 +825,8 @@ class Gui(QtGui.QMainWindow):
         pf.canvas.update()
         self.enableButtons(self.actions,['ReRun'],False)
         self.enableButtons(self.actions,['Play','Step','Continue','Stop'],True)
+        # by default, we run the script in the current GUI viewport
+        pf.canvas = pf.GUI.viewports.current
         pf.app.processEvents()
 
 
@@ -839,8 +841,11 @@ class Gui(QtGui.QMainWindow):
         global stepmode
         stepmode = False
         self.drawlock.release()
+        pf.canvas.update()
         self.enableButtons(self.actions,['Play','ReRun'],True)
         self.enableButtons(self.actions,['Step','Continue','Stop'],False)
+        # acknowledge viewport switching
+        pf.canvas = pf.GUI.viewports.current
         pf.app.processEvents()
 
 

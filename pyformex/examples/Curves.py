@@ -168,7 +168,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
-    # Release scriptlock
+    # Release script lock
     scriptRelease(__file__)
 
 
