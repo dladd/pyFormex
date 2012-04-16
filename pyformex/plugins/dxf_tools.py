@@ -16,13 +16,9 @@ menu is provided for standard tasks.
 from gui.draw import *
 from plugins import dxf
 from plugins import geometry_menu
-## from plugins.curve import *
+from plugins.curve import *
 from gui import menu
-## from connectivity import *
-## import olist
-## import utils
-## import combine_mesh as cm
-## reload(cm)
+from connectivity import Connectivity
 
 _name_ = 'dxf_tools'
     
@@ -267,6 +263,14 @@ def splitArcs():
     drawCell()
 
 
+def endPoints(parts):
+    """Find the end points of all parts"""
+    ep = Coords.concatenate([ p.coords[[0,-1]] for p in parts ])
+    endpoints, ind = ep.fuse()
+    ind = Connectivity(ind.reshape(-1,2))
+    return endpoints,ind
+
+
 def convertToFormex():
     """Convert all dxf parts to a plex-2 Formex
 
@@ -352,7 +356,7 @@ def drawParts(zoom=True,showpoints=None,shownumbers=None,showbif=None):
         X = Coords.concatenate([p.pointsAt([0.5])[0] for p in parts])
         drawMarks(X,nrs,color=blue)#,color=nrs)
     if showpoints:
-        endpoints,ind = endPoints()
+        endpoints,ind = endPoints(parts)
         draw(endpoints)
         drawNumbers(endpoints)
     if showbif and 'bifurc' in pf.PF:
