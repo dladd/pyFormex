@@ -1721,20 +1721,18 @@ Shortest altitude: %s; largest aspect ratio: %s
         if len(Mparts) ==  0:
             # No intersection: return empty mesh
             return Mesh(Coords(),[])
-        elif len(Mparts) == 1:
-            M = Mparts[0]
         else:
             M = Mesh.concatenate(Mparts)
 
-        # Remove degenerate and duplicate elements
-        M = Mesh(M.coords,M.elems.removeDegenerate().removeDuplicate())
-
-        # Split in connected loops
-        parts = connectedLineElems(M.elems)
-        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
-        elems = concatenate(parts,axis=0)
-
-        return Mesh(M.coords,elems,prop=prop)
+            # Remove degenerate and duplicate elements
+            M = Mesh(M.coords,M.elems.removeDegenerate().removeDuplicate())
+    
+            # Split in connected loops
+            parts = connectedLineElems(M.elems)
+            prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
+            elems = concatenate(parts,axis=0)
+    
+            return Mesh(M.coords,elems,prop=prop)
 
 
     def slice(self,dir=0,nplanes=20):
