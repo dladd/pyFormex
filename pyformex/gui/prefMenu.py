@@ -182,12 +182,13 @@ def settings():
                 _I('appdirs',text='Applicationt Paths',tooltip='pyFormex will look for applications in these directories',buttons=[('Edit',changeAppDirs)]),
                 _I('autoglobals',text='Auto Globals',tooltip='If checked, global Application variables of any Geometry type will automatically be copied to the pyFormex global variable dictionary (PF), and thus become available in the GUI'),
                 _I('showapploaderrors',text='Show Application Load Error Traceback',tooltip='If checked, a traceback of exceptions occurring at Application Load time will be output. If unchecked, such exceptions will be suppressed, and the application will not run.'),
+                _I('loadcurproj',text="Reload last project on startup"),
                 ],
              ),
             _T('GUI',[
                 _G('Appearance',appearance),
                 _G('Components',toolbars+actionbuttons+[
-                    _I('gui/coordsbox',pf.cfg['gui/coordsbox']),
+                    _I('gui/coordsbox'),
                     _I('gui/showfocus',pf.cfg['gui/showfocus']),
                     _I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
                     _I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),

@@ -30,6 +30,7 @@ import widgets
 import utils
 import project
 import draw
+from draw import _I
 import image
 import plugins
 
@@ -94,14 +95,27 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     return proj
 
 
+def readProjectFile(fn):
+    if os.path.exists(fn):
+        proj = project.Project(fn,access='wr')
+        return proj
+    else:
+        return None
+        
+
 def setProject(proj):
     """Open a (new or old) Project file and make it the current project.
 
+    proj is an open project or a filename.
+    If a filename, the project file is opened.
+
+    .. note: The remainder is obsolete
+    
     The user is asked for a Project file name and the access modalities.
     Depending on the results of the dialog:
 
     - either an new project is create or an old is opened,
-    - the old data may be discarded, added to the current exported symbols,
+    - the old data may be discarded, added to the current pyFormex globals,
       or replace them
     - the opened Project may become the current Project, or its data are
       just imported in the current Project.
@@ -174,7 +188,7 @@ def setProject(proj):
     if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
         draw.processArgs([proj.autofile])
 
-    pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
+    listProject()
 
 
 def createProject():
@@ -203,12 +217,32 @@ def importProject():
     """Import an existing project.
 
     Ask the user to select an existing project file, and then import
-    its data into the current project.
+    all or selected data from it into the current project.
     """
     proj = openProject(exist=True,access='r')
     if proj: # only if non-empty
-        pf.PF.update(proj)
-        listProject()
+        keys = utils.sortedKeys(proj)
+        res = draw.askItems(
+            [   _I('mode',choices=['All','Defined','Undefined','Selected','None'],itemtype='radio'),
+                _I('selected',choices=keys),
+                ],
+            caption='Select variables to import',
+            )
+        if res:
+            mode = res['mode'][0]
+            if mode == 'A':
+                pass
+            elif mode == 'D':
+                proj = utils.selectDict(proj,pf.PF)
+            elif mode == 'U':
+                proj = utils.removeDict(proj,pf.PF)
+            elif mode == 'S':
+                proj = utils.selectDict(proj,res['selected'])
+            elif mode == 'N':
+                return
+            pf.message("Importing symbols: %s" % utils.sortedKeys(proj))
+            pf.PF.update(proj)
+            listProject()
         
 
 def setAutoScript():
@@ -254,7 +288,7 @@ def saveAsProject():
 
 def listProject():
     """Print all global variable names."""
-    pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
+    pf.message("pyFormex globals: %s" % utils.sortedKeys(pf.PF))
 
 def clearProject():
     """Clear the contents of the current project."""
@@ -277,8 +311,8 @@ def closeProject(save=None):
         if save:
             saveProject()
             if pf.PF:
-                pf.message("Exported symbols: %s" % utils.sortedKeys(pf.PF))
-                if draw.ask("What shall I do with the exported symbols?",["Delete","Keep"]) == "Delete":
+                listProject()
+                if draw.ask("What shall I do with the existing globals?",["Delete","Keep"]) == "Delete":
                     pf.PF.clear()
 
     pf.PF.filename = None

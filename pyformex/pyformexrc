@@ -57,6 +57,7 @@ localprefs = '.pyformex/pyformexrc'
 scripttemplate = os.path.join(pyformexdir,'template.py')
 curfile = ''
 curproj = ''
+loadcurproj = False
 
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically

@@ -90,6 +90,11 @@ def select(a,b):
     return [ a[i] for i in b ]
 
 
+def remove(a,b):
+    """Returns the complement of select(a,b)."""
+    return [ ai for i,ai in enumerate(a) if i not in b ]
+
+
 def toFront(l,i):
     """Add or move i to the front of list l
 

@@ -1216,11 +1216,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     appname = pf.cfg['curfile']
     pf.GUI.setcurfile(appname)
 
-    # load last project
-    #
-    #  TODO
-    #
-
     # Last minute menu modifications can go here
 
     # cleanup
@@ -1244,6 +1239,16 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     pf.app_started = True
     pf.GUI.processEvents()
+
+    # load last project
+    #
+    #  TODO
+    if pf.cfg['loadcurproj']:
+        fn = pf.cfg['curproj']
+        if fn:
+            proj = fileMenu.readProjectFile(fn)
+            fileMenu.setProject(proj)  
+    #
     return 0
 
 
