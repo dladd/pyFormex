@@ -271,6 +271,7 @@ class InputItem(QtGui.QWidget):
             
         if 'tooltip' in kargs:
             self.setToolTip(kargs['tooltip'])
+
         ##     if hasattr(self,'label'):
         ##         self.label.setToolTip(kargs['tooltip'])
         ## try:
@@ -1804,64 +1805,64 @@ def inputAny(name,value,itemtype,**options):
     return f(name,value,**options)
 
                 
+## BV removed in 0.9
+## def inputAnyOld(item,parent=None):
+##     """_Create an InputItem with the old data style.
 
-def inputAnyOld(item,parent=None):
-    """_Create an InputItem with the old data style.
-
-    This translates the data from the legacy InputItem data to the
-    new style required by InputAny.
-    Returns the InputItem constrctured with the data.
-    """
-    name,value = item[:2]
+##     This translates the data from the legacy InputItem data to the
+##     new style required by InputAny.
+##     Returns the InputItem constrctured with the data.
+##     """
+##     name,value = item[:2]
     
-    if type(item[-1]) == dict:
-        # we have options
-        options = item[-1]
-        item = item[:-1]
-    else:
-        options = {}
+##     if type(item[-1]) == dict:
+##         # we have options
+##         options = item[-1]
+##         item = item[:-1]
+##     else:
+##         options = {}
 
-    if len(item) > 2 and type(item[2]) == str:
-        itemtype = item[2]
-    else:
-        # No item specified: guess from value or from available options
-        if 'choices' in options:
-            itemtype = 'select'
-        else:
-            itemtype = type(value)
+##     if len(item) > 2 and type(item[2]) == str:
+##         itemtype = item[2]
+##     else:
+##         # No item specified: guess from value or from available options
+##         if 'choices' in options:
+##             itemtype = 'select'
+##         else:
+##             itemtype = type(value)
 
-    if itemtype == int:
-        if len(item) > 3 and type(item[3] != dict):
-            options['min'] = int(item[3])
-        if len(item) > 4:
-            options['max'] = int(item[4])
+##     if itemtype == int:
+##         if len(item) > 3 and type(item[3] != dict):
+##             options['min'] = int(item[3])
+##         if len(item) > 4:
+##             options['max'] = int(item[4])
 
-    elif itemtype == float:
-        if len(item) > 3 and type(item[3] != dict):
-            options['min'] = int(item[3])
-        if len(item) > 4:
-            options['max'] = int(item[4])
-        if len(item) > 5:
-            options['dec'] = int(item[5])
+##     elif itemtype == float:
+##         if len(item) > 3 and type(item[3] != dict):
+##             options['min'] = int(item[3])
+##         if len(item) > 4:
+##             options['max'] = int(item[4])
+##         if len(item) > 5:
+##             options['dec'] = int(item[5])
 
-    elif itemtype == 'select' :
-        if len(item) > 3:
-            options['choices'] = item[3]
+##     elif itemtype == 'select' :
+##         if len(item) > 3:
+##             options['choices'] = item[3]
 
-    elif itemtype in ['radio','hradio','vradio']:
-        if len(item) > 3:
-            options['choices'] = item[3]
-        options['direction'] = itemtype[0]
+##     elif itemtype in ['radio','hradio','vradio']:
+##         if len(item) > 3:
+##             options['choices'] = item[3]
+##         options['direction'] = itemtype[0]
 
-    elif itemtype in ['push','hpush','vpush']:
-        if len(item) > 3:
-            options['choices'] = item[3]
-        options['direction'] = itemtype[0]
+##     elif itemtype in ['push','hpush','vpush']:
+##         if len(item) > 3:
+##             options['choices'] = item[3]
+##         options['direction'] = itemtype[0]
 
-    if parent is not None:
-        options['parent'] = parent
+##     if parent is not None:
+##         options['parent'] = parent
 
-    return inputAny(name,value,itemtype,**options)
+##     return inputAny(name,value,itemtype,**options)
 
 
 def updateDialogItems(data,newdata):

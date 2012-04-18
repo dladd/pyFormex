@@ -1485,6 +1485,9 @@ def vectorPairAreaNormals(vec1,vec2):
     """Compute area of and normals on parallellograms formed by vec1 and vec2.
 
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    As a convenience, single vectors may also be specified with shape (3,),
+    and will be converted to (1,3).
+    
     The result is a tuple of two arrays:
     
     - area (n) : the area of the parallellogram formed by vec1 and vec2.
@@ -1496,7 +1499,7 @@ def vectorPairAreaNormals(vec1,vec2):
     Note that where two vectors are parallel, an area zero results and
     an axis with components NaN.
     """
-    normal = cross(vec1,vec2)
+    normal = cross(vec1.reshape(-1,3),vec2.reshape(-1,3))
     area = vectorLength(normal)
     normal /= area.reshape((-1,1))
     return area,normal

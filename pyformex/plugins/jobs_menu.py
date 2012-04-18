@@ -255,12 +255,12 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
                 ]
         else:
             jobname_input = [
-                dict(name='jobname',value=the_jobname,choices=the_jobnames)
+                _I('jobname',the_jobname,choices=the_jobnames)
                 ]
 
         print jobname_input
         res = askItems(jobname_input + [
-            dict(name='target dir',value=targetdir,itemtype='button',func=changeTargetDir),
+            _I('target dir',targetdir,itemtype='button',func=changeTargetDir),
             ('.fil',True),
             ('.post',True),
             ('_post.py',False),
