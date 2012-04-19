@@ -43,20 +43,6 @@ from utils import deprecation
 # These functions replace the standard Mesh.report method.
 # They are here for demonstration purposes.
 #
-def report(self):
-    """Create a report on the Mesh shape and size.
-
-    The report contains the number of nodes, number of elements,
-    plexitude, element type, bbox and size.
-    """
-    bb = self.bbox()
-    return """
-    
-Shape: %s nodes, %s elems, plexitude %s
-Eltype: %s (ndim=%s),
-BBox: %s, %s
-Size: %s
-""" % (self.ncoords(),self.nelems(),self.nplex(),self.eltype,self.eltype.ndim,bb[0],bb[1],bb[1]-bb[0])
 
 
 def alt_report(self):
@@ -336,15 +322,6 @@ def partitionByAngle(self,**arg):
 # Initialize
 #
 
-def initialize():
-    """Initialize the Mesh extensions.
-
-    Calling this function will install some of the mesh functions
-    defined in this modules as Mesh methods.
-    """
-    Mesh.report = alt_report
-
-
 def _auto_initialize():
     """Auto-initialize Mesh extensions.
 
@@ -354,7 +331,6 @@ def _auto_initialize():
     installed here will always be available as Mesh methods just by
     importing the mesh_ext module.
     """
-    Mesh.report = report
     Mesh.areas = areas
     Mesh.area = area
     Mesh.nodeFront = nodeFront

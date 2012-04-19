@@ -307,9 +307,6 @@ class Mesh(Geometry):
     npoints = ncoords
     def shape(self):
         return self.elems.shape
-
-    def info(self):
-        return "coords" + str(self.coords.shape) + "; elems" + str(self.elems.shape)
     
 
     def nedges(self):
@@ -323,6 +320,46 @@ class Mesh(Geometry):
             return self.nelems() * self.eltype.nedges()
         except:
             return 0
+
+
+    def info(self):
+        """Return short info about the Mesh.
+
+        This includes only the shape of the coords and elems arrays.
+        """
+        return "coords" + str(self.coords.shape) + "; elems" + str(self.elems.shape)
+
+    def report(self,full=True):
+        """Create a report on the Mesh shape and size.
+
+        The report always contains the number of nodes, number of elements,
+        plexitude, dimensionality, element type, bbox and size.
+        If full==True(default), it also contains the nodal coordinate
+        list and element connectivity table. Because the latter can be rather
+        bulky, they can be switched off. (Though numpy will limit the printed
+        output).
+
+        TODO: We should add an option here to let numpy print the full tables.
+        """
+        bb = self.bbox()
+        s = """
+Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
+  BBox: %s, %s
+  Size: %s
+""" % (self.ncoords(),self.nelems(),self.nplex(),self.eltype.ndim,self.eltype,bb[0],bb[1],bb[1]-bb[0])
+
+        if full:
+            s += "Coords:\n" + self.coords.__str__() +  "\nElems:\n" + self.elems.__str__()
+        return s
+
+
+    def __str__(self):
+        """Format a Mesh in a string.
+
+        This creates a detailed string representation of a Mesh,
+        containing the report() and the lists of nodes and elements.
+        """
+        return self.report(False)
 
 
     def centroids(self):
@@ -727,29 +764,6 @@ class Mesh(Geometry):
                 adjmatrix[i, :len( nadjn[i]) ]=avgval[ nadjn[i]  ]
             avgval= sum(adjmatrix, axis=1)/lnadjn
         return avgval
-
-
-    def report(self):
-        """Create a report on the Mesh shape and size.
-
-        The report contains the number of nodes, number of elements,
-        plexitude, bbox and size.
-        """
-        bb = self.bbox()
-        return """
-Shape: %s nodes, %s elems, plexitude %s
-BBox: %s, %s
-Size: %s
-""" % (self.ncoords(),self.nelems(),self.nplex(),bb[1],bb[0],bb[1]-bb[0])
-
-
-    def __str__(self):
-        """Format a Mesh in a string.
-
-        This creates a detailed string representation of a Mesh,
-        containing the report() and the lists of nodes and elements.
-        """
-        return self.report() + "Coords:\n" + self.coords.__str__() +  "\nElems:\n" + self.elems.__str__()
 
 
     def fuse(self,**kargs):
