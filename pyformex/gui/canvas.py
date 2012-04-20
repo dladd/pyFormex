@@ -1101,6 +1101,7 @@ class Canvas(object):
         bbox = coords.Coords(bbix).bbox()
         dx,dy,dz = bbox[1] - bbox[0]
         vsize = max(dx/self.aspect,dy)
+        dsize = bbox.dsize()
         offset = dz
         dist = (vsize/tf + offset) / correction
         
@@ -1115,8 +1116,10 @@ class Canvas(object):
         ## print "near,far = %s, %s" % (near,far)
         ## near,far = 0.1*dist,10.*dist
         ## print "near,far = %s, %s" % (near,far)
-        near,far = dist-1.5*vsize,dist+1.5*vsize
-        #print "near,far = %s, %s" % (near,far)
+        #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
+        near,far = dist-1.0*dsize,dist+1.0*dsize
+        # print "near,far = %s, %s" % (near,far)
+        # make sure near is positive
         near = max(0.0001*vsize,near)
         #print "near,far = %s, %s" % (near,far)
         self.camera.setClip(near,far)

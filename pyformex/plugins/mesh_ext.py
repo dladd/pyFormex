@@ -197,6 +197,7 @@ def areas(self):
         mesh._default_facetype.
         """
         return _default_surfacetype.get(nplex,None)
+
     import geomtools
     nfacperel= len(self.eltype.faces[1])#nfaces per elem
     mf=Mesh(self.coords, self.getFaces())#mesh of all faces

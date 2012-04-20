@@ -1765,7 +1765,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     def volume(self):
         """Return the total volume of a Mesh.
 
-        If the Mesh can not be converted to tet4 type, 0 is returned
+        Computes the volume of Mesh of dimensionality 3 by converting it
+        first to a 'tet4' type Mesh. If the Mesh dimensionality is less than 3
+        or the Mesh can not be converted to type 'tet4', 0.0 is returned.
         """
         try:
             return self.volumes().sum()
