@@ -39,81 +39,11 @@ from utils import deprecation
 
 
 ##############################################################################
-#
-# These functions replace the standard Mesh.report method.
-# They are here for demonstration purposes.
-#
 
-
-def alt_report(self):
-    """Create a report on the Mesh shape and size.
-
-    The report contains the number of nodes, number of elements,
-    plexitude, element type, bbox and size.
-    """
-    bb = self.bbox()
-    return """
-    
-Number of nodes: %s
-Number of elements: %s
-Plexitude: %s
-Eltype: %s
-Dimensionality: %s
-Min Coords: %s
-Max Coords: %s
-Size: %s
-Area: %s
-Volume: %s
-""" % (self.ncoords(),self.nelems(),self.nplex(),self.eltype,self.eltype.ndim,bb[1],bb[0],bb[1]-bb[0],self.area(),self.volume())
-
-##############################################################################
-#
-
-#GDS connectivity functions valid for all mesh types, moved from trisurface.py
-def nodeFront(self,startat=0,front_increment=1):
-    """Generator function returning the frontal elements.
-
-    startat is an element number or list of numbers of the starting front.
-    On first call, this function returns the starting front.
-    Each next() call returns the next front.
-    """
-    p = -ones((self.nelems()),dtype=int)
-    if self.nelems() <= 0:
-        return
-    # Construct table of elements connected to each element
-    adj = self.nodeAdjacency()
-
-    # Remember nodes left for processing
-    todo = ones((self.npoints(),),dtype=bool)
-    elems = clip(asarray(startat),0,self.nelems())
-    prop = 0
-    while elems.size > 0:
-        # Store prop value for current elems
-        p[elems] = prop
-        yield p
-
-        prop += front_increment
-
-        # Determine adjacent elements
-        elems = unique(adj[elems])
-        elems = elems[(elems >= 0) * (p[elems] < 0) ]
-        if elems.size > 0:
-            continue
-
-        # No more elements in this part: start a new one
-        elems = where(p<0)[0]
-        if elems.size > 0:
-            # Start a new part
-            elems = elems[[0]]
-            prop += 1
 
 def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-    for p in self.nodeFront(startat=startat,front_increment=front_increment):   
-        if nsteps > 0:
-            nsteps -= 1
-        elif nsteps == 0:
-            break
-    return p
+    return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
+
 
 def partitionByNodeFront(self,firstprop=0,startat=0):
     """Detects different parts of the Mesh using a frontal method.
@@ -333,7 +263,6 @@ def _auto_initialize():
     """
     Mesh.areas = areas
     Mesh.area = area
-    Mesh.nodeFront = nodeFront
     Mesh.walkNodeFront = walkNodeFront
     Mesh.partitionByNodeFront = partitionByNodeFront
     Mesh.partitionByConnection = partitionByConnection

@@ -162,6 +162,22 @@ class Connectivity(ndarray):
         """
         return self.shape[0]
 
+
+    def maxnodes(self):
+        """Return an upper limit for number of nodes in the connectivity.
+
+        This returns the highest node number plus one.
+        """
+        return self.max() + 1
+
+
+    def nnodes(self):
+        """Return the actual number of nodes in the connectivity.
+
+        This returns the count of the unique node numbers.
+        """
+        return unique(self).shape[0]
+
     
     def nplex(self):
         """Return the plexitude of the elements in the Connectivity table.
@@ -708,10 +724,6 @@ class Connectivity(ndarray):
             lo = lo[uniq]
         else:
             hi = lo = Connectivity()
-        #
-        # PUT THIS BEHIND THE SELECTION, BECAUSE IT LOOSES THE 'eltype'
-        # ** PROBABLY SOLVED BY __finalize__, so could go up
-        #
         if hasattr(sel,'eltype'):
             lo.eltype = sel.eltype
         return hi,lo
@@ -841,6 +853,78 @@ class Connectivity(ndarray):
                 return elems
 
         return self
+
+
+    # BV: Conceptually, this is a function of an adjacency table
+    #     But we currently do not have adjacency tables as a separate
+    #     class. We construct them ad hoc from Connectivity tables.
+    #  Should we create an Adjacency class ?? Our Conectivity is
+    #  more efficient in storage, because we have a constant plexitude.
+    #  Implementing an Adjacency class could have the benefit of many
+    # available graph algorithms (is there something in numpy?)
+
+
+    def frontFactory(self,startat=0,frontinc=1):
+        """Generator function returning the frontal elements.
+
+        startat is an element number or list of numbers of the starting front.
+        On first call, this function returns the starting front.
+        Each next() call returns the next front.
+
+        This method is normally used indirectly, via the frontWalk method.
+        """
+        p = -ones((self.nelems()),dtype=int)
+        if self.nelems() <= 0:
+            return
+        # Construct table of adjacent elements
+        adj = self.adjacency()
+
+        # Remember nodes left for processing
+        todo = ones(self.maxnodes(),dtype=bool)
+        elems = clip(asarray(startat),0,self.nelems())
+        prop = 0
+        while elems.size > 0:
+            # Store prop value for current elems
+            p[elems] = prop
+            yield p
+
+            prop += frontinc
+
+            # Determine adjacent elements
+            elems = unique(adj[elems])
+            elems = elems[(elems >= 0) * (p[elems] < 0) ]
+            if elems.size > 0:
+                continue
+
+            # No more elements in this part: start a new one
+            elems = where(p<0)[0]
+            if elems.size > 0:
+                # Start a new part
+                elems = elems[[0]]
+                prop += 1
+
+
+    def frontWalk(self,startat=0,nsteps=-1,frontinc=1):
+        """Walks through the elements by their node front.
+
+        A frontal walk is executed starting from the given element(s).
+        A number of steps is executed, each step advancing the front
+        over a given number of single pass increments.
+
+        Returns an array of integers specifying for each element in which step
+        that element was passed by the walker.
+
+        Parameters:
+
+        - `startat`: 
+
+        """
+        for p in self.frontFactory(startat=startat,frontinc=frontinc):   
+            if nsteps > 0:
+                nsteps -= 1
+            elif nsteps == 0:
+                break
+        return p
 
 
 #######################################################################

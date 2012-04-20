@@ -233,8 +233,7 @@ def growCollection(K,**kargs):
     """Grow the collection with n frontal rings.
 
     K should be a collection of elements.
-    This currently only works on surfaces. Objects that do not have a
-    nodeFront() generator function are 
+    This should work on any objects that have a growSelection method.
     """
     if K.obj_type == 'element':
         for k in K.keys():

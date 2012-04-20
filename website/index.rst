@@ -35,7 +35,7 @@
 
 .. meta::
    :description: pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations
-   :keywords: pyformex 3D modeling geometry surface mesh STL finite element stent python numpy
+   :keywords: Pyformex, 3D modeling, Geometry, Surface, Mesh, STL ,Finite Elements, Stent, Python, Numpy
 
 .. toctree::
    :titlesonly:
@@ -96,13 +96,15 @@ Overview
 
       <p class="biglink"><a class="biglink" href="http://savannah.nongnu.org/projects/pyformex/">Project page</a><br/><span class="linkdescr">where the development takes place</span></p>
 
+      <p class="biglink"><a class="biglink" href="links.html">Links</a><br/><span class="linkdescr">to providers, users and just friends</span></p>
+
     </td><td width="50%">
 
       <p class="biglink"><a class="biglink" href="doc/index.html">Documentation</a><br/><span class="linkdescr">learn all about pyFormex</span></p>
 
-      <p class="biglink"><a class="biglink" href="support.html">Support</a><br/><span class="linkdescr">everyone at times needs help with something</span></p>
+      <p class="biglink"><a class="biglink" href="doc/install.html">Install</a><br/><span class="linkdescr">discover the many ways to install</span></p>
 
-      <p class="biglink"><a class="biglink" href="links.html">Links</a><br/><span class="linkdescr">to providers, users and just friends</span></p>
+      <p class="biglink"><a class="biglink" href="support.html">Support</a><br/><span class="linkdescr">everyone at times needs help with something</span></p>
 
     </td></tr>
   </table>
