@@ -49,57 +49,6 @@ selection = pf.GUI.selection['formex']
 setSelection = selection.set
 drawSelection = selection.draw
 
-
-## def readSelection(select=True,draw=True,multi=True):
-##     """Read a Formex (or list) from asked file name(s).
-
-##     If select is True (default), this becomes the current selection.
-##     If select and draw are True (default), the selection is drawn.
-##     """
-##     types = utils.fileDescription(['pgf','all'])
-##     fn = askFilename(pf.cfg['workdir'],types,multi=multi)
-##     if fn:
-##         if not multi:
-##             fn = [ fn ]
-##         chdir(fn[0])
-##         res = ODict()
-##         pf.GUI.setBusy()
-##         for f in fn:
-##             res.update(readGeomFile(f))
-##         pf.GUI.setBusy(False)
-##         export(res)
-##         if select:
-##             oknames = [ k for k in res if isinstance(res[k],Formex) ]
-##             selection.set(oknames)
-##             pf.message("Set Formex selection to %s" % oknames)
-##             if draw:
-##                 selection.draw()
-##     return fn
-
-
-## def writeSelection():
-##     """Writes the currently selected Formices to a Geometry File."""
-##     F = selection.check()
-##     if F:
-##         types = utils.fileDescription(['pgf','all'])
-##         name = selection.names[0]
-##         fn = askNewFilename(os.path.join(pf.cfg['workdir'],"%s.pgf" % name),
-##                             filter=types)
-##         if fn:
-##             if not (fn.endswith('.pgf') or fn.endswith('.formex')):
-##                 fn += '.pgf'
-##             pf.message("Creating pyFormex Geometry File '%s'" % fn)
-##             chdir(fn)
-##             selection.writeToFile(fn)
-##             pf.message("Contents: %s" % selection.names)
-    
-
-## def printSize():
-##     for s in selection.names:
-##         S = named(s)
-##         pf.message("Formex %s has shape %s" % (s,S.shape()))
-
-
 ################### Change attributes of Formex #######################
 
 

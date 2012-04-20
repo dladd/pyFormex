@@ -104,9 +104,9 @@ def readProjectFile(fn):
         
 
 def setProject(proj):
-    """Open a (new or old) Project file and make it the current project.
+    """Make the specified project the current project.
 
-    proj is an open project or a filename.
+    proj is an open project.
     If a filename, the project file is opened.
 
     .. note: The remainder is obsolete
@@ -284,6 +284,12 @@ def saveAsProject():
         pf.PF.filename = proj.filename
         pf.PF.gzip = proj.gzip
         saveProject()
+    if pf.PF.filename is not None:
+        updateSettings({
+            'curproj':pf.PF.filename,
+            'workdir':os.path.dirname(pf.PF.filename),
+            },save=True)
+    pf.GUI.setcurproj(pf.PF.filename)
     
 
 def listProject():

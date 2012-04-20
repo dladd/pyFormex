@@ -52,12 +52,6 @@ def draw_edge_numbers(n):
     F = Formex(S.coords[S.getEdges()]) 
     return drawNumbers(F,color='green')
 
-## def draw_node_numbers(n):
-##     """Draw the node numbers of the named surface."""
-##     S = named(n)
-##     F = Formex(S.coords) 
-##     return drawNumbers(F,color='red')
-
 def draw_normals(n,avg=False):
     """Draw the surface normals at centers or averaged normals at the nodes."""
     S = named(n)
