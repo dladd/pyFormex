@@ -133,6 +133,8 @@ Proposed changes in the Element class
 
     def __init__(self,name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs):
                 
+        # store name in itself, to restore correctly from pickles
+        self._name = name.lower()
         self.doc = doc
         self.ndim = ndim
         self.vertices = Coords(vertices)
@@ -144,8 +146,9 @@ Proposed changes in the Element class
         if 'reversed' in kargs:
             self.reversed = kargs['reversed']
         # add the element to the collection
-        name = name.lower()
-        Element.collection[name] = self
+        if self._name in Element.collection:
+            raise ValueError,"Can not create duplicate element names"
+        Element.collection[self._name] = self
 
 
     def nplex(self):
@@ -252,10 +255,12 @@ Proposed changes in the Element class
         return Mesh(x,e,eltype=e.eltype)
 
     def name(self):
-        for k,v in Element.collection.items():
-            if v == self:
-                return k
-        return 'unregistered_element'
+        return self._name
+        ## for k,v in Element.collection.items():
+        ##     if v == self:
+        ##         return k
+        ## return 'unregistered_element'
+
 
     def __str__(self):
         return self.name()

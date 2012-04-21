@@ -115,6 +115,12 @@ class Mesh(Geometry):
     
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
+        print "MESH INIT"
+        print "COORDS",coords
+        print "ELEMS",elems
+        print "PROP",prop
+        print "ELTYPE",eltype
+        print elementType(eltype)
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
@@ -233,14 +239,26 @@ class Mesh(Geometry):
         self.coords[i] = val
 
 
+    def __getstate__(self):
+        import copy
+        state = copy.copy(self.__dict__)
+        # Store the element type by name
+        state['eltype'] = state['eltype']._name
+        return state
+
+
     def __setstate__(self,state):
         """Set the object from serialized state.
         
         This allows to read back old pyFormex Project files where the Mesh
         class did not set element type yet.
         """
-        self.__dict__.update(state)
-        self.setType(self.eltype)
+        if 'eltype' in state:
+            state['eltype'] = elementType(state['eltype'])
+            self.__dict__.update(state)
+        else:
+            # Old Project files did not save element type
+            self.setType(self.eltype)
     
 
     def getProp(self):
