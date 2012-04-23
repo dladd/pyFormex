@@ -678,8 +678,9 @@ class InputCombo(InputItem):
         self.input.addItems(self._choices_)
         if callable(onselect):
             self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
-        if callable(func):
-            self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
+# BV REMOVED BECAUSE NOT DOCUMENTED 
+#        if callable(func):
+#            self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
         self.setValue(default)
         self.layout().insertWidget(1,self.input)
 

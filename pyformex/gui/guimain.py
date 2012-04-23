@@ -1246,8 +1246,14 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     if pf.cfg['loadcurproj']:
         fn = pf.cfg['curproj']
         if fn:
-            proj = fileMenu.readProjectFile(fn)
-            fileMenu.setProject(proj)  
+            try:
+                proj = fileMenu.readProjectFile(fn)
+                fileMenu.setProject(proj)
+            except:
+                # Avoid crashes from a faulty project file
+                # TODO: should we push this up to fileMenu.readProjectFile ?
+                # 
+                pf.message("Could not load the current project %s" % fn)
     #
     return 0
 

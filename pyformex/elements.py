@@ -255,11 +255,16 @@ Proposed changes in the Element class
         return Mesh(x,e,eltype=e.eltype)
 
     def name(self):
-        return self._name
-        ## for k,v in Element.collection.items():
-        ##     if v == self:
-        ##         return k
-        ## return 'unregistered_element'
+        try:
+            return self._name
+        except:
+            # Retained for compatibility with older Meshes stored in Projects
+            # TODO: remove this, or move to a compat module,
+            #       around version 0.9.2 
+            for k,v in Element.collection.items():
+                if v == self:
+                    return k
+            return 'unregistered_element'
 
 
     def __str__(self):

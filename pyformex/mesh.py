@@ -115,12 +115,6 @@ class Mesh(Geometry):
     
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
-        print "MESH INIT"
-        print "COORDS",coords
-        print "ELEMS",elems
-        print "PROP",prop
-        print "ELTYPE",eltype
-        print elementType(eltype)
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
@@ -243,7 +237,7 @@ class Mesh(Geometry):
         import copy
         state = copy.copy(self.__dict__)
         # Store the element type by name
-        state['eltype'] = state['eltype']._name
+        state['eltype'] = state['eltype'].name()
         return state
 
 
@@ -1711,16 +1705,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         else:
             T = T1 * T2
 
-        if len(T.shape) == 1:
-            return T
-        
-        if nodes == 'any':
-            T = T.any(axis=1)
-        elif nodes == 'none':
-            T = (1-T.any(1)).astype(bool)
-        else:
-            T = T.all(axis=1)
-        return T
+        if len(T.shape) > 1:
+            # We have results for more than 1 node per element
+            if nodes == 'any':
+                T = T.any(axis=1)
+            elif nodes == 'none':
+                T = ~T.any(axis=1)
+            else:
+                T = T.all(axis=1)
+
+        return asarray(T)
 
 
     def clip(self,t,compact=False):

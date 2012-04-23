@@ -1936,7 +1936,7 @@ Script: %s
                 set = range(telems)
 
             if p.has_key('eltype'):
-                print('Elements of type %s: %s' % (p.eltype,set))
+                pf.debug('Elements of type %s: %s' % (p.eltype,set),pf.DEBUG.ABQ)
 
                 setname = esetName(p)
                 gl,gr = self.model.splitElems(set)

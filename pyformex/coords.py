@@ -135,6 +135,14 @@ class Coords(ndarray):
     # Because we have a __new__ constructor here and no __init__,
     # we have to list the arguments explicitely in the docstring above.
     #
+
+    #
+    # :DEV
+    # Because the Coords class is sticky, results that are not conforming
+    # to the requirements of being a Coords array, should be converted to
+    # the general array class:   e.g.   return asarray(T)
+    #
+    
     def __new__(clas, data=None, dtyp=Float, copy=False):
         """Create a new instance of :class:`Coords`."""
         if data is None:
@@ -658,7 +666,7 @@ class Coords(ndarray):
             T = T1
         else:
             T = T1 * T2
-        return T
+        return asarray(T)
 
 
     ## THIS IS A CANDIDATE FOR THE LIBRARY
