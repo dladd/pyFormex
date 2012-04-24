@@ -224,7 +224,7 @@ def importProject():
         keys = utils.sortedKeys(proj)
         res = draw.askItems(
             [   _I('mode',choices=['All','Defined','Undefined','Selected','None'],itemtype='radio'),
-                _I('selected',choices=keys),
+                _I('selected',choices=keys,itemtype='list'),
                 ],
             caption='Select variables to import',
             )
