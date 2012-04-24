@@ -264,7 +264,7 @@ def fmtMaterial(mat):
                 order=mat.order
             else:
                 order=len(mat.constants)/3.
-            if len(order)%3!=0 :
+            if order%3!=0 :
                 raise ValueError,"Wrong number of parameters"
         
         if mat.type.lower() == 'polynomial':
