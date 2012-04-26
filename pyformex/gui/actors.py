@@ -389,7 +389,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,mode=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=1.0,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,mode=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -497,14 +497,18 @@ class GeomActor(Actor):
 
     def setAlpha(self,alpha,bkalpha):
         """Set the Actors alpha value."""
-        self.alpha = alpha
-        if self.alpha is not None:
-            self.alpha = float(self.alpha)
-        self.bkalpha = bkalpha
-        if self.bkalpha is not None:
-            self.bkalpha = float(self.bkalpha)
-        # TODO: not sure about the following
-        self.trans = self.alpha < 1.0 or self.bkalpha < 1.0 
+        try:
+            self.alpha = float(alpha)
+        except:
+            self.alpha = None
+        if bkalpha is None:
+            bkalpha = alpha
+        try:
+            self.bkalpha = float(bkalpha)
+        except:
+            self.bkalpha = None
+        self.trans = (self.alpha is not None and self.alpha < 1.0) or (
+            self.bkalpha is not None and self.bkalpha < 1.0 ) 
             
 
     def bbox(self):

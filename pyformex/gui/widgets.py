@@ -524,23 +524,23 @@ class InputBool(InputItem):
         else:
             self.input.setCheckState(QtCore.Qt.Unchecked)
 
+
 class MyListWidget(QtGui.QListWidget):
-    def __init__(self):
+    def __init__(self,maxh=-1):
         QtGui.QListWidget.__init__(self)
         
     def allItems(self):
         return [ self.item(i) for i in range(self.count()) ]
 
-    def fixSize(self):
+    def reqSize(self):
         w = 0
         h = 10 # margin
         for i in self.allItems():
             r = self.visualItemRect(i)
             h += r.height()
             w = max(w,r.width())
-        #print "Need total height of %s" % h
-        self.setFixedSize(w,h)
-
+        return w,h
+            
 
 class InputList(InputItem):
     """A list selection InputItem.
@@ -554,14 +554,14 @@ class InputList(InputItem):
     If default is None or an empty list, nothing is selected initially.
 
     By default, the user can select multiple items and the return value is
-    a list of all currently slected items.
+    a list of all currently selected items.
     If single is True, only a single item can be selected.
     
     If check is True, all items have a checkbox and only the checked items
     are returned. This option sets single==False.
     """
     
-    def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,fast_sel=False,*args,**kargs):
+    def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,fast_sel=False,maxh=-1,*args,**kargs):
         """Create the listwidget."""
         if len(choices) == 0:
             raise ValueError,"List input expected choices!"
@@ -589,6 +589,13 @@ class InputList(InputItem):
         self.input.setSelectionMode(selection_mode[mode])
         self.setValue(default)
         #self.input.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        w,h = self.input.reqSize()
+        pf.debug("Need max width of %s and total height of %s" % (w,h),pf.DEBUG.WIDGET)
+        if maxh < 0 or h < maxh:
+            self.setFixedSize(w,h)
+        else:
+            self.setFixedSize(w,h)
+            
         self.input.fixSize()
         self.input.updateGeometry()
         self.layout().insertWidget(1,self.input)
@@ -1199,7 +1206,6 @@ class InputForm(QtGui.QVBoxLayout):
         self.last = None    # last added itemtype
 
 
-
 class InputGroup(QtGui.QGroupBox):
     """A boxed group of InputItems."""
     
@@ -1737,7 +1743,6 @@ class InputDialog(QtGui.QDialog):
 
     # for compatibility, should be deprecated
     getResult = getResults
-
 
 
 class ScrollDialog(InputDialog):
