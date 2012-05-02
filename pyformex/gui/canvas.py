@@ -514,7 +514,7 @@ class Canvas(object):
         pf.debug("Canvas Setting:\n%s"% self.settings,pf.DEBUG.DRAW)
 
 
-    def Size(self):
+    def getSize(self):
         return self.width(),self.height()
 
 
@@ -669,7 +669,7 @@ class Canvas(object):
     def createBackground(self):
         """Create the background object."""
         x1,y1 = 0,0
-        x2,y2 = self.Size()
+        x2,y2 = self.getSize()
         from gui.drawable import saneColorArray
         color = saneColorArray(self.settings.bgcolor,(4,))
         #print color.shape,color

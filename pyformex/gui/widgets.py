@@ -596,7 +596,6 @@ class InputList(InputItem):
         else:
             self.setFixedSize(w,h)
             
-        self.input.fixSize()
         self.input.updateGeometry()
         self.layout().insertWidget(1,self.input)
         self.updateGeometry()

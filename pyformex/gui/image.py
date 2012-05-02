@@ -109,7 +109,7 @@ def imageFormats():
            image_formats_fromeps
 
 
-def checkImageFormat(fmt,verbose=False):
+def checkImageFormat(fmt,verbose=True):
     """Checks image format; if verbose, warn if it is not.
 
     Returns the image format, or None if it is not OK.
@@ -122,8 +122,9 @@ def checkImageFormat(fmt,verbose=False):
         return fmt
     else:
         if verbose:
-            error("Sorry, can not save in %s format!\n"
-                  "I suggest you use 'png' format ;)"%fmt)
+            import draw
+            draw.error("Sorry, can not save in %s format!\n"
+                       "I suggest you use 'png' format ;)"%fmt)
         return None
 
 
