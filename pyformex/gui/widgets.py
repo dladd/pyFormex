@@ -76,15 +76,22 @@ def standardIcon(label):
         return label
 
 
-def maxSize():
+def objSize(object):
+    """Return the width and height of an object.
+
+    Returns a tuple w,h for any object that has width and height methods.
+    """
+    return object.width(),object.height()
+
+
+def maxWinSize():
     """Return the maximum widget size.
 
-    The maximum widget size is the (available) screen size. This may be
-    smaller than the physical screen size (e.g. excluding docking panels).
+    The maximum widget size is the maximum size for a window on the screen.
+    The available size may be smaller than the physical screen size (e.g.
+    it may exclude the space for docking panels).
     """
-    rect = pf.app.desktop().availableGeometry()
-    maxh,maxw = rect.width(),rect.height()
-    return maxh,maxw
+    return objSize(pf.app.desktop().availableGeometry())
 
  
 def addTimeOut(widget,timeout=None,timeoutfunc=None):
@@ -525,9 +532,15 @@ class InputBool(InputItem):
             self.input.setCheckState(QtCore.Qt.Unchecked)
 
 
-class MyListWidget(QtGui.QListWidget):
-    def __init__(self,maxh=-1):
+class ListWidget(QtGui.QListWidget):
+    """A customized QListWidget with ability to compute its required size.
+
+    """
+    def __init__(self,maxh=0):
+        """Initialize the ListWidget"""
         QtGui.QListWidget.__init__(self)
+	self.maxh = maxh
+        self._size = QtGui.QListWidget.sizeHint(self)
         
     def allItems(self):
         return [ self.item(i) for i in range(self.count()) ]
@@ -540,7 +553,34 @@ class MyListWidget(QtGui.QListWidget):
             h += r.height()
             w = max(w,r.width())
         return w,h
-            
+
+    def setSize(self):
+        w,h = self.reqSize()
+        pf.debug("Required list size is %s,%s" % (w,h),pf.DEBUG.WIDGET)
+        if self.maxh > -1:
+            self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+            if self.maxh > 0:
+                h = min(h,self.maxh)   
+            w,hs = objSize(QtGui.QListWidget.sizeHint(self))
+            pf.debug("QListWidget hints size %s,%s" % (w,hs),pf.DEBUG.WIDGET)
+
+        if self.maxh < 0:
+            self.setFixedSize(w,h)
+
+        pf.debug("Setting list size to %s,%s" % (w,h),pf.DEBUG.WIDGET)
+        self._size = QtCore.QSize(w,h)
+
+    def sizeHint(self):
+        if self.maxh > 0:
+            w,h = objSize(QtGui.QListWidget.sizeHint(self))
+            print w
+            print h
+            print("QListWidget hints size %s,%s" % (w,h),pf.DEBUG.WIDGET)
+            h = max(h,self.maxh)
+            return QtCore.QSize(w,h)
+        else:
+            return self._size
+
 
 class InputList(InputItem):
     """A list selection InputItem.
@@ -557,6 +597,12 @@ class InputList(InputItem):
     a list of all currently selected items.
     If single is True, only a single item can be selected.
     
+    If maxh==-1, the widget gets a fixed height to precisely take the number of
+    items in the list. If maxh>=0, the widget will get scrollbars when the 
+    height is not sufficient to show all items. With maxh>0, the item will
+    get the specified height (in pixels), while maxh==0 will try to give the
+    widget the required height to show all items
+
     If check is True, all items have a checkbox and only the checked items
     are returned. This option sets single==False.
     """
@@ -566,7 +612,8 @@ class InputList(InputItem):
         if len(choices) == 0:
             raise ValueError,"List input expected choices!"
         self._choices_ = [ str(s) for s in choices ]
-        self.input = MyListWidget()
+        self.input = ListWidget(maxh=maxh)
+        
         if fast_sel:
             but = [('Select All',self.setAll),('Deselect All',self.setNone)]
             if 'buttons' in kargs and kargs['buttons']:
@@ -588,16 +635,23 @@ class InputList(InputItem):
 
         self.input.setSelectionMode(selection_mode[mode])
         self.setValue(default)
-        #self.input.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
-        w,h = self.input.reqSize()
-        pf.debug("Need max width of %s and total height of %s" % (w,h),pf.DEBUG.WIDGET)
-        if maxh < 0 or h < maxh:
-            self.setFixedSize(w,h)
+
+        self.input.setSize()
+        if maxh > -1:
+            #self.input.updateGeometry()
+            self.scroll = QtGui.QScrollArea()
+            if maxh > 0:
+                self.scroll.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Expanding)
+            else:
+                self.scroll.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
+            self.scroll.setBackgroundRole(QtGui.QPalette.Dark)
+            self.scroll.setWidgetResizable(False)
+            self.scroll.setWidget(self.input)
+            self.layout().insertWidget(1,self.scroll)
         else:
-            self.setFixedSize(w,h)
+            self.input.updateGeometry()
+            self.layout().insertWidget(1,self.input)
             
-        self.input.updateGeometry()
-        self.layout().insertWidget(1,self.input)
         self.updateGeometry()
         #self.input.setSizeHint(QtCore.QSize(self.input.width(),10))
 
@@ -1205,6 +1259,19 @@ class InputForm(QtGui.QVBoxLayout):
         self.last = None    # last added itemtype
 
 
+class ScrollForm(QtGui.QScrollArea):
+    """An scrolling input form.
+
+    The input form is a layout box in which the items are layed out
+    vertically. The layout can also contain any number of tab widgets
+    in which items can be layed out using tab pages.
+    """
+    
+    def __init__(self):
+        QtGui.QScrollArea.__init__(self)
+        self.form = InputForm()
+
+
 class InputGroup(QtGui.QGroupBox):
     """A boxed group of InputItems."""
     
@@ -1424,7 +1491,7 @@ class InputDialog(QtGui.QDialog):
       combo or group. Also, any input field should only have one enabler!
          
     """
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[],scroll=False):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
@@ -1454,7 +1521,11 @@ class InputDialog(QtGui.QDialog):
             
         # create the form with the input fields
         self.tab = None  # tabwidget for all the tabs in this form
-        self.form = InputForm()
+        if scroll:
+            self.scroll = ScrollForm()
+            self.form = self.scroll.form
+        else:
+            self.form = InputForm()
         self.add_items(items,self.form,self.prefix)
 
         # add the action buttons
@@ -1742,6 +1813,7 @@ class InputDialog(QtGui.QDialog):
 
     # for compatibility, should be deprecated
     getResult = getResults
+
 
 
 class ScrollDialog(InputDialog):

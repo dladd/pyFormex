@@ -27,16 +27,16 @@
 
 .. _`email us`: mailto:benedict.verhegghe@ugent.be
 .. _`pyFormex website`: http://pyformex.org
-.. _`Home Page`: http://www.nongnu.org/pyformex/
-.. _`Documentation`: http:///www.nongnu.org/pyformex/doc/
+.. _`Home Page`: http://pyformex.nongnu.org
+.. _`Documentation`: http:///pyformex.nongnu.org/doc
 
-.. _`Online manual`: http:///www.nongnu.org/pyformex/doc/index.html
-.. _`Introduction to pyFormex`: http:///www.nongnu.org/pyformex/doc/intro.html
-.. _`Installing pyFormex`: http:///www.nongnu.org/pyformex/doc/install.html
-.. _`pyFormex tutorial`: http:///www.nongnu.org/pyformex/doc/tutorial.html
-.. _`pyFormex reference manual`: http:///www.nongnu.org/pyformex/doc/refman.html
-.. _`pyFormex user guide`: http:///www.nongnu.org/pyformex/doc/user-guide.html
-.. _`pyFormex examples`: http:///www.nongnu.org/pyformex/doc/examples.html
+.. _`Online manual`: http:///pyformex.nongnu.org/doc/index.html
+.. _`Introduction to pyFormex`: http:///pyformex.nongnu.org/doc/intro.html
+.. _`Installing pyFormex`: http:///pyformex.nongnu.org/doc/install.html
+.. _`pyFormex tutorial`: http:///pyformex.nongnu.org/doc/tutorial.html
+.. _`pyFormex reference manual`: http:///pyformex.nongnu.org/doc/refman.html
+.. _`pyFormex user guide`: http:///pyformex.nongnu.org/doc/user-guide.html
+.. _`pyFormex examples`: http:///pyformex.nongnu.org/doc/examples.html
 .. _`PDF version`: http://download.savannah.gnu.org/releases/pyformex/pyformex.pdf
 
 .. _`Savannah`: http://savannah.nongnu.org/
