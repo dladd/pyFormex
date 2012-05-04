@@ -851,6 +851,24 @@ def intersectionPointsPOL(X,q,m,mode='all'):
     return pointsAtLines(q,m,t)
 
 
+def intersectionSphereSphere(R,r,d):
+    """Intersection of two spheres (or two circles in the x,y plane).
+
+    Computes the intersection of two spheres with radii R, resp. r, having
+    their centres at distance d <= R+r. The intersection is a circle with
+    its center on the segment connecting the two sphere centers at a distance
+    x from the first sphere, and having a radius y. The return value is a
+    tuple x,y.
+    """
+    if d > R+r:
+        raise ValueError,"d (%s) should not be larger than R+r (%s)" % (d,R+r)
+    dd = R**2-r**2+d**2
+    d2 = 2*d
+    x = dd/d2
+    y = sqrt(d2**2*R**2 - dd**2) / d2
+    return x,y
+    
+
 #################### distance tools ###############
 
 def distancesPFL(X,q,m,mode='all'):
