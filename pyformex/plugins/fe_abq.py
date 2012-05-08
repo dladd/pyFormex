@@ -1059,7 +1059,7 @@ def writeSection(fil,prop):
     elif eltype in surface_elems:
         if el.sectiontype.upper() == 'SURFACE':
             if el.density:
-                fil.write("""*SURFACE SECTION, ELSET=%s, DENSITY=%f \n""" % (setname, el.density))
+                fil.write("""*SURFACE SECTION, ELSET=%s, DENSITY=%s \n""" % (setname, el.density))
             else:
                 fil.write("""*SURFACE SECTION, ELSET=%s \n""" % setname)
     
