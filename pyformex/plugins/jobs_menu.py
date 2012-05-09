@@ -25,7 +25,6 @@
 
 import pyformex as pf
 from gui import menu
-from gui.widgets import simpleInputItem as I
 
 import utils
 import os
@@ -80,13 +79,13 @@ def configure():
         accept(save=True)
 
     def autoSettings(keylist):
-        return [I(k,pf.cfg[k]) for k in keylist]
+        return [_I(k,pf.cfg[k]) for k in keylist]
 
     jobs_settings = [
-        I('jobs/host',pf.cfg.get('jobs/host','localhost'),text="Host",tooltip="The host machine where your job input/output files are located.",choices=pf.cfg.get('jobs/hosts',['localhost'])), #,buttons=[('Add Host',addHost)]),
-        I('jobs/inputdir',pf.cfg.get('jobs/inputdir','bumper/requests'),text="Input directory"),
-        I('jobs/outputdir',pf.cfg.get('jobs/outputdir','bumper/results'),text="Output directory"),
-        I('_addhost_','',text="New host",tooltip="To set a host name that is not yet in the list of hosts, you can simply fill it in here."),
+        _I('jobs/host',pf.cfg.get('jobs/host','localhost'),text="Host",tooltip="The host machine where your job input/output files are located.",choices=pf.cfg.get('jobs/hosts',['localhost'])), #,buttons=[('Add Host',addHost)]),
+        _I('jobs/inputdir',pf.cfg.get('jobs/inputdir','bumper/requests'),text="Input directory"),
+        _I('jobs/outputdir',pf.cfg.get('jobs/outputdir','bumper/results'),text="Output directory"),
+        _I('_addhost_','',text="New host",tooltip="To set a host name that is not yet in the list of hosts, you can simply fill it in here."),
         ]
 
     dia = widgets.InputDialog(
@@ -135,9 +134,9 @@ def remoteCommand(host=None,command=None):
     """
     if host is None or command is None:
         res = askItems(
-            [ I('host',choices=['bumpfs','bumpfs2','--other--']),
-              I('other','',text='Other host name'),
-              I('command','hostname'),
+            [ _I('host',choices=['bumpfs','bumpfs2','--other--']),
+              _I('other','',text='Other host name'),
+              _I('command','hostname'),
               ],
             enablers = [('host','--other--','other')],
             )
@@ -163,8 +162,8 @@ def submitToCluster(filename=None):
             filename += '.inp'
         jobname = os.path.basename(filename)[:-4]
         res = askItems([
-            ('ncpus',4,{'text':'Number of cpus','min':1,'max':1024}),
-            ('postabq',False,{'text':'Run postabq on the results?'}),
+            _I('ncpus',4,text='Number of cpus',min=1,max=1024),
+            _I('postabq',False,text='Run postabq on the results?'),
             ])
         if res:
             reqtxt = 'cpus=%s\n' % res['ncpus']
@@ -206,12 +205,15 @@ def checkResultsOnServer(host=None,userdir=None):
     """
     global the_host,the_userdir,the_jobnames
     if host is None or userdir is None:
-        res = askItems([
-            ('host',None,'select',{'choices':['bumpfs','bumpfs2','other']}),
-            ('other','',{'text':'Other host name'}),
-            ('status',None,'select',{'choices':['results','running','custom']}),
-            ('userdir','bumper/results/',{'text':'Custom user directory'}),
-            ])
+        res = askItems(
+            [ ('host',None,'select',{'choices':['bumpfs','bumpfs2','other']}),
+              ('other','',{'text':'Other host name'}),
+              ('status',None,'select',{'choices':['results','running','custom']}),
+              ('userdir','bumper/results/',{'text':'Custom user directory'}),
+            ], enablers=[
+                ('status','custom','userdir')
+                ]
+            )
         if not res:
             return
         host = res['host']

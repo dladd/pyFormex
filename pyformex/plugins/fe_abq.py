@@ -1224,17 +1224,17 @@ def writeCloads(fil,prop,op='NEW'):
 def writeDloads(fil,prop,op='NEW'):
     """Write Dloads.
     
-    prop is a list property records having an attribute dload
+    prop is a list of elem property records having an attribute dload.
 
     By default, the loads are applied as new values in the current step.
     The user can set op='MOD' to add the loads to already existing ones.
     """
     for p in prop:
-        setname = esetname(p)
+        setname = esetName(p)
         fil.write("*DLOAD, OP=%s" % op)
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
-            fil.write("\n")
+        fil.write("\n")
         if p.dload.label == 'GRAV':
             fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
         else:

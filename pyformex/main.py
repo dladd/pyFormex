@@ -538,7 +538,8 @@ def run(argv=[]):
             if pf.options.listfiles:
                 print '\n'.join(files)
             else:
-                cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],' '.join(files))
+                cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],''.join([" '%s'" % f for f in files]))
+                print cmd 
                 os.system(cmd)
         return
 

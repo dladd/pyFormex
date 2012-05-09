@@ -394,7 +394,7 @@ class Camera(object):
     def loadModelView (self,m=None):
         """Load the ModelView matrix.
 
-        There are thrre uses of this function:
+        There are three uses of this function:
 
         - Without argument and if the viewing parameters have not changed
           since the last save of the ModelView matrix, this will just reload
@@ -472,8 +472,10 @@ class Camera(object):
         and the aspect ratio (width/height) of the viewing volume.
         A parameter that is not specified is left unchanged.
         """
-        if fovy: self.fovy = min(abs(fovy),180)
-        if aspect: self.aspect = abs(aspect)
+        if fovy:
+            self.fovy = min(abs(fovy),180)
+        if aspect:
+            self.aspect = abs(aspect)
         self.lensChanged = True
 
 
@@ -596,7 +598,7 @@ class Camera(object):
         No need to set matrix mode though. This function will switch to
         GL_PROJECTION mode before loading the matrix
 
-        !! CHANGED: does not switch back to GL_MODELVIEW mode!
+        If keepmode=True, does not switch back to GL_MODELVIEW mode.
 
         A pick region can be defined to use the camera in picking mode.
         pick defines the picking region center and size (x,y,w,h).
@@ -646,13 +648,13 @@ class Camera(object):
     def project(self,x,y,z):
         "Map the object coordinates (x,y,z) to window coordinates."""
         self.set3DMatrices()
-        return GLU.gluProject(x,y,z,self.m,self.p,self.v)
+        return GLU.gluProject(x,y,z,self.m.astype(double),self.p,self.v)
 
 
     def unProject(self,x,y,z):
         "Map the window coordinates (x,y,z) to object coordinates."""
         self.set3DMatrices()
-        return GLU.gluUnProject(x,y,z,self.m,self.p,self.v)
+        return GLU.gluUnProject(x,y,z,self.m.astype(double),self.p,self.v)
 
 
     def setTracking(self,onoff=True):
