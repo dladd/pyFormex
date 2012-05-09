@@ -539,7 +539,7 @@ def run(argv=[]):
                 print '\n'.join(files)
             else:
                 cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],''.join([" '%s'" % f for f in files]))
-                print cmd 
+                #print cmd 
                 os.system(cmd)
         return
 

@@ -89,7 +89,7 @@ class TranslatedActor(Actor):
     def __init__(self,A,trl=(0.,0.,0.),**kargs):
         Actor.__init__(self,**kargs)
         self.actor = A
-        self.trans = A.trans
+        self.opak = A.opak
         self.trl = asarray(trl)
 
     def bbox(self):
@@ -121,7 +121,7 @@ class RotatedActor(Actor):
         """
         Actor.__init__(self,**kargs)
         self.actor = A
-        self.trans = A.trans
+        self.opak = A.opak
         if shape(rot) == (3,):
             self.rot = rotMatrix(rot,n=4)
         else:
@@ -221,7 +221,7 @@ class AxesActor(Actor):
         self.cs = cs
         self.color = saneColorArray(saneColor(color),(3,1))
         self.alpha = alpha
-        self.trans = True
+        self.opak = False
         self.nolight = True
         self.colored_axes = colored_axes
         self.draw_planes = draw_planes
@@ -275,7 +275,7 @@ class GridActor(Actor):
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
         self.alpha = alpha
-        self.trans = True
+        self.opak = False
         self.lines = lines
         self.planes = planes
         self.nx = asarray(nx)
@@ -308,7 +308,7 @@ class CoordPlaneActor(Actor):
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
         self.alpha = alpha
-        self.trans = True
+        self.opak = False
         self.lines = lines
         self.planes = planes
         self.nx = asarray(nx)
@@ -346,7 +346,7 @@ class PlaneActor(Actor):
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
         self.alpha = alpha
-        self.trans = True
+        self.opak = False
         self.lines = lines
         self.planes = planes
         self.nx = asarray(nx)
@@ -507,9 +507,7 @@ class GeomActor(Actor):
             self.bkalpha = float(bkalpha)
         except:
             self.bkalpha = None
-        self.trans = (self.alpha is not None and self.alpha < 1.0) or (
-            self.bkalpha is not None and self.bkalpha < 1.0 ) 
-            
+        self.opak = (self.alpha == 1.0) or (self.bkalpha == 1.0 ) 
 
     def bbox(self):
         return self.coords.bbox()

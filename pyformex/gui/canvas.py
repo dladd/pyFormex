@@ -848,8 +848,9 @@ class Canvas(object):
         # draw the scene actors and annotations
         sorted_actors =  [ a for a in self.actors if not a.ontop ] + [ a for a in self.actors if a.ontop ] + self.annotations
         if self.alphablend:
-            opaque = [ a for a in sorted_actors if not a.trans ]
-            transp = [ a for a in sorted_actors if a.trans ]
+            opaque = [ a for a in sorted_actors if a.opak ]
+            transp = [ a for a in sorted_actors if not a.opak ]
+            
             for actor in opaque:
                 self.setDefaults()
                 actor.draw(canvas=self)

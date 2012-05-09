@@ -1148,7 +1148,7 @@ class Drawable(object):
         self.list = None
         self.listmode = None # stores mode of self.list: wireframe/smooth/flat
         self.mode = None # subclasses can set a persistent drawing mode
-        self.trans = False
+        self.opak = True
         self.nolight = nolight
         self.ontop = ontop
         self.extra = [] # list of dependent Drawables
