@@ -1221,6 +1221,11 @@ def writeCloads(fil,prop,op='NEW'):
             fil.write("%s, %s, %s\n" % (setname,dof,v[1]))
 
 
+def writeCommaList(fil,*args):
+    """Write a list of values comma-separated to fil"""
+    fil.write(', '.join([str(i) for i in args]))
+              
+    
 def writeDloads(fil,prop,op='NEW'):
     """Write Dloads.
     
@@ -1235,10 +1240,12 @@ def writeDloads(fil,prop,op='NEW'):
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
-        if p.dload.label == 'GRAV':
-            fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
-        else:
-            fil.write("%s, %s, %s\n" % (setname,p.dload.label,p.dload.value))
+        writeCommaList(fil,setname,*p.dload)
+        fil.write("\n")
+#        if p.dload.label == 'GRAV':
+#            fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
+#        else:
+#            fil.write("%s, %s, %s\n" % (setname,p.dload.label,p.dload.value))
 
 
 def writeDsloads(fil,prop,op='NEW'):
