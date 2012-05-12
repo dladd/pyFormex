@@ -208,7 +208,13 @@ class FeResult(object):
     Displacements = do_nothing
     Unknown = do_nothing
 
-    def setStepInc(self,step,inc):
+    def setStepInc(self,step,inc=1):
+        """Set the database pointer to a given step,inc pair.
+
+        This sets the step and inc attributes to the given values, and puts
+        the corresponding results in the R attribute. If the step.inc pair does
+        not exist, an empty results dict is set.
+        """
         try:
             self.step = step
             self.inc = inc
@@ -226,6 +232,22 @@ class FeResult(object):
         if self.res.has_key(step):
             return self.res[step].keys()
         
+    def nextStep(self):
+        """Skips to the start of the next step."""
+        if self.step < self.getSteps()[-1]:
+            self.setStepInc(self.step+1)
+        
+    def nextInc(self):
+        """Skips to the next increment.
+
+        The next increment is either the next increment of the current step,
+        or the first increment of the next step.
+        """
+        if self.inc < self.getIncs()[-1]:
+            self.setStepInc(self.step,self.inc+1)
+        else:
+            self.nextStep()
+     
 
     def getres(self,key,domain='nodes'):
         """Return the results of the current step/inc for given key.

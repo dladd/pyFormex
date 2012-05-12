@@ -732,10 +732,9 @@ class InputCombo(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        self._choices_ = [ str(s) for s in choices ]
         self.input = QtGui.QComboBox()
         InputItem.__init__(self,name,*args,**kargs)
-        self.input.addItems(self._choices_)
+        self.setChoices(choices)
         if callable(onselect):
             self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
 # BV REMOVED BECAUSE NOT DOCUMENTED 
@@ -749,10 +748,23 @@ class InputCombo(InputItem):
         return str(self.input.currentText())
 
     def setValue(self,val):
-        """Change the widget's value."""
+        """Change the widget's current value."""
         val = str(val)
         if val in self._choices_:
             self.input.setCurrentIndex(self._choices_.index(val))
+
+    def setChoices(self,choices):
+        """Change the widget's choices.
+
+        This also sets the current value to the first in the list.
+        """
+        # Set new ones
+        self._choices_ = [ str(s) for s in choices ]
+        self.input.addItems(self._choices_)
+        # Remove old choices (we can not do this first, because we can not
+        # remove the last choice
+        while self.input.count() > len(self._choices_):
+            self.input.removeItem(1)
 
     def setIndex(self,i):
         self.input.setCurrentIndex(i)

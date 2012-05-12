@@ -213,7 +213,9 @@ def named_item(items,name):
 
 
 def showModel(nodes=True,elems=True):
-    print DB.elems
+    print 'Elements in model:'
+    for k,v in DB.elems.iteritems():
+        print "%s: %s" % (k,len(v))
     M = [ Mesh(DB.nodes,el,eltype='quad%d'%el.shape[1],prop=i) for i,el in enumerate(DB.elems.itervalues()) ]
     if nodes:
         draw([m.coords for m in M],nolight=True)
@@ -299,8 +301,11 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     # the supplied text
     if text:
+        # Replace text tags
+        text.replace('%S',str(DB.step))
+        text.replace('%I',str(DB.inc))
         if multiplier != 0:
-            text += ' (* 10**%s)' % -multiplier
+            text.replace('%M',' (* 10**%s)' % -multiplier)
         drawText(text,200,30)
 
     smooth()
@@ -395,16 +400,6 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##             if sta:
 ##                 pf.message(out)
 
-##     def selectStepInc(self):
-##         res = askItems([('Step',self.DB.step,'select',self.DB.res.keys())])
-##         if res:
-##             step = int(res['Step'])
-##             res = askItems([('Increment',None,'select',self.DB.res[step].keys())])
-##             if res:
-##                 inc = int(res['Increment'])
-##         pf.message("Step %s; Increment %s;" % (step,inc))
-##         self.DB.setStepInc(step,inc)
-
     
 
 ################### menu #################
@@ -497,19 +492,6 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##             self.DB.setStepInc(step,inc)
 
 
-##     def setInc(self,i):
-##         inc = str(self.inc_combo.combo.input.currentText())
-##         if inc != self.DB.inc:
-##             self.DB.setStepInc(step,inc)
-##         print("Current step/inc: %s/%s" % (self.DB.step,self.DB.inc))
-        
-
-##     def select(self,sel=None):
-##         sel = self.selection.ask1()
-##         if sel:
-##             self.setDB(sel,self.selection[0])
-
-
 ########## Postproc results dialog #######
 
 result_types = ODict([
@@ -544,70 +526,9 @@ result_types = ODict([
     ])
 
 
-input_items = [
-    dict(name='feresult',text='FE Result DB',value='',itemtype='info'),
-    dict(name='elgroup',text='Element Group',choices=['--ALL--',]),
-    dict(name='restype',text='Type of result',choices=result_types.values()),
-    dict(name='loadcase',text='Load case',value=0),
-    dict(name='autoscale',text='Autocalculate deformation scale',value=True),
-    dict(name='dscale',text='Deformation scale',value=100.),
-    dict(name='showref',text='Show undeformed configuration',value=True),
-    dict(name='animate',text='Animate results',value=False),
-    dict(name='shape',text='Amplitude shape',value='linear',itemtype='radio',choices=['linear','sine']),
-    dict(name='cycle',text='Animation cycle',value='updown',itemtype='radio',choices=['up','updown','revert']),
-    dict(name='count',text='Number of cycles',value=5),
-    dict(name='nframes',text='Number of frames',value=10),
-    dict(name='sleeptime',text='Animation sleeptime',value=0.1), 
-    ]
-
-
 selection = Objects(clas=FeResult)
 dialog = None
 DB = None
-
-
-def show():
-    """Show the results"""
-    data = dialog_getresults()
-    #print(data)
-    globals().update(data)
-    nodes = DB.nodes
-    if elgroup == '--ALL--':
-        elems = DB.elems.values()
-    else:
-        elems = [ DB.elems[elgroup] ]
-
-    dscale = data['dscale']
-    displ = DB.getres('U')
-    if displ is not None:
-        displ = displ[:,0:3]
-
-        if autoscale:
-            siz0 = Coords(nodes).sizes()
-            siz1 = Coords(displ).sizes()
-            w = where(siz0 > 0.0)[0]
-            dscale = niceNumber(0.5/(siz1[w]/siz0[w]).max())
-
-    if animate:
-        dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
-
-    # Get the scalar element result values from the results.
-    txt = 'No Results'
-    val = None
-    if resindex > 0:
-        key = result_types.keys()[resindex]
-        print("RESULT KEY = %s" % key)
-        if key == 'Computed':
-            if askPoint():
-                val = Coords(nodes).distanceFromPoint(point)
-        else:
-            val = DB.getres(key)
-            if key == 'U':
-                val = norm2(val)
-    if val is not None:
-        txt = result_types.values()[resindex]
-    showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
-    return val
 
 
 def setDB(db):
@@ -640,6 +561,7 @@ def selectDB(db=None):
         clear()
         print(DB.about.get('heading','No Heading'))
         print('Stress tensor has %s components' % DB.datasize['S'])
+        DB.printSteps()
         showModel()
     return db
 
@@ -695,19 +617,21 @@ def importDB(fn=None):
         fn = askFilename(pf.cfg['workdir'],types)
     if fn:
         chdir(fn)
-        size = os.stat(fn).st_size
-        if size > 1000000 and ask("""
+        sizeM = round(os.stat(fn).st_size * 1.e-6)
+        if sizeM > 10.0 and ask("""
 BEWARE!!!
 
-The size of this file is very large: %s bytes
+The size of this file is very large: %.1fMB.
 It is unlikely that I will be able to process this file.
 I strongly recommend you to cancel the operation now.
-""" % size,["Continue","Cancel"]) != "Continue":
+""" % sizeM,["Continue","Cancel"]) != "Continue":
             return
 
         # import the results DB
+        pf.GUI.setBusy(True)
         runScript(fn)
-
+        pf.GUI.setBusy(False)
+ 
         ### check whether the import succeeded
         name = FeResult._name_
         db = pf.PF[name]
@@ -747,6 +671,94 @@ def dialog_reset(data=None):
     dialog.updateData(data)
 
 
+def show():
+    """Show the results """
+    data = dialog_getresults()
+    show_results(data)
+
+
+def show_results(data):
+    """Show the current DB results using the settings in data.
+
+    Note that while the data may contain a 'step' and 'inc' value,
+    the displayed results are those of the step/inc in the database.
+    """
+    globals().update(data)
+    DB.setStepInc(int(data['step']),int(data['inc']))
+
+    nodes = DB.nodes
+    if elgroup == '--ALL--':
+        elems = DB.elems.values()
+    else:
+        elems = [ DB.elems[elgroup] ]
+
+    dscale = data['dscale']
+    print DB.step,DB.inc
+    displ = DB.getres('U')
+    if displ is not None:
+        displ = displ[:,0:3]
+
+        if autoscale:
+            siz0 = Coords(nodes).sizes()
+            siz1 = Coords(displ).sizes()
+            if siz1.max() == 0.:
+                # all displacements are zero
+                dscale = 1.
+            else:
+                print siz0,siz1
+                w = where(siz0 > 0.0)[0]
+                print w
+                dscale = 0.5/(siz1[w]/siz0[w]).max()
+                print dscale
+                dscale = niceNumber(0.5/(siz1[w]/siz0[w]).max())
+
+    if animate:
+        dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
+
+    txt = "Step %S; Inc %I; " 
+
+    # Get the scalar element result values from the results.
+    val = None
+    if resindex > 0:
+        key = result_types.keys()[resindex]
+        print("RESULT KEY = %s" % key)
+        if key == 'Computed':
+            if askPoint():
+                val = Coords(nodes).distanceFromPoint(point)
+        else:
+            val = DB.getres(key)
+            if key == 'U':
+                val = norm2(val)
+    if val is not None:
+        txt += result_types.values()[resindex]
+    showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
+    return val
+
+
+def show_DB_results():
+    """Show the results at the current DB step,inc pointer.
+
+    If the result dialog is shown, its step,inc fields are also updated.
+    """
+    global dialog
+    if dialog:
+        dialog.updateData({
+            'step':DB.step,
+            'inc':DB.inc,
+            })
+    # This shoud use show_results instead, with the stored data
+    show()
+            
+
+def next_inc():
+    DB.nextInc()
+    show_DB_results()
+
+def next_step():
+    DB.nextStep()
+    show_DB_results()
+    
+
 def open_dialog():
     global dialog
     if not checkDB():
@@ -754,7 +766,41 @@ def open_dialog():
         return
     close_dialog()
 
+    def set_inc_choices(step):
+        print "Setting incs for step %s" % step
+        dialog['inc'].setChoices(DB.getIncs(int(step)))
+
+
+    input_items = [
+        _T('Result',[
+            _I('feresult',text='FE Result DB',value='',itemtype='info'),
+            _I('step',text='Step',choices=[1],onselect=set_inc_choices),
+            _I('inc',text='Increment',choices=[1]),
+            _I('elgroup',text='Element Group',choices=['--ALL--',]),
+            _I('restype',text='Type of result',choices=result_types.values()),
+            _I('loadcase',text='Load case',value=0),
+            _I('autoscale',text='Autocalculate deformation scale',value=True),
+            _I('dscale',text='Deformation scale',value=100.),
+            _I('showref',text='Show undeformed configuration',value=True),
+            ]),
+        _T('Animation',[
+            _I('animate',text='Animate results',value=False),
+            _I('shape',text='Amplitude shape',value='linear',itemtype='radio',choices=['linear','sine']),
+            _I('cycle',text='Animation cycle',value='updown',itemtype='radio',choices=['up','updown','revert']),
+            _I('count',text='Number of cycles',value=5),
+            _I('nframes',text='Number of frames',value=10),
+            _I('sleeptime',text='Animation sleeptime',value=0.1), 
+            ]),
+        ]
+
+    enablers = [
+        ('autoscale',False,'dscale'),
+        ('animate',True,'shape','cycle','count','nframes','sleeptime'),
+        ]
+
     actions = [
+        ('Next Inc',next_inc),
+        ('Next Step',next_step),
         ('Close',close_dialog),
         ('Reset',reset),
         # ('Select DB',selectDB),
@@ -762,11 +808,16 @@ def open_dialog():
         # ('Show Fields',showfields),
         # ('Show Attr',showattr),
         ]
-    dialog = widgets.InputDialog(input_items,caption='Results Dialog',actions=actions,default='Show')
+    dialog = widgets.InputDialog(
+        input_items,
+        enablers = enablers,
+        caption='Results Dialog',
+        actions=actions,
+        default='Show',
+        )
     # Update the data items from saved values
     try:
         newdata = named('PostProcMenu_data')
-        print newdata
     except:
         newdata = {}
         pass
@@ -775,6 +826,8 @@ def open_dialog():
     if DB:
         newdata['elgroup'] = ['--ALL--',] + DB.elems.keys()
     dialog.updateData(newdata)
+    dialog['step'].setChoices(DB.getSteps())
+    dialog['inc'].setChoices(DB.getIncs(1))
     dialog.show()
     #pf.PF['__PostProcMenu_dialog__'] = dialog
 

@@ -163,13 +163,15 @@ def submitToCluster(filename=None):
         jobname = os.path.basename(filename)[:-4]
         res = askItems([
             _I('ncpus',4,text='Number of cpus',min=1,max=1024),
+            _I('abqver','6.10',text='Abaqus Version',choices=['6.8','6.9','6.10','6.11']),
             _I('postabq',False,text='Run postabq on the results?'),
             ])
         if res:
             reqtxt = 'cpus=%s\n' % res['ncpus']
+            reqtxt += 'abqver=%s\n' % res['abqver']
             if res['postabq']:
                 reqtxt += 'postproc=postabq\n'
-            host = pf.cfg.get('jobs/host','mecaflix')
+            host = pf.cfg.get('jobs/host','bumpfs')
             reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
             cmd = "scp %s %s:%s" % (filename,host,reqdir)
             ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
