@@ -252,7 +252,7 @@ def setAutoScript():
  
 
 def setAutoFile():
-    """Set the current script as autoScriptFile in the project"""
+    """Set the current script/app as autofile in the project"""
     if pf.cfg['curfile'] and pf.GUI.canPlay:
         pf.PF.autofile = pf.cfg['curfile']
 
@@ -323,6 +323,9 @@ def closeProject(save=None):
 
     pf.PF.filename = None
     pf.GUI.setcurproj('None')
+    updateSettings({
+        'curproj':pf.PF.filename,
+        },save=True)
 
 
 def closeProjectWithoutSaving():

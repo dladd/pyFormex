@@ -49,6 +49,11 @@ import tempfile
 utils.hasExternal('admesh')
 utils.hasExternal('tetgen')
 utils.hasExternal('gts')
+#
+# gts commands used:
+#   in Debian package: stl2gts gts2stl gtscheck
+#   not in Debian package: gtssplit gtscoarsen gtsrefine gtssmooth
+#
 
 from utils import deprecation
 
@@ -445,96 +450,6 @@ def fillBorder(border,method='radial',dir=None):
         raise ValueError,"Strategy should be either 'radial', 'border' or 'planar'"
     
     return TriSurface(coords,elems)
-
-#
-# BV Removed in 0.9
-#
-
-## @utils.deprecation("surfaceInsideBorder is deprecated. Please use fillBorder instead.")
-## def surfaceInsideBorder(border,method='radial'):
-##     """Create a surface inside a closed curve defined by a 2-plex Mesh.
-
-##     border is a 2-plex Mesh representing a closed polyline.
-
-##     The return value is a TriSurface filling the hole inside the border.
-
-##     There are two fill methods:
-    
-##     - 'radial': this method adds a central point and connects all border
-##       segments with the center to create triangles. It is fast and works
-##       well if the border is smooth, nearly convex and nearly planar.
-##     - 'border': this method creates subsequent triangles by connecting the
-##       endpoints of two consecutive border segments and thus works its way
-##       inwards until the hole is closed. Triangles are created at the segments
-##       that form the smallest angle. This method is slower, but works also
-##       for most complex borders. Because it does not create any new
-##       points, the returned surface uses the same point coordinate array
-##       as the input Mesh.
-##     """
-##     if border.nplex() != 2:
-##         raise ValueError,"Expected Mesh with plexitude 2, got %s" % border.nplex()
-
-##     if method == 'radial':
-##         x = border.getPoints().center()
-##         n = zeros_like(border.elems[:,:1]) + border.coords.shape[0]
-##         elems = concatenate([border.elems,n],axis=1)
-##         coords = Coords.concatenate([border.coords,x])
-
-##     elif method == 'border':
-##         coords = border.coords
-##         segments = border.elems
-##         elems = empty((0,3,),dtype=int)
-##         while len(segments) != 3:
-##             segments,triangle = _create_border_triangle(coords,segments)
-##             elems = row_stack([elems,triangle])
-##         elems = row_stack([elems,segments[:,0]])
-
-##     else:
-##         raise ValueError,"Strategy should be either 'radial' or 'border'"
-    
-##     return TriSurface(coords,elems)
-
-
-## # This should be replaced with an algorith using PolyLine
-## def _create_border_triangle(coords,elems):
-##     """Create a triangle within a border.
-    
-##     The triangle is created from the two border elements with
-##     the sharpest angle.
-##     Coords is a (npoints,3) shaped array of floats.
-##     Elems is a (nelems,2) shaped array of integers representing
-##     the border element numbers and must be ordered.
-##     A list of two objects is returned: the new border elements and the triangle.
-##     """
-##     border = coords[elems]
-##     # calculate angles between edges of border
-##     edges1 = border[:,1]-border[:,0]
-##     edges2 = border[:,0]-border[:,1]
-##     # roll axes so that edge i of edges1 and edges2 are neighbours
-##     edges2 = roll(edges2,-1,0)
-##     len1 = length(edges1)
-##     len2 = length(edges2)
-##     inpr = diagonal(inner(edges1,edges2))
-##     cos = inpr/(len1*len2)
-##     # angle between 0 and 180 degrees
-##     angle = arccosd(cos)
-##     # determine sharpest angle
-##     i = where(angle == angle.min())[0][0]
-##     # create triangle and new border elements
-##     j = i + 1
-##     n = shape(elems)[0]
-##     if j == n:
-##         j -= n
-##     old_edges = take(elems,[i,j],0)
-##     elems = delete(elems,[i,j],0)
-##     new_edge = asarray([old_edges[0,0],old_edges[-1,1]])
-##     if j == 0:
-##         elems = insert(elems,0,new_edge,0)
-##     else:
-##         elems = insert(elems,i,new_edge,0)
-##     triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
-##     return elems,triangle
-
 
 
 ############################################################################
@@ -1756,39 +1671,30 @@ Shortest altitude: %s; largest aspect ratio: %s
 ##################  Smooth a surface #############################
 
     
-    def smooth(self,method='lowpass',iterations=1,lambda_value=0.5,neighbourhood=1,alpha=0.0,beta=0.2,verbose=False):
+    def smooth(self,method='lowpass',iterations=1,lambda_value=0.5,neighbourhood=1,alpha=0.0,beta=0.2):
         """Smooth the surface.
 
         Returns a TriSurface which is a smoothed version of the original.
-        Three smoothing methods are available: 'lowpass', 'laplace', and
-        'gts'. The first two are built-in, the latter uses the external
-        command `gtssmooth`.
+        Two smoothing methods are available: 'lowpass' and 'laplace'.
 
         Parameters:
         
-        - `method`: 'lowpass', 'laplace', or 'gts'
+        - `method`: 'lowpass' or 'laplace'
         - `iterations`: int: number of iterations
         - `lambda_value`: float: lambda value used in the filters
 
         Extra parameters for 'lowpass' and 'laplace':
         
-        - `neighbourhood`: int: maximum number of edges to follow to define
-          node neighbourhood
+        - `neighbourhood`: int: maximum number of edges followed in defining
+          the node neighbourhood
 
         Extra parameters for 'laplace':
         
         - `alpha`, `beta`: float: parameters for the laplace method.
 
-        Extra parameters for 'gts':
-        
-        - `verbose`: boolean: requests more verbose output of the `gtssmooth`
-          command
-
         Returns: the smoothed TriSurface
         """
         method = method.lower()
-        if method == 'gts':
-            return self._gts_smooth(iterations,lambda_value,verbose)
 
         # find adjacency
         adj = adjacencyArrays(self.getEdges(),nsteps=neighbourhood)[1:]
@@ -1830,10 +1736,40 @@ Shortest altitude: %s; largest aspect ratio: %s
         return self.smooth('lowpass',iterations/2,lambda_value,neighbours)
 
 
-    def smoothLaplaceHC(self,iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
+    def smoothLaplaceHC(self,iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
         """Apply Laplace smoothing with shrinkage compensation to the surface."""
-        return self.smooth('lowpass',iterations,lambda_value,neighbours,alpha,beta)
+        return self.smooth('laplace',iterations,lambda_value,alpha=alpha,beta=beta)
 
+   
+
+    def refine(self,max_edges=None,min_cost=None,method='gts'):
+        """Refine the TriSurface.
+
+        Refining a TriSurface means increasing the number of triangles and
+        reducing their size, while keeping the changes to the modeled surface
+        minimal.
+        Construct a refined version of the surface.
+        This uses the external program `gtsrefine`. The surface
+        should be a closed orientable non-intersecting manifold.
+        Use the :meth:`check` method to find out.
+
+        Parameters:
+        
+        - `max_edges`: int: stop the refining process if the number of
+          edges exceeds this value
+        - `min_cost`: float: stop the refining process if the cost of refining
+          an edge is smaller
+        - `log`: boolean: log the evolution of the cost
+        - `verbose`: boolean: print statistics about the surface
+        """
+        if method == 'gts':
+            return self.gts_refine(max_edges,min_cost)
+
+        # THIS IS WORK IN PROGRESS
+        self.getElemEdges()
+        edglen = length(self.coords[self.edges[:,1]]-self.coords[self.edges[:,0]])
+        print edglen
+        return self
 
 
 ###################################################################
@@ -2055,7 +1991,7 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S
    
 
-    def refine(self,max_edges=None,min_cost=None,log=False,verbose=False,method='gts'):
+    def gts_refine(self,max_edges=None,min_cost=None,log=False,verbose=False):
         """Refine the TriSurface.
 
         Refining a TriSurface means increasing the number of triangles and
@@ -2102,7 +2038,7 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S
 
 
-    def _gts_smooth(self,iterations=1,lambda_value=0.5,verbose=False):
+    def gts_smooth(self,iterations=1,lambda_value=0.5,verbose=False):
         """Smooth the surface using gtssmooth.
 
         Smooth a surface by applying iterations of a Laplacian filter.
@@ -2423,32 +2359,10 @@ def Cube():
     return TriSurface(faces)
 
 
-@deprecation("trisurface.Sphere is deprecated: use simple.sphere(ndiv=2**(level-1)) instead")
+@deprecation('depr_trisurface_Sphere')
 def Sphere(level=4,verbose=False,filename=None):
-    """Create a spherical surface by calling the gtssphere command.
-
-    If a filename is given, it is stored under that name, else a temporary
-    file is created.
-    Beware: this may take a lot of time if level is 8 or higher.
-    """
-    cmd = 'gtssphere '
-    if verbose:
-        cmd += ' -v'
-    cmd += ' %s' % level
-    if filename is None:
-        tmp = tempfile.mktemp('.gts')
-    else:
-        tmp = filename
-    cmd += ' > %s' % tmp
-    pf.message("Writing file %s" % tmp)
-    sta,out = utils.runCommand(cmd)
-    if sta or verbose:
-        pf.message(out)
-    pf.message("Reading model from %s" % tmp)
-    S = TriSurface.read(tmp)
-    if filename is None:
-        os.remove(tmp)
-    return S
+    import simple
+    return simple.sphere(ndiv=2**(level-1))
 
 
 ####### Unsupported functions needing cleanup #######################

@@ -1019,21 +1019,41 @@ def smooth():
     """Smooth the selected surface."""
     S = selection.check(single=True)
     if S:
-        res = askItems([
-            _I('method','lowpass',itemtype='radio',choices=['lowpass','laplace','gts']),
-            _I('iterations',1),
-            _I('lambda_value',0.5,min=0.0,max=1.0),
-            _I('neighbourhood',1),
-            _I('alpha',0.0),
-            _I('beta',0.2),
-            _I('verbose',False),
-            ])
+        res = askItems(
+            [ _I('method','lowpass',itemtype='select',choices=['lowpass','laplace']),
+              _I('iterations',1,min=1),
+              _I('lambda_value',0.5,min=0.0,max=1.0),
+              _I('neighbourhood',1),
+              _I('alpha',0.0),
+              _I('beta',0.2),
+              ], enablers=[
+                ('method','lowpass','neighbourhood'),
+                ('method','laplace','alpha','beta'),
+                ],
+            )
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
                 return
             selection.remember(True)
             S = S.smooth(**res)
+            selection.changeValues([S])
+            selection.drawChanges()
+
+
+def refine():
+    S = selection.check(single=True)
+    if S:
+        res = askItems([_I('max_edges',-1),
+                        _I('min_cost',-1.0),
+                        ])
+        if res:
+            selection.remember()
+            if res['max_edges'] <= 0:
+                res['max_edges'] = None
+            if res['min_cost'] <= 0:
+                res['min_cost'] = None
+            S=S.refine(**res)
             selection.changeValues([S])
             selection.drawChanges()
 
@@ -1200,12 +1220,12 @@ def createCube():
 
 def createSphere():
     res = askItems([_I('name','__auto__'),
-                    _I('grade',4),
+                    _I('ndiv',8,min=1),
                     ])
     if res:
         name = res['name']
-        level = max(1,res['grade'])
-        S = Sphere(level,verbose=True,filename=name+'.gts')
+        ndiv = res['ndiv']
+        S = simple.sphere(ndiv)
         export({name:S})
         selection.set([name])
         selection.draw()
@@ -1248,25 +1268,6 @@ def coarsen():
             if res['max_cost'] <= 0:
                 res['max_cost'] = None
             S=S.coarsen(**res)
-            selection.changeValues([S])
-            selection.drawChanges()
-
-
-def refine():
-    S = selection.check(single=True)
-    if S:
-        res = askItems([_I('max_edges',-1),
-                        _I('min_cost',-1.0),
-                        _I('log',False),
-                        _I('verbose',False),
-                        ])
-        if res:
-            selection.remember()
-            if res['max_edges'] <= 0:
-                res['max_edges'] = None
-            if res['min_cost'] <= 0:
-                res['min_cost'] = None
-            S=S.refine(**res)
             selection.changeValues([S])
             selection.drawChanges()
 
@@ -1401,14 +1402,14 @@ def create_menu():
           ("&Spliner",spliner),
            ]),
         ("&Smooth",smooth),
+        ("&Refine",refine),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ('&GTS functions',
          [('&Check surface',check),
           ('&Split surface',split),
           ("&Coarsen surface",coarsen),
-          ("&Refine surface",refine),
-          ("&Smooth surface",smooth),
+          ## ("&Smooth surface",smooth),
           ("&Boolean operation on two surfaces",boolean),
           ("&Intersection curve of two surfaces",intersection),
           ]),

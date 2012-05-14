@@ -101,4 +101,6 @@ depr_polygon = "The curve.Polygon class is deprecated. Please use curve.Polyline
 depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."
 depr_widgets_selection = "widgets.Selection is deprecated. Please use widgets.ListSelection."
 depr_compat_input = "The use of compatInputItem is deprecated. Please use simpleInputItem instead."
+depr_trisurface_Sphere = "trisurface.Sphere is deprecated: use simple.sphere(ndiv=2**(level-1)) instead"
+
 # End
