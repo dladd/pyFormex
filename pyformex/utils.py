@@ -50,10 +50,11 @@ known_externals = {
     'calpy': ('calpy --version','Calpy (\S+)'), 
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
     'units': ('units --version','GNU Units version (\S+)'),
-    'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
+    'ffmpeg': ('ffmpeg -version','FFmpeg version (\S+)'),
     'gts': ('gtsset -h','Usage(:) set'),
     'calix': ('calix --version','CALIX-(\S+)'),
-    'dxfparser': ('dxfparser --version','dxfparser (\S+)'),
+    'pyformex-dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
+    'pyformex-postabq': ('pyformex-postabq -V','postabq (\S+).*'),
     }
 
 def checkVersion(name,version,external=False):
@@ -194,7 +195,8 @@ def checkExternal(name=None,command=None,answer=None):
         if answer is None:
             answer = ans
 
-    m = re.match(answer,system(command)[1])
+    out = system1(command)[1]
+    m = re.match(answer,out)
     if m:
         version = m.group(1)
     else:

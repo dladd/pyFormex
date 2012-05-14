@@ -35,8 +35,8 @@
 #ifndef DXFPARSER_H
 #define DXFPARSER_H
 
-#include <dxflib/dl_creationadapter.h>
-#include <dxflib/dl_dxf.h>
+#include <dl_creationadapter.h>
+#include <dl_dxf.h>
 
 
 class MyDxfFilter : public DL_CreationAdapter {

@@ -454,7 +454,7 @@ def run(argv=[]):
         remove_pyFormex(pyformexdir,pf.bindir)
         return
 
-    if pf.options.whereami or pf.options.detect :
+    if pf.options.whereami: # or pf.options.detect :
         pf.options.debuglevel |= pf.DEBUG.INFO
             
     pf.debug("pyformex script started from %s" % pf.bindir,pf.DEBUG.INFO)
@@ -462,7 +462,7 @@ def run(argv=[]):
     pf.debug("Current Python sys.path: %s" % sys.path,pf.DEBUG.INFO)
 
     if pf.options.detect:
-        print("Detecting all installed helper software")
+        print("Detecting installed helper software")
         utils.checkExternal()
         print(utils.reportDetected())
 

@@ -241,22 +241,34 @@ def createMenuData():
             (_('&Developer Guidelines'),DevLinksMenuData),
             ]
         
-        def install_dxfparser():
-            extdir = os.path.join(pf.cfg['pyformexdir'],'external','dxfparser')
+        def install_external(pkgdir,prgname):
+            extdir = os.path.join(pf.cfg['pyformexdir'],'extra',pkgdir)
             sta,out = utils.runCommand("cd %s; make && gksu make install" % extdir)
             if sta:
                 info = out
             else:
-                if utils.hasExternal('dxfparser',force=True):
-                    info = "Succesfully installed dxfparser"
+                if utils.hasExternal(prgname,force=True):
+                    info = "Succesfully installed %s" % pkgdir
                 else:
                     info ="You should now restart pyFormex!"
-            draw.showInfo(info)
-                
+            draw.showInfo(info)  
             return sta
         
+        def install_dxfparser():
+            install_external('dxfparser','pyformex-dxfparser')
+        
+        def install_postabq():
+            install_external('postabq','pyformex-postabq')
+        
+        def install_gts():
+            install_external('gts','gtsinside')
+
+
+        
         MenuData.append((_('&Install Externals'),[
-            (_('dxfparser'),install_dxfparser),
+            (_('dxfparser'),install_dxfparser,{'tooltip':"Install dxfparser: requires libdxflib-dev!"}),
+            (_('postabq'),install_postabq),
+            (_('gts'),install_gts),
             ]))
 
 

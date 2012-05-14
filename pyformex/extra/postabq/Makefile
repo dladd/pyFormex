@@ -24,31 +24,57 @@
 ##
 
 #
-#  Makefile for postabq
+#  Makefile for 'postabq' command used by pyFormex
 #
+############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
-PREFIX= /usr/local/bin
-BINDIR= $(DESTDIR)$(PREFIX)
+# !! An environment variable DESTDIR can be set to specify a path for
+# !! the installation tree. All install paths specified hereafter will
+# !! then be relative to that installation path.
+# !! An environment variable SU can be set to execute a program with
+# !! root privileges. Examples are 'sudo' or 'gksu'. 
 
+# root of the installation tree: this is a reasonable default
+prefix:= /usr/local
+# where to install the executable files
+bindir:= $(prefix)/bin
+# where to install library files
+libdir:= $(prefix)/lib
+# where to install the documentation
+docdir:= $(prefix)/share/doc
 
-PROGRAM= postabq
-PROGRAMNAME= pyformex-postabq    # name to use for installed binary
+#####################################################################
 
-CC= gcc
+PKG:= postabq
+
+BINDIR:= $(DESTDIR)$(bindir)
+LIBDIR:= $(DESTDIR)$(libdir)
+DOCDIR:= $(DESTDIR)$(docdir)
+
+CC:= gcc
+CXX:= g++
+INSTALL:= $(SU) install
+INSTALLBIN:= $(INSTALL) -m 0755
+INSTALLDATA:= $(INSTALL) -m 0644
+
+PRG= postabq
+PRGNAME= pyformex-postabq    # name to use for installed binary
+
 CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC
-INSTALLBIN= install -m 0755
 
-all: $(PROGRAM)
+.PHONY: all build install clean
 
-install: installbin
+build: $(PRG)
 
-$(PROGRAM): $(PROGRAM).c
+all: install clean
+
+$(PRG): $(PRG).c
 	$(CC) -o $@ $<
 
-installbin: $(PROGRAM)
-	$(INSTALLBIN) $< $(BINDIR)/$(PROGRAMNAME)
+install: $(PRG)
+	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)
 
 clean:
-	rm -rf *.o
+	rm -f $(PRG) $(PRG).o
 
 # End
