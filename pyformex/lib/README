@@ -26,11 +26,3 @@
 # This directory contains the compiled modules and external programs 
 # of pyFormex.
 #
-# To generate the configure script, run:
-#
-# autoconf
-#
-# To configure and compile the modules/programs:
-# ./configure
-# make
-#

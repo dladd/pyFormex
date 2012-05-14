@@ -23,20 +23,28 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-#
-# This script helps with installing the gts library and utilities from source:
-#
-# Prerequisites: libglib2.0-dev
-#
-# TO INSTALL:
-# ./install.sh get unpack patch make
-# sudo ./install.sh install rename
-# ./install.sh clean
-#
-# OR:    ./install.sh all     TO DO IT ALL AT ONCE
-#
-# Use at your own risk if you do not understand what is happening!
-#
+
+usage() {
+    cat <<EOF
+
+This script helps with installing the gts library and utilities from source:
+
+ Prerequisites: libglib2.0-dev
+
+ To install :
+  ./install.sh get unpack patch make
+  sudo ./install.sh install rename
+  ./install.sh clean
+
+ or to do it all at once:
+  ./install.sh all
+
+ Use at your own risk if you do not understand what is happening!
+
+EOF
+}
+[ -n "$1" ] || { usage; exit 1; }
+
 
 VERSION=0.7.6
 NAME=gts-$VERSION

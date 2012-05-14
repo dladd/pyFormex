@@ -237,7 +237,13 @@ class Mesh(Geometry):
         import copy
         state = copy.copy(self.__dict__)
         # Store the element type by name
-        state['eltype'] = state['eltype'].name()
+        # This sometimes fails
+        print "SELF.ELTYPE %s" % self.eltype
+        print state['eltype']
+        try:
+            state['eltype'] = state['eltype'].name()
+        except:
+            state['eltype'] = None
         return state
 
 
