@@ -734,6 +734,7 @@ class InputCombo(InputItem):
             choices[0:0] = [ default ]
         self.input = QtGui.QComboBox()
         InputItem.__init__(self,name,*args,**kargs)
+        self._choices_ = []
         self.setChoices(choices)
         if callable(onselect):
             self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
@@ -758,13 +759,12 @@ class InputCombo(InputItem):
 
         This also sets the current value to the first in the list.
         """
+        # First remove old choices, if any
+        while self.input.count() > 0:
+            self.input.removeItem(0)
         # Set new ones
         self._choices_ = [ str(s) for s in choices ]
         self.input.addItems(self._choices_)
-        # Remove old choices (we can not do this first, because we can not
-        # remove the last choice
-        while self.input.count() > len(self._choices_):
-            self.input.removeItem(1)
 
     def setIndex(self,i):
         self.input.setCurrentIndex(i)
