@@ -243,10 +243,29 @@ class FeResult(object):
         The next increment is either the next increment of the current step,
         or the first increment of the next step.
         """
-        if self.inc < self.getIncs()[-1]:
+        if self.inc < self.getIncs(self.step)[-1]:
             self.setStepInc(self.step,self.inc+1)
         else:
             self.nextStep()
+        
+    def prevStep(self):
+        """Skips to the start of the previous step."""
+        if self.step > 1:
+            self.setStepInc(self.step-1)
+        
+    def prevInc(self):
+        """Skips to the previous increment.
+
+        The previous increment is either the previous increment of the current
+        step, or the last increment of the previous step.
+        """
+        if self.inc > 1:
+            self.setStepInc(self.step,self.inc-1)
+        else:
+            if self.step > 1:
+                step = self.step-1
+                inc = self.getIncs(step)[-1]
+            self.setStepInc(step,inc)
      
 
     def getres(self,key,domain='nodes'):

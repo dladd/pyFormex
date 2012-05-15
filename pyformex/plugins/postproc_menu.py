@@ -750,6 +750,14 @@ def show_DB_results():
     show()
             
 
+def prev_step():
+    DB.prevStep()
+    show_DB_results()
+
+def prev_inc():
+    DB.prevInc()
+    show_DB_results()
+        
 def next_inc():
     DB.nextInc()
     show_DB_results()
@@ -799,8 +807,11 @@ def open_dialog():
         ]
 
     actions = [
-        ('Next Inc',next_inc),
-        ('Next Step',next_step),
+        ('Prev Step',prev_step,'rew'),
+        ('Prev',prev_inc,'prev'),
+        ('Next',next_inc,'next'),
+        ('Next Step',next_step,'ff'),
+        ('---',),
         ('Close',close_dialog),
         ('Reset',reset),
         # ('Select DB',selectDB),

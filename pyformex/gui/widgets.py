@@ -2830,22 +2830,31 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
     blist = []
     for a in actions:
         name = a[0]
-        b = QtGui.QPushButton(name,parent)
-        n = name.lower()
-        if len(a) > 1 and callable(a[1]):
-            slot = (a[1],)
-        elif parent:
-            if n == 'ok':
-                slot = (parent,Accept)
-            elif n == 'cancel':
-                slot = (parent,Reject)
+        if name == '---':
+            spacer = QtGui.QSpacerItem(20,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
+            layout.addItem(spacer)
+        else:
+            if len(a) > 2:
+                icon = a[2]
+                icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(icon)))
+                b = QtGui.QPushButton(icon,'',parent)
             else:
-                slot = (parent,Reject)
-        b.connect(b,QtCore.SIGNAL("clicked()"),*slot)
-        if n == default.lower():
-            b.setDefault(True)
-        layout.addWidget(b)
-        blist.append(b)
+                b = QtGui.QPushButton(name,parent)
+            n = name.lower()
+            if len(a) > 1 and callable(a[1]):
+                slot = (a[1],)
+            elif parent:
+                if n == 'ok':
+                    slot = (parent,Accept)
+                elif n == 'cancel':
+                    slot = (parent,Reject)
+                else:
+                    slot = (parent,Reject)
+            b.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+            if n == default.lower():
+                b.setDefault(True)
+            layout.addWidget(b)
+            blist.append(b)
     return blist
 
 
