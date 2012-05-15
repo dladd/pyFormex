@@ -225,11 +225,13 @@ def createMenuData():
         devtodo = os.path.join(pyformexdir,"..","TODO")
         devhowto = os.path.join(pyformexdir,"..","HOWTO-dev.rst")
         devapp = os.path.join(pyformexdir,"..","scripts-apps.rst")
+        devextra = os.path.join(pyformexdir,"..","install-extra.rst")
         #print pf.refcfg.help['developer']
         developer = [
             ('Developer HOWTO',devhowto),
             ('Scripts versus Apps',devapp),
             ('pyFormex TODO list',devtodo),
+            ('Installation of extra software',devextra),
            ('Numpy documentation guidelines','http://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt'),
             ('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')
             ]

@@ -1409,6 +1409,7 @@ def create_menu():
          [('&Check surface',check),
           ('&Split surface',split),
           ("&Coarsen surface",coarsen),
+          ("&Refine",refine),
           ## ("&Smooth surface",smooth),
           ("&Boolean operation on two surfaces",boolean),
           ("&Intersection curve of two surfaces",intersection),
