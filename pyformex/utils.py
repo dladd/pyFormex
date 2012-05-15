@@ -764,6 +764,7 @@ def is_pyFormex(filename):
     
 
 tempFile = tempfile.NamedTemporaryFile
+tempDir = tempfile.mkdtemp
 
 
 # BV: We could turn this into a factory

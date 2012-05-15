@@ -190,6 +190,7 @@ class Gui(QtGui.QMainWindow):
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
+        pf.debug('Creating Main Window',pf.DEBUG.GUI)
         self.on_exit = [fileMenu.askCloseProject] 
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
@@ -197,6 +198,7 @@ class Gui(QtGui.QMainWindow):
 
 
         # The status bar
+        pf.debug('Creating Status Bar',pf.DEBUG.GUI)
         self.statusbar = self.statusBar()
         #self.statusbar.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
         #self.statusbar.setFixedHeight(32)
@@ -210,10 +212,12 @@ class Gui(QtGui.QMainWindow):
         self.canEdit = False
         
         # The menu bar
+        pf.debug('Creating Menu Bar',pf.DEBUG.GUI)
         self.menu = menu.MenuBar('TopMenu')
         self.setMenuBar(self.menu)
 
         # The toolbar
+        pf.debug('Creating ToolBar',pf.DEBUG.GUI)
         self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
         # Create a box for the central widget
@@ -230,6 +234,7 @@ class Gui(QtGui.QMainWindow):
         self.splitter.show()
 
         # self.central is the complete central widget of the main window
+        pf.debug('Creating Central Widget',pf.DEBUG.GUI)
         self.central = QtGui.QWidget()
         self.central.autoFillBackground()
           #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
@@ -247,7 +252,9 @@ class Gui(QtGui.QMainWindow):
         self.splitter.addWidget(self.board)
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
+        
         # Create the top menu
+        pf.debug('Creating Menus',pf.DEBUG.GUI)
         menudata = menu.createMenuData()
         self.menu.insertItems(menudata)
         # ... and the toolbar
@@ -260,6 +267,7 @@ class Gui(QtGui.QMainWindow):
 
         # Define Toolbars
     
+        pf.debug('Creating Toolbars',pf.DEBUG.GUI)
         self.camerabar = self.updateToolBar('camerabar','Camera ToolBar')
         self.modebar = self.updateToolBar('modebar','RenderMode ToolBar')
         self.viewbar = self.updateToolBar('viewbar','Views ToolBar')
@@ -330,14 +338,21 @@ class Gui(QtGui.QMainWindow):
 
 
         # Restore previous pos/size
+        pf.debug('Restore size/pos',pf.DEBUG.GUI)
         self.resize(*size)
         self.move(*pos)
         self.board.resize(*bdsize)
 
+        pf.debug('Set Curdir',pf.DEBUG.GUI)
         self.setcurdir()
 
         # redirect standard/error output if option set
-        self.board.redirect(pf.cfg['gui/redirect'])
+        #
+        # TODO: we should redirect it to a buffer and
+        # wait until GUI shown, then show in board
+        # else show on stdout/err
+        
+        #self.board.redirect(pf.cfg['gui/redirect'])
 
         if pf.options.debuglevel:
             s = sizeReport(self,'DEBUG: Main:') + \
@@ -356,6 +371,7 @@ class Gui(QtGui.QMainWindow):
 
         # Modeless child dialogs
         self.doc_dialog = None
+        pf.debug('Done initializing GUI',pf.DEBUG.GUI)
 
 
     def close_doc_dialog(self):
@@ -1125,6 +1141,8 @@ You should seriously consider to bail out now!!!
     pos = pf.cfg.get('gui/pos',(0,0))
     bdsize = pf.cfg.get('gui/bdsize',(800,600))
     size = MinSize(size,pf.maxsize)
+
+    # Create the GUI
     pf.GUI = Gui(windowname,
                  pf.cfg.get('gui/size',(800,600)),
                  pf.cfg.get('gui/pos',(0,0)),
@@ -1230,6 +1248,12 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     pf.debug("Showing the GUI",pf.DEBUG.GUI)
     pf.GUI.show()
+
+    # redirect standard output to board
+    # TODO: this should disappear when we have buffered stdout
+    # and moved this up into GUI init
+    pf.GUI.board.redirect(pf.cfg['gui/redirect'])
+
     pf.GUI.update()
 
     if pf.cfg['gui/fortune']:

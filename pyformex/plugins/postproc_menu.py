@@ -283,11 +283,13 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             vmid = 0.5*(vmin+vmax)
 
         scalev = [vmin,vmid,vmax]
-        print scalev
-        logv = [ abs(a) for a in scalev if a != 0.0 ]
-        logs = log10(logv)
-        logma = int(logs.max())
-
+        if max(scalev) > 0.0:
+            logv = [ abs(a) for a in scalev if a != 0.0 ]
+            logs = log10(logv)
+            logma = int(logs.max())
+        else:
+            # All data = 0.0
+            logma = 0
 
         if logma < 0:
             multiplier = 3 * ((2 - logma) / 3 )
@@ -302,10 +304,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     # the supplied text
     if text:
         # Replace text tags
-        text.replace('%S',str(DB.step))
-        text.replace('%I',str(DB.inc))
+        text = text.replace('%S',str(DB.step))
+        text = text.replace('%I',str(DB.inc))
         if multiplier != 0:
-            text.replace('%M',' (* 10**%s)' % -multiplier)
+            text = text.replace('%M',' (* 10**%s)' % -multiplier)
         drawText(text,200,30)
 
     smooth()
@@ -341,33 +343,47 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         # displaying new ones. This makes the animation a lot smoother
         # (though the code is less clear and compact).
         if len(frames) > 0:
-            for Fi in frames[-1][0]:
-                pf.canvas.removeActor(Fi)
-            pf.canvas.removeDecoration(frames[-1][1])
+            pf.canvas.removeActor(frames[-1][0])
+            pf.canvas.removeDecoration(frames[-1][2])
         # add the latest frame to the stored list of frames
-        frames.append((F,T))
+        frames.append((F,[],T))
         wait()
 
     zoomBbox(bbox(bboxes))
     
-    # display the remaining cycles
-    count -= 1
-    FA,TA = frames[-1]
+    animateScenes(frames,count,sleeptime)
+
+
+def animateScenes(scenes,count=1,sleeptime=None):
+    """Animate a series of scenes.
+
+    Each scene is a triple of (actors, annots, decors), where each item is
+    either a single item of resp. type Actor, Annotation, Decoration, or a
+    (possibly empty) list of such items.
+    """
+    if sleeptime is not None:
+        delay(sleeptime)
+
+    # prepare to remove last scene
+    FA,AA,TA = scenes[-1] # !! not None: that would remove everything !!
+    
     while count > 0:
         count -= 1
 
-        for F,T in frames:
-            # It would be interesting if addactor would add/remove a list
-            # of actors
-            for Fi in F:
-                pf.canvas.addActor(Fi)
-            pf.canvas.addDecoration(T)
-            for Fi in FA:
-                pf.canvas.removeActor(Fi)
+        for F,A,T in scenes:
+            # annotations and decorations should not change smoothly
+            # therefore remove the old ones first
+            pf.canvas.removeAnnotation(AA)
             pf.canvas.removeDecoration(TA)
+            # draw the new items
+            pf.canvas.addActor(F)
+            pf.canvas.addAnnotation(A)
+            pf.canvas.addDecoration(T)
+            # remove the old actors after drawing the new ones
+            pf.canvas.removeActor(FA)
             pf.canvas.display()
             pf.canvas.update()
-            FA,TA = F,T
+            FA,AA,TA = F,A,T
             wait()
 
 
@@ -496,10 +512,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
 result_types = ODict([
     ('','None'),
-    ('U','[Displacement]'),
     ('U0','X-Displacement'),
     ('U1','Y-Displacement'),
     ('U2','Z-Displacement'),
+    ('U','[Displacement]'),
     ('S0','X-Normal Stress'),
     ('S1','Y-Normal Stress'),
     ('S2','Z-Normal Stress'),
@@ -786,7 +802,6 @@ def open_dialog():
             _I('inc',text='Increment',choices=[1]),
             _I('elgroup',text='Element Group',choices=['--ALL--',]),
             _I('restype',text='Type of result',choices=result_types.values()),
-            _I('loadcase',text='Load case',value=0),
             _I('autoscale',text='Autocalculate deformation scale',value=True),
             _I('dscale',text='Deformation scale',value=100.),
             _I('showref',text='Show undeformed configuration',value=True),

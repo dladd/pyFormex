@@ -172,14 +172,11 @@ def install_more_trisurface_methods():
     TriSurface.inside = inside
 
 
-install_more_trisurface_methods()
-
-try:
-    print "You have pygts installed: pyFormex will try to use it instead of gts commands"
-    import gts
-    install_more_trisurface_methods()
-except:
-    print "Oops, looks like something went wrong in pyformex_gts"
+## try:
+##     import gts
+##     print "You have pygts installed: pyFormex will try to use it instead of gts commands"
+## except:
+##     print "Oops, looks like something went wrong in pyformex_gts"
 
 
 # End

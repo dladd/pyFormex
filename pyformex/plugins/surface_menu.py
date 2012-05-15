@@ -1072,12 +1072,13 @@ def flytru_stl():
 
 
 def create_volume():
-    """Generate a volume tetraeder mesh inside an stl surface."""
-    types = [ 'STL/OFF Files (*.stl *.off)', 'All Files (*)' ]
-    fn = askFilename(pf.cfg['workdir'],types)
-    if fn:
-        tetgen.runTetgen(fn)        
-    
+    """Generate a volume tetraeder mesh inside a surface."""
+    S = selection.check(single=True)
+    if S:
+        import tetgen
+        M = tetgen.meshInsideSurface(S,quality=True)
+        export({'tetmesh':M})
+        
 
 def export_surface():
     S = selection.check(single=True)

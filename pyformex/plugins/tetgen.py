@@ -1,4 +1,4 @@
-# $Id$ pyformex
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -32,7 +32,6 @@ See http://tetgen.org
 """
 
 from coords import *
-from formex import Formex
 from connectivity import Connectivity
 from mesh import Mesh
 from filewrite import *
@@ -416,7 +415,7 @@ def readTetgen(fn):
         if nodenrs.min() == 1 and nodenrs.max()==nodenrs.size:
             elems = elems-1
         M = Mesh(nodes,elems,eltype=elems.eltype)
-        res['tetgen'+ext] = nodes
+        res['tetgen'+ext] = M
         
     elif ext == '.smesh':
         nodes,elems = readSmeshFile(fn)
@@ -429,18 +428,24 @@ def readTetgen(fn):
         res = dict([('Mesh-%s'%M.nplex(),M) for M in ML])
 
     return res
-    
 
-if __name__ == 'draw':
 
-    clear()
-    dir = os.path.dirname(pf.cfg['pyformexdir'])
-    fn = askFilename(filter=utils.fileDescription('tetgen'))
-    if not fn:
-        exit()
-        
+def meshInsideSurface(surf,quality=False):
+    d = utils.tempDir()
+    fn = os.path.join(d,'surface.off')
+    surf.write(fn)
+    if quality:
+        options='-q'
+    else:
+        options=''
+    runTetgen(fn,options)
+    fn = os.path.join(d,'surface.1.ele')
     res = readTetgen(fn)
-    print res
-    draw(res.values())
+    utils.removeTree(d)
+    return res['tetgen.ele']
+
+def install_more_trisurface_methods():
+    from plugins.trisurface import TriSurface
+    TriSurface.tetmesh = meshInsideSurface
     
 # End
