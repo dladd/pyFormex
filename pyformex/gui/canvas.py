@@ -1115,13 +1115,12 @@ class Canvas(object):
         ## print "vsize,dist = %s, %s" % (vsize,dist)
         ## near,far = 0.01*dist,100.*dist
         ## print "near,far = %s, %s" % (near,far)
-        ## near,far = 0.1*dist,10.*dist
-        ## print "near,far = %s, %s" % (near,far)
         #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
         near,far = dist-1.0*dsize,dist+1.0*dsize
         # print "near,far = %s, %s" % (near,far)
         # make sure near is positive
-        near = max(0.0001*vsize,near)
+        #print (0.0001*vsize,0.01*dist,near)
+        near = max(0.0001*vsize,0.01*dist,near)
         #print "near,far = %s, %s" % (near,far)
         self.camera.setClip(near,far)
         self.camera.resetArea()
