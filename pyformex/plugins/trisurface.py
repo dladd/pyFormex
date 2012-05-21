@@ -38,7 +38,6 @@ import mesh_ext  # load the extended Mesh functions
 
 import geomtools
 import inertia
-import tetgen
 import filewrite
 import utils
 from gui.drawable import interpolateNormals
@@ -47,7 +46,6 @@ import os,tempfile
 import tempfile
 
 utils.hasExternal('admesh')
-utils.hasExternal('tetgen')
 
 from utils import deprecation
 
@@ -209,14 +207,6 @@ def write_stla(f,x):
     f.write("endsolid\n")
     if own:
         f.close()
-
-
-def write_smesh(fn,nodes,elems):
-    """Write a tetgen surface model to .node and .smesh files.
-
-    The provided file name is the .node or the .smesh filename.
-    """
-    tetgen.writeSurface(fn,nodes,elems)
 
 
 def surface_volume(x,pt=None):
@@ -693,7 +683,7 @@ class TriSurface(Mesh):
             elif ftype == 'off':
                 filewrite.writeOFF(fname,self.coords,self.elems)
             elif ftype == 'smesh':
-                write_smesh(fname,self.coords,self.elems)
+                tetgen.writeSurface(fname,self.coords,self.elems)
             pf.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nelems()))
         else:
             print("Cannot save TriSurface as file %s" % fname)
@@ -910,7 +900,6 @@ class TriSurface(Mesh):
         altmin = 2*self.areas / edgmax
         aspect = edgmax/altmin
         _qual_equi = sqrt(sqrt(3.)) / 6.
-        print _qual_equi
         qual = sqrt(self.areas) / peri / _qual_equi
         self.edglen,self.facedg,self.peri,self.edgmin,self.edgmax,self.altmin,self.aspect,self.qual = edglen,facedg,peri,edgmin,edgmax,altmin,aspect,qual 
 
@@ -1793,8 +1782,8 @@ Quality: %s .. %s
 
 
 ###################################################################
-##    Methods using admesh/GTS/tetgen
-#####################################
+##    Methods using admesh/GTS
+##############################
  
  
     def fixNormals(self):
@@ -1883,37 +1872,6 @@ Quality: %s .. %s
         else:
             pf.message('Status of gtscheck not understood')
             return sta, None
-
-
-    def checkSelfIntersectionsWithTetgen(self,verbose=False):
-        """check self intersections using tetgen
-        
-        Returns couples of intersecting triangles
-        """
-        from plugins.tetgen import writeSurface
-        cmd = 'tetgen -d '
-        tmp = tempfile.mktemp('')
-        print tmp
-        pf.message("Writing temp file %s" % tmp)
-        writeSurface(tmp,self.coords, self.elems)
-        if verbose:
-            cmd += '-V '
-        cmd=cmd+ tmp
-        pf.message("Checking with command\n %s" % cmd)
-        sta,out = utils.runCommand(cmd)
-        if sta:
-            pf.message('Tetgen got an error')
-            return sta
-        try:
-            os.remove(tmp+'.node')
-            os.remove(tmp+'.smesh')
-            os.remove(tmp+'.1.face')
-            os.remove(tmp+'.1.node')
-        except:
-            pass
-        if sta or verbose:
-            pf.message(out)
-        return asarray( [int(l.split(' ')[0]) for l in out.split('acet #')[1:]]).reshape(-1, 2)-1
 
 
     def split(self,base,verbose=False):
@@ -2360,6 +2318,7 @@ def intersectSurfaceWithSegments(s1, segm, atol=1.e-5):
 
 import pyformex_gts
 pyformex_gts.install_more_trisurface_methods()
+
 
 import tetgen
 tetgen.install_more_trisurface_methods()

@@ -79,6 +79,38 @@ def bbox(objects):
     return Coords(concatenate(bboxes)).bbox()
 
 
+# TODO: should give a warning/ return None when no intersection?
+def bboxIntersection(A,B):
+    """Compute the intersection of the bounding box of two objects.
+
+    A and B are objects having a bbox method. The intersection of the two
+    bounding boxes is returned in boox format.
+    """
+    Amin,Amax = A.bbox()
+    Bmin,Bmax = B.bbox()
+    min = where(Amin>Bmin,Amin,Bmin)
+    max = where(Amax<Bmax,Amax,Bmax)
+    return Coords([min,max])
+
+#
+# TODO: this could be merged with the test method by allowing a list for
+#       the parameters dir, min, max
+#
+def testBbox(A,bb,dirs=[0,1,2],nodes='any'):
+    """Test which part of A is inside a given bbox, applied in directions dirs.
+
+    A is any object having bbox and a test method (Formex, Mesh).
+    bb is a bounding box, i.e. a (2,3) shape float array.
+    dirs is a list of the three coordinate axes or a subset thereof.
+    nodes has the same meaing as in Formex.test and Mesh.test.
+
+    The result is a bool array flagging the elements that are inside the given
+    bounding box.
+    """
+    test = [ A.test(nodes=nodes,dir=i,min=bb[0][i],max=bb[1][i]) for i in dirs ]
+    return stack(test).prod(axis=0).astype(bool)
+
+
 ###########################################################################
 ##
 ##   class Coords

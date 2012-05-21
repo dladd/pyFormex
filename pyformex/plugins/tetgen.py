@@ -30,7 +30,6 @@ tetgen program
 tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
 See http://tetgen.org
 """
-
 from coords import *
 from connectivity import Connectivity
 from mesh import Mesh
@@ -392,7 +391,11 @@ def runTetgen(fn,options=''):
     tetgen will generate a volume tetraeder mesh inside the surface,
     and create a new approximation of the surface as a by-product.
     """
-    if os.path.exists(fn):
+    if not utils.hasExternal('tetgen'):
+        utils.warn("no_tetgen")
+        return
+
+    if os.path.exists(fn) and utils.hasExternal('tetgen'):
         sta,out = utils.runCommand('tetgen -z%s %s' % (options,fn))
 
 
@@ -430,10 +433,44 @@ def readTetgen(fn):
     return res
 
 
-def meshInsideSurface(surf,quality=False):
+#################################################################
+## Extra TriSurface Methods ##
+
+def checkSelfIntersectionsWithTetgen(self,verbose=False):
+    """check self intersections using tetgen
+
+    Returns couples of intersecting triangles
+    """
+    from plugins.tetgen import writeSurface
+    cmd = 'tetgen -d '
+    tmp = tempfile.mktemp('')
+    print tmp
+    pf.message("Writing temp file %s" % tmp)
+    writeSurface(tmp,self.coords, self.elems)
+    if verbose:
+        cmd += '-V '
+    cmd=cmd+ tmp
+    pf.message("Checking with command\n %s" % cmd)
+    sta,out = utils.runCommand(cmd)
+    if sta:
+        pf.message('Tetgen got an error')
+        return sta
+    try:
+        os.remove(tmp+'.node')
+        os.remove(tmp+'.smesh')
+        os.remove(tmp+'.1.face')
+        os.remove(tmp+'.1.node')
+    except:
+        pass
+    if sta or verbose:
+        pf.message(out)
+    return asarray( [int(l.split(' ')[0]) for l in out.split('acet #')[1:]]).reshape(-1, 2)-1
+
+
+def meshInsideSurface(self,quality=False):
     d = utils.tempDir()
     fn = os.path.join(d,'surface.off')
-    surf.write(fn)
+    self.write(fn)
     if quality:
         options='-q'
     else:
@@ -447,5 +484,7 @@ def meshInsideSurface(surf,quality=False):
 def install_more_trisurface_methods():
     from plugins.trisurface import TriSurface
     TriSurface.tetmesh = meshInsideSurface
-    
+    TriSurface.checkSelfIntersectionsWithTetgen = checkSelfIntersectionsWithTetgen
+
+
 # End
