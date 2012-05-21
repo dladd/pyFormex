@@ -309,7 +309,7 @@ def convertInp(fn):
     #print(cmd)
     pf.GUI.setBusy()
     sta, out = utils.runCommand(cmd)
-    #print out
+    print out
     pf.GUI.setBusy(False)
         
 
@@ -766,6 +766,23 @@ def narrow_selection(clas):
     print "SELECTION MESH TYPE",selection.names
     
 
+def reverseMesh():
+    """Fuse the nodes of a Mesh"""
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    meshes = [ m.reverse() for m in meshes ]
+    export2(selection.names,meshes)
+    clear()
+    selection.draw()
+    
+
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
     if not selection.check():
@@ -1033,6 +1050,7 @@ def create_menu():
         ## ("---",None),
         ## ("&Fly",fly),
         ("Mesh",[
+            ("&Reverse mesh elements",reverseMesh),
             ("&Convert element type",convertMesh),
             ("&Subdivide",subdivideMesh),
             ("&Fuse nodes",fuseMesh),

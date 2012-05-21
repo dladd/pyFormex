@@ -904,12 +904,35 @@ class TriSurface(Mesh):
         edg = self.coords[self.getEdges()]
         edglen = length(edg[:,1]-edg[:,0])
         facedg = edglen[self.getElemEdges()]
+        peri = facedg.sum(axis=-1)
         edgmin = facedg.min(axis=-1)
         edgmax = facedg.max(axis=-1)
         altmin = 2*self.areas / edgmax
         aspect = edgmax/altmin
-        self.edglen,self.facedg,self.edgmin,self.edgmax,self.altmin,self.aspect = edglen,facedg,edgmin,edgmax,altmin,aspect 
+        _qual_equi = sqrt(sqrt(3.)) / 6.
+        print _qual_equi
+        qual = sqrt(self.areas) / peri / _qual_equi
+        self.edglen,self.facedg,self.peri,self.edgmin,self.edgmax,self.altmin,self.aspect,self.qual = edglen,facedg,peri,edgmin,edgmax,altmin,aspect,qual 
 
+
+    def perimeters(self):
+        """Compute the perimeters of all triangles."""
+        self._compute_data()
+        return self.peri
+    
+     
+    def quality(self):
+        """Compute a quality measure for the triangle schapes.
+        
+        The quality of a triangle is defined as the ratio of the square
+        root of its surface area to its perimeter relative to this same
+        ratio for an equilateral triangle with the same area.  The quality
+        is then one for an equilateral triangle and tends to zero for a
+        very stretched triangle.
+        """
+        self._compute_data()
+        return self.qual
+    
 
     def aspectRatio(self):
         """Return the apect ratio of the triangles of the surface.
@@ -947,6 +970,7 @@ class TriSurface(Mesh):
         manifold,closed,mincon,maxcon = self.surfaceType()
         self._compute_data()
         area = self.area()
+        qual = self.quality()
         s = """
 Size: %s vertices, %s edges and %s faces
 Bounding box: min %s, max %s
@@ -955,6 +979,7 @@ Surface is%s a%s manifold
 Facet area: min %s; mean %s; max %s
 Edge length: min %s; mean %s; max %s
 Shortest altitude: %s; largest aspect ratio: %s
+Quality: %s .. %s
 """ % ( self.ncoords(),self.nedges(),self.nfaces(),
         bbox[0],bbox[1],
         mincon,maxcon,
@@ -962,6 +987,7 @@ Shortest altitude: %s; largest aspect ratio: %s
         self.areas.min(),self.areas.mean(),self.areas.max(),
         self.edglen.min(),self.edglen.mean(),self.edglen.max(),
         self.altmin.min(),self.aspect.max(),
+        qual/min(), qual.max(),
         )
         if manifold:
             angles = self.edgeAngles()

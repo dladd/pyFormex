@@ -429,8 +429,10 @@ def deleteTriangles():
 #  - domain to display: True to display on edges, False to display on elements
 
 SelectableStatsValues = odict.ODict([
+    ('Quality', (TriSurface.quality,False)),
     ('Aspect ratio', (TriSurface.aspectRatio,False)),
     ('Facet Area', (TriSurface.facetArea,False)),
+    ('Facet Perimeter', (TriSurface.perimeters,False)),
     ('Smallest altitude', (TriSurface.smallestAltitude,False)),
     ('Longest edge', (TriSurface.longestEdge,False)),
     ('Shortest edge', (TriSurface.shortestEdge,False)),

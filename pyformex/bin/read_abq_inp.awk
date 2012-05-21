@@ -55,30 +55,37 @@
 BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 
 # start a new part
-/^\*\* PART INSTANCE:/ { start_part($4); print "**PART "$4; next; }
+#/^\*\* PART INSTANCE:/ { start_part($4); print "**PART "$4; next; }
 /^\*Part,/ { sub(".*name=",""); sub(" .*",""); start_part($0); print "*Part "$0; next; }
+/^\*Instance,/ { sub(".*name=",""); sub(", .*",""); start_instance($0); print "*Instance "$0; next; }
 
 # skip all other comment lines
 /^\*\*/ { next; }
 
 # start a node block: record the number of the first node
-/^\*[Nn]ode/ { 
+/^\*Node/ { 
     start_mode(1)
     getline; gsub(",",""); header = "# nodes "outfile " offset "$1
 }
 
 # start an element block
-/^\*[Ee]lement,/ { 
+/^\*Element,/ { 
     start_mode(2) 
     getline; header = "# elems "outfile " nplex "NF-1
 
 }
 
 # start an elset block
-/^\*[Ee]lset, elset=.*, generate/ { 
+/^\*Elset, elset=.*, generate/ { 
     start_mode(3)
     sub(".*elset=","");sub(",.*",""); setname=$0;
     getline;
+}
+
+# skip a step block
+/^\*Step/ { 
+    print "*Step"
+    skip_block("^\*End Step")
 }
 
 # skip other commands
@@ -95,6 +102,17 @@ END { end_mode(); fflush("") }
 
 ######## functions #####################
 
+# skip input until endcmd
+function skip_block(endcmd) {
+    print "  Skipping until " endcmd
+    do {
+	getline;
+	done = match($0,endcmd);
+    } while (done == 0);
+    print 
+    next;
+}
+
 # start a new part with name pname
 function start_part(pname) {
     print "Starting part "pname
@@ -104,6 +122,12 @@ function start_part(pname) {
     nodesblk = -1
     elemsblk = -1
     esetsblk = -1
+}
+
+# start a new instance with name pname
+function start_instance(pname) {
+    print "Starting instance "pname
+    start_part(pname)
 }
 
 
