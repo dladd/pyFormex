@@ -1539,7 +1539,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.connect(seq,eltype=eltype)
 
 
-    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclude=None):
+    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclnod=[], exclelem=[]):
         """Return a smoothed mesh.
         
         Smoothing algorithm based on lowpass filters.
@@ -1551,9 +1551,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         (up to a point where the mesh expands),
         but will result in less smoothing per iteration.
         
-        Exclude may contain a list of node indices to exclude from the smoothing.
-        If exclude is 'border', all nodes on the border of the mesh will
-        be unchanged, and the smoothing will only act inside.
+        - `exclnod`: It contains a list of node indices to exclude from the smoothing.
+           If exclnod is 'border', all nodes on the border of the mesh will
+           be unchanged, and the smoothing will only act inside.
+           If exclnod is 'inner', only the nodes on the border of the mesh will
+           take part to the smoothing.
+        
+        - `exclelem`: It contains a list of elements to exclude from the smoothing.
+           The nodes of these elements will not take part to the smoothing.
+           If exclnod and exclelem are used at the same time the union of them
+           will be exluded from smoothing.
         """
         if iterations < 1: 
             return self
@@ -1564,10 +1571,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         mu = -lamb/(1-k*lamb)
         adj = self.getEdges().adjacency(kind='n')
         incl = resize(True, self.ncoords())
-        if exclude == 'border':
-            exclude = unique(self.getBorder())
-        if exclude is not None:
-            incl[exclude] = False
+        
+        if exclnod == 'border':
+            exclnod = unique(self.getBorder())
+        if exclnod == 'inner':
+            exclnod = delete(arange(self.ncoords()), unique(self.getBorder()))
+        exclelemnod = unique(self.elems[exclelem])
+        exclude=array(unique(concatenate([exclnod, exclelemnod])), dtype = int)
+
+        incl[exclude] = False
+        
         if edg:
             externals = resize(False,self.ncoords())
             expoints = unique(self.getFreeEntities())
