@@ -20,9 +20,9 @@ def selectSurfaceFile(fn):
     fn = askFilename(fn,filter=utils.fileDescription('surface'))
     return fn
 
-def create():
-    """Create a closed surface and a set of points."""
 
+def getData():
+    """Ask input data from the user."""
     res = askItems(
         [ _G('Surface', [
             _I('surface','file',choices=['file','sphere']),
@@ -42,11 +42,14 @@ def create():
             ( 'surface','sphere','grade', ),
             ],
         )
+    if res:
+        globals().update(res)
 
-    if not res:
-        return
+    return res
 
-    globals().update(res)
+
+def create():
+    """Create a closed surface and a set of points."""
     nx,ny,nz = npts
 
     # Create surface
@@ -62,68 +65,40 @@ def create():
 
     if not S.isClosedManifold():
         warning("This is not a closed manifold surface. Try another.")
-        return
+        return None,None
     
     # Create points
 
     if points == 'grid':
         P = simple.regularGrid([-1.,-1.,-1.],[1., 1., 1.],[nx-1,ny-1,nz-1])
     else:
-        P = Coords(random.rand(nx*ny*nz*3))
+        P = random.rand(nx*ny*nz*3)
 
     sc = array(scale)
-    print scale
     siz = array(S.sizes())
-    print siz
-    print sc*siz
-    P = Formex(P.reshape(-1, 3)).resized(sc*siz).centered()
+    tr = array(trl)
+    P = Formex(P.reshape(-1, 3)).resized(sc*siz).centered().translate(tr*siz)
 
     draw(P, marksize=1, color='black')
+    zoomAll()
+
+    return S,P
+
     
-    #P = Coords(P).translate([1.5,0.5,0.5])
-    
-    ## print "Testing %s points against %s faces" % (P.shape[0],F.nelems())
-    ## clear()
-    ## draw(F, color='red')
-    ## bb = bboxIntersection(F,P)
-    ## drawBbox(bb,color=array(red),linewidth=2)
-    ## zoomAll()
+def testInside(S,P):
+    """Test which of the points P are inside surface S"""
 
-    ## t = timer.Timer()
-    ## ind = F.inside(P)
-    ## print "gtsinside: found %s points in %s seconds" % (len(ind),t.seconds())
+    print "Testing %s points against %s faces" % (P.nelems(),S.nelems())
 
-    ## if len(ind) > 0:
-    ##     draw(P[ind],color=green,marksize=5,ontop=True,nolight=True,bbox=None)
+    bb = bboxIntersection(S,P)
+    drawBbox(bb,color=array(red),linewidth=2)
 
+    t = timer.Timer()
+    ind = S.inside(P)
+    print "gtsinside: %s points / %s faces: found %s inside points in %s seconds" % (P.nelems(),S.nelems(),len(ind),t.seconds())
 
-def doitgts(S,n,m,rand=False):
-    clear()
-
-    ## if rand:
-    ##     P = Coords(random.rand(n*n*n*3))
-    ## else:
-    ##     P = simple.regularGrid([-1.,-1.,-1.],[1., 1., 1.],[n-1,n-1,n-1])
-    ##     P = Coords(P).translate([1.5,0.5,0.5])
-
-    ## P = P.reshape(-1, 3)
-    ## F = S.refine(m)
-    
-    ## print "Testing %s points against %s faces" % (P.shape[0],F.nelems())
-    ## clear()
-    ## draw(F, color='red')
-    ## draw(P, marksize=1, color='black')
-    ## bb = bboxIntersection(F,P)
-    ## drawBbox(bb,color=array(red),linewidth=2)
-    ## zoomAll()
-
-    ## t = timer.Timer()
-    ## ind = F.inside(P)
-    ## print "gtsinside: found %s points in %s seconds" % (len(ind),t.seconds())
-
-    ## if len(ind) > 0:
-    ##     draw(P[ind],color=green,marksize=5,ontop=True,nolight=True,bbox=None)
-
+    if len(ind) > 0:
+        draw(P[ind],color=green,marksize=3,ontop=True,nolight=True,bbox='last')
 
 
 def run():
@@ -133,27 +108,10 @@ def run():
 
     chdir(__file__)
 
-    create()
-
-    ## doitgts(S,30,10000)
-    ## return
-    
-    ## for m in [ 2000, 5000, 10000, 20000 ]:
-
-    ##     for n in [  20, 30, 40 ]:
-
-    ##         doitgts(S,n,m)
-
-    ## return
-
-    ## res = askItems([_I('size',20,min=1,max=100,text='Size of point grid'),
-    ##                 _I('refine',0,text='Number of surface refinements'),
-    ##                 ])
-    ## if not res:
-    ##     exit()
-    ## n = res['size']
-    ## m = res['refine']
-    ## doit(n,m)
+    if getData():
+        S,P = create()
+        if S:
+            testInside(S,P)
     
 
 if __name__ == 'draw':

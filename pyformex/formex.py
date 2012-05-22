@@ -1845,25 +1845,32 @@ maxprop  = %s
 
         .. warning:: This method currently only works for plexitude 2 or 3!
         
-        - `p`,`n`: a point and normal vector defining the cutting plane.
-          In case of plexitude 3, p and n can be sequences of points and vector,
-          allowing to cut with multiple planes.
-          Both p and n have shape (3) or (npoints,3).
-
-        The default return value is a tuple of two Formices of the same
-        plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
-        Formex at the positive side of the plane (as defined by the normal
-        vector), and Fneg is the part at the negative side.
-        Elements of the input Formex that are lying completely on one side
-        of the plane will return unaltered. Elements that are crossing the
-        plane will be cut and split up into multiple parts.
+        Parameters:
         
-        When side = '+' or '-' (or 'positive'or 'negative'), only one
-        of the sides is returned.
+        - `p`, `n`: a point and normal vector defining the cutting plane.
+          In case of a Formex of plexitude 2, both `p` and `n` have shape (3,).
+          In case of plexitude 3, `p` and/or `n` can be sequences of
+          points, resp. vectors, allowing cutting with multiple planes. 
+          Both `p` and `n` can have shape (3) or (nplanes,3).
+        - `side`: either an empty string, or one of '+' or '-'. In the latter
+          cases, only the part at the positive, resp. negative side of the
+          plane (as defined by its normal) is returned. The (default) empty
+          string makes both parts being returned as a tuple (pos,neg).
+        
 
-        The other arguments (atol,newprops) are currently specific for the
-        plexitude. See the cut2AtPlane and cut3AtPlane, which hold the
-        actual implementation of this method.
+        Returns:
+        
+          The default return value is a tuple of two Formices of the same
+          plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
+          Formex at the positive side of the plane (as defined by the normal
+          vector), and Fneg is the part at the negative side.
+          Elements of the input Formex that are lying completely on one side
+          of the plane will return unaltered. Elements that are crossing the
+          plane will be cut and split up into multiple parts.
+        
+          When side = '+' or '-' (or 'positive'or 'negative'), only one
+          of the sides is returned.
+
         """
         if atol is None:
             atol = 1.e-5*self.dsize()

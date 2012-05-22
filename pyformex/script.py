@@ -727,7 +727,9 @@ def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
     The format is portable over different pyFormex versions and 
     even to other software.
 
-    - `filename`: the name of the file to be written
+    - `filename`: the name of the file to be written. If it ends with '.gz'
+      the file will be compressed with gzip. If a file with the given name
+      minus the trailing '.gz' exists, it will be destroyed.
     - `objects`: a list or a dictionary. If it is a dictionary,
       the objects will be saved with the key values as there names.
       Objects that can not be exported to a Geometry File will be
@@ -739,11 +741,16 @@ def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
 
     Returns the number of objects written to the file.
     """
+    gzip = filename.endswith('.gz')
+    if gzip:
+        filename = filename[:-3]
     f = geomfile.GeometryFile(filename,mode='w',sep=sep)
     if shortlines:
         f.fmt = {'i':'%i ','f':'%f '}
     f.write(objects)
     f.close()
+    if gzip:
+        utils.gzip(filename)
     return len(objects)
     
 
@@ -755,14 +762,22 @@ def readGeomFile(filename):
     The format is portable over different pyFormex versions and 
     even to other software.
 
-    - `filename`: the name of an exisiting pyFormex Geometry File.
+    - `filename`: the name of an existing pyFormex Geometry File. If the
+      filename ends on '.gz', it is considered to be a gzipped file and
+      will be uncompressed transparently during the reading.
     
     Returns a dictionary with the geometric objects read from the file.
     If object names were stored in the file, they will be used as the keys.
     Else, default names will be provided.
     """
+    gzip = filename.endswith('.gz')
+    if gzip:
+        filename = utils.gunzip(filename,unzipped='',remove=False)
     f = geomfile.GeometryFile(filename,mode='r')
-    return f.read()
+    objects = f.read()
+    if gzip:
+        utils.removeFile(filename)
+    return objects
     
 
 #### End

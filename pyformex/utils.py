@@ -327,6 +327,12 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
     return filelist
 
 
+def removeFile(filename):
+    """Remove a file, ignoring error when it does not exist."""
+    if os.path.exists(filename):
+        os.remove(filename)
+
+
 def removeTree(path,top=True):
     """Remove all files below path. If top==True, also path is removed."""
     for root, dirs, files in os.walk(path, topdown=False):
@@ -475,7 +481,7 @@ def showDoc(obj=None,rst=True):
     If `rst=False
     """
 
-###################### dos to unix conversion ###################
+###################### file conversion ###################
 
 def dos2unix(infile,outfile=None):
     if outfile is None:
@@ -490,6 +496,72 @@ def unix2dos(infile,outfile=None):
     else:
         cmd = "sed -i 's|$|\\r|' %s > %s" % (infile,outfile)
     return runCommand(cmd)
+
+
+def gzip(filename,gzipped=None,remove=True,level=5):
+    """Compress a file in gzip format.
+
+    Parameters:
+
+    - `filename`: input file name
+    - `gzipped`: output file name. If not specified, it will be set to
+      the input file name + '.gz'. An existing output file will be
+      overwritten.
+    - `remove`: if True (default), the input file is removed after
+      succesful compression
+    - `level`: an integer from 1..9: gzip compression level. Higher values
+      result in smaller files, but require longer compression times. The
+      default of 5 gives already a fairly good compression ratio.
+
+    Returns the name of the compressed file.
+    """
+    import gzip
+    if gzipped is None:
+        gzipped = filename+'.gz'
+    fil = open(filename,'rb')
+    gz = gzip.open(gzipped,'wb',compresslevel=level)
+    gz.write(fil.read())
+    fil.close()
+    gz.close()
+    if remove:
+        removeFile(filename)
+    return gzipped
+
+
+def gunzip(filename,unzipped=None,remove=True):
+    """Uncompress a file in gzip format.
+
+    Parameters:
+
+    - `filename`: compressed input file name (usually ending in '.gz')
+    - `unzipped`: output file name. If not specified and `filename` ends with
+      '.gz', it will be set to the `filename` with the '.gz' removed.
+      If an empty string is specified or it is not specified and the filename
+      does not end in '.gz', the name of a temporary file is generated. Since
+      you will normally want to read something from the decompressed file, this
+      temporary file is not deleted after closing. It is up to the user to
+      delete it (using the returned file name) when he is ready with it. 
+    - `remove`: if True (default), the input file is removed after
+      succesful decompression. You probably want to set this to False when
+      decompressing to a temporary file.
+
+    Returns the name of the decompressed file.
+    """
+    import gzip
+    gz = gzip.open(filename,'rb')
+    if unzipped is None and filename.endswith('.gz'):
+        unzipped = filename[:-3]
+    if unzipped:
+        fil = open(unzipped,'wb')
+    else:
+        fil = tempFile(prefix='gunzip-',delete=False)
+        unzipped = fil.name
+    fil.write(gz.read())
+    gz.close()
+    fil.close()
+    if remove:
+        removeFile(filename)
+    return unzipped
 
 
 ##########################################################################
@@ -576,8 +648,17 @@ def fileTypeFromExt(fname):
     ''
     >>> fileTypeFromExt('pyformex')
     ''
+    >>> fileTypeFromExt('pyformex.pgf')
+    >>> fileTypeFromExt('pyformex.pgf.gz')
+    >>> fileTypeFromExt('pyformex.gz')
     """
-    return fileType(os.path.splitext(fname)[1])
+    name,ext = os.path.splitext(fname)
+    ext = fileType(ext)
+    if ext == 'gz':
+        ext1 = fileTypeFromExt(name)
+        if ext1:
+            ext = '.'.join([ext1,ext])
+    return ext
 
 
 def findIcon(name):
