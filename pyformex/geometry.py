@@ -234,12 +234,19 @@ class Geometry(object):
 
 
     def resized(self,size=1.,tol=1.e-5):
-        """Return a scaled copy of the Formex with given size in all directions.
+        """Return a copy of the Geometry scaled to the given size.
 
-        If a direction has zero size, it is not rescaled.
+        size can be a single value or a list of three values for the
+        three coordinate directions. If it is a single value, all directions
+        are scaled to the same size.
+        Directions for which the geometry has a size smaller than tol times
+        the maximum size are not rescaled.
         """
+        from numpy import resize
         s = self.sizes()
-        s[s<tol*s.max()] = size
+        size = Coords(resize(size,(3,)))
+        ignore = s<tol*s.max()
+        s[ignore] = size[ignore]
         return self.scale(size/s)
 
 
