@@ -1574,6 +1574,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         
         if exclnod == 'border':
             exclnod = unique(self.getBorder())
+            k = 0. #k can be zero because it cannot shrink
+            edg = False #there is no border edge
         if exclnod == 'inner':
             exclnod = delete(arange(self.ncoords()), unique(self.getBorder()))
         exclelemnod = unique(self.elems[exclelem])
