@@ -1550,6 +1550,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Higher values of k can reduce shrinkage even more
         (up to a point where the mesh expands),
         but will result in less smoothing per iteration.
+        
+        Exclude may contain a list of node indices to exclude from the smoothing.
+        If exclude is 'border', all nodes on the border of the mesh will
+        be unchanged, and the smoothing will only act inside.
         """
         if iterations < 1: 
             return self
@@ -1560,6 +1564,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         mu = -lamb/(1-k*lamb)
         adj = self.getEdges().adjacency(kind='n')
         incl = resize(True, self.ncoords())
+        if exclude == 'border':
+            exclude = unique(self.getBorder())
         if exclude is not None:
             incl[exclude] = False
         if edg:
