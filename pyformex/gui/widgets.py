@@ -2935,7 +2935,6 @@ class CoordsBox(QtGui.QWidget):
             self.values.append(val)
         self.setLayout(layout)
 
-
     def getValues(self):
         """Return the current x,y,z values as a list of floats."""
         return [ float(val.text()) for val in self.values ] 
@@ -2962,10 +2961,10 @@ class ImageView(QtGui.QLabel):
         if maxheight:
             self.setMaximumHeight(maxheight)
         if image is not None:
-            self.showImage(image)
+            self.showImage(image,maxheight=maxheight)
             
 
-    def showImage(self,image):
+    def showImage(self,image,maxheight=None):
         """Show an image in the viewer.
 
         image: either a filename or an existing QImage instance. If a filename,
@@ -2980,6 +2979,8 @@ class ImageView(QtGui.QLabel):
             image = QtGui.QImage(filename)
             if image.isNull():
                 raise ValueError,"Cannot load image file %s" % filename
+            if maxheight:
+                image = image.scaledToHeight(maxheight)
         #print("Size %sx%s" % (image.width(),image.height()))
         self.setPixmap(QtGui.QPixmap.fromImage(image))
         self.filename = filename
