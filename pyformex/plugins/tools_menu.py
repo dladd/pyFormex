@@ -481,13 +481,13 @@ def sendMail():
 
 ###################### images #############################
         
-def selectImage():
+def selectImage(extra_items=[]):
     """Open a dialog to read an image file.
 
     """
     global image
     from gui.widgets import ImageView
-    from gui.imagearray import QImage
+    from gui.imagearray import resizeImage
     
     # some default values
     filename = getcfg('datadir')+'/butterfly.png'
@@ -498,18 +498,18 @@ def selectImage():
     # construct the image previewer widget
     viewer = ImageView(filename,maxheight=h)
 
-    def selectImage(fn):
+    def select_image(fn):
         """Helper function to load and preview image"""
         fn = askImageFile(fn)
         if fn:
             viewer.showImage(fn)
-            loadImage(fn)
+            load_image(fn)
         return fn
 
-    def loadImage(fn):
+    def load_image(fn):
         """Helper function to load the image and set its size in the dialog"""
         global image
-        image = QImage(fn)
+        image = resizeImage(fn)
         if image.isNull():
             warning("Could not load image '%s'" % fn)
             return None
@@ -529,34 +529,34 @@ def selectImage():
         return w,h
     
     res = askItems([
-        _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+        _I('filename',filename,text='Image file',itemtype='button',func=select_image),
         _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
         _I('nx',w,text='width'),
         _I('ny',h,text='height'),
-        ])
+        ] + extra_items)
 
     if not res:
         return None
 
     if image is None:
         print "Loading image"
-        loadImage(filename)
+        load_image(filename)
 
-    
+    image = resizeImage(image,res['nx'],res['ny'])
+    return image,res
 
-    return image
 
 def showImage():
     clear()
-    im = selectImage()
+    im,res = selectImage()
     if im:
         drawImage(im)
 
 def showImage3D():
     clear()
-    im = selectImage()
+    im,res = selectImage([_I('pixel cell',choices=['dot','quad'])])
     if im:
-        drawImage3D(im)
+        drawImage3D(im,pixel=res['pixel cell'])
 
 
 ################### menu #################

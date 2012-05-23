@@ -981,7 +981,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     elif pixel == 'quad':
         F = Formex('4:0123')
     else:
-        F = Formex(origin())
+        F = Formex('1:0')
     F = F.replic2(nx,ny).centered()
 
     # Draw the grid using the image colors
