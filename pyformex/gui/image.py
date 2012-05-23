@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
@@ -466,33 +465,26 @@ def autoSaveOn():
     Use this function instead of directly accessing the autosave variable.
     """
     return multisave and multisave[-2]
+    
 
-
-def createMovie(encoder='ffmpeg'):
+def createMovie(files,encoder='ffmpeg',**kargs):
     """Create a movie from a saved sequence of images.
 
-    encoder is one of: 'ffmpeg, mencoder, convert'
     """
-    if not multisave:
-        pf.warning('You need to start multisave mode first!')
-        return
-
-    names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
-    glob = names.glob()
-    ## if glob.split('.')[-1] != 'jpg':
-    ##     pf.warning("Currently you need to save in 'jpg' format to create movies")
-    ##     return
+    print "Encoding %s" % files
 
     if encoder == 'convert':
-        cmd = "convert -delay 1 -colors 256 %s output.gif" % names.glob()
+        outfile = 'output.gif'
+        cmd = "convert -delay %s -colors %s %s %s" % (kargs['delay'],kargs['colors'],files,outfile)
     elif encoder == 'mencoder':
-        cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
-    elif encoder == 'mencoder1':
-        cmd = "mencoder \"mf://%s\" -mf fps=10 -o output1.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800" % names.glob()
+        outfile = 'output.avi'
+        cmd = "mencoder \"mf://%s\" -o %s -mf fps=%s -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=%s" % (files,outfile,kargs['fps'],kargs['vbirate'])
     else:
-        cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % names.glob()
+        outfile = 'output.mp4'
+        cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % files
     pf.debug(cmd,pf.DEBUG.IMAGE)
     utils.runCommand(cmd)
+    print "Created file %s" % outfile
 
 
 def saveMovie(filename,format,windowname=None):

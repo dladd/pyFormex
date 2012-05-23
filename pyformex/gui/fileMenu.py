@@ -30,7 +30,7 @@ import widgets
 import utils
 import project
 import draw
-from draw import _I
+from draw import _I,_G
 import image
 import plugins
 
@@ -501,6 +501,42 @@ def listAll():
     print pf.PF
 
 
+
+def createMovieInteractive():
+    """Create a movie from a saved sequence of images.
+
+    """
+    if not image.multisave:
+        pf.warning('You need to start multisave mode first!')
+        return
+
+    names = image.multisave[0]
+    glob = names.glob()
+
+    res = draw.askItems(
+        [ _I('files',glob),
+          _I('encoder',choices=['mencoder','convert','ffmpeg']),
+          _G('Mencoder',[
+              _I('fps',10),
+              _I('vbirate',800),
+              ]),
+          _G('Convert',[
+              _I('delay',1),
+              _I('colors',256),
+              ]),
+          ],
+        enablers = [
+            ('encoder','mencoder','Mencoder'),
+            ('encoder','convert','Convert'),
+          ])
+    if not res:
+        return
+
+    pf.GUI.setBusy()
+    image.createMovie(**res)
+    pf.GUI.setBusy(False)
+    
+
 MenuData = [
     ## (_('&Open project'),openProject),
     (_('&Start new project'),createProject),
@@ -531,7 +567,7 @@ MenuData = [
     (_('&Save Image'),saveImage),
     (_('Start &MultiSave'),startMultiSave),
     (_('Save &Next Image'),image.saveNext),
-    (_('Create &Movie'),image.createMovie),
+    (_('Create &Movie'),createMovieInteractive),
     (_('&Stop MultiSave'),stopMultiSave),
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
