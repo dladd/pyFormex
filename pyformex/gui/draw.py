@@ -970,7 +970,7 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
     if nx != w or ny != h:
         image = image.scaled(nx,ny)
     # Create the colors
-    color,colortable = image2glcolor(image),None
+    color,colortable = image2glcolor(image)
 
     # Create a 2D grid of nx*ny elements
     # !! THIS CAN PROBABLY BE DONE FASTER
