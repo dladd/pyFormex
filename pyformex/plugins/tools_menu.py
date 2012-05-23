@@ -496,7 +496,7 @@ def selectImage():
     diag = None # the image dialog
 
     # construct the image previewer widget
-    viewer = ImageView(filename)
+    viewer = ImageView(filename,maxheight=h)
 
     def selectImage(fn):
         """Helper function to load and preview image"""
