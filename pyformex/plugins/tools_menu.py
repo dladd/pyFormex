@@ -542,6 +542,8 @@ def selectImage():
         print "Loading image"
         loadImage(filename)
 
+    
+
     return image
 
 def showImage():
@@ -549,6 +551,12 @@ def showImage():
     im = selectImage()
     if im:
         drawImage(im)
+
+def showImage3D():
+    clear()
+    im = selectImage()
+    if im:
+        drawImage3D(im)
 
 
 ################### menu #################
@@ -591,7 +599,8 @@ def create_menu():
         ("&Draw Selection",planes.draw),
         ("&Forget Selection",planes.forget),
         ("---",None),
-        ("Show an &Image file as Formex",showImage),
+        ("Show an &Image file on the canvas",showImage),
+        ("Show an &Image file as Formex",showImage3D),
         ("---",None),
         ('&Pick',[
             ("&Actors",pick_actors),

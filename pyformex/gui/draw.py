@@ -941,7 +941,7 @@ def drawAxes(CS,*args,**kargs):
     return A
         
 
-def drawImage(image,nx=-1,ny=-1,pixel='dot'):
+def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     """Draw an image as a colored Formex
 
     Draws a raster image as a colored Formex. While there are other and
@@ -951,25 +951,27 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
 
     Parameters:
 
-    - `image`: a QImage holding a raster image. An image can be loaded from
-      most standard image files using the :func:`loadImage` function
-    - `nx`,`ny`: resolution you want to use for the display
+    - `image`: a QImage or any data that can be converted to a QImage,
+      e.g. the name of a raster image file. 
+     - `nx`,`ny`: width and height (in cells) of the Formex grid.
+      If the supplied image has a different size, it will be rescaled.
+      Values <= 0 will be replaced with the corresponding actual size of
+      the image.
     - `pixel`: the Formex representing a single pixel. It should be either
       a single element Formex, or one of the strings 'dot' or 'quad'. If 'dot'
       a single point will be used, if 'quad' a unit square. The difference
       will be important when zooming in. The default is 'dot'. 
 
+    Returns the drawn Actor.
+
+    See also :func:`drawImage`.
     """
     pf.GUI.setBusy()
-    from gui.imagearray import image2glcolor
-    w,h = image.width(),image.height()
-    if nx <= 0:
-        nx = w
-    if ny <= 0:
-        ny = h
-    if nx != w or ny != h:
-        image = image.scaled(nx,ny)
+    from gui.imagearray import image2glcolor,resizeImage
+    
     # Create the colors
+    image = resizeImage(image,nx,ny)
+    nx,ny = image.width(),image.height()
     color,colortable = image2glcolor(image)
 
     # Create a 2D grid of nx*ny elements
@@ -986,6 +988,47 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
     FA = draw(F,color=color,colormap=colortable,nolight=True)
     pf.GUI.setBusy(False)
     return FA
+    
+
+def drawImage(image,w=0,h=0,x=-1,y=-1,color=white,ontop=False):
+    """Draws an image as a viewport decoration.
+
+    Parameters:
+
+    - `image`: a QImage or any data that can be converted to a QImage,
+      e.g. the name of a raster image file. See also the :func:`loadImage`
+      function.
+    - `w`,`h`: width and height (in pixels) of the displayed image.
+      If the supplied image has a different size, it will be rescaled.
+      A value <= 0 will be replaced with the corresponding actual size of
+      the image.
+    - `x`,`y`: position of the lower left corner of the image. If negative,
+      the image will be centered on the current viewport.
+    - `color`: the color to mix in (AND) with the image. The default (white)
+      will make all pixels appear as in the image.
+    - `ontop`: determines whether the image will appear as a background
+      (default) or at the front of the 3D scene (as on the camera glass).
+
+    Returns the Decoration drawn.
+
+    Note that the Decoration has a fixed size (and position) on the canvas
+    and will not scale when the viewport size is changed.
+    The :func:`bgcolor` function can be used to draw an image that completely
+    fills the background. 
+    """
+    utils.warn("warn_drawImage_changed")
+    from gui.imagearray import image2numpy
+    from gui.decors import Rectangle
+    
+    image = image2numpy(image,resize=(w,h),indexed=False)
+    w,h = image.shape[:2]
+    if x < 0:
+        x = (pf.canvas.width() - w) // 2
+    if y < 0:
+        y = (pf.canvas.height() - h) // 2
+    R = Rectangle(x,y,x+w,y+h,color=color,texture=image,ontop=ontop)
+    decorate(R)
+    return R
 
 
 def drawViewportAxes3D(pos,color=None):
@@ -1058,6 +1101,8 @@ def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,zoom=None)
     TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,zoom=zoom)
     decorate(TA)
     return TA
+
+
 
 def annotate(annot):
     """Draw an annotation."""

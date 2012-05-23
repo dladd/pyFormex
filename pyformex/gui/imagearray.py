@@ -35,26 +35,56 @@ from PyQt4.QtGui import QImage, QColor
 import numpy as np
 import utils
 
-def image2numpy(image,order='RGBA',flip=True,indexed=None,expand=None):
+
+def resizeImage(image,w=0,h=0):
+    """Load and optionally resize an image.
+
+    Parameters:
+
+    - `image`: a QImage, or any data that can be converted to a QImage,
+      e.g. the name of a raster image file.
+    - `w`, `h`: requested size in pixels of the image.
+       A value <= 0 will be replaced with the corresponding actual size of
+      the image.
+
+   Returns a QImage with the requested size.
+   """     
+    if not isinstance(image,QImage):
+        image = QImage(image)
+
+    W,H = image.width(),image.height()
+    if w <= 0:
+        w = W
+    if h <= 0:
+        h = H
+    if w != W or h != H:
+        image = image.scaled(w,h)
+
+    return image
+
+
+def image2numpy(image,resize=(0,0),order='RGBA',flip=True,indexed=None,expand=None):
     """Transform an image to a Numpy array.
 
     Parameters:
 
-    - image: a QImage or any data that can be converted to a QImage,
+    - `image`: a QImage or any data that can be converted to a QImage,
       e.g. the name of an image file, in any of the formats supported by Qt.
       The image can be a full color image or an indexed type. Only 32bit
-      and 8bit images are currently supported. 
-    - order: string with a permutation of the characters 'RGBA', defining
+      and 8bit images are currently supported.
+    - `resize`: a tuple of two integers (width,height). Positive value will
+      force the image to be resized to this value.
+    - `order`: string with a permutation of the characters 'RGBA', defining
       the order in which the colors are returned. Default is RGBA, so that
       result[...,0] gives the red component. Note however that QImage stores
       in ARGB order. You may also specify a subset of the 'RGBA' characters,
       in which case you will only get some of the color components. An often
       used value is 'RGB' to get the colors without the alpha value.
-    - flip: boolean: if True, the image scanlines are flipped upside down.
+    - `flip`: boolean: if True, the image scanlines are flipped upside down.
       This is practical because image files are usually stored in top down
       order, while OpenGL uses an upwards positive direction, requiring a
       flip to show the image upright.
-    - indexed: True, False or None.
+    - `indexed`: True, False or None.
 
       - If True, the result will be an indexed image where each pixel color
         is an index into a color table. Non-indexed image data will be
@@ -68,20 +98,20 @@ def image2numpy(image,order='RGBA',flip=True,indexed=None,expand=None):
         colortable will be returned, but the latter will be None for
         non-indexed images.
 
-    - expand: deprecated, retained for compatibility
+    - `expand`: deprecated, retained for compatibility
 
     Returns:
 
-    - if indexed is False: an int8 array with shape (height,width,4), holding
+    - if `indexed` is False: an int8 array with shape (height,width,4), holding
       the 4 components of the color of each pixel. Order of the components
       is as specified by the `order` argument. Indexed image formats will
       be expanded to a full color array.
 
-    - if indexed is True: a tuple (colors,colortable) where colors is an
+    - if `indexed` is True: a tuple (colors,colortable) where colors is an
       (height,width) shaped int array of indices into the colortable,
       which is an int8 array with shape (ncolors,4).
       
-    - if indexed is None (default), a tuple (colors,colortable) is returned,
+    - if `indexed` is None (default), a tuple (colors,colortable) is returned,
       the type of which depend on the original image format:
 
       - for indexed formats, colors is an int (height,width) array of indices
@@ -94,16 +124,17 @@ def image2numpy(image,order='RGBA',flip=True,indexed=None,expand=None):
         utils.warn("depr_image2numpy_arg")
         indexed = not expand
         
-    if not isinstance(image,QImage):
-        image = QImage(image)
+    
+    image = resizeImage(image,*resize)
 
     if indexed:
         image = image.convertToFormat(QImage.Format_Indexed8)
         
+    h,w = image.height(),image.width()
+    
     if image.format() in (QImage.Format_ARGB32_Premultiplied,
                           QImage.Format_ARGB32,
                           QImage.Format_RGB32):
-        h,w = image.height(),image.width()
         buf = image.bits().asstring(image.numBytes())
         ar = np.frombuffer(buf,dtype='ubyte',count=image.numBytes()).reshape(h,w,4)
         idx = [ 'BGRA'.index(c) for c in order ]
@@ -112,21 +143,17 @@ def image2numpy(image,order='RGBA',flip=True,indexed=None,expand=None):
 
     elif image.format() == QImage.Format_Indexed8:
         ct = np.array(image.colorTable(),dtype=np.uint32)
-        print("IMAGE FORMAT is INDEXED with %s colors" % ct.shape[0])
+        #print("IMAGE FORMAT is INDEXED with %s colors" % ct.shape[0])
         ct = ct.view(np.uint8).reshape(-1,4)
         idx = [ 'BGRA'.index(c) for c in order ]
         ct = ct[...,idx]
-        #print ct
-        #print ct.shape
-        h,w = image.height(),image.width()
-        #print("Image size = %s,%s" % (w,h))
         buf = image.bits().asstring(image.numBytes())
         ar = np.frombuffer(buf,dtype=np.uint8)
         if ar.size != w*h:
             pf.warning("Size of image data (%s) does not match the reported dimensions: %s x %s = %s" % (ar.size,w,h,w*h))
             #ar = ar[:w*h]
         ar = ar.reshape(h,-1)
-        print "IMAGE SHAPE IS %s" % str(ar.shape)
+        #print "IMAGE SHAPE IS %s" % str(ar.shape)
         
     else:
         raise ValueError("image2numpy only supports 32bit and 8bit images")
@@ -195,17 +222,24 @@ def rgb2qimage(rgb):
 
 
 
-def image2glcolor(im):
+def image2glcolor(image,resize=(0,0)):
     """Convert a bitmap image to corresponding OpenGL colors.
 
-    im is a QImage or any data from which a QImage can be initialized.
-    The image RGB colors are converted to OpenGL colors.
-    The return value is a (w,h,3) shaped array of values in the range
-    0.0 to 1.0.
+    Parameters:
+
+    - `image`: a QImage or any data that can be converted to a QImage,
+      e.g. the name of an image file, in any of the formats supported by Qt.
+      The image can be a full color image or an indexed type. Only 32bit
+      and 8bit images are currently supported.
+    - `resize`: a tuple of two integers (width,height). Positive value will
+      force the image to be resized to this value.
+
+    Returns a (w,h,3) shaped array of float values in the range 0.0 to 1.0,
+    containing the OpenGL colors corresponding to the image RGB colors.
     By default the image is flipped upside-down because the vertical
     OpenGL axis points upwards, while bitmap images are stored downwards.
     """
-    c = image2numpy(im,order='RGB',flip=True,indexed=False)
+    c = image2numpy(image,resize=resize,order='RGB',flip=True,indexed=False)
     c = c.reshape(-1,3)
     c = c / 255.
     return c, None
