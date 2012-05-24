@@ -448,7 +448,7 @@ CurvatureValues = ['Gaussian curvature','Mean curvature','Shape index','Curvedne
 
 def showHistogram(key,val,cumulative):
     y,x = plot2d.createHistogram(val,cumulative=cumulative)
-    return plot2d.showHistogram(x,y,key)
+    plot2d.showHistogram(x,y,key)
 
 
 _stat_dia = None

@@ -27,31 +27,56 @@
 Generic 2D plotting functions for pyFormex.
 """
 
-import pyformex
+import pyformex as pf
 from pyformex import utils
-from numpy import *
+from arraytools import *
 
-def showHistogram(x,y,txt,**options):
-    """Show a histogram of x,y data.
+
+def showStepPlot(x,y,label='',title=None,plot2d_system=None):
+    """Show a step plot of x,y data.
 
     """
-    plot2d_system = pyformex.cfg['gui/plot2d']
+    if title is None:
+        title = 'pyFormex step plot: %s' % label
+    maxlen = min(len(x),len(y))
+    x = x[:maxlen]
+    y = y[:maxlen]
+
+    if plot2d_system is None:
+        plot2d_system = pf.cfg['plot2d']
+        if not utils.hasModule(plot2d_system):
+            pf.error("I can not draw the requested plot. You need to install one of the supported plotting libraries (python-gnuplot or python-matplotlib) and set the appropriate preference in you pyformex configuration file or via the Settings->Settings Dialog menu item.")
+            return
 
     if plot2d_system == 'gnuplot':
-        if not utils.hasModule('gnuplot'):
-            error("You do not have the Python Gnuplot module installed.\nI can not draw the requested plot.")
-            return
-        
         import Gnuplot
-        maxlen = min(len(x),len(y))
-        data = Gnuplot.Data(x[:maxlen],y[:maxlen],title=txt, with_='histeps') 
+        data = Gnuplot.Data(x,y,title=label, with_='steps') 
         g = Gnuplot.Gnuplot(persist=1)
-        g.title('pyFormex histogram: %s' % txt)
+        g.title(title)
         g.plot(data)
         
     elif plot2d_system == 'qwt':
         pass
         #from PyQt4.Qwt5.qplt import *
+
+    elif plot2d_system == 'matplotlib':
+        import matplotlib.pyplot as plt
+        plt.step(x,y,where='post',label=label)
+        plt.title(title)
+        plt.legend()
+        plt.show()
+
+
+def showHistogram(x,y,label,cumulative=False,plot2d_system=None):
+    """Show a histogram of x,y data.
+
+    """
+    if cumulative:
+        fill = y[-1]
+    else:
+        fill = y[0]
+    y = growAxis(y,len(x)-len(y),fill=fill)
+    showStepPlot(x,y,label,plot2d_system=plot2d_system)
 
 
 def createHistogram(data,cumulative=False,**kargs):

@@ -1183,6 +1183,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     
     pf.message = draw.message
     pf.warning = draw.warning
+    pf.error = draw.error
 
     # setup the canvas
     pf.debug("Setting the canvas",pf.DEBUG.GUI)

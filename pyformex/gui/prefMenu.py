@@ -183,6 +183,7 @@ def settings():
                 _I('autoglobals',text='Auto Globals',tooltip='If checked, global Application variables of any Geometry type will automatically be copied to the pyFormex global variable dictionary (PF), and thus become available in the GUI'),
                 _I('showapploaderrors',text='Show Application Load Error Traceback',tooltip='If checked, a traceback of exceptions occurring at Application Load time will be output. If unchecked, such exceptions will be suppressed, and the application will not run.'),
                 _I('loadcurproj',text="Reload last project on startup"),
+                _I('plot2d',text="Prefered 2D plot library",choices=['gnuplot','matplotlib']),
                 ],
              ),
             _T('GUI',[

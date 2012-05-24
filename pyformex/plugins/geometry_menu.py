@@ -145,7 +145,8 @@ def readGeometry(filename,filetype=None):
 
     elif filetype in ['surface','stl','off','gts','neu']:
         surf = TriSurface.read(filename)
-        res = {autoName(TriSurface).next():surf}
+        name = autoName(TriSurface).next()
+        res = {name:surf}
 
     elif filetype in tetgen.filetypes:
         res = tetgen.readTetgen(filename)
@@ -178,6 +179,10 @@ def importGeometry(select=True,draw=True,ftype=None):
         print "Items read: %s" % [ "%s(%s)" % (k,res[k].__class__.__name__) for k in res]
         if select:
             selection.set(res.keys())
+            print selection.names
+            surface_menu.selection.set([n for n in selection.names if isinstance(named(n),TriSurface)])
+            print surface_menu.selection.names
+
             if draw:
                 selection.draw()
                 zoomAll()

@@ -80,6 +80,9 @@ uselib = True
 showapploaderrors = False
 openlastproj = False
 
+# prefered system for creating 2d plots
+plot2d = 'gnuplot'
+
 
 [warnings]
 nice = True
@@ -143,7 +146,6 @@ wheelzoomfactor = 0.25  # enlargement factor for the wheelzoom
 dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'lens' or 'none')
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
-plot2d = 'gnuplot'
 easter_egg = ()
 
 layout = 1

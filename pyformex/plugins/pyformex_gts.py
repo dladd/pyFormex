@@ -34,7 +34,7 @@ import os
 import tempfile
 
 utils.hasExternal('gts')
-utils.hasModule('gts')
+utils.hasModule('pygts')
 #
 # gts commands used:
 #   in Debian package: stl2gts gts2stl gtscheck

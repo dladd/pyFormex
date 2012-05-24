@@ -31,17 +31,27 @@ from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
 
-# versions of detected modules/external commands
+# versions of detected modules
 the_version = {
     'pyformex':pf.__version__,
     'python':sys.version.split()[0],
     }
+# versions of detected external commands
 the_external = {}
 
 # Do not include pyformex or python here: they are predefined
 # and could be erased by the detection 
-known_modules = [ 'numpy','pyopengl','pyqt4','pyqt4gl','calpy',
-                  'gnuplot','gl2ps' ]
+known_modules = {
+    'numpy': (''),
+    'pyopengl': (''),
+    'pyqt4': (''),
+    'pyqt4gl': (''),
+    'calpy': (''),
+    'gnuplot': ("Gnuplot"),
+    'matplotlib': ("matplotlib"),
+    'gl2ps': (''),
+    'pygts': ("You should install 'pygts' (http://pygts.sourceforge.net/)"),
+    }
 
 known_externals = {
     'Python': ('python --version','Python (\\S+)'),
@@ -113,9 +123,20 @@ def hasExternal(name,force=False):
     else:
         return checkExternal(name)
 
+
+def requireModule(name):
+    """Ensure that the named Python module is available.
+
+    If the module is not available, an error is raised.
+    """
+    if not hasModule(name):
+        errmsg = known_modules[name][0]
+        if errmsg:
+            pf.error(errmsg)
+        
     
 
-def checkModule(name=None):
+def checkModule(name=None,severity=2):
     """Check if the named Python module is available, and record its version.
 
     The version string is returned, empty if the module could not be loaded.
@@ -151,17 +172,22 @@ def checkModule(name=None):
         elif name == 'gnuplot':
             import Gnuplot
             version = Gnuplot.__version__
+        elif name == 'matplotlib':
+            import matplotlib
+            version = matplotlib.__version__
         elif name == 'gl2ps':
             import gl2ps
             version = str(gl2ps.GL2PS_VERSION)
     except:
-        pass
+        # unregistered modules
+        return ''
+   
     # make sure version is a string (e.g. gl2ps uses a float!)
     version = str(version)
-    _congratulations(name,version,'module',fatal,quiet=True)
+    _congratulations(name,version,'module',fatal,quiet=False,severity=severity)
+    #if version:
     the_version[name] = version
     return version
-
 
 
 def checkExternal(name=None,command=None,answer=None):
@@ -201,9 +227,23 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    _congratulations(name,version,'program',quiet=True)
+    _congratulations(name,version,'program',quiet=False)
+    #if version:
     the_external[name] = version
     return version
+
+
+def _congratulations(name,version,typ='module',fatal=False,quiet=False,severity=2):
+    """Report a detected module/program."""
+    if version:
+        if not quiet:
+            pf.message("Congratulations! You have %s (%s)" % (name,version))
+    else:
+        if not quiet or fatal:
+            pf.error("ALAS! I could not find %s '%s' on your system" % (typ,name))
+        if fatal:
+            pf.error("Sorry, I'm getting out of here....")
+            sys.exit()
 
 
 def FullVersion():
@@ -237,18 +277,6 @@ def procInfo(title):
     print('module name: %s' %  __name__)
     print('parent process: %s' % os.getppid())
     print('process id: %s' % os.getpid())
-
-
-def _congratulations(name,version,typ='module',fatal=False,quiet=True):
-    """Report a detected module/program."""
-    if version and not quiet:
-        pf.message("Congratulations! You have %s (%s)" % (name,version))
-    if not version:
-        if not quiet or fatal:
-            pf.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
-        if fatal:
-            pf.message("Sorry, I'm out of here....")
-            sys.exit()
 
 
 def prefixFiles(prefix,files):

@@ -74,6 +74,7 @@ def message(s):
     print(s)
 
 warning = message
+error = message
 
 class DebugLevels(object):
     """A class with debug levels.
