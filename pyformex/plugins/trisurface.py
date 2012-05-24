@@ -976,7 +976,7 @@ Quality: %s .. %s
         self.areas.min(),self.areas.mean(),self.areas.max(),
         self.edglen.min(),self.edglen.mean(),self.edglen.max(),
         self.altmin.min(),self.aspect.max(),
-        qual/min(), qual.max(),
+        qual.min(), qual.max(),
         )
         if manifold:
             angles = self.edgeAngles()
