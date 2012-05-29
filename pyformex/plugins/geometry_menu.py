@@ -107,8 +107,8 @@ def set_selection(clas='geometry'):
         if not sel.names:
             message("Nothing selected")
             
-#        selection.set(sel.names)
-#        selection.draw()
+        selection.set(sel.names)
+        selection.draw()
         
 
 ##################### read and write ##########################
@@ -813,7 +813,7 @@ def fuseMesh():
         rtol = res['Relative Tolerance'],
         atol = res['Absolute Tolerance'],
         shift = res['Shift'],
-        ppb = res['Nodes per box'],
+        ppb = res['Points per box'],
         ) for m in meshes ]
     after = [ m.ncoords() for m in meshes ]
     print "Number of points before fusing: %s" % before

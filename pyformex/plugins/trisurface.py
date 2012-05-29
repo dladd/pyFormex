@@ -640,22 +640,35 @@ class TriSurface(Mesh):
         - .off
         - .neu (Gambit Neutral)
         - .smesh (Tetgen)
+
+        Gzipped .stl, .gts and .off files are also supported. Their names
+        should be the normal filename with '.gz' appended. These files are
+        uncompressed on the fly during the reading and the uncompressed
+        versions are deleted after reading.
         """
-        if ftype is None:
-            ftype = os.path.splitext(fn)[1]  # deduce from extension
-        ftype = ftype.strip('.').lower()
+        print fn
+        ftype = utils.fileTypeFromExt(fn)
+        print "FTYPE %s" % ftype
+        gzip = ftype.endswith('.gz')
+        if gzip:
+            fn = utils.gunzip(fn,unzipped='',remove=False)
+            ftype = ftype[:-3]
+            print fn
         if ftype == 'off':
-            return TriSurface(*read_off(fn))
+            surf = TriSurface(*read_off(fn))
         elif ftype == 'gts':
-            return TriSurface(*read_gts(fn))
+            surf = TriSurface(*read_gts(fn))
         elif ftype == 'stl':
-            return TriSurface(*read_stl(fn))
+            surf = TriSurface(*read_stl(fn))
         elif ftype == 'neu':
-            return TriSurface(*read_gambit_neutral(fn))
+            surf = TriSurface(*read_gambit_neutral(fn))
         elif ftype == 'smesh':
-            return TriSurface(*tetgen.readSurface(fn))
+            surf = TriSurface(*tetgen.readSurface(fn))
         else:
             raise "Unknown TriSurface type, cannot read file %s" % fn
+        if gzip:
+            utils.removeFile(fn)
+        return surf
 
 
     def write(self,fname,ftype=None):

@@ -112,7 +112,7 @@ def readSelection(select=True,draw=True,multi=True):
     If select is True (default), this becomes the current selection.
     If select and draw are True (default), the selection is drawn.
     """
-    types = [ 'Surface Files (*.gts *.stl *.off *.neu *.smesh)', 'All Files (*)' ]
+    types = map(utils.fileDescription,['surface','all'])
     fn = askFilename(pf.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:

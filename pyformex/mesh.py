@@ -30,7 +30,8 @@ geometrical models like those used in Finite Element models.
 It also contains some useful functions to create such models.
 """
 
-from formex import *
+from coords import *
+from formex import Formex
 from connectivity import Connectivity
 from elements import elementType,elementName
 from utils import deprecation
@@ -1424,14 +1425,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           Coords item back at the end of the list.
 
         - `div`: Either an integer, or a sequence of float numbers (usually
-          in the range ]0.0..1.0]). With this parameter the generated elements
+          in the range ]0.0..1.0]). This should only
+          be used for degree==1.
+
+          With this parameter the generated elements
           can be further subdivided along the connection direction.
           If an int is given, the connected elements will be divided
           into this number of elements along the connection direction. If a
           sequence of float numbers is given, the numbers specify the relative
           distance along the connection direction where the elements should
           end. If the last value in the sequence is not equal to 1.0, there
-          will be a gap between the consecutive connections.
+          will be a gap between the consecutive connections. 
 
         - `eltype`: the element type of the constructed hypermesh. Normally,
           this is set automatically from the base element type and the
@@ -1443,6 +1447,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         elif isinstance(coordslist,Mesh):
             utils.warn("warn_mesh_connect")
             clist = [ self.coords, coordslist.coords ]
+            if degree == 2:
+                raise ValueError,"This only works for linear connection"
+            ##     xm = 0.5 * (clist[0]+clist[1])
+            ##     clist.insert(1, xm) 
         else:
             raise ValueError,"Invalid coordslist argument"
 
@@ -1457,6 +1465,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             raise ValueError,"Invalid length of coordslist (%s) for degree %s." % (len(clist),degree)
 
         # set divisions
+        ## div = unitDivisor(degree*div,start=1)
         div = unitDivisor(div,start=1)
 
         # For higher order non-lagrangian elements the procedure could be

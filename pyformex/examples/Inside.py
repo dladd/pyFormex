@@ -54,7 +54,7 @@ def create():
 
     # Create surface
     if surface == 'file':
-        S = TriSurface.read(filename)
+        S = TriSurface.read(filename).centered()
     elif surface == 'sphere':
         S = simple.sphere(ndiv=grade)
 
