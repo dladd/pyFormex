@@ -312,7 +312,7 @@ def closeProject(save=None):
     """
     if pf.PF.filename is not None:
         if save is None:
-            save = draw.ack("Save the current project?")
+            save = draw.ack("Save the current project before closing it?")
         pf.message("Closing project %s (save=%s)" % (pf.PF.filename,save))
         if save:
             saveProject()

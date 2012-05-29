@@ -65,6 +65,7 @@ known_externals = {
     'calix': ('calix --version','CALIX-(\S+)'),
     'pyformex-dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
     'pyformex-postabq': ('pyformex-postabq -V','postabq (\S+).*'),
+    'recordmydesktop': ('recordmydesktop --version','recordMyDesktop v(\S+)'),
     }
 
 def checkVersion(name,version,external=False):
@@ -136,14 +137,14 @@ def requireModule(name):
         
     
 
-def checkModule(name=None,severity=2):
+def checkModule(name=None,quiet=False):
     """Check if the named Python module is available, and record its version.
 
     The version string is returned, empty if the module could not be loaded.
     The (name,version) pair is also inserted into the the_version dict.
     """
     if name is None:
-        [ checkModule(n) for n in known_modules ]
+        [ checkModule(n,quiet=True) for n in known_modules ]
         return
     
     version = ''
@@ -184,13 +185,13 @@ def checkModule(name=None,severity=2):
    
     # make sure version is a string (e.g. gl2ps uses a float!)
     version = str(version)
-    _congratulations(name,version,'module',fatal,quiet=False,severity=severity)
+    _congratulations(name,version,'module',fatal,quiet=quiet)
     #if version:
     the_version[name] = version
     return version
 
 
-def checkExternal(name=None,command=None,answer=None):
+def checkExternal(name=None,command=None,answer=None,quiet=False):
     """Check if the named external command is available on the system.
 
     name is the generic command name,
@@ -211,7 +212,7 @@ def checkExternal(name=None,command=None,answer=None):
     value is returned.
     """
     if name is None:
-        [ checkExternal(n) for n in known_externals.keys() ]
+        [ checkExternal(n,quiet=True) for n in known_externals.keys() ]
         return
     
     if command is None or answer is None:
@@ -227,7 +228,7 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    _congratulations(name,version,'program',quiet=False)
+    _congratulations(name,version,'program',quiet=quiet)
     #if version:
     the_external[name] = version
     return version
@@ -255,19 +256,20 @@ def Libraries():
     return ', '.join(acc)
 
 def reportDetected():
+    notfound = '** Not Found **'
     s = "%s\n\n" % FullVersion()
     s += "pyFormex C libraries: %s\n\n" % Libraries()
     s += "Python version: %s\n" % sys.version
     s += "Operating system: %s\n\n" % sys.platform
     s += "Detected Python Modules:\n"
-    for k,v in the_version.items():
+    for k,v in the_version.iteritems():
         if not v:
-            v = 'Not Found'
+            v = notfound
         s += "%s (%s)\n" % ( k,v)
     s += "\nDetected External Programs:\n"
-    for k,v in the_external.items():
-        #if not v:
-        #    v = 'Not Found'
+    for k,v in the_external.iteritems():
+        if not v:
+            v = notfound
         s += "%s (%s)\n" % ( k,v)
     return s
 

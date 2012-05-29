@@ -43,8 +43,12 @@ def run():
     clear()
 
     nx,ny,nz = 5,3,2
+    nx,ny,nz = 1,1,1
     degree = 2           # create quadratic extrusions, change to 1 for linear
+    serendipity = False
+    show3Dbyborder = False
     noise = 0.0          # set nonzero to add some noise to the coordinates 
+    sleep = 2
 
     smoothwire()
     view('iso')
@@ -54,7 +58,7 @@ def run():
     print a.eltype
     draw(a,color='black')
 
-    delay(2)
+    delay(sleep)
 
     b = a.extrude(nx,1.,0,degree=degree)  # point extruded to quadratic line 
     print b.eltype
@@ -62,14 +66,28 @@ def run():
     draw(b,color='red')
 
     c = b.extrude(ny,1.,1,degree=degree)  # line extruded to quadratic surface
+    if serendipity:
+        c = c.convert('quad8')#.compact()
     print c.eltype
     draw(c.coords,wait=False)
     draw(c,color='blue')
 
-    d = c.extrude(nz,-1.,2,degree=degree)  # surface extruded to quadratic volume
+    #c1 = c.trl(2,1.)
+    #d = c.connect(c1,degree=2)
+
+    #d = d.convert('hex20')
+    d = c.extrude(nz,1.,2,degree=degree)  # surface extruded to quadratic volume
+    d = d.compact()
     print d.eltype
+    #d = d.reverse()
+    if show3Dbyborder:
+        d = d.getBorderMesh()
+    print "Shown as %s" % d.eltype
+    clear()
     draw(d.coords,wait=False)
-    draw(d,color='yellow')
+    drawNumbers(d.coords)
+    print d.elems
+    draw(d,color='yellow',bkcolor='black')
 
     if noise:
         e = d.addNoise(noise)

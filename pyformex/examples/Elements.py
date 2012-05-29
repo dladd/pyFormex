@@ -86,7 +86,7 @@ def showElement(eltype,options):
     elif options['Draw as'] == 'Border':
         M = M.getBorderMesh()
         
-    draw(M.coords,color=None,wait=False)
+    draw(M.coords)#,color=None,wait=False)
     drawNumbers(M.coords,color=None)
 
 
