@@ -311,8 +311,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.pick_func = {
             'actor'  : self.pick_actors,
             'element': self.pick_elements,
-            'point'  : self.pick_points,
+            'face'   : self.pick_faces,
             'edge'   : self.pick_edges,
+            'point'  : self.pick_points,
             'number' : self.pick_numbers,
             }
         self.pickable = None
@@ -1062,8 +1063,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick_parts(self,obj_type,max_objects,store_closest=False):
         """Set the list of actor parts inside the pick_window.
 
-        obj_type can be 'element', 'edge' or 'point'
-        'edge' is only available for mesh type geometry
+        obj_type can be 'element', 'face', 'edge' or 'point'.
+        'face' and 'edge' are only available for Mesh type geometry.
         max_objects specifies the maximum number of objects
 
         The picked object numbers are stored in self.picked.
@@ -1136,6 +1137,18 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             if hasattr(a,'nedges'):
                 npickable += a.nedges()
         self.pick_parts('edge',npickable,store_closest=\
+                        self.selection_filter == 'single' or\
+                        self.selection_filter == 'closest',
+                        )
+
+
+    def pick_faces(self):
+        """Set the list of actor faces inside the pick_window."""
+        npickable = 0
+        for a in self.actors:
+            if hasattr(a,'nfaces'):
+                npickable += a.nfaces()
+        self.pick_parts('face',npickable,store_closest=\
                         self.selection_filter == 'single' or\
                         self.selection_filter == 'closest',
                         )

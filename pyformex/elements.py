@@ -232,10 +232,10 @@ Proposed changes in the Element class
             self.drawedges = self.getEdges().reduceDegenerate()
         return self.drawedges
 
+
     def getDrawFaces(self,quadratic=False):
-        #print "QUADRATIC %s" % quadratic
+        """Returns the local connectivity for drawing the element's faces"""
         if quadratic and hasattr(self,'drawfaces2'):
-            #print self.drawfaces2
             return self.drawfaces2
         if not hasattr(self,'drawfaces'):
             self.drawfaces = self.getFaces().reduceDegenerate()

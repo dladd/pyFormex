@@ -946,6 +946,29 @@ def renumberMeshInElemsOrder():
     selection.draw()
 
 
+def getBorderMesh():
+    """Create the border Meshes for the selected Meshes.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    names = selection.names
+    meshes = [ M.getBorderMesh() for M in meshes ]
+
+    names = [ "%s_border" % n for n in selection.names ]
+    export2(names,meshes)
+    selection.set(names)
+    clear()
+    selection.draw()
+
+
  
 ################### menu #################
  
@@ -1060,6 +1083,7 @@ def create_menu():
             ("&Subdivide",subdivideMesh),
             ("&Fuse nodes",fuseMesh),
             ("&Renumber nodes in element order",renumberMeshInElemsOrder),
+            ("&Get Border Mesh",getBorderMesh),
             ]),
         ("---",None),
         ("&Reload menu",reload_menu),

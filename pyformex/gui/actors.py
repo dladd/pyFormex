@@ -693,10 +693,15 @@ class GeomActor(Actor):
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
 
-        mode can be 'element', 'edge' or 'point'
+        mode can be 'element', 'face', 'edge' or 'point'
         """
         if mode == 'element':
             pickPolygons(self.coords,self.elems)
+
+        elif mode == 'face':
+            faces = self.object.getFaces()
+            if faces is not None:
+                pickPolygons(self.coords,faces)
 
         elif mode == 'edge':
             edges = self.object.getEdges()
