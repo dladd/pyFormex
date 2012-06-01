@@ -86,6 +86,7 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 /^\*Step/ { 
     print "*Step"
     skip_block("^\*End Step")
+    next
 }
 
 # skip other commands
@@ -109,8 +110,7 @@ function skip_block(endcmd) {
 	getline;
 	done = match($0,endcmd);
     } while (done == 0);
-    print 
-    next;
+    print;
 }
 
 # start a new part with name pname
