@@ -32,6 +32,7 @@ from coords import *
 import utils
 import os
 import tempfile
+from plugins.trisurface import TriSurface,read_gts_intersectioncurve
 
 utils.hasExternal('gts')
 utils.hasModule('pygts')
