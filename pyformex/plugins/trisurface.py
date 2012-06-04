@@ -1690,6 +1690,51 @@ Quality: %s .. %s
         P = Coords.interpolate(xmin,xmax,nplanes)
         return [ self.intersectionWithPlane(p,dir) for p in P ]
 
+
+    def patchextension(self, p, step,  dir=None,  makecircular=False, div=1.):
+        """Extrude a nearly-planar patch of a surface self.
+        
+        - `self` is a surface with propery numbers
+        - `p` is the property number of the patch to extrude
+        - `div` is the number of elements along the extrusion. If None, 
+        the triangle size is taken from the patch's border
+        - `step` is the length of the extrusion. If step is a string (e.g. '2.'), 
+        the length is given as number of average 'diameters'
+        - `dir` is the axis of the extrusion. if dir is None, dir is 
+        the average normal of patch p
+        - `makecircular` if True makes the circular the extended section.
+    
+        This is a convenient function to elongate tubular structures
+        such as arteries.
+        """
+        s1 = self.withProp(p)
+        a1, n1 = s1.areaNormals()
+        n1 = normalize(n1.sum(axis=0))
+        r1 = (a1.sum()/math.pi)**0.5
+        if type(step) == str:
+            step = 2.*r1*float(step)
+    
+        if dir == None:
+            dir = n1
+            
+        s1x = s1.translate(dir, step)
+    
+        if makecircular:
+            c = s1x.compact().center()
+            s1x.coords = c + normalize(s1x.coords-c)*r1
+            
+        b = s1.border()[0]
+        if div == None:
+            from plugins.curve import PolyLine
+            bb = PolyLine(coords = b[:, 0], closed=True)
+            avglen = bb.length()/(bb.nparts)
+            div = int(ceil(step/avglen))
+    
+        bx = s1x.border()[0]
+        x = b.connect(bx, div=div).convert('tri3').setProp(self.maxProp()+1)
+        return self.withoutProp(p) + x + s1x
+
+
 ##################  Smooth a surface #############################
 
     
