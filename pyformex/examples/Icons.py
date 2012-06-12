@@ -80,6 +80,29 @@ def icon_rerun():
     zoomAll()
 
 
+def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:1):
+    """Perform a spiral transformation on a coordinate array"""
+    theta = X[...,dir[0]]
+    r = rfunc(theta) + X[...,dir[1]]
+    x = r * cos(theta)
+    y = r * sin(theta)
+    z = zfunc(theta) + X[...,dir[2]]
+    X = hstack([x,y,z]).reshape(X.shape)
+    return Coords(X)
+
+def icon_reset():
+    T = Formex([[(0,0),(-3,0),(-3,3)]])
+    draw(T,color='steelblue')
+    x = Coords([(-2,2),(-1,3),(3,3),(3,0)])
+    draw(x)
+    P = BezierSpline(control=x)
+    x = Coords([(3,0),(3,-1),(3,-2),(1,-3)])
+    draw(x)
+    P1 = BezierSpline(control=x)
+    draw([P,P1],color='indianred')
+    zoomAll()
+
+
 def icon_script():
     icon_run()
     from examples import FontForge

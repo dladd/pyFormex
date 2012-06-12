@@ -43,7 +43,7 @@ def run():
     clear()
 
     nx,ny,nz = 5,3,2
-    nx,ny,nz = 1,1,1
+    #nx,ny,nz = 1,1,1
     degree = 2           # create quadratic extrusions, change to 1 for linear
     serendipity = False
     show3Dbyborder = False
@@ -85,7 +85,7 @@ def run():
     print "Shown as %s" % d.eltype
     clear()
     draw(d.coords,wait=False)
-    drawNumbers(d.coords)
+    #drawNumbers(d.coords)
     print d.elems
     draw(d,color='yellow',bkcolor='black')
 

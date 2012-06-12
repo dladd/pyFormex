@@ -65,13 +65,13 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 # start a node block: record the number of the first node
 /^\*Node/ { 
     start_mode(1)
-    getline; gsub(",",""); header = "# nodes "outfile " offset "$1
+    getline; gsub(","," "); header = "# nodes "outfile " offset "$1
 }
 
 # start an element block
 /^\*Element,/ { 
     start_mode(2) 
-    getline; header = "# elems "outfile " nplex "NF-1
+    getline; gsub(","," "); header = "# elems "outfile " nplex "NF-1
 
 }
 
@@ -79,13 +79,13 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 /^\*Elset, elset=.*, generate/ { 
     start_mode(3)
     sub(".*elset=","");sub(",.*",""); setname=$0;
-    getline;
+    getline; gsub(","," ");
 }
 
 # skip a step block
 /^\*Step/ { 
     print "*Step"
-    skip_block("^\*End Step")
+    skip_block("^*End Step")
     next
 }
 
@@ -94,12 +94,13 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 
 # output data according to output mode
 { 
+    gsub(","," ");
     if (mode==1) print_node();
     else if (mode==2) print_elem();    
     else if (mode==3) print_elset();    
 }
 
-END { end_mode(); fflush("") }
+END { end_mode(); fflush(""); close(meshfile) }
 
 ######## functions #####################
 
@@ -171,6 +172,7 @@ function start_unique_file(type,blk) {
 function end_mode() {
     if (mode>0) {
 	print "Ending mode "mode
+	close(outfile)
 	mode = 0
 	if (count > 0) print header" count "count >> meshfile
     }
@@ -178,6 +180,7 @@ function end_mode() {
 
 # print a node
 function print_node() {
+    print "NODE",$2," ",$3," ",$4
     gsub(",",""); print $2," ",$3," ",$4 >> outfile;
     count += 1;
 }

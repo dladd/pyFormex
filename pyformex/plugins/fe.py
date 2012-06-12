@@ -177,7 +177,7 @@ class Model(Geometry):
         oldnew = old[new]
         newold = argsort(oldnew)
         self.coords = self.coords[oldnew]
-        self.elems = [ Connectivity(newold[e]) for e in self.elems ]
+        self.elems = [ Connectivity(newold[e],eltype=e.eltype) for e in self.elems ]
         return oldnew,newold
 
 

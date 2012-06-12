@@ -270,6 +270,9 @@ Proposed changes in the Element class
     def __str__(self):
         return self.name()
 
+    def __repr__(self):
+        return "elementType(%s)" % self.name()
+
     def report(self):
         print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces()))
   

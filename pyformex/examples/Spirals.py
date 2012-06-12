@@ -41,13 +41,15 @@ m = 100 # number of cells along spiral
 a = 1. # number of 360 degree turns
 
 F = Formex(origin()) # base pattern, here a point
-F = F.replic(m,1.,0)
-s = a*2*pi/m
+F = F.replic(m,1.,0)#.reflect(0)
+s = a*2*pi/(m-1)
 F = F.scale(s)
 
-def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:1):
+
+def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
     theta = X[...,dir[0]]
+    print theta
     r = rfunc(theta) + X[...,dir[1]]
     x = r * cos(theta)
     y = r * sin(theta)
@@ -77,8 +79,13 @@ def run():
     linewidth(2)
     clear()
     flat()
+    draw(origin())
+    draw(F,color=blue)
+    drawNumbers(F,color=blue)
     draw(PL,color=red)
     draw(PL.coords,color=red)
+    drawNumbers(PL.coords,color=red)
+    return
 
 
     if ack("Spread point evenly?"):

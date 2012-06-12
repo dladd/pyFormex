@@ -25,11 +25,8 @@
 
 """FeAbq
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['persistence', 'dialog', 'color'] 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
 _techniques = ['persistence', 'dialog', 'color'] 
@@ -41,13 +38,22 @@ from plugins.properties import *
 from plugins.fe_abq import *
 
 
-def quad():
-    """Return a unit quadrilateral Formex."""
-    return Formex('4:0123')
+def base(nplex):
+    """Return the pattern string to generate suqare base cells"""
+    return {
+        3: '3:012934',
+        4: '4:0123',
+        } [nplex]
 
-def triquad():
-    """Return a triangularized unit quadrilateral Formex."""
-    return Formex('3:012934')
+
+def abq_eltype(nplex):
+    """Return matching abaqus/calculix eltype for given pyFormex plexitude"""
+    return {
+        3 : 'CPS3',
+        4 : 'CPS4',
+        8 : 'CPS8',
+        } [nplex]
+
 
 def printModel(M):
     """print the model M"""
@@ -59,29 +65,26 @@ def printModel(M):
         print e
     print "==================="
 
-def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
+
+def drawFEModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
     """draw the model M"""
-    smoothwire()
-    lights(False)
-    transparent()
     clear()
-    print F.prop
     if nodes or nodenrs:
-##         F = Formex(M.coords)
         if nodes:
-            draw(F)
+            draw(M.coords)
         if nodenrs:
-            drawNumbers(F)
+            drawNumbers(M.coords)
     if elems or elemnrs:
-##         G = [Formex(M.coords[e],i+1) for i,e in enumerate(M.elems)]
-        G = parts
+        meshes = [Mesh(M.coords,e,prop=i+1) for i,e in enumerate(M.elems)]
         if elems:
-            draw(G)
+            draw(meshes)
         if elemnrs:
-            [ drawNumbers(i) for i in G ]
+            [ drawNumbers(i,color=red) for i in meshes ]
     zoomAll()
 
 def run():
+    global parts,M,F
+    
     na,ma = 4,2  # Size of domain A   
     nb,mb = 3,4  # size of domain B
     # Make sure the property numbers never clash!
@@ -89,21 +92,32 @@ def run():
     pb1 = 2 # Property for part of domain B
     pbc,pld = 1,6 # Properties corresponding to boundary/loaded nodes
 
-    A = triquad().replic2(na,ma,1,1).setProp(pa)
-    B = quad().replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
+    _choices = ["A mixture of tri3 and quad4","Only quad4","Only quad8"]
+    ans = _choices.index(ask("What kind of elements do you want?",_choices))
+    if ans == 0:
+        baseA = Formex(base(3))
+        baseB = Formex(base(4))
+    else:
+        baseA = Formex(base(4))
+        baseB = Formex(base(4))
+
+    A = baseA.replic2(na,ma,1,1).setProp(pa)
+    B = baseB.replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
     # Change every second element of B to property pb1
     B.prop[arange(B.prop.size) % 2 == 1] = pb1
     C = A.rotate(90).setProp(pc)
     parts = [A,B,C]
+    
+    # First convert parts to Meshes
+    parts = [ p.toMesh() for p in parts ]
+    if ans == 2:
+        # Convert meshes to 'quad8'
+        parts = [ p.convert('quad8') for p in parts ]
 
     # Create the finite element model
     # A model contains a single set of nodes and one or more sets of elements
-    M = mergedModel([p.toMesh() for p in parts])
-
-    # Create a Formex with the nodes, mostly for drawing
-    F = Formex(M.coords)
-
-    drawModel(M)
+    M = mergedModel(parts)
+    drawFEModel(M)
 
     # Transfer the properties from the parts in a global set
     elemprops = concatenate([part.prop for part in parts])
@@ -146,10 +160,11 @@ def run():
     esets.update([(v,where(elemprops==v)[0]) for v in [pa,pb,pb1,pc]])
 
     # Set the element properties
-    P.elemProp(set=esets[pa],eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
-    P.elemProp(set=esets[pb],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
-    P.elemProp(set=esets[pb1],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
-    P.elemProp(set=esets[pc],eltype='CPS3',section=ElemSection(section=medium_plate,material=steel))
+    ea,eb,ec = [ abq_eltype(p.nplex()) for p in parts ]
+    P.elemProp(set=esets[pa],eltype=ea,section=ElemSection(section=thin_plate,material=steel))
+    P.elemProp(set=esets[pb],eltype=eb,section=ElemSection(section=thick_plate,material=steel))
+    P.elemProp(set=esets[pb1],eltype=eb,section=ElemSection(section=thick_plate,material=steel))
+    P.elemProp(set=esets[pc],eltype=ec,section=ElemSection(section=medium_plate,material=steel))
 
     print "Element properties"
     for p in P.getProp('e'):
@@ -167,6 +182,8 @@ def run():
     P.nodeProp(tag='step1',set=lnodes,name='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
     P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
 
+    # Coloring the nodes gets easier using a Formex
+    F = Formex(M.coords)
     F.setProp(0)
     F.prop[bnodes] = pbc
     F.prop[lnodes] = pld
@@ -175,13 +192,14 @@ def run():
     for p in P.getProp('n'):
         print p
 
-
-    drawModel(M,elems=False)
-
     while ack("Renumber nodes?"):
         # renumber the nodes randomly
+        print [e.eltype  for e in M.elems]
         old,new = M.renumber()
-        drawModel(M)
+        print old,new
+        print [e for e in M.elems]
+        print [e.eltype  for e in M.elems]
+        drawFEModel(M)
         if widgets.input_timeout > 0:
             break
 
@@ -223,6 +241,13 @@ def run():
         if fn:
             all.write(jobname=fn,group_by_group=True)
 
+# Initialize
+smoothwire()
+lights(False)
+transparent()
+clear()
+
 if __name__ == 'draw':
     run()
+    
 # End
