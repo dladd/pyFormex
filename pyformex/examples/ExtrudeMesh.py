@@ -39,16 +39,18 @@ _techniques = ['extrude', 'quadratic']
 
 from gui.draw import *
 
+
+
 def run():
     clear()
 
     nx,ny,nz = 5,3,2
-    #nx,ny,nz = 1,1,1
+    #nx,ny,nz = 3,2,2
     degree = 2           # create quadratic extrusions, change to 1 for linear
     serendipity = False
     show3Dbyborder = False
     noise = 0.0          # set nonzero to add some noise to the coordinates 
-    sleep = 2
+    sleep = 0
 
     smoothwire()
     view('iso')
@@ -86,14 +88,20 @@ def run():
     clear()
     draw(d.coords,wait=False)
     #drawNumbers(d.coords)
-    print d.elems
     draw(d,color='yellow',bkcolor='black')
 
     if noise:
         e = d.addNoise(noise)
         draw(e.coords,wait=False,clear=True)
         draw(e,color=cyan)
-    
+
+
+    #adj = [ d.adjacency(i) for i in range(3) ]
+    #drawNumbers(d)
+    #from connectivity import adjacencyDiff
+    #print adjacencyDiff(adj[0],adj[1])
+    #print adjacencyDiff(adj[0],adj[2])
+     
 if __name__ == 'draw':
     run()
 # End

@@ -704,6 +704,21 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 #############################################################################
     # Adjacency #
 
+
+    def adjacency(self,level=0):
+        """Return an adjacency table for the specified level.
+
+        Two elements are said to be adjacent if they share a lower
+        entity of the specified level.
+        The level is one of the lower entities of the mesh.
+        """
+        if level == 0:
+            return self.elems.adjacency()
+        else:
+            sel = self.eltype.getEntities(level)
+            hi,lo = self.elems.insertLevel(sel)
+            return hi.adjacency()
+
     #
     #  IDEA: Should we move these up to Connectivity ?
     #        That would also avoid some possible problems 
@@ -734,6 +749,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return (self.edgeConnections() >=0).sum(axis=-1)
 
 
+    #
+    # Are these really needed? better use adjacency(level)
+    # 
+    #
     def nodeAdjacency(self):
         """Find the elems adjacent to each elem via one or more nodes."""
         return self.elems.adjacency()

@@ -1229,8 +1229,24 @@ def reduceAdjacency(adj):
     adj = sortAdjacency(adj)
     return adj
 
-# BV: This could become one of the schemes of Connectivity.reorder 
+    
+def adjacencyDiff(adj1,adj2):
+    """Return the difference between two adjacency tables.
 
+    adj1 and adj2 are two adjacency tables with the same number of rows.
+    The return value is an adjacency table of the same length, where each row
+    contains the numbers in adj1 but not in adj2
+    """
+    adj = sortAdjacency(concatenate([adj1,adj2],axis=-1))
+    dup = adj[:,:-1] == adj[:,1:] # duplicate items
+    adj[dup] = -1
+    adj = roll(adj,-1,axis=-1)
+    adj[dup] = -1
+    adj = roll(adj,1,axis=-1)
+    return reduceAdjacency(adj)
+
+
+# BV: This could become one of the schemes of Connectivity.reorder 
 def findConnectedLineElems(elems):
     """Find a single path of connected line elems.
 
