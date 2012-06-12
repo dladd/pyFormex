@@ -51,6 +51,7 @@ def run():
     show3Dbyborder = False
     noise = 0.0          # set nonzero to add some noise to the coordinates 
     sleep = 0
+    central = nx//2 + ny//2 * nx + nz//2 * ny * nx
 
     smoothwire()
     view('iso')
@@ -95,12 +96,22 @@ def run():
         draw(e.coords,wait=False,clear=True)
         draw(e,color=cyan)
 
-
-    #adj = [ d.adjacency(i) for i in range(3) ]
-    #drawNumbers(d)
-    #from connectivity import adjacencyDiff
-    #print adjacencyDiff(adj[0],adj[1])
-    #print adjacencyDiff(adj[0],adj[2])
+    drawNumbers(d)
+    print "central = %s" % central
+    d.setProp(6)
+    d.prop[central] = 0
+    adj = [ d.adjacency(i) for i in range(3) ]
+    from connectivity import adjacencyDiff
+    # color the node but not face adjacent elements cyan
+    a = adjacencyDiff(adj[0],adj[2])[central]
+    a = a[a>=0]
+    d.prop[a] = 4
+    # color the node but not edge adjacent elements red
+    a = adjacencyDiff(adj[0],adj[1])[central]
+    a = a[a>=0]
+    d.prop[a] = 1
+    clear()
+    draw(d)
      
 if __name__ == 'draw':
     run()
