@@ -55,7 +55,7 @@ def partitionByNodeFront(self,firstprop=0,startat=0):
     corresponding to the part number. The lowest property number will be
     firstprop.
     """
-    return firstprop +self.walkNodeFront( startat=startat,front_increment=0)
+    return firstprop +self.walkNodeFront(startat=startat)
 
 def partitionByConnection(self):
     """Detect the connected parts of a Mesh.
