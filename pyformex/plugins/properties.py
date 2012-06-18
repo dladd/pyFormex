@@ -589,6 +589,19 @@ class PropertyDB(Dict):
         - csys: a CoordSystem
         - ampl: the name of an Amplitude
         """
+        
+        ####check if set inherit the type from coords####
+        #import elements
+        #M=Mesh(elements.Hex8)
+        #set = where(M.coords[:,2] == 0.0)[0]
+        #print set
+        #print type(set)
+        #<class 'coords.Coords'>
+        from coords import Coords
+        if type(set) == Coords:
+            raise ValueError,"type(set) cannot be coords. Use set = asarray(set)"
+        ####
+        
         try:
             d = kargs
             if cload is not None:
