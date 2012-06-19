@@ -1353,7 +1353,7 @@ def circle():
 
 class Arc3(Curve):
     """A class representing a circular arc."""
-
+    ##approx returns a PolyLine that does not start from coords[0]. Why?
     def __init__(self,coords):
         """Create a circular arc.
 
@@ -1362,6 +1362,7 @@ class Arc3(Curve):
         Curve.__init__(self)
         self.nparts = 1
         self.closed = False
+        self.coords = Coords(coords)##GDS. This line is needed?
         self._set_coords(Coords(coords))
 
 
