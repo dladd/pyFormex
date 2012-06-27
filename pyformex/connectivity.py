@@ -569,7 +569,7 @@ class Connectivity(ndarray):
         Returns an element adjacency table (kind='e') or node adjacency
         table (kind='n').
 
-        An element `i` is said to be ajacent to element `j`, if the two
+        An element `i` is said to be adjacent to element `j`, if the two
         elements have at least one common node.
 
         A node `i` is said to be adjacent to node `j`, if there is at least
@@ -614,7 +614,8 @@ class Connectivity(ndarray):
         elif kind == 'n':
             adj = concatenate([where(inv>=0,self[:,i][inv],inv) for i in range(self.nplex())],axis=1)
         else:
-            raise ValueError,"kind should be 'e' or 'n', got %s" % str(kind) 
+            raise ValueError,"kind should be 'e' or 'n', got %s" % str(kind)
+        print adj
         return reduceAdjacency(adj)
 
 
@@ -1174,9 +1175,10 @@ def sortAdjacency(adj):
              [-1, -1, -1]])
 
     """
-    adj.sort(axis=-1)      # sort rows
-    maxc = adj.max(axis=0) # find maximum per column
-    adj = adj[:,maxc>=0]   # retain columns with non-negative maximum
+    if adj.shape[1] > 0:
+        adj.sort(axis=-1)      # sort rows
+        maxc = adj.max(axis=0) # find maximum per column
+        adj = adj[:,maxc>=0]   # retain columns with non-negative maximum
     return adj
 
 
@@ -1185,7 +1187,7 @@ def reduceAdjacency(adj):
 
     An adjacency table is an integer array where each row lists the numbers
     of the items that are connected to the item with number equal to the row
-    index. Rows are padded with -1 value to create rows of equal length.
+    index. Rows are padded with -1 values to create rows of equal length.
 
     A reduced adjacency table is one where each row:
 
