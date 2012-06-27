@@ -85,6 +85,13 @@ def printpos(w,t=None):
 def sizeReport(w,t=None):
     return "%s %s x %s" % (t,w.width(),w.height())
 
+
+def hasDRI():
+    viewport.setOpenGLFormat()
+    dri = viewport.opengl_format.directRendering()
+    print dri
+    return dri
+
 ################# Message Board ###############
 
 class Board(QtGui.QTextEdit):
@@ -673,6 +680,18 @@ class Gui(QtGui.QMainWindow):
         return ax-rx,ay-ry
 
 
+    def XGeometry(self):
+        """Get the main window position and size from the xwininfo command.
+
+        """
+        res = xwininfo(self.winId())
+        x,y,w,h = [ int(res[key]) for key in [
+            'Absolute upper-left X','Absolute upper-left Y',
+            'Width','Height',
+            ]]
+        return x,y,w,h
+
+
     def writeSettings(self):
         """Store the GUI settings"""
         pf.debug('Store current settings',pf.DEBUG.CONFIG)
@@ -931,6 +950,14 @@ def windowExists(windowname):
     return not os.system('xwininfo -name "%s" > /dev/null 2>&1' % windowname)
 
 
+def windowId():
+    """Return the X windowid of the main pyFormex window."""
+    info = QtGui.QX11Info()
+    print info
+    print "%x" % info.appRootWindow()
+    
+
+
 def findOldProcesses(max=16):
     """Find old pyFormex GUI processes still running.
 
@@ -1046,8 +1073,7 @@ def startGUI(args):
 
     # Check if we have DRI
     pf.debug("Setting OpenGL format",pf.DEBUG.OPENGL)
-    viewport.setOpenGLFormat()
-    dri = viewport.opengl_format.directRendering()
+    dri = hasDRI()
 
 
     # Check for existing pyFormex processes

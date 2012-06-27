@@ -535,7 +535,51 @@ def createMovieInteractive():
     pf.GUI.setBusy()
     image.createMovie(**res)
     pf.GUI.setBusy(False)
+
+
+_recording_pid = 0
+
+def recordSession(stop=0):
+    """Record the current pyFormex session."""
+    global _recording_pid
+    from guimain import hasDRI
+
+    print "RECORDING with dri=%s" % pf.options.dri
+
+    ok = utils.checkExternal('recordmydesktop')
+    if not ok:
+        return
+    if hasDRI():
+        if not draw.ack("Recording the session while using DRI may fail to correctly capture the OpenGL canvas. We recommend to start pyformex with the --nodri to do session recording (at the expense of a slower execution). If you click YES I will nevertheless go ahead with recording."):
+            return
+
+    fn = draw.askFilename(pf.cfg['workdir'],"Theora video files (*.ogv)",exist=False)
+    if not fn:
+        return
     
+    print "Recording your session to file %s" % fn
+    x,y,w,h = pf.GUI.XGeometry()
+    cmd = "recordmydesktop -x %s -y %s --width %s --height %s --no-frame -o %s" % (x,y,w,h,fn)
+    print cmd
+    pid = utils.spawn(cmd)
+    print "Recording pid = %s" % pid
+    _recording_pid = pid
+
+
+def stopRecording(stop=15):
+    global _recording_pid
+    print "STOP RECORDING"
+    if _recording_pid:
+        # Was recording: finish it
+        utils.killProcesses([_recording_pid],stop)
+        # should check that it has stopped
+        _recording_pid = 0
+
+
+def abortRecording():
+    stopRecording(6)
+    
+
 
 MenuData = [
     ## (_('&Open project'),openProject),
@@ -571,6 +615,11 @@ MenuData = [
     (_('&Stop MultiSave'),stopMultiSave),
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
+    (_('&Record Session'),[
+        (_('&Start Recording'),recordSession),
+        (_('&Stop Recording'),stopRecording),
+        (_('&Abort Recording'),abortRecording),
+        ]),
     (_('---2'),None),
     (_('E&xit'),draw.closeGui),
 ]

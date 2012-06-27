@@ -63,8 +63,8 @@ known_externals = {
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\S+)'),
     'gts': ('gtsset -h','Usage(:) set'),
     'calix': ('calix --version','CALIX-(\S+)'),
-    'pyformex-dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
-    'pyformex-postabq': ('pyformex-postabq -V','postabq (\S+).*'),
+    'dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
+    'postabq': ('pyformex-postabq -V','postabq (\S+).*'),
     'recordmydesktop': ('recordmydesktop --version','recordMyDesktop v(\S+)'),
     }
 
@@ -800,8 +800,13 @@ def spawn(cmd):
     return pid
 
 
-def killProcesses(pids,signal):
-    """Send the specified signal to the processes in list"""
+def killProcesses(pids,signal=15):
+    """Send the specified signal to the processes in list
+
+    - `pids`: a list of process ids.
+    - `signal`: the signal to send to the processes. The default (15) will
+      try to terminate the process. See 'man kill' for more values.
+    """
     for pid in pids:
         try:
             os.kill(pid,signal)

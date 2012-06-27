@@ -117,7 +117,7 @@ def setOpenGLFormat():
     On a correctly installed system, the default should do well.
     The default OpenGL format can be changed by command line options::
     
-       --dri   : use the Direct Rendering Infrastructure
+       --dri   : use the Direct Rendering Infrastructure, if available
        --nodri : do not use the DRI
        --alpha : enable the alpha buffer 
     """
