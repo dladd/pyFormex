@@ -42,6 +42,7 @@
 class MyDxfFilter : public DL_CreationAdapter {
 
   virtual void addArc(const DL_ArcData& d);
+  virtual void addCircle(const DL_CircleData& d);
   virtual void addLine(const DL_LineData& d);
   virtual void addPolyline(const DL_PolylineData& d);
   virtual void addVertex(const DL_VertexData& d);

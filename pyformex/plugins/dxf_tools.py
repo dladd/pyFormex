@@ -213,6 +213,17 @@ def editArc(p):
         ])
     if res:
         return Arc(center=res['center'],radius=res['radius'],angles=(res['start_angle'],res['end_angle'])).setProp(p.prop)
+
+
+def editLine(p):
+    x0,x1 = p.coords
+    res = askItems([
+        _I('part_number',p.prop,readonly=True),
+        _I('point 0',x0,itemtype='point'),
+        _I('point 1',x1,itemtype='point'),
+        ])
+    if res:
+        return Line([x0,x1]).setProp(p.prop)
         
 
 def editParts():
@@ -226,11 +237,13 @@ def editParts():
         return
     for i in selection:
         p = parts[i]
-        if type(p).__name__ == 'Arc':
-            newp = editArc(p)
-            if newp:
-                print "Replacing part %s" % p.prop
-                parts[i] = newp
+        try:
+            newp = globals()['edit'+type(p).__name__](p)
+        except:
+            newp = None
+        if newp:
+            print "Replacing part %s" % p.prop
+            parts[i] = newp
                 
 
 def splitArcs():
@@ -257,6 +270,35 @@ def splitArcs():
             if res:
                 asp = res['split_angle']
                 newp = [ Arc(center=p._center,radius=p.radius,angles=ap).setProp(p.prop) for ap in [ (a[0],asp), (asp,a[1]) ] ]
+                print "NEW: %s" % len(newp)
+                parts[i:i+1] = newp
+        print "# of parts: %s" % len(parts)
+    drawCell()
+                
+
+def splitLines():
+    """Split the picked Lines"""
+    parts = named('_dxf_sel_')
+    if not parts:
+        return
+    while True:
+        drawParts(zoom=False,showpoints=True,shownumbers=True)
+        selection = pickParts(filter='single')
+        if selection is None:
+            break
+        i = selection[0]
+        p = parts[i]
+        x0,x1 = p.coords
+        if type(p).__name__ == 'Line':
+            res = askItems([
+                _I('part_number',p.prop,readonly=True),
+                _I('point 0',x0,itemtype='point'),
+                _I('point 1',x1,itemtype='point'),
+                _I('split parameter value',0.5)])      
+            if res:
+                asp = res['split parameter value']
+                xm = (1.0-asp) * x0 + asp * x1
+                newp = [ Line([x0,xm]).setProp(p.prop), Line([xm,x1]).setProp(p.prop) ]
                 print "NEW: %s" % len(newp)
                 parts[i:i+1] = newp
         print "# of parts: %s" % len(parts)
@@ -410,6 +452,7 @@ def create_menu():
         ("&Renumber DXF entities",renumberDxf),
         ("&Edit DXF entities",editParts),
         ("&Split Arcs",splitArcs),
+        ("&Split Lines",splitLines),
         ("---",None),
         ("&Write DXFTEXT file",exportDxfText),
         ("&Convert to Formex",convertToFormex),

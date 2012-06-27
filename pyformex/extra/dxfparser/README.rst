@@ -74,6 +74,14 @@ to get an ascii file with the contents.
 
 The ascii output looks like:
 
+add a dxf entity
+----------------
+To add new dxf entities to the parser, you should proceed as follows.
 
+- First look up the entity in the dxf reference (chapter 6), to see what the parameters are.
+- Add a matching 'add*' entry in the parser.h file.
+- Add a matching entity output format in parser.cc
+- Create the 'add*' function to properly output the entity. The names of the
+  argument fields can be found in the dxflib documentation.
  
 .. End

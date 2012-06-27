@@ -36,15 +36,20 @@
 
 #include <stdio.h>
 
-const char* _version_ = "dxfparser 0.1";
+const char* _version_ = "dxfparser 0.2";
 const char* _copyright_ = "Copyright (C) 2011 Benedict Verhegghe";
 const char* ArcFmt = "Arc(%f,%f,%f,%f,%f,%f)\n";
+const char* CircleFmt = "Circle(%f,%f,%f,%f)\n";
 const char* LineFmt = "Line(%f,%f,%f,%f,%f,%f)\n";
 const char* PolylineFmt = "Polyline(%d)\n";
 const char* VertexFmt = "Vertex(%f,%f,%f)\n";
 
 void MyDxfFilter::addArc(const DL_ArcData& d) {
   printf(ArcFmt,d.cx,d.cy,d.cz,d.radius,d.angle1,d.angle2);
+}
+
+void MyDxfFilter::addCircle(const DL_CircleData& d) {
+  printf(CircleFmt,d.cx,d.cy,d.cz,d.radius);
 }
 
 void MyDxfFilter::addLine(const DL_LineData& d) {

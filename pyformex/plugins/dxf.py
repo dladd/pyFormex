@@ -72,8 +72,10 @@ def readDXF(filename):
     type 'Arc', 'Line', 'Polyline', 'Vertex'.
     """
     import utils,commands
+    print filename
     if utils.hasExternal('dxfparser'):
         cmd = 'pyformex-dxfparser %s 2>/dev/null' % filename
+        print cmd
         sta,out = utils.runCommand(cmd)
         if sta==0:
             return out
@@ -151,6 +153,9 @@ def convertDXF(text):
         part.dxftype = 'Arc'
         Entities.append(part)
 
+    def Circle(x0,y0,z0,r):
+        Arc(x0,y0,z0,r,0.,360.)
+
     def Line(x0,y0,z0,x1,y1,z1):
         global Entities,Vertices
         count = len(Entities)
@@ -177,7 +182,7 @@ def convertDXF(text):
         Vertices.append([x,y,z])
         
 
-    l = {'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex}
+    l = {'Line':Line, 'Arc':Arc, 'Circle':Circle, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex}
     exec text in l
     EndEntity()
     return Entities
