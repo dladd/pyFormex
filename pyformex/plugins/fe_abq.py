@@ -1269,7 +1269,7 @@ def writeDsloads(fil,prop,op='NEW'):
 
 def writeAmplitude(fil,prop):
     for p in prop:
-        fil.write("*AMPLITUDE, NAME=%s, DEFINITION=%s\n" % (p.name,p.amplitude.type))
+        fil.write("*AMPLITUDE, NAME=%s, DEFINITION=%s, TIME=%s\n" % (p.name,p.amplitude.type,p.amplitude.atime))
         for i,v in enumerate(p.amplitude.data):
             fil.write("%s, %s," % tuple(v))
             if i % 4 == 3:
