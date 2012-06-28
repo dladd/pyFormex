@@ -286,13 +286,16 @@ class Amplitude(object):
     """A class for storing an amplitude.
 
     The amplitude is a list of tuples (time,value).
+    atime (amplitude time) can be either STEP TIME (default in Abaqus) or TOTAL TIME
     """
     
-    def __init__(self,data,definition='TABULAR'):
+    def __init__(self,data,definition='TABULAR',atime='STEP TIME'):
         """Create a new amplitude."""
         if definition in [ 'TABULAR', 'SMOOTH STEP' ]:
-            self.data = checkArray(data,(-1,2),'f','i')
-            self.type = definition
+            if atime in [ 'STEP TIME', 'TOTAL TIME' ]:
+                self.data = checkArray(data,(-1,2),'f','i')
+                self.type = definition
+                self.atime = atime
         else:
             raise ValueError,"Expected definition = 'TABULAR' or 'SMOOTH STEP'"
 
