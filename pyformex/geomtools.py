@@ -106,11 +106,11 @@ def projectedArea(x,dir):
     if type(dir) is int:
         dir = unitVector(dir)
     x1 = roll(x,-1,axis=0)
-    print x.dtype
-    print Coords(dir).dtype
+##    print x.dtype
+##    print Coords(dir).dtype
     area = vectorTripleProduct(Coords(dir),x,x1)
-    print area.dtype
-    print area.sum() / 2
+##    print area.dtype
+##    print area.sum() / 2
     return 0.5 * area.sum() 
 
 
@@ -636,11 +636,11 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
     F = asanyarray(F).reshape(-1,3,3)
     if not return_all:
         # Find lines passing through the bounding spheres of the triangles
-        r,c,n = triangleBoundingCircle(F)        
+        r,c,n = triangleBoundingCircle(F)
         if mode == 'all':
 ##            d = distancesPFL(c,q,m,mode).transpose() # this is much slower for large arrays
             mode = 'pair'
-            d = row_stack([ distancesPFL(c,q[i],m[i],mode) for i in range(q.shape[0]) ]) 
+            d = row_stack([ distancesPFL(c,q[i],m[i],mode) for i in range(q.shape[0]) ])
             wl,wt = where(d<=r)
         elif mode == 'pair':
             d = distancesPFL(c,q,m,mode)
@@ -655,7 +655,7 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
     x = pointsAtLines(q,m,t)
     if not return_all:
         # Find points inside the faces
-        ok = insideTriangle(F,x[newaxis]).reshape(-1)
+        ok = insideTriangle(F,x[newaxis]).reshape(-1)        
         return x[ok],wl[ok],wt[ok]
     else:
         return x
@@ -846,8 +846,6 @@ def intersectionPointsPOL(X,q,m,mode='all'):
     array of intersection points instead of the parameter values.
     """
     t = intersectionTimesPOL(X,q,m,mode)
-    if mode == 'all':
-        q = q[:,newaxis]
     return pointsAtLines(q,m,t)
 
 
@@ -885,7 +883,10 @@ def distancesPFL(X,q,m,mode='all'):
       all lines (q,m) or `pair` for pairwise distances.
 
     Returns: A (nX,nq) shaped (`mode=all`) array of distances.
-    """    
+    """
+    X = X.astype(float64)
+    q = q.astype(float64)
+    m = m.astype(float64)
     if mode == 'all':
         X = asanyarray(X).reshape(-1,1,3)
         q = asanyarray(q).reshape(1,-1,3)
