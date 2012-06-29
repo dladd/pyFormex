@@ -615,7 +615,6 @@ class Connectivity(ndarray):
             adj = concatenate([where(inv>=0,self[:,i][inv],inv) for i in range(self.nplex())],axis=1)
         else:
             raise ValueError,"kind should be 'e' or 'n', got %s" % str(kind)
-        print adj
         return reduceAdjacency(adj)
 
 
@@ -912,13 +911,17 @@ class Connectivity(ndarray):
         A number of steps is executed, each step advancing the front
         over a given number of single pass increments.
 
-        Returns an array of integers specifying for each element in which step
-        that element was passed by the walker.
-
         Parameters:
 
-        - `startat`: 
+        - `startat`: initial element numbers in the front. It can be a single
+          element number or a list of numbers.
+        - `nsteps`: number of steps to walk. The default is to walk until all
+          elements have been reached.
+        - `frontinc`: number of front advancements in a single step. The
+          default is to advance the front once in each step.
 
+        Returns an array of integers specifying for each element in which step
+        the element was reached by the walker.
         """
         for p in self.frontFactory(startat=startat,frontinc=frontinc):   
             if nsteps > 0:

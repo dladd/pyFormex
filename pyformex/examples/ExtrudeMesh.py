@@ -44,7 +44,7 @@ from gui.draw import *
 def run():
     clear()
 
-    nx,ny,nz = 5,3,2
+    nx,ny,nz = 5,3,4
     #nx,ny,nz = 3,2,2
     degree = 2           # create quadratic extrusions, change to 1 for linear
     serendipity = False
@@ -98,10 +98,14 @@ def run():
 
     drawNumbers(d)
     print "central = %s" % central
-    d.setProp(6)
+    d.setProp(7)
     d.prop[central] = 0
     adj = [ d.adjacency(i) for i in range(3) ]
     from connectivity import adjacencyDiff
+    # color the face adjacent elements blue
+    a = adj[2][central]
+    a = a[a>=0]
+    d.prop[a] = 3
     # color the node but not face adjacent elements cyan
     a = adjacencyDiff(adj[0],adj[2])[central]
     a = a[a>=0]

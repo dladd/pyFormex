@@ -417,6 +417,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.eltype.getEntities(level)
 
 
+#######################################################################
+    ## Entity selection and mesh traversal ##
+
     def getLowerEntities(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 
@@ -556,8 +559,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
         # LOOSES THE eltype
         # SHOULD BE FIXED, BUT NEEDS TO BE CHECKED !!! BV
-        #
-        brd.eltype = sel.eltype
+        #  ### BV uncommented for checking, report if not working ###
+        # brd.eltype = sel.eltype
+        if brd.eltype is None:
+            raise ValueError,"THIS ERROR SOHULD NOT OCCUR! CONTACT MAINTAINERS!"
         if not return_indices:
             return brd
         
@@ -632,6 +637,30 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.getFreeEntitiesMesh(level=-1,compact=compact)
 
 
+    def getBorderElems(self):
+        """Return the elements that are on the border of the Mesh.
+
+        This returns a list with the numbers of the elements that are on the
+        border of the Mesh. Elements are considered to be at the border if they
+        contain at least one complete element of the border Mesh (i.e. an
+        element of the first lower hierarchical level). Thus, in a volume Mesh,
+        elements only touching the border by a vertex or an edge are not
+        considered border elements.
+        """
+        brd,ind = self.getBorder(True)
+        return unique(ind[:,0])
+
+
+    def peel(self):
+        """Return a Mesh with the border elements removed.
+
+        This is a convenient shorthand for ::
+
+          self.cselect(self.getBorderElems())
+        """
+        return self.cselect(self.getBorderElems())
+
+
     def getFreeEdgesMesh(self,compact=True):
         """Return a Mesh with the free edge elements.
 
@@ -649,7 +678,74 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           self.getFreeEntitiesMesh(level=1,compact=compact)
         """
         return self.getFreeEntitiesMesh(level=1,compact=compact)
-        
+
+
+#    def frontWalk(self,level=1,startat=0,nsteps=-1,front_increment=1):
+#        if level == 1:
+#            elems = self.elems
+#        else:
+#            elems,lo = self.elems.insertLevel(level)            
+#        return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
+
+
+    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
+        return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
+
+
+    def partitionByNodeFront(self,firstprop=0,startat=0):
+        """Detects different parts of the Mesh using a frontal method.
+
+        okedges flags the edges where the two adjacent elems are to be
+        in the same part of the Mesh.
+        startat is a list of elements that are in the first part.
+        The partitioning is returned as a property type array having a value
+        corresponding to the part number. The lowest property number will be
+        firstprop.
+        """
+        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
+
+
+    def partitionByConnection(self):
+        """Detect the connected parts of a Mesh.
+
+        The Mesh is partitioned in parts in which all elements are
+        connected. Two elements are connected if it is possible to draw a
+        continuous (poly)line from a point in one element to a point in
+        the other element without leaving the Mesh.
+        The partitioning is returned as a property type array having a value
+        corresponding to the part number. The lowest property number will be
+        firstprop.
+        """
+        return self.partitionByNodeFront()
+
+
+    def splitByConnection(self):
+        """Split the Mesh into connected parts.
+
+        Returns a list of Meshes that each form a connected part.
+        """
+        split = self.setProp(self.partitionByConnection()).splitProp()
+        if split:
+            return split.values()
+        else:
+            return [ self ]
+
+
+    def largestByConnection(self):
+        """Return the largest connected part of the Mesh."""
+        p = self.partitionByConnection()
+        nparts = p.max()+1
+        if nparts == 1:
+            return self,nparts
+        else:
+            t = [ p == pi for pi in range(nparts) ]
+            n = [ ti.sum() for ti in t ]
+            w = array(n).argmax()
+            return self.clip(t[w]),nparts
+
+
+###########################################################################
+    ## simple mesh transformations ##
 
     def reverse(self):
         """Return a Mesh where all elements have been reversed.

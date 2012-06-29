@@ -40,59 +40,6 @@ from utils import deprecation
 
 ##############################################################################
 
-
-def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-    return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
-
-
-def partitionByNodeFront(self,firstprop=0,startat=0):
-    """Detects different parts of the Mesh using a frontal method.
-
-    okedges flags the edges where the two adjacent elems are to be
-    in the same part of the Mesh.
-    startat is a list of elements that are in the first part.
-    The partitioning is returned as a property type array having a value
-    corresponding to the part number. The lowest property number will be
-    firstprop.
-    """
-    return firstprop +self.walkNodeFront(startat=startat,front_increment=0)
-
-def partitionByConnection(self):
-    """Detect the connected parts of a Mesh.
-
-    The Mesh is partitioned in parts in which all elements are
-    connected. Two elements are connected if it is possible to draw a
-    continuous (poly)line from a point in one element to a point in
-    the other element without leaving the Mesh.
-    The partitioning is returned as a property type array having a value
-    corresponding to the part number. The lowest property number will be
-    firstprop.
-    """
-    return self.partitionByNodeFront()
-
-def splitByConnection(self):
-    """Split the Mesh into connected parts.
-
-    Returns a list of Meshes that each form a connected part.
-    """
-    split = self.setProp(self.partitionByConnection()).splitProp()
-    if split:
-        return split.values()
-    else:
-        return [ self ]
-
-def largestByConnection(self):
-    """Return the largest connected part of the Mesh."""
-    p = self.partitionByConnection()
-    nparts = p.max()+1
-    if nparts == 1:
-        return self,nparts
-    else:
-        t = [ p == pi for pi in range(nparts) ]
-        n = [ ti.sum() for ti in t ]
-        w = array(n).argmax()
-        return self.clip(t[w]),nparts
-
         
 ########################################
 
@@ -264,10 +211,6 @@ def _auto_initialize():
     """
     Mesh.areas = areas
     Mesh.area = area
-    Mesh.walkNodeFront = walkNodeFront
-    Mesh.partitionByNodeFront = partitionByNodeFront
-    Mesh.partitionByConnection = partitionByConnection
-    Mesh.splitByConnection = splitByConnection
     Mesh.largestByConnection = largestByConnection
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes

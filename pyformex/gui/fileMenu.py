@@ -550,7 +550,7 @@ def recordSession(stop=0):
     if not ok:
         return
     if hasDRI():
-        if not draw.ack("Recording the session while using DRI may fail to correctly capture the OpenGL canvas. We recommend to start pyformex with the --nodri to do session recording (at the expense of a slower execution). If you click YES I will nevertheless go ahead with recording."):
+        if not draw.ack("Recording the session while using DRI may fail to correctly capture the OpenGL canvas. We recommend starting pyformex with the --nodri option to do session recording (at the expense of a slower execution). If you click YES I will nevertheless go ahead with recording."):
             return
 
     fn = draw.askFilename(pf.cfg['workdir'],"Theora video files (*.ogv)",exist=False)
