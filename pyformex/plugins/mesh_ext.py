@@ -211,7 +211,6 @@ def _auto_initialize():
     """
     Mesh.areas = areas
     Mesh.area = area
-    Mesh.largestByConnection = largestByConnection
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
