@@ -1099,81 +1099,86 @@ Quality: %s .. %s
 ##################  Partitioning a surface #############################
 
 
-    def edgeFront(self,startat=0,okedges=None,front_increment=1):
-        """Generator function returning the frontal elements.
+    ## def edgeFront(self,startat=0,okedges=None,front_increment=1):
+    ##     """Generator function returning the frontal elements.
 
-        startat is an element number or list of numbers of the starting front.
-        On first call, this function returns the starting front.
-        Each next() call returns the next front.
-        front_increment determines how the property increases at each
-        frontal step. There is an extra increment +1 at each start of
-        a new part. Thus, the start of a new part can always be detected
-        by a front not having the property of the previous plus front_increment.
-        """
-        #print("FRONT_INCREMENT %s" % front_increment)
-        p = -ones((self.nfaces()),dtype=int)
-        if self.nfaces() <= 0:
-            return
-        # Construct table of elements connected to each edge
-        conn = self.edgeConnections()
-        # Bail out if some edge has more than two connected faces
-        if conn.shape[1] != 2:
-            pf.warning("Surface is not a manifold")
-            return
-        # Check size of okedges
-        if okedges is not None:
-            if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-                raise ValueError,"okedges has incorrect shape"
+    ##     startat is an element number or list of numbers of the starting front.
+    ##     On first call, this function returns the starting front.
+    ##     Each next() call returns the next front.
+    ##     front_increment determines how the property increases at each
+    ##     frontal step. There is an extra increment +1 at each start of
+    ##     a new part. Thus, the start of a new part can always be detected
+    ##     by a front not having the property of the previous plus front_increment.
+    ##     """
+    ##     #print("FRONT_INCREMENT %s" % front_increment)
+    ##     p = -ones((self.nfaces()),dtype=int)
+    ##     if self.nfaces() <= 0:
+    ##         return
+    ##     # Construct table of elements connected to each edge
+    ##     conn = self.edgeConnections()
+    ##     # Bail out if some edge has more than two connected faces
+    ##     if conn.shape[1] != 2:
+    ##         pf.warning("Surface is not a manifold")
+    ##         return
+    ##     # Check size of okedges
+    ##     if okedges is not None:
+    ##         if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
+    ##             raise ValueError,"okedges has incorrect shape"
 
-        # Remember edges left for processing
-        todo = ones((self.nedges(),),dtype=bool)
-        elems = clip(asarray(startat),0,self.nfaces())
-        prop = 0
-        while elems.size > 0:
-            # Store prop value for current elems
-            p[elems] = prop
-            yield p
+    ##     # Remember edges left for processing
+    ##     todo = ones((self.nedges(),),dtype=bool)
+    ##     elems = clip(asarray(startat),0,self.nfaces())
+    ##     prop = 0
+    ##     while elems.size > 0:
+    ##         # Store prop value for current elems
+    ##         p[elems] = prop
+    ##         yield p
 
-            prop += front_increment
+    ##         prop += front_increment
 
-            # Determine border
-            edges = unique(self.getElemEdges()[elems])
-            edges = edges[todo[edges]]
-            if edges.size > 0:
-                # flag edges as done
-                todo[edges] = 0
-                # take connected elements
-                if okedges is None:
-                    elems = conn[edges].ravel()
-                else:
-                    elems = conn[edges[okedges[edges]]].ravel()
-                elems = elems[(elems >= 0) * (p[elems] < 0) ]
-                if elems.size > 0:
-                    continue
+    ##         # Determine border
+    ##         edges = unique(self.getElemEdges()[elems])
+    ##         edges = edges[todo[edges]]
+    ##         if edges.size > 0:
+    ##             # flag edges as done
+    ##             todo[edges] = 0
+    ##             # take connected elements
+    ##             if okedges is None:
+    ##                 elems = conn[edges].ravel()
+    ##             else:
+    ##                 elems = conn[edges[okedges[edges]]].ravel()
+    ##             elems = elems[(elems >= 0) * (p[elems] < 0) ]
+    ##             if elems.size > 0:
+    ##                 continue
 
-            # No more elements in this part: start a new one
-            #print("NO MORE ELEMENTS")
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
+    ##         # No more elements in this part: start a new one
+    ##         #print("NO MORE ELEMENTS")
+    ##         elems = where(p<0)[0]
+    ##         if elems.size > 0:
+    ##             # Start a new part
+    ##             elems = elems[[0]]
+    ##             prop += 1
 
 
-    def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
-        """Grow a selection using a frontal method.
+    ## def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
+    ##     """Grow a selection using a frontal method.
 
-        Starting from element `startat`, grow a selection `nsteps` times
-        following the common edges of the triangles.
+    ##     Starting from element `startat`, grow a selection `nsteps` times
+    ##     following the common edges of the triangles.
 
-        The property of each new front is augmented by `front_increment`.
-        """
-        for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            if nsteps > 0:
-                nsteps -= 1
-            elif nsteps == 0:
-                break
-        return p
+    ##     The property of each new front is augmented by `front_increment`.
+    ##     """
+    ##     for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
+    ##         if nsteps > 0:
+    ##             nsteps -= 1
+    ##         elif nsteps == 0:
+    ##             break
+    ##     return p
+
+
+    def walkEdgeFront(*args,**kargs):
+        utils.warn("depr_trisurface_walkedgefront")
+        return self.frontWalk(level=1,*args,**kargs)
 
 
     def growSelection(self,sel,mode='node',nsteps=1):
@@ -1187,10 +1192,8 @@ Quality: %s .. %s
         - 'node' : include all elements that have a node in common,
         - 'edge' : include all elements that have an edge in common.
         """
-        if mode == 'node':
-            p = self.walkNodeFront(startat=sel,nsteps=nsteps)
-        elif mode == 'edge':
-            p = self.walkEdgeFront(startat=sel,nsteps=nsteps)
+        level = {'node':0,'edge':1}[mode]
+        p = self.frontWalk(level=level,startat=sel,nsteps=nsteps)
         return where(p>=0)[0]
     
 

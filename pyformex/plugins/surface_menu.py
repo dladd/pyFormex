@@ -615,9 +615,9 @@ def colorByFront():
             startat = res['start at']
             firstprop = res['first prop']
             if ftype == 'node':
-                p = S.walkNodeFront(nsteps=nsteps,startat=startat)
+                p = S.frontWalk(level=0,nsteps=nsteps,startat=startat)
             else:
-                p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
+                p = S.frontWalk(level=1,nsteps=nsteps,startat=startat)
             S.setProp(p/nwidth + firstprop)
             print("Colored in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
             selection.draw()

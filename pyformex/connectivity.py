@@ -656,13 +656,19 @@ class Connectivity(ndarray):
             return Connectivity(self[:,sel].reshape(-1,sel.nplex()),eltype=eltype)
         else:
             return Connectivity()
-        
 
+        
+    # BV: should we add a 'unique=False' option to create tables of
+    # all intermediate entities without uniqifying?
+    # 
+    # BV: do we need the lower_only? It is just as easy or easier to
+    # write elems.insertLevel(level)[1]
     def insertLevel(self,selector,lower_only=False):
         """Insert an extra hierarchical level in a Connectivity table.
 
-        A Connectivity table identifies higher hierchical entities in function
-        of lower ones. This method inserts an extra hierarchical level.
+        A Connectivity table identifies higher hierarchical entities in
+        function of lower ones. This method inserts an extra level in the
+        hierarchy.
         For example, if you have volumes defined in function of points,
         you can insert an intermediate level of edges, or faces.
         Multiple intermediate level entities may be created from each
@@ -675,6 +681,12 @@ class Connectivity(ndarray):
           of such tuples all having the same length.
           Each row of `selector` holds a list of the local node numbers that
           should be retained in the new Connectivity table.
+
+          If the Connectivity has an element type, selector can also be a
+          single integer specifying one of the hierarchical levels of element
+          entities (See the Element class). In that case the selector is
+          constructed automatically from self.eltype.getEntities(selector).
+          
         - `lower_only`: if True, only the definition of the new (lower)
           entities is returned, complete without removing duplicates.
           This is equivalent to using :meth:`selectNodes`, which
@@ -716,7 +728,13 @@ class Connectivity(ndarray):
                  [3, 2]]))
            
         """
-        sel = Connectivity(selector)
+        if type(selector) == int:
+            if hasattr(self,'eltype'):
+                sel = self.eltype.getEntities(selector)
+            else:
+                raise ValueError,"Specified an int as selector, but no eltype was defined"
+        else:
+            sel = Connectivity(selector)
         lo = self.selectNodes(sel)
         if lo.size > 0:
             uniq,uniqid = uniqueRows(lo,permutations=True)

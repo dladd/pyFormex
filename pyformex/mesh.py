@@ -409,6 +409,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.elems
 
 
+#######################################################################
+    ## Entity selection and mesh traversal ##
+
+
     @deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
     def getLowerEntitiesSelector(self,level=-1):
         """Get the entities of a lower dimensionality.
@@ -417,9 +421,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.eltype.getEntities(level)
 
 
-#######################################################################
-    ## Entity selection and mesh traversal ##
 
+    # BV: This should probably be removed,
+    # If needed, add a unique=False to Connectivity.insertLEvel 
     def getLowerEntities(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 
@@ -449,6 +453,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         ent = self.elems.selectNodes(sel)
         ent.eltype = sel.eltype
         if unique:
+            warn("depr_mesh_getlowerentities_unique")
             ent = ent.removeDuplicate()
 
         return ent
@@ -487,7 +492,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         requests can return it without the need for computing it again.
         """
         if self.edges is None:
-            self.edges = self.getLowerEntities(1,unique=True)
+            self.edges = self.elems.insertLevel(1)[1]
         return self.edges
         
 
@@ -500,7 +505,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         requests can return it without the need for computing it again.
         """
         if self.faces is None:
-            self.faces = self.getLowerEntities(2,unique=True)
+            self.faces = self.elems.insertLevel(2)[1]
         return self.faces
         
 
@@ -513,7 +518,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         requests can return it without the need for computing it again.
         """
         if self.cells is None:
-            self.cells = self.getLowerEntities(3,unique=True)
+            self.cells = self.elems.insertLevel(3)[1]
         return self.cells
 
 
@@ -527,8 +532,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         element to edge connectivity.
         """
         if self.elem_edges is None:
-            sel = self.eltype.getEntities(1)
-            self.elem_edges,self.edges = self.elems.insertLevel(sel)
+            self.elem_edges,self.edges = self.elems.insertLevel(1)
         return self.elem_edges
 
     
@@ -543,14 +547,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         for inverse lookup of the higher entity (column 0) and its local
         lower entity number (column 1).
         """
-        sel = self.eltype.getEntities(level)
-        if sel.size == 0:
+        hi,lo = self.elems.insertLevel(level)
+        if hi.size == 0:
             if return_indices:
                 return Connectivity(),[]
             else:
                 return Connectivity()
             
-        hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
         isbrd = (ncon<=1)   # < 1 should not occur 
@@ -680,19 +683,41 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.getFreeEntitiesMesh(level=1,compact=compact)
 
 
-#    def frontWalk(self,level=1,startat=0,nsteps=-1,front_increment=1):
-#        if level == 1:
-#            elems = self.elems
-#        else:
-#            elems,lo = self.elems.insertLevel(level)            
-#        return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
+    def frontWalk(self,level=0,startat=0,nsteps=-1,front_increment=1):
+        """Visit all elements using a frontal walk.
+
+        In a frontal walk a forward step is executed simultanuously from all
+        the elements in the current front. The elements thus reached become
+        the new front. An element can be reached from the current element if
+        both are connected by a lower entity of the specified level. Default
+        level is 'point'.
+
+        Parameters:
+
+        - `startat`: initial element numbers in the front. It can be a single
+          element number or a list of numbers.
+        - `nsteps`: number of steps to walk. The default is to walk until all
+          elements have been reached.
+        - `frontinc`: number of front advancements in a single step. The
+          default is to advance the front once in each step.
+
+        Returns an array of integers specifying for each element in which step
+        the element was reached by the walker.
+        """
+        if level == 0:
+            elems = self.elems
+        else:
+            elems,lo = self.elems.insertLevel(level)            
+
+        return elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
 
 
-    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-        return self.elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
+    def walkNodeFront(*args,**kargs):
+        utils.warn("depr_mesh_walknodefront")
+        return self.frontWalk(*args,**kargs)
+    
 
-
-    def partitionByNodeFront(self,firstprop=0,startat=0):
+    def partitionByFront(self,firstprop=0,level=0,startat=0):
         """Detects different parts of the Mesh using a frontal method.
 
         okedges flags the edges where the two adjacent elems are to be
@@ -702,7 +727,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         corresponding to the part number. The lowest property number will be
         firstprop.
         """
-        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
+        utils.warn("partitionByFront is DEPRECATED")
+        return firstprop + self.frontWalk(startat=startat,front_increment=0)
 
 
     def partitionByConnection(self):
@@ -716,7 +742,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         corresponding to the part number. The lowest property number will be
         firstprop.
         """
-        return self.partitionByNodeFront()
+        utils.warn("partitionByConnection is DEPRECATED")
+        return self.partitionByFront()
 
 
     def splitByConnection(self):
@@ -724,7 +751,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Returns a list of Meshes that each form a connected part.
         """
-        split = self.setProp(self.partitionByConnection()).splitProp()
+        split = self.setProp(self.frontWalk()).splitProp()
         if split:
             return split.values()
         else:
