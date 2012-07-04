@@ -300,7 +300,7 @@ def clearProject():
     """Clear the contents of the current project."""
     pf.PF.clear()
 
-def closeProject(save=None):
+def closeProject(save=None,delet=None):
     """Close the current project, saving it or not.
 
     Parameters:
@@ -318,7 +318,9 @@ def closeProject(save=None):
             saveProject()
             if pf.PF:
                 listProject()
-                if draw.ask("What shall I do with the existing globals?",["Delete","Keep"]) == "Delete":
+                if delet is None:
+                    delet = draw.ask("What shall I do with the existing globals?",["Delete","Keep"]) == "Delete"
+                if delet:
                     pf.PF.clear()
 
     pf.PF.filename = None
@@ -335,16 +337,20 @@ def closeProjectWithoutSaving():
 
 def askCloseProject():
     if pf.PF and pf.PF.filename is not None:
-        choices = ['Exit without saving','SaveAs and Exit','Save and Exit']
+        choices = ['Exit without saving','SaveAs and Exit','Save, Close and Exit','Save and Exit']
         if pf.PF.access == 'r':
             choices = choices[:2]
-        res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%pf.PF.filename,choices,default=2)
+        res = draw.ask("You still an open project (%s) that might not have been saved.\nWhat do you want me to do?"%pf.PF.filename,choices,default=2)
         res = choices.index(res)
-        if res == 1:
+        if res == 0:
+            closeProject(save=False,delet=False)
+        elif res == 1:
             saveAsProject()
         elif res == 2:
+            closeProject(save=True,delet=False)
+        elif res == 3:
             saveProject()
-
+ 
 
 def convertProjectFile():
     proj = openProject(pf.PF.filename,access=['c'],default='c',exist=True)

@@ -144,7 +144,7 @@ class Curve(Geometry):
         is interpreted as the curve segment number, and the decimal part
         goes from 0 to 1 over the segment.
         """
-        # Do not use asarray here! We change it!
+        # Do not use asarray here! We change it, so need a copy!
         t = array(t).ravel()
         ti = floor(t).clip(min=0,max=self.nparts-1)
         t -= ti
@@ -268,6 +268,32 @@ class Curve(Geometry):
             at = PL.atLength(ntot)
             X = PL.pointsAt(at)
             PL = PolyLine(X,closed=PL.closed)
+        return PL.setProp(self.prop)
+
+
+    def approximate(self,nseg,equidistant=True,npre=100):
+        """Approximate a Curve with a PolyLine of n segments
+
+        Parameters:
+
+        - `nseg`: number of straight segments of the resulting PolyLine
+        - `equidistant`: if True (default) the points are spaced almost
+          equidistantly over the curve. If False, the points are spread
+          equally over the parameter space.
+        - `npre`: only used when `equidistant` is True: number of segments
+          per part of the curve used in the pre-approximation. This is
+          pre-approximation is currently required to compute curve lengths.
+
+        Note:: This is an alternative for Curve.approx, and may replace it
+        completely in future.
+        """
+        if equidistant:
+            S = self.approximate(npre,equidistant=False)
+        else:
+            S = self
+        at = arange(nseg+1) * float(S.nparts) / nseg
+        X = S.pointsAt(at)
+        PL = PolyLine(X,closed=S.closed)
         return PL.setProp(self.prop)
 
 
