@@ -1004,7 +1004,7 @@ surface_elems = [
 solid3d_elems = [
     'C3D4','C3D4H',
     'C3D6','C3D6H',
-    'C3D8','C3D8H','C3D8R','C3D8RH','C3D10',
+    'C3D8','C3D8I','C3D8H','C3D8R','C3D8RH','C3D10',
     'C3D10H','C3D10M','C3D10MH',
     'C3D15','C3D15H',
     'C3D20','C3D20H','C3D20R','C3D20RH',]
