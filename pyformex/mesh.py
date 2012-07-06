@@ -237,10 +237,11 @@ class Mesh(Geometry):
     def __getstate__(self):
         import copy
         state = copy.copy(self.__dict__)
-        # Store the element type by name
-        # This sometimes fails
-        print "SELF.ELTYPE %s" % self.eltype
-        print state['eltype']
+        # Store the element type by name,
+        # This is needed because of the way ElementType is initialized
+        # Maybe we should change that.
+        # The setstate then needs to set the elementType
+        # And this needs also to be done in Connectivity, if it has an eltype
         try:
             state['eltype'] = state['eltype'].name()
         except:

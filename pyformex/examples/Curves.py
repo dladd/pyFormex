@@ -26,11 +26,8 @@
 
 Examples showing the use of the 'curve' plugin
 
-level = 'normal'
-topics = ['geometry','curve']
-techniques = ['widgets','persistence','import','spline']
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','curve']
 _techniques = ['widgets','persistence','import','spline']
@@ -40,7 +37,6 @@ from gui.draw import *
 from plugins.curve import *
 from plugins.nurbs import *
 from odict import ODict
-from gui.widgets import InputDialog
 
 ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
 point_color = [ 'black','white' ] 
@@ -52,14 +48,13 @@ TA = None
 
 curvetypes = [
     'PolyLine',
-    'Quadratic Bezier Spline',
-    'Cubic Bezier Spline',
-    'Natural Spline',
-    'Nurbs Curve',
+    'BezierSpline',
+    'NaturalSpline',
+    'NurbsCurve',
 ]
 
 
-def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
+def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
     global S,TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -70,14 +65,12 @@ def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cu
     drawNumbers(Formex(P))
     if ctype == 'PolyLine':
         S = PolyLine(P,closed=closed)
-    elif ctype == 'Quadratic Bezier Spline':
-        S = BezierSpline(P,degree=2,closed=closed,curl=curl,endzerocurv=(endcond,endcond))
-    elif ctype == 'Cubic Bezier Spline':
-        S = BezierSpline(P,closed=closed,curl=curl,endzerocurv=(endcond,endcond))
-    elif ctype == 'Natural Spline':
+    elif ctype == 'BezierSpline':
+        S = BezierSpline(P,degree=degree,curl=curl,closed=closed,endzerocurv=(endcond,endcond))
+    elif ctype == 'NaturalSpline':
         S = NaturalSpline(P,closed=closed,endzerocurv=(endcond,endcond))
         directions = False
-    elif ctype == 'Nurbs Curve':
+    elif ctype == 'NurbsCurve':
         S = NurbsCurve(P,closed=closed)#,blended=closed)
         scale = None
         directions = False
@@ -135,12 +128,13 @@ dataset = [
     #Coords([[0., 1., 0.],[1., 0., 0.]]),
     ]
 
-data_items = [
+_items = [
     _I('DataSet','0',choices=map(str,range(len(dataset)))), 
     _I('CurveType',choices=curvetypes),
     _I('Closed',False),
-    _I('EndCurvatureZero',False),
+    _I('Degree',3,min=1,max=3),
     _I('Curl',1./3.),
+    _I('EndCurvatureZero',False),
     _I('Ndiv',10),
     _I('SpreadEvenly',False),
     _I('Ntot',40),
@@ -152,6 +146,11 @@ data_items = [
     _I('ShowDirections',False),
     _I('CutWithPlane',False),
     ]
+
+_enablers = [
+    ('CurveType','BezierSpline','Degree','Curl','EndCurvatureZero'),
+    ]
+
 
 clear()
 setDrawOptions({'bbox':'auto','view':'front'})
@@ -185,7 +184,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
+        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
         setDrawOptions({'bbox':None})
 
 def showAll():
@@ -198,8 +197,10 @@ def timeOut():
     
 
 def run():
-    dialog = widgets.InputDialog(
-        data_items,
+    global dialog
+    dialog = Dialog(
+        items=_items,
+        enablers=_enablers,
         caption='Curve parameters',
         actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
         default='Show')

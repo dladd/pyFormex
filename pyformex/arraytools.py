@@ -1548,7 +1548,9 @@ def vectorPairCosAngle(v1,v2):
     """
     v1 = asarray(v1)
     v2 = asarray(v2)
-    return dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
+    cos = dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
+    # clip to [-1.,1.] in case of rounding errors
+    return cos.clip(min=-1.,max=1.)
 
 
 def vectorPairAngle(v1,v2):
@@ -1564,7 +1566,7 @@ def vectorPairAngle(v1,v2):
 def histogram2(a,bins,range=None):
     """Compute the histogram of a set of data.
 
-    This function is a like numpy's histogram function, but also returns
+    This function is like numpy's histogram function, but also returns
     the bin index for each individual entry in the data set.
 
     Parameters:

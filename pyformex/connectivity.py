@@ -152,6 +152,31 @@ class Connectivity(ndarray):
         self.inv = getattr(obj, 'inv', None)
 
 
+    ## def __getstate__(self):
+    ##     """Serialize the object."""
+    ##     import copy
+    ##     state = copy.copy(self.__dict__)
+    ##     # Store the element type by name,
+    ##     # This is needed because of the way ElementType is initialized
+    ##     # Maybe we should change that.
+    ##     # The setstate then needs to set the elementType
+    ##     try:
+    ##         state['eltype'] = state['eltype'].name()
+    ##     except:
+    ##         state['eltype'] = None
+    ##     return state
+
+
+    ## def __setstate__(self,state):
+    ##     """Set the object from serialized state."""
+    ##     # The saved value is a string, convert to elementType
+    ##     try:
+    ##         state['eltype'] = elementType(state['eltype'])
+    ##     except:
+    ##         pass
+    ##     self.__dict__.update(state)
+ 
+
     def nelems(self):
         """Return the number of elements in the Connectivity table.
 
