@@ -2473,6 +2473,12 @@ class ArrayModel(TableModel):
             chead=range(data.shape[1])
         TableModel.__init__(self,data,rhead=rhead,chead=chead,edit=edit)
 
+ 
+    def data(self,index,role):
+        if index.isValid() and role == QtCore.Qt.DisplayRole: 
+            return QtCore.QVariant(self.arraydata[index.row(),index.column()]) 
+        return QtCore.QVariant() 
+
 
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
@@ -2543,7 +2549,9 @@ class Table(QtGui.QTableView):
          
        
                         
-
+#
+# THIS SHOULD BE DEPRECATED: use InputDialog
+#
 class Tabs(QtGui.QTabWidget):
     """Present a list of widgets as a single tabbed widget.
 

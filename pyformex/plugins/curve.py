@@ -266,6 +266,8 @@ class Curve(Geometry):
         PL = PolyLine(self.subPoints(ndiv),closed=self.closed)
         if ntot is not None:
             at = PL.atLength(ntot)
+            if self.closed:
+                at = at[:-1]
             X = PL.pointsAt(at)
             PL = PolyLine(X,closed=PL.closed)
         return PL.setProp(self.prop)
