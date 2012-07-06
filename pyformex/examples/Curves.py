@@ -49,24 +49,27 @@ TA = None
 curvetypes = [
     'PolyLine',
     'BezierSpline',
+    'BezierSpline2',
     'NaturalSpline',
     'NurbsCurve',
 ]
 
 
-def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
+def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,approx,cutWP=False,scale=None,directions=False):
     global S,TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
     if TA is not None:
         undecorate(TA)
-    TA = drawText(text,10,10,font='sans',size=20)
+    TA = drawText(text,10,20,font='sans',size=20)
     draw(P, color='black',nolight=True)
     drawNumbers(Formex(P))
     if ctype == 'PolyLine':
         S = PolyLine(P,closed=closed)
     elif ctype == 'BezierSpline':
         S = BezierSpline(P,degree=degree,curl=curl,closed=closed,endzerocurv=(endcond,endcond))
+    elif ctype == 'BezierSpline2':
+        S = BezierSpline(P,degree=2,closed=closed)
     elif ctype == 'NaturalSpline':
         S = NaturalSpline(P,closed=closed,endzerocurv=(endcond,endcond))
         directions = False
@@ -83,15 +86,10 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,draw
     print "%s control points" % S.coords.shape[0]
     #draw(S.coords,color=red,nolight=True)
 
-    if drawtype == 'Curve':
-        draw(S,color=ctype_color[im],nolight=True)
-
-    else:
+    if approx:
         if spread:
-            #print ndiv,ntot
             PL = S.approx(ndiv=ndiv,ntot=ntot)
         else:
-            #print ndiv,ntot
             PL = S.approx(ndiv=ndiv)
 
         if cutWP:
@@ -101,6 +99,9 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,draw
         else:
             draw(PL, color=ctype_color[im])
         draw(PL.pointsOn(),color=black)
+
+    else:
+        draw(S,color=ctype_color[im],nolight=True)
 
     
     if directions:
@@ -135,13 +136,15 @@ _items = [
     _I('Degree',3,min=1,max=3),
     _I('Curl',1./3.),
     _I('EndCurvatureZero',False),
-    _I('Ndiv',10),
-    _I('SpreadEvenly',False),
-    _I('Ntot',40),
+    _G('Approximation',[
+        _I('Ndiv',4),
+        _I('SpreadEvenly',False),
+        _I('Ntot',40),
+        ],checked=False),
     _I('ExtendAtStart',0.0),
     _I('ExtendAtEnd',0.0),
     _I('Scale',[1.0,1.0,1.0]),
-    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
+#    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
     _I('Clear',True),
     _I('ShowDirections',False),
     _I('CutWithPlane',False),
@@ -149,6 +152,7 @@ _items = [
 
 _enablers = [
     ('CurveType','BezierSpline','Degree','Curl','EndCurvatureZero'),
+    ('SpreadEvenly',True,'Ntot'),
     ]
 
 
@@ -184,7 +188,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
+        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,Approximation,CutWithPlane,Scale,ShowDirections)
         setDrawOptions({'bbox':None})
 
 def showAll():
