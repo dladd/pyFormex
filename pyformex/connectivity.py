@@ -152,15 +152,15 @@ class Connectivity(ndarray):
         self.inv = getattr(obj, 'inv', None)
 
             
-    ## def __reduce__(self):
-    ##     """Reduce the object to a pickled state"""
-    ##     # Get the pickled ndarray state (as a list, so we can change it)
-    ##     object_state = list(ndarray.__reduce__(self))
-    ##     # Define our own state with the extra attributes we added
-    ##     subclass_state = (self.eltype,None)
-    ##     # Store both in place of the original ndarray state
-    ##     object_state[2] = (object_state[2],subclass_state)
-    ##     return tuple(object_state)
+    def __reduce__(self):
+        """Reduce the object to a pickled state"""
+        # Get the pickled ndarray state (as a list, so we can change it)
+        object_state = list(ndarray.__reduce__(self))
+        # Define our own state with the extra attributes we added
+        subclass_state = (self.eltype,None)
+        # Store both in place of the original ndarray state
+        object_state[2] = (object_state[2],subclass_state)
+        return tuple(object_state)
 
     
     ## def __setstate__(self,state):
