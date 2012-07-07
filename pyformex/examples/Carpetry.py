@@ -68,9 +68,9 @@ def run():
     nkeys = len(possible_keys)
 
     maxconv = 6
-    minconv = 4
-    minelems = 10000
-    maxelems = 30000
+    minconv = 3
+    minelems = 6000
+    maxelems = 20000
 
     save = False
 
@@ -100,6 +100,8 @@ def run():
         key = possible_keys[random.randint(nkeys)]
         print "colored by %s" % key
         func = V[key][0]
+        print M.eltype
+        print M.elems.eltype
         S = trisurface.TriSurface(M)
         val = func(S)
         export({'surface':S})

@@ -36,21 +36,46 @@ from connectivity import Connectivity
 from numpy import array,arange
 from odict import ODict
 
+class TestP(object):
+    c = 4
+
+    def __getstate__(self):
+        state = {'d':"hallo"}
+        print "PICKLING",state
+        return state
+
+    def __setstate__(self,state):
+        print "UNPICKLING",state
+        self.__dict__.update(state)
+
 def _sanitize(ent):
     # input is Connectivity or (eltype,table)
     # output is Connectivity
     if isinstance(ent,Connectivity):
-        return ent
+        if hasattr(ent,'eltype'):
+            return ent
+        else:
+            raise ValueError,"Conectivity should have an element type"
     else:
         return Connectivity(ent[1],eltype=ent[0])
 
-class Element(object):
-    """Element base class: an empty element.
 
-    All derived classes should have a capitalized name: starting with
-    an uppercase character and further only lower case and digits.
+class ElementType(object):
+    """Base class for element type classes.
+
+    Element type data are stored in a class derived from ElementType.
+    The derived element type classes contain only static data. No instances
+    of these classes should be created. The base class defines the access
+    methods, which are all class methods.
+
+    Derived classes should be created by calling the function
+    :func:`createElementType.
 
     Each element is defined by the following attributes:
+
+    - `name`: a string. It is capitalized before use, thus all ElementType
+      subclasses have a name starting with an uppercase letter. Usually the
+      name has a numeric last part, equal to the plexitude of the element. 
 
     - `vertices`: the natural coordinates of its vertices,
     
@@ -106,81 +131,69 @@ class Element(object):
     'r': randomly choose one of the possible conversions. data is a list of
          element names. This can e.g. be used to select randomly between
          different but equivalent conversion paths.
-    
+
     """
-    proposed_changes = """..
-
     
-Proposed changes in the Element class
-=====================================
+   
+## Proposed changes in the Element class
+## =====================================
 
-- nnodes = nvertices
+## - nodal coordinates are specified as follows:
 
-- nodal coordinates are specified as follows:
+##   - in symmetry directions: between -1 and +1, centered on 0
+##   - in non-symmetry directions: between 0 and +1, aligned on 0
 
-  - in symmetry directions: between -1 and +1, centered on 0
-  - in non-symmetry directions: between 0 and +1, aligned on 0
+## - getCoords() : return coords as is
+## - getAlignedCoords(): return coords between 0 ad 1 and aligned on 0 in all
+##   directions
 
-- getCoords() : return coords as is
-- getAlignedCoords(): return coords between 0 ad 1 and aligned on 0 in all
-  directions
+    name = None
+    doc = "NO ELEMENT TYPE"
+    ndim = 0
+    vertices = []
+    edges = []
+    faces = []
 
-- Make the elements subclasses instead of Element class instances?
-
-"""
-
-    collection = ODict() # the full collection with all defined elements
-
-    def __init__(self,name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs):
-                
-        # store name in itself, to restore correctly from pickles
-        self._name = name.lower()
-        self.doc = doc
-        self.ndim = ndim
-        self.vertices = Coords(vertices)
-        self.edges = _sanitize(edges)
-        self.faces = _sanitize(faces)
-        for a in [ 'drawedges', 'drawedges2', 'drawfaces', 'drawfaces2']:
-            if a in kargs:
-                setattr(self,a, [ _sanitize(e) for e in kargs[a] ])
-        if 'reversed' in kargs:
-            self.reversed = kargs['reversed']
-        # add the element to the collection
-        if self._name in Element.collection:
-            raise ValueError,"Can not create duplicate element names"
-        Element.collection[self._name] = self
-
-
+    @classmethod
     def nplex(self):
+        """Return the plexitude of the element"""
         return self.vertices.shape[0]
     
     nvertices = nplex
     nnodes = nplex
 
                                       
+    @classmethod
     def nedges(self):
         return self.edges.nelems()
     
+    @classmethod
     def nfaces(self):
         return self.faces.nelems()
 
 
+    @classmethod
     def getPoints(self):
         return self.getEntities(0)
 
+    @classmethod
     def getEdges(self):
         return self.getEntities(1)
 
+    @classmethod
     def getFaces(self):
         return self.getEntities(2)
 
+    @classmethod
     def getCells(self):
         return self.getEntities(3)
     
+    @classmethod
     def getElement(self):
         return self.getEntities(self.ndim)
 
 
+    @classmethod
     def getEntities(self,level,reduce=False):
         """Return the type and connectivity table of some element entities.
 
@@ -216,7 +229,7 @@ Proposed changes in the Element class
             return Connectivity(arange(self.nplex()).reshape((-1,1)),eltype='point')
 
         elif level == self.ndim:
-            return Connectivity(arange(self.nplex()).reshape((1,-1)),eltype=self.name())
+            return Connectivity(arange(self.nplex()).reshape((1,-1)),eltype=self)
 
         elif level == 1:
             return self.edges
@@ -225,6 +238,7 @@ Proposed changes in the Element class
             return self.faces
  
 
+    @classmethod
     def getDrawEdges(self,quadratic=False):
         if quadratic and hasattr(self,'drawedges2'):
             return self.drawedges2
@@ -233,6 +247,7 @@ Proposed changes in the Element class
         return self.drawedges
 
 
+    @classmethod
     def getDrawFaces(self,quadratic=False):
         """Returns the local connectivity for drawing the element's faces"""
         if quadratic and hasattr(self,'drawfaces2'):
@@ -240,63 +255,93 @@ Proposed changes in the Element class
         if not hasattr(self,'drawfaces'):
             self.drawfaces = self.getFaces().reduceDegenerate()
         return self.drawfaces
-        
 
-    def toFormex(self):
-        from formex import Formex
-        x = self.vertices
-        e = self.getElement()
-        return Formex(x[e],eltype=e.eltype)
-
+    @classmethod
     def toMesh(self):
+        """Convert the element type to a Mesh.
+
+        Returns a Mesh with a single element of natural size.
+        """
         from mesh import Mesh
         x = self.vertices
         e = self.getElement()
         return Mesh(x,e,eltype=e.eltype)
+        
 
+    @classmethod
+    def toFormex(self):
+        """Convert the element type to a Formex.
+
+        Returns a Formex with a single element of natural size.
+        """
+        return self.toMesh().toFormex()
+
+
+    @classmethod
     def name(self):
-        try:
-            return self._name
-        except:
-            # Retained for compatibility with older Meshes stored in Projects
-            # TODO: remove this, or move to a compat module,
-            #       around version 0.9.2 
-            for k,v in Element.collection.items():
-                if v == self:
-                    return k
-            return 'unregistered_element'
+        return self.__name__.lower()
 
 
+    @classmethod
     def __str__(self):
-        return self.name()
+        return self.__name__
 
+    @classmethod
     def __repr__(self):
-        return "elementType(%s)" % self.name()
+        return "elementType(%s)" % self.__name__
 
+    @classmethod
     def report(self):
         print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces()))
-  
 
-    @classmethod
-    def listAll(clas):
-        return Element.collection.keys()
-            
-    @classmethod
-    def printAll(clas):
-        for k,v in Element.collection.items():
-            print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (k,v.ndim,v.nplex(),v.nedges(),v.nfaces()))
-        
+
+# all registered element types:
+_registered_element_types = {}
+
+
+def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs):
+    name = name.capitalize()
+    if name in _registered_element_types:
+        raise ValueError,"Element type %s already exists" % name
+
+    #print "\n CREATING ELEMENT TYPE %s\n" % name
+    
+    D = dict(
+        __doc__ = doc,
+        ndim = ndim,
+        vertices = Coords(vertices),
+        edges = _sanitize(edges),
+        faces = _sanitize(faces),
+        )
+
+    for a in [ 'drawedges', 'drawedges2', 'drawfaces', 'drawfaces2']:
+        if a in kargs:
+            D[a] = [ _sanitize(e) for e in kargs[a] ]
+            del kargs[a]
+
+    # other args are added as-is        
+    D.update(kargs)
+    #print "Final class dict:",D
+
+        ## # add the element to the collection
+        ## if self._name in Element.collection:
+        ##     raise ValueError,"Can not create duplicate element names"
+        ## Element.collection[self._name] = self
+
+    C = type(name,(ElementType,),D)
+    _registered_element_types[name] = C
+    return C
 
 #####################################################
 # Define the collection of default pyFormex elements 
 
-Point = Element(
+Point = createElementType(
     'point',"A single point",
     ndim = 0,
     vertices = [ ( 0.0, 0.0, 0.0 ) ],
     )
 
-Line2 = Element(
+Line2 = createElementType(
     'line2',"A 2-node line segment",
     ndim = 1,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -304,7 +349,7 @@ Line2 = Element(
                  ],
     )
 
-Line3 = Element(
+Line3 = createElementType(
     'line3',"A 3-node quadratic line segment",
     ndim = 1,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -315,7 +360,7 @@ Line3 = Element(
 
 ######### 2D ###################
 
-Tri3 = Element(
+Tri3 = createElementType(
     'tri3',"A 3-node triangle",
     ndim = 2,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -325,7 +370,7 @@ Tri3 = Element(
     edges = ('line2', [ (0,1), (1,2), (2,0) ])
     )
 
-Tri6 = Element(
+Tri6 = createElementType(
     'tri6',"A 6-node triangle",
     ndim = 2,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -340,7 +385,7 @@ Tri6 = Element(
     drawfaces = [('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )]
 )
 
-Quad4 = Element(
+Quad4 = createElementType(
     'quad4',"A 4-node quadrilateral",
     ndim = 2,
     vertices = [ (  0.0,  0.0, 0.0 ),
@@ -351,7 +396,7 @@ Quad4 = Element(
     edges = ('line2', [ (0,1), (1,2), (2,3), (3,0) ], ),
     )
 
-Quad6 = Element(
+Quad6 = createElementType(
     'quad6',"A 6-node quadrilateral",
     ndim = 2,
     vertices = Coords.concatenate([
@@ -368,7 +413,7 @@ Quad6 = Element(
     drawfaces = [('quad4',[(0,4,5,3),(2,5,4,1)], )],
     )
 
-Quad8 = Element(
+Quad8 = createElementType(
     'quad8',"A 8-node quadrilateral",
     ndim = 2,
     vertices = Coords.concatenate([
@@ -386,7 +431,7 @@ Quad8 = Element(
     )
     
 
-Quad9 = Element(
+Quad9 = createElementType(
     'quad9',"A 9-node quadrilateral",
     ndim = 2,
     vertices = Coords.concatenate([
@@ -402,7 +447,7 @@ Quad9 = Element(
 
 ######### 3D ###################
 
-Tet4 = Element(
+Tet4 = createElementType(
     'tet4',"A 4-node tetrahedron",
     ndim = 3,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -416,7 +461,7 @@ Tet4 = Element(
     )
 
 
-Tet10 = Element(
+Tet10 = createElementType(
     'tet10',"A 10-node tetrahedron",
     ndim = 3,
     vertices = [ ( 0.0, 0.0, 0.0 ),
@@ -437,7 +482,7 @@ Tet10 = Element(
     )
 
 
-Tet14 = Element(
+Tet14 = createElementType(
     'tet14',"A 14-node tetrahedron",
     ndim = 3,
     vertices = Coords.concatenate([
@@ -454,7 +499,7 @@ Tet14 = Element(
     )
     
     
-Tet15 = Element(
+Tet15 = createElementType(
     'tet15',"A 15-node tetrahedron",
     ndim = 3,
     vertices = Coords.concatenate([
@@ -468,25 +513,7 @@ Tet15 = Element(
     )
 
 
-#Wedge6 = Element(
-#    'wedge6',"A 6-node wedge element",
-#    ndim = 3,
-#    vertices = [ ( 0.0, 0.0, 1.0 ),
-#                 ( 1.0, 0.0, 1.0 ),
-#                 ( 0.0, 1.0, 1.0 ),
-#                 ( 0.0, 0.0,-1.0 ),
-#                 ( 1.0, 0.0,-1.0 ),
-#                 ( 0.0, 1.0,-1.0 ),
-#                 ],
-#    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], ),
-#    faces = ('quad4', [ (0,1,1,2), (3,5,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ], ),
-#    reversed = (3,4,5,0,1,2),
-#    drawfaces = [ ('tri3', [ (0,1,2), (3,5,4)] ),
-#                  ('quad4', [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], )]
-#    )
-
-
-Wedge6 = Element(
+Wedge6 = createElementType(
     'wedge6',"A 6-node wedge element",
     ndim = 3,
     vertices = Coords.concatenate([
@@ -503,7 +530,7 @@ Wedge6 = Element(
     )
 
 
-Hex8 = Element(
+Hex8 = createElementType(
     'hex8',"An 8-node hexahedron",
     ndim = 3,
     vertices = [ ( 0.0, 0.0, 0.0 ),  
@@ -526,7 +553,7 @@ Hex8 = Element(
 
 
 
-Hex16 = Element(
+Hex16 = createElementType(
     'hex16',"A 16-node hexahedron",
     ndim = 3,
     vertices = Coords.concatenate([
@@ -552,7 +579,7 @@ Hex16 = Element(
     )
 
 
-Hex20 = Element(
+Hex20 = createElementType(
     'hex20',"A 20-node hexahedron",
     ndim = 3,
     vertices = Coords.concatenate([
@@ -579,7 +606,7 @@ Hex20.drawfaces2 = [ Hex20.faces ]
 # WE MIGHT SWITCH OTHER ELEMENTS TO THIS REGULAR SCHEME TOO
 # AND ADD THE RENUMBERING TO THE FE OUTPUT MODULES
 from simple import regularGrid
-Hex27 = Element(
+Hex27 = createElementType(
     'hex27',"A 27-node hexahedron",
     ndim = 3,
     vertices = regularGrid([0.,0.,0.],[1.,1.,1.],[2,2,2]).swapaxes(0,2).reshape(-1,3),
@@ -591,7 +618,6 @@ Hex27 = Element(
                        (0,6,8,2,3,7,5,1,4),(18,20,26,24,19,23,25,21,22), ],),
 )
 Hex27.drawfaces = [ Hex27.faces.selectNodes(i) for i in Quad9.drawfaces ]
-
 
 ######################################################################
 ########## element type conversions ##################################
@@ -863,7 +889,7 @@ Hex8.degenerate = {
 
 from arraytools import golden_ratio as phi
 
-Icosa = Element(
+Icosa = createElementType(
     'icosa',
     """An icosahedron: a regular polyhedron with 20 triangular surfaces.,
 
@@ -937,7 +963,7 @@ def elementType(name=None,nplex=-1):
     - `nplex`: plexitude of the element. If specified and no element name
       was given, the default element type for this plexitude is returned.
 
-    Returns: a subclass of :class:`Element`
+    Returns: a subclass of :class:`ElementType`
 
     Errors: if neither `name` nor `nplex` can resolve into an element type,
       an error is raised.
@@ -949,31 +975,29 @@ def elementType(name=None,nplex=-1):
     >>> elementType(nplex=2).name()
     'line2'
     """
+    eltype = name
 
-    if isinstance(name,Element):
-        return name
-    
-    eltype = None
     try:
-        eltype = Element.collection[name.lower()]
-        #print "TEST %s (%s)" % (eltype,nplex)
-        # TESTING WOULD BREAK SOME INVALID ELTYPE SETTINGS in mesh
-        # MAYBE INTRODUCE None/INvalidElement for no valid eltype
-        #if not (nplex >= 0 and nplex != eltype.nplex()):
-        return eltype
+        if issubclass(eltype,ElementType):
+            return eltype
     except:
         pass
+    
     if eltype is None:
         try:
             return _default_eltype[nplex]
         except:
             pass
 
-    return None
+    try:
+        eltype = globals()[name.capitalize()]
+        if issubclass(eltype,ElementType):
+            return eltype
+    except:
+        pass
 
-    #return NoElement
-    
-    #raise ValueError("There is no element with name '%s' and plexitude '%s'" % (str(name),str(nplex)))
+    #raise ValueError,"No such element type: %s" % name
+    return None
 
 
 def elementTypes(ndim=None):
@@ -983,30 +1007,19 @@ def elementTypes(ndim=None):
     dimensionality are returned.
     """
     if ndim is None:
-        return Element.collection.keys()
+        return _registered_element_types.keys()
     else:
-        return [ k for k,v in Element.collection.items() if v.ndim==ndim] 
+        return [ k for k,v in _registered_element_types.iteritems() if v.ndim==ndim] 
 
 def printElementTypes():
     """Print all available element types.
 
-    Prints a list of the names of all availabale element types,
+    Prints a list of the names of all available element types,
     grouped by their dimensionality.
     """
     print("Available Element Types:")        
     for ndim in range(4):
         print("  %s-dimensional elements: %s" % (ndim,elementTypes(ndim))        )
-
-def elementName(eltype):
-    if isinstance(eltype,Element):
-        return eltype.name()
-    elif type(eltype) is str:
-        try:
-            return elementType(eltype).name()
-        except:
-            pass
-    else:
-        return None
         
 
 if __name__ == "__main__":

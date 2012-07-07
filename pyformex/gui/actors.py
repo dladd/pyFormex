@@ -30,7 +30,7 @@ from OpenGL import GL,GLU
 
 from drawable import *
 from formex import *
-from elements import elementType,elementName
+from elements import elementType
 from mesh import Mesh
 
 from plugins.trisurface import TriSurface
@@ -180,11 +180,11 @@ class BboxActor(Actor):
     """Draws a bbox."""
 
     def __init__(self,bbox,color=None,linewidth=None,**kargs):
+        from elements import Hex8
         Actor.__init__(self,**kargs)
         self.color = color
         self.linewidth = linewidth
         self.bb = bbox
-        Hex8 = elementType('hex8')
         self.vertices = Hex8.vertices * (bbox[1]-bbox[0]) + bbox[0]
         self.edges = Hex8.edges
         self.facets = Hex8.faces

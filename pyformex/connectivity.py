@@ -151,31 +151,30 @@ class Connectivity(ndarray):
         self.eltype = getattr(obj, 'eltype', None)
         self.inv = getattr(obj, 'inv', None)
 
+            
+    ## def __reduce__(self):
+    ##     """Reduce the object to a pickled state"""
+    ##     # Get the pickled ndarray state (as a list, so we can change it)
+    ##     object_state = list(ndarray.__reduce__(self))
+    ##     # Define our own state with the extra attributes we added
+    ##     subclass_state = (self.eltype,None)
+    ##     # Store both in place of the original ndarray state
+    ##     object_state[2] = (object_state[2],subclass_state)
+    ##     return tuple(object_state)
 
-    ## def __getstate__(self):
-    ##     """Serialize the object."""
-    ##     import copy
-    ##     state = copy.copy(self.__dict__)
-    ##     # Store the element type by name,
-    ##     # This is needed because of the way ElementType is initialized
-    ##     # Maybe we should change that.
-    ##     # The setstate then needs to set the elementType
-    ##     try:
-    ##         state['eltype'] = state['eltype'].name()
-    ##     except:
-    ##         state['eltype'] = None
-    ##     return state
-
-
+    
     ## def __setstate__(self,state):
-    ##     """Set the object from serialized state."""
-    ##     # The saved value is a string, convert to elementType
+    ##     """Restore from pickled state"""
+    ##     # In __reduce__, we replaced ndarray's state with a tuple
+    ##     # of itself and our own state
     ##     try:
-    ##         state['eltype'] = elementType(state['eltype'])
+    ##         "TRYING TO RESTORE CONNECTIITY"
+    ##         nd_state, own_state = state
+    ##         ndarray.__setstate__(self,nd_state)
+    ##         self.eltype,self.inv = own_state
     ##     except:
-    ##         pass
-    ##     self.__dict__.update(state)
- 
+    ##         ndarray.__setstate__(state)
+            
 
     def nelems(self):
         """Return the number of elements in the Connectivity table.
@@ -1186,7 +1185,6 @@ class Connectivity(ndarray):
             codes = cols[:,0]
         data.insert(0,codes)
         return Connectivity(column_stack(data))
-
 
 ############################################################################
 

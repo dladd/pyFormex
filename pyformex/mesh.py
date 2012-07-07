@@ -33,7 +33,7 @@ It also contains some useful functions to create such models.
 from coords import *
 from formex import Formex
 from connectivity import Connectivity
-from elements import elementType,elementName
+from elements import elementType
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
