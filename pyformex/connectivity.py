@@ -163,17 +163,17 @@ class Connectivity(ndarray):
         return tuple(object_state)
 
     
-    ## def __setstate__(self,state):
-    ##     """Restore from pickled state"""
-    ##     # In __reduce__, we replaced ndarray's state with a tuple
-    ##     # of itself and our own state
-    ##     try:
-    ##         "TRYING TO RESTORE CONNECTIITY"
-    ##         nd_state, own_state = state
-    ##         ndarray.__setstate__(self,nd_state)
-    ##         self.eltype,self.inv = own_state
-    ##     except:
-    ##         ndarray.__setstate__(state)
+    def __setstate__(self,state):
+        """Restore from pickled state"""
+        # In __reduce__, we replaced ndarray's state with a tuple
+        # of itself and our own state
+        try:
+            "TRYING TO RESTORE CONNECTIITY"
+            nd_state, own_state = state
+            ndarray.__setstate__(self,nd_state)
+            self.eltype,self.inv = own_state
+        except:
+            ndarray.__setstate__(state)
             
 
     def nelems(self):
