@@ -76,7 +76,6 @@ def makeGrid(nx,ny,eltype):
     return elem.toFormex().replic2(nx,ny).resized(1.).centered()
 
 
-
 def drawImage(grid,base,patch):
     """Draw the image on the specified patch grid.
 
@@ -85,7 +84,6 @@ def drawImage(grid,base,patch):
     """
     mT = [ patch.isopar('quad8',x,base) for x in grid.coords ]
     return [ draw(i,color=c,bbox='last') for i,c in zip (mT,pcolor)]
-
 
 
 def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
@@ -123,6 +121,7 @@ def run():
     # default image file
     filename = getcfg('datadir')+'/benedict_6.jpg'
     viewer = ImageView(filename)
+    print type(viewer)
 
     px,py = 5,5 #control points for projection of patches
     kx,ky = 60,50 #number of cells in each patch
@@ -131,7 +130,7 @@ def run():
 
     res = askItems([
         _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-    #    viewer,   # uncomment this line to add the image previewer
+        _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
         _I('px',px,text='Number of patches in x-direction'),
         _I('py',py,text='Number of patches in y-direction'),
         _I('kx',kx,text='Width of a patch in pixels'), 
@@ -151,7 +150,8 @@ def run():
     F = Formex('4:0123').replic2(nx,ny).centered()
     if image is None:
         print "Loading image"
-        wpic, hpic=loadImage(filename)
+        wpic, hpic = loadImage(filename)
+        print "Image size is %sx%s" % (wpic,hpic)
 
     if image is None:
         return
@@ -160,7 +160,7 @@ def run():
     color,colortable = image2glcolor(image.scaled(nx,ny))
     # Reorder by patch
     pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
-    #print pcolor.shape
+    print pcolor.shape
 
     mH = makeGrid(px,py,'Quad8')
 
@@ -168,7 +168,8 @@ def run():
         hpic, wpic
         ratioYX = float(hpic)/wpic
         mH = mH.scale(ratioYX,1) # Keep original aspect ratio
-    except: pass
+    except:
+        pass
 
     mH0 = mH.scale(scale).translate([-0.5,-0.1,2.])
 

@@ -279,6 +279,12 @@ class ElementType(object):
 
     @classmethod
     def name(self):
+        """Return the lowercase name of the element.
+
+        For compatibility, name() returns the lower case version of the
+        ElementType's name. To get the real name, use the attribute
+        `__name__` or format the ElementType as a string.
+        """
         return self.__name__.lower()
 
 
@@ -292,7 +298,7 @@ class ElementType(object):
 
     @classmethod
     def report(self):
-        print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces()))
+        return "ElementType %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.__name__,self.ndim,self.nplex(),self.nedges(),self.nfaces())
 
 
 # all registered element types:
@@ -1010,6 +1016,7 @@ def elementTypes(ndim=None):
         return _registered_element_types.keys()
     else:
         return [ k for k,v in _registered_element_types.iteritems() if v.ndim==ndim] 
+
 
 def printElementTypes():
     """Print all available element types.

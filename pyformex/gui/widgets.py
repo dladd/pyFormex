@@ -1224,9 +1224,8 @@ class InputWidget(InputItem):
 
     The widget should have:
     
-    - a results attribute that is set to
-      a dict with the resulting input values when the widget's
-      acceptData() is called.
+    - a results attribute that is set to a dict with the resulting input
+      values when the widget's acceptData() is called.
     - an acceptData() method, that sets the widgets results dict.
     - a setValue(dict) method that sets the widgets values to those
       specified in the dict.

@@ -24,19 +24,25 @@
 ##
 """ColorImage
 
-level = 'normal'
-topics = ['image']
-techniques = ['color']
-
+This example illustrates how to display and transform 2D images.
+First, a 2D image is read from a file. You can select a file by clicking ont
+the filename button. 
+Then a grid type geometry is constructed. The size of the grid can be set,
+and the image will be rescaled to that size.
+The individual elements of the grid are attributed colors corresponding with
+the image pixel values.
+Finally, before the result is drawn, the geometry can be transformed into some
+other shape or be projected on a another surface.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['image']
-_techniques = ['color']
+_techniques = ['color','image']
 
 from gui.draw import *
-from gui.widgets import ImageView,simpleInputItem as I
+from gui.widgets import ImageView
 from gui.imagearray import *
+from odict import ODict
 
 resetAll()
 
@@ -86,19 +92,19 @@ def run():
     # image viewer widget
     viewer = ImageView(filename)
 
-    transforms = {
-        'flat': lambda F: F,
-        'cylindrical': lambda F: F.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1),
-        'spherical': lambda F: F.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1),
-        'projected_on_cylinder': lambda F: F.projectOnCylinder(2*R,1),
-        }
+    transforms = ODict([
+        ('flat', lambda F: F),
+        ('cylindrical', lambda F: F.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1)),
+        ('spherical', lambda F: F.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1)),
+        ('projected_on_cylinder', lambda F: F.projectOnCylinder(2*R,1)),
+        ])
 
     res = askItems([
-        I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-        I('viewer',viewer,itemtype='widget'),  # the image previewing widget
-        I('nx',w,text='width'),
-        I('ny',h,text='height'),
-        I('transform',itemtype='vradio',choices=transforms.keys()),
+        _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+        _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
+        _I('nx',w,text='width'),
+        _I('ny',h,text='height'),
+        _I('transform',itemtype='vradio',choices=transforms.keys()),
         ])
 
     if not res:

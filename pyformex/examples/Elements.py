@@ -25,12 +25,10 @@
 
 """Elements
 
-level = 'normal'
-topics = ['geometry','mesh']
-techniques = ['dialog','elements']
-
+This example is intended for testing the drawing functions for each of the
+implemented element types. 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','mesh']
 _techniques = ['dialog','elements']
@@ -39,7 +37,6 @@ from gui.draw import *
 
 from elements import *
 from mesh import Mesh
-from gui.widgets import simpleInputItem as I
 import utils
 import olist
 
@@ -50,7 +47,10 @@ def showElement(eltype,options):
     clear()
     drawText("Element type: %s" %eltype,100,200,font='times',size=18,color=black)
     el = elementType(eltype)
-    #print el.report()
+
+    if options['Show report']:
+        print el.report()
+
     M = el.toMesh()
     
     ndim = el.ndim
@@ -108,6 +108,7 @@ def run():
         'Draw as':'Mesh',
         'Color setting':'direct',
         'Force dimensionality':False,
+        'Show report':False,
         }
     res.update(pf.PF.get('Elements_data',{}))
     #print res
@@ -115,17 +116,18 @@ def run():
     res = askItems(
         store=res,
         items=[
-            I('Element Type',choices=['All',]+ElemList),
-            I('Deformed',itemtype='bool'),
-            I('Mirrored',itemtype='radio',choices=['No','x','y','z']),
-            I('Draw as',itemtype='radio',choices=['Mesh','Formex','Border']),
-            I('Color setting',itemtype='radio',choices=['direct','prop']),
-            I('Force dimensionality',itemtype='bool'),
+            _I('Element Type',choices=['All',]+ElemList),
+            _I('Deformed',itemtype='bool'),
+            _I('Mirrored',itemtype='radio',choices=['No','x','y','z']),
+            _I('Draw as',itemtype='radio',choices=['Mesh','Formex','Border']),
+            _I('Color setting',itemtype='radio',choices=['direct','prop']),
+            _I('Force dimensionality',itemtype='bool'),
+            _I('Show report',itemtype='bool'),
             ])
     if not res:
         return
 
-    #print "RESULT",res
+    # save the results for persistence
     pf.PF['Elements_data'] = res
     
     eltype = res['Element Type']
