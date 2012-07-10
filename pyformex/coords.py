@@ -1423,9 +1423,19 @@ class Coords(ndarray):
         # Create set of cuts with set of planes
         #print type(S)
         cuts = [ S.intersectionWithPlane(xi,v1) for xi in x ]
+        nseg = [ c.nelems() for c in cuts ]
+        if ignore_errors:
+            # remove the empty intersections
+            cuts = [ c for c,n in zip(cuts,nseg) if n > 0 ]
+        else:
+            # Check that all planes cut the surface
+            if 0 in nseg:
+                raise RuntimeError,"Some plane has no intersection line"
+                
         # cut the cuts with second set of planes
         points = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
         if ignore_errors :
+            # Keep only those rays with at least one cutting point
             points = [ p for p in points if p.shape[0] > 0 ]
         else:
             npts = [ p.shape[0] for p in points ]

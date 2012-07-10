@@ -26,7 +26,7 @@
 #
 # Makefile for 'gts*' commands used by pyFormex
 #
-# You need: libgts-dev, libglib-2.0-dev, pkg-config 
+# You need: libgts-dev, libglib2.0-dev, pkg-config 
 #
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 

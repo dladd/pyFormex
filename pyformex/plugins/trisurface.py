@@ -1626,7 +1626,7 @@ Quality: %s .. %s
         if ins0.size > 0:
             cutedg = fac[ins0][cut[ins0]].reshape(-1,2)
             e0 = rev[cutedg]
-            Mparts.append(Mesh(x,e0).compact())
+            Mparts.append(Mesh(x,e0,eltype='line2').compact())
 
         # One inside vertex
         if ins1.size > 0:
@@ -1640,12 +1640,12 @@ Quality: %s .. %s
                 e11cut = rev[cutedg]
                 x11 = Coords.concatenate([coords,x],axis=0)
                 e11 = concatenate([e11ins,e11cut+len(coords)],axis=1)
-                Mparts.append(Mesh(x11,e11).compact())
+                Mparts.append(Mesh(x11,e11,eltype='line2').compact())
 
         # Two inside vertices -> 0 cutting edges
         if ins2.size > 0:
             e2 = ele[ins2][ins[ins2]].reshape(-1,2)
-            Mparts.append(Mesh(coords,e2).compact())
+            Mparts.append(Mesh(coords,e2,eltype='line2').compact())
 
         # Three inside vertices -> 0 cutting edges
         if ins3.size > 0:
@@ -1655,7 +1655,7 @@ Quality: %s .. %s
             insedg = setdiff1d(insedg,insedg[double])
             if insedg.size != 0:
                 e3 = edg[insedg]
-                Mparts.append(Mesh(coords,e3).compact())
+                Mparts.append(Mesh(coords,e3,eltype='line2').compact())
 
         # Done with getting the segments
         if len(Mparts) ==  0:

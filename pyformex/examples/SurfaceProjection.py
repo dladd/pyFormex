@@ -159,7 +159,7 @@ def run():
     except:
         pass
 
-    mH0 = mH.scale(scale).translate([-0.4,-0.1,2.])
+    mH0 = mH.scale(scale).translate([-1.4,-0.1,2.])
 
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()
@@ -172,7 +172,8 @@ def run():
     d0 = drawImage(mH0,base,patch)
 
     if method == 'projection':
-        pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
+        pts = mH0.coords.projectOnSurface(T,[0.,0.,1.],True)
+        print pts
         #print mH0.shape
         #print pts.shape
         dg1 = d1 = [] # to allow dummy undraw 
