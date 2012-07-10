@@ -114,7 +114,7 @@ def run():
 
     # default image file
     dfilename = getcfg('datadir')+'/benedict_6.jpg'
-    wviewer = ImageView(filename,maxheight=200)
+    wviewer = ImageView(dfilename,maxheight=200)
 
     res = askItems([
         _I('filename',dfilename,text='Image file',itemtype='button',func=selectImage),
@@ -206,13 +206,12 @@ def run():
     # small translation to make sure the image is above the surface, not cutting it
 
     print "Finally show the finished image"
-    print len(pf.canvas.actors)
-    undraw(dp);  print len(pf.canvas.actors)
-    undraw(dx);  print len(pf.canvas.actors)
-    undraw(d0);  print len(pf.canvas.actors)
-    undraw(d1);  print len(pf.canvas.actors)
-    undraw(dg0);  print len(pf.canvas.actors)
-    undraw(dg1);  print len(pf.canvas.actors)
+    undraw(dp);
+    undraw(dx);
+    undraw(d0);
+    undraw(d1);
+    undraw(dg0);
+    undraw(dg1);
     view('front')
     zoomAll()
 
