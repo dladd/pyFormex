@@ -25,20 +25,12 @@
 
 """SurfaceProjection.py
 
-level = 'normal'
-topics = ['surface']
-techniques = ['transform','projection','dialog','image']
-original idea: gianluca
-
-.. Description
-
-SurfaceProjection
------------------
-
-This example illustrates the use of intersectSurfaceWithLines and Coords.projectOnSurface.
+This example illustrates the use of Coords.projectOnSurface and
+trisurface.intersectSurfaceWithLines as a method to render a 2D image
+onto a 3D surface.
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['surface']
 _techniques = ['transform','projection','dialog','image']
@@ -51,9 +43,10 @@ from gui.imagearray import *
 
 
 def selectImage(fn):
+    global wviewer
     fn = askImageFile(fn)
     if fn:
-        viewer.showImage(fn)
+        wviewer.showImage(fn)
     return fn
 
 
@@ -63,8 +56,7 @@ def loadImage(fn):
     if image.isNull():
         warning("Could not load image '%s'" % fn)
         return None
-
-    return image.width(),image.height()
+    return image
 
 
 def makeGrid(nx,ny,eltype):
@@ -79,11 +71,12 @@ def makeGrid(nx,ny,eltype):
 def drawImage(grid,base,patch):
     """Draw the image on the specified patch grid.
 
+    The image colors are specified in the global variable pcolor.
     grid is a Formex with px*py Quad8 elements.
-    Each element of grid will be filled by a kx*jy patch of colors.
+    Each element of grid will be filled by a kx*ky patch of colors.
     """
     mT = [ patch.isopar('quad8',x,base) for x in grid.coords ]
-    return [ draw(i,color=c,bbox='last') for i,c in zip (mT,pcolor)]
+    return [ draw(i,color=c,bbox='last',nolight=True,wait=False) for i,c in zip (mT,pcolor)]
 
 
 def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
@@ -103,6 +96,7 @@ def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
 
 
 def run():
+    global wviewer,pcolor,px,py
     clear()
     smooth()
     lights(True)
@@ -119,24 +113,18 @@ def run():
     draw(T)
 
     # default image file
-    filename = getcfg('datadir')+'/benedict_6.jpg'
-    viewer = ImageView(filename)
-    print type(viewer)
-
-    px,py = 5,5 #control points for projection of patches
-    kx,ky = 60,50 #number of cells in each patch
-    scale = 0.8
-    method='projection'
+    dfilename = getcfg('datadir')+'/benedict_6.jpg'
+    wviewer = ImageView(filename,maxheight=200)
 
     res = askItems([
-        _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-        _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
-        _I('px',px,text='Number of patches in x-direction'),
-        _I('py',py,text='Number of patches in y-direction'),
-        _I('kx',kx,text='Width of a patch in pixels'), 
-        _I('ky',ky,text='Height of a patch in pixels'),
-        _I('scale',scale,text='Scale factor'),
-        _I('method',method,choices=['projection','intersection']),
+        _I('filename',dfilename,text='Image file',itemtype='button',func=selectImage),
+        _I('viewer',wviewer,itemtype='widget'),  # the image previewing widget
+        _I('px',5,text='Number of patches in x-direction'),
+        _I('py',5,text='Number of patches in y-direction'),
+        _I('kx',60,text='Width of a patch in pixels'), 
+        _I('ky',50,text='Height of a patch in pixels'),
+        _I('scale',0.8,text='Scale factor'),
+        _I('method',choices=['projection','intersection']),
         ])
 
     if not res:
@@ -150,7 +138,8 @@ def run():
     F = Formex('4:0123').replic2(nx,ny).centered()
     if image is None:
         print "Loading image"
-        wpic, hpic = loadImage(filename)
+        image = loadImage(filename)
+        wpic,hpic = image.width(),image.height()
         print "Image size is %sx%s" % (wpic,hpic)
 
     if image is None:
@@ -160,23 +149,22 @@ def run():
     color,colortable = image2glcolor(image.scaled(nx,ny))
     # Reorder by patch
     pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
-    print pcolor.shape
+    print "Shape of the colors array: %s" % str(pcolor.shape)
 
     mH = makeGrid(px,py,'Quad8')
 
     try:
-        hpic, wpic
         ratioYX = float(hpic)/wpic
         mH = mH.scale(ratioYX,1) # Keep original aspect ratio
     except:
         pass
 
-    mH0 = mH.scale(scale).translate([-0.5,-0.1,2.])
+    mH0 = mH.scale(scale).translate([-0.4,-0.1,2.])
 
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()
     zoom(0.5)
-    pause(msg='Create %s x %s patches > STEP' % (px,py))
+    print "Create %s x %s patches" % (px,py)
 
     # Create the transforms
     base = makeGrid(1,1,'Quad8').coords[0]
@@ -184,11 +172,10 @@ def run():
     d0 = drawImage(mH0,base,patch)
 
     if method == 'projection':
-        print type(T)
         pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
-        print mH0.shape
-        print pts.shape
-        dg1=d1 = None
+        #print mH0.shape
+        #print pts.shape
+        dg1 = d1 = [] # to allow dummy undraw 
 
 
     else:
@@ -198,7 +185,7 @@ def run():
 
         x = connect([mH0.points(), mH1.points()])
         dx = draw(x)
-        pause(msg='Creating intersection with surface > STEP')
+        print "Creating intersection with surface"
         pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
 
         if len(x) != len(pts):
@@ -206,28 +193,30 @@ def run():
             print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
             return
 
-    dp=draw(pts, marksize=6, color='white')
-    print pts.shape
+    dp = draw(pts, marksize=6, color='white')
+    #print pts.shape
     mH2 = Formex(pts.reshape(-1,8,3))
 
     if method == 'projection':
         x = connect([mH0.points(),mH2.points()])
         dx = draw(x)
 
-    pause(msg='Create projection mapping using the grid points > STEP')
+    print "Create projection mapping using the grid points"
     d2 = drawImage(mH2.trl([0.,0.,0.01]),base,patch)
     # small translation to make sure the image is above the surface, not cutting it
 
-    pause(msg='Finally show the finished image > STEP')
-    undraw(dp)
-    undraw(dx)
-    undraw(d0)
-    undraw(d1)
-    undraw(dg0)
-    undraw(dg1)
+    print "Finally show the finished image"
+    print len(pf.canvas.actors)
+    undraw(dp);  print len(pf.canvas.actors)
+    undraw(dx);  print len(pf.canvas.actors)
+    undraw(d0);  print len(pf.canvas.actors)
+    undraw(d1);  print len(pf.canvas.actors)
+    undraw(dg0);  print len(pf.canvas.actors)
+    undraw(dg1);  print len(pf.canvas.actors)
     view('front')
     zoomAll()
 
 if __name__ == 'draw':
+    delay(0)
     run()
 # End
