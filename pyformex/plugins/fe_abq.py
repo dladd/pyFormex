@@ -731,6 +731,8 @@ def fmtGeneralContact(prop):
     
     - Exclusions (exl)
     
+    - Extra (extra). E.g. extra='*CONTACT CONTROLS ASSIGNMENT, TYPE=SCALE PENALTY\n, , 1.e3\n'
+    
     Example:
     
     >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
@@ -750,6 +752,8 @@ def fmtGeneralContact(prop):
                 out += "%s, %s\n" % (ex[0], ex[1])
         out += "*Contact property assignment\n"
         out += ", , %s\n" % intername
+        if p.extra:
+            out += p.extra
     return out
 
 
