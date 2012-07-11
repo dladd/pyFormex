@@ -76,7 +76,7 @@ def drawImage(grid,base,patch):
     Each element of grid will be filled by a kx*ky patch of colors.
     """
     mT = [ patch.isopar('quad8',x,base) for x in grid.coords ]
-    return [ draw(i,color=c,bbox='last',nolight=True,wait=False) for i,c in zip (mT,pcolor)]
+    return [ draw(i,color=c,alpha=0.99,bbox='last',nolight=True,wait=False) for i,c in zip (mT,pcolor)]
 
 
 def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
@@ -119,11 +119,11 @@ def run():
     res = askItems([
         _I('filename',dfilename,text='Image file',itemtype='button',func=selectImage),
         _I('viewer',wviewer,itemtype='widget'),  # the image previewing widget
-        _I('px',5,text='Number of patches in x-direction'),
-        _I('py',5,text='Number of patches in y-direction'),
-        _I('kx',60,text='Width of a patch in pixels'), 
-        _I('ky',50,text='Height of a patch in pixels'),
-        _I('scale',0.8,text='Scale factor'),
+        _I('px',4,text='Number of patches in x-direction'),
+        _I('py',6,text='Number of patches in y-direction'),
+        _I('kx',30,text='Width of a patch in pixels'), 
+        _I('ky',30,text='Height of a patch in pixels'),
+        _I('scale',1.0,text='Scale factor'),
         _I('method',choices=['projection','intersection']),
         ])
 
@@ -159,7 +159,7 @@ def run():
     except:
         pass
 
-    mH0 = mH.scale(scale).translate([-1.4,-0.1,2.])
+    mH0 = mH.scale(scale).translate([-0.4,-0.1,2.])
 
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()
@@ -172,10 +172,7 @@ def run():
     d0 = drawImage(mH0,base,patch)
 
     if method == 'projection':
-        pts = mH0.coords.projectOnSurface(T,[0.,0.,1.],True)
-        print pts
-        #print mH0.shape
-        #print pts.shape
+        pts = mH0.coords.projectOnSurface(T,[0.,0.,1.],'-f')
         dg1 = d1 = [] # to allow dummy undraw 
 
 
@@ -215,8 +212,9 @@ def run():
     undraw(dg1);
     view('front')
     zoomAll()
+    pause(1)
+    transparent()
 
 if __name__ == 'draw':
-    delay(0)
     run()
 # End

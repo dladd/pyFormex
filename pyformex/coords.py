@@ -1398,54 +1398,102 @@ class Coords(ndarray):
         return f
 
 
-    def projectOnSurface(self,S,n,ignore_errors=False):
+    def projectOnSurface(self,S,dir=0,missing='error', return_indices=False):
         """Project the Coords on a triangulated surface.
 
-        The points of the Coords are projected in the direction of the
-        vector n onto the surface S. 
+        The points of the Coords are projected in the specified direction dir
+        onto the surface S. 
 
         Parameters:
 
         - `S`: TriSurface: any triangulated surface
-        - `n`: int or vector: specifies the direction of the projection
-        - `ignore_errors`: if True, projective lines not cutting the
-          surface will result in NaN values. The default is to raise an error.
+        - `dir`: int or vector: specifies the direction of the projection
+        - `missing`: float value or a string. Specifies a distance to set
+          the position of the projection point in cases where the projective
+          line does not cut the surface. The sign of the distance is taken
+          into account. If specified as a string, it should be one of the
+          strings 'c', 'f', or 'm', possibly preceded by a '+' or '-'.
+          The distance will then be taken equal to the closest,
+          the furthest, or the mean distance of a point to its projection,
+          and applied in positive or negative direction as specified.
+          Any other value of missing will result in an error if some point
+          does not have any projection.
+        - `return_indices: if True, also returns an index of the points that
+          have a projection on the surface.
 
-        If successful, a Coords with the same structure as the
-        input is returned.
+        Returns a Coords with the same shape as the input. If `return_indices
+          is True, also returns an index of the points that have a projection
+          on the surface. This index is a sequential one, no matter what the
+          shape of the input Coords is.
         """
+        import olist
+        from geomtools import anyPerpendicularVector
+        try:
+            missing = float(missing)
+        except:
+            if type(missing) is str and len(missing) > 0:
+                if missing[0] not in '+-':
+                    missing = '+' + missing
+                missing = missing[:2]
+            else:
+                missing = None
+
+        if type(dir) is int:
+            dir = unitVector()
+        else:
+            dir = asarray(dir)
         x = self.reshape(-1,3)
         # Create planes through x in direction n
-        # WE SHOULD MOVE THIS TO arraytools?
-        from geomtools import anyPerpendicularVector
-        v1 = anyPerpendicularVector(n)
-        v2 = cross(n,v1)
+        # WE SHOULD MOVE THIS TO geomtools?
+        v1 = anyPerpendicularVector(dir)
+        v2 = cross(dir,v1)
         # Create set of cuts with set of planes
-        #print type(S)
         cuts = [ S.intersectionWithPlane(xi,v1) for xi in x ]
         nseg = [ c.nelems() for c in cuts ]
-        if ignore_errors:
-            # remove the empty intersections
-            cuts = [ c for c,n in zip(cuts,nseg) if n > 0 ]
-        else:
-            # Check that all planes cut the surface
-            if 0 in nseg:
-                raise RuntimeError,"Some plane has no intersection line"
+        # remove the empty intersections
+        cutid = [ i for i,n in enumerate(nseg) if n > 0 ]
+        cuts = olist.select(cuts,cutid)
                 
         # cut the cuts with second set of planes
-        points = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
-        if ignore_errors :
-            # Keep only those rays with at least one cutting point
-            points = [ p for p in points if p.shape[0] > 0 ]
-        else:
-            npts = [ p.shape[0] for p in points ]
-            if min(npts) == 0:
-                print npts
-                raise RuntimeError,"Some line has no intersection point"
-        # find the points closest to self
-        points = [ p.closestToPoint(xi) for p,xi in zip(points,x) ]
-        return Coords.concatenate(points)
+        cuts = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
+        npts = [ p.shape[0] for p in cuts ]
+        okid = [ i for i,n in enumerate(npts) if n > 0 ]
+        # remove the empty intersections
+        cutid = olist.select(cutid,okid) 
+        cuts = olist.select(cuts,okid)
 
+        # find the points closest to self
+        cuts = [ p.closestToPoint(xi) for p,xi in zip(cuts,x) ]
+        cuts = Coords.concatenate(cuts)
+
+        if cuts.shape[0] < x.shape[0]:
+            # fill in missing values or raise error
+            if type(missing) is float:
+                d = missing
+            elif missing[1] in 'cfm':
+                d = length(x[cutid] - cuts)
+                if missing[1]=='c':
+                    d = d.min()
+                elif missing[1]=='f':
+                    d = d.max()
+                elif missing[1]=='m':
+                    d = 0.5*(d.min()+d.max())
+                if missing[0] == '-':
+                    d *= -1.
+                #x = x.copy() + d * dir.reshape(1,3)
+                x = x.trl(d*dir)
+                x[cutid] = cuts
+            else:
+                raise ValueError,"The projection of some point(s) in the specified direction does not cut the surface"
+        else:
+            x = cuts
+            
+        x = x.reshape(self.shape)
+        if return_indices:
+            return x,cutid
+        else:
+            return x
+        
 
     # Extra transformations implemented by plugins
 
