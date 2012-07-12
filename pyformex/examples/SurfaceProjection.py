@@ -124,6 +124,7 @@ def run():
         _I('kx',30,text='Width of a patch in pixels'), 
         _I('ky',30,text='Height of a patch in pixels'),
         _I('scale',1.0,text='Scale factor'),
+        _I('trl',[-0.4,-0.1,2.],itemtype='point',text='Translation'),
         _I('method',choices=['projection','intersection']),
         ])
 
@@ -159,7 +160,7 @@ def run():
     except:
         pass
 
-    mH0 = mH.scale(scale).translate([-0.4,-0.1,2.])
+    mH0 = mH.scale(scale).translate(trl)
 
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()

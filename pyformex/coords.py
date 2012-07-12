@@ -1417,7 +1417,8 @@ class Coords(ndarray):
           the furthest, or the mean distance of a point to its projection,
           and applied in positive or negative direction as specified.
           Any other value of missing will result in an error if some point
-          does not have any projection.
+          does not have any projection. An error will also be raised if not
+          a single point projection intersects the surface.
         - `return_indices: if True, also returns an index of the points that
           have a projection on the surface.
 
@@ -1455,7 +1456,7 @@ class Coords(ndarray):
         cuts = olist.select(cuts,cutid)
                 
         # cut the cuts with second set of planes
-        cuts = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
+        cuts = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x[cutid]) ]
         npts = [ p.shape[0] for p in cuts ]
         okid = [ i for i,n in enumerate(npts) if n > 0 ]
         # remove the empty intersections
@@ -1463,9 +1464,11 @@ class Coords(ndarray):
         cuts = olist.select(cuts,okid)
 
         # find the points closest to self
-        cuts = [ p.closestToPoint(xi) for p,xi in zip(cuts,x) ]
+        cuts = [ p.closestToPoint(xi) for p,xi in zip(cuts,x[cutid]) ]
         cuts = Coords.concatenate(cuts)
 
+        if cuts.size == 0:
+            raise ValueError,"The projection does not intersect with the surface"
         if cuts.shape[0] < x.shape[0]:
             # fill in missing values or raise error
             if type(missing) is float:
@@ -1480,7 +1483,6 @@ class Coords(ndarray):
                     d = 0.5*(d.min()+d.max())
                 if missing[0] == '-':
                     d *= -1.
-                #x = x.copy() + d * dir.reshape(1,3)
                 x = x.trl(d*dir)
                 x[cutid] = cuts
             else:
@@ -1836,6 +1838,8 @@ class Coords(ndarray):
         [[ 1.  1.  0.]]
         """
         L2 = atleast_2d(*L)
+        if len(L2) == 0 or max([len(x) for x in L2]) == 0:
+            return Coords()
         if len(L)==1:
             return L2
         else:
