@@ -69,9 +69,15 @@ import utils
 
 # Set the proper revision number when running from svn sources
 if pf.svnversion:
-    sta,out = utils.runCommand('cd %s && svnversion' % pyformexdir,quiet=True)
-    if sta == 0 and not out.startswith('exported'):
-        pf.__revision__ = out.strip()
+    try:
+        sta,out = utils.runCommand('cd %s && svnversion' % pyformexdir,quiet=True)
+        if sta == 0 and not out.startswith('exported'):
+            pf.__revision__ = out.strip()
+    except:
+        # The above may fail when a checked-out svn version is moved to
+        # a system without subversion installed.
+        # Therefore, silently ignore
+        pass
 
 # Set the Full pyFormex version string
 # This had to be deferred until the __revision__ was set
