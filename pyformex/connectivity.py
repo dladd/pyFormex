@@ -168,12 +168,18 @@ class Connectivity(ndarray):
         # In __reduce__, we replaced ndarray's state with a tuple
         # of itself and our own state
         try:
-            "TRYING TO RESTORE CONNECTIITY"
             nd_state, own_state = state
             ndarray.__setstate__(self,nd_state)
             self.eltype,self.inv = own_state
         except:
-            ndarray.__setstate__(state)
+            try:
+                # try to read legacy pickle format, which did not save
+                # the element type (rev < 2360)
+                ndarray.__setstate__(self,state)
+                print "WARNING: Connectivity was restored without element type!"
+            except:
+                print "I could not unpickle the Connectivity, neither in old not new format"
+                raise
             
 
     def nelems(self):
