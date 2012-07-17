@@ -133,6 +133,10 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     Then the data are formatted in lines with maximum npl items, separated
     by sep. Lines are separated by linesep.
     """
+    w=[type(d)!=str for d in data]#GDS
+    for i in where(w)[0]:#GDS
+        data[i]=around(data[i], decimals=7)#GDS
+        
     data = asarray(data)
     data = data.reshape(-1,data.shape[-1])
     return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])+linesep
