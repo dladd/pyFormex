@@ -190,6 +190,23 @@ class Mesh(Geometry):
             eltype = self.elems.eltype
         self.eltype = self.elems.eltype = elementType(eltype,self.nplex())
         return self
+
+
+    def elType(self):
+        """Return the element type of the Mesh.
+
+        """
+        if self.elems.eltype is not None:
+            return self.elems.eltype
+        else:
+            return self.eltype
+
+
+    def elName(self):
+        """Return the element name of the Mesh.
+
+        """
+        return self.elType().name()
     
 
     def setProp(self,prop=None):

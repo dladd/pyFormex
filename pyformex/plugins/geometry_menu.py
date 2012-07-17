@@ -211,6 +211,7 @@ def getParams(line):
 
 def readNodes(fil):
     """Read a set of nodes from an open mesh file"""
+    print("Reading nodes")
     a = fromfile(fil,sep=" ").reshape(-1,3)
     x = Coords(a)
     #print(x.shape)
@@ -283,7 +284,6 @@ def importModel(fn=None):
         
     for f in fn:
         d = readMesh(f)
-        #print(type(d))
         x = d['coords']
         e = d['elems']
 

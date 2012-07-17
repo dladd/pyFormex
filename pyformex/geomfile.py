@@ -218,7 +218,7 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')
