@@ -408,7 +408,8 @@ def raiseExit():
 
 
 def enableBreak(mode=True):
-    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],mode)
+    if pf.GUI:
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],mode)
 
 
 def stopatbreakpt():
@@ -427,7 +428,8 @@ def runScript(fn,argv=[]):
     """
     from timer import Timer
     t = Timer()
-    pf.GUI.history.add(fn)
+    if pf.GUI:
+        pf.GUI.history.add(fn)
     message("Running script (%s)" % fn)
     pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
@@ -479,7 +481,7 @@ def runApp(appname,argv=[],refresh=False):
     scriptLock('__auto__')
     if pf.GUI:
         pf.GUI.startRun()
-    pf.GUI.apphistory.add(appname)
+        pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv

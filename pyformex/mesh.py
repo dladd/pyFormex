@@ -839,8 +839,32 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if reverse:
             M = M.reverse()
         return M
-        
 
+ 
+    def rosette(self,n,angle,axis=2,around=None):
+        """Create rotational replications of a Mesh.
+
+        Parameters:
+
+        - `n`: int: number of rotational replications
+        - `angle`: float: angular step (in degrees) between subsequent
+          replications
+        - `axis`: int or float(3): specifies the directional vector of the
+          rotation axis
+        - `around`: float(3): a point on the axis. If not specified, the axis
+          goes through the origin.
+
+        Returns: a Mesh containing `n` rotational replicas of the original.
+        The first elements of the result coincide with the original.
+        """
+        if n > 1:
+            angles = 360./n * arange(n)
+            M = [ M.rotate(a) for a in angles ]
+            M = Mesh.concatenate(M)
+        else:
+            M = self
+        return M
+    
 
 #############################################################################
     # Adjacency #

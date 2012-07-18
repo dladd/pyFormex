@@ -35,6 +35,7 @@ import pyformex as pf
 import utils
 from odict import ODict
 
+import fileread
 from geometry import Geometry
 from geomfile import GeometryFile
 from formex import Formex
@@ -201,72 +202,6 @@ def importAny():
     importGeometry(ftype=None)
 
 
-def getParams(line):
-    """Strip the parameters from a comment line"""
-    s = line.split()
-    d = {'mode': s.pop(0),'filename': s.pop(0)}
-    d.update(dict(zip(s[::2],s[1::2])))
-    return d
-    
-
-def readNodes(fil):
-    """Read a set of nodes from an open mesh file"""
-    print("Reading nodes")
-    a = fromfile(fil,sep=" ").reshape(-1,3)
-    x = Coords(a)
-    #print(x.shape)
-    return x
-
-
-def readElems(fil,nplex):
-    """Read a set of elems of plexitude nplex from an open mesh file"""
-    print("Reading elements of plexitude %s" % nplex)
-    e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex) 
-    e = Connectivity(e)
-    #print(e.shape)
-    return e
-
-
-def readEsets(fil):
-    """Read the eset data of type generate"""
-    data = []
-    for line in fil:
-        s = line.strip('\n').split()
-        if len(s) == 4:
-            data.append(s[:1]+map(int,s[1:]))
-    return data
-            
-
-def readMesh(fn):
-    """Read a nodes/elems model from file.
-
-    Returns an (x,e) tuple or None
-    """
-    d = {}
-    pf.GUI.setBusy(True)
-    fil = open(fn,'r')
-    for line in fil:
-        if line[0] == '#':
-            line = line[1:]
-        globals().update(getParams(line))
-        dfil = open(filename,'r')
-        if mode == 'nodes':
-            d['coords'] = readNodes(dfil)
-        elif mode == 'elems':
-            elems = d.setdefault('elems',[])
-            e = readElems(dfil,int(nplex)) - int(offset)
-            elems.append(e)
-        elif mode == 'esets':
-            d['esets'] = readEsets(dfil)
-        else:
-            print("Skipping unrecognized line: %s" % line)
-        dfil.close()
-
-    pf.GUI.setBusy(False)
-    fil.close()
-    return d                    
-
-
 def importModel(fn=None):
     """Read one or more element meshes into pyFormex.
 
@@ -282,14 +217,15 @@ def importModel(fn=None):
     if type(fn) == str:
         fn = [fn]
         
+    pf.GUI.setBusy(True)
     for f in fn:
-        d = readMesh(f)
-        x = d['coords']
-        e = d['elems']
-
+        d = fileread.readMeshFile(fn)
         modelname = os.path.basename(f).replace('.mesh','')
         export({modelname:d})
-        export(dict([("%s-%d"%(modelname,i), Mesh(x,ei)) for i,ei in enumerate(e)])) 
+        M = fileread.extractMeshes(d)
+        names = [ "%s-%d"%(modelname,i) for i in range(len(M)) ]
+        export(dict(zip(names,M)))
+    pf.GUI.setBusy(False)
 
 
 def readInp(fn=None):
@@ -301,21 +237,11 @@ def readInp(fn=None):
         if not fn:
             return
 
+        pf.GUI.setBusy(True)
         for f in fn:
-            convertInp(f)
+            fileread.convertInp(f)
+        pf.GUI.setBusy(False)
         return
-
-
-def convertInp(fn):
-    converter = os.path.join(pf.cfg['pyformexdir'],'bin','read_abq_inp.awk')
-    dirname = os.path.dirname(fn)
-    basename = os.path.basename(fn)
-    cmd = 'cd %s;%s %s' % (dirname,converter,basename)
-    #print(cmd)
-    pf.GUI.setBusy()
-    sta, out = utils.runCommand(cmd)
-    print out
-    pf.GUI.setBusy(False)
         
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):

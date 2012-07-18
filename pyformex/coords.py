@@ -883,7 +883,7 @@ class Coords(ndarray):
         As a convenience, the user may also specify a 3x3 rotation matrix,
         in which case the function rotate(mat) is equivalent to affine(mat).
 
-        All rotations are performed around the point [0,0,0], unless a
+        All rotations are performed around the point [0.,0.,0.], unless a
         rotation origin is specified in the argument 'around'. 
         """
         mat = asarray(angle)
