@@ -219,7 +219,7 @@ def importModel(fn=None):
         
     pf.GUI.setBusy(True)
     for f in fn:
-        d = fileread.readMeshFile(fn)
+        d = fileread.readMeshFile(f)
         modelname = os.path.basename(f).replace('.mesh','')
         export({modelname:d})
         M = fileread.extractMeshes(d)

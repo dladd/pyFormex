@@ -25,7 +25,7 @@
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 
 import pyformex as pf
-from coords import tand
+import coords
 
 from numpy import *
 from OpenGL import GL,GLU
@@ -1094,9 +1094,9 @@ class Canvas(object):
         self.camera.setLens(fovy,self.aspect)
         # Default correction is sqrt(3)
         correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
-        tf = tand(fovy/2.)
+        tf = coords.tand(fovy/2.)
 
-        import simple,coords
+        import simple
         bbix = simple.regularGrid(X0,X1,[1,1,1])
         bbix = dot(bbix,self.camera.rot[:3,:3])
         bbox = coords.Coords(bbix).bbox()
@@ -1118,9 +1118,12 @@ class Canvas(object):
         #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
         near,far = dist-1.0*dsize,dist+1.0*dsize
         # print "near,far = %s, %s" % (near,far)
-        # make sure near is positive
         #print (0.0001*vsize,0.01*dist,near)
-        near = max(0.0001*vsize,0.01*dist,near)
+        # make sure near is positive
+        near = max(near,0.0001*vsize,0.01*dist,finfo(coords.Float).tiny)
+        # make sure far > near
+        if far <= near:
+            far += finfo(coords.Float).eps
         #print "near,far = %s, %s" % (near,far)
         self.camera.setClip(near,far)
         self.camera.resetArea()
