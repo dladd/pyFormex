@@ -618,6 +618,8 @@ def fmtShellSection(el,setname,matname):
         if matname is not None:
             out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s
 %s \n""" % (setname,matname,float(el.thickness))
+    if el.transverseshearstiffness is not None:
+        out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
     return out
 
  
