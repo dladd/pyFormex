@@ -613,11 +613,23 @@ def fmtSolidSection(el,setname):
     return out
 
 def fmtShellSection(el,setname,matname):
+    """Format the shell definition.
+    
+    Required:
+    - setname
+    - matname
+    
+    Optional:
+    - transverseshearstiffness
+    - offset (for contact surface SPOS or 0.5, SNEG or -0.5)
+    """
     out = ''
     if el.sectiontype.upper() == 'SHELL':
         if matname is not None:
-            out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (setname,matname,float(el.thickness))
+            out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s"""%(setname,matname)
+            if el.offset is not None:
+                out += """, OFFSET=%s"""%el.offset
+            out += """\n%s \n""" % float(el.thickness)
     if el.transverseshearstiffness is not None:
         out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
     return out
