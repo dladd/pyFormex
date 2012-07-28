@@ -629,6 +629,10 @@ def fmtShellSection(el,setname,matname):
             out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s"""%(setname,matname)
             if el.offset is not None:
                 out += """, OFFSET=%s"""%el.offset
+            if el.thicknessmodulus is not None:
+                out += """, THICKNESS MODULUS=%f"""%el.thicknessmodulus
+            if el.poisson is not None:
+                out += """, POISSON=%f"""%el.poisson
             out += """\n%s \n""" % float(el.thickness)
     if el.transverseshearstiffness is not None:
         out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
@@ -1014,7 +1018,8 @@ shell_elems = [
     'S8R','S8R5',
     'S9R5',
     'STRI3',
-    'STRI65']
+    'STRI65', 
+    'SC8R']
 surface_elems = [
     'SFM3D3',
     'SFM3D4','SFM3D4R',
