@@ -566,7 +566,7 @@ class TriSurface(Mesh):
     def getElemEdges(self):
         """Get the faces' edge numbers."""
         if self.elem_edges is None:
-            self.elem_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+            self.elem_edges,self.edges = self.elems.insertLevel(1)
         return self.elem_edges
 
 
@@ -877,22 +877,49 @@ class TriSurface(Mesh):
         return self.concatenate([self]+border)
         
 
-    def edgeCosAngles(self):
+    def edgeCosAngles(self,return_mask=False):
         """Return the cos of the angles over all edges.
         
         The surface should be a manifold (max. 2 elements per edge).
         Edges adjacent to only one element get cosangles = 1.0.
-        """
-        conn = self.edgeConnections()
-        # Bail out if some edge has more than two connected faces
-        if conn.shape[1] != 2:
-            raise RuntimeError,"TriSurface is not a manifold"
-        angles = ones(self.nedges())
-        conn2 = (conn >= 0).sum(axis=-1) == 2
-        n = self.areaNormals()[1][conn[conn2]]
-        angles[conn2] = dotpr(n[:,0],n[:,1])
-        return angles.clip(min=-1.,max=1.)
+        If return_mask == True, a second return value is a boolean array
+        with the edges that connect two faces. 
 
+        As a side effect, this method also sets the area, normals,
+        elem_edges and edges attributes.
+        """
+        # get connections of edges to faces
+        conn = self.getElemEdges().inverse()
+        ## # BV: The following gives the same results, but does not
+        ## #     guarantee the edges attribute to be set
+        ## conn1 = self.edgeConnections()
+        ## diff = (conn1 != conn).sum()
+        ## if diff > 0:
+        ##     print "edgeConnections",conn1
+        ##     print "getElemEdges.inverse",conn
+        # Bail out if some edge has more than two connected faces
+        if conn.shape[1] > 2:
+            raise RuntimeError,"The TriSurface is not a manifold"
+        # get normals on all faces
+        n = self.areaNormals()[1]
+        # Flag edges that connect two faces
+        conn2 = (conn >= 0).sum(axis=-1) == 2
+        # get adjacent facet normals for 2-connected edges
+        n = n[conn[conn2]]
+        # compute cosinus of angles over 2-connected edges
+        cosa = dotpr(n[:,0],n[:,1])
+        # Initialize cosangles to all 1. values
+        cosangles = ones((conn.shape[0],))
+        # Fill in the values for the 2-connected edges
+        cosangles[conn2] = cosa
+        # Clip to the -1...+1. range 
+        cosangles = cosangles.clip(min=-1.,max=1.)
+        # Return results
+        if return_mask:
+            return cosangles,conn2
+        else:
+            return cosangles
+        
 
     def edgeAngles(self):
         """Return the angles over all edges (in degrees). It is the angle (0 to 180) between 2 face normals."""
@@ -1096,124 +1123,43 @@ Quality: %s .. %s
     ##     return Mesh.reflect(self,*args,**kargs)
     
 
-##################  Partitioning a surface #############################
+##################  Partitioning a surface  #############################
 
-#START of GDS changes on 260712
-#GDS - the next 2 functions were commented. 
-#I restored them to make the partionByAngle working again
-    def edgeFront(self,startat=0,okedges=None,front_increment=1):
-        """Generator function returning the frontal elements.
-   
-        startat is an element number or list of numbers of the starting front.
-        On first call, this function returns the starting front.
-        Each next() call returns the next front.
-        front_increment determines how the property increases at each
-        frontal step. There is an extra increment +1 at each start of
-        a new part. Thus, the start of a new part can always be detected
-        by a front not having the property of the previous plus front_increment.
+
+    def featureEdges(self,angle=60.):
+        """Return the feature edges of the surface.
+
+        Feature edges are edges that are prominent features of the geometry.
+        They are either border edges or edges where the normals on the two
+        adjacent triangles differ more than a given angle.
+        The non feature edges then represent edges on a rather smooth surface.
+
+        Parameters:
+
+        - `angle`: The angle by which the normals on adjacent triangles
+          should differ in order for the edge to be marked as a feature. 
+
+        Returns: a boolean array with shape (nedg,) where the feature angles
+          are marked with True.
+
+        .. note: As a side effect, this also sets the `elem_edges` and `edges`
+           attributes, which can be used to get the edge data with the same
+           numbering as used in the returned mask. Thus, the following
+           constructs a Mesh with the feature edges of a surface S::
+
+             p = S.featureEdges()
+             Mesh(S.coords,S.edges[p])
         """
-        #print("FRONT_INCREMENT %s" % front_increment)
-        p = -ones((self.nfaces()),dtype=int)
-        if self.nfaces() <= 0:
-            return
-        # Construct table of elements connected to each edge
-        conn = self.edgeConnections()
-        # Bail out if some edge has more than two connected faces
-        if conn.shape[1] != 2:
-            pf.warning("Surface is not a manifold")
-            return
-        # Check size of okedges
-        if okedges is not None:
-            if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-                raise ValueError,"okedges has incorrect shape"
-   
-        # Remember edges left for processing
-        todo = ones((self.nedges(),),dtype=bool)
-        elems = clip(asarray(startat),0,self.nfaces())
-        prop = 0
-        while elems.size > 0:
-            # Store prop value for current elems
-            p[elems] = prop
-            yield p
-   
-            prop += front_increment
-   
-            # Determine border
-            edges = unique(self.getElemEdges()[elems])
-            edges = edges[todo[edges]]
-            if edges.size > 0:
-                # flag edges as done
-                todo[edges] = 0
-                # take connected elements
-                if okedges is None:
-                    elems = conn[edges].ravel()
-                else:
-                    elems = conn[edges[okedges[edges]]].ravel()
-                elems = elems[(elems >= 0) * (p[elems] < 0) ]
-                if elems.size > 0:
-                    continue
-   
-            # No more elements in this part: start a new one
-            #print("NO MORE ELEMENTS")
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
-   
-   
-    def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
-        """Grow a selection using a frontal method.
-   
-        Starting from element `startat`, grow a selection `nsteps` times
-        following the common edges of the triangles.
-   
-        The property of each new front is augmented by `front_increment`.
-        """
-        for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            if nsteps > 0:
-                nsteps -= 1
-            elif nsteps == 0:
-                break
-        return p
-
-#GDS: the next 3 lines were uncommented 260712
-##    def walkEdgeFront(*args,**kargs):
-##        utils.warn("depr_trisurface_walkedgefront")
-##        return self.frontWalk(level=1,*args,**kargs)
-#END of GDS changes on 260712
-
-    def growSelection(self,sel,mode='node',nsteps=1):
-        """Grow a selection of a surface.
-
-        `p` is a single element number or a list of numbers.
-        The return value is a list of element numbers obtained by
-        growing the front `nsteps` times.
-        The `mode` argument specifies how a single frontal step is done:
-
-        - 'node' : include all elements that have a node in common,
-        - 'edge' : include all elements that have an edge in common.
-        """
-        level = {'node':0,'edge':1}[mode]
-        p = self.frontWalk(level=level,startat=sel,nsteps=nsteps)
-        return where(p>=0)[0]
-    
-
-    def partitionByEdgeFront(self,okedges,firstprop=0,startat=0):
-        """Detect different parts of the surface using a frontal method.
-
-        okedges flags the edges where the two adjacent triangles are to be
-        in the same part of the surface.
-        startat is a list of elements that are in the first part. 
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
-        """
-        return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
-    
+        # Get the edge angles
+        cosa,conn2 = self.edgeCosAngles(return_mask=True)
+        # initialize all edges as features
+        feature = ones((self.edges.shape[0],),dtype=bool)
+        # unmark edges with small angle
+        feature[conn2] = cosa <= cosd(angle)
+        return feature
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0,sort='number',sortedbyarea=None):
+    def partitionByAngle(self,angle=60.,firstprop=0,sort='number'):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1231,24 +1177,13 @@ Quality: %s .. %s
         argument to 'area' will sort the parts according to decreasing
         area. Any other value will return the parts unsorted.
         """
-        if sortedbyarea is not None:
-            pf.warning("The sortedbyarea parameter is obsolete. Use the sort parameter instead.")
-            if sortedbyarea:
-                sort = 'area'
-            
-        conn = self.edgeConnections()
-        # Flag edges that connect two faces
-        conn2 = (conn >= 0).sum(axis=-1) == 2
-        # compute normals and flag small angles over edges
-        cosangle = cosd(angle)
-        a, n = self.areaNormals()
-        n = n[conn[conn2]]
-        small_angle = ones(conn2.shape,dtype=bool)
-        small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        p = self.partitionByEdgeFront(small_angle)
+        feat = self.featureEdges(angle=angle)
+        p = self.maskedEdgeFrontWalk(mask=~feat,frontinc=0)
+        
         if sort == 'number':
             h = histogram(p,list(unique(p))+[p.max()+1])[0]
         elif sort == 'area':
+            a  = self.areaNormals()[0]
             h = [a[p==j].sum() for j in unique(p)]
         else:
             sort = False
@@ -1256,13 +1191,8 @@ Quality: %s .. %s
             srt = argsort(h)[::-1]
             inv = inverseUniqueIndex(srt)
             p = inv[p]
-        
+            
         return firstprop + p
-
-
-    def cutWithPlanes(self,planes,side=''):
-        d = self.distanceFromPlane(p,n)
-      
         
 
     # This may replace CutWithPlane after it has been proved stable

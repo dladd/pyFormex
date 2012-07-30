@@ -101,17 +101,16 @@ def run():
     d.setProp(7)
     d.prop[central] = 0
     adj = [ d.adjacency(i) for i in range(3) ]
-    from connectivity import adjacencyDiff
     # color the face adjacent elements blue
     a = adj[2][central]
     a = a[a>=0]
     d.prop[a] = 3
     # color the node but not face adjacent elements cyan
-    a = adjacencyDiff(adj[0],adj[2])[central]
+    a = adj[0].diff(adj[2])[central]
     a = a[a>=0]
     d.prop[a] = 4
     # color the node but not edge adjacent elements red
-    a = adjacencyDiff(adj[0],adj[1])[central]
+    a = adj[0].diff(adj[1])[central]
     a = a[a>=0]
     d.prop[a] = 1
     clear()

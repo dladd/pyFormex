@@ -611,13 +611,13 @@ def colorByFront():
             t = timer.Timer()
             ftype = res['front type']
             nwidth = res['front width']
-            nsteps = nwidth * res['number of colors']
+            maxval = nwidth * res['number of colors']
             startat = res['start at']
             firstprop = res['first prop']
             if ftype == 'node':
-                p = S.frontWalk(level=0,nsteps=nsteps,startat=startat)
+                p = S.frontWalk(level=0,maxval=maxval,startat=startat)
             else:
-                p = S.frontWalk(level=1,nsteps=nsteps,startat=startat)
+                p = S.frontWalk(level=1,maxval=maxval,startat=startat)
             S.setProp(p/nwidth + firstprop)
             print("Colored in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
             selection.draw()
@@ -644,11 +644,26 @@ def partitionByAngle():
         if res:
             selection.remember()
             t = timer.Timer()
-            S.prop = S.partitionByAngle(**res)
-            print("Partitioned in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
+            p = S.partitionByAngle(**res)
+            S = S.setProp(p)
+            print("Partitioned in %s parts (%s seconds)" % (len(S.propSet()),t.seconds()))
             selection.draw()
          
  
+def showFeatureEdges():
+    S = selection.check(single=True)
+    if S:
+        selection.draw()
+        res  = askItems([
+            _I('angle',60.),
+            _I('ontop',False),
+            ])
+        pf.app.processEvents()
+        if res:
+            p = S.featureEdges(angle=res['angle'])
+            M = Mesh(S.coords,S.edges[p])
+            draw(M,color='red',linewidth=3,bbox='last',nolight=True,ontop=res['ontop'])
+        
 
 #############################################################################
 # Transformation of the vertex coordinates (based on Coords)
@@ -1376,6 +1391,7 @@ def create_menu():
          [("&Color By Front",colorByFront),
           ("&Partition By Connection",partitionByConnection),
           ("&Partition By Angle",partitionByAngle),
+          ("&Show Feature Edges",showFeatureEdges),
           ]),
         ("&Show Border",showBorder),
         ("&Fill Border",fillBorders),

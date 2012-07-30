@@ -34,6 +34,7 @@ adjacency of elements can easily be detected from common node numbers.
 """
 
 from arraytools import *
+from adjacency import *
 from utils import deprecation
 from messages import _future_deprecation
 
@@ -593,7 +594,7 @@ class Connectivity(ndarray):
         return complement(nodes,self.nelems())
 
 
-    def adjacency(self,kind='e'):
+    def adjacency(self,kind='e',mask=None):
         """Return a table of adjacent items.
 
         Returns an element adjacency table (kind='e') or node adjacency
@@ -608,8 +609,16 @@ class Connectivity(ndarray):
         Parameters:
 
         - `kind`: 'e' or 'n', requesting resp. element or node adjacency.
+        - `mask`: Either None or a boolean array or index flagging the nodes
+          which are to be considered connectors between elements. If None,
+          all nodes are considered connections.
+          This option is only useful in the case `kind`=='e'. If you want to
+          use an element mask for the 'n' case, just apply the (element) mask
+          beforehand::
+
+            self[mask].adjacency('n')
         
-        Returns: an integer array with shape (nr,nc),
+        Returns: an Adjacency array with shape (nr,nc),
         where row `i` holds a sorted list of all the items that are
         adjacent to item `i`, padded with -1 values to create an equal
         list length for all items.
@@ -618,34 +627,48 @@ class Connectivity(ndarray):
         Example:
         
           >>> Connectivity([[0,1],[0,2],[1,3],[0,5]]).adjacency('e')
-          array([[ 1,  2,  3],
+          Adjacency([[ 1,  2,  3],
                  [-1,  0,  3],
                  [-1, -1,  0],
                  [-1,  0,  1]])
+          >>> Connectivity([[0,1],[0,2],[1,3],[0,5]]).adjacency('e',mask=[1,2,3,5])
+          Adjacency([[ 2],
+                 [-1],
+                 [ 0],
+                 [-1]])
           >>> Connectivity([[0,1],[0,2],[1,3],[0,5]]).adjacency('n')
-          array([[ 1,  2,  5],
+          Adjacency([[ 1,  2,  5],
                  [-1,  0,  3],
                  [-1, -1,  0],
                  [-1, -1,  1],
                  [-1, -1, -1],
                  [-1, -1,  0]])
           >>> Connectivity([[0,1,2],[0,1,3],[2,4,5]]).adjacency('n')
-          array([[-1,  1,  2,  3],
+          Adjacency([[-1,  1,  2,  3],
                  [-1,  0,  2,  3],
                  [ 0,  1,  4,  5],
                  [-1, -1,  0,  1],
                  [-1, -1,  2,  5],
                  [-1, -1,  2,  4]])
-                 
+          >>> Connectivity([[0,1,2],[0,1,3],[2,4,5]])[[0,2]].adjacency('n')
+          Adjacency([[-1, -1,  1,  2],
+                 [-1, -1,  0,  2],
+                 [ 0,  1,  4,  5],
+                 [-1, -1, -1, -1],
+                 [-1, -1,  2,  5],
+                 [-1, -1,  2,  4]])
         """
         inv = self.inverse()
         if kind == 'e':
+            if mask is not None:
+                mask = complement(mask,inv.shape[0])
+                inv[mask] = -1
             adj = inv[self].reshape((self.nelems(),-1))
         elif kind == 'n':
             adj = concatenate([where(inv>=0,self[:,i][inv],inv) for i in range(self.nplex())],axis=1)
         else:
             raise ValueError,"kind should be 'e' or 'n', got %s" % str(kind)
-        return reduceAdjacency(adj)
+        return Adjacency(adj)
 
 
 ######### Creating intermediate levels ###################
@@ -912,71 +935,92 @@ class Connectivity(ndarray):
     # available graph algorithms (is there something in numpy?)
 
 
-    def frontFactory(self,startat=0,frontinc=1):
-        """Generator function returning the frontal elements.
+    ## def frontFactory(self,startat=0,frontinc=1,partinc=1,mask=None):
+    ##     """Generator function returning the frontal elements.
 
-        startat is an element number or list of numbers of the starting front.
-        On first call, this function returns the starting front.
-        Each next() call returns the next front.
+    ##     This is a generator function and is normally not used directly,
+    ##     but via the :meth:`frontWalk` method.
 
-        This method is normally used indirectly, via the frontWalk method.
-        """
-        p = -ones((self.nelems()),dtype=int)
-        if self.nelems() <= 0:
-            return
-        # Construct table of adjacent elements
-        adj = self.adjacency()
+    ##     It returns an int array with a value for each element.
+    ##     On the initial call, all values are -1, except for the elements
+    ##     in the initial front, which get a value 0. At each call a new front
+    ##     is created with all the elements that are connected to any of the
+    ##     current front and which have not yet been visited. The new front 
+    ##     elements get a value equal to the last front's value plus the
+    ##     `frontinc`. If the front becomes empty and a new starting front is
+    ##     created, the front value is extra incremented with `partinc`.
 
-        # Remember nodes left for processing
-        todo = ones(self.maxnodes(),dtype=bool)
-        elems = clip(asarray(startat),0,self.nelems())
-        prop = 0
-        while elems.size > 0:
-            # Store prop value for current elems
-            p[elems] = prop
-            yield p
+    ##     Parameters: see :meth:`frontWalk`.
+    ##     """
+    ##     p = -ones((self.nelems()),dtype=int)
+    ##     if self.nelems() <= 0:
+    ##         return
+            
+    ##     # Construct table of adjacent elements
+    ##     adj = self.adjacency(mask=mask)
 
-            prop += frontinc
+    ##     # Remember nodes left for processing
+    ##     elems = clip(asarray(startat),0,self.nelems())
+    ##     prop = 0
+    ##     while elems.size > 0:
+    ##         # Store prop value for current elems
+    ##         p[elems] = prop
+    ##         yield p
 
-            # Determine adjacent elements
-            elems = unique(adj[elems])
-            elems = elems[(elems >= 0) * (p[elems] < 0) ]
-            if elems.size > 0:
-                continue
+    ##         prop += frontinc
 
-            # No more elements in this part: start a new one
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
+    ##         # Determine adjacent elements
+    ##         elems = unique(adj[elems])
+    ##         elems = elems[(elems >= 0) * (p[elems] < 0) ]
+    ##         if elems.size > 0:
+    ##             continue
+
+    ##         # No more elements in this part: start a new one
+    ##         elems = where(p<0)[0]
+    ##         if elems.size > 0:
+    ##             # Start a new part
+    ##             elems = elems[[0]]
+    ##             prop += partinc
 
 
-    def frontWalk(self,startat=0,nsteps=-1,frontinc=1):
-        """Walks through the elements by their node front.
+    ## def frontWalk(self,startat=0,frontinc=1,partinc=1,maxval=-1,mask=None):
+    ##     """Walks through the elements by their node front.
 
-        A frontal walk is executed starting from the given element(s).
-        A number of steps is executed, each step advancing the front
-        over a given number of single pass increments.
+    ##     A frontal walk is executed starting from the given element(s).
+    ##     A number of steps is executed, each step advancing the front
+    ##     over a given number of single pass increments. The step number at
+    ##     which an element is reached is recorded and returned.
 
-        Parameters:
+    ##     Parameters:
 
-        - `startat`: initial element numbers in the front. It can be a single
-          element number or a list of numbers.
-        - `nsteps`: number of steps to walk. The default is to walk until all
-          elements have been reached.
-        - `frontinc`: number of front advancements in a single step. The
-          default is to advance the front once in each step.
+    ##     - `startat`: initial element numbers in the front. It can be a single
+    ##       element number or a list of numbers.
+    ##     - `frontinc`: increment for the front number on each frontal step.
+    ##     - `partinc`: increment for the front number when the front
+    ##     - `maxval`: maximum frontal value. If negative (default) the walk will
+    ##       continue until all elements have been reached. If non-negative,
+    ##       walking will stop as soon as the frontal value reaches this
+    ##       maximum.
+    ##     - `mask`: Either None or a boolean array or index flagging the nodes
+    ##       which are to be considered connectors between elements. If None,
+    ##       all nodes are considered connections.
 
-        Returns an array of integers specifying for each element in which step
-        the element was reached by the walker.
-        """
-        for p in self.frontFactory(startat=startat,frontinc=frontinc):   
-            if nsteps > 0:
-                nsteps -= 1
-            elif nsteps == 0:
-                break
-        return p
+    ##     Returns: an array of integers specifying for each element in which step
+    ##     the element was reached by the walker.
+
+    ##     Example:
+        
+    ##       >>> A = Connectivity([[0,1,4],[4,3,0],[1,2,5],[5,4,1],[3,4,7],[7,6,3],[4,5,8],[8,7,4],])
+    ##       >>> print A.frontWalk()
+    ##       [0 1 1 1 1 2 1 1]
+    ##       >>> print A.frontWalk(mask=[1,2,3,5,6,7])
+    ##       [0 4 1 1 5 5 2 6]
+    ##     """
+    ##     for p in self.frontFactory(startat=startat,frontinc=frontinc,partinc=partinc,mask=mask):
+    ##         if maxval >= 0:
+    ##             if p.max() > maxval:
+    ##                 break
+    ##     return p
 
 
 #######################################################################
@@ -1194,109 +1238,6 @@ class Connectivity(ndarray):
 
 ############################################################################
 
-def sortAdjacency(adj):
-    """Sort an adjacency table.
-
-    An adjacency table is an integer array where each row lists the numbers
-    of the items that are connected to the item with number equal to the row
-    index. Rows are padded with -1 value to create rows of equal length.
-
-    This function sorts the rows of the adjacency table in ascending order
-    and removes all columns containing only -1 values.
-
-    Paramaters:
-
-    - `adj`: an 2-D integer array with values >=0 or -1
-   
-    Returns: an integer array with shape (adj.shape[0],maxc), with
-    maxc <= adj.shape[1], where the rows are sorted in ascending order
-    and where columns with only -1 values are removed.
-
-    Example:
-
-      >>> a = array([[ 0,  2,  1, -1],
-      ...            [-1,  3,  1, -1],
-      ...            [ 3, -1,  0,  1],
-      ...            [-1, -1, -1, -1]])
-      >>> sortAdjacency(a)
-      array([[ 0,  1,  2],
-             [-1,  1,  3],
-             [ 0,  1,  3],
-             [-1, -1, -1]])
-
-    """
-    if adj.shape[1] > 0:
-        adj.sort(axis=-1)      # sort rows
-        maxc = adj.max(axis=0) # find maximum per column
-        adj = adj[:,maxc>=0]   # retain columns with non-negative maximum
-    return adj
-
-
-def reduceAdjacency(adj):
-    """Reduce an adjacency table.
-
-    An adjacency table is an integer array where each row lists the numbers
-    of the items that are connected to the item with number equal to the row
-    index. Rows are padded with -1 values to create rows of equal length.
-
-    A reduced adjacency table is one where each row:
-
-    - does not contain the row index itself,
-    - does not contain duplicates,
-    - is sorted in ascending order,
-
-    and that has at least one row without -1 value.
-
-    Paramaters:
-
-    - `adj`: an 2-D integer array with value >=0 or -1
-   
-    Returns: an integer array with shape (adj.shape[0],maxc), with
-    maxc <= adj.shape[1], where row `i` retains the unique non-negative
-    numbers of the original array except the valu `i`, and is possibly
-    padded with -1 values.
-
-    Example:
-
-      >>> a = array([[ 0,  0,  0,  1,  2,  5],
-      ...            [-1,  0,  1, -1,  1,  3],
-      ...            [-1, -1,  0, -1, -1,  2],
-      ...            [-1, -1,  1, -1, -1,  3],
-      ...            [-1, -1, -1, -1, -1, -1],
-      ...            [-1, -1,  0, -1, -1,  5]])
-      >>> reduceAdjacency(a)
-      array([[ 1,  2,  5],
-             [-1,  0,  3],
-             [-1, -1,  0],
-             [-1, -1,  1],
-             [-1, -1, -1],
-             [-1, -1,  0]])
-
-    """
-    adj = checkArrayDim(adj,2)
-    n = adj.shape[0]
-    adj[adj == arange(n).reshape(n,-1)] = -1 # remove the item i
-    adj = sortAdjacency(adj)
-    adj[adj[:,:-1] == adj[:,1:]] = -1 #remove duplicate items
-    adj = sortAdjacency(adj)
-    return adj
-
-    
-def adjacencyDiff(adj1,adj2):
-    """Return the difference between two adjacency tables.
-
-    adj1 and adj2 are two adjacency tables with the same number of rows.
-    The return value is an adjacency table of the same length, where each row
-    contains the numbers in adj1 but not in adj2
-    """
-    adj = sortAdjacency(concatenate([adj1,adj2],axis=-1))
-    dup = adj[:,:-1] == adj[:,1:] # duplicate items
-    adj[dup] = -1
-    adj = roll(adj,-1,axis=-1)
-    adj[dup] = -1
-    adj = roll(adj,1,axis=-1)
-    return reduceAdjacency(adj)
-
 
 # BV: This could become one of the schemes of Connectivity.reorder 
 def findConnectedLineElems(elems):
@@ -1475,16 +1416,16 @@ def connectedLineElems(elems,return_indices=False):
              
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
       [Connectivity([[1, 0],
-             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]
+             [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
              
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
       [Connectivity([[1, 0],
-             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]
+             [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
              
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]],True)
       ([Connectivity([[1, 0],
-             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])], [array([[ 0, -1],
-             [ 1,  1]], dtype=int32), array([[2, 1]], dtype=int32), array([[3, 1]], dtype=int32)])
+             [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])], [array([[ 0, -1],
+             [ 1,  1]], dtype=int32), array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])
              
       >>> connectedLineElems([[0,1,2],[2,0,3],[0,3,1],[4,5,2]])
       [Connectivity([[3, 0, 2],
@@ -1599,11 +1540,6 @@ def demagic2(codes,magic):
     return cols
 
 
-# Removed in 0.9
-## @deprecation("partitionSegmentedCurve is deprecated. Use connectedLineElems instead.")
-## def partitionSegmentedCurve(*args,**kargs):
-##     return connectedLineElems(*args,**karg)
-
 
 #
 # BV: the following functions have to be checked for their need
@@ -1620,13 +1556,6 @@ def adjacencyList(elems):
     return [ list(elems[w[0],1-w[1]]) for w in ok ]
 
 
-# Removed in 0.9
-## @deprecation("adjacencyArray is deprecated. Use Connectivity().adjacency('n')")
-## def adjacencyArray(index,maxcon=5):
-##     return Connectivity(index).adjacency('n')
-
-    
-# BV: Can this be replaced with a nodefront walker?
 def adjacencyArrays(elems,nsteps=1):
     """Create adjacency arrays for 2-node elements.
 
@@ -1644,7 +1573,7 @@ def adjacencyArrays(elems,nsteps=1):
            [1],
            [2],
            [3],
-           [4]]), array([[1, 4],
+           [4]]), Adjacency([[1, 4],
            [0, 2],
            [1, 3],
            [2, 4],
@@ -1655,6 +1584,7 @@ def adjacencyArrays(elems,nsteps=1):
            [1, 2]]), array([], shape=(5, 0), dtype=int64)]
 
     """
+    utils.warn("depr_adjacencyArrays")
     elems = Connectivity(elems)
     if len(elems.shape) != 2 or elems.shape[1] != 2:
         raise ValueError,"""Expected a set of 2-node elements."""

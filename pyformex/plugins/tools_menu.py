@@ -341,14 +341,15 @@ def setpropCollection(K,prop):
         for k in K.keys():
             a = pf.canvas.actors[k]
             o = a.object
-            print "SETPROP ACTOR %s" % type(o)
-            n =  _drawables.names[k]
-            print "SETPROP DRAWABLE %s" % n
-            O = named(n)
-            print 'From actor: %s' % id(o)
-            print 'From name: %s' % id(O)
-            if id(o) != id(O):
-                raise RuntimeError,"The id of the drawn object does not match the selection"
+            ## print "SETPROP ACTOR %s" % type(o)
+            ## print _drawables
+            ## n = _drawables.names[k]
+            ## print "SETPROP DRAWABLE %s" % n
+            ## O = named(n)
+            ## print 'From actor: %s' % id(o)
+            ## print 'From name: %s' % id(O)
+            ## if id(o) != id(O):
+            ##     raise RuntimeError,"The id of the drawn object does not match the selection"
             if prop is None:
                 o.setProp(prop)
             elif hasattr(o,'setProp'):
@@ -442,7 +443,7 @@ def export_selection():
         default = options[1]
     res = askItems([
         _I('Export with name',''),
-        _I('Export as',default,'radio',options),
+        _I('Export as',default,itemtype='radio',choices=options),
         ])
     if res:
         name = res['Export with name']

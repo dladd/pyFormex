@@ -290,14 +290,10 @@ class ElementType(object):
 
     @classmethod
     def __str__(self):
-        """haha"""
-        print "Haha"
         return self.__name__
 
     @classmethod
     def __repr__(self):
-        """hehe"""
-        print "Hehe"
         return "elementType(%s)" % self.__name__
 
     @classmethod
@@ -1031,8 +1027,6 @@ def printElementTypes():
     print("Available Element Types:")        
     for ndim in range(4):
         print("  %s-dimensional elements: %s" % (ndim,elementTypes(ndim))        )
-        
-printElementTypes()
 
 if __name__ == "__main__":
     printElementTypes()

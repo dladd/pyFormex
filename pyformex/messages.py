@@ -112,6 +112,7 @@ depr_compat_input = "The use of compatInputItem is deprecated. Use simpleInputIt
 depr_trisurface_Sphere = "trisurface.Sphere is deprecated: use simple.sphere(ndiv=2**(level-1)) instead"
 
 depr_mesh_getlowerentities_unique = "The use of the unique argument is deprecated. Use Mesh.insertLevel() instead."
-depr_mesh_walknodefront = "Mesh.walkNodeFront is deprecated. Use Mesh.frontWalk() instead."
+
+depr_adjacencyArrays = "adjacencyArrays is deprecated. Use Adjacency.frontWalk() instead."
 
 # End

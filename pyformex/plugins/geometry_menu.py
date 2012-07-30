@@ -714,6 +714,23 @@ def reverseMesh():
     selection.draw()
     
 
+def compactMesh():
+    """Compact the Mesh"""
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    meshes = [ m.compact() for m in meshes ]
+    export2(selection.names,meshes)
+    clear()
+    selection.draw()
+    
+
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
     if not selection.check():
@@ -851,8 +868,8 @@ def convertMesh():
             selection.draw()
 
 
-def renumberMeshInElemsOrder():
-    """Renumber the selected Meshes in elems order.
+def renumberMesh(order='elems'):
+    """Renumber the nodes of the selected Meshes.
 
     """
     if not selection.check():
@@ -865,11 +882,18 @@ def renumberMeshInElemsOrder():
 
     meshes = [ named(n) for n in selection.names ]
     names = selection.names
-    meshes = [ M.renumber() for M in meshes ]
+    meshes = [ M.renumber(order) for M in meshes ]
     export2(names,meshes)
     selection.set(names)
     clear()
     selection.draw()
+
+
+def renumberMeshRandom():
+    """Renumber the nodes of the selected Meshes in random order. 
+
+    """
+    renumberMesh('random')
 
 
 def getBorderMesh():
@@ -1007,8 +1031,12 @@ def create_menu():
             ("&Reverse mesh elements",reverseMesh),
             ("&Convert element type",convertMesh),
             ("&Subdivide",subdivideMesh),
+            ("&Compact",compactMesh),
             ("&Fuse nodes",fuseMesh),
-            ("&Renumber nodes in element order",renumberMeshInElemsOrder),
+            ("&Renumber nodes",[
+                ("In element order",renumberMesh),
+                ("In random order",renumberMeshRandom),
+                ]),
             ("&Get Border Mesh",getBorderMesh),
             ]),
         ("---",None),

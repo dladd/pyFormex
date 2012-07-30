@@ -701,7 +701,41 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.getFreeEntitiesMesh(level=1,compact=compact)
 
 
-    def frontWalk(self,level=0,startat=0,nsteps=-1,front_increment=1):
+#############################################################################
+    # Adjacency #
+
+
+    def adjacency(self,level=0,diflevel=-1):
+        """Create an element adjacency table.
+
+        Two elements are said to be adjacent if they share a lower
+        entity of the specified level.
+        The level is one of the lower entities of the mesh.
+
+        Parameters:
+
+        - `level`: hierarchy of the geometric items connecting two elements:
+          0 = node, 1 = edge, 2 = face. Only values of a lower hierarchy than
+          the elements of the Mesh itself make sense.
+        - `diflevel`: if >= level, and smaller than the hierarchy of
+          self.elems, elements that have a connection of this level are removed.
+          Thus, in a Mesh with volume elements, self.adjacency(0,1) gives the
+          adjacency of elements by a node but not by an edge.
+
+        Returns an Adjacency with integers specifying for each element
+        its neighbours connected by the specified geometrical subitems.
+        """
+        if diflevel > level:
+            return self.adjacency(level).diff(self.adjacency(diflevel))
+
+        if level == 0:
+            elems = self.elems
+        else:
+            elems,lo = self.elems.insertLevel(level)
+        return elems.adjacency()
+
+
+    def frontWalk(self,level=0,startat=0,frontinc=1,partinc=1,maxval=-1):
         """Visit all elements using a frontal walk.
 
         In a frontal walk a forward step is executed simultanuously from all
@@ -712,44 +746,41 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Parameters:
 
-        - `startat`: initial element numbers in the front. It can be a single
-          element number or a list of numbers.
-        - `nsteps`: number of steps to walk. The default is to walk until all
-          elements have been reached.
-        - `frontinc`: number of front advancements in a single step. The
-          default is to advance the front once in each step.
+        - `level`: hierarchy of the geometric items connecting two elements:
+          0 = node, 1 = edge, 2 = face. Only values of a lower hierarchy than
+          the elements of the Mesh itself make sense. There are no
+          connections on the upper level.
+
+        The remainder of the parameters are like in
+        :meth:`Connectivity.frontWalk`.
 
         Returns an array of integers specifying for each element in which step
         the element was reached by the walker.
         """
-        if level == 0:
-            elems = self.elems
-        else:
-            elems,lo = self.elems.insertLevel(level)            
-
-        return elems.frontWalk(startat=startat,nsteps=nsteps,frontinc=front_increment)
-
-
-    def walkNodeFront(*args,**kargs):
-        utils.warn("depr_mesh_walknodefront")
-        return self.frontWalk(*args,**kargs)
+        return self.adjacency(level).frontWalk(startat=startat,frontinc=frontinc,partinc=partinc,maxval=maxval)
     
 
-    def partitionByFront(self,firstprop=0,level=0,startat=0):
-        """Detects different parts of the Mesh using a frontal method.
+    def maskedEdgeFrontWalk(self,mask=None,startat=0,frontinc=1,partinc=1,maxval=-1):
+        """Perform a front walk over masked edge connections.
 
-        okedges flags the edges where the two adjacent elems are to be
-        in the same part of the Mesh.
-        startat is a list of elements that are in the first part.
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
+        This is like frontWalk(level=1), but allows to specify a mask to
+        select the edges that are used as connectors between elements.
+
+        Parameters:
+
+        - `mask`: Either None or a boolean array or index flagging the nodes
+          which are to be considered connectors between elements. If None,
+          all nodes are considered connections.
+
+        The remainder of the parameters are like in
+        :meth:`Connectivity.frontWalk`.
         """
-        utils.warn("partitionByFront is DEPRECATED")
-        return firstprop + self.frontWalk(startat=startat,front_increment=0)
+        hi,lo = self.elems.insertLevel(1)
+        adj = hi.adjacency(mask=mask)
+        return adj.frontWalk(startat=startat,frontinc=frontinc,partinc=partinc,maxval=maxval)
 
 
-    def partitionByConnection(self):
+    def partitionByConnection(self,level=0,startat=0,firstprop=0,nparts=-1,mask=None):
         """Detect the connected parts of a Mesh.
 
         The Mesh is partitioned in parts in which all elements are
@@ -760,16 +791,15 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         corresponding to the part number. The lowest property number will be
         firstprop.
         """
-        utils.warn("partitionByConnection is DEPRECATED")
-        return self.partitionByFront()
+        return firstprop + self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
 
 
-    def splitByConnection(self):
+    def splitByConnection(self,*args,**kargs):
         """Split the Mesh into connected parts.
 
         Returns a list of Meshes that each form a connected part.
         """
-        split = self.setProp(self.frontWalk()).splitProp()
+        split = self.setProp(self.frontWalk(*args,**kargs)).splitProp()
         if split:
             return split.values()
         else:
@@ -789,100 +819,23 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             return self.clip(t[w]),nparts
 
 
+    def growSelection(self,sel,mode='node',nsteps=1):
+        """Grow a selection of a surface.
+
+        `p` is a single element number or a list of numbers.
+        The return value is a list of element numbers obtained by
+        growing the front `nsteps` times.
+        The `mode` argument specifies how a single frontal step is done:
+
+        - 'node' : include all elements that have a node in common,
+        - 'edge' : include all elements that have an edge in common.
+        """
+        level = {'node':0,'edge':1}[mode]
+        p = self.frontWalk(level=level,startat=sel,maxval=nsteps)
+        return where(p>=0)[0]  
+
+
 ###########################################################################
-    ## simple mesh transformations ##
-
-    def reverse(self):
-        """Return a Mesh where all elements have been reversed.
-
-        Reversing an element has the following meaning:
-
-        - for 1D elements: reverse the traversal direction,
-        - for 2D elements: reverse the direction of the positive normal,
-        - for 3D elements: reverse inside and outside directions of the
-          element's border surface
-
-        The :meth:`reflect` method by default calls this method to undo
-        the element reversal caused by the reflection operation. 
-        """
-        utils.warn('warn_mesh_reverse')
-
-        if hasattr(self.eltype,'reversed'):
-            elems = self.elems[:,self.eltype.reversed]
-        else:
-            elems = self.elems[:,::-1]
-        return self.__class__(self.coords,elems,prop=self.prop,eltype=self.eltype)
-
-            
-    def reflect(self,dir=0,pos=0.0,reverse=True,**kargs):
-        """Reflect the coordinates in one of the coordinate directions.
-
-        Parameters:
-
-        - `dir`: int: direction of the reflection (default 0)
-        - `pos`: float: offset of the mirror plane from origin (default 0.0)
-        - `reverse`: boolean: if True, the :meth:`Mesh.reverse` method is
-          called after the reflection to undo the element reversal caused
-          by the reflection of its coordinates. This will in most cases have
-          the desired effect. If not however, the user can set this to False
-          to skip the element reversal.
-        """
-        if 'autofix' in kargs:
-            utils.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
-            reverse = kargs['autofix']
-            
-        if reverse is None:
-            reverse = True
-            utils.warn("warn_mesh_reflect")
-        
-        M = Geometry.reflect(self,dir=dir,pos=pos)
-        if reverse:
-            M = M.reverse()
-        return M
-
- 
-    def rosette(self,n,angle,axis=2,around=None):
-        """Create rotational replications of a Mesh.
-
-        Parameters:
-
-        - `n`: int: number of rotational replications
-        - `angle`: float: angular step (in degrees) between subsequent
-          replications
-        - `axis`: int or float(3): specifies the directional vector of the
-          rotation axis
-        - `around`: float(3): a point on the axis. If not specified, the axis
-          goes through the origin.
-
-        Returns: a Mesh containing `n` rotational replicas of the original.
-        The first elements of the result coincide with the original.
-        """
-        if n > 1:
-            angles = 360./n * arange(n)
-            M = [ M.rotate(a) for a in angles ]
-            M = Mesh.concatenate(M)
-        else:
-            M = self
-        return M
-    
-
-#############################################################################
-    # Adjacency #
-
-
-    def adjacency(self,level=0):
-        """Return an adjacency table for the specified level.
-
-        Two elements are said to be adjacent if they share a lower
-        entity of the specified level.
-        The level is one of the lower entities of the mesh.
-        """
-        if level == 0:
-            return self.elems.adjacency()
-        else:
-            sel = self.eltype.getEntities(level)
-            hi,lo = self.elems.insertLevel(sel)
-            return hi.adjacency()
 
     #
     #  IDEA: Should we move these up to Connectivity ?
@@ -1255,6 +1208,58 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         sel = random.randint(0,n,(self.nelems()))
         return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
+
+
+###########################################################################
+    ## simple mesh transformations ##
+
+    def reverse(self):
+        """Return a Mesh where all elements have been reversed.
+
+        Reversing an element has the following meaning:
+
+        - for 1D elements: reverse the traversal direction,
+        - for 2D elements: reverse the direction of the positive normal,
+        - for 3D elements: reverse inside and outside directions of the
+          element's border surface
+
+        The :meth:`reflect` method by default calls this method to undo
+        the element reversal caused by the reflection operation. 
+        """
+        utils.warn('warn_mesh_reverse')
+
+        if hasattr(self.eltype,'reversed'):
+            elems = self.elems[:,self.eltype.reversed]
+        else:
+            elems = self.elems[:,::-1]
+        return self.__class__(self.coords,elems,prop=self.prop,eltype=self.eltype)
+
+            
+    def reflect(self,dir=0,pos=0.0,reverse=True,**kargs):
+        """Reflect the coordinates in one of the coordinate directions.
+
+        Parameters:
+
+        - `dir`: int: direction of the reflection (default 0)
+        - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        - `reverse`: boolean: if True, the :meth:`Mesh.reverse` method is
+          called after the reflection to undo the element reversal caused
+          by the reflection of its coordinates. This will in most cases have
+          the desired effect. If not however, the user can set this to False
+          to skip the element reversal.
+        """
+        if 'autofix' in kargs:
+            utils.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
+            reverse = kargs['autofix']
+            
+        if reverse is None:
+            reverse = True
+            utils.warn("warn_mesh_reflect")
+        
+        M = Geometry.reflect(self,dir=dir,pos=pos)
+        if reverse:
+            M = M.reverse()
+        return M
     
 
     def convert(self,totype,fuse=False):
@@ -1527,9 +1532,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         
         - 'elems': the nodes are number in order of their appearance in the
           Mesh connectivity.
+        - 'random': the nodes are numbered randomly.
         """
         if order == 'elems':
             order = renumberIndex(self.elems)
+        elif order == 'random':
+            order = arange(self.nnodes())
+            random.shuffle(order)
         newnrs = inverseUniqueIndex(order)
         return self.__class__(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
 
@@ -1937,7 +1946,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return asarray(T)
 
 
-    def clip(self,t,compact=False):
+    def clip(self,t,compact=True):
         """Return a Mesh with all the elements where t>0.
 
         t should be a 1-D integer array with length equal to the number
@@ -1947,7 +1956,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.select(t>0,compact=compact)
 
 
-    def cclip(self,t,compact=False):
+    def cclip(self,t,compact=True):
         """This is the complement of clip, returning a Mesh where t<=0.
         
         """

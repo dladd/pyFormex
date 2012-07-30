@@ -368,9 +368,6 @@ class Adjacency(ndarray):
           continue until all elements have been reached. If non-negative,
           walking will stop as soon as the frontal value reaches this
           maximum.
-        - `mask`: Either None or a boolean array or index flagging the nodes
-          which are to be considered connectors between elements. If None,
-          all nodes are considered connections.
 
         Returns: an array of integers specifying for each element in which step
         the element was reached by the walker.
