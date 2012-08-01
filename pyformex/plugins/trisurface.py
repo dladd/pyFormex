@@ -1263,9 +1263,9 @@ Quality: %s .. %s
         # BV: SHOULD WE CHANGE THIS???
         all_p = p_posin[self.elems].all(axis=-1)
         all_n = p_negin[self.elems].all(axis=-1)
-        S = self.cclip(all_p+all_n)  # DOES THIS COMPACT? NO
-        Sp = self.clip(all_p)
-        Sn = self.clip(all_n)
+        S = self.cclip(all_p+all_n,compact=False)  # DOES THIS COMPACT? NO
+        Sp = self.clip(all_p,compact=False)
+        Sn = self.clip(all_n,compact=False)
         # Restore properties
         self.prop = save_prop
 
@@ -1517,7 +1517,7 @@ Quality: %s .. %s
         d_ele = d[self.elems]
         ele_all_up = (d_ele > 0.).all(axis=1)
         ele_all_do = (d_ele < 0.).all(axis=1)
-        S = self.cclip(ele_all_up+ele_all_do)
+        S = self.cclip(ele_all_up+ele_all_do,compact=False)
 
         # If there is no intersection, we're done
         if S.nelems() == 0:
