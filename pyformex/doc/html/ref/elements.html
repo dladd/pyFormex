@@ -146,13 +146,20 @@ that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
 <dl class="class">
-<dt id="elements.Element">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>faces=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
-<dd><p>Element base class: an empty element.</p>
-<p>All derived classes should have a capitalized name: starting with
-an uppercase character and further only lower case and digits.</p>
+<dt id="elements.ElementType">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">ElementType</tt><a class="headerlink" href="#elements.ElementType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for element type classes.</p>
+<p>Element type data are stored in a class derived from ElementType.
+The derived element type classes contain only static data. No instances
+of these classes should be created. The base class defines the access
+methods, which are all class methods.</p>
+<p>Derived classes should be created by calling the function
+<tt class="xref py py-func docutils literal"><span class="pre">createElementType()</span></tt>.</p>
 <p>Each element is defined by the following attributes:</p>
 <ul class="simple">
+<li><cite>name</cite>: a string. It is capitalized before use, thus all ElementType
+subclasses have a name starting with an uppercase letter. Usually the
+name has a numeric last part, equal to the plexitude of the element.</li>
 <li><cite>vertices</cite>: the natural coordinates of its vertices,</li>
 <li><cite>edges</cite>: a list of edges, each defined by 2 or 3 node numbers,</li>
 <li><cite>faces</cite>: a list of faces, each defined by a list of minimum 3 node
@@ -205,9 +212,27 @@ target will be attempted.</dd>
 <dd>element names. This can e.g. be used to select randomly between
 different but equivalent conversion paths.</dd>
 </dl>
-<dl class="method">
-<dt id="elements.Element.getEntities">
-<tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big><a class="headerlink" href="#elements.Element.getEntities" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="elements.ElementType.nplex">
+<em class="property">classmethod </em><tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.nplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.nvertices">
+<em class="property">classmethod </em><tt class="descname">nvertices</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.nvertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.nnodes">
+<em class="property">classmethod </em><tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.nnodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.getEntities">
+<em class="property">classmethod </em><tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big><a class="headerlink" href="#elements.ElementType.getEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the type and connectivity table of some element entities.</p>
 <p>The full list of entities with increasing dimensionality  0,1,2,3 is:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
@@ -229,6 +254,35 @@ elements. The returned dict may then have multiple entries.</p>
 the return value is None.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="elements.ElementType.getDrawFaces">
+<em class="property">classmethod </em><tt class="descname">getDrawFaces</tt><big>(</big><em>quadratic=False</em><big>)</big><a class="headerlink" href="#elements.ElementType.getDrawFaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the local connectivity for drawing the element&#8217;s faces</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.toMesh">
+<em class="property">classmethod </em><tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.toMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the element type to a Mesh.</p>
+<p>Returns a Mesh with a single element of natural size.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.toFormex">
+<em class="property">classmethod </em><tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the element type to a Formex.</p>
+<p>Returns a Formex with a single element of natural size.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="elements.ElementType.name">
+<em class="property">classmethod </em><tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.ElementType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the lowercase name of the element.</p>
+<p>For compatibility, name() returns the lower case version of the
+ElementType&#8217;s name. To get the real name, use the attribute
+<cite>__name__</cite> or format the ElementType as a string.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
@@ -244,7 +298,7 @@ element for the specified plexitude is returned.</li>
 <li><cite>nplex</cite>: plexitude of the element. If specified and no element name
 was given, the default element type for this plexitude is returned.</li>
 </ul>
-<p>Returns: a subclass of <a class="reference internal" href="#elements.Element" title="elements.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></p>
+<p>Returns: a subclass of <a class="reference internal" href="#elements.ElementType" title="elements.ElementType"><tt class="xref py py-class docutils literal"><span class="pre">ElementType</span></tt></a></p>
 <dl class="docutils">
 <dt>Errors: if neither <cite>name</cite> nor <cite>nplex</cite> can resolve into an element type,</dt>
 <dd>an error is raised.</dd>
@@ -270,7 +324,7 @@ dimensionality are returned.</p>
 <dt id="elements.printElementTypes">
 <tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print all available element types.</p>
-<p>Prints a list of the names of all availabale element types,
+<p>Prints a list of the names of all available element types,
 grouped by their dimensionality.</p>
 </dd></dl>
 
@@ -305,7 +359,7 @@ grouped by their dimensionality.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

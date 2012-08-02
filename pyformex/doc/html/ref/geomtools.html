@@ -154,20 +154,29 @@ The area is always positive.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="geomtools.polygonArea">
-<tt class="descclassname">geomtools.</tt><tt class="descname">polygonArea</tt><big>(</big><em>x</em>, <em>project=None</em><big>)</big><a class="headerlink" href="#geomtools.polygonArea" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute area inside a polygon.</p>
+<dt id="geomtools.smallestDirection">
+<tt class="descclassname">geomtools.</tt><tt class="descname">smallestDirection</tt><big>(</big><em>x</em>, <em>method='inertia'</em><big>)</big><a class="headerlink" href="#geomtools.smallestDirection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the direction of the smallest dimension of a Coords</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.projectedArea">
+<tt class="descclassname">geomtools.</tt><tt class="descname">projectedArea</tt><big>(</big><em>x</em>, <em>dir</em><big>)</big><a class="headerlink" href="#geomtools.projectedArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute projected area inside a polygon.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>x</cite>: (nplex,3) Coords array representing the vertices of a
-(possibly nonplanar) polygon.</li>
-<li><cite>project</cite>: (3,) Coords array representing a unit direction vector.</li>
+<li><cite>x</cite>: (npoints,3) Coords with the ordered vertices of a
+(possibly nonplanar) polygonal contour.</li>
+<li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
+consisting of 3 floats, specifying the projection direction.</li>
 </ul>
-<p>Returns: a single float value with the area inside the polygon. If a
-direction vector is given, the area projected in that direction is
-returned.</p>
-<p>Note that if the polygon is nonplanar and no direction is given, the area
-inside the polygon is not well defined.</p>
+<p>Returns: a single float value with the area inside the polygon projected
+in the specified direction.</p>
+<p>Note that if the polygon is planar and the specified direction is that
+of the normal on its plane, the returned area is that of the planar
+figure inside the polygon. If the polygon is nonplanar however, the area
+inside the polygon is not defined. The projected area in a specified
+direction is, since the projected polygon is a planar one.</p>
 </dd></dl>
 
 <dl class="function">
@@ -591,6 +600,17 @@ array of intersection points instead of the parameter values.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="geomtools.intersectionSphereSphere">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionSphereSphere</tt><big>(</big><em>R</em>, <em>r</em>, <em>d</em><big>)</big><a class="headerlink" href="#geomtools.intersectionSphereSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection of two spheres (or two circles in the x,y plane).</p>
+<p>Computes the intersection of two spheres with radii R, resp. r, having
+their centres at distance d &lt;= R+r. The intersection is a circle with
+its center on the segment connecting the two sphere centers at a distance
+x from the first sphere, and having a radius y. The return value is a
+tuple x,y.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geomtools.distancesPFL">
 <tt class="descclassname">geomtools.</tt><tt class="descname">distancesPFL</tt><big>(</big><em>X</em>, <em>q</em>, <em>m</em>, <em>mode='all'</em><big>)</big><a class="headerlink" href="#geomtools.distancesPFL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the distances of points X from lines (q,m).</p>
@@ -737,7 +757,7 @@ be inside the simplex.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -585,6 +585,18 @@ P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=di
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtShellSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtShellSection</tt><big>(</big><em>el</em>, <em>setname</em>, <em>matname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtShellSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the shell definition.</p>
+<p>Required:
+- setname
+- matname</p>
+<p>Optional:
+- transverseshearstiffness
+- offset (for contact surface SPOS or 0.5, SNEG or -0.5)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtSurface">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the surface definitions.</p>
@@ -647,11 +659,17 @@ different identifiers for the different elements in the surface. Thus:</p>
 <p>Only implemented on model level</p>
 <p>Required:</p>
 <ul class="simple">
-<li>interaction: interaction properties : name or Dict</li>
+<li>interaction: interaction properties: name or Dict</li>
 </ul>
 <p>Optional:</p>
-<ul class="simple">
-<li>Exclusions (exl)</li>
+<ul>
+<li><p class="first">Exclusions (exl)</p>
+</li>
+<li><p class="first">Extra (extra). Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">extra</span> <span class="o">=</span> <span class="s">&quot;*CONTACT CONTROLS ASSIGNMENT, TYPE=SCALE PENALTY</span><span class="se">\n</span><span class="s">, , 1.e3</span><span class="se">\n</span><span class="s">&quot;</span>
+</pre></div>
+</div>
+</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">generalinteraction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop1&#39;</span><span class="p">),</span><span class="n">exl</span> <span class="o">=</span><span class="p">[[</span><span class="s">&#39;surf11&#39;</span><span class="p">,</span> <span class="s">&#39;surf12&#39;</span><span class="p">],[</span><span class="s">&#39;surf21&#39;</span><span class="p">,</span><span class="n">surf22</span><span class="p">]])</span>
@@ -807,10 +825,16 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.writeCommaList">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeCommaList</tt><big>(</big><em>fil</em>, <em>*args</em><big>)</big><a class="headerlink" href="#fe_abq.writeCommaList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a list of values comma-separated to fil</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.writeDloads">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">writeDloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write Dloads.</p>
-<p>prop is a list property records having an attribute dload</p>
+<p>prop is a list of elem property records having an attribute dload.</p>
 <p>By default, the loads are applied as new values in the current step.
 The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
 </dd></dl>
@@ -961,7 +985,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

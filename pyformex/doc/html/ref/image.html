@@ -161,7 +161,7 @@ The available image formats are derived from the installed software.</p>
 
 <dl class="function">
 <dt id="image.checkImageFormat">
-<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#image.checkImageFormat" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=True</em><big>)</big><a class="headerlink" href="#image.checkImageFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks image format; if verbose, warn if it is not.</p>
 <p>Returns the image format, or None if it is not OK.</p>
 </dd></dl>
@@ -308,9 +308,8 @@ The current background color is selected from the lower left pixel.</p>
 
 <dl class="function">
 <dt id="image.createMovie">
-<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>encoder='ffmpeg'</em><big>)</big><a class="headerlink" href="#image.createMovie" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>files</em>, <em>encoder='ffmpeg'</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#image.createMovie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a movie from a saved sequence of images.</p>
-<p>encoder is one of: &#8216;ffmpeg, mencoder, convert&#8217;</p>
 </dd></dl>
 
 <dl class="function">
@@ -350,7 +349,7 @@ The current background color is selected from the lower left pixel.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -171,15 +171,15 @@ all points in the Mesh;</li>
 by indices into the Coords array. All values in elems should be in the
 range 0 &lt;= value &lt; ncoords.</li>
 <li>prop: an array of element property numbers, default None.</li>
-<li>eltype: an Element subclass or a string designing the element type,
-default None.</li>
-</ul>
-<p>If eltype is None, the eltype of the elems Connectivity table is used,
+<li>eltype: an element type (a subclass of <tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt>) or the name
+of an Element type, or None (default).
+If eltype is None, the eltype of the elems Connectivity table is used,
 and if that is missing, a default eltype is derived from the plexitude,
-by a call to the elements.elementType function.
+by a call to <a class="reference internal" href="elements.html#elements.elementType" title="elements.elementType"><tt class="xref py py-func docutils literal"><span class="pre">elements.elementType()</span></tt></a>.
 In most cases the eltype can be set automatically.
 The user can override the default value, but an error will occur if
-the element type does not exist or does not match the plexitude.</p>
+the element type does not exist or does not match the plexitude.</li>
+</ul>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
 or by a single geometric object that provides a toMesh() method.</p>
 <p>If only an element type is provided, a unit sized single element Mesh
@@ -194,6 +194,18 @@ defined in elements.py. The function will only allow to set a type
 matching the plexitude of the Mesh.</p>
 <p>This method is seldom needed, because the applications should
 normally set the element type at creation time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.elType">
+<tt class="descname">elType</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.elType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the element type of the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.elName">
+<tt class="descname">elName</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.elName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the element name of the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -256,6 +268,26 @@ with the Mesh. Else, an error is raised.</p>
 <p>This returns the number of rows that would be in getEdges(),
 without actually constructing the edges.
 The edges are not fused!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.info">
+<tt class="descname">info</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return short info about the Mesh.</p>
+<p>This includes only the shape of the coords and elems arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.report">
+<tt class="descname">report</tt><big>(</big><em>full=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a report on the Mesh shape and size.</p>
+<p>The report always contains the number of nodes, number of elements,
+plexitude, dimensionality, element type, bbox and size.
+If full==True(default), it also contains the nodal coordinate
+list and element connectivity table. Because the latter can be rather
+bulky, they can be switched off. (Though numpy will limit the printed
+output).</p>
+<p>TODO: We should add an option here to let numpy print the full tables.</p>
 </dd></dl>
 
 <dl class="method">
@@ -426,6 +458,28 @@ switched off by setting <cite>compact=False</cite>.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.getBorderElems">
+<tt class="descname">getBorderElems</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the elements that are on the border of the Mesh.</p>
+<p>This returns a list with the numbers of the elements that are on the
+border of the Mesh. Elements are considered to be at the border if they
+contain at least one complete element of the border Mesh (i.e. an
+element of the first lower hierarchical level). Thus, in a volume Mesh,
+elements only touching the border by a vertex or an edge are not
+considered border elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.peel">
+<tt class="descname">peel</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.peel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the border elements removed.</p>
+<p>This is a convenient shorthand for</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">cselect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getBorderElems</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.getFreeEdgesMesh">
 <tt class="descname">getFreeEdgesMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEdgesMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with the free edge elements.</p>
@@ -443,33 +497,101 @@ switched off by setting <cite>compact=False</cite>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Mesh where all elements have been reversed.</p>
-<p>Reversing an element has the following meaning:</p>
+<dt id="mesh.Mesh.adjacency">
+<tt class="descname">adjacency</tt><big>(</big><em>level=0</em>, <em>diflevel=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.adjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an element adjacency table.</p>
+<p>Two elements are said to be adjacent if they share a lower
+entity of the specified level.
+The level is one of the lower entities of the mesh.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li>for 1D elements: reverse the traversal direction,</li>
-<li>for 2D elements: reverse the direction of the positive normal,</li>
-<li>for 3D elements: reverse inside and outside directions of the
-element&#8217;s border surface</li>
+<li><cite>level</cite>: hierarchy of the geometric items connecting two elements:
+0 = node, 1 = edge, 2 = face. Only values of a lower hierarchy than
+the elements of the Mesh itself make sense.</li>
+<li><cite>diflevel</cite>: if &gt;= level, and smaller than the hierarchy of
+self.elems, elements that have a connection of this level are removed.
+Thus, in a Mesh with volume elements, self.adjacency(0,1) gives the
+adjacency of elements by a node but not by an edge.</li>
 </ul>
-<p>The <a class="reference internal" href="#mesh.Mesh.reflect" title="mesh.Mesh.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">reflect()</span></tt></a> method by default calls this method to undo
-the element reversal caused by the reflection operation.</p>
+<p>Returns an Adjacency with integers specifying for each element
+its neighbours connected by the specified geometrical subitems.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>reverse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reflect the coordinates in one of the coordinate directions.</p>
+<dt id="mesh.Mesh.frontWalk">
+<tt class="descname">frontWalk</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>frontinc=1</em>, <em>partinc=1</em>, <em>maxval=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.frontWalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visit all elements using a frontal walk.</p>
+<p>In a frontal walk a forward step is executed simultanuously from all
+the elements in the current front. The elements thus reached become
+the new front. An element can be reached from the current element if
+both are connected by a lower entity of the specified level. Default
+level is &#8216;point&#8217;.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
-<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
-<li><cite>reverse</cite>: boolean: if True, the <a class="reference internal" href="#mesh.Mesh.reverse" title="mesh.Mesh.reverse"><tt class="xref py py-meth docutils literal"><span class="pre">Mesh.reverse()</span></tt></a> method is
-called after the reflection to undo the element reversal caused
-by the reflection of its coordinates. This will in most cases have
-the desired effect. If not however, the user can set this to False
-to skip the element reversal.</li>
+<li><cite>level</cite>: hierarchy of the geometric items connecting two elements:
+0 = node, 1 = edge, 2 = face. Only values of a lower hierarchy than
+the elements of the Mesh itself make sense. There are no
+connections on the upper level.</li>
+</ul>
+<p>The remainder of the parameters are like in
+<tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.frontWalk()</span></tt>.</p>
+<p>Returns an array of integers specifying for each element in which step
+the element was reached by the walker.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.maskedEdgeFrontWalk">
+<tt class="descname">maskedEdgeFrontWalk</tt><big>(</big><em>mask=None</em>, <em>startat=0</em>, <em>frontinc=1</em>, <em>partinc=1</em>, <em>maxval=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.maskedEdgeFrontWalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a front walk over masked edge connections.</p>
+<p>This is like frontWalk(level=1), but allows to specify a mask to
+select the edges that are used as connectors between elements.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mask</cite>: Either None or a boolean array or index flagging the nodes
+which are to be considered connectors between elements. If None,
+all nodes are considered connections.</li>
+</ul>
+<p>The remainder of the parameters are like in
+<tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.frontWalk()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.partitionByConnection">
+<tt class="descname">partitionByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>firstprop=0</em>, <em>nparts=-1</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.partitionByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect the connected parts of a Mesh.</p>
+<p>The Mesh is partitioned in parts in which all elements are
+connected. Two elements are connected if it is possible to draw a
+continuous (poly)line from a point in one element to a point in
+the other element without leaving the Mesh.
+The partitioning is returned as a property type array having a value
+corresponding to the part number. The lowest property number will be
+firstprop.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.splitByConnection">
+<tt class="descname">splitByConnection</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the Mesh into connected parts.</p>
+<p>Returns a list of Meshes that each form a connected part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.largestByConnection">
+<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the largest connected part of the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.growSelection">
+<tt class="descname">growSelection</tt><big>(</big><em>sel</em>, <em>mode='node'</em>, <em>nsteps=1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.growSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grow a selection of a surface.</p>
+<p><cite>p</cite> is a single element number or a list of numbers.
+The return value is a list of element numbers obtained by
+growing the front <cite>nsteps</cite> times.
+The <cite>mode</cite> argument specifies how a single frontal step is done:</p>
+<ul class="simple">
+<li>&#8216;node&#8217; : include all elements that have a node in common,</li>
+<li>&#8216;edge&#8217; : include all elements that have an edge in common.</li>
 </ul>
 </dd></dl>
 
@@ -519,14 +641,6 @@ to skip the element reversal.</li>
 <dt id="mesh.Mesh.nEdgeAdjacent">
 <tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of adjacent elems.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.report">
-<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a report on the Mesh shape and size.</p>
-<p>The report contains the number of nodes, number of elements,
-plexitude, element type, bbox and size.</p>
 </dd></dl>
 
 <dl class="method">
@@ -680,7 +794,7 @@ The returned Mesh inherits the matching properties.</p>
 <dl class="method">
 <dt id="mesh.Mesh.withoutProp">
 <tt class="descname">withoutProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withoutProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Mesh without the elements with property val.</p>
+<dd><p>Return a Mesh without the elements with property <cite>val</cite>.</p>
 <p>This is the complementary method of Mesh.withProp().
 val is either a single integer, or a list/array of integers.
 The return value is a Mesh holding all the elements that do not
@@ -690,9 +804,27 @@ The returned Mesh inherits the matching properties.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.connectedTo">
+<tt class="descname">connectedTo</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#mesh.Mesh.connectedTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the elements connected to the specified node(s).</p>
+<p><cite>nodes</cite>: int or array_like, int.</p>
+<p>Returns a Mesh with all the elements from the original that contain
+at least one of the specified nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.notConnectedTo">
+<tt class="descname">notConnectedTo</tt><big>(</big><em>nod</em><big>)</big><a class="headerlink" href="#mesh.Mesh.notConnectedTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the elements not connected to the given node(s).</p>
+<p><cite>nodes</cite>: int or array_like, int.</p>
+<p>Returns a Mesh with all the elements from the original that do not
+contain any of the specified nodes.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.splitProp">
 <tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.splitProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition a Mesh according to its propery values.</p>
+<dd><p>Partition a Mesh according to its property values.</p>
 <p>Returns a dict with the property values as keys and the
 corresponding partitions as values. Each value is a Mesh instance.
 It the Mesh has no props, an empty dict is returned.</p>
@@ -707,6 +839,37 @@ Mesh as the original. The elements are randomly distributed over
 the subMeshes.</p>
 <p>By default, the Meshes are compacted. Compaction may be switched
 off for efficiency reasons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh where all elements have been reversed.</p>
+<p>Reversing an element has the following meaning:</p>
+<ul class="simple">
+<li>for 1D elements: reverse the traversal direction,</li>
+<li>for 2D elements: reverse the direction of the positive normal,</li>
+<li>for 3D elements: reverse inside and outside directions of the
+element&#8217;s border surface</li>
+</ul>
+<p>The <a class="reference internal" href="#mesh.Mesh.reflect" title="mesh.Mesh.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">reflect()</span></tt></a> method by default calls this method to undo
+the element reversal caused by the reflection operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>reverse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in one of the coordinate directions.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
+<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
+<li><cite>reverse</cite>: boolean: if True, the <a class="reference internal" href="#mesh.Mesh.reverse" title="mesh.Mesh.reverse"><tt class="xref py py-meth docutils literal"><span class="pre">Mesh.reverse()</span></tt></a> method is
+called after the reflection to undo the element reversal caused
+by the reflection of its coordinates. This will in most cases have
+the desired effect. If not however, the user can set this to False
+to skip the element reversal.</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -838,6 +1001,7 @@ index automatically:</p>
 <ul class="simple">
 <li>&#8216;elems&#8217;: the nodes are number in order of their appearance in the
 Mesh connectivity.</li>
+<li>&#8216;random&#8217;: the nodes are numbered randomly.</li>
 </ul>
 </dd></dl>
 
@@ -911,7 +1075,9 @@ connect back to the first. This is accomplished by adding the first
 Coords item back at the end of the list.</p>
 </li>
 <li><p class="first"><cite>div</cite>: Either an integer, or a sequence of float numbers (usually
-in the range ]0.0..1.0]). With this parameter the generated elements
+in the range ]0.0..1.0]). This should only
+be used for degree==1.</p>
+<p>With this parameter the generated elements
 can be further subdivided along the connection direction.
 If an int is given, the connected elements will be divided
 into this number of elements along the connection direction. If a
@@ -967,7 +1133,7 @@ the geometry .</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.smooth">
-<tt class="descname">smooth</tt><big>(</big><em>iterations=1</em>, <em>lamb=0.5</em>, <em>k=0.1</em>, <em>edg=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.smooth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smooth</tt><big>(</big><em>iterations=1</em>, <em>lamb=0.5</em>, <em>k=0.1</em>, <em>edg=True</em>, <em>exclnod=</em><span class="optional">[</span><span class="optional">]</span>, <em>exclelem=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#mesh.Mesh.smooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a smoothed mesh.</p>
 <p>Smoothing algorithm based on lowpass filters.</p>
 <p>If edg is True, the algorithm tries to smooth the
@@ -975,6 +1141,25 @@ outer border of the mesh seperately to reduce mesh shrinkage.</p>
 <p>Higher values of k can reduce shrinkage even more
 (up to a point where the mesh expands),
 but will result in less smoothing per iteration.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><cite>exclnod</cite>: It contains a list of node indices to exclude from the smoothing.</dt>
+<dd><p class="first last">If exclnod is &#8216;border&#8217;, all nodes on the border of the mesh will
+be unchanged, and the smoothing will only act inside.
+If exclnod is &#8216;inner&#8217;, only the nodes on the border of the mesh will
+take part to the smoothing.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>exclelem</cite>: It contains a list of elements to exclude from the smoothing.</dt>
+<dd><p class="first last">The nodes of these elements will not take part to the smoothing.
+If exclnod and exclelem are used at the same time the union of them
+will be exluded from smoothing.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="classmethod">
@@ -986,6 +1171,10 @@ Meshes with plexitude are ignored though, to allow empty
 Meshes to be added in.</p>
 <p>Merging of the nodes can be tuned by specifying extra arguments
 that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+<p>If any of the meshes has property numbers, the resulting mesh will
+inherit the properties. In that case, any meshes without properties
+will be assigned property 0.
+If all meshes are without properties, so will be the result.</p>
 <p>This is a class method, and should be invoked as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">mesh0</span><span class="p">,</span><span class="n">mesh1</span><span class="p">,</span><span class="n">mesh2</span><span class="p">])</span>
 </pre></div>
@@ -1023,7 +1212,7 @@ may be left unspecified.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.clip">
-<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with all the elements where t&gt;0.</p>
 <p>t should be a 1-D integer array with length equal to the number
 of elements of the Mesh.
@@ -1032,7 +1221,7 @@ The resulting Mesh will contain all elements where t &gt; 0.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.cclip">
-<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cclip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cclip" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the complement of clip, returning a Mesh where t&lt;=0.</p>
 </dd></dl>
 
@@ -1062,7 +1251,9 @@ value is None.</p>
 <dt id="mesh.Mesh.volume">
 <tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total volume of a Mesh.</p>
-<p>If the Mesh can not be converted to tet4 type, 0 is returned</p>
+<p>Computes the volume of Mesh of dimensionality 3 by converting it
+first to a &#8216;tet4&#8217; type Mesh. If the Mesh dimensionality is less than 3
+or the Mesh can not be converted to type &#8216;tet4&#8217;, 0.0 is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1299,8 +1490,12 @@ value is None.</p>
 <dl class="method">
 <dt id="mesh.Mesh.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#mesh.Mesh.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1390,7 +1585,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

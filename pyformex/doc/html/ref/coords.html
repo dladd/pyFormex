@@ -410,8 +410,18 @@ center() of the <a class="reference internal" href="#coords.Coords" title="coord
 <dt id="coords.Coords.inertia">
 <tt class="descname">inertia</tt><big>(</big><em>mass=None</em><big>)</big><a class="headerlink" href="#coords.Coords.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>This returns the center of gravity, the principal axes of inertia,
-the principal moments of inertia and the inertia tensor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mass</cite>: float array with ncoords weight values. The default is to
+attribute a weight 1. to each point.</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>center</cite>: the center of mass: shape (3,)</li>
+<li><cite>axes</cite>: the principal axes of the inertia tensor: shape (3,3)</li>
+<li><cite>principal</cite>: the (prinicipal) moments of inertia: shape (3,)</li>
+<li><cite>tensor</cite>: the full inertia tensor in the global axes: shape (3,3)</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -665,7 +675,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -961,19 +971,32 @@ No points of the <a class="reference internal" href="#coords.Coords" title="coor
 
 <dl class="method">
 <dt id="coords.Coords.projectOnSurface">
-<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>dir=0</em>, <em>missing='error'</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project the Coords on a triangulated surface.</p>
-<p>The points of the Coords are projected in the direction of the
-vector n onto the surface S.</p>
+<p>The points of the Coords are projected in the specified direction dir
+onto the surface S.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>S</cite>: TriSurface: any triangulated surface</li>
-<li><cite>n</cite>: int or vector: specifies the direction of the projection</li>
-<li><cite>ignore_errors</cite>: if True, projective lines not cutting the
-surface will result in NaN values. The default is to raise an error.</li>
+<li><cite>dir</cite>: int or vector: specifies the direction of the projection</li>
+<li><cite>missing</cite>: float value or a string. Specifies a distance to set
+the position of the projection point in cases where the projective
+line does not cut the surface. The sign of the distance is taken
+into account. If specified as a string, it should be one of the
+strings &#8216;c&#8217;, &#8216;f&#8217;, or &#8216;m&#8217;, possibly preceded by a &#8216;+&#8217; or &#8216;-&#8216;.
+The distance will then be taken equal to the closest,
+the furthest, or the mean distance of a point to its projection,
+and applied in positive or negative direction as specified.
+Any other value of missing will result in an error if some point
+does not have any projection. An error will also be raised if not
+a single point projection intersects the surface.</li>
+<li><cite>return_indices</cite>: if True, also returns an index of the points that
+have a projection on the surface.</li>
 </ul>
-<p>If successful, a Coords with the same structure as the
-input is returned.</p>
+<p>Returns a Coords with the same shape as the input. If <cite>return_indices</cite>
+is True, also returns an index of the points that have a projection
+on the surface. This index is a sequential one, no matter what the
+shape of the input Coords is.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1041,8 +1064,55 @@ Raises an error if self.ndim &lt; 2.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="coords.Coords.sort">
+<tt class="descname">sort</tt><big>(</big><em>order=[0, 1, 2]</em><big>)</big><a class="headerlink" href="#coords.Coords.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort points in the specified order of their coordinates.</p>
+<p>The points are sorted based on their coordinate values. There is a
+maximum number of points (above 2 million) that can be sorted. If you
+need to to sort more, first split up your data according to the first
+axis.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: permutation of [0,1,2], specifying the order in which
+the subsequent axes are used to sort the points.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: int array which is a permutation of range(self.npoints()).</dt>
+<dd>If taken in the specified order, it is guaranteed that no point can
+have a coordinate that is larger that the corresponding coordinate
+of the next point.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.boxes">
+<tt class="descname">boxes</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>minsize=1e-05</em><big>)</big><a class="headerlink" href="#coords.Coords.boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of equally sized boxes spanning the points x.</p>
+<p>A regular 3D grid of equally sized boxes is created spanning all
+the points <cite>x</cite>. The size, position and number of boxes are determined
+from the specified parameters.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>ppb</cite>: int: mean number of points per box. The box sizes and
+number of boxes will be determined to approximate this number.</li>
+<li><cite>shift</cite>: float (0.0 .. 1.0): a relative shift value for the grid.
+Applying a shift of 0.5 will make the lowest coordinate values fall
+at the center of the outer boxes.</li>
+<li><cite>minsize</cite>: float: minimum absolute size of the boxes (same in each
+coordinate direction).</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>ox</cite>: float array (3): minimal coordinates of the box grid,</li>
+<li><cite>dx</cite>: float array (3): box size in the three axis directions,</li>
+<li><cite>nx</cite>: in array (3): number of boxes in each of the coordinate
+directions.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="coords.Coords.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em>, <em>nodesperbox=None</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -1053,7 +1123,7 @@ coordinates array for each of the original nodes. This index will
 have the same shape as the pshape() of the coords array.</li>
 </ul>
 <p>The procedure works by first dividing the 3D space in a number of
-equally sized boxes, with a mean population of nodesperbox.
+equally sized boxes, with a mean population of ppb.
 The boxes are numbered in the 3 directions and a unique integer scalar
 is computed, that is then used to sort the nodes.
 Then only nodes inside the same box are compared on almost equal
@@ -1119,6 +1189,24 @@ except for the length of the specified axis.
 This function is equivalent to the numpy concatenate, but makes
 sure the result is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
 is the first one instead of the last.</p>
+<p>The result is at least a 2D array, even when the list contains
+a single Coords with a single point.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 1.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1189,7 +1277,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -1491,8 +1579,18 @@ center() of the <a class="reference internal" href="#coords.Coords" title="coord
 <dt id="coords.BoundVectors.inertia">
 <tt class="descname">inertia</tt><big>(</big><em>mass=None</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>This returns the center of gravity, the principal axes of inertia,
-the principal moments of inertia and the inertia tensor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mass</cite>: float array with ncoords weight values. The default is to
+attribute a weight 1. to each point.</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>center</cite>: the center of mass: shape (3,)</li>
+<li><cite>axes</cite>: the principal axes of the inertia tensor: shape (3,3)</li>
+<li><cite>principal</cite>: the (prinicipal) moments of inertia: shape (3,)</li>
+<li><cite>tensor</cite>: the full inertia tensor in the global axes: shape (3,3)</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -1780,7 +1878,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -1795,7 +1893,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -2091,19 +2189,32 @@ No points of the <a class="reference internal" href="#coords.Coords" title="coor
 
 <dl class="method">
 <dt id="coords.BoundVectors.projectOnSurface">
-<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.projectOnSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>dir=0</em>, <em>missing='error'</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.projectOnSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project the Coords on a triangulated surface.</p>
-<p>The points of the Coords are projected in the direction of the
-vector n onto the surface S.</p>
+<p>The points of the Coords are projected in the specified direction dir
+onto the surface S.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>S</cite>: TriSurface: any triangulated surface</li>
-<li><cite>n</cite>: int or vector: specifies the direction of the projection</li>
-<li><cite>ignore_errors</cite>: if True, projective lines not cutting the
-surface will result in NaN values. The default is to raise an error.</li>
+<li><cite>dir</cite>: int or vector: specifies the direction of the projection</li>
+<li><cite>missing</cite>: float value or a string. Specifies a distance to set
+the position of the projection point in cases where the projective
+line does not cut the surface. The sign of the distance is taken
+into account. If specified as a string, it should be one of the
+strings &#8216;c&#8217;, &#8216;f&#8217;, or &#8216;m&#8217;, possibly preceded by a &#8216;+&#8217; or &#8216;-&#8216;.
+The distance will then be taken equal to the closest,
+the furthest, or the mean distance of a point to its projection,
+and applied in positive or negative direction as specified.
+Any other value of missing will result in an error if some point
+does not have any projection. An error will also be raised if not
+a single point projection intersects the surface.</li>
+<li><cite>return_indices</cite>: if True, also returns an index of the points that
+have a projection on the surface.</li>
 </ul>
-<p>If successful, a Coords with the same structure as the
-input is returned.</p>
+<p>Returns a Coords with the same shape as the input. If <cite>return_indices</cite>
+is True, also returns an index of the points that have a projection
+on the surface. This index is a sequential one, no matter what the
+shape of the input Coords is.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2184,8 +2295,55 @@ Raises an error if self.ndim &lt; 2.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="coords.BoundVectors.sort">
+<tt class="descname">sort</tt><big>(</big><em>order=[0, 1, 2]</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort points in the specified order of their coordinates.</p>
+<p>The points are sorted based on their coordinate values. There is a
+maximum number of points (above 2 million) that can be sorted. If you
+need to to sort more, first split up your data according to the first
+axis.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: permutation of [0,1,2], specifying the order in which
+the subsequent axes are used to sort the points.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: int array which is a permutation of range(self.npoints()).</dt>
+<dd>If taken in the specified order, it is guaranteed that no point can
+have a coordinate that is larger that the corresponding coordinate
+of the next point.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.BoundVectors.boxes">
+<tt class="descname">boxes</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>minsize=1e-05</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of equally sized boxes spanning the points x.</p>
+<p>A regular 3D grid of equally sized boxes is created spanning all
+the points <cite>x</cite>. The size, position and number of boxes are determined
+from the specified parameters.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>ppb</cite>: int: mean number of points per box. The box sizes and
+number of boxes will be determined to approximate this number.</li>
+<li><cite>shift</cite>: float (0.0 .. 1.0): a relative shift value for the grid.
+Applying a shift of 0.5 will make the lowest coordinate values fall
+at the center of the outer boxes.</li>
+<li><cite>minsize</cite>: float: minimum absolute size of the boxes (same in each
+coordinate direction).</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>ox</cite>: float array (3): minimal coordinates of the box grid,</li>
+<li><cite>dx</cite>: float array (3): box size in the three axis directions,</li>
+<li><cite>nx</cite>: in array (3): number of boxes in each of the coordinate
+directions.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="coords.BoundVectors.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em>, <em>nodesperbox=None</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -2196,7 +2354,7 @@ coordinates array for each of the original nodes. This index will
 have the same shape as the pshape() of the coords array.</li>
 </ul>
 <p>The procedure works by first dividing the 3D space in a number of
-equally sized boxes, with a mean population of nodesperbox.
+equally sized boxes, with a mean population of ppb.
 The boxes are numbered in the 3 directions and a unique integer scalar
 is computed, that is then used to sort the nodes.
 Then only nodes inside the same box are compared on almost equal
@@ -2262,6 +2420,24 @@ except for the length of the specified axis.
 This function is equivalent to the numpy concatenate, but makes
 sure the result is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
 is the first one instead of the last.</p>
+<p>The result is at least a 2D array, even when the list contains
+a single Coords with a single point.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 1.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
@@ -2568,8 +2744,18 @@ center() of the <a class="reference internal" href="#coords.Coords" title="coord
 <dt id="coords.CoordinateSystem.inertia">
 <tt class="descname">inertia</tt><big>(</big><em>mass=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>This returns the center of gravity, the principal axes of inertia,
-the principal moments of inertia and the inertia tensor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mass</cite>: float array with ncoords weight values. The default is to
+attribute a weight 1. to each point.</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>center</cite>: the center of mass: shape (3,)</li>
+<li><cite>axes</cite>: the principal axes of the inertia tensor: shape (3,3)</li>
+<li><cite>principal</cite>: the (prinicipal) moments of inertia: shape (3,)</li>
+<li><cite>tensor</cite>: the full inertia tensor in the global axes: shape (3,3)</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -2857,7 +3043,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -2872,7 +3058,7 @@ If no axis is specified, rotation is around the 2(z)-axis. This is
 convenient for working on 2D-structures.</p>
 <p>As a convenience, the user may also specify a 3x3 rotation matrix,
 in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
+<p>All rotations are performed around the point [0.,0.,0.], unless a
 rotation origin is specified in the argument &#8216;around&#8217;.</p>
 </dd></dl>
 
@@ -3168,19 +3354,32 @@ No points of the <a class="reference internal" href="#coords.Coords" title="coor
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.projectOnSurface">
-<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>dir=0</em>, <em>missing='error'</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project the Coords on a triangulated surface.</p>
-<p>The points of the Coords are projected in the direction of the
-vector n onto the surface S.</p>
+<p>The points of the Coords are projected in the specified direction dir
+onto the surface S.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>S</cite>: TriSurface: any triangulated surface</li>
-<li><cite>n</cite>: int or vector: specifies the direction of the projection</li>
-<li><cite>ignore_errors</cite>: if True, projective lines not cutting the
-surface will result in NaN values. The default is to raise an error.</li>
+<li><cite>dir</cite>: int or vector: specifies the direction of the projection</li>
+<li><cite>missing</cite>: float value or a string. Specifies a distance to set
+the position of the projection point in cases where the projective
+line does not cut the surface. The sign of the distance is taken
+into account. If specified as a string, it should be one of the
+strings &#8216;c&#8217;, &#8216;f&#8217;, or &#8216;m&#8217;, possibly preceded by a &#8216;+&#8217; or &#8216;-&#8216;.
+The distance will then be taken equal to the closest,
+the furthest, or the mean distance of a point to its projection,
+and applied in positive or negative direction as specified.
+Any other value of missing will result in an error if some point
+does not have any projection. An error will also be raised if not
+a single point projection intersects the surface.</li>
+<li><cite>return_indices</cite>: if True, also returns an index of the points that
+have a projection on the surface.</li>
 </ul>
-<p>If successful, a Coords with the same structure as the
-input is returned.</p>
+<p>Returns a Coords with the same shape as the input. If <cite>return_indices</cite>
+is True, also returns an index of the points that have a projection
+on the surface. This index is a sequential one, no matter what the
+shape of the input Coords is.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3261,8 +3460,55 @@ Raises an error if self.ndim &lt; 2.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="coords.CoordinateSystem.sort">
+<tt class="descname">sort</tt><big>(</big><em>order=[0, 1, 2]</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort points in the specified order of their coordinates.</p>
+<p>The points are sorted based on their coordinate values. There is a
+maximum number of points (above 2 million) that can be sorted. If you
+need to to sort more, first split up your data according to the first
+axis.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: permutation of [0,1,2], specifying the order in which
+the subsequent axes are used to sort the points.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: int array which is a permutation of range(self.npoints()).</dt>
+<dd>If taken in the specified order, it is guaranteed that no point can
+have a coordinate that is larger that the corresponding coordinate
+of the next point.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.boxes">
+<tt class="descname">boxes</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>minsize=1e-05</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of equally sized boxes spanning the points x.</p>
+<p>A regular 3D grid of equally sized boxes is created spanning all
+the points <cite>x</cite>. The size, position and number of boxes are determined
+from the specified parameters.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>ppb</cite>: int: mean number of points per box. The box sizes and
+number of boxes will be determined to approximate this number.</li>
+<li><cite>shift</cite>: float (0.0 .. 1.0): a relative shift value for the grid.
+Applying a shift of 0.5 will make the lowest coordinate values fall
+at the center of the outer boxes.</li>
+<li><cite>minsize</cite>: float: minimum absolute size of the boxes (same in each
+coordinate direction).</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>ox</cite>: float array (3): minimal coordinates of the box grid,</li>
+<li><cite>dx</cite>: float array (3): box size in the three axis directions,</li>
+<li><cite>nx</cite>: in array (3): number of boxes in each of the coordinate
+directions.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="coords.CoordinateSystem.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>ppb=1</em>, <em>shift=0.5</em>, <em>rtol=1e-05</em>, <em>atol=1e-05</em>, <em>repeat=True</em>, <em>nodesperbox=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -3273,7 +3519,7 @@ coordinates array for each of the original nodes. This index will
 have the same shape as the pshape() of the coords array.</li>
 </ul>
 <p>The procedure works by first dividing the 3D space in a number of
-equally sized boxes, with a mean population of nodesperbox.
+equally sized boxes, with a mean population of ppb.
 The boxes are numbered in the 3 directions and a unique integer scalar
 is computed, that is then used to sort the nodes.
 Then only nodes inside the same box are compared on almost equal
@@ -3339,6 +3585,24 @@ except for the length of the specified axis.
 This function is equivalent to the numpy concatenate, but makes
 sure the result is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
 is the first one instead of the last.</p>
+<p>The result is at least a 2D array, even when the list contains
+a single Coords with a single point.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]</span>
+<span class="go"> [ 1.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">Y</span><span class="p">])</span>
+<span class="go">[[ 2.  2.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="p">])</span>
+<span class="go">[[ 1.  1.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
@@ -3432,6 +3696,26 @@ bounding box.</dd>
 </dd></dl>
 
 <dl class="function">
+<dt id="coords.bboxIntersection">
+<tt class="descclassname">coords.</tt><tt class="descname">bboxIntersection</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="headerlink" href="#coords.bboxIntersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the intersection of the bounding box of two objects.</p>
+<p>A and B are objects having a bbox method. The intersection of the two
+bounding boxes is returned in boox format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="coords.testBbox">
+<tt class="descclassname">coords.</tt><tt class="descname">testBbox</tt><big>(</big><em>A, bb, dirs=[0, 1, 2], nodes='any'</em><big>)</big><a class="headerlink" href="#coords.testBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test which part of A is inside a given bbox, applied in directions dirs.</p>
+<p>A is any object having bbox and a test method (Formex, Mesh).
+bb is a bounding box, i.e. a (2,3) shape float array.
+dirs is a list of the three coordinate axes or a subset thereof.
+nodes has the same meaing as in Formex.test and Mesh.test.</p>
+<p>The result is a bool array flagging the elements that are inside the given
+bounding box.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="coords.origin">
 <tt class="descclassname">coords.</tt><tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.origin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a single point with coordinates [0.,0.,0.].</p>
@@ -3452,7 +3736,7 @@ The start position is always the origin (0.,0.,0.).</p>
 <ul class="simple">
 <li>0: goto origin (0.,0.,0.)</li>
 <li>1..8: move in the x,y plane</li>
-<li>9: remain at the same place (and duplicate the last point)</li>
+<li>9 or .: remain at the same place (i.e. duplicate the last point)</li>
 <li>A..I: same as 1..9 plus step +1. in z-direction</li>
 <li>a..i: same as 1..9 plus step -1. in z-direction</li>
 <li>/: do not insert the next point</li>
@@ -3525,7 +3809,7 @@ defining how the subsequent objects have to be aligned in that direction:</p>
 <li><tt class="docutils literal"><span class="pre">|</span></tt> : align the minimum value on the maximal value of the previous item</li>
 </ul>
 <p>E.g., the string <tt class="docutils literal"><span class="pre">'|--'</span></tt> will juxtapose the objects in the x-direction,
-while aligning the on their minimal coordinates in the y- and z- direction.</p>
+while aligning them on their minimal coordinates in the y- and z- direction.</p>
 </dd></dl>
 
 <dl class="function">
@@ -3582,7 +3866,7 @@ the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

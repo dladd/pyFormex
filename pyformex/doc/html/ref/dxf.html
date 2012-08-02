@@ -294,10 +294,32 @@ vertices of a PolyLine.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="dxf.collectByType">
+<tt class="descclassname">dxf.</tt><tt class="descname">collectByType</tt><big>(</big><em>entities</em><big>)</big><a class="headerlink" href="#dxf.collectByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect the dxf entities by type.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dxf.toLines">
+<tt class="descclassname">dxf.</tt><tt class="descname">toLines</tt><big>(</big><em>coll</em>, <em>chordal=0.01</em>, <em>arcdiv=None</em><big>)</big><a class="headerlink" href="#dxf.toLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the dxf entities in a dxf collection to a plex-2 Formex</p>
+<p>This converts Lines, Arcs and PolyLines to plex-2 elements and collects
+them in a single Formex.
+The chordal and arcdiv parameters are passed to <tt class="xref py py-meth docutils literal"><span class="pre">Arc.approx()</span></tt> to set
+the accuracy for the approximation of the Arc by line segments.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="dxf.exportDXF">
 <tt class="descclassname">dxf.</tt><tt class="descname">exportDXF</tt><big>(</big><em>filename</em>, <em>F</em><big>)</big><a class="headerlink" href="#dxf.exportDXF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a Formex to a DXF file</p>
 <p>Currently, only plex-2 Formices can be exported to DXF.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dxf.exportDxfText">
+<tt class="descclassname">dxf.</tt><tt class="descname">exportDxfText</tt><big>(</big><em>filename</em>, <em>parts</em><big>)</big><a class="headerlink" href="#dxf.exportDxfText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a set of dxf entities to a .dxftext file.</p>
 </dd></dl>
 
 </div>
@@ -331,7 +353,7 @@ vertices of a PolyLine.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

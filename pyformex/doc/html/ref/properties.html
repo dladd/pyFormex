@@ -423,9 +423,17 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.Amplitude">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Amplitude</tt><big>(</big><em>data</em>, <em>definition='TABULAR'</em><big>)</big><a class="headerlink" href="#properties.Amplitude" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Amplitude</tt><big>(</big><em>data</em>, <em>definition='TABULAR'</em>, <em>atime='STEP TIME'</em>, <em>smoothing=None</em><big>)</big><a class="headerlink" href="#properties.Amplitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing an amplitude.</p>
 <p>The amplitude is a list of tuples (time,value).</p>
+<p><cite>atime</cite> (amplitude time) can be either STEP TIME (default in Abaqus)
+or TOTAL TIME</p>
+<p><cite>smoothing</cite> (optional) is a float (from 0. to 0.5, suggested value 0.05)
+representing the fraction of the time interval before and after each time
+point during which the piecewise linear time variation will be replaced by
+a smooth quadratic time variation (avoiding infinite accelerations). 
+Smoothing should be used in combination with TABULAR (set 0.05 as default
+value?)</p>
 </dd></dl>
 
 <dl class="class">
@@ -657,7 +665,7 @@ such as ndarrays.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

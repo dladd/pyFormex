@@ -773,6 +773,40 @@ needed to replace the values in the index by the new ones.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
+<dt id="arraytools.complement">
+<tt class="descclassname">arraytools.</tt><tt class="descname">complement</tt><big>(</big><em>index</em>, <em>n=-1</em><big>)</big><a class="headerlink" href="#arraytools.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complement of an index in a range(0,n).</p>
+<p>The complement is the list of numbers from the range(0,n) that are
+not included in the index.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>index</cite>: array_like, 1-D, int or bool. If integer, it is a list with
+the non-negative numbers to be excluded from the range(0,n).
+If boolean, it normally has the length of the range and flags the
+elements to be returned with a False value.</li>
+<li><cite>n</cite>: int: the upper limit for the range of numbers. If <cite>index</cite> is of
+type integer and <cite>n</cite> is not specified or is negative, it will be set
+equal to the largest number in <cite>index</cite> plus 1. If <cite>index</cite> is of type
+boolean and <cite>n</cite> is larger than the length of <cite>index</cite>, <cite>index</cite> will be
+padded with <cite>False</cite> values until length <cite>n</cite>.</li>
+</ul>
+<p>Returns:</p>
+<blockquote>
+<div>If <cite>index</cite> is integer: a 1-D integer array with the numbers from
+range(0,n) that are not included in <cite>index</cite>. If <cite>index</cite> is boolean,
+the negated <cite>index</cite> padded to or cut at length <cite>n</cite>.</div></blockquote>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">complement</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="go">[1 3 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">complement</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">[1 3 4 7 8 9]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">complement</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">],</span><span class="mi">6</span><span class="p">)</span>
+<span class="go">[ True False False False  True  True]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="arraytools.inverseUniqueIndex">
 <tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse an index.</p>
@@ -783,7 +817,7 @@ get a value -1 in the inverse index.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>index</cite>: array_like, 1-D, integer
-An array with non-negative values, wihch all have to be unique.</li>
+An array with non-negative values, which all have to be unique.</li>
 </ul>
 <p>Returns:</p>
 <blockquote>
@@ -1012,7 +1046,9 @@ The result is a tuple of two arrays:</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is a tuple of two arrays:</p>
+As a convenience, single vectors may also be specified with shape (3,),
+and will be converted to (1,3).</p>
+<p>The result is a tuple of two arrays:</p>
 <ul class="simple">
 <li>area (n) : the area of the parallellogram formed by vec1 and vec2.</li>
 <li>normal (n,3) : (normalized) vectors normal to each couple (vec1,2).</li>
@@ -1076,7 +1112,7 @@ each pair of vectors (vec1,vec2).</p>
 <dt id="arraytools.histogram2">
 <tt class="descclassname">arraytools.</tt><tt class="descname">histogram2</tt><big>(</big><em>a</em>, <em>bins</em>, <em>range=None</em><big>)</big><a class="headerlink" href="#arraytools.histogram2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the histogram of a set of data.</p>
-<p>This function is a like numpy&#8217;s histogram function, but also returns
+<p>This function is like numpy&#8217;s histogram function, but also returns
 the bin index for each individual entry in the data set.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -1208,6 +1244,47 @@ a.shape[0].</div></blockquote>
 <dd><p>Create an array with random values between min and max</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="arraytools.unitDivisor">
+<tt class="descclassname">arraytools.</tt><tt class="descname">unitDivisor</tt><big>(</big><em>div</em>, <em>start=0</em><big>)</big><a class="headerlink" href="#arraytools.unitDivisor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide a unit interval in equal parts.</p>
+<p>div: an integer or a list of floating point values.</p>
+<p>If it is an integer, returns a list of floating point values
+dividing the interval 0.0 toi 1.0 in div equal parts.
+If start=1 is given, the first value (0.0) will be skipped.</p>
+<p>If div is a list, just returns div as a 1D array.</p>
+<p>This function is intended to be used by interpolation functions
+that accept an input as either an int or a list of floats.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.uniformParamValues">
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniformParamValues</tt><big>(</big><em>n</em>, <em>umin=0.0</em>, <em>umax=1.0</em><big>)</big><a class="headerlink" href="#arraytools.uniformParamValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a set of uniformly distributed parameter values in a range.</p>
+<p>Parameters:</p>
+<dl class="docutils">
+<dt><cite>n</cite>: int: number of intervals in which the range should be divided.</dt>
+<dd>The number of values returned is <tt class="docutils literal"><span class="pre">n+1</span></tt>.</dd>
+<dt><cite>umin</cite>,`umax`: float: start and end value of the interval. Default</dt>
+<dd>interval is [0.0..1.0].</dd>
+<dt>Returns: a float array with n+1 equidistant values in the range umin..umax.</dt>
+<dd>For n &gt; 0, both of the endpoints are included. For n=0, a single
+value at the center of the interval will be returned. For n&lt;0, an
+empty array is returned.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="go">[0.0, 0.25, 0.5, 0.75, 1.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="go">[0.5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="go">[1.5, 2.0, 2.5]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -1239,7 +1316,7 @@ a.shape[0].</div></blockquote>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

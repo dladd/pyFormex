@@ -330,7 +330,7 @@ The return value is a Coords object with nelems points.</p>
 
 <dl class="method">
 <dt id="formex.Formex.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>repeat=True</em>, <em>nodesperbox=1</em>, <em>rtol=1e-05</em>, <em>atol=None</em><big>)</big><a class="headerlink" href="#formex.Formex.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>repeat=True</em>, <em>ppb=1</em>, <em>rtol=1e-05</em>, <em>atol=None</em><big>)</big><a class="headerlink" href="#formex.Formex.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a tuple of nodal coordinates and element connectivity.</p>
 <p>A tuple of two arrays is returned. The first is float array with
 the coordinates of the unique nodes of the Formex. The second is
@@ -451,7 +451,14 @@ get a copy with the sum.</p>
 <dl class="classmethod">
 <dt id="formex.Formex.concatenate">
 <em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>Flist</em><big>)</big><a class="headerlink" href="#formex.Formex.concatenate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Concatenate all formices in Flist.</p>
+<dd><p>Concatenate all Formices in Flist.</p>
+<p>All the Formices in the list should have the same plexitude,
+If any of the Formices has property numbers, the resulting Formex will
+inherit the properties. In that case, any Formices without properties
+will be assigned property 0.
+If all Formices are without properties, so will be the result.
+The eltype of the resulting Formex will be that of the first Formex in
+the list.</p>
 <p>This is a class method, not an instance method!</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]],</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">Formex</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">F</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="n">F</span><span class="p">]))</span>
@@ -1005,8 +1012,12 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 <dl class="method">
 <dt id="formex.Formex.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#formex.Formex.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1017,13 +1028,21 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 <p class="first admonition-title">Warning</p>
 <p class="last">This method currently only works for plexitude 2 or 3!</p>
 </div>
+<p>Parameters:</p>
 <ul class="simple">
-<li><cite>p</cite>,`n`: a point and normal vector defining the cutting plane.
-In case of plexitude 3, p and n can be sequences of points and vector,
-allowing to cut with multiple planes.
-Both p and n have shape (3) or (npoints,3).</li>
+<li><cite>p</cite>, <cite>n</cite>: a point and normal vector defining the cutting plane.
+In case of a Formex of plexitude 2, both <cite>p</cite> and <cite>n</cite> have shape (3,).
+In case of plexitude 3, <cite>p</cite> and/or <cite>n</cite> can be sequences of
+points, resp. vectors, allowing cutting with multiple planes. 
+Both <cite>p</cite> and <cite>n</cite> can have shape (3) or (nplanes,3).</li>
+<li><cite>side</cite>: either an empty string, or one of &#8216;+&#8217; or &#8216;-&#8216;. In the latter
+cases, only the part at the positive, resp. negative side of the
+plane (as defined by its normal) is returned. The (default) empty
+string makes both parts being returned as a tuple (pos,neg).</li>
 </ul>
-<p>The default return value is a tuple of two Formices of the same
+<p>Returns:</p>
+<blockquote>
+<div><p>The default return value is a tuple of two Formices of the same
 plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
 Formex at the positive side of the plane (as defined by the normal
 vector), and Fneg is the part at the negative side.
@@ -1032,9 +1051,7 @@ of the plane will return unaltered. Elements that are crossing the
 plane will be cut and split up into multiple parts.</p>
 <p>When side = &#8216;+&#8217; or &#8216;-&#8216; (or &#8216;positive&#8217;or &#8216;negative&#8217;), only one
 of the sides is returned.</p>
-<p>The other arguments (atol,newprops) are currently specific for the
-plexitude. See the cut2AtPlane and cut3AtPlane, which hold the
-actual implementation of this method.</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -1289,7 +1306,7 @@ encountered, and the order of the result is the maximum order in Flist.</p>
 <tt class="descclassname">formex.</tt><tt class="descname">interpolate</tt><big>(</big><em>F</em>, <em>G</em>, <em>div</em>, <em>swap=False</em><big>)</big><a class="headerlink" href="#formex.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two formices.</p>
 <p>F and G are two Formices with the same shape.
-v is a list of floating point values.
+div is a list of floating point values.
 The result is the concatenation of the interpolations of F and G at all
 the values in div.
 An interpolation of F and G at value v is a Formex H where each coordinate
@@ -1338,7 +1355,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

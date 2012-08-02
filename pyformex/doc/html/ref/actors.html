@@ -157,7 +157,7 @@ display list. This may include calling the display list of another
 actor but <em>not</em> creating a new display list.</li>
 </ul>
 <p>The interactive picking functionality requires the following methods,
-for which we porvide do-nothing defaults here:</p>
+for which we provide do-nothing defaults here:</p>
 <ul class="simple">
 <li><cite>npoints()</cite>:</li>
 <li><cite>nelems()</cite>:</li>
@@ -371,7 +371,7 @@ for which we porvide do-nothing defaults here:</p>
 
 <dl class="class">
 <dt id="actors.AxesActor">
-<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">AxesActor</tt><big>(</big><em>cs=None, size=1.0, color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)], colored_axes=True, draw_planes=False, linewidth=None, **kargs</em><big>)</big><a class="headerlink" href="#actors.AxesActor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">AxesActor</tt><big>(</big><em>cs=None, size=1.0, psize=0.5, color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)], colored_axes=True, draw_planes=True, draw_reverse=True, linewidth=2, alpha=0.5, **kargs</em><big>)</big><a class="headerlink" href="#actors.AxesActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An actor showing the three axes of a CoordinateSystem.</p>
 <p>If no CoordinateSystem is specified, the global coordinate system is drawn.</p>
 <p>The default actor consists of three colored lines of unit length along
@@ -523,7 +523,7 @@ draw_planes = False: do not draw the coordinate planes.</p>
 
 <dl class="class">
 <dt id="actors.GeomActor">
-<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>texture=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GeomActor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>mode=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>bkalpha=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>texture=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GeomActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a geometrical model.</p>
 <p>The model can either be in Formex or Mesh format.</p>
 <dl class="method">
@@ -546,7 +546,7 @@ draw_planes = False: do not draw the coordinate planes.</p>
 
 <dl class="method">
 <dt id="actors.GeomActor.setAlpha">
-<tt class="descname">setAlpha</tt><big>(</big><em>alpha</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setAlpha" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setAlpha</tt><big>(</big><em>alpha</em>, <em>bkalpha</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setAlpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the Actors alpha value.</p>
 </dd></dl>
 
@@ -566,7 +566,7 @@ one with mode=&#8217;wireframe&#8217; and color=black, and one with mode=mode[:-
 <dt id="actors.GeomActor.pickGL">
 <tt class="descname">pickGL</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#actors.GeomActor.pickGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allow picking of parts of the actor.</p>
-<p>mode can be &#8216;element&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;</p>
+<p>mode can be &#8216;element&#8217;, &#8216;face&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;</p>
 </dd></dl>
 
 <dl class="method">
@@ -629,7 +629,7 @@ of its parent, but the eltype will be retained.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -320,8 +320,8 @@ parametric values.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="nurbs.NurbsCurve.derivatives">
-<tt class="descname">derivatives</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.derivatives" title="Permalink to this definition">¶</a></dt>
+<dt id="nurbs.NurbsCurve.derivs">
+<tt class="descname">derivs</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.derivs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the points and derivatives up to d at parameter values at</p>
 </dd></dl>
 
@@ -348,6 +348,17 @@ points adapted.</p>
 <tt class="descname">decompose</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decomposes a curve in subsequent Bezier curves.</p>
 <p>Returns an equivalent unblended Nurbs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.removeKnots">
+<tt class="descname">removeKnots</tt><big>(</big><em>u</em>, <em>tol</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.removeKnots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a knots in the curve.</p>
+<p>u is a vector with knot parameter values to be inserted into the
+curve. The control points are adapted to keep the curve unchanged.</p>
+<p>Returns a Nurbs curve equivalent with the original but with the
+specified knot values inserted in the knot vector, and the control
+points adapted.</p>
 </dd></dl>
 
 <dl class="method">
@@ -399,12 +410,30 @@ the degree is not set larger than 3.</p>
 <tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.pointsAt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points on the Nurbs surface at given parametric values.</p>
 <p>Parameters:</p>
-<dl class="docutils">
-<dt><cite>u</cite>: (nu,2) shaped float array: <cite>nu</cite> parametric values (u,v) at which</dt>
-<dd>a point is to be placed.</dd>
-</dl>
+<ul class="simple">
+<li><cite>u</cite>: (nu,2) shaped float array: <cite>nu</cite> parametric values (u,v) at which
+a point is to be placed.</li>
+</ul>
 <p>Returns: (nu,3) shaped Coords with <cite>nu</cite> points at the specified
 parametric values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsSurface.derivs">
+<tt class="descname">derivs</tt><big>(</big><em>u</em>, <em>m</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return points and derivatives at given parametric values.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>u</cite>: (nu,2) shaped float array: <cite>nu</cite> parametric values (u,v) at which
+the points and derivatives are evaluated.</li>
+<li><cite>m</cite>: tuple of two int values (mu,mv). The points and derivatives up
+to order mu in u direction and mv in v direction are returned.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: (nu+1,nv+1,nu,3) shaped Coords with <cite>nu</cite> points at the</dt>
+<dd>specified parametric values. The slice (0,0,:,:) contains the
+points.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -593,7 +622,7 @@ if d3 is give, also returns the torsion of the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -141,6 +141,36 @@
 <span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>21. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
 <dl class="class">
+<dt id="canvas.ActorList">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">ActorList</tt><big>(</big><em>canvas</em><big>)</big><a class="headerlink" href="#canvas.ActorList" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of drawn objects of the same kind.</p>
+<p>This is used to collect the Actors, Decorations and Annotations
+in a scene.
+Currently the implementation does not check that the objects are of
+the proper type.</p>
+<dl class="method">
+<dt id="canvas.ActorList.add">
+<tt class="descname">add</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an actor or a list thereof to a ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.ActorList.delete">
+<tt class="descname">delete</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an actor or a list thereof from an ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.ActorList.redraw">
+<tt class="descname">redraw</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.ActorList.redraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw all actors in the list.</p>
+<p>This redraws the specified actors (recreating their display list).
+This could e.g. be used after changing an actor&#8217;s properties.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="canvas.CanvasSettings">
 <em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of settings for an OpenGL Canvas.</p>
@@ -170,6 +200,7 @@ colors (max. 4 are used).</li>
 <li>bkcolor: the default backface color</li>
 <li>colormap: the default color map to be used if color is an index</li>
 <li>bklormap: the default color map to be used if bkcolor is an index</li>
+<li>transparency: the default alpha and bkalpha value</li>
 <li>pointsize: the default size for drawing points</li>
 <li>marksize: the default size for drawing markers</li>
 <li>linewidth: the default width for drawing lines</li>
@@ -402,93 +433,84 @@ It is assumed that you will not try to change/refresh the normal
 <dt id="canvas.Canvas.setBbox">
 <tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the bounding box of the scene you want to be visible.</p>
+<p>bbox is a (2,3) shaped array specifying a bounding box.
+If no bbox is given, the bounding box of all the actors in the
+scene is used, or if the scene is empty, a default unit bounding box.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addActor">
-<tt class="descname">addActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addActor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a 3D actor to the 3D scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeActor">
-<tt class="descname">removeActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a 3D actor from the 3D scene.</p>
+<tt class="descname">addActor</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 3D actor or a list thereof to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addHighlight">
-<tt class="descname">addHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addHighlight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a 3D actor highlight to the 3D scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeHighlight">
-<tt class="descname">removeHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a 3D actor highlight from the 3D scene.</p>
+<tt class="descname">addHighlight</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a highlight or a list thereof to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addAnnotation">
-<tt class="descname">addAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an annotation to the 3D scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeAnnotation">
-<tt class="descname">removeAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove an annotation from the 3D scene.</p>
+<tt class="descname">addAnnotation</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an annotation or a list thereof to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addDecoration">
-<tt class="descname">addDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addDecoration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a 2D decoration to the canvas.</p>
+<tt class="descname">addDecoration</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 2D decoration or a list thereof to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.addAny">
+<tt class="descname">addAny</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addAny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add any  item or list.</p>
+<p>This will add any actor/annotation/decoration item or a list
+of any such items  to the canvas. This is the prefered method to add
+an item to the canvas, because it makes sure that each item is added
+to the proper list. It can however not be used to add highlights.</p>
+<p>If you have a long list of a single type, it is more efficient to
+use one of the type specific add methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeActor">
+<tt class="descname">removeActor</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 3D actor or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all actors from the scene.
+This also resets the bounding box for the canvas autozoom.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeHighlight">
+<tt class="descname">removeHighlight</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a highlight or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all highlights from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeAnnotation">
+<tt class="descname">removeAnnotation</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an annotation or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all annotations from the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeDecoration">
-<tt class="descname">removeDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a 2D decoration from the canvas.</p>
+<tt class="descname">removeDecoration</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 2D decoration or a list thereof from the canvas.</p>
+<p>Without argument, removes all decorations from the scene.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Canvas.remove">
-<tt class="descname">remove</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.remove" title="Permalink to this definition">¶</a></dt>
+<dt id="canvas.Canvas.removeAny">
+<tt class="descname">removeAny</tt><big>(</big><em>itemlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAny" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
 <p>This will remove the items from any of the canvas lists in which the
 item appears.
-itemlist can also be a single item instead of a list.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeActors">
-<tt class="descname">removeActors</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all actors in actorlist (default = all) from the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeHighlights">
-<tt class="descname">removeHighlights</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all highlights in actorlist (default = all) from the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeAnnotations">
-<tt class="descname">removeAnnotations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all annotations in actorlist (default = all) from the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeDecorations">
-<tt class="descname">removeDecorations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecorations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all decorations in actorlist (default = all) from the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.removeAll">
-<tt class="descname">removeAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all actors and decorations</p>
+itemlist can also be a single item instead of a list.
+If None is specified, all items from all lists will be removed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -663,7 +685,7 @@ None to leave it unchanged.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

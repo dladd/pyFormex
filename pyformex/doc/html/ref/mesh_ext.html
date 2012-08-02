@@ -146,69 +146,6 @@ Mesh object, but are also available as Mesh methods.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh_ext</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh_ext</span></tt></p>
 <dl class="function">
-<dt id="mesh_ext.report">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">report</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#mesh_ext.report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a report on the Mesh shape and size.</p>
-<p>The report contains the number of nodes, number of elements,
-plexitude, element type, bbox and size.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.alt_report">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">alt_report</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#mesh_ext.alt_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a report on the Mesh shape and size.</p>
-<p>The report contains the number of nodes, number of elements,
-plexitude, element type, bbox and size.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.nodeFront">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">nodeFront</tt><big>(</big><em>self</em>, <em>startat=0</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#mesh_ext.nodeFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator function returning the frontal elements.</p>
-<p>startat is an element number or list of numbers of the starting front.
-On first call, this function returns the starting front.
-Each next() call returns the next front.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.partitionByNodeFront">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">partitionByNodeFront</tt><big>(</big><em>self</em>, <em>firstprop=0</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#mesh_ext.partitionByNodeFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detects different parts of the Mesh using a frontal method.</p>
-<p>okedges flags the edges where the two adjacent elems are to be
-in the same part of the Mesh.
-startat is a list of elements that are in the first part.
-The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.partitionByConnection">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">partitionByConnection</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#mesh_ext.partitionByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect the connected parts of a Mesh.</p>
-<p>The Mesh is partitioned in parts in which all elements are
-connected. Two elements are connected if it is possible to draw a
-continuous (poly)line from a point in one element to a point in
-the other element without leaving the Mesh.
-The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.splitByConnection">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">splitByConnection</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#mesh_ext.splitByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the Mesh into connected parts.</p>
-<p>Returns a list of Meshes that each form a connected part.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.largestByConnection">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">largestByConnection</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#mesh_ext.largestByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the largest connected part of the Mesh.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="mesh_ext.rings">
 <tt class="descclassname">mesh_ext.</tt><tt class="descname">rings</tt><big>(</big><em>self</em>, <em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#mesh_ext.rings" title="Permalink to this definition">¶</a></dt>
 <dd><p>It finds the rings of elems connected to sources by node.</p>
@@ -272,16 +209,8 @@ For a Mesh with dimensionality &lt; 2, 0 is returned.</p>
 surface. The arguments and return value are the same as in
 <tt class="xref py py-meth docutils literal"><span class="pre">TriSurface.partitionByAngle()</span></tt>.</p>
 <p>Currently this only works for &#8216;tri3&#8217; and &#8216;quad4&#8217; type Meshes.
-Also, the &#8216;quad4&#8217; partitioning method currently only works corectly
+Also, the &#8216;quad4&#8217; partitioning method currently only works correctly
 if the quads are nearly planar.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh_ext.initialize">
-<tt class="descclassname">mesh_ext.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh_ext.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the Mesh extensions.</p>
-<p>Calling this function will install some of the mesh functions
-defined in this modules as Mesh methods.</p>
 </dd></dl>
 
 </div>
@@ -315,7 +244,7 @@ defined in this modules as Mesh methods.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

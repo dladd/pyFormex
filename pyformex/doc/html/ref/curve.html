@@ -150,10 +150,57 @@ but special cases may be created for handling plane curves.</p>
 <dd><p>Base class for curve type classes.</p>
 <p>This is a virtual class intended to be subclassed.
 It defines the common definitions for all curve types.
-The subclasses should at least define the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-</pre></div>
-</div>
+The subclasses should at least define the following attributes and methods
+or override them if the defaults are not suitable.</p>
+<p>Attributes:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Coords :</th><td class="field-body">coordinates of points defining the curve</td>
+</tr>
+<tr class="field"><th class="field-name">Parts :</th><td class="field-body">number of parts (e.g. straight segments of a polyline)</td>
+</tr>
+<tr class="field"><th class="field-name">Closed :</th><td class="field-body">is the curve closed or not</td>
+</tr>
+<tr class="field"><th class="field-name">Range :</th><td class="field-body">[min,max] : range of the parameter: default 0..1</td>
+</tr>
+</tbody>
+</table>
+<p>Methods:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Sub_points(t,j) :</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">returns points at parameter value t,j</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Sub_directions(t,j) :</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">returns direction at parameter value t,j</td>
+</tr>
+<tr class="field"><th class="field-name">Pointson() :</th><td class="field-body">the defining points placed on the curve</td>
+</tr>
+<tr class="field"><th class="field-name">Pointsoff() :</th><td class="field-body">the defining points placeded off the curve (control points)</td>
+</tr>
+<tr class="field"><th class="field-name">Parts(j,k) :</th><td class="field-body"></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Approx(ndiv,ntot) :</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Furthermore it may define, for efficiency reasons, the following methods:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Sub_points_2 :</th><td class="field-body"></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Sub_directions_2 :</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="curve.Curve.endPoints">
 <tt class="descname">endPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.endPoints" title="Permalink to this definition">¶</a></dt>
@@ -201,7 +248,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.Curve.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -230,6 +277,17 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Curve.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.Curve.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Curve.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -246,6 +304,24 @@ straight segments over each part of the curve.
 If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
 straight segments over the total curve. This is based on a
 first approximation with ndiv segments over each part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.Curve.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -517,8 +593,12 @@ they wil be repeated. If you give more, they will be ignored.</p>
 <dl class="method">
 <dt id="curve.Curve.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Curve.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -586,8 +666,8 @@ a segment.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.PolyLine.sub_points2">
-<tt class="descname">sub_points2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points2" title="Permalink to this definition">¶</a></dt>
+<dt id="curve.PolyLine.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points_2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points at value,part pairs (t,j)</p>
 </dd></dl>
 
@@ -660,11 +740,10 @@ at the specified relative lengths.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.PolyLine.split">
-<tt class="descname">split</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#curve.PolyLine.split" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the curve at the point i.</p>
-<p>Returns a list of open PolyLines: one, if the PolyLine is closed or
-i is one of the endpoints of an open PolyLine, two in other cases.</p>
+<dt id="curve.PolyLine.parts">
+<tt class="descname">parts</tt><big>(</big><em>j</em>, <em>k</em><big>)</big><a class="headerlink" href="#curve.PolyLine.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine containing only segments j to k (k not included).</p>
+<p>The resulting PolyLine is always open.</p>
 </dd></dl>
 
 <dl class="method">
@@ -692,13 +771,6 @@ cannot be concatenated.</p>
 <tt class="descname">endPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.endPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return start and end points of the curve.</p>
 <p>Returns a Coords with two points, or None if the curve is closed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.PolyLine.sub_points_2">
-<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
 </dd></dl>
 
 <dl class="method">
@@ -958,7 +1030,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.PolyLine.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.PolyLine.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -993,6 +1065,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.PolyLine.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.PolyLine.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.PolyLine.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -1012,10 +1106,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.PolyLine.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.PolyLine.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.PolyLine.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1056,13 +1161,6 @@ If fil is a string, the file is closed prior to returning.</p>
 <tt class="descname">endPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.endPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return start and end points of the curve.</p>
 <p>Returns a Coords with two points, or None if the curve is closed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Line.sub_points_2">
-<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Line.sub_points_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1322,7 +1420,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.Line.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Line.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -1357,6 +1455,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Line.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.Line.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Line.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Line.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -1376,10 +1496,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.Line.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.Line.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1392,6 +1523,17 @@ You can specify a single value or a list/array of integer values.
 If the number of passed values is less than the number of elements,
 they wil be repeated. If you give more, they will be ignored.</p>
 <p>If a value None is given, the properties are removed from the Formex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Line.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.Line.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1416,17 +1558,6 @@ a segment.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.Line.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a Geometry to a .pgf file.</p>
-<p>If fil is a string, a file with that name is opened. Else fil should
-be an open file.
-The Geometry is then written to that file in a native format, using
-sep as separator between the coordinates.
-If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="curve.Line.toFormex">
 <tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.toFormex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the polyline as a Formex.</p>
@@ -1446,8 +1577,8 @@ If fil is a string, the file is closed prior to returning.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.sub_points2">
-<tt class="descname">sub_points2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Line.sub_points2" title="Permalink to this definition">¶</a></dt>
+<dt id="curve.Line.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Line.sub_points_2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points at value,part pairs (t,j)</p>
 </dd></dl>
 
@@ -1520,11 +1651,10 @@ at the specified relative lengths.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.split">
-<tt class="descname">split</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#curve.Line.split" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the curve at the point i.</p>
-<p>Returns a list of open PolyLines: one, if the PolyLine is closed or
-i is one of the endpoints of an open PolyLine, two in other cases.</p>
+<dt id="curve.Line.parts">
+<tt class="descname">parts</tt><big>(</big><em>j</em>, <em>k</em><big>)</big><a class="headerlink" href="#curve.Line.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine containing only segments j to k (k not included).</p>
+<p>The resulting PolyLine is always open.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1672,6 +1802,13 @@ an empty Coords if degree &lt;= 1.</p>
 <dt id="curve.BezierSpline.lengths">
 <tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the length of the parts of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.parts">
+<tt class="descname">parts</tt><big>(</big><em>j</em>, <em>k</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a curve containing only parts j to k (k not included).</p>
+<p>The resulting curve is always open.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1983,7 +2120,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.BezierSpline.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -2018,6 +2155,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.BezierSpline.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.BezierSpline.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -2037,10 +2196,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.BezierSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.BezierSpline.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2359,7 +2529,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.CardinalSpline.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -2394,6 +2564,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.CardinalSpline.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.CardinalSpline.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -2413,10 +2605,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.CardinalSpline.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2502,6 +2705,13 @@ an empty Coords if degree &lt;= 1.</p>
 <dt id="curve.CardinalSpline.lengths">
 <tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the length of the parts of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline.parts">
+<tt class="descname">parts</tt><big>(</big><em>j</em>, <em>k</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a curve containing only parts j to k (k not included).</p>
+<p>The resulting curve is always open.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2826,7 +3036,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.CardinalSpline2.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -2861,6 +3071,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.CardinalSpline2.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline2.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.CardinalSpline2.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -2880,10 +3112,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline2.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.CardinalSpline2.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3203,7 +3446,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.NaturalSpline.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -3238,6 +3481,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.NaturalSpline.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.NaturalSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.NaturalSpline.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -3257,10 +3522,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.NaturalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.NaturalSpline.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3580,7 +3856,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.Arc3.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Arc3.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -3615,6 +3891,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Arc3.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.Arc3.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc3.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Arc3.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc3.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -3634,10 +3932,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc3.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.Arc3.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.Arc3.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3697,13 +4006,6 @@ plane will be parallel to the z-axis.</p>
 <tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Arc.sub_points_2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points at values,parts given by zip(t,j)</p>
 <p>t and j can both be arrays, but should have the same length.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Arc.sub_directions">
-<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Arc.sub_directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the directions at values t in part j</p>
-<p>t can be an array of parameter values, j is a single segment number.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3963,7 +4265,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.Arc.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Arc.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -3998,6 +4300,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Arc.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.Arc.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Arc.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -4006,10 +4330,21 @@ method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.Arc.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.Arc.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4047,7 +4382,7 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <dl class="method">
 <dt id="curve.Arc.approx">
-<tt class="descname">approx</tt><big>(</big><em>chordal=0.001</em>, <em>ndiv=None</em><big>)</big><a class="headerlink" href="#curve.Arc.approx" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>chordal=0.001</em><big>)</big><a class="headerlink" href="#curve.Arc.approx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a PolyLine approximation of the Arc.</p>
 <p>Approximates the Arc by a sequence of inscribed straight line
 segments.</p>
@@ -4350,7 +4685,7 @@ goes from 0 to 1 over the segment.</p>
 <dl class="method">
 <dt id="curve.Spiral.directionsAt">
 <tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Spiral.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
+<dd><p>Return the directions at parameter values t.</p>
 <p>Parameter values are floating point values. Their integer part
 is interpreted as the curve segment number, and the decimal part
 goes from 0 to 1 over the segment.</p>
@@ -4385,6 +4720,28 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Spiral.split">
+<tt class="descname">split</tt><big>(</big><em>split=None</em><big>)</big><a class="headerlink" href="#curve.Spiral.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a curve into a list of partial curves</p>
+<p>split is a list of integer values specifying the node numbers
+where the curve is to be split. As a convenience, a single int may
+be given if the curve is to be split at a single node, or None
+to split all all nodes.</p>
+<p>Returns a list of open curves of the same type as the original.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Spiral.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Spiral.length">
 <tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Spiral.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total length of the curve.</p>
@@ -4404,10 +4761,21 @@ first approximation with ndiv segments over each part.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Spiral.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dt id="curve.Spiral.approximate">
+<tt class="descname">approximate</tt><big>(</big><em>nseg</em>, <em>equidistant=True</em>, <em>npre=100</em><big>)</big><a class="headerlink" href="#curve.Spiral.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximate a Curve with a PolyLine of n segments</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nseg</cite>: number of straight segments of the resulting PolyLine</li>
+<li><cite>equidistant</cite>: if True (default) the points are spaced almost
+equidistantly over the curve. If False, the points are spread
+equally over the parameter space.</li>
+<li><cite>npre</cite>: only used when <cite>equidistant</cite> is True: number of segments
+per part of the curve used in the pre-approximation. This is
+pre-approximation is currently required to compute curve lengths.</li>
+</ul>
+<p>Note:: This is an alternative for Curve.approx, and may replace it
+completely in future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4497,7 +4865,7 @@ with curl 0.375058 through 8 points.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

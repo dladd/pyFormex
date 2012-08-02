@@ -191,7 +191,7 @@ module (&#8211;nogui option).</p>
 
 <dl class="function">
 <dt id="script.listAll">
-<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>dic=None</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>dic=None</em>, <em>sort=False</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all objects in dictionay that match criteria.</p>
 <ul class="simple">
 <li>dic: a dictionary object, defaults to pyformex.PF</li>
@@ -299,8 +299,8 @@ is returned to the caller.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.run">
-<tt class="descclassname">script.</tt><tt class="descname">run</tt><big>(</big><em>appname=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em>, <em>reload=False</em><big>)</big><a class="headerlink" href="#script.run" title="Permalink to this definition">¶</a></dt>
+<dt id="script.runAny">
+<tt class="descclassname">script.</tt><tt class="descname">runAny</tt><big>(</big><em>appname=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em>, <em>refresh=False</em><big>)</big><a class="headerlink" href="#script.runAny" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the current pyFormex application or script file.</p>
 <p>This function does nothing if no appname/filename is passed or no current
 script/app was set.
@@ -348,9 +348,10 @@ configuration file.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.writable">
-<tt class="descclassname">script.</tt><tt class="descname">writable</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#script.writable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if the specified path is writeable</p>
+<dt id="script.isWritable">
+<tt class="descclassname">script.</tt><tt class="descname">isWritable</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#script.isWritable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the specified path is writable.</p>
+<p>BEWARE: this only works if the path exists!</p>
 </dd></dl>
 
 <dl class="function">
@@ -378,13 +379,6 @@ for persistence between pyFormex invocations.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.isWritable">
-<tt class="descclassname">script.</tt><tt class="descname">isWritable</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#script.isWritable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that the specified path is writeable.</p>
-<p>BEWARE: this only works if the path exists!</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="script.checkRevision">
 <tt class="descclassname">script.</tt><tt class="descname">checkRevision</tt><big>(</big><em>rev</em>, <em>comp='&gt;='</em><big>)</big><a class="headerlink" href="#script.checkRevision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the pyFormex revision number.</p>
@@ -408,17 +402,6 @@ raise an error if the requirement fails.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.grepSource">
-<tt class="descclassname">script.</tt><tt class="descname">grepSource</tt><big>(</big><em>pattern</em>, <em>options=''</em>, <em>relative=True</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#script.grepSource" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds pattern in the pyFormex source .py files.</p>
-<p>Uses the <cite>grep</cite> program to find all occurrences of some specified
-pattern text in the pyFormex source .py files (including the examples).
-Extra options can be passed to the grep command. See <cite>man grep</cite> for
-more info.</p>
-<p>Returns the output of the grep command.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="script.writeGeomFile">
 <tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em>, <em>shortlines=False</em><big>)</big><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save geometric objects to a pyFormex Geometry File.</p>
@@ -427,7 +410,9 @@ native format that can be efficiently read back into pyformex.
 The format is portable over different pyFormex versions and 
 even to other software.</p>
 <ul class="simple">
-<li><cite>filename</cite>: the name of the file to be written</li>
+<li><cite>filename</cite>: the name of the file to be written. If it ends with &#8216;.gz&#8217;
+the file will be compressed with gzip. If a file with the given name
+minus the trailing &#8216;.gz&#8217; exists, it will be destroyed.</li>
 <li><cite>objects</cite>: a list or a dictionary. If it is a dictionary,
 the objects will be saved with the key values as there names.
 Objects that can not be exported to a Geometry File will be
@@ -449,7 +434,9 @@ native format that can be efficiently read back into pyformex.
 The format is portable over different pyFormex versions and 
 even to other software.</p>
 <ul class="simple">
-<li><cite>filename</cite>: the name of an exisiting pyFormex Geometry File.</li>
+<li><cite>filename</cite>: the name of an existing pyFormex Geometry File. If the
+filename ends on &#8216;.gz&#8217;, it is considered to be a gzipped file and
+will be uncompressed transparently during the reading.</li>
 </ul>
 <p>Returns a dictionary with the geometric objects read from the file.
 If object names were stored in the file, they will be used as the keys.
@@ -487,7 +474,7 @@ Else, default names will be provided.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

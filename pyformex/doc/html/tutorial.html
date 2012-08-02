@@ -475,7 +475,10 @@ continue with this tutorial.</p>
 23
 24
 25
-26</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 <span class="sd">&quot;&quot;&quot;Python intro</span>
 
 <span class="sd">A short introduction to some aspects of the Python programming language</span>
@@ -491,14 +494,17 @@ continue with this tutorial.</p>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">print</span> <span class="s">&#39;THE LIGHT IS BROKEN!&#39;</span>
 
-
-
-<span class="n">appreciation</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">:</span> <span class="s">&#39;not driving&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">:</span><span class="s">&#39;slow&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">:</span><span class="s">&#39;normal&#39;</span><span class="p">,</span> <span class="mi">90</span><span class="p">:</span><span class="s">&#39;dangerous&#39;</span><span class="p">,</span> <span class="mi">120</span><span class="p">:</span><span class="s">&#39;suicidal&#39;</span><span class="p">}</span>
+<span class="n">appreciation</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span><span class="p">:</span> <span class="s">&#39;not driving&#39;</span><span class="p">,</span>
+    <span class="mi">30</span><span class="p">:</span><span class="s">&#39;slow&#39;</span><span class="p">,</span>
+    <span class="mi">60</span><span class="p">:</span><span class="s">&#39;normal&#39;</span><span class="p">,</span>
+    <span class="mi">90</span><span class="p">:</span><span class="s">&#39;dangerous&#39;</span><span class="p">,</span>
+    <span class="mi">120</span><span class="p">:</span><span class="s">&#39;suicidal&#39;</span>
+    <span class="p">}</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">speed</span> <span class="o">=</span> <span class="mi">30</span><span class="o">*</span><span class="n">i</span>
     <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">. Driving at speed </span><span class="si">%s</span><span class="s"> is </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">speed</span><span class="p">,</span><span class="n">appreciation</span><span class="p">[</span><span class="n">speed</span><span class="p">])</span>
-
 
 <span class="c"># End</span>
 </pre></div>
@@ -731,7 +737,10 @@ Wireframe</em> menu option or <img alt="button-wireframe" src="_images/wireframe
 lines of the square, and not the surface inside that
 border. Obviously, you need a 4 element 2-plex Formex, using data
 structured like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span><span class="n">clear</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1480,7 +1489,7 @@ arrays are the same, within a small tolerance.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

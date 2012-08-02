@@ -235,9 +235,11 @@ The result is a dictionary with a single key: &#8216;text&#8217; having the
 displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
 be a changed text.</td>
 </tr>
+<tr class="field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
+</tr>
 </tbody>
 </table>
-<p>: modeless dialog: the open dialog window itself.</p>
 </dd></dl>
 
 <dl class="function">
@@ -425,7 +427,7 @@ converted,</li>
 
 <dl class="function">
 <dt id="draw.draw">
-<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>shrink=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>alpha=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>bkalpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>view=None</em>, <em>bbox=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw object(s) with specified settings and direct camera to it.</p>
 <p>The first argument is an object to be drawn. All other arguments are
 settings that influence how  the object is being drawn.</p>
@@ -575,6 +577,23 @@ or to allow to view a mark at the vertices.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.drawBbox">
+<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>F</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#draw.drawBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the bounding box of the geometric object F.</p>
+<p>F is any object that has a <cite>bbox</cite> method.
+Returns the drawn Annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawPrincipal">
+<tt class="descclassname">draw.</tt><tt class="descname">drawPrincipal</tt><big>(</big><em>F</em>, <em>weight=None</em><big>)</big><a class="headerlink" href="#draw.drawPrincipal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the principal axes of the geometric object F.</p>
+<p>F is any object that has a <cite>coords</cite> attribute.
+If specified, weight is an array of weights attributed to the points
+of F. It should have the same length as <cite>F.coords</cite>.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.drawText3D">
 <tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a text at a 3D point P.</p>
@@ -582,15 +601,18 @@ or to allow to view a mark at the vertices.</p>
 
 <dl class="function">
 <dt id="draw.drawAxes">
-<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>CS</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the axes of a CoordinateSystem.</p>
-<p>This draws an AxesActor corresponding to the specified Coordinatesystem.
-The arguments are the same as those of the AxesActor constructor.</p>
+<p>CS is a CoordinateSystem. Other arguments can be added just like in the
+<tt class="xref py py-class docutils literal"><span class="pre">AxesActor</span></tt> class.</p>
+<p>While you can draw a CoordinateSystem using the <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> function,
+this function gives a better result because it has specialized color
+and annotation settings and provides reasonable deafults.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.drawImage">
-<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>nx=-1</em>, <em>ny=-1</em>, <em>pixel='dot'</em><big>)</big><a class="headerlink" href="#draw.drawImage" title="Permalink to this definition">¶</a></dt>
+<dt id="draw.drawImage3D">
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage3D</tt><big>(</big><em>image</em>, <em>nx=0</em>, <em>ny=0</em>, <em>pixel='dot'</em><big>)</big><a class="headerlink" href="#draw.drawImage3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an image as a colored Formex</p>
 <p>Draws a raster image as a colored Formex. While there are other and
 better ways to display an image in pyFormex (such as using the imageView
@@ -598,14 +620,46 @@ widget), this function allows for interactive handling the image using
 the OpenGL infrastructure.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>image</cite>: a QImage holding a raster image. An image can be loaded from
-most standard image files using the <tt class="xref py py-func docutils literal"><span class="pre">loadImage()</span></tt> function</li>
-<li><cite>nx</cite>,`ny`: resolution you want to use for the display</li>
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file.</li>
+<li><cite>nx</cite>,`ny`: width and height (in cells) of the Formex grid.
+If the supplied image has a different size, it will be rescaled.
+Values &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
 <li><cite>pixel</cite>: the Formex representing a single pixel. It should be either
 a single element Formex, or one of the strings &#8216;dot&#8217; or &#8216;quad&#8217;. If &#8216;dot&#8217;
 a single point will be used, if &#8216;quad&#8217; a unit square. The difference
 will be important when zooming in. The default is &#8216;dot&#8217;.</li>
 </ul>
+<p>Returns the drawn Actor.</p>
+<p>See also <a class="reference internal" href="#draw.drawImage" title="draw.drawImage"><tt class="xref py py-func docutils literal"><span class="pre">drawImage()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawImage">
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em>, <em>x=-1</em>, <em>y=-1</em>, <em>color=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>ontop=False</em><big>)</big><a class="headerlink" href="#draw.drawImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws an image as a viewport decoration.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file. See also the <tt class="xref py py-func docutils literal"><span class="pre">loadImage()</span></tt>
+function.</li>
+<li><cite>w</cite>,`h`: width and height (in pixels) of the displayed image.
+If the supplied image has a different size, it will be rescaled.
+A value &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+<li><cite>x</cite>,`y`: position of the lower left corner of the image. If negative,
+the image will be centered on the current viewport.</li>
+<li><cite>color</cite>: the color to mix in (AND) with the image. The default (white)
+will make all pixels appear as in the image.</li>
+<li><cite>ontop</cite>: determines whether the image will appear as a background
+(default) or at the front of the 3D scene (as on the camera glass).</li>
+</ul>
+<p>Returns the Decoration drawn.</p>
+<p>Note that the Decoration has a fixed size (and position) on the canvas
+and will not scale when the viewport size is changed.
+The <a class="reference internal" href="#draw.bgcolor" title="draw.bgcolor"><tt class="xref py py-func docutils literal"><span class="pre">bgcolor()</span></tt></a> function can be used to draw an image that completely
+fills the background.</p>
 </dd></dl>
 
 <dl class="function">
@@ -615,15 +669,15 @@ will be important when zooming in. The default is &#8216;dot&#8217;.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.drawBbox">
-<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawBbox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the bbox of the actor A.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="draw.drawActor">
 <tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an actor and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawAny">
+<tt class="descclassname">draw.</tt><tt class="descname">drawAny</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawAny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an Actor/Annotation/Decoration and update the screen.</p>
 </dd></dl>
 
 <dl class="function">
@@ -808,7 +862,7 @@ screen.</p>
 
 <dl class="function">
 <dt id="draw.play">
-<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>step=False</em><big>)</big><a class="headerlink" href="#draw.play" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>step=False</em>, <em>refresh=False</em><big>)</big><a class="headerlink" href="#draw.play" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the current script or if already running, continue it.</p>
 </dd></dl>
 
@@ -819,7 +873,9 @@ screen.</p>
 <p>This works pretty much like the play() function, but will
 reload the current application prior to running it.
 This function is especially interesting during development
-of an application.</p>
+of an application.
+If the current application is a script, then it is equivalent with
+play().</p>
 </dd></dl>
 
 <dl class="function">
@@ -848,7 +904,7 @@ This is equivalent with the behavior of the play function.</p>
 <dd><p>Pause the execution until an external event occurs or timeout.</p>
 <p>When the pause statement is executed, execution of the pyformex script
 is suspended until some external event forces it to proceed again.
-Clicking the PLAY or CONTINUE button will produce such an event.</p>
+Clicking the PLAY, STEP or CONTINUE button will produce such an event.</p>
 </dd></dl>
 
 <dl class="function">
@@ -914,6 +970,12 @@ or is one of the viewport objects in pyformex.GUI.viewports</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.nViewports">
+<tt class="descclassname">draw.</tt><tt class="descname">nViewports</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.nViewports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of viewports.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.layout">
 <tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#draw.layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the viewports layout.</p>
@@ -942,6 +1004,12 @@ or is one of the viewport objects in pyformex.GUI.viewports</p>
 <dt id="draw.updateGUI">
 <tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.updateGUI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightActor">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActor</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#draw.highlightActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight the i-th actor in the scene.</p>
 </dd></dl>
 
 <dl class="function">
@@ -988,8 +1056,8 @@ partitionCollection() method.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.removeHighlights">
-<tt class="descclassname">draw.</tt><tt class="descname">removeHighlights</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<dt id="draw.removeHighlight">
+<tt class="descclassname">draw.</tt><tt class="descname">removeHighlight</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeHighlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the highlights from the current viewport</p>
 </dd></dl>
 
@@ -1074,7 +1142,7 @@ might also be set by the user.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

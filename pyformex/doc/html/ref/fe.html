@@ -466,8 +466,12 @@ old ones.</p>
 <dl class="method">
 <dt id="fe.Model.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#fe.Model.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -763,8 +767,12 @@ coords blocks, allowing to accomodate better to versatile applications.</p>
 <dl class="method">
 <dt id="fe.FEModel.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#fe.FEModel.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -875,7 +883,7 @@ The return value is a merged fe Model.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

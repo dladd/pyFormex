@@ -353,7 +353,7 @@ vector. This has the effect of moving the scene in opposite direction.</p>
 <dt id="camera.Camera.loadModelView">
 <tt class="descname">loadModelView</tt><big>(</big><em>m=None</em><big>)</big><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the ModelView matrix.</p>
-<p>There are thrre uses of this function:</p>
+<p>There are three uses of this function:</p>
 <ul class="simple">
 <li>Without argument and if the viewing parameters have not changed
 since the last save of the ModelView matrix, this will just reload
@@ -447,7 +447,7 @@ current area size.</p>
 <p>The caller will have to setup the correct GL environment beforehand.
 No need to set matrix mode though. This function will switch to
 GL_PROJECTION mode before loading the matrix</p>
-<p>!! CHANGED: does not switch back to GL_MODELVIEW mode!</p>
+<p>If keepmode=True, does not switch back to GL_MODELVIEW mode.</p>
 <p>A pick region can be defined to use the camera in picking mode.
 pick defines the picking region center and size (x,y,w,h).</p>
 <p>This function does it best at autodetecting changes in the lens
@@ -513,7 +513,7 @@ detected. You can optionally force loading the matrix.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

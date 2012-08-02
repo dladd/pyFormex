@@ -202,6 +202,20 @@ specified plexitude.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="connectivity.Connectivity.maxnodes">
+<tt class="descname">maxnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.maxnodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an upper limit for number of nodes in the connectivity.</p>
+<p>This returns the highest node number plus one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.nnodes">
+<tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nnodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the actual number of nodes in the connectivity.</p>
+<p>This returns the count of the unique node numbers.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="connectivity.Connectivity.nplex">
 <tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the plexitude of the elements in the Connectivity table.</p>
@@ -421,51 +435,117 @@ checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</d
 <p>This returns the inverse index of the Connectivity, as computed
 by <a class="reference internal" href="arraytools.html#arraytools.inverseIndex" title="arraytools.inverseIndex"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.inverseIndex()</span></tt></a>. See</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
 <span class="go">array([[ 0,  1,  2],</span>
 <span class="go">       [-1,  0,  1],</span>
 <span class="go">       [-1,  0,  2],</span>
+<span class="go">       [-1, -1, -1],</span>
 <span class="go">       [-1,  1,  2]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
+<dt id="connectivity.Connectivity.nParents">
+<tt class="descname">nParents</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nParents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of elements connected to each node.</p>
+<p>Returns a 1-D int array with the number of elements connected
+to each node. The length of the array is equal to the highest
+node number + 1. Unused node numbers will have a count of zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">nParents</span><span class="p">()</span>
+<span class="go">array([3, 2, 2, 0, 2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.connectedTo">
+<tt class="descname">connectedTo</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.connectedTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of elements connected to the specified nodes.</p>
+<p><cite>nodes</cite>: a single node number or a list/array thereof</p>
+<p>Returns: an int array with the numbers of the elements that
+contain at least one of the specified nodes.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">connectedTo</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([0, 2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.notConnectedTo">
+<tt class="descname">notConnectedTo</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.notConnectedTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of elements not connected to the specified nodes.</p>
+<p><cite>nodes</cite>: a single node number or a list/array thereof</p>
+<p>Returns: an int array with the numbers of the elements that
+do not contain any of the specified nodes.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">notConnectedTo</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([0, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="connectivity.Connectivity.adjacency">
-<tt class="descname">adjacency</tt><big>(</big><em>kind='e'</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.adjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">adjacency</tt><big>(</big><em>kind='e'</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.adjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a table of adjacent items.</p>
 <p>Returns an element adjacency table (kind=&#8217;e&#8217;) or node adjacency
 table (kind=&#8217;n&#8217;).</p>
-<p>An element <cite>i</cite> is said to be ajacent to element <cite>j</cite>, if the two
+<p>An element <cite>i</cite> is said to be adjacent to element <cite>j</cite>, if the two
 elements have at least one common node.</p>
 <p>A node <cite>i</cite> is said to be adjacent to node <cite>j</cite>, if there is at least
 one element containing both nodes.</p>
 <p>Parameters:</p>
-<ul class="simple">
-<li><cite>kind</cite>: &#8216;e&#8217; or &#8216;n&#8217;, requesting resp. element or node adjacency.</li>
+<ul>
+<li><p class="first"><cite>kind</cite>: &#8216;e&#8217; or &#8216;n&#8217;, requesting resp. element or node adjacency.</p>
+</li>
+<li><p class="first"><cite>mask</cite>: Either None or a boolean array or index flagging the nodes
+which are to be considered connectors between elements. If None,
+all nodes are considered connections.
+This option is only useful in the case <cite>kind</cite> == &#8216;e&#8217;. If you want to
+use an element mask for the &#8216;n&#8217; case, just apply the (element) mask
+beforehand:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
 </ul>
-<p>Returns: an integer array with shape (nr,nc),
+<p>Returns: an Adjacency array with shape (nr,nc),
 where row <cite>i</cite> holds a sorted list of all the items that are
 adjacent to item <cite>i</cite>, padded with -1 values to create an equal
 list length for all items.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
-<span class="go">array([[ 1,  2,  3],</span>
+<span class="go">Adjacency([[ 1,  2,  3],</span>
 <span class="go">       [-1,  0,  3],</span>
 <span class="go">       [-1, -1,  0],</span>
 <span class="go">       [-1,  0,  1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="n">mask</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">Adjacency([[ 2],</span>
+<span class="go">       [-1],</span>
+<span class="go">       [ 0],</span>
+<span class="go">       [-1]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
-<span class="go">array([[ 1,  2,  5],</span>
+<span class="go">Adjacency([[ 1,  2,  5],</span>
 <span class="go">       [-1,  0,  3],</span>
 <span class="go">       [-1, -1,  0],</span>
 <span class="go">       [-1, -1,  1],</span>
 <span class="go">       [-1, -1, -1],</span>
 <span class="go">       [-1, -1,  0]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
-<span class="go">array([[-1,  1,  2,  3],</span>
+<span class="go">Adjacency([[-1,  1,  2,  3],</span>
 <span class="go">       [-1,  0,  2,  3],</span>
 <span class="go">       [ 0,  1,  4,  5],</span>
 <span class="go">       [-1, -1,  0,  1],</span>
+<span class="go">       [-1, -1,  2,  5],</span>
+<span class="go">       [-1, -1,  2,  4]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
+<span class="go">Adjacency([[-1, -1,  1,  2],</span>
+<span class="go">       [-1, -1,  0,  2],</span>
+<span class="go">       [ 0,  1,  4,  5],</span>
+<span class="go">       [-1, -1, -1, -1],</span>
 <span class="go">       [-1, -1,  2,  5],</span>
 <span class="go">       [-1, -1,  2,  4]])</span>
 </pre></div>
@@ -504,23 +584,30 @@ is equal to that of the selector, possibly None.</p>
 <dt id="connectivity.Connectivity.insertLevel">
 <tt class="descname">insertLevel</tt><big>(</big><em>selector</em>, <em>lower_only=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.insertLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert an extra hierarchical level in a Connectivity table.</p>
-<p>A Connectivity table identifies higher hierchical entities in function
-of lower ones. This method inserts an extra hierarchical level.
+<p>A Connectivity table identifies higher hierarchical entities in
+function of lower ones. This method inserts an extra level in the
+hierarchy.
 For example, if you have volumes defined in function of points,
 you can insert an intermediate level of edges, or faces.
 Multiple intermediate level entities may be created from each
 element.</p>
 <p>Parameters:</p>
-<ul class="simple">
-<li><cite>selector</cite>: an object that can be converted to a 1-dim or 2-dim
+<ul>
+<li><p class="first"><cite>selector</cite>: an object that can be converted to a 1-dim or 2-dim
 integer array. Examples are a tuple of local node numbers, or a list
 of such tuples all having the same length.
 Each row of <cite>selector</cite> holds a list of the local node numbers that
-should be retained in the new Connectivity table.</li>
-<li><cite>lower_only</cite>: if True, only the definition of the new (lower)
+should be retained in the new Connectivity table.</p>
+<p>If the Connectivity has an element type, selector can also be a
+single integer specifying one of the hierarchical levels of element
+entities (See the Element class). In that case the selector is
+constructed automatically from self.eltype.getEntities(selector).</p>
+</li>
+<li><p class="first"><cite>lower_only</cite>: if True, only the definition of the new (lower)
 entities is returned, complete without removing duplicates.
 This is equivalent to using <a class="reference internal" href="#connectivity.Connectivity.selectNodes" title="connectivity.Connectivity.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>, which
-is prefered when you do not need the higher level info.</li>
+is prefered when you do not need the higher level info.</p>
+</li>
 </ul>
 <p>Return value: a tuple of two Connectivities <cite>hi</cite>,`lo`, where:</p>
 <ul class="simple">
@@ -611,76 +698,6 @@ pairs. In each element the nodes are sorted.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">connectivity</span></tt></p>
 <dl class="function">
-<dt id="connectivity.sortAdjacency">
-<tt class="descclassname">connectivity.</tt><tt class="descname">sortAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#connectivity.sortAdjacency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sort an adjacency table.</p>
-<p>An adjacency table is an integer array where each row lists the numbers
-of the items that are connected to the item with number equal to the row
-index. Rows are padded with -1 value to create rows of equal length.</p>
-<p>This function sorts the rows of the adjacency table in ascending order
-and removes all columns containing only -1 values.</p>
-<p>Paramaters:</p>
-<ul class="simple">
-<li><cite>adj</cite>: an 2-D integer array with values &gt;=0 or -1</li>
-</ul>
-<p>Returns: an integer array with shape (adj.shape[0],maxc), with
-maxc &lt;= adj.shape[1], where the rows are sorted in ascending order
-and where columns with only -1 values are removed.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sortAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="go">array([[ 0,  1,  2],</span>
-<span class="go">       [-1,  1,  3],</span>
-<span class="go">       [ 0,  1,  3],</span>
-<span class="go">       [-1, -1, -1]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="connectivity.reduceAdjacency">
-<tt class="descclassname">connectivity.</tt><tt class="descname">reduceAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#connectivity.reduceAdjacency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reduce an adjacency table.</p>
-<p>An adjacency table is an integer array where each row lists the numbers
-of the items that are connected to the item with number equal to the row
-index. Rows are padded with -1 value to create rows of equal length.</p>
-<p>A reduced adjacency table is one where each row:</p>
-<ul class="simple">
-<li>does not contain the row index itself,</li>
-<li>does not contain duplicates,</li>
-<li>is sorted in ascending order,</li>
-</ul>
-<p>and that has at least one row without -1 value.</p>
-<p>Paramaters:</p>
-<ul class="simple">
-<li><cite>adj</cite>: an 2-D integer array with value &gt;=0 or -1</li>
-</ul>
-<p>Returns: an integer array with shape (adj.shape[0],maxc), with
-maxc &lt;= adj.shape[1], where row <cite>i</cite> retains the unique non-negative
-numbers of the original array except the valu <cite>i</cite>, and is possibly
-padded with -1 values.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">5</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reduceAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="go">array([[ 1,  2,  5],</span>
-<span class="go">       [-1,  0,  3],</span>
-<span class="go">       [-1, -1,  0],</span>
-<span class="go">       [-1, -1,  1],</span>
-<span class="go">       [-1, -1, -1],</span>
-<span class="go">       [-1, -1,  0]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="connectivity.findConnectedLineElems">
 <tt class="descclassname">connectivity.</tt><tt class="descname">findConnectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.findConnectedLineElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a single path of connected line elems.</p>
@@ -695,36 +712,58 @@ be reordered and the node sequence of an element may be reversed.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>elems</cite>: Connectivity-like. Any plexitude is allowed, but only the
-first and the last columna are relevant.</li>
+first and the last column are relevant.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a Connectivity with a single chain extracted from the input</dt>
-<dd><p class="first">Connectivity. The result will not necessarily be the longest path.
-It will however contain the first element of the input table.</p>
-<p class="last">As a side-effect, all elements contained in the output chain will
-have their entries in the input table <cite>elems</cite> changed to -1.</p>
-</dd>
-</dl>
+<p>Returns: a tuple of:</p>
+<ul class="simple">
+<li><cite>con</cite>: a Connectivity with the same shape as the input Connectivity
+<cite>elems</cite>, holding a single chain extracted from the input and filled
+with -1 for the remainder (if any). The chain will not necessarily
+be the longest path. It will however at least contain the first element
+of the input table.</li>
+<li><cite>inv</cite>: an int array with two columns and number of rows equal to that of
+<cite>con</cite>. The first column holds the row number in <cite>elems</cite> of the entries
+in <cite>con</cite>. The second column holds a value +1 or -1, flagging whether
+the element is traversed in original direction (+1) in the chain or in
+the reverse direction (-1).</li>
+</ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
-<span class="go">Connectivity([[0, 1],</span>
-<span class="go">       [1, 2],</span>
-<span class="go">       [2, 4],</span>
-<span class="go">       [4, 0]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">con</span>
+<span class="go">[[0 1]</span>
+<span class="go"> [1 2]</span>
+<span class="go"> [2 4]</span>
+<span class="go"> [4 0]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">inv</span>
+<span class="go">[[ 0  1]</span>
+<span class="go"> [ 1  1]</span>
+<span class="go"> [ 3 -1]</span>
+<span class="go"> [ 2 -1]]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-<span class="go">Connectivity([[2, 1],</span>
-<span class="go">       [1, 0],</span>
-<span class="go">       [0, 4]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">con</span>
+<span class="go">[[2 1]</span>
+<span class="go"> [1 0]</span>
+<span class="go"> [0 4]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">inv</span>
+<span class="go">[[ 1 -1]</span>
+<span class="go"> [ 0 -1]</span>
+<span class="go"> [ 2  1]]</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
-<span class="go">Connectivity([[ 1,  0],</span>
-<span class="go">       [ 0,  2],</span>
-<span class="go">       [-1, -1],</span>
-<span class="go">       [-1, -1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">findConnectedLineElems</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">con</span>
+<span class="go">[[ 1  0]</span>
+<span class="go"> [ 0  2]</span>
+<span class="go"> [-1 -1]</span>
+<span class="go"> [-1 -1]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">inv</span>
+<span class="go">[[ 0 -1]</span>
+<span class="go"> [ 1  1]</span>
+<span class="go"> [-1  0]</span>
+<span class="go"> [-1  0]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">C</span>
 <span class="go">[[-1 -1]</span>
 <span class="go"> [-1 -1]</span>
@@ -736,11 +775,21 @@ have their entries in the input table <cite>elems</cite> changed to -1.</p>
 
 <dl class="function">
 <dt id="connectivity.connectedLineElems">
-<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition a segmented curve into connected segments.</p>
+<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a collection of line segments into connected polylines.</p>
 <p>The input argument is a (nelems,2) shaped array of integers.
 Each row holds the two vertex numbers of a single line segment.</p>
-<p>The return value is a list of (nsegi,2) shaped array of integers.</p>
+<p>The return value is a list of Connectivity tables of plexitude 2.
+The line elements of each Connectivity are ordered to form a continuous
+connected segment, i.e. the first vertex of each line element in a
+table is equal to the last vertex of the previous element.
+The connectivity tables are sorted in order of decreasing length.</p>
+<p>If return_indices = True, a second list of tables is returned, with
+the same shape as those in the first list. The tables of the second
+list contain in the first column the original element number of the
+entries, and in the second column a value +1 or -1 depending on
+whether the element traversal in the connected segment is in the
+original direction (+1) or the reverse (-1).</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
 <span class="go">[Connectivity([[0, 1],</span>
@@ -757,7 +806,18 @@ Each row holds the two vertex numbers of a single line segment.</p>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
 <span class="go">[Connectivity([[1, 0],</span>
-<span class="go">       [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]</span>
+<span class="go">       [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+<span class="go">[Connectivity([[1, 0],</span>
+<span class="go">       [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]],</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">([Connectivity([[1, 0],</span>
+<span class="go">       [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])], [array([[ 0, -1],</span>
+<span class="go">       [ 1,  1]], dtype=int32), array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
@@ -766,6 +826,15 @@ Each row holds the two vertex numbers of a single line segment.</p>
 <span class="go">       [0, 3, 1]]), Connectivity([[4, 5, 2]])]</span>
 </pre></div>
 </div>
+<p>Obviously, from the input elems table and the second return value,
+the first return value could be reconstructed:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">first</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">where</span><span class="p">(</span><span class="n">i</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">second</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>But since the construction of the first list is required by the algorithm,
+it is returned anyway.</p>
 </dd></dl>
 
 <dl class="function">
@@ -784,7 +853,7 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
 <span class="go">       [1],</span>
 <span class="go">       [2],</span>
 <span class="go">       [3],</span>
-<span class="go">       [4]]), array([[1, 4],</span>
+<span class="go">       [4]]), Adjacency([[1, 4],</span>
 <span class="go">       [0, 2],</span>
 <span class="go">       [1, 3],</span>
 <span class="go">       [2, 4],</span>
@@ -828,7 +897,7 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

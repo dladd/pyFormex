@@ -439,8 +439,14 @@ of the checkbox.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="widgets.ListWidget">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListWidget</tt><big>(</big><em>maxh=0</em><big>)</big><a class="headerlink" href="#widgets.ListWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>A customized QListWidget with ability to compute its required size.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="widgets.InputList">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>maxh=-1</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputList" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list selection InputItem.</p>
 <p>A list selection is a widget allowing the selection of zero, one or more
 items from a list.</p>
@@ -449,8 +455,13 @@ default is the initial/default list of selected items.
 Values in default that are not in the choices list, are ignored.
 If default is None or an empty list, nothing is selected initially.</p>
 <p>By default, the user can select multiple items and the return value is
-a list of all currently slected items.
+a list of all currently selected items.
 If single is True, only a single item can be selected.</p>
+<p>If maxh==-1, the widget gets a fixed height to precisely take the number of
+items in the list. If maxh&gt;=0, the widget will get scrollbars when the 
+height is not sufficient to show all items. With maxh&gt;0, the item will
+get the specified height (in pixels), while maxh==0 will try to give the
+widget the required height to show all items</p>
 <p>If check is True, all items have a checkbox and only the checked items
 are returned. This option sets single==False.</p>
 <dl class="method">
@@ -526,7 +537,14 @@ whenever the current selection changes.</p>
 <dl class="method">
 <dt id="widgets.InputCombo.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputCombo.setValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the widget&#8217;s value.</p>
+<dd><p>Change the widget&#8217;s current value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputCombo.setChoices">
+<tt class="descname">setChoices</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#widgets.InputCombo.setChoices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the widget&#8217;s choices.</p>
+<p>This also sets the current value to the first in the list.</p>
 </dd></dl>
 
 <dl class="method">
@@ -972,9 +990,8 @@ value is set in the button.</p>
 <dd><p>An input item containing any other widget.</p>
 <p>The widget should have:</p>
 <ul class="simple">
-<li>a results attribute that is set to
-a dict with the resulting input values when the widget&#8217;s
-acceptData() is called.</li>
+<li>a results attribute that is set to a dict with the resulting input
+values when the widget&#8217;s acceptData() is called.</li>
 <li>an acceptData() method, that sets the widgets results dict.</li>
 <li>a setValue(dict) method that sets the widgets values to those
 specified in the dict.</li>
@@ -1016,6 +1033,15 @@ in which items can be layed out using tab pages.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="widgets.ScrollForm">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ScrollForm</tt><a class="headerlink" href="#widgets.ScrollForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>An scrolling input form.</p>
+<p>The input form is a layout box in which the items are layed out
+vertically. The layout can also contain any number of tab widgets
+in which items can be layed out using tab pages.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="widgets.InputGroup">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boxed group of InputItems.</p>
@@ -1041,7 +1067,7 @@ in which items can be layed out using tab pages.</p>
 
 <dl class="class">
 <dt id="widgets.InputDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span>, <em>scroll=False</em><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to interactively set the value of one or more items.</p>
 <p>Overview</p>
 <p>The pyFormex user has full access to the Qt4 framework on which the
@@ -1558,7 +1584,7 @@ message stays open, use the <tt class="xref py py-meth docutils literal"><span c
 
 <dl class="class">
 <dt id="widgets.TextBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=['OK', None], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=[('OK',)], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
 The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
@@ -1567,7 +1593,7 @@ was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pre
 
 <dl class="class">
 <dt id="widgets.ButtonBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name, actions=[], parent=None, stretch=[-1, -1]</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name='', actions=None, default=None, parent=None, spacer=False, stretch=[-1, -1], cmargin=(2, 2, 2, 2)</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A box with action buttons.</p>
 <ul class="simple">
 <li><cite>name</cite>: a label to be displayed in front of the button box. An empty
@@ -1576,22 +1602,12 @@ string will suppress it.</li>
 function can be a normal callable function, or one of the values
 widgets.ACCEPTED or widgets.REJECTED. In the latter case, <cite>parent</cite>
 should be specified.</li>
+<li><cite>default</cite>: name of the action to set as the default. If no default
+is given, it will be set to the LAST button.</li>
 <li><cite>parent</cite>: the parent dialog holding this button box. It should be
-specified if one of the buttons actions is widgets.ACCEPTED or
-widgets.REJECTED.</li>
+specified if one of the buttons actions is not specified or is
+widgets.ACCEPTED or widgets.REJECTED.</li>
 </ul>
-<dl class="method">
-<dt id="widgets.ButtonBox.name">
-<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ButtonBox.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the name of the InputItem.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.ButtonBox.text">
-<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ButtonBox.text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the displayed text of the InputItem.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="widgets.ButtonBox.setText">
 <tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox.setText" title="Permalink to this definition">¶</a></dt>
@@ -1602,18 +1618,6 @@ widgets.REJECTED.</li>
 <dt id="widgets.ButtonBox.setIcon">
 <tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox.setIcon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the icon on button index.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.ButtonBox.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ButtonBox.value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the widget&#8217;s value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.ButtonBox.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox.setValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1642,7 +1646,7 @@ widgets.REJECTED.</li>
 <dd><p>A widget displaying an image.</p>
 <dl class="method">
 <dt id="widgets.ImageView.showImage">
-<tt class="descname">showImage</tt><big>(</big><em>image</em><big>)</big><a class="headerlink" href="#widgets.ImageView.showImage" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">showImage</tt><big>(</big><em>image</em>, <em>maxheight=None</em><big>)</big><a class="headerlink" href="#widgets.ImageView.showImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show an image in the viewer.</p>
 <p>image: either a filename or an existing QImage instance. If a filename,
 it should be an image file that can be read by the QImage constructor.
@@ -1654,11 +1658,19 @@ gui.image.image_formats_qtr provides a list.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
 <dl class="function">
-<dt id="widgets.maxSize">
-<tt class="descclassname">widgets.</tt><tt class="descname">maxSize</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.maxSize" title="Permalink to this definition">¶</a></dt>
+<dt id="widgets.objSize">
+<tt class="descclassname">widgets.</tt><tt class="descname">objSize</tt><big>(</big><em>object</em><big>)</big><a class="headerlink" href="#widgets.objSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the width and height of an object.</p>
+<p>Returns a tuple w,h for any object that has width and height methods.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.maxWinSize">
+<tt class="descclassname">widgets.</tt><tt class="descname">maxWinSize</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.maxWinSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the maximum widget size.</p>
-<p>The maximum widget size is the (available) screen size. This may be
-smaller than the physical screen size (e.g. excluding docking panels).</p>
+<p>The maximum widget size is the maximum size for a window on the screen.
+The available size may be smaller than the physical screen size (e.g.
+it may exclude the space for docking panels).</p>
 </dd></dl>
 
 <dl class="function">
@@ -1806,10 +1818,10 @@ blank line, or your first paragraph could be turned into comments.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="widgets.dialogButtons">
-<tt class="descclassname">widgets.</tt><tt class="descname">dialogButtons</tt><big>(</big><em>dialog</em>, <em>actions=None</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#widgets.dialogButtons" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a set of dialog buttons</p>
-<p>dia is a dialog widget</p>
+<dt id="widgets.addActionButtons">
+<tt class="descclassname">widgets.</tt><tt class="descname">addActionButtons</tt><big>(</big><em>layout, actions=[('Cancel',), ('OK',)], default=None, parent=None</em><big>)</big><a class="headerlink" href="#widgets.addActionButtons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a set of action buttons to a layout</p>
+<p>layout is a QLayout</p>
 <p>actions is a list of tuples (name,) or (name,function).
 If a function is specified, it will be executed on pressing the button.
 If no function is specified, and name is one of &#8216;ok&#8217; or &#8216;cancel&#8217; (case
@@ -1854,7 +1866,7 @@ is given, it is set to the LAST button.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

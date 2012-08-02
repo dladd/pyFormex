@@ -225,8 +225,15 @@ The result is remembered in the the_external dict.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.requireModule">
+<tt class="descclassname">utils.</tt><tt class="descname">requireModule</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.requireModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that the named Python module is available.</p>
+<p>If the module is not available, an error is raised.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.checkModule">
-<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the named Python module is available, and record its version.</p>
 <p>The version string is returned, empty if the module could not be loaded.
 The (name,version) pair is also inserted into the the_version dict.</p>
@@ -234,7 +241,7 @@ The (name,version) pair is also inserted into the the_version dict.</p>
 
 <dl class="function">
 <dt id="utils.checkExternal">
-<tt class="descclassname">utils.</tt><tt class="descname">checkExternal</tt><big>(</big><em>name=None</em>, <em>command=None</em>, <em>answer=None</em><big>)</big><a class="headerlink" href="#utils.checkExternal" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkExternal</tt><big>(</big><em>name=None</em>, <em>command=None</em>, <em>answer=None</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#utils.checkExternal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the named external command is available on the system.</p>
 <p>name is the generic command name,
 command is the command as it will be executed to check its operation,
@@ -290,7 +297,7 @@ value is returned.</p>
 
 <dl class="function">
 <dt id="utils.listTree">
-<tt class="descclassname">utils.</tt><tt class="descname">listTree</tt><big>(</big><em>path</em>, <em>listdirs=True</em>, <em>topdown=True</em>, <em>sorted=False</em>, <em>excludedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>excludefiles=</em><span class="optional">[</span><span class="optional">]</span>, <em>includedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>includefiles=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#utils.listTree" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">listTree</tt><big>(</big><em>path</em>, <em>listdirs=True</em>, <em>topdown=True</em>, <em>sorted=False</em>, <em>excludedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>excludefiles=</em><span class="optional">[</span><span class="optional">]</span>, <em>includedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>includefiles=</em><span class="optional">[</span><span class="optional">]</span>, <em>symlinks=True</em><big>)</big><a class="headerlink" href="#utils.listTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>List all files in path.</p>
 <p>If <tt class="docutils literal"><span class="pre">dirs==False</span></tt>, directories are not listed.
 By default the tree is listed top down and entries in the same directory
@@ -300,6 +307,13 @@ dirnames, resp. filenames to exclude from the result.</p>
 <p><cite>includedirs</cite> and <cite>includefiles</cite> can be given to include only the
 directories, resp. files matching any of those patterns.</p>
 <p>Note that &#8216;excludedirs&#8217; and &#8216;includedirs&#8217; force top down handling.</p>
+<p>If <cite>symlinks</cite> is set False, symbolic links are removed from the list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.removeFile">
+<tt class="descclassname">utils.</tt><tt class="descname">removeFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#utils.removeFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a file, ignoring error when it does not exist.</p>
 </dd></dl>
 
 <dl class="function">
@@ -309,9 +323,26 @@ directories, resp. files matching any of those patterns.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.pyformexFiles">
-<tt class="descclassname">utils.</tt><tt class="descname">pyformexFiles</tt><big>(</big><em>relative=False</em><big>)</big><a class="headerlink" href="#utils.pyformexFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the pyformex source .py files.</p>
+<dt id="utils.sourceFiles">
+<tt class="descclassname">utils.</tt><tt class="descname">sourceFiles</tt><big>(</big><em>relative=False</em>, <em>symlinks=True</em>, <em>extended=False</em><big>)</big><a class="headerlink" href="#utils.sourceFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the pyFormex source .py files.</p>
+<ul class="simple">
+<li><cite>symlinks</cite>: if False, files that are symbolic links are retained in the
+list. The default is to remove them.</li>
+<li><cite>extended</cite>: if True, the .py files in all the paths in the configured
+appdirs and scriptdirs are also added.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.grepSource">
+<tt class="descclassname">utils.</tt><tt class="descname">grepSource</tt><big>(</big><em>pattern</em>, <em>options=''</em>, <em>relative=True</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#utils.grepSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds pattern in the pyFormex source .py files.</p>
+<p>Uses the <cite>grep</cite> program to find all occurrences of some specified
+pattern text in the pyFormex source .py files (including the examples).
+Extra options can be passed to the grep command. See <cite>man grep</cite> for
+more info.</p>
+<p>Returns the output of the grep command.</p>
 </dd></dl>
 
 <dl class="function">
@@ -361,31 +392,43 @@ the specified char.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.showDoc">
-<tt class="descclassname">utils.</tt><tt class="descname">showDoc</tt><big>(</big><em>obj=None</em>, <em>rst=True</em><big>)</big><a class="headerlink" href="#utils.showDoc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the docstring of an object.</p>
-<blockquote>
-<div><p>Parameters:</p>
+<dt id="utils.gzip">
+<tt class="descclassname">utils.</tt><tt class="descname">gzip</tt><big>(</big><em>filename</em>, <em>gzipped=None</em>, <em>remove=True</em>, <em>level=5</em><big>)</big><a class="headerlink" href="#utils.gzip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress a file in gzip format.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li><cite>obj</cite>: any object (module, class, method, function) that has a
-__doc__ attribute. If None is specified, the docstring of the current
-application is shown.</li>
-<li><cite>rst</cite>: bool. If False, the doctring is shown in plain text as is.
-The default is to treat the docstring as reStructuredText. For the
-purpose of a nice formatting, the docstring is changed as follows:
-Below the first line, a line is added with the same length as the first,
-but all &#8216;=&#8217; characters, marking the fist line as a header inFurthermore
-a line will be changed</li>
+<li><cite>filename</cite>: input file name</li>
+<li><cite>gzipped</cite>: output file name. If not specified, it will be set to
+the input file name + &#8216;.gz&#8217;. An existing output file will be
+overwritten.</li>
+<li><cite>remove</cite>: if True (default), the input file is removed after
+succesful compression</li>
+<li><cite>level</cite>: an integer from 1..9: gzip compression level. Higher values
+result in smaller files, but require longer compression times. The
+default of 5 gives already a fairly good compression ratio.</li>
 </ul>
-<p>a bit to allow a nice display.</p>
-</div></blockquote>
-<dl class="docutils">
-<dt>two</dt>
-<dd><blockquote class="first">
-<div>line are prepended, one line containing &#8216;..&#8217;, the other one empty.This will allow the recognition as reStructuredText.</div></blockquote>
-<p class="last">If <a href="#id1"><span class="problematic" id="id2">`</span></a>rst=False</p>
-</dd>
-</dl>
+<p>Returns the name of the compressed file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.gunzip">
+<tt class="descclassname">utils.</tt><tt class="descname">gunzip</tt><big>(</big><em>filename</em>, <em>unzipped=None</em>, <em>remove=True</em><big>)</big><a class="headerlink" href="#utils.gunzip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uncompress a file in gzip format.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>filename</cite>: compressed input file name (usually ending in &#8216;.gz&#8217;)</li>
+<li><cite>unzipped</cite>: output file name. If not specified and <cite>filename</cite> ends with
+&#8216;.gz&#8217;, it will be set to the <cite>filename</cite> with the &#8216;.gz&#8217; removed.
+If an empty string is specified or it is not specified and the filename
+does not end in &#8216;.gz&#8217;, the name of a temporary file is generated. Since
+you will normally want to read something from the decompressed file, this
+temporary file is not deleted after closing. It is up to the user to
+delete it (using the returned file name) when he is ready with it.</li>
+<li><cite>remove</cite>: if True (default), the input file is removed after
+succesful decompression. You probably want to set this to False when
+decompressing to a temporary file.</li>
+</ul>
+<p>Returns the name of the decompressed file.</p>
 </dd></dl>
 
 <dl class="function">
@@ -435,6 +478,9 @@ without the leading dot.</p>
 <span class="go">&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex&#39;</span><span class="p">)</span>
 <span class="go">&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.pgf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.pgf.gz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.gz&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -497,8 +543,13 @@ Else an error is raised by default.</p>
 
 <dl class="function">
 <dt id="utils.killProcesses">
-<tt class="descclassname">utils.</tt><tt class="descname">killProcesses</tt><big>(</big><em>pids</em>, <em>signal</em><big>)</big><a class="headerlink" href="#utils.killProcesses" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">killProcesses</tt><big>(</big><em>pids</em>, <em>signal=15</em><big>)</big><a class="headerlink" href="#utils.killProcesses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the specified signal to the processes in list</p>
+<ul class="simple">
+<li><cite>pids</cite>: a list of process ids.</li>
+<li><cite>signal</cite>: the signal to send to the processes. The default (15) will
+try to terminate the process. See &#8216;man kill&#8217; for more values.</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -634,6 +685,14 @@ but not add new keys.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.sortedKeys">
+<tt class="descclassname">utils.</tt><tt class="descname">sortedKeys</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#utils.sortedKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sorted keys of a dict.</p>
+<p>It is required that the keys of the dict be sortable, e.g. all strings
+or integers.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.stuur">
 <tt class="descclassname">utils.</tt><tt class="descname">stuur</tt><big>(</big><em>x</em>, <em>xval</em>, <em>yval</em>, <em>exp=2.5</em><big>)</big><a class="headerlink" href="#utils.stuur" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a (non)linear response on the input x.</p>
@@ -683,7 +742,7 @@ is returned.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

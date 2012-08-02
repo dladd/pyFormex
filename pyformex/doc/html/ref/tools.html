@@ -159,8 +159,7 @@
 <tt class="descclassname">tools.</tt><tt class="descname">growCollection</tt><big>(</big><em>K</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#tools.growCollection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grow the collection with n frontal rings.</p>
 <p>K should be a collection of elements.
-This currently only works on surfaces. Objects that do not have a
-nodeFront() generator function are</p>
+This should work on any objects that have a growSelection method.</p>
 </dd></dl>
 
 <dl class="function">
@@ -218,7 +217,7 @@ Else, the obj is exported as is under the name.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Mar 03, 2012.
+      Last updated on Aug 02, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
