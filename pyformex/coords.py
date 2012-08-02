@@ -1419,13 +1419,13 @@ class Coords(ndarray):
           Any other value of missing will result in an error if some point
           does not have any projection. An error will also be raised if not
           a single point projection intersects the surface.
-        - `return_indices: if True, also returns an index of the points that
+        - `return_indices`: if True, also returns an index of the points that
           have a projection on the surface.
 
-        Returns a Coords with the same shape as the input. If `return_indices
-          is True, also returns an index of the points that have a projection
-          on the surface. This index is a sequential one, no matter what the
-          shape of the input Coords is.
+        Returns a Coords with the same shape as the input. If `return_indices`
+        is True, also returns an index of the points that have a projection
+        on the surface. This index is a sequential one, no matter what the
+        shape of the input Coords is.
         """
         import olist
         from geomtools import anyPerpendicularVector

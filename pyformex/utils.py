@@ -491,26 +491,6 @@ def underlineHeader(s,char='"'):
     return s[:i] + '\n' + char*i + s[i:]
 
 
-def showDoc(obj=None,rst=True):
-    """Show the docstring of an object.
-
-    Parameters:
-    
-    - `obj`: any object (module, class, method, function) that has a
-      __doc__ attribute. If None is specified, the docstring of the current
-      application is shown.
-    - `rst`: bool. If False, the doctring is shown in plain text as is.
-      The default is to treat the docstring as reStructuredText. For the
-      purpose of a nice formatting, the docstring is changed as follows:
-      Below the first line, a line is added with the same length as the first,
-      but all '=' characters, marking the fist line as a header inFurthermore
-      a line will be changed
-    a bit to allow a nice display.
- two
-      line are prepended, one line containing '..', the other one empty.This will allow the recognition as reStructuredText.
-    If `rst=False
-    """
-
 ###################### file conversion ###################
 
 def dos2unix(infile,outfile=None):

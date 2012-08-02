@@ -66,10 +66,11 @@ class Curve(Geometry):
     :sub_directions(t,j): returns direction at parameter value t,j
     :pointsOn(): the defining points placed on the curve
     :pointsOff(): the defining points placeded off the curve (control points)
-    :parts(j,k)    
-    :approx(ndiv,ntot)
+    :parts(j,k):    
+    :approx(ndiv,ntot):
 
     Furthermore it may define, for efficiency reasons, the following methods:
+    
     :sub_points_2:
     :sub_directions_2:
     

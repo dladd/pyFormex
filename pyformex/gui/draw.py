@@ -151,7 +151,8 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
       The result is a dictionary with a single key: 'text' having the
       displayed text as a value. If an itemtype 'text' was used, this may
       be a changed text.
-    : modeless dialog: the open dialog window itself. 
+    :modeless dialog: the open dialog window itself.
+    
     """
     if mono:
         font = "DejaVu Sans Mono"
@@ -184,7 +185,7 @@ def showFile(filename,mono=False,**kargs):
         return
     showText(f.read(),mono=mono,**kargs)
     f.close()
-   
+
 
 def showDoc(obj=None,rst=True,modal=False):
     """Show the docstring of an object.
@@ -953,7 +954,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
 
     - `image`: a QImage or any data that can be converted to a QImage,
       e.g. the name of a raster image file. 
-     - `nx`,`ny`: width and height (in cells) of the Formex grid.
+    - `nx`,`ny`: width and height (in cells) of the Formex grid.
       If the supplied image has a different size, it will be rescaled.
       Values <= 0 will be replaced with the corresponding actual size of
       the image.

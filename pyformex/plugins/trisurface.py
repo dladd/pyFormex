@@ -1625,17 +1625,21 @@ Quality: %s .. %s
         return [ self.intersectionWithPlane(p,dir) for p in P ]
 
 
-    def patchextension(self, p, step,  dir=None,  makecircular=False, div=1.):
-        """Extrude a nearly-planar patch of a surface self.
+    # BV: Is this generic enough?
+    # BV: Need an Example !
+    # BV: The use of p here is not consistent with other pyFormex concept
+
+    def patchextension(self,p,step,dir=None,makecircular=False,div=1.):
+        """Extrude a nearly-planar patch of a surface.
         
         - `self` is a surface with propery numbers
         - `p` is the property number of the patch to extrude
         - `div` is the number of elements along the extrusion. If None, 
-        the triangle size is taken from the patch's border
+          the triangle size is taken from the patch's border
         - `step` is the length of the extrusion. If step is a string (e.g. '2.'), 
-        the length is given as number of average 'diameters'
+          the length is given as number of average 'diameters'
         - `dir` is the axis of the extrusion. if dir is None, dir is 
-        the average normal of patch p
+          the average normal of patch p
         - `makecircular` if True makes the circular the extended section.
     
         This is a convenient function to elongate tubular structures
@@ -1741,7 +1745,6 @@ Quality: %s .. %s
         """Apply Laplace smoothing with shrinkage compensation to the surface."""
         return self.smooth('laplace',iterations,lambda_value,alpha=alpha,beta=beta)
 
-   
 
     def refine(self,max_edges=None,min_cost=None,method='gts'):
         """Refine the TriSurface.

@@ -56,7 +56,7 @@ def matchNone(regexps,target):
     return matchCount(regexps,target) == 0
 
 
-def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[]):
+def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[],filtr=None):
     """List all files in path.
 
     If ``dirs==False``, directories are not listed.
@@ -95,7 +95,12 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
         filelist.extend(prefixFiles(root,files))
         if listdirs and not topdown:
             filelist.append(root)
+    if filtr:
+        filelist = [ f for f in filelist if filtr(f) ]
     return filelist
+
+
+#NON_MANIFEST = [ f.strip('\n') for f in open('NONMANIFEST').readlines() ]
 
 
 # pyFormex documentation (installed in the pyformex tree)
@@ -117,7 +122,7 @@ DOC_FILES = listTree(
 # pyFormex data files (installed in the pyformex tree)
 DATA_FILES = listTree(
     'pyformex/data',listdirs=False,sorted=True,
-    excludedirs=['.svn','benchmark'],
+    excludedirs=['.svn','benchmark','ply'],
     excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
     includefiles=[
         'README',
@@ -190,7 +195,8 @@ DIST_FILES = [
     listTree('pyformex',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              includedirs=['gui','plugins'],
-             includefiles=['.*\.py$','pyformex(rc)?$'] #,'pyformex-search']
+             includefiles=['.*\.py$','pyformex(rc)?$'],
+             excludefiles=['core.py','curvetools.py'],
              ) + \
     listTree('pyformex/icons',listdirs=False,sorted=True,
              excludedirs=['.svn'],

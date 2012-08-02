@@ -1116,7 +1116,7 @@ def complement(index,n=-1):
 
     Parameters:
 
-    -  `index`: array_like, 1-D, int or bool. If integer, it is a list with
+    - `index`: array_like, 1-D, int or bool. If integer, it is a list with
       the non-negative numbers to be excluded from the range(0,n).
       If boolean, it normally has the length of the range and flags the
       elements to be returned with a False value.

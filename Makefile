@@ -221,12 +221,10 @@ dist: ${PKGDIR}/${LATEST}
 ${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: revision version # MANIFEST.in
+${PKGDIR}/${PKGVER}: revision version
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
-
-MANIFEST.in: MANIFEST.py
-	python $< >$@
+	python manifest_check.py
 
 # Publish the distribution to our ftp server
 

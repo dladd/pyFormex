@@ -44,7 +44,7 @@ def resizeImage(image,w=0,h=0):
     - `image`: a QImage, or any data that can be converted to a QImage,
       e.g. the name of a raster image file.
     - `w`, `h`: requested size in pixels of the image.
-       A value <= 0 will be replaced with the corresponding actual size of
+      A value <= 0 will be replaced with the corresponding actual size of
       the image.
 
    Returns a QImage with the requested size.

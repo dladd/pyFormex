@@ -36,17 +36,6 @@ from connectivity import Connectivity
 from numpy import array,arange
 from odict import ODict
 
-class TestP(object):
-    c = 4
-
-    def __getstate__(self):
-        state = {'d':"hallo"}
-        print "PICKLING",state
-        return state
-
-    def __setstate__(self,state):
-        print "UNPICKLING",state
-        self.__dict__.update(state)
 
 def _sanitize(ent):
     # input is Connectivity or (eltype,table)
@@ -69,7 +58,7 @@ class ElementType(object):
     methods, which are all class methods.
 
     Derived classes should be created by calling the function
-    :func:`createElementType.
+    :func:`createElementType`.
 
     Each element is defined by the following attributes:
 
@@ -313,7 +302,7 @@ def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs
     #print "\n CREATING ELEMENT TYPE %s\n" % name
     
     D = dict(
-        __doc__ = doc,
+        __doc__ = '_'+doc,  # block autodoc for generated classed
         ndim = ndim,
         vertices = Coords(vertices),
         edges = _sanitize(edges),

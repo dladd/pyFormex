@@ -597,7 +597,10 @@ class Gui(QtGui.QMainWindow):
             app = apps.load(appname)
             if app is None:
                 self.canPlay = False
-                self.canEdit = os.path.exists(apps.findAppSource(appname))
+                try:
+                    self.canEdit = os.path.exists(apps.findAppSource(appname))
+                except:
+                    self.canEdit = False
             else:
                 self.canPlay = hasattr(app,'run')
                 self.canEdit = os.path.exists(apps.findAppSource(app))

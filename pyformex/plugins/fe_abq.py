@@ -577,9 +577,10 @@ def fmtSolidSection(el,setname):
         
     el.material see fmtMaterial documentation
     
-    EXAMPLE
-    control=Dict({'name':'StentControl','hourglass':'enhanced',})
-    P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,seccontrol=control))
+    Example:
+
+      control=Dict({'name':'StentControl','hourglass':'enhanced',})
+      P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,seccontrol=control))
     """
     
     out = ''
@@ -744,17 +745,19 @@ def fmtGeneralContact(prop):
     
     Required:
 
-    - interaction: interaction properties : name or Dict
+    - interaction: interaction properties: name or Dict
     
     Optional:
     
     - Exclusions (exl)
-    
-    - Extra (extra). E.g. extra='*CONTACT CONTROLS ASSIGNMENT, TYPE=SCALE PENALTY\n, , 1.e3\n'
-    
+    - Extra (extra). Example ::
+
+        extra = "*CONTACT CONTROLS ASSIGNMENT, TYPE=SCALE PENALTY\\n, , 1.e3\\n"
+
     Example:
     
-    >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
+      >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
+    
     """
     out = ''
     for p in prop:

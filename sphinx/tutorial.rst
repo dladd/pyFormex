@@ -499,7 +499,10 @@ lines of the square, and not the surface inside that
 border. Obviously, you need a 4 element 2-plex Formex, using data
 structured like this::
 
-   F = Formex([[[0.,0.],[0.,1.]], [[0.,1.],[1.,1.]], [[1.,1.],[1.,0.]], [[1.,0.],[0.,0.]]])
+   F = Formex([[[0.,0.],[0.,1.]], 
+               [[0.,1.],[1.,1.]],
+               [[1.,1.],[1.,0.]],
+               [[1.,0.],[0.,0.]]])
    draw(F,color=blue,clear=True)
 
 Try it, and you will see an image identical to the earlier figure

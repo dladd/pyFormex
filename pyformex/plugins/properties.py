@@ -286,12 +286,16 @@ class Amplitude(object):
     """A class for storing an amplitude.
 
     The amplitude is a list of tuples (time,value).
-    `atime` (amplitude time) can be either STEP TIME (default in Abaqus) or TOTAL TIME
-    `smoothing` (optional) is a float (from 0. to 0.5, suggested value 0.05) representing the fraction 
-            of the time interval before and after each time point during 
-            which the piecewise linear time variation will be replaced by
-            a smooth quadratic time variation (avoiding infinite accelerations). 
-            Smoothing should be used in combination with TABULAR (set 0.05 as default value?)
+
+    `atime` (amplitude time) can be either STEP TIME (default in Abaqus)
+    or TOTAL TIME
+
+    `smoothing` (optional) is a float (from 0. to 0.5, suggested value 0.05)
+    representing the fraction of the time interval before and after each time
+    point during which the piecewise linear time variation will be replaced by
+    a smooth quadratic time variation (avoiding infinite accelerations). 
+    Smoothing should be used in combination with TABULAR (set 0.05 as default
+    value?)
     """
     
     def __init__(self,data,definition='TABULAR',atime='STEP TIME', smoothing=None):

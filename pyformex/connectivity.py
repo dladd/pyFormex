@@ -612,7 +612,7 @@ class Connectivity(ndarray):
         - `mask`: Either None or a boolean array or index flagging the nodes
           which are to be considered connectors between elements. If None,
           all nodes are considered connections.
-          This option is only useful in the case `kind`=='e'. If you want to
+          This option is only useful in the case `kind` == 'e'. If you want to
           use an element mask for the 'n' case, just apply the (element) mask
           beforehand::
 
@@ -622,7 +622,6 @@ class Connectivity(ndarray):
         where row `i` holds a sorted list of all the items that are
         adjacent to item `i`, padded with -1 values to create an equal
         list length for all items.
-
            
         Example:
         
@@ -1318,6 +1317,7 @@ def findConnectedLineElems(elems):
        [-1 -1]
        [ 0  3]
        [ 4  5]]
+       
     """
 
     #
@@ -1439,6 +1439,7 @@ def connectedLineElems(elems,return_indices=False):
           where(i[:,-1:] > 0, elems[i[:,0]], elems[i[:,0],::-1]) \
           for i in second
       ]
+      
     But since the construction of the first list is required by the algorithm,
     it is returned anyway.
     """
