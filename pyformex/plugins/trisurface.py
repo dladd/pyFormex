@@ -359,8 +359,7 @@ def fillBorder(border,method='radial',dir=None):
     """
     from plugins.curve import PolyLine
     if isinstance(border,Mesh) and border.nplex()==2:
-        if method == 'radial':
-            border = border.compact()
+        border = border.compact()
         coords = border.coords
         elems = border.elems[:,0]
     elif isinstance(border,PolyLine):
