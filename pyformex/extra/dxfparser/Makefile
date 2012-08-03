@@ -54,7 +54,6 @@ LIBDIR:= $(DESTDIR)$(libdir)
 DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
-CXX:= g++
 INSTALL:= $(SU) install
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
@@ -62,8 +61,7 @@ INSTALLDATA:= $(INSTALL) -m 0644
 PRG= dxfparser
 PRGNAME= pyformex-dxfparser    # name to use for installed binary
 
-CFLAGS= -c -I/usr/include/dxflib
-LFLAGS= -ldxflib
+FLAGS= `pkg-config --cflags --libs dxflib`
 
 .PHONY: all build install clean
 
@@ -71,11 +69,8 @@ build: $(PRG)
 
 all: install clean
 
-$(PRG): $(PRG).o
-	$(CC) $(LFLAGS) $< -o $@
-
-$(PRG).o: $(PRG).cc $(PRG).h
-	$(CXX) $(CFLAGS) $< -o $@
+$(PRG): $(PRG).cc $(PRG).h
+	$(CC) $(FLAGS) $< -o $@
 
 install: $(PRG)
 	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)

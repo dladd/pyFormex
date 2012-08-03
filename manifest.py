@@ -144,13 +144,13 @@ DATA_FILES = listTree(
 # scripts to install extra programs
 EXTRA_FILES = listTree(
     'pyformex/extra',listdirs=True,sorted=True,
-    excludedirs=[
-        '.svn',
-        'build',
-        'calix',
+    includedirs=[
+        'calpy',
         'dxfparser',
-        'postabq'
-        'pyftgl',
+        'gts',
+        'postabq',
+        'pygl2ps',
+        'tetgen'
         ],
     excludefiles=['.*~$'],
     includefiles=[

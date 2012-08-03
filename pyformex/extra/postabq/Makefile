@@ -52,7 +52,6 @@ LIBDIR:= $(DESTDIR)$(libdir)
 DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
-CXX:= g++
 INSTALL:= $(SU) install
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
@@ -60,7 +59,6 @@ INSTALLDATA:= $(INSTALL) -m 0644
 PRG= postabq
 PRGNAME= pyformex-postabq    # name to use for installed binary
 
-CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC
 
 .PHONY: all build install clean
 

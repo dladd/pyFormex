@@ -54,7 +54,6 @@ LIBDIR:= $(DESTDIR)$(libdir)
 DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
-CXX:= g++
 INSTALL:= $(SU) install
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644

@@ -43,5 +43,10 @@ Then compile and install the programs with:
 
 The default install is under '/usr/local/' and requires root privileges.
 
+Afterwards, you can clean up with:
+  make clean
+
+Or do it all at once with 
+  make all
 
 
