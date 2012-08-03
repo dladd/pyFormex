@@ -1806,7 +1806,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         for i in range(iterations):
             c[incl] = (1.-lamb)*c[incl] + lamb*(w[incl]*c[adj][incl]).sum(1)
             c[incl] = (1.-mu)*c[incl] + mu*(w[incl]*c[adj][incl]).sum(1)
-        return self.__class__(c, self.elems, self.prop, eltype=self.eltype)
+        return self.__class__(c, self.elems, prop=self.prop, eltype=self.eltype)
 
 
     def __add__(self,other):
