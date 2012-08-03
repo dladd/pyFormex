@@ -32,13 +32,21 @@ defines a few essential functions.
 # It is loaded even before main.
 
 __version__ = "0.8.7-a1"
-__revision__ = '2382M'
+__revision__ = '2385:2386M'
 Version = 'pyFormex %s' % __version__
 FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!
 Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
-svnversion = False
+
+# Installation type. Should be one of:
+# 'R(elease)': installed from a released tarball with the included install
+#              procedure. This is the default.
+# 'S(ource)' : running directly from the checked out source tree. This is set
+#              during startup after detection.
+# 'P(ackage)': installed from a distribution package. The packager should set
+#              this to 'P' before packaging the files.
+installtype = 'R'
 
 # The GUI parts
 app_started = False

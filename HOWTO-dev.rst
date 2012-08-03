@@ -961,7 +961,7 @@ First, create the distribution and test it out locally: both the installation pr
    svn up
    make dist
 
-- Put the files on Savannah::
+- Put the release files on Savannah::
 
    make sign
    make pubpdf

@@ -33,8 +33,10 @@ startup_warnings = ''
 startup_messages = ''
 
 pyformexdir = sys.path[0]
-pf.svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
-if pf.svnversion:
+
+if os.path.exists(os.path.join(pyformexdir,'.svn')):
+    # Running from source tree
+    pf.installtype = 'S'
 
     def checkLibraries():
         #print "Checking pyFormex libraries"
@@ -68,7 +70,7 @@ You should probably exit pyFormex, fix the problem first and then restart pyForm
 import utils
 
 # Set the proper revision number when running from svn sources
-if pf.svnversion:
+if pf.installtype=='S':
     try:
         sta,out = utils.runCommand('cd %s && svnversion' % pyformexdir,quiet=True)
         if sta == 0 and not out.startswith('exported'):
@@ -140,9 +142,17 @@ def printcfg(key):
     print("!! cfg[%s] = %s" % (key,pf.cfg[key]))
 
 
-
 def remove_pyFormex(pyformexdir,bindir):
     """Remove the pyFormex installation."""
+    if pf.installtype == 'P':
+        print "It looks like this version of pyFormex was installed from a distribution package. You should use your distribution's package tools to remove the pyFormex installation."
+        return
+    
+    if pf.installtype == 'S':
+        print "It looks like you are running pyFormex directly from a source tree at %s. I will not remove it. If you have enough privileges, you can just remove the whole source tree from the file system." % pyformexdir
+        return
+    
+        
     print("""
 BEWARE!
 This procedure will remove the complete pyFormex installation!
@@ -334,13 +344,13 @@ def run(argv=[]):
         option_list=[
         MO("--gui",
            action="store_true", dest="gui", default=None,
-           help="start the GUI (default if no scriptfile argument is given)",
+           help="Start the GUI (this is the default when no scriptname argument is given)",
            ),
         MO("--nogui",
            action="store_false", dest="gui", default=None,
-           help="do not load the GUI (default if a scriptfile argument is given)",
+           help="Do not start the GUI (this is the default when a scriptname argument is given)",
            ),
-        MO("--interactive",'-i',
+        MO("--interactive",
            action="store_true", dest="interactive", default=False,
            help="Go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
            ),
@@ -406,31 +416,31 @@ def run(argv=[]):
         ##    ),
         MO("--testexecutor",
            action="store_true", dest="executor", default=False,
-           help="test alternate executor: only for developers!",
+           help="Test alternate executor: only for developers!",
            ),
         MO("--fastnurbs",
            action="store_true", dest="fastnurbs", default=False,
-           help="test C library nurbs drawing: only for developers!",
+           help="Test C library nurbs drawing: only for developers!",
            ),
         MO("--listfiles",
            action="store_true", dest="listfiles", default=False,
-           help="list the pyformex Python source files.",
+           help="List the pyformex Python source files.",
            ),
         MO("--search",
            action="store_true", dest="search", default=False,
-           help="search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. Adding -a  will use the extended search path. The final argument is the pattern to search.",
+           help="Search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. Adding -a  will use the extended search path. The final argument is the pattern to search.",
            ),
         MO("--remove",
            action="store_true", dest="remove", default=False,
-           help="remove the pyformex installation and exit",
+           help="Remove the pyFormex installation and exit. This option only works when pyFormex was installed from a tarball release using the supplied install procedure. If you install from a distribution package (e.g. Debian), you should use your distribution's package tools to remove pyFormex. If you run pyFormex directly from SVN sources, you should just remove the whole checked out source tree.",
            ),
         MO("--whereami",
            action="store_true", dest="whereami", default=False,
-           help="show where the pyformex package is installed and exit",
+           help="Show where the pyformex package is installed and exit",
            ),
         MO("--detect",
            action="store_true", dest="detect", default=False,
-           help="show detected helper software and exit",
+           help="Show detected helper software and exit",
            ),
         ])
     pf.options, args = parser.parse_args(argv)
@@ -574,7 +584,7 @@ def run(argv=[]):
 
     #  If we run from an SVN version, we should set the proper revision
     #  number and run the svnclean procedure.
-    if pf.svnversion:
+    if pf.installtype=='S':
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
             try:

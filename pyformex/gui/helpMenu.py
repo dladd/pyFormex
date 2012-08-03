@@ -220,7 +220,7 @@ def createMenuData():
     except:
         MenuData = []
 
-    if pf.svnversion:
+    if pf.installtype=='S':
         pyformexdir = pf.cfg['pyformexdir']
         devtodo = os.path.join(pyformexdir,"..","TODO")
         devhowto = os.path.join(pyformexdir,"..","HOWTO-dev.rst")
