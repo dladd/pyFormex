@@ -3,11 +3,11 @@ Upstream-Name: pyformex
 Source: http://savannah.nongnu.org/projects/pyformex/
 
 Files: *
-Copyright: 2004-2011 Benedict Verhegghe <benedict.verhegghe@ugent.be>
+Copyright: 2004-2012 Benedict Verhegghe <benedict.verhegghe@ugent.be>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2011 Benedict Verhegghe <benedict.verhegghe@ugent.be>
+Copyright: 2011,2012 Benedict Verhegghe <benedict.verhegghe@ugent.be>
 License: GPL-3.0+
 
 License: GPL-3.0+

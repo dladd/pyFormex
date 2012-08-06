@@ -90,7 +90,7 @@ class sdist(_sdist):
         self.filelist.remove_duplicates()
         self.write_manifest()
 
-
+    
 ## class install(_install):
 ##     def run(self):
 

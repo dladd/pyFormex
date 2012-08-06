@@ -1004,7 +1004,7 @@ First, create the distribution and test it out locally: both the installation pr
    make lib	
    svn ci -m 'Bump version after release'
 
-Well, that was easy, uh? ~)
+Well, that was easy, uh? ~)_do build
 
 
 Creating (official) Debian packages
@@ -1012,11 +1012,41 @@ Creating (official) Debian packages
 
 .. note: This section needs further clarification
 
-- Needed software:
-- Needed dependencies: python-all-dev
+Debian packages are create in the `pkg` subdirectory of the trunk.
+The whole process is controlled by the script `_do`. The debian-template
+subdirectory contains starting versions of the `debian` files packaging.
+They will need to be tuned for the release. 
 
-- Unpack latest relesae: _do unpack
-- Build: _do build
+- Needed software packages for the build process: debhelper, devscripts. 
+  Furthermore you also need to have installed all dependencies for the build,
+  as declared in the variables `Build-Depends` and `Build-Depends-Indep` in
+  the file `control`.
+
+- Go to the `pkg` directory. The `_do` procedure should always be executed
+  from here.
+- Unpack latest release: `_do unpack`. This unpacks the latest source
+  distribution (from the `dist/` or `dist/pyformex/` subdirectory) in
+  a directory `pyformex-VERSION` and copies the `debian-template` as a
+  starting `debian` subdirectory.
+- Edit the files in the generated `pyformex-VERSION/debian` subdirectory. 
+  At least a new entry in the file `changelog` needs to be added. 
+  Other files that are likely to require changes are `control` and `rules`.
+
+.. note: If errors occur during the build, you will most likely have to fix
+   the files in `debian` and then rerun the build. Often a rebuild requires
+   a clean first. Beware that this will remove your changes and reinstall
+   the original `debian` files. It is therefore adviced to edit the 
+   files in `debian-template` instead of those in `pyformex-VERSION/debian`.
+   Then do a `_do clean unpack`.
+
+- Build the packages: `_do build`. This will build the python modules, 
+  the compiled libraries and the extra binaries under a path 
+  `pyformex-VERSION/debian/tmp` and install the needed files into
+  the package directories `pyformex`, `pyformex-lib` and `pyformex-extras`.
+
+  Check that no errors occur during the procedure. A log file is written 
+  for each package.
+
 - If OK, build final (signed): _do final
 - upload: dput mentors PYFVER.changes
   

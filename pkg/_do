@@ -1,17 +1,31 @@
 #!/bin/bash
 #
+#  Script to create Debian packages
+#
+#
 
+# source the version data
 . ../RELEASE
-PYFDIR=pyformex-$VERSION
-SOURCE=../dist/pyformex/pyformex-$VERSION.tar.gz
-ORIG=pyformex_$VERSION.orig.tar.gz
+
+PYFDIR=pyformex-$RELEASE
+echo "Working on $PYFDIR"
+
+if [ "$RELEASE" = "$VERSION" ]; then
+    echo "This is an official release"
+    SOURCE=../dist/pyformex/pyformex-$RELEASE.tar.gz
+else
+    echo "This is an interim release"
+    SOURCE=../dist/pyformex-$RELEASE.tar.gz
+fi
+ORIG=pyformex_$RELEASE.orig.tar.gz
+
 [ -f $PYFDIR/debian/changelog ] && PKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
 
 
 unpack() {
     [ -d "$PYFDIR" ] && rm -rf $PYFDIR
     tar xf $SOURCE
-    cp -a debian-ex $PYFDIR/debian
+    cp -a debian-template $PYFDIR/debian
     ln -sfn ${SOURCE} ${ORIG}
     # For now !!!
     #rm $PYFDIR/debian/*.doc-base

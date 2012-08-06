@@ -161,6 +161,7 @@ EXTRA_FILES = listTree(
         '.*\.patch',
         '.*\.c',
         '.*\.cc',
+        '.*\.h',
         '.*\.i',
         '.*\.py',
         ],

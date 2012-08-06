@@ -26,6 +26,8 @@
 #
 #  Makefile for 'postabq' command used by pyFormex
 #
+#  Build dependencies: none 
+#
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
 # !! An environment variable DESTDIR can be set to specify a path for

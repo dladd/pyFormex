@@ -26,7 +26,7 @@
 #
 #  Makefile for 'dxfparser' command used by pyFormex
 #
-# You need: libdxflib-dev 
+#  Build dependencies: libdxflib-dev 
 #
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 

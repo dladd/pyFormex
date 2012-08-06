@@ -5,7 +5,10 @@ Maintainer: Benedict Verhegghe <benedict.verhegghe@ugent.be>
 Build-Depends: debhelper (>= 8.0.0), 
 	       python-all-dev (>= 2.6.6-3~), 
 	       python-numpy (>=1.0), 
-	       libglu1-mesa-dev
+	       libglu1-mesa-dev,
+	       libdxflib-dev,
+	       libgts-dev,
+	       libglib2.0-dev
 Build-Depends-Indep: libjs-jquery, libjs-underscore
 Standards-Version: 3.9.2
 Homepage: http://pyformex.org
@@ -65,3 +68,27 @@ Description: program to create 3D geometry from Python scripts.
  This package contains the pyFormex acceleration libraries for your 
  architecture. Installing this package will dramatically speed up
  operations on large 3D models.
+
+
+Package: pyformex-extra
+Architecture: any
+Depends: pyformex(=${source:Version}), 
+	 ${misc:Depends}, 
+	 ${shlibs:Depends},
+	 libgts-bin,
+	 libglib2.0-0
+Description: program to create 3D geometry from Python scripts.
+ pyFormex can be used to generate, transform and manipulate large
+ geometrical models of 3D structures by sequences of mathematical operations.
+ Unlike traditional CAD systems, pyFormex provides a powerful (Python based)
+ scripting language as the basic user input, making it very well suited 
+ for automated and repeated (parametric) design procedures. 
+ It provides a wide range of operations on meshes, like STL type triangulated
+ surfaces and FEA or CFD grids. Nurbs curves and surfaces are under development.
+ pyFormex is often used to create models from medical scan images, or as a
+ pre- and post-processor for Finite Element analysis programs. But it could
+ just as well be used to just create some nice 3D renderings.
+ .
+ This package contains some extra binaries that give pyFormex extended 
+ functionaly. Included are gtsinside, gtsrefine, gtsset, gtssmooth,
+ pyfomrex-dxfparser, pyformex-postabq.
