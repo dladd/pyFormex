@@ -1533,18 +1533,23 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         - 'elems': the nodes are number in order of their appearance in the
           Mesh connectivity.
         - 'random': the nodes are numbered randomly.
+        - 'front': the nodes are numbered in order of their frontwalk.
         """
         if order == 'elems':
             order = renumberIndex(self.elems)
         elif order == 'random':
             order = arange(self.nnodes())
             random.shuffle(order)
+        elif order == 'front':
+            adj = self.elems.adjacency('n')
+            p = adj.frontWalk()
+            order = p.argsort()
         newnrs = inverseUniqueIndex(order)
         return self.__class__(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
 
 
-    def renumberElems(self,order='nodes'):
-        """Renumber the elements of a Mesh.
+    def reorder(self,order='nodes'):
+        """Reorder the elements of a Mesh.
 
         Parameters:
 
@@ -1554,7 +1559,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
           - 'nodes': order the elements in increasing node number order.
           - 'random': number the elements in a random order.
-          - 'reverse': number the elements in. 
+          - 'reverse': number the elements in reverse order. 
 
         Returns:
           A Mesh equivalent with self but with the elements ordered as specified.
@@ -1563,6 +1568,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         order = self.elems.reorder(order)
         return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)
+
+
+    # for compatibility:
+    renumberElems = reorder
 
 ##############################################################
     #
