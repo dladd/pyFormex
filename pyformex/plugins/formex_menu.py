@@ -49,17 +49,6 @@ selection = pf.GUI.selection['formex']
 setSelection = selection.set
 drawSelection = selection.draw
 
-################### Change attributes of Formex #######################
-
-
-def shrink():
-    """Toggle the shrink mode"""
-    if selection.shrink is None:
-        selection.shrink = 0.8
-    else:
-        selection.shrink = None
-    selection.draw()
-
 
 #################### CoordPlanes ####################################
 
@@ -326,8 +315,6 @@ _menu = 'Formex'
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
-        ("&Shrink",shrink),
-        ("---",None),
         ("&Bbox",
          [('&Show Bbox Planes',showBbox),
           ('&Remove Bbox Planes',removeBbox),

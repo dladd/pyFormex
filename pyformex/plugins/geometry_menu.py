@@ -110,6 +110,15 @@ def set_selection(clas='geometry'):
             
         selection.set(sel.names)
         selection.draw()
+
+
+def shrink():
+    """Toggle the shrink mode"""
+    if selection.shrink is None:
+        selection.shrink = 0.8
+    else:
+        selection.shrink = None
+    selection.draw()
         
 
 ##################### read and write ##########################
@@ -896,6 +905,13 @@ def renumberMeshRandom():
     renumberMesh('random')
 
 
+def renumberMeshFront():
+    """Renumber the nodes of the selected Meshes in random order. 
+
+    """
+    renumberMesh('front')
+
+
 def getBorderMesh():
     """Create the border Meshes for the selected Meshes.
 
@@ -968,13 +984,14 @@ def create_menu():
             ('&Bounding Box',selection.printbbox),
             ('&Type and Size',printDataSize),
             ]),
-        ("Toggle &Annotations ",[
+        ("&Annotations ",[
             ("&Names",selection.toggleNames,dict(checkable=True)),
             ("&Elem Numbers",selection.toggleNumbers,dict(checkable=True)),
             ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True,checked=selection.hasNodeNumbers())),
             ("&Free Edges",selection.toggleFreeEdges,dict(checkable=True,checked=selection.hasFreeEdges())),
             ("&Node Marks",selection.toggleNodes,dict(checkable=True,checked=selection.hasNodeMarks())),
             ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
+            ('&Toggle Shrink Mode',shrink,dict(checkable=True)),
             ]),
         ("---",None),
         ("&Convert",[
@@ -1036,6 +1053,7 @@ def create_menu():
             ("&Renumber nodes",[
                 ("In element order",renumberMesh),
                 ("In random order",renumberMeshRandom),
+                ("In frontal order",renumberMeshFront),
                 ]),
             ("&Get Border Mesh",getBorderMesh),
             ]),
