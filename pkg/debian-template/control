@@ -90,5 +90,5 @@ Description: program to create 3D geometry from Python scripts.
  just as well be used to just create some nice 3D renderings.
  .
  This package contains some extra binaries that give pyFormex extended 
- functionaly. Included are gtsinside, gtsrefine, gtsset, gtssmooth,
- pyfomrex-dxfparser, pyformex-postabq.
+ functionality. Included are gtsinside, gtsrefine, gtsset, gtssmooth,
+ pyformex-dxfparser, pyformex-postabq.

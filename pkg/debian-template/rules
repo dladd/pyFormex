@@ -8,18 +8,41 @@ export DH_VERBOSE=1
 export DH_OPTIONS
 
 %:
+	@echo "BV: USING DEFAULT RULE $@"
 	dh $@ --with python2
 
 
 
 build:
+	@echo "BV: BUILD" 
 	dh_auto_build
 	make -C $(CURDIR)/pyformex/extra
 
 
+override_dh_auto_install:
+	dh_auto_install
+	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra install prefix=/usr
+
+
 override_dh_install:
-	dh_install -i -ppyformex --exclude=".so"
-	dh_install -a -ppyformex-lib
+	dh_install -i --exclude=".so"
+	dh_install -a
+
+
+#binary:
+#	@echo "BV: BINARY" 
+#	dh_auto_test
+#	dh_testroot
+#	dh_prep
+#	dh_installdirs
+#	@echo "BV: INSTALL" 
+#	dh_auto_install
+#	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra install prefix=/usr
+#	@echo "BV: PACKAGE PYFORMEX" 
+#	dh_install -i --exclude=".so"
+#	dh_installdocs
+#	@echo "BV: INSTALL PYFORMEX-lib and PYFORMEX-extra" 
+#	dh_install -a
 
 
 override_dh_python2:
