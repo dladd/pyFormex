@@ -1,6 +1,7 @@
-dxfparser/pyformex-dxfparser
-gts/gtsinside
-gts/gtsrefine
-gts/gtsset
+pyformex-dxfparser
+gtsinside
+gtsrefine
+gtsset
 gtssmooth
 pyformex-postabq
+

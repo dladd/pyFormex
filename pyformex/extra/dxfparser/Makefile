@@ -26,7 +26,7 @@
 #
 #  Makefile for 'dxfparser' command used by pyFormex
 #
-#  Build dependencies: libdxflib-dev 
+# You need: libdxflib-dev 
 #
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
@@ -55,6 +55,7 @@ DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
 INSTALL:= $(SU) install
+INSTALLDIR:= $(INSTALL) -d
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
@@ -73,6 +74,7 @@ $(PRG): $(PRG).cc $(PRG).h
 	$(CC) $(FLAGS) $< -o $@
 
 install: $(PRG)
+	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)
 
 clean:

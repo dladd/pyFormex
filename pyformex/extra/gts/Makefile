@@ -24,9 +24,9 @@
 ##
 
 #
-#  Makefile for 'gts*' commands used by pyFormex
+# Makefile for 'gts*' commands used by pyFormex
 #
-#  Build dependencies: libgts-dev, libglib2.0-dev, pkg-config 
+# You need: libgts-dev, libglib2.0-dev, pkg-config 
 #
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
@@ -55,6 +55,7 @@ DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
 INSTALL:= $(SU) install
+INSTALLDIR:= $(INSTALL) -d
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
@@ -73,6 +74,7 @@ gts%: %.c
 	$(CC) $(FLAGS) $< -o $@
 
 install: $(PRG)
+	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $(PRG) $(BINDIR)
 
 clean:

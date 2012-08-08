@@ -11,6 +11,12 @@ export DH_OPTIONS
 	dh $@ --with python2
 
 
+
+build:
+	dh_auto_build
+	make -C $(CURDIR)/pyformex/extra
+
+
 override_dh_install:
 	dh_install -i -ppyformex --exclude=".so"
 	dh_install -a -ppyformex-lib

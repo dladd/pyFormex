@@ -638,7 +638,10 @@ needed to install and run it on a system, packaged in a single archive
 together with an install procedure. This is primarily targeted at normal
 users that want a stable system and are not doing development work.
 
-It is therefore a good idea to first checkin your last modifications and to
+Distribution of pyFormex is done in the form of a 'tarball' (.tar.gz) archive.
+You need to have `python-svn` installed to create the distribution tarball.
+
+Before creating an official distribution, checkin your last modifications and
 update your tree, so that your current svn version corresponds to a single
 unchanged revision version in the repository.
 In the top directory of your svn tree do ::
@@ -647,11 +650,18 @@ In the top directory of your svn tree do ::
   svn up
   make dist
 
-This will create the package file  `pyformex-${VERSION}.tar.gz` in `dist/`.
-The version is read from the `RELEASE` file in the top directory. Do not 
-change the *VERSION* or *RELEASE* settings in this file by hand: we have
-make commands to do this (see below). Make sure that the *RELEASE* contains
-an alpha number (it ends with *-aNUMBER*). This means that it is an intermediate, unfinished, unsupported release. Official, supported releases do not have the alpha trailer. However, *currently only the project manager is allowed to create/distribute official releases!*
+This will create the package file `pyformex-${VERSION}.tar.gz` in
+`dist/`.  The version is read from the `RELEASE` file in the top
+directory. Do not change the *VERSION* or *RELEASE* settings in this
+file by hand: we have make commands to do this (see below). Make sure
+that the *RELEASE* contains an alpha number (it ends with *-aNUMBER*). 
+This means that it is an intermediate, unfinished,
+unsupported release. Official, supported releases do not have the
+alpha trailer. 
+
+Any developer can create alpha release tarballs and distribute them. 
+However, *currently only the project manager is allowed
+to create and distribute official releases!*
 
 After you have tested that pyFormex installation and operation from the
 resulting works fine, you can distribute the package to other users, e.g. 
@@ -661,6 +671,7 @@ Once the package file has been distributed by any means, you should immediately
 bump the version, so that the next created distribution will have a higher number::
 
   make bumpversion
+  svn ci -M "Bumping version after creating distribution"
 
 .. note:: There is a (rather small) risk here that two developers might
   independently create a release with the same number.

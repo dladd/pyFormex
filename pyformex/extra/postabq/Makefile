@@ -26,8 +26,6 @@
 #
 #  Makefile for 'postabq' command used by pyFormex
 #
-#  Build dependencies: none 
-#
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
 # !! An environment variable DESTDIR can be set to specify a path for
@@ -55,6 +53,7 @@ DOCDIR:= $(DESTDIR)$(docdir)
 
 CC:= gcc
 INSTALL:= $(SU) install
+INSTALLDIR:= $(INSTALL) -d
 INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
@@ -72,6 +71,7 @@ $(PRG): $(PRG).c
 	$(CC) -o $@ $<
 
 install: $(PRG)
+	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)
 
 clean:

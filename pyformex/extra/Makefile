@@ -14,7 +14,7 @@ $(DIRS): $(BUILDDIRS)
 $(BUILDDIRS):
 	$(MAKE) -C $(@:build-%=%) build
 
-install: $(INSTALLDIRS) build
+install: build $(INSTALLDIRS)
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
@@ -28,4 +28,4 @@ all: build install clean
 .PHONY: subdirs $(BUILDDIRS)
 .PHONY: subdirs $(INSTALLDIRS)
 .PHONY: subdirs $(CLEANDIRS)
-.PHONY: all install clean test
+.PHONY: all build install clean
