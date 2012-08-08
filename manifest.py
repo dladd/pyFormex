@@ -175,7 +175,12 @@ OTHER_DATA = [
         'pyformex/icons/pyformex.xpm',
         ]),
     ('share/applications', ['pyformex.desktop']),
-    ('share/man/man1', ['pyformex/doc/pyformex.1']),
+    ('share/man/man1', [
+        'pyformex/doc/pyformex.1',
+        'pyformex/extra/gts/gtsinside.1',
+        'pyformex/extra/gts/gtsset.1',
+        'pyformex/extra/gts/gtssmooth.1',
+        ]),
     # the full html documentation
     ## ('share/doc/pyformex/html',DOC_FILES),
     ]

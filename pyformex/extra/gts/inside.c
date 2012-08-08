@@ -52,7 +52,6 @@ int main (int argc, char * argv[])
   int c = 0, cnt = 0;
   double x,y,z;
   gboolean verbose = FALSE;
-  gboolean check_self_intersection = FALSE;
   gchar * file1, * file2;
   gboolean is_open1, is_inside;
 
@@ -63,7 +62,6 @@ int main (int argc, char * argv[])
   while (c != EOF) {
 #ifdef HAVE_GETOPT_LONG
     static struct option long_options[] = {
-      {"self", no_argument, NULL, 's'},
       {"help", no_argument, NULL, 'h'},
       {"verbose", no_argument, NULL, 'v'}
     };
@@ -73,27 +71,21 @@ int main (int argc, char * argv[])
 #else /* not HAVE_GETOPT_LONG */
     switch ((c = getopt (argc, argv, "shv"))) {
 #endif /* not HAVE_GETOPT_LONG */
-    case 's': /* self */
-      check_self_intersection = TRUE;
-      break;
     case 'v': /* verbose */
       verbose = TRUE;
       break;
     case 'h': /* help */
       fprintf (stderr,
-	"Usage: inside [OPTION] FILE1 FILE2\n"
-	"Check which points are inside a closed surface.\n"
+	"Usage: gtsinside [OPTION] FILE1 FILE2\n"
+	"Test whether points are inside a closed surface.\n"
 	"FILE1 is a surface file. FILE2 is a text file where each line\n"
 	"contains the three coordinates of a point, separated with blanks.\n"
 	"\n"
-	"  -s      --self     checks that the surfaces are not self-intersecting\n"
-        "                     if one of them is, the set of self-intersecting faces\n"
-	"                     is written (as a GtsSurface) on standard output\n"
 	"  -v      --verbose  print statistics about the surface\n"
 	"  -h      --help     display this help and exit\n"
 	"\n"
 	"Reports bugs to %s\n",
-	"benedict.verhegghe@ugent.be");
+	"https://savannah.nongnu.org/projects/pyformex/");
       return 0; /* success */
       break;
     case '?': /* wrong options */
@@ -151,21 +143,6 @@ int main (int argc, char * argv[])
     fprintf (stderr, "inside: surface `%s' is not an orientable manifold\n",
   	     file1);
     return 1;
-  }
-
-  /* check that the surface is not self-intersecting */
-  if (check_self_intersection) {
-    GtsSurface * self_intersects;
-
-    self_intersects = gts_surface_is_self_intersecting (s1);
-    if (self_intersects != NULL) {
-      fprintf (stderr, "inside: surface `%s' is self-intersecting\n", file1);
-      if (verbose)
-  	gts_surface_print_stats (self_intersects, stderr);
-      gts_surface_write (self_intersects, stdout);
-      gts_object_destroy (GTS_OBJECT (self_intersects));
-      return 1;
-    }
   }
 
   /* build bounding box tree for the surface */
