@@ -216,7 +216,7 @@ stampstaticdirs: Stamp.staticdir
 	${STAMP} -t$< -i ${STATICDIRS}
 
 # Create the distribution
-dist: ${PKGDIR}/${LATEST}
+dist: manpages ${PKGDIR}/${LATEST}
 
 ${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
@@ -225,6 +225,12 @@ ${PKGDIR}/${PKGVER}: revision version
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
 	python manifest_check.py
+
+# Create all our manpages
+manpages:
+	make -C pyformex/doc manpages
+	make -C pyformex/extra manpages
+
 
 # Publish the distribution to our ftp server
 

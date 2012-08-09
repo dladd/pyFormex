@@ -60,7 +60,7 @@ INSTALLDATA:= $(INSTALL) -m 0644
 PRG= postabq
 PRGNAME= pyformex-$(PRG)    # name to use for installed binary
 SRC= $(PRG).c
-MAN= $(PRG).1
+MAN= pyformex-$(PRG).1
 
 
 .PHONY: all build install clean
@@ -78,7 +78,7 @@ install: $(PRG)
 
 manpages: $(MAN)
 
-%.1: %.1.rst
+pyformex-%.1: %.1.rst
 	rst2man $< > $@
 
 clean:

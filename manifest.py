@@ -152,18 +152,19 @@ EXTRA_FILES = listTree(
         'pygl2ps',
         'tetgen'
         ],
-    excludefiles=['.*~$'],
+    excludefiles=['.*~$','.*\.1\.rst'],
     includefiles=[
         'README',
         'Makefile',
-        '.*\.sh',
-        '.*\.rst'
-        '.*\.patch',
-        '.*\.c',
-        '.*\.cc',
-        '.*\.h',
-        '.*\.i',
-        '.*\.py',
+        '.*\.sh$',
+        '.*\.rst$'
+        '.*\.patch$',
+        '.*\.c$',
+        '.*\.cc$',
+        '.*\.h$',
+        '.*\.i$',
+        '.*\.py$',
+        '.*\.1$',
         ],
     )
 

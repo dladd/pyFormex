@@ -6,7 +6,7 @@ pyformex
 generate and transform 3D geometry using Python scripts
 -------------------------------------------------------
 
-:Author: Benedict Verhegghe <benedict.verhegghe@ugent.be>. This manual page was written for the Debian project (and may be used by others).
+:Author: Benedict Verhegghe <benedict.verhegghe@ugent.be>, with the help of the other project members: Gianluca De Santis, Francesco Iannaccone, Peter Mortier, Tomas Praet, Sofie Van Cauter, Wenxuan Zhou. This manual page was written for the Debian project (and may be used by others).
 :Date:   2011-12-29
 :Copyright: GPL v3 or higher
 :Version: 0.1
@@ -15,10 +15,11 @@ generate and transform 3D geometry using Python scripts
 
 .. TODO: authors and author with name <email>
 
+
 SYNOPSIS
 ========
 
-  pyformex [options] [ [ file [args] ] ...]
+pyformex [options] [ [ file [args] ] ...]
 
 DESCRIPTION
 ===========
@@ -68,12 +69,4 @@ http://pyformex.org/doc or the documentation included with the distribution.
 SEE ALSO
 ========
 
-http://pyformex.org/doc/
-
-
-AUTHORS
-=======
-
-pyFormex is developed by Benedict Verhegghe with the help of the other 
-pyFormex project members: Gianluca De Santis, Francesco Iannaccone, Peter Mortier, Tomas Praet, Sofie Van Cauter, Wenxuan Zhou.
-
+The full pyFormex documentation is at http://pyformex.org/doc/.
