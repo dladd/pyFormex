@@ -89,14 +89,14 @@ int main (int argc, char * argv[])
       return 0; /* success */
       break;
     case '?': /* wrong options */
-      fprintf (stderr, "Try `inside --help' for more information.\n");
+      fprintf (stderr, "Try `gtsinside --help' for more information.\n");
       return 1; /* failure */
     }
   }
 
   if (optind >= argc) { /* missing FILE1 */
     fprintf (stderr, 
-	     "inside: missing FILE1\n"
+	     "gtsinside: missing FILE1\n"
 	     "Try `inside --help' for more information.\n");
     return 1; /* failure */
   }
@@ -104,22 +104,22 @@ int main (int argc, char * argv[])
 
   if (optind >= argc) { /* missing FILE2 */
     fprintf (stderr, 
-	     "inside: missing FILE2\n"
-	     "Try `inside --help' for more information.\n");
+	     "gtsinside: missing FILE2\n"
+	     "Try `gtsinside --help' for more information.\n");
     return 1; /* failure */
   }
   file2 = argv[optind++];
 
   /* open first file */
   if ((fptr = fopen (file1, "rt")) == NULL) {
-    fprintf (stderr, "inside: can not open file `%s'\n", file1);
+    fprintf (stderr, "gtsinside: can not open file `%s'\n", file1);
     return 1;
   }
   /* reads in first surface file */
   s1 = GTS_SURFACE (gts_object_new (GTS_OBJECT_CLASS (gts_surface_class ())));
   fp = gts_file_new (fptr);
   if (gts_surface_read (s1, fp)) {
-    fprintf (stderr, "inside: `%s' is not a valid GTS surface file\n", 
+    fprintf (stderr, "gtsinside: `%s' is not a valid GTS surface file\n", 
 	     file1);
     fprintf (stderr, "%s:%d:%d: %s\n", file1, fp->line, fp->pos, fp->error);
     return 1;
@@ -129,7 +129,7 @@ int main (int argc, char * argv[])
 
   /* open second file */
   if ((fptr = fopen (file2, "rt")) == NULL) {
-    fprintf (stderr, "inside: can not open file `%s'\n", file2);
+    fprintf (stderr, "gtsinside: can not open file `%s'\n", file2);
     return 1;
   }
 
@@ -140,7 +140,7 @@ int main (int argc, char * argv[])
 
   /* check that the surface is an orientable manifold */
   if (!gts_surface_is_orientable (s1)) {
-    fprintf (stderr, "inside: surface `%s' is not an orientable manifold\n",
+    fprintf (stderr, "gtsinside: surface `%s' is not an orientable manifold\n",
   	     file1);
     return 1;
   }
@@ -158,7 +158,7 @@ int main (int argc, char * argv[])
     cnt++;
   }
   if ( !feof(fptr) ) {
-    fprintf (stderr, "inside: error while reading points from file `%s'\n",
+    fprintf (stderr, "gtsinside: error while reading points from file `%s'\n",
   	     file2);
     return 1;
   }

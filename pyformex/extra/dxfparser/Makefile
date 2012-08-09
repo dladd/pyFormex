@@ -60,7 +60,9 @@ INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
 PRG= dxfparser
-PRGNAME= pyformex-dxfparser    # name to use for installed binary
+PRGNAME= pyformex-$(PRG)    # name to use for installed binary
+SRC= $(PRG).cc $(PRG).h
+MAN= $(PRG).1
 
 FLAGS= `pkg-config --cflags --libs dxflib`
 
@@ -70,12 +72,17 @@ build: $(PRG)
 
 all: install clean
 
-$(PRG): $(PRG).cc $(PRG).h
+$(PRG): $(SRC)
 	$(CC) $(FLAGS) $< -o $@
 
 install: $(PRG)
 	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)
+
+manpages: $(MAN)
+
+%.1: %.1.rst
+	rst2man $< > $@
 
 clean:
 	rm -f $(PRG) $(PRG).o

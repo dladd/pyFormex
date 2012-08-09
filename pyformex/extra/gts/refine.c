@@ -200,7 +200,7 @@ int main (int argc, char * argv[])
       return 0; /* success */
       break;
     case '?': /* wrong options */
-      fprintf (stderr, "Try `refine --help' for more information.\n");
+      fprintf (stderr, "Try `gtsrefine --help' for more information.\n");
       return 1; /* failure */
     }
   }
@@ -212,7 +212,7 @@ int main (int argc, char * argv[])
 		       gts_vertex_class ());
   fp = gts_file_new (stdin);
   if (gts_surface_read (s, fp)) {
-    fputs ("refine: the file on standard input is not a valid GTS file\n", 
+    fputs ("gtsrefine: the file on standard input is not a valid GTS file\n", 
 	   stderr);
     fprintf (stderr, "stdin:%d:%d: %s\n", fp->line, fp->pos, fp->error);
     return 1; /* failure */

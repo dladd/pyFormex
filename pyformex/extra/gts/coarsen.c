@@ -1,21 +1,33 @@
-/* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 Stéphane Popinet
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+// $Id$
+//
+//  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+//  pyFormex is a tool for generating, manipulating and transforming 3D
+//  geometrical models by sequences of mathematical operations.
+//  Home page: http://pyformex.org
+//  Project page:  http://savannah.nongnu.org/projects/pyformex/
+//  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+//  Distributed under the GNU General Public License version 3 or later.
+//
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see http://www.gnu.org/licenses/.
+//
+
+/*
+ * This is a modified version of the coarsen example coming with the 
+ * GTS library. Copyright (C) 1999 Stéphane Popinet
  */
+
 
 #include <stdlib.h>
 #include <locale.h>
@@ -209,7 +221,7 @@ int main (int argc, char * argv[])
       break;
     case 'h': /* help */
       fprintf (stderr,
-             "Usage: coarsen [OPTION] < file.gts\n"
+             "Usage: gtscoarsen [OPTION] < file.gts\n"
 	     "Construct a coarsened version of the input.\n"
 	     "\n"
 	     "  -n N, --number=N    stop the coarsening process if the number of\n"
@@ -234,11 +246,11 @@ int main (int argc, char * argv[])
 	     "  -h    --help        display this help and exit\n"
 	     "\n"
 	     "Reports bugs to %s\n",
-	     GTS_MAINTAINER);
+	     "https://savannah.nongnu.org/projects/pyformex/");
       return 0; /* success */
       break;
     case '?': /* wrong options */
-      fprintf (stderr, "Try `coarsen --help' for more information.\n");
+      fprintf (stderr, "Try `gtscoarsen --help' for more information.\n");
       return 1; /* failure */
     }
   }
@@ -250,7 +262,7 @@ int main (int argc, char * argv[])
 		       gts_vertex_class ());
   fp = gts_file_new (stdin);
   if (gts_surface_read (s, fp)) {
-    fputs ("coarsen: the file on standard input is not a valid GTS file\n", 
+    fputs ("gtscoarsen: the file on standard input is not a valid GTS file\n", 
 	   stderr);
     fprintf (stderr, "stdin:%d:%d: %s\n", fp->line, fp->pos, fp->error);
     return 1; /* failure */

@@ -60,7 +60,8 @@ INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
 SRC= $(wildcard *.c)
-PRG= $(addprefix gts, ${SRC:.c=})
+PRG= $(addprefix gts, $(SRC:.c=))
+MAN= $(addsuffix .1, $(PRG))
 
 FLAGS= `pkg-config --cflags --libs glib-2.0 gts`
 
@@ -76,6 +77,11 @@ gts%: %.c
 install: $(PRG)
 	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $(PRG) $(BINDIR)
+
+manpages: $(MAN)
+
+%.1: %.1.rst
+	rst2man $< > $@
 
 clean:
 	rm -f $(PRG)

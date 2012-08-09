@@ -13,12 +13,10 @@ Test whether points are inside a closed surface
 :Manual section: 1
 :Manual group: text and X11 processing
 
-.. TODO: authors and author with name <email>
-
 SYNOPSIS
 ========
 
-  gtsinside [OPTION ...] SURFACE POINTS
+gtsinside [OPTION ...] SURFACE POINTS
 
 DESCRIPTION
 ===========
@@ -34,8 +32,8 @@ Due to rounding errors in the floating point computations, this command may repo
 OPTIONS
 =======
 
---verbose, -v         Print statistics about the surface.
---help, -h            Display this help ans exit.
+-v, --verbose        Print statistics about the surface.
+-h, --help           Display this help and exit.
 
 
 SEE ALSO
@@ -48,4 +46,4 @@ AUTHOR
 ======
 
 gtsinside was written by Benedict Verhegghe <benedict.verhegghe@ugent.be>.
-The gts library was written by Stephane Popinet <popinet@users.sourceforge.net>.
+The GTS library was written by Stephane Popinet <popinet@users.sourceforge.net>.

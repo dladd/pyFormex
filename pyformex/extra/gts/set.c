@@ -1,20 +1,31 @@
-/* GTS - Library for the manipulation of triangulated surfaces
+// $Id$
+//
+//  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+//  pyFormex is a tool for generating, manipulating and transforming 3D
+//  geometrical models by sequences of mathematical operations.
+//  Home page: http://pyformex.org
+//  Project page:  http://savannah.nongnu.org/projects/pyformex/
+//  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+//  Distributed under the GNU General Public License version 3 or later.
+//
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see http://www.gnu.org/licenses/.
+//
+
+/*
+ * This is a modified version of the set example coming with the GTS library.
  * Copyright (C) 1999 Stéphane Popinet
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
  */
 
 #include <stdlib.h>
@@ -49,7 +60,7 @@ int main (int argc, char * argv[])
   FILE * fptr;
   GtsFile * fp;
   int c = 0;
-  gboolean verbose = TRUE;
+  gboolean verbose = FALSE;
   gboolean inter = FALSE;
   gboolean check_self_intersection = FALSE;
   gchar * operation, * file1, * file2;
@@ -81,66 +92,68 @@ int main (int argc, char * argv[])
       inter = TRUE;
       break;
     case 'v': /* verbose */
-      verbose = FALSE;
+      verbose = TRUE;
       break;
     case 'h': /* help */
       fprintf (stderr,
-             "Usage: set [OPTION] OPERATION FILE1 FILE2\n"
-             "Compute set operations between surfaces, where OPERATION is either.\n"
-             "union, inter, diff, all.\n"
-	     "\n"
-             "  -i      --inter    output an OOGL (Geomview) representation of the curve\n"
-             "                     intersection of the surfaces\n"
-	     "  -s      --self     checks that the surfaces are not self-intersecting\n"
-             "                     if one of them is, the set of self-intersecting faces\n"
-	     "                     is written (as a GtsSurface) on standard output\n"
-	     "  -v      --verbose  do not print statistics about the surface\n"
-	     "  -h      --help     display this help and exit\n"
-	     "\n"
-	     "Reports bugs to %s\n",
-	     GTS_MAINTAINER);
+	       "Usage: gtsset [OPTION] OPERATION surface1.gts surface2.gts\n"
+	       "Compute  boolean  operations  between  surfaces.\n"
+	       "OPERATION  is one of: union, inter, diff, all.\n"
+	       "First three write result to stdout. 'all' writes four surface files: \n"
+	       "s1out2.gts, s1in2.gts, s2out1.gts, s2in1.gts.\n"
+	       "\n"
+	       "  -i      --inter    output an OOGL (Geomview) representation of the curve\n"
+	       "                     intersection of the surfaces\n"
+	       "  -s      --self     checks that the surfaces are not self-intersecting\n"
+	       "                     if one of them is, the set of self-intersecting faces\n"
+	       "                     is written (as a GtsSurface) on standard output\n"
+	       "  -v      --verbose  print statistics about the surface\n"
+	       "  -h      --help     display this help and exit\n"
+	       "\n"
+	       "Reports bugs to %s\n",
+	       "https://savannah.nongnu.org/projects/pyformex/");
       return 0; /* success */
       break;
     case '?': /* wrong options */
-      fprintf (stderr, "Try `set --help' for more information.\n");
+      fprintf (stderr, "Try `gtsset --help' for more information.\n");
       return 1; /* failure */
     }
   }
 
   if (optind >= argc) { /* missing OPERATION */
     fprintf (stderr, 
-	     "set: missing OPERATION\n"
-	     "Try `set --help' for more information.\n");
+	     "gtsset: missing OPERATION\n"
+	     "Try `gtsset --help' for more information.\n");
     return 1; /* failure */
   }
   operation = argv[optind++];
 
   if (optind >= argc) { /* missing FILE1 */
     fprintf (stderr, 
-	     "set: missing FILE1\n"
-	     "Try `set --help' for more information.\n");
+	     "gtsset: missing FILE1\n"
+	     "Try `gtsset --help' for more information.\n");
     return 1; /* failure */
   }
   file1 = argv[optind++];
 
   if (optind >= argc) { /* missing FILE2 */
     fprintf (stderr, 
-	     "set: missing FILE2\n"
-	     "Try `set --help' for more information.\n");
+	     "gtsset: missing FILE2\n"
+	     "Try `gtsset --help' for more information.\n");
     return 1; /* failure */
   }
   file2 = argv[optind++];
 
   /* open first file */
   if ((fptr = fopen (file1, "rt")) == NULL) {
-    fprintf (stderr, "set: can not open file `%s'\n", file1);
+    fprintf (stderr, "gtsset: can not open file `%s'\n", file1);
     return 1;
   }
   /* reads in first surface file */
   s1 = GTS_SURFACE (gts_object_new (GTS_OBJECT_CLASS (gts_surface_class ())));
   fp = gts_file_new (fptr);
   if (gts_surface_read (s1, fp)) {
-    fprintf (stderr, "set: `%s' is not a valid GTS surface file\n", 
+    fprintf (stderr, "gtsset: `%s' is not a valid GTS surface file\n", 
 	     file1);
     fprintf (stderr, "%s:%d:%d: %s\n", file1, fp->line, fp->pos, fp->error);
     return 1;
@@ -150,14 +163,14 @@ int main (int argc, char * argv[])
 
   /* open second file */
   if ((fptr = fopen (file2, "rt")) == NULL) {
-    fprintf (stderr, "set: can not open file `%s'\n", file2);
+    fprintf (stderr, "gtsset: can not open file `%s'\n", file2);
     return 1;
   }
   /* reads in second surface file */
   s2 = GTS_SURFACE (gts_object_new (GTS_OBJECT_CLASS (gts_surface_class ())));
   fp = gts_file_new (fptr);
   if (gts_surface_read (s2, fp)) {
-    fprintf (stderr, "set: `%s' is not a valid GTS surface file\n", 
+    fprintf (stderr, "gtsset: `%s' is not a valid GTS surface file\n", 
 	     file2);
     fprintf (stderr, "%s:%d:%d: %s\n", file2, fp->line, fp->pos, fp->error);
     return 1;
@@ -173,12 +186,12 @@ int main (int argc, char * argv[])
 
   /* check that the surfaces are orientable manifolds */
   if (!gts_surface_is_orientable (s1)) {
-    fprintf (stderr, "set: surface `%s' is not an orientable manifold\n",
+    fprintf (stderr, "gtsset: surface `%s' is not an orientable manifold\n",
 	     file1);
     return 1;
   }
   if (!gts_surface_is_orientable (s2)) {
-    fprintf (stderr, "set: surface `%s' is not an orientable manifold\n",
+    fprintf (stderr, "gtsset: surface `%s' is not an orientable manifold\n",
 	     file2);
     return 1;
   }
@@ -189,7 +202,7 @@ int main (int argc, char * argv[])
 
     self_intersects = gts_surface_is_self_intersecting (s1);
     if (self_intersects != NULL) {
-      fprintf (stderr, "set: surface `%s' is self-intersecting\n", file1);
+      fprintf (stderr, "gtsset: surface `%s' is self-intersecting\n", file1);
       if (verbose)
 	gts_surface_print_stats (self_intersects, stderr);
       gts_surface_write (self_intersects, stdout);
@@ -198,7 +211,7 @@ int main (int argc, char * argv[])
     }
     self_intersects = gts_surface_is_self_intersecting (s2);
     if (self_intersects != NULL) {
-      fprintf (stderr, "set: surface `%s' is self-intersecting\n", file2);
+      fprintf (stderr, "gtsset: surface `%s' is self-intersecting\n", file2);
       if (verbose)
 	gts_surface_print_stats (self_intersects, stderr);
       gts_surface_write (self_intersects, stdout);
@@ -220,7 +233,7 @@ int main (int argc, char * argv[])
   g_assert (gts_surface_inter_check (si, &closed));
   if (!closed) {
     fprintf (stderr,
-	     "set: the intersection of `%s' and `%s' is not a closed curve\n",
+	     "gtsset: the intersection of `%s' and `%s' is not a closed curve\n",
 	     file1, file2);
     return 1;
   }
@@ -286,8 +299,8 @@ int main (int argc, char * argv[])
   }
   else {
     fprintf (stderr, 
-	     "set: operation `%s' unknown\n"
-	     "Try `set --help' for more information.\n", 
+	     "gtsset: operation `%s' unknown\n"
+	     "Try `gtsset --help' for more information.\n", 
 	     operation);
     return 1;
   }
@@ -298,7 +311,7 @@ int main (int argc, char * argv[])
 
     self_intersects = gts_surface_is_self_intersecting (s3);
     if (self_intersects != NULL) {
-      fprintf (stderr, "set: the resulting surface is self-intersecting\n");
+      fprintf (stderr, "gtsset: the resulting surface is self-intersecting\n");
       if (verbose)
 	gts_surface_print_stats (self_intersects, stderr);
       gts_surface_write (self_intersects, stdout);

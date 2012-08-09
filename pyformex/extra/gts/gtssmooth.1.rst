@@ -16,7 +16,7 @@ Smooth a GTS Surface
 SYNOPSIS
 ========
 
-  gtssmooth [OPTION] LAMBDA NITER < file.gts > smooth.gts
+gtssmooth [OPTION] LAMBDA NITER < file.gts > smooth.gts
 
 DESCRIPTION
 ===========
@@ -41,5 +41,5 @@ gtscheck
 AUTHOR
 ======
 
-The gts library was written by Stephane Popinet <popinet@users.sourceforge.net>.
-This gtssmooth command is taken from the examples.
+The GTS library was written by Stephane Popinet <popinet@users.sourceforge.net>.
+The gtssmooth command is taken from the examples.

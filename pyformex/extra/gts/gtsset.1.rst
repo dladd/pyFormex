@@ -13,34 +13,34 @@ Compute set operations between surfaces
 :Manual section: 1
 :Manual group: text and X11 processing
 
-.. TODO: authors and author with name <email>
-
 SYNOPSIS
 ========
 
-  gtsset [OPTION] OPERATION FILE1 FILE2
+gtsset [OPTION] OPERATION surface1.gts surface2.gts
 
 DESCRIPTION
 ===========
 
-Compute set operations between surfaces, where OPERATION is either.
+Compute boolean operations between surfaces. OPERATION is one of:
 union, inter, diff, all.
 
-FILE1 and FILE2 are files with closed surface representations in GTS format.
+surface1.gts and surface2.gts are files with closed surface representations
+in GTS format.
 
-The default operation is to write a new closed surface in GTS format to stdout.
+The default operation is to write to stdout a new closed surface in GTS format.
+For the 'all' operation however, four GTS surface files are written: 
+s1out2.gts, s1in2.gts, s2out1.gts, s2in1.gts.
 
 OPTIONS
 =======
 
---inter, -i      Output an OOGL (Geomview) representation of the curve
-                 intersection of the surfaces
---self, -s       Check that the surfaces are not self-intersecting. 
-                 If one of them is, the set of self-intersecting faces
-                 is written (as a GtsSurface) on standard output.
---verbose, -v    Do not print statistics about the surface.
---help, -h       Display this help and exit.
-
+-i, --inter          Instead of outputting a surface, output an OOGL (Geomview)
+    		     representation of the curve intersection of the surfaces.
+-s, --self           Check that the surfaces are not self-intersecting. 
+                     If one of them is, the set of self-intersecting faces
+                     is written (as a GtsSurface) on standard output.
+-v, --verbose        Print statistics about the surface.
+-h, --help           Display this help and exit.
 
 
 SEE ALSO
