@@ -1615,7 +1615,7 @@ class InputDialog(QtGui.QDialog):
                 # input fields
                 form.addWidget(item)
                 form.last = None
-                    
+                
             else:
                 raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
 
@@ -2436,19 +2436,20 @@ class TableModel(QtCore.QAbstractTableModel):
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
-            try:
+            if 1==1:
                 r,c = [index.row(),index.column()]
                 print "Setting value at %s,%s to %s" %(r,c,value)
-                value = eval(str(svalue.toString()))
+                value = eval(str(value.toString()))
                 print "Setting value at %s,%s to %s" %(r,c,value)
                 self.arraydata[index.row()][index.column()] = value
                 print "Succesfully changed data"
-                self.emit(QtCore.SIGNAL(self.dataChanged),index,index)
+                self.dataChanged.emit(index,index) #not sure if needed, ?way to check?
+#                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index) #or maybe this one
                 print "Signaled success"
                 return True
-            except:
-                print "Could not set the value"
-                return False
+#            except:
+#                print "Could not set the value"
+#                return False
         else:
             print "CAN  NOT EDIT"
         return False
@@ -2496,7 +2497,7 @@ class ArrayModel(TableModel):
                     raise ValueError
                 print "Setting value at %s,%s to %s" %(r,c,value)
                 self.arraydata[index.row()][index.column()] = value
-                self.emit(QtCore.SIGNAL(self.dataChanged),index,index)
+                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 return True
             except:
                 print "Could not set the value"
