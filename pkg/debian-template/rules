@@ -16,8 +16,13 @@ export DH_OPTIONS
 build:
 	@echo "BV: BUILD" 
 	dh_auto_build
+	@echo "Building extras"
 	make -C $(CURDIR)/pyformex/extra
 
+binary:
+	dh binary --with=python2
+	@echo "Installing extras"
+	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra prefix=/usr install
 
 override_dh_auto_install:
 	dh_auto_install

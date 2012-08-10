@@ -1213,9 +1213,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
+        # Make the clicked viewport the current one
         pf.GUI.viewports.setCurrent(self)
-        if len(pf.scriptlock) == 0:
-            pf.canvas = pf.GUI.viewports.current
         # on PRESS, always remember mouse position and button
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
@@ -1268,7 +1267,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 ################# Multiple Viewports ###############
 
-class NewMultiCanvas(QtGui.QGridLayout):
+class NewiMultiCanvas(QtGui.QGridLayout):
     """An OpenGL canvas with multiple viewports and QT interaction.
 
     The MultiCanvas implements a central QT widget containing one or more
@@ -1396,7 +1395,11 @@ class NewMultiCanvas(QtGui.QGridLayout):
         """Make the specified viewport the current one.
 
         view can be either a viewport or viewport number.
+        The current viewport is the one that will be used for drawing
+        operations. This may be different from the viewport having GUI
+        focus (pf.canvas).
         """
+        print "NEWCANVAS SETTING CURRENT VIEWPORT"
         if type(view) == int and view in range(len(self.all)):
             view = self.all[view]
         if view == self.current:
@@ -1409,9 +1412,9 @@ class NewMultiCanvas(QtGui.QGridLayout):
             self.current = view
             self.current.focus = True
             self.current.updateGL()
-            toolbar.updateTransparencyButton()
-            toolbar.updatePerspectiveButton()
-            toolbar.updateLightButton()
+
+        pf.canvas = pf.GUI.viewports.current
+
 
 
     def currentView(self):
@@ -1550,21 +1553,26 @@ class MultiCanvas(FramedGridLayout):
 
         canv can be either a viewport or viewport number.
         """
+        print "SETTING CURRENT VIEWPORT"
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
         if canv == self.current:
-            return  # already current
-
-        if canv in self.all:
+            print "ALREADY CURRENT"
+        elif canv in self.all:
+            print "CHANGING CURRENT"
             if self.current:
                 self.current.focus = False
                 self.current.updateGL()
             self.current = canv
             self.current.focus = True
             self.current.updateGL()
-            toolbar.updateTransparencyButton()
-            toolbar.updatePerspectiveButton()
-            toolbar.updateLightButton()
+            toolbar.updateViewportButtons(self.current)
+            
+        pf.canvas = self.current
+
+
+    def viewIndex(self,view):
+        return self.all.index(view)
 
 
     def currentView(self):

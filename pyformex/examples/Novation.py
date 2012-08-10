@@ -45,7 +45,7 @@ def run():
         _I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
         _I('nbumps',3,text='Number of bumps'),
         _I('rendermode',choices=renderchoices,text='Render mode'),
-        _I('transparent',False,text='Transparent'),
+        _I('transp',False,text='Transparent'),
         _I('bottom',False,text='Add a bottom plate'),
         _I('shrink',False,text='Shrink elements'),
         _I('export',False,text='Export to .stl'),
@@ -63,9 +63,6 @@ def run():
     else:
         # The base is one quadrilateral
         e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
-
-    # These are lines forming quadrilaterals
-    #e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
 
     # Novation (Spots)
     s = nbumps+1
@@ -85,8 +82,8 @@ def run():
         e = e.shrink(0.8)
 
     renderMode(rendermode)
-    if transparent:
-        pf.canvas.alphablend = True
+    if transp:
+        transparent(True)
     if bottom:
         draw(b,color=yellow,alpha=1.0)
 

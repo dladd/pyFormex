@@ -151,6 +151,7 @@ easter_egg = ()
 layout = 1
 showfocus = True
 
+
 # Default canvas settings
 [canvas]
 bgcolor = 'grey90'      # background color (single color or list of 2 or 4)
@@ -167,6 +168,11 @@ linestipple = (0,1)         # line stipple (factor,pattern)
 marksize = 0.4              # size of 3D marks
 marktype = 'sphere'         # type of 3D mark
 rendermode = 'wireframe'    # default rendering mode
+shading = False
+lighting = False            # default lights off
+alphablend = False
+avgnormals = False
+culling = False
 
 
 [mark]
@@ -203,7 +209,6 @@ light2 = {'enabled':False,'ambient':0.0,'diffuse':1.0,'specular':0.2,'position':
 
 [render]
 mode = 'wireframe'
-lighting = None  # smooth modes will switch it on
 lightmodel = 'ambient and diffuse' # currently only model supported
 ambient = 0.2     # does this really do anything?
 material = 'default' # the name of a material defined above

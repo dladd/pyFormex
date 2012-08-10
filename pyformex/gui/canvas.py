@@ -362,8 +362,11 @@ class CanvasSettings(Dict):
     - bgimage: background image filename
     - slcolor: the highlight color
     - rendermode: the rendering mode
-    - shading: True is smooth, False is flat
-    - lighting: True or False
+    - shading: boolean (smooth/flat shading)
+    - lighting: boolean (lights on/off)
+    - alphablend: boolean (transparency on/off)
+    - culling: boolean
+    - avgnormals: boolean
 
     The list of default settings includes:
 
@@ -420,7 +423,8 @@ class CanvasSettings(Dict):
                         v =  map(saneColor,v)
                 elif k in ['bgimage']:
                     v = str(v)
-                elif k in ['smoothshading', 'lighting', 'culling']:
+                elif k in ['shading', 'lighting', 'culling', 'alphablend',
+                           'avgnormals',]:
                     v = bool(v)
                 elif k in ['linewidth', 'pointsize', 'marksize']:
                     v = float(v)
@@ -500,13 +504,7 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings(**settings)
         self.mode2D = False
-        self.rendermode = pf.cfg['render/mode']
-        self.lighting = pf.cfg['render/lighting']
-        if self.lighting not in [True,False]:
-            self.lighting = self.rendermode.startswith('smooth')
-        self.polygonfill = False
-        self.avgnormals = False
-        self.alphablend = False
+        self.rendermode = pf.cfg['canvas/rendermode']
         self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None
@@ -564,59 +562,62 @@ class Canvas(object):
         If lighting is not specified, it is set depending on the rendermode.
         
         If the canvas has not been initialized, this merely sets the
-        attributes self.rendermode and self.lighting.
+        attributes self.rendermode and self.settings.lighting.
         If the canvas was already initialized (it has a camera), and one of
         the specified settings is fdifferent from the existing, the new mode
         is set, the canvas is re-initialized according to the newly set mode,
         and everything is redrawn with the new mode.
         """
+        print "SETTING RENDERMODE"
         if mode not in Canvas.rendermodes:
             raise ValueError,"Invalid render mode %s" % mode
         if lighting not in [True,False]:
             lighting = mode.startswith('smooth')
 
-        if mode != self.rendermode or lighting != self.lighting:
+        print "MODE=%s, light=%s" % (mode,lighting)
+        if mode != self.rendermode or lighting != self.settings.lighting:
             self.rendermode = mode
-            self.lighting = lighting
-            #print "GLINIT %s %s" % (self.rendermode,self.lighting)
+            self.settings.lighting = lighting
             self.glinit()
-            #print "REDRAWALL %s %s" % (self.rendermode,self.lighting)
-            #self.redrawAll()
-            #print "SWITCH TO NRE RENDERMODE COMPLETED"
         else:
-            #print "KEEP MODE  %s %s" % (self.rendermode,self.lighting)
             pass
 
+    ## def setToggle(self,attr,onoff):
+    ##     if onoff not in [True,False]:
+    ##         onoff = not getattr(self,attr)
+    ##     setattr(self,attr,onoff)
+    ##     try:
+    ##         func = getattr(self,'do_'+attr)#.capitalize())
+    ##         func(onoff)
+    ##     except:
+    ##         pass
+
+
     def setToggle(self,attr,onoff):
+        """Set or toggle a boolean settings attribute
+
+        Furthermore, if a Canvas method do_ATTR is defined, it will be called
+        with the new toggle state as a parameter.
+        """
         if onoff not in [True,False]:
-            onoff = not getattr(self,attr)
-        setattr(self,attr,onoff)
+            onoff = not self.settings[attr]
+        self.settings[attr] = onoff
         try:
-            func = getattr(self,'do_'+attr)#.capitalize())
+            func = getattr(self,'do_'+attr)
             func(onoff)
         except:
             pass
-        
-    ## def setTransparency(self,onoff):
-    ##     self.alphablend = onoff
+
 
     def setLighting(self,onoff):
         self.setToggle('lighting',onoff)
-        
-    ## def setLighting(self,onoff):
-    ##     self.lighting = onoff
-    ##     print "canvas.setLighting %s" % onoff
-    ##     self.glLight(self.lighting)
 
-    ## def setAveragedNormals(self,onoff):
-    ##     self.avgnormals = onoff
-    ##     self.do_avgnormals(onoff)
-        
+
     def do_avgnormals(self,onoff):
-        change = (self.rendermode == 'smooth' and self.avgnormals) or \
-                 (self.rendermode == 'smooth_avg' and not self.avgnormals)
+        change = (self.rendermode == 'smooth' and self.settings.avgnormals) or \
+                 (self.rendermode == 'smooth_avg' and not self.settings.avgnormals)
         if change:
-            if self.avgnormals:
+            if self.settings.avgnormals:
                 self.rendermode = 'smooth_avg'
             else:
                 self.rendermode = 'smooth'
@@ -754,7 +755,7 @@ class Canvas(object):
         else:
             raise RuntimeError,"Unknown rendering mode"
 
-        self.setLighting(self.lighting)
+        self.setLighting(self.settings.lighting)
 
         if self.rendermode.endswith('wire'):
             GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)
@@ -777,7 +778,7 @@ class Canvas(object):
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
         self.settings.setDefault()
-        self.do_lighting(self.lighting)
+        self.do_lighting(self.settings.lighting)
         GL.glDepthFunc(GL.GL_LESS)
 
     
@@ -829,10 +830,10 @@ class Canvas(object):
 
         # draw the focus rectangle if more than one viewport
         if len(pf.GUI.viewports.all) > 1 and pf.cfg['gui/showfocus']:
-            if self.hasFocus():
-                self.draw_focus_rectangle(2)
-            elif self.focus:
-                self.draw_focus_rectangle(1)
+            if self.hasFocus(): # QT focus
+                self.draw_focus_rectangle(0,color=colors.blue)
+            if self.focus:      # pyFormex DRAW focus
+                self.draw_focus_rectangle(2,color=colors.red)
                 
         self.end_2D_drawing()
 
@@ -847,7 +848,7 @@ class Canvas(object):
 
         # draw the scene actors and annotations
         sorted_actors =  [ a for a in self.actors if not a.ontop ] + [ a for a in self.actors if a.ontop ] + self.annotations
-        if self.alphablend:
+        if self.settings.alphablend:
             opaque = [ a for a in sorted_actors if a.opak ]
             transp = [ a for a in sorted_actors if not a.opak ]
             
@@ -929,7 +930,7 @@ class Canvas(object):
             GL.glPopMatrix()
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glPopMatrix()
-            self.do_lighting(self.lighting)
+            self.do_lighting(self.settings.lighting)
             self.mode2D = False
        
         
@@ -1213,13 +1214,13 @@ class Canvas(object):
         """Show the saved buffer"""
         pass
 
-    def draw_focus_rectangle(self,width=2):
+    def draw_focus_rectangle(self,ofs=0,color=colors.pyformex_pink):
         """Draw the focus rectangle.
 
-        The specified width is HALF of the line width"""
-        lw = width
+        The specified width is HALF of the line width
+        """
         w,h = self.width(),self.height()
-        self._focus = decors.Grid(lw,lw,w-lw,h-lw,color=colors.pyformex_pink,linewidth=2*lw)
+        self._focus = decors.Grid(1+ofs,ofs,w-ofs,h-1-ofs,color=color,linewidth=1)
         self._focus.draw()
 
     def draw_cursor(self,x,y):

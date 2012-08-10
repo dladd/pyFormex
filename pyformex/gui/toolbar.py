@@ -170,9 +170,10 @@ class ViewportToggleButton(object):
 
     def updateButton(self):
         """Update the button to current viewport state."""
+        print "UPDATE TOGGLE %s" % attr
         vp = pf.GUI.viewports.current
         if vp == pf.canvas:
-            self.setChecked(getattr(vp,self.attr))
+            self.setChecked(vp.settings[self.attr])
         pf.GUI.processEvents()
 
     def toggle(self,attr,state=None):
@@ -196,14 +197,27 @@ def toggleButton(attr,state=None):
     vp.update()
     pf.GUI.processEvents()
 
+count = 0
+
 def updateButton(button,attr):
     """Update the button to correct state."""
+    global count
+    count += 1
     vp = pf.GUI.viewports.current
-    pf.debug("VP %s / %s" % (vp,pf.canvas),pf.DEBUG.GUI)
-    if vp == pf.canvas and button:
-        button.setChecked(getattr(vp,attr))
+    button.setChecked(vp.settings[attr])
     pf.GUI.processEvents()
-        
+
+
+def updateViewportButtons(vp):
+    if vp != pf.GUI.viewports.current:
+        print "viewport %s is not current" % pf.GUI.viewports.viewIndex(vp)
+    if vp.focus:
+        print "viewport %s has focus" % pf.GUI.viewports.viewIndex(vp)
+        updateButton(transparency_button,'alphablend')
+        updateButton(light_button,'lighting')
+        updateButton(normals_button,'avgnormals')
+
+    
 ################# Transparency Button ###############
 
 transparency_button = None # the toggle transparency button

@@ -71,7 +71,7 @@ def run():
         viewport(i)
         flat()
         clear()
-        vp(i)
+        #vp(i)
         draw(F)
         drawText("F%s"%i,10,20,size=18)
         pf.canvas.update()
