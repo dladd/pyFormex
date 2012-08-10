@@ -63,6 +63,9 @@ SRC= $(wildcard *.c)
 PRG= $(addprefix gts, $(SRC:.c=))
 MAN= $(addsuffix .1, $(PRG))
 
+# This avoids warnings during creation of Debian packages, but may
+# not work on other systems
+#FLAGS= `PKG_CONFIG_PATH=. pkg-config --cflags --libs glib-2.0 gts`
 FLAGS= `pkg-config --cflags --libs glib-2.0 gts`
 
 .PHONY: all build install clean
@@ -84,6 +87,6 @@ manpages: $(MAN)
 	rst2man $< > $@
 
 clean:
-	rm -f $(PRG)
+	rm -f $(PRG) $(MAN)
 
 # End

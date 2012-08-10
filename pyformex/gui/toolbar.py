@@ -170,7 +170,7 @@ class ViewportToggleButton(object):
 
     def updateButton(self):
         """Update the button to current viewport state."""
-        print "UPDATE TOGGLE %s" % attr
+        #print "UPDATE TOGGLE %s" % attr
         vp = pf.GUI.viewports.current
         if vp == pf.canvas:
             self.setChecked(vp.settings[self.attr])
@@ -209,10 +209,10 @@ def updateButton(button,attr):
 
 
 def updateViewportButtons(vp):
-    if vp != pf.GUI.viewports.current:
-        print "viewport %s is not current" % pf.GUI.viewports.viewIndex(vp)
+    ## if vp != pf.GUI.viewports.current:
+    ##     print "viewport %s is not current" % pf.GUI.viewports.viewIndex(vp)
     if vp.focus:
-        print "viewport %s has focus" % pf.GUI.viewports.viewIndex(vp)
+        #print "viewport %s has focus" % pf.GUI.viewports.viewIndex(vp)
         updateButton(transparency_button,'alphablend')
         updateButton(light_button,'lighting')
         updateButton(normals_button,'avgnormals')

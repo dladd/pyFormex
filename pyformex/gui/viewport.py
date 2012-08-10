@@ -406,11 +406,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             if self.trackfunc:
-                print "PRESS",self.trackfunc,pf.canvas.camera.ctr
+                #print "PRESS",self.trackfunc,pf.canvas.camera.ctr
                 pf.canvas.camera.setTracking(True)
                 x,y,z = pf.canvas.camera.ctr
                 self.zplane = pf.canvas.project(x,y,z,True)[2]
-                print 'ZPLANE',self.zplane
+                #print 'ZPLANE',self.zplane
                 self.trackfunc(x,y,self.zplane)
             self.begin_2D_drawing()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
@@ -422,8 +422,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == MOVE:
             if self.trackfunc:
-                print "MOVE",self.trackfunc
-                print 'ZPLANE',self.zplane
+                #print "MOVE",self.trackfunc
+                #print 'ZPLANE',self.zplane
                 self.trackfunc(x,y,self.zplane)
             # Remove old rectangle
             self.swapBuffers()
@@ -1399,7 +1399,7 @@ class NewiMultiCanvas(QtGui.QGridLayout):
         operations. This may be different from the viewport having GUI
         focus (pf.canvas).
         """
-        print "NEWCANVAS SETTING CURRENT VIEWPORT"
+        #print "NEWCANVAS SETTING CURRENT VIEWPORT"
         if type(view) == int and view in range(len(self.all)):
             view = self.all[view]
         if view == self.current:
@@ -1553,13 +1553,14 @@ class MultiCanvas(FramedGridLayout):
 
         canv can be either a viewport or viewport number.
         """
-        print "SETTING CURRENT VIEWPORT"
+        #print "SETTING CURRENT VIEWPORT"
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
         if canv == self.current:
-            print "ALREADY CURRENT"
+            #print "ALREADY CURRENT"
+            pass
         elif canv in self.all:
-            print "CHANGING CURRENT"
+            #print "CHANGING CURRENT"
             if self.current:
                 self.current.focus = False
                 self.current.updateGL()

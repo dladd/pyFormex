@@ -461,7 +461,7 @@ class CanvasSettings(Dict):
 
     def setDefault(self):
         """Activate the default canvas settings in the GL machine."""
-        GL.glColor3fv(self.fgcolor)
+        GL.glColor4fv(list(self.fgcolor)+[self.transparency,])
         GL.glLineWidth(self.linewidth)
         glLineStipple(*self.linestipple)
         GL.glPointSize(self.pointsize)
