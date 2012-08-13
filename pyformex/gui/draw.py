@@ -812,10 +812,10 @@ def drawVectors(P,v,size=None,nolight=True,**drawOptions):
     return draw(connect([P,Q]),nolight=nolight,**drawOptions)
 
 
-def drawPlane(P,N,size):
+def drawPlane(P,N,size,**drawOptions):
     from plugins.tools import Plane
     p = Plane(P,N,size)
-    return draw(p,bbox='last')
+    return draw(p,bbox='last',**drawOptions)
 
 
 def drawMarks(X,M,color='black',leader='',ontop=True):

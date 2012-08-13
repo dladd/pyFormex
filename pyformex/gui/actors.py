@@ -99,6 +99,10 @@ class TranslatedActor(Actor):
         self.actor.redraw(**kargs)
         Drawable.redraw(self,**kargs)
 
+    def prepare_list(self,**kargs):
+        self.actor.prepare_list(**kargs)
+        Drawable.prepare_list(self,**kargs)
+
     def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
@@ -133,6 +137,10 @@ class RotatedActor(Actor):
     def redraw(self,**kargs):
         self.actor.redraw(**kargs)
         Drawable.redraw(self,**kargs)
+
+    def prepare_list(self,**kargs):
+        self.actor.prepare_list(**kargs)
+        Drawable.prepare_list(self,**kargs)
 
     def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
