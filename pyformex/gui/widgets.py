@@ -1820,6 +1820,11 @@ class InputDialog(QtGui.QDialog):
         #self.raise_()
         pf.app.processEvents()
         self._pos = self.saveGeometry()
+        for item in items:
+            if isinstance(item,QtGui.QWidget):
+                
+                item.getResults
+            
         return self.results
 
     # for compatibility, should be deprecated
@@ -2436,7 +2441,7 @@ class TableModel(QtCore.QAbstractTableModel):
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
-            if 1==1:
+            try:
                 r,c = [index.row(),index.column()]
                 print "Setting value at %s,%s to %s" %(r,c,value)
                 value = eval(str(value.toString()))
@@ -2447,9 +2452,9 @@ class TableModel(QtCore.QAbstractTableModel):
 #                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index) #or maybe this one
                 print "Signaled success"
                 return True
-#            except:
-#                print "Could not set the value"
-#                return False
+            except:
+                print "Could not set the value"
+                return False
         else:
             print "CAN  NOT EDIT"
         return False
@@ -2471,24 +2476,22 @@ class ArrayModel(TableModel):
             rhead=range(data.shape[0])
         if chead is None:
             chead=range(data.shape[1])
-        TableModel.__init__(self,data,rhead=rhead,chead=chead,edit=edit)
-
+        TableModel.__init__(self,data.tolist(),rhead=rhead,chead=chead,edit=edit)
  
     def data(self,index,role):
-        if index.isValid() and role == QtCore.Qt.DisplayRole: 
-            return QtCore.QVariant(self.arraydata[index.row(),index.column()]) 
+        if index.isValid() and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.arraydata[index.row()][index.column()]) 
         return QtCore.QVariant() 
-
 
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
-            try:
+            if 1==1:
                 r,c = [index.row(),index.column()]
                 print "Setting value at %s,%s to %s" %(r,c,value)
-                if self.arraydata.dtype.kind == 'f':
+                if isinstance(self.arraydata[index.row()][index.column()],float):
                     value,ok = value.toDouble()
-                elif self.arraydata.dtype.kind == 'i':
+                elif isinstance(self.arraydata[index.row()][index.column()],int):
                     value,ok = value.toInt()
                 else:
                     print "Editing of other than float or int arrays is not implemented yet!"
