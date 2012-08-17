@@ -2486,7 +2486,7 @@ class ArrayModel(TableModel):
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
-            if 1==1:
+            try:
                 r,c = [index.row(),index.column()]
                 print "Setting value at %s,%s to %s" %(r,c,value)
                 if isinstance(self.arraydata[index.row()][index.column()],float):
