@@ -359,7 +359,8 @@ def fillBorder(border,method='radial',dir=None):
     """
     from plugins.curve import PolyLine
     if isinstance(border,Mesh) and border.nplex()==2:
-        border = border.compact()
+        if method == 'radial':
+            border = border.compact()
         coords = border.coords
         elems = border.elems[:,0]
     elif isinstance(border,PolyLine):
@@ -873,8 +874,17 @@ class TriSurface(Mesh):
 
     def close(self,method='radial',dir=None):
         border = self.fillBorder(method,dir)
-        return self.concatenate([self]+border)
-        
+        if method == 'radial':
+            return self.concatenate([self]+border)
+        else:
+            elems = concatenate([ m.elems for m in [self]+border ],axis=0)
+            if self.prop is None:
+                prop = zeros(shape=self.nelems(),dtype=Int)
+            else:
+                prop = self.prop
+            prop = concatenate( [prop] + [ m.prop for m in border ])
+            return TriSurface(self.coords,elems,prop=prop)
+
 
     def edgeCosAngles(self,return_mask=False):
         """Return the cos of the angles over all edges.
