@@ -600,23 +600,11 @@ class PropertyDB(Dict):
         - displ,veloc,accel: prescribed displacement, velocity or
           acceleration: a list of 6 float values
           [UX,UY,UZ,RX,RY,RZ] or  a list of tuples (dofid,value)
-        - bound: a boundary condition: a str or a list of 6 codes (0/1)
+        - bound: a boundary condition: a str, a list of 6 codes (0/1), or
+          a list of tuples (what??)
         - csys: a CoordSystem
         - ampl: the name of an Amplitude
         """
-        
-        ####check if set inherit the type from coords####
-        #import elements
-        #M=Mesh(elements.Hex8)
-        #set = where(M.coords[:,2] == 0.0)[0]
-        #print set
-        #print type(set)
-        #<class 'coords.Coords'>
-        from coords import Coords
-        if type(set) == Coords:
-            raise ValueError,"type(set) cannot be coords. Use set = asarray(set)"
-        ####
-        
         try:
             d = kargs
             if cload is not None:
