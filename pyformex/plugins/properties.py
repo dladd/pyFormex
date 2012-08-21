@@ -631,7 +631,10 @@ class PropertyDB(Dict):
                 if type(bound) == str:
                     d['bound'] = checkString(bound,self.bound_strings)
                 elif type(bound) == list:
-                    d['bound'] = checkArray1D(bound,6,'i')
+                    if type(bound[0]) != tuple:
+                        d['bound'] = checkArray1D(bound,6,'i')
+                    else:
+                        d['bound'] = bound # unchecked
             if csys is not None:
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
