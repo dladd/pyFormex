@@ -1819,12 +1819,7 @@ class InputDialog(QtGui.QDialog):
         #self.activateWindow()
         #self.raise_()
         pf.app.processEvents()
-        self._pos = self.saveGeometry()
-        for item in items:
-            if isinstance(item,QtGui.QWidget):
-                
-                item.getResults
-            
+        self._pos = self.saveGeometry()          
         return self.results
 
     # for compatibility, should be deprecated
