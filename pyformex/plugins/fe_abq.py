@@ -133,7 +133,6 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     Then the data are formatted in lines with maximum npl items, separated
     by sep. Lines are separated by linesep.
     """
-        
     data = asarray(data)
     data = data.reshape(-1,data.shape[-1])
     return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])+linesep
@@ -919,7 +918,37 @@ def fmtEquation(prop):
     return out
             
             
+
+
+def fmtMass(prop):
+    """Format mass
+
+    Required:
     
+    - mass : mass magnitude
+    - set : name of the element set on which mass is applied
+    """
+    out = ''
+    for p in prop:
+        out +='*MASS, ELSET={0}\n'.format(p.name)
+        out +='{0}\n'.format(p.mass)
+    return out
+    
+def fmtInertia(prop):
+    """Format rotary inertia
+
+    Required:
+    
+    - inertia : inertia tensor i11, i22, i33, i12, i13, i23
+    - set : name of the element set on which inertia is applied
+    """
+    out = ''
+    for p in prop:
+        out +='*ROTARY INERTIA, ELSET={0}\n'.format(p.name)
+        out += fmtData1D(p.inertia,  6)
+        out += '\n'
+    return out
+
 
 ## The following output sections with possibly large data
 ## are written directly to file.
@@ -1200,7 +1229,8 @@ def writeBoundaries(fil,prop):
         elif isinstance(p.bound[0],tuple):
             for b in p.bound:
                 dof = b[0]+1
-                fil.write(fmtData(setname,dof,dof,b[1]))
+#                fil.write(fmtData(setname,dof,dof,b[1]))
+                fil.write("{0}, {1}, {1}, {2}\n".format(setname,  dof,  b[1]))
 
 #~ FI see writeBoundaries comments
 def writeDisplacements(fil,prop,dtype='DISPLACEMENT'):
@@ -2011,7 +2041,17 @@ Script: %s
             fil.write("*END ASSEMBLY\n")
 
         pf.message("Writing global model properties")
-            
+        
+        prop = self.prop.getProp('',  attr=['mass'])
+        if prop:
+            pf.message("Writing masses")
+            fil.write(fmtMass(prop))
+        
+        prop = self.prop.getProp('',  attr=['inertia'])
+        if prop:
+            pf.message("Writing rotary inertia")
+            fil.write(fmtInertia(prop))
+        
         prop = self.prop.getProp('',attr=['amplitude'])
         if prop:
             pf.message("Writing amplitudes")
