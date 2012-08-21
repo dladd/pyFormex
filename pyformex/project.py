@@ -1,4 +1,4 @@
-# $Id$
+# $Id$    pyformex 
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -28,11 +28,13 @@
 Functions for managing a project in pyFormex.
 """
 import pyformex as pf
+from track import TrackedDict
 from pyformex import utils
 import os,sys
 import cPickle
 import gzip
 
+_signature_ = pf.FullVersion
 
 module_relocations = {
     'plugins.mesh' : 'mesh',
@@ -59,10 +61,9 @@ def pickle_load(f,try_resolve=True):
 
     return pi.load()
 
-
 highest_format = 3
 
-class Project(dict):
+class Project(TrackedDict):
     """Project: a persistent storage of pyFormex data.
 
     A pyFormex Project is a regular Python dict that can contain named data
@@ -157,9 +158,27 @@ class Project(dict):
 
     - `data`: a dict-like object to initialize the Project contents. These data
       may override values read from the file.  
+
+    Example:
+    
+      >>> d = dict(a=1,b=2,c=3,d=[1,2,3],e={'f':4,'g':5})
+      >>> import tempfile
+      >>> f = tempfile.mktemp('.pyf','w')
+      >>> P = Project(f)
+      >>> P.update(d)
+      >>> print dict.__str__(P)
+      {'a': 1, 'c': 3, 'b': 2, 'e': {'g': 5, 'f': 4}, 'd': [1, 2, 3]}
+      >>> P.save(quiet=True)
+      >>> P.clear()
+      >>> print dict.__str__(P)
+      {}
+      >>> P.load(quiet=True)
+      >>> print dict.__str__(P)
+      {'a': 1, 'c': 3, 'b': 2, 'e': {'g': 5, 'f': 4}, 'd': [1, 2, 3]}
+
     """
 
-    def __init__(self,filename=None,access='wr',convert=True,signature=pf.FullVersion,compression=5,binary=True,data={},**kargs):
+    def __init__(self,filename=None,access='wr',convert=True,signature=_signature_,compression=5,binary=True,data={},**kargs):
         """Create a new project."""
         if 'create' in kargs:
             utils.warn("The create=True argument should be replaced with access='w'")
@@ -205,22 +224,25 @@ class Project(dict):
         return dict([(k,v) for k,v in zip(store_attr,store_vals) if v is not None])
 
 
-    def save(self):
+    def save(self,quiet=False):
         """Save the project to file."""
         if 'w' not in self.access:
-            #print "NOT saving to readonly Project file access" 
+            # print "NOT saving to readonly Project file access" 
             return
+
+        print "PROJECT VARIABLES CHANGED: %s" % self.hits
 
         if self.filename is None:
             import tempfile
             fd,fn = tempfile.mkstemp(prefix='pyformex_',suffix='.pyf')
             self.filename = fn
         else:
-            print "Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip)
+            if not quiet:
+                print "Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip)
             #print("  Contents: %s" % self.keys()) 
         f = open(self.filename,'w'+self.mode)
         # write header
-        self.signature = pf.FullVersion
+        # self.signature = pf.FullVersion
         f.write("%s\n" % self.header_data())
         f.flush()
         if self.mode == 'b':
@@ -235,9 +257,10 @@ class Project(dict):
         else:
             cPickle.dump(self,f,protocol)
         f.close()
+        self.hits = 0
 
 
-    def readHeader(self):
+    def readHeader(self,quiet=False):
         """Read the header from a project file.
         
         Tries to read the header from different legacy formats,
@@ -246,7 +269,8 @@ class Project(dict):
         Returns the open file if succesfull.
         """
         self.format = -1
-        print("Reading project file: %s" % self.filename)
+        if not quiet:
+            print("Reading project file: %s" % self.filename)
         f = open(self.filename,'rb')
         fpos = f.tell()
         s = f.readline()
@@ -265,7 +289,8 @@ class Project(dict):
                 self.format = 2
             except:
                 s = s.strip()
-                print "Header = '%s'" % s
+                if not quiet:
+                    print "Header = '%s'" % s
                 if s=='gzip' or s=='' or 'pyFormex' in s:
                     # transitional format
                     self.gzip = 5
@@ -281,23 +306,26 @@ class Project(dict):
         return f
 
 
-    def load(self,try_resolve=False):
+    def load(self,try_resolve=False,quiet=False):
         """Load a project from file.
         
         The loaded definitions will update the current project.
         """
-        f = self.readHeader()
+        f = self.readHeader(quiet)
         if self.format < highest_format:
-            print "Format looks like %s" % self.format
+            if not quiet:
+                print "Format looks like %s" % self.format
             utils.warn('warn_old_project')
         with f:
             try:
-                print "Unpickling gzip"
+                if not quiet:
+                    print "Unpickling gzip"
                 pyf = gzip.GzipFile(fileobj=f,mode='rb')
                 p = pickle_load(pyf,try_resolve)
                 pyf.close()
             except:
-                print "Unpickling clear"
+                if not quiet:
+                    print "Unpickling clear"
                 p = pickle_load(f,try_resolve)
             self.update(p)
     
@@ -360,72 +388,6 @@ class Project(dict):
     def delete(self):
         """Unrecoverably delete the project file."""
         os.remove(self.filename)
-        
-        
-# Test
 
-if __name__ == '__main__':
-
-    d = dict(a=1,b=2,c=3,d=[1,2,3],e={'f':4,'g':5})
-    from numpy import random
-    d['r'] = random.randint(0,100,(3,3))
-    print('DATA',d)
-
-    P = Project('testa.pyf')
-    P.update(d)
-    print('SAVE',P)
-    P.save()
-    P.clear()
-    print('CLEAR',P)
-    P.load()
-    print('LOAD',P)
-
-    P = Project('testb.pyf',access='w')
-    P.update(d)
-    print('SAVE',P)
-    P.save()
-    P.clear()
-    print('CLEAR',P)
-    P.load()
-    print('LOAD',P)
-
-    P = Project()
-    P.update(d)
-    print('SAVE',P)
-    P.save()
-    P.clear()
-    print('CLEAR',P)
-    P.load()
-    print('LOAD',P)
-
-    for i in [0,1,3,5,7,9]:
-        P = Project('testc%s.pyf'%i,access='w',compression=i)
-        P.update(d)
-        print('SAVE',P)
-        P.save()
-        P.clear()
-        print('CLEAR',P)
-        P.load()
-        print('LOAD',P)
-     
-    P = Project('testl.pyf',access='w',legacy=True)
-    P.update(d)
-    print('SAVE',P)
-    P.save()
-    P.clear()
-    print('CLEAR',P)
-    P.load()
-    print('LOAD',P)
-     
-    P = Project('testr.pyf',access='r')
-    P.update(d)
-    print('SAVE',P)
-    P.save()
-    P.clear()
-    print('CLEAR',P)
-    P.load()
-    print('LOAD',P)
-
-    #
 
 # End

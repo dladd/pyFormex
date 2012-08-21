@@ -238,10 +238,10 @@ def _congratulations(name,version,typ='module',fatal=False,quiet=False,severity=
     """Report a detected module/program."""
     if version:
         if not quiet:
-            pf.message("Congratulations! You have %s (%s)" % (name,version))
+            pf.debug("Congratulations! You have %s (%s)" % (name,version),pf.DEBUG.DETECT)
     else:
         if not quiet or fatal:
-            pf.error("ALAS! I could not find %s '%s' on your system" % (typ,name))
+            pf.debug("ALAS! I could not find %s '%s' on your system" % (typ,name),pf.DEBUG.DETECT)
         if fatal:
             pf.error("Sorry, I'm getting out of here....")
             sys.exit()

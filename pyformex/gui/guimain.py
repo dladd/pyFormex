@@ -141,6 +141,8 @@ class Board(QtGui.QTextEdit):
     def redirect(self,onoff):
         """Redirect standard and error output to this message board"""
         if onoff:
+            sys.stderr.flush()
+            sys.stdout.flush()
             self.stderr = sys.stderr
             self.stdout = sys.stdout
             sys.stderr = self
@@ -379,7 +381,7 @@ class Gui(QtGui.QMainWindow):
         # Modeless child dialogs
         self.doc_dialog = None
         pf.debug('Done initializing GUI',pf.DEBUG.GUI)
-
+            
 
     def close_doc_dialog(self):
         """Close the doc_dialog if it is open."""
@@ -710,36 +712,6 @@ class Gui(QtGui.QMainWindow):
                            'pos':Pos(pf.GUI),
                            'bdsize':Size(pf.GUI.board),
                            },name='gui')
-
-
-    def cleanup(self):
-        """Cleanup the GUI (restore default state)."""
-        pf.debug('GUI cleanup',pf.DEBUG.GUI)
-        self.drawlock.release()
-        pf.canvas.cancel_selection()
-        pf.canvas.cancel_draw()
-        draw.clear_canvas()
-        self.setBusy(False)
-
-
-    def closeEvent(self,event):
-        """Close Main Window Event Handler"""
-##         if draw.ack("Do you really want to quit?"):
-##             print("YES:EXIT")
-        self.cleanup()
-        pf.debug("Executing registered exit functions",pf.DEBUG.GUI)
-        for f in self.on_exit:
-            pf.debug(f,pf.DEBUG.GUI)
-            f()
-        self.writeSettings()
-        event.accept()
-##         else:
-##             print("NO:STAY")
-##             event.ignore()
-
-    def onExit(self,func):
-        """Register a function for execution on exit"""
-        self.on_exit.append(func)
             
 # THESE FUNCTION SHOULD BECOME app FUNCTIONS
 
@@ -887,6 +859,57 @@ class Gui(QtGui.QMainWindow):
         pf.app.processEvents()
 
 
+    def cleanup(self):
+        """Cleanup the GUI (restore default state)."""
+        pf.debug('GUI cleanup',pf.DEBUG.GUI)
+        self.drawlock.release()
+        pf.canvas.cancel_selection()
+        pf.canvas.cancel_draw()
+        draw.clear_canvas()
+        self.setBusy(False)
+
+
+    def onExit(self,func):
+        """Register a function for execution on exit"""
+        self.on_exit.append(func)
+
+        
+    def closeEvent(self,event):
+        """Override the close event handler.
+        
+        We override the default close event handler for the main
+        window, to allow the user to cancel the exit.
+        """
+        print "Closing pyFormex Main Window?"
+        if draw.ack("Do you really want to exit pyFormex?"):
+            self.cleanup()
+            if pf.options.gui:
+                script.force_finish()
+            # force reset redirect
+            sys.stderr.flush()
+            sys.stdout.flush()
+            sys.stderr = sys.__stderr__
+            sys.stdout = sys.__stdout__
+            self.drawlock.free()
+            draw.wakeup()
+            pf.debug("Executing registered exit functions",pf.DEBUG.GUI)
+            for f in self.on_exit:
+                pf.debug(f,pf.DEBUG.GUI)
+                f()
+            self.writeSettings()
+            event.accept()
+        else:
+            event.ignore()
+
+
+def quitGUI():
+    """Quit the GUI"""
+    pf.GUI.close()
+    if pf.app:
+        pf.app.exit()
+        pf.app = None
+
+
 def xwininfo(windowid=None,name=None):
     """Returns the X window info parsed as a dict.
 
@@ -1023,23 +1046,6 @@ does not seem to work, use the KILL(9) signal.
         utils.killProcesses(pids,9)
 
 
-
-def quitGUI():
-    """Quit the GUI"""
-    pf.debug("Quit GUI",pf.DEBUG.GUI)
-    # froce reset redirect
-    sys.stderr = sys.__stderr__
-    sys.stdout = sys.__stdout__
-    #print "QUIT"
-    pf.GUI.drawlock.free()
-    draw.wakeup()
-    if pf.options.gui:
-        script.force_finish()
-    if pf.app:
-        pf.app.exit()
-        pf.app = None
-
-
 def startGUI(args):
     """Create the QT4 application and GUI.
 
@@ -1070,8 +1076,8 @@ def startGUI(args):
     ## pf.settings = QtCore.QSettings("pyformex.org", "pyFormex")
     ## pf.settings.setValue("testje","testvalue")
     
-    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
-    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
+    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
+    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
 
     # Check if we have DRI
@@ -1291,6 +1297,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         if sta == 0:
             draw.showInfo(out)
 
+    #pf.app.setQuitOnLastWindowClosed(False)
     pf.app_started = True
     pf.GUI.processEvents()
 
