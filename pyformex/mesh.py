@@ -780,7 +780,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return adj.frontWalk(startat=startat,frontinc=frontinc,partinc=partinc,maxval=maxval)
 
 
-    def partitionByConnection(self,level=0,startat=0,nparts=-1,mask=None):
+    # BV: DO WE NEED THE nparts ?
+    def partitionByConnection(self,level=0,startat=0,sort='number',nparts=-1):
         """Detect the connected parts of a Mesh.
 
         The Mesh is partitioned in parts in which all elements are
@@ -789,16 +790,28 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         the other element without leaving the Mesh.
         The partitioning is returned as a integer array having a value
         for ech element corresponding to the part number it belongs to.
+       
+        By default the parts are sorted in decreasing order of the number
+        of elements. If you specify nparts, you may wish to switch off the
+        sorting by specifying sort=''.
         """
-        return self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
+        p = self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
+        if sort=='number':
+            p = sortSubsets(p)
+        #
+        # TODO: add weighted sorting methods
+        #
+        return p
 
 
-    def splitByConnection(self,level=0,startat=0):
+    def splitByConnection(self,level=0,startat=0,sort='number'):
         """Split the Mesh into connected parts.
 
         Returns a list of Meshes that each form a connected part.
+        By default the parts are sorted in decreasing order of the number
+        of elements. 
         """
-        p = self.partitionByConnection(level=level,startat=startat)
+        p = self.partitionByConnection(level=level,startat=startat,sort=sort)
         split = self.setProp(p).splitProp()
         if split:
             return split.values()
@@ -807,16 +820,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
 
     def largestByConnection(self,level=0):
-        """Return the largest connected part of the Mesh."""
+        """Return the largest connected part of the Mesh.
+
+        This is equivalent with, but more efficient than ::
+
+          self.splitByConnection(level)[0]
+        """
         p = self.partitionByConnection(level=level)
-        nparts = p.max()+1
-        if nparts == 1:
-            return self,nparts
-        else:
-            t = [ p == pi for pi in range(nparts) ]
-            n = [ ti.sum() for ti in t ]
-            w = array(n).argmax()
-            return self.clip(t[w]),nparts
+        return self.withProp(0)
 
 
     def growSelection(self,sel,mode='node',nsteps=1):

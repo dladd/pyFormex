@@ -1189,16 +1189,9 @@ Quality: %s .. %s
         p = self.maskedEdgeFrontWalk(mask=~feat,frontinc=0)
         
         if sort == 'number':
-            h = histogram(p,list(unique(p))+[p.max()+1])[0]
+            p = sortSubsets(p)
         elif sort == 'area':
-            a  = self.areaNormals()[0]
-            h = [a[p==j].sum() for j in unique(p)]
-        else:
-            sort = False
-        if sort:
-            srt = argsort(h)[::-1]
-            inv = inverseUniqueIndex(srt)
-            p = inv[p]
+            p = sortSubsets(p,self.areaNormals()[0])
             
         return p
         
