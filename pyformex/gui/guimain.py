@@ -1224,7 +1224,7 @@ You should seriously consider to bail out now!!!
         pf.debug('Loading splash %s' % pf.cfg['gui/splash'],pf.DEBUG.GUI)
         splashimage = QtGui.QPixmap(pf.cfg['gui/splash'])
         splash = QtGui.QSplashScreen(splashimage)
-        splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.SplashScreen)
         splash.setFont(QtGui.QFont("Helvetica",24))
         splash.showMessage(pf.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
