@@ -265,13 +265,28 @@ def createMenuData():
         def install_gts():
             install_external('gts','gtsinside')
 
-
-        
+       
         MenuData.append((_('&Install Externals'),[
             (_('dxfparser'),install_dxfparser,{'tooltip':"Install dxfparser: requires libdxflib-dev!"}),
             (_('postabq'),install_postabq),
             (_('gts'),install_gts),
             ]))
+
+
+        # DEV: Leave the following commented code as an example
+
+        ## #
+        ## # Test of the exit function
+        ## #
+
+        ## def testExit():
+        ##     import guimain
+        ##     ret = guimain.exitDialog()
+        ##     print "ExitDialog returned: %s" % ret
+            
+        ## MenuData.append((_('&Test Functions'),[
+        ##     (_('test exit'),testExit),
+        ##     ]))
 
 
     return MenuData

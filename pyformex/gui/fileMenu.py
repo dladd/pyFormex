@@ -91,7 +91,9 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
         raise
     finally:
         pf.GUI.setBusy(False)
-        
+
+    proj.hits = 0
+    print "START COUNTING HITS"
     return proj
 
 
@@ -333,23 +335,6 @@ def closeProject(save=None,delet=None):
 def closeProjectWithoutSaving():
     """Close the current project without saving it."""
     closeProject(False)
-    
-
-def askCloseProject():
-    if pf.PF and pf.PF.filename is not None:
-        choices = ['Exit without saving','SaveAs and Exit','Save, Close and Exit','Save and Exit']
-        if pf.PF.access == 'r':
-            choices = choices[:2]
-        res = draw.ask("You still an open project (%s) that might not have been saved.\nWhat do you want me to do?"%pf.PF.filename,choices,default=2)
-        res = choices.index(res)
-        if res == 0:
-            closeProject(save=False,delet=False)
-        elif res == 1:
-            saveAsProject()
-        elif res == 2:
-            closeProject(save=True,delet=False)
-        elif res == 3:
-            saveProject()
  
 
 def convertProjectFile():

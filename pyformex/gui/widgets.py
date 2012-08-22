@@ -344,9 +344,9 @@ class InputLabel(InputItem):
         """Create the input item."""
         self._plain = kargs.get('plain',False)
         self.input =  QtGui.QLabel()
-        maxw,maxh = maxSize()
-        self.input.setMaximumSize(0.6*maxw,0.6*maxh)
-        self.input.setMinimumSize(0.2*maxw,0.2*maxh)
+        #maxw,maxh = self.maxSize()
+        #self.input.setMaximumSize(0.6*maxw,0.6*maxh)
+        #self.input.setMinimumSize(0.2*maxw,0.2*maxh)
         setExpanding(self.input)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
@@ -443,10 +443,9 @@ class InputText(InputItem):
         if 'size' in kargs:
             self.size = kargs['size']
 
+
     def sizeHint(self):
-        if not hasattr(self,'size'):
-            size = QtGui.QTextEdit.sizeHint(self.input)
-        else:
+        if hasattr(self,'size'):
             width,height = self.size
             docsize = self.input.document().size().toSize()
             #print "docsize = %s" % docsize
@@ -461,6 +460,8 @@ class InputText(InputItem):
                 height = max(height, 0.75*width)
             size = QtCore.QSize(width,height)
             #print "newsize = %s" % size
+        else:
+            size = QtGui.QTextEdit.sizeHint(self.input)
             
         return size
     

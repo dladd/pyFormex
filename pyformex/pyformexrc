@@ -110,6 +110,8 @@ bdsize=size
 pos=(0,0)
 fullscreen = False
 icontype = '.xpm'
+exitconfirm = 'smart' # other options: 'never', 'always'
+dooze = 0.0
 
 prefsmenu = True     # add settings menu menu
 viewportmenu = True  # add viewport menu

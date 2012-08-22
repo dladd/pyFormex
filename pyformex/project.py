@@ -43,10 +43,10 @@ module_relocations = {
 
 def find_global(module,name):
     """Override the import path of some classes"""
-    pf.debug("I want to import %s from %s" % (name,module),pf.DEBUG.MISC)
+    pf.debug("I want to import %s from %s" % (name,module),pf.DEBUG.PROJECT)
     if module in module_relocations:
         module = module_relocations[module]
-        pf.debug("  I will try module %s instead" % module,pf.DEBUG.MISC)
+        pf.debug("  I will try module %s instead" % module,pf.DEBUG.PROJECT)
     __import__(module)
     mod = sys.modules[module]
     clas = getattr(mod, name)
@@ -191,14 +191,17 @@ class Project(TrackedDict):
         self.gzip = compression if compression in range(1,10) else 0
         self.mode = 'b' if binary or compression > 0 else ''
         
-        dict.__init__(self)
+        TrackedDict.__init__(self)
         if filename and os.path.exists(filename) and 'r' in self.access:
             # read existing contents
             self.load(convert)
-        self.update(data)
+            self.hits = 0
+        if data:
+            self.update(data)
         if filename and access=='w':
             # destroy existing contents
             self.save()
+        print "INITIAL hits = %s" % self.hits
 
 
     def __str__(self):
@@ -227,10 +230,10 @@ class Project(TrackedDict):
     def save(self,quiet=False):
         """Save the project to file."""
         if 'w' not in self.access:
-            # print "NOT saving to readonly Project file access" 
+            pf.debug("Not saving because Project file opened readonly")
             return
 
-        print "PROJECT VARIABLES CHANGED: %s" % self.hits
+        print("Project variables changed: %s" % self.hits,pf.DEBUG.PROJECT)
 
         if self.filename is None:
             import tempfile

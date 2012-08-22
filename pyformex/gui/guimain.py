@@ -200,7 +200,7 @@ class Gui(QtGui.QMainWindow):
         on top, and a statusbar at the bottom.
         """
         pf.debug('Creating Main Window',pf.DEBUG.GUI)
-        self.on_exit = [fileMenu.askCloseProject] 
+        self.on_exit = [] 
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
         # add widgets to the main window
@@ -866,6 +866,7 @@ class Gui(QtGui.QMainWindow):
         pf.canvas.cancel_selection()
         pf.canvas.cancel_draw()
         draw.clear_canvas()
+        draw.wakeup()
         self.setBusy(False)
 
 
@@ -880,18 +881,25 @@ class Gui(QtGui.QMainWindow):
         We override the default close event handler for the main
         window, to allow the user to cancel the exit.
         """
-        print "Closing pyFormex Main Window?"
-        if draw.ack("Do you really want to exit pyFormex?"):
-            self.cleanup()
-            if pf.options.gui:
-                script.force_finish()
+        #
+        # DEV: things going wrong during the event handler are hard to debug!
+        # You can add those things to a function and add the function to a
+        # menu for testing. At the end of the file helpMenu.py there is an
+        # example (commented out).
+        #
+        pf.GUI.cleanup()
+        if pf.options.gui:
+            script.force_finish()
+        if exitDialog():
+            self.drawlock.free()
+            dooze = pf.cfg['gui/dooze']
+            print "Exiting in %s seconds" % dooze
+            draw.sleep(dooze)
             # force reset redirect
             sys.stderr.flush()
             sys.stdout.flush()
             sys.stderr = sys.__stderr__
             sys.stdout = sys.__stdout__
-            self.drawlock.free()
-            draw.wakeup()
             pf.debug("Executing registered exit functions",pf.DEBUG.GUI)
             for f in self.on_exit:
                 pf.debug(f,pf.DEBUG.GUI)
@@ -901,13 +909,55 @@ class Gui(QtGui.QMainWindow):
         else:
             event.ignore()
 
+    
+def exitDialog():
+    """Show the exit dialog to the user.
 
-def quitGUI():
-    """Quit the GUI"""
-    pf.GUI.close()
-    if pf.app:
-        pf.app.exit()
-        pf.app = None
+    """
+    confirm = pf.cfg['gui/exitconfirm']
+    ## print "confirm = %s" % confirm
+    ## print "pf.PF.filename = %s" % pf.PF.filename
+    ## print "pf.PF.hits = %s" % pf.PF.hits
+    
+    if confirm == 'never':
+        return True
+
+    if confirm == 'smart' and (pf.PF.filename is None or pf.PF.hits == 0):
+        return True
+    
+    print("Project variable changes: %s" % pf.PF.hits)
+    print("pyFormex globals: %s" % pf.PF.keys())
+
+    save_opts = ['To current project file','Under another name','Do not save']
+    res = draw.askItems(
+        [ draw._I('info',itemtype='label',value="You have unsaved global variables. What shall I do?"),
+          draw._I('save',itemtype='vradio',choices=save_opts,text='Save the current globals'),
+          draw._I('reopen',pf.cfg['loadcurproj'],text="Reopen the project on next startup"),
+          ],
+        caption='pyFormex exit dialog')
+        
+    if not res:
+        # Cancel the exit
+        return False
+
+    save = save_opts.index(res['save'])
+    if save == 0:
+        fileMenu.saveProject()
+    elif save == 1:
+        fileMenu.saveAsProject()
+
+    if not res['reopen']:
+        fileMenu.closeProject(save=False,delet=False)
+
+    return True
+
+# BV: Not used anymore
+## def quitGUI():
+##     """Quit the GUI"""
+##     pf.GUI.close()
+##     if pf.app:
+##         pf.app.exit()
+##         pf.app = None
 
 
 def xwininfo(windowid=None,name=None):
