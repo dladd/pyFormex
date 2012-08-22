@@ -715,13 +715,6 @@ class Gui(QtGui.QMainWindow):
             
 # THESE FUNCTION SHOULD BECOME app FUNCTIONS
 
-    def currentStyle(self):
-        return pf.app.style().metaObject().className()[1:-5]
-
-
-    def getStyles(self):
-        return map(str,QtGui.QStyleFactory().keys())
-
 
     def setStyle(self,style):
         """Set the main application style."""
@@ -1095,6 +1088,25 @@ does not seem to work, use the KILL(9) signal.
     elif answer == 'KILL(9)':
         utils.killProcesses(pids,9)
 
+########################
+# Main application
+########################
+
+
+class Application(QtGui.QApplication):
+    """The interactive Qt4 application"""
+    
+    def __init__(self,args):
+        QtGui.QApplication.__init__(self,args)
+
+
+    def currentStyle(self):
+        return self.style().metaObject().className()[1:-5]
+
+
+    def getStyles(self):
+        return map(str,QtGui.QStyleFactory().keys())
+
 
 def startGUI(args):
     """Create the QT4 application and GUI.
@@ -1109,7 +1121,7 @@ def startGUI(args):
     #
     #pf.options.debug = -1
     pf.debug("Arguments passed to the QApplication: %s" % args,pf.DEBUG.INFO)
-    pf.app = QtGui.QApplication(args)
+    pf.app = Application(args)
     #
     pf.debug("Arguments left after constructing the QApplication: %s" % args,pf.DEBUG.INFO)
     pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'),pf.DEBUG.INFO)

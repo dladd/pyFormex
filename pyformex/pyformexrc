@@ -102,6 +102,7 @@ history = []
 apphistory = []
 history_max = 20
 
+#splash = os.path.join(icondir,'pyformex-scallop.png')
 splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['geometry_menu']
 style = "Plastique"

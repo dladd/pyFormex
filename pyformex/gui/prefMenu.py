@@ -136,7 +136,7 @@ def settings():
     plugin_items = [ _I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
 
     appearance = [
-        _I('gui/style',pf.GUI.currentStyle(),choices=pf.GUI.getStyles()),
+        _I('gui/style',pf.app.currentStyle(),choices=pf.app.getStyles()),
         _I('gui/font',pf.app.font().toString(),'font'),
         ]
 
