@@ -780,44 +780,33 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return adj.frontWalk(startat=startat,frontinc=frontinc,partinc=partinc,maxval=maxval)
 
 
-    def partitionByConnection(self,level=0,startat=0,firstprop=0,nparts=-1,mask=None):
+    def partitionByConnection(self,level=0,startat=0,nparts=-1,mask=None):
         """Detect the connected parts of a Mesh.
 
         The Mesh is partitioned in parts in which all elements are
         connected. Two elements are connected if it is possible to draw a
         continuous (poly)line from a point in one element to a point in
         the other element without leaving the Mesh.
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
+        The partitioning is returned as a integer array having a value
+        for ech element corresponding to the part number it belongs to.
         """
-        return firstprop + self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
+        return self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
 
-
-#    def splitByConnection(self,*args,**kargs):
-#        """Split the Mesh into connected parts.
-#
-#        Returns a list of Meshes that each form a connected part.
-#        """
-#        split = self.setProp(self.frontWalk(*args,**kargs)).splitProp()
-#        if split:
-#            return split.values()
-#        else:
-#            return [ self ]
 
     def splitByConnection(self,level=0,startat=0):
         """Split the Mesh into connected parts.
 
         Returns a list of Meshes that each form a connected part.
         """
-        split = self.setProp(self.frontWalk(level=level,startat=startat,frontinc=0)).splitProp()
+        p = self.partitionByConnection(level=level,startat=startat)
+        split = self.setProp(p).splitProp()
         if split:
             return split.values()
         else:
             return [ self ]
 
 
-    def largestByConnection(self, level=0):
+    def largestByConnection(self,level=0):
         """Return the largest connected part of the Mesh."""
         p = self.partitionByConnection(level=level)
         nparts = p.max()+1
