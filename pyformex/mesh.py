@@ -794,21 +794,32 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return firstprop + self.frontWalk(level=level,startat=startat,frontinc=0,partinc=1,maxval=nparts)
 
 
-    def splitByConnection(self,*args,**kargs):
+#    def splitByConnection(self,*args,**kargs):
+#        """Split the Mesh into connected parts.
+#
+#        Returns a list of Meshes that each form a connected part.
+#        """
+#        split = self.setProp(self.frontWalk(*args,**kargs)).splitProp()
+#        if split:
+#            return split.values()
+#        else:
+#            return [ self ]
+
+    def splitByConnection(self,level=0,startat=0):
         """Split the Mesh into connected parts.
 
         Returns a list of Meshes that each form a connected part.
         """
-        split = self.setProp(self.frontWalk(*args,**kargs)).splitProp()
+        split = self.setProp(self.frontWalk(level=level,startat=startat,frontinc=0)).splitProp()
         if split:
             return split.values()
         else:
             return [ self ]
 
 
-    def largestByConnection(self):
+    def largestByConnection(self, level=0):
         """Return the largest connected part of the Mesh."""
-        p = self.partitionByConnection()
+        p = self.partitionByConnection(level=level)
         nparts = p.max()+1
         if nparts == 1:
             return self,nparts
