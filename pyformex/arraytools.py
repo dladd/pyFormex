@@ -1023,7 +1023,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
       >>> print uniq
       [1 2 3 4 5 6 7 8]
       >>> print ind
-      [ 7  0  1 10  3  4  5  6]
+      [7 0 1 2 3 4 5 6]
       >>> print inv
       [1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]
       >>> uniq,ind,inv = uniqueOrdered(a,True,True)
@@ -1196,6 +1196,40 @@ def inverseUniqueIndex(index):
     inv[ind] = arange(ind.size,dtype=inv.dtype)
     return inv
     
+
+def sortSubsets(a,w=None):
+    """Sort subsets of an integer array a.
+
+    a is a 1-D integer array. Subsets of the array are the collections
+    of equal values.
+    w is a float array with same size of a, specifying a weight for each
+    of the array elements in a.
+    If no weight is specified, all elements have the same weight.
+
+    The subsets of a are sorted in order of decreasing total weight of the
+    subsets (or number of elements if weight is None).
+
+    The return value is an integer array of the same size of a, specifying
+    for each element the index of its subset in the sorted list of subsets.
+
+    Example:
+
+      >>> sortSubsets([0,1,2,3,1,2,3,2,3,3])
+      array([3, 2, 1, 0, 2, 1, 0, 1, 0, 0])
+
+      >>> sortSubsets([0,1,2,3,1,2,3,2,3,3],w=[9,8,7,6,5,4,3,2,1,0])
+      array([3, 1, 0, 2, 1, 0, 2, 0, 2, 2])
+    """
+    a = asarray(a).ravel()
+    if w is None:
+        h = histogram(a,list(unique(a))+[a.max()+1])[0]
+    else:
+        w = asarray(w).ravel()
+        h = [w[a==j].sum() for j in unique(a)]
+    srt = argsort(h)[::-1]
+    inv = inverseUniqueIndex(srt)
+    return inv[a]
+            
 
 def sortByColumns(a):
     """Sort an array on all its columns, from left to right.

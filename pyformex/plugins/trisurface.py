@@ -1168,7 +1168,7 @@ Quality: %s .. %s
         return feature
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0,sort='number'):
+    def partitionByAngle(self,angle=60.,sort='number'):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1177,9 +1177,8 @@ Quality: %s .. %s
         edge between two elements having their normals differ more than
         angle (in degrees), will belong to the same part.
        
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
+        The partitioning is returned as an integer array specifying the part
+        number for eacht triangle.
 
         By default the parts are assigned property numbers in decreasing
         order of the number of triangles in the part. Setting the sort
@@ -1201,7 +1200,7 @@ Quality: %s .. %s
             inv = inverseUniqueIndex(srt)
             p = inv[p]
             
-        return firstprop + p
+        return p
         
 
     # This may replace CutWithPlane after it has been proved stable
