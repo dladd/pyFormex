@@ -747,6 +747,14 @@ def stack(al,axis=0):
     return concatenate([addAxis(ai,axis) for ai in al],axis=axis)
 
 
+def concat(al,axis=0):
+    """Smart array concatenation ignoring empty arrays"""
+    if len(al) > 0:
+        return concatenate([a for a in al if a.size > 0],axis=axis)
+    else:
+        return []
+    
+
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 

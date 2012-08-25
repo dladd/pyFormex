@@ -931,9 +931,32 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         numbers. Possibly empty (always if the dimensionality of the Mesh
         is lower than 2). 
         """
+        if self.ngrade() < 2:
+            return []
+                
         ML = self.splitByConnection(1,sort='')
         nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
-        return unique(concatenate(nm))
+        return unique(concat(nm))
+
+
+    def nonManifoldEdgeNodes(self):
+        """Return the non-manifold edges of a Mesh.
+
+        Non-manifold edges are edges where subparts of a mesh of grade 3
+        are connected by an edge but not by an face.
+
+        Returns: an integer array with a sorted list of non-manifold edge
+        numbers. Possibly empty (always if the dimensionality of the Mesh
+        is lower than 3). 
+        """
+        if self.ngrade() < 3:
+            return []
+                
+        ML = self.splitByConnection(2,sort='')
+        # We should insert edge level to get edge numbers
+        # Currenttly this returns node numbers
+        nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
+        return unique(concat(nm))
 
 
     # BV: REMOVED node2nodeAdjacency:
