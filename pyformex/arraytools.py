@@ -1597,6 +1597,25 @@ def vectorPairAngle(v1,v2):
     return arccos(vectorPairCosAngle(v1,v2))
 
 
+def multiplicity(a):
+    """Return the multiplicity of the numbers in a
+
+    a is a 1-D integer array.
+
+    Returns a tuple of:
+
+    - mult: the multiplicity of the unique values in a
+    - uniq: the sorted list of unique values in a
+
+    Example:
+
+      >>> multiplicity([0,3,5,1,4,1,0,7,1])
+    """
+    bins = unique(a)
+    mult,b = histogram(a,bins=concatenate([bins,[max(a)+1]]))
+    return mult,bins
+
+
 def histogram2(a,bins,range=None):
     """Compute the histogram of a set of data.
 

@@ -435,10 +435,15 @@ class GeomActor(Actor):
         # Store a reference to the drawn object
         self.object = data
         
-        if isinstance(data,GeomActor) or isinstance(data,Mesh):
+        if isinstance(data,GeomActor):
             self.coords = data.coords
             self.elems = data.elems
             self.eltype = data.eltype
+            
+        elif isinstance(data,Mesh):
+            self.coords = data.coords
+            self.elems = data.elems
+            self.eltype = data.elType()
             
         elif isinstance(data,Formex):
             self.coords = data.coords

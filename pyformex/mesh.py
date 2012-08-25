@@ -161,6 +161,16 @@ class Mesh(Geometry):
         self.setProp(prop)
 
 
+
+    def __getattribute__(self,name):
+        """This is temporarily here to warn people about the eltype removal"""
+        if name == 'eltype':
+            warn("depr_mesh_eltype")
+
+        # Default behaviour
+        return object.__getattribute__(self, name)
+
+
     def _set_coords(self,coords):
         """Replace the current coords with new ones.
 
@@ -168,7 +178,7 @@ class Mesh(Geometry):
         for the position of the coordinates.
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
-            return self.__class__(coords,self.elems,prop=self.prop,eltype=self.eltype)
+            return self.__class__(coords,self.elems,prop=self.prop,eltype=self.elType())
         else:
             raise ValueError,"Invalid reinitialization of %s coords" % self.__class__
 
@@ -304,7 +314,7 @@ class Mesh(Geometry):
     def copy(self):
         """Return a copy using the same data arrays"""
         # SHOULD THIS RETURN A DEEP COPY?
-        return self.__class__(self.coords,self.elems,prop=self.prop,eltype=self.eltype)
+        return self.__class__(self.coords,self.elems,prop=self.prop,eltype=self.elType())
 
 
     def toFormex(self):
@@ -314,7 +324,7 @@ class Mesh(Geometry):
         the Mesh. Node property numbers however can not be translated to
         the Formex data model.
         """
-        return Formex(self.coords[self.elems],self.prop,self.eltype.name())
+        return Formex(self.coords[self.elems],self.prop,self.elName())
 
 
     def toSurface(self):
@@ -333,7 +343,7 @@ class Mesh(Geometry):
     def ndim(self):
         return 3
     def ngrade(self):
-        return self.eltype.ndim
+        return self.elType().ndim
     def nelems(self):
         return self.elems.shape[0]
     def nplex(self):
@@ -354,7 +364,7 @@ class Mesh(Geometry):
         The edges are not fused!
         """
         try:
-            return self.nelems() * self.eltype.nedges()
+            return self.nelems() * self.elType().nedges()
         except:
             return 0
 
@@ -383,7 +393,7 @@ class Mesh(Geometry):
 Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
   BBox: %s, %s
   Size: %s
-""" % (self.ncoords(),self.nelems(),self.nplex(),self.eltype.ndim,self.eltype,bb[0],bb[1],bb[1]-bb[0])
+""" % (self.ncoords(),self.nelems(),self.nplex(),self.grade(),self.elName(),bb[0],bb[1],bb[1]-bb[0])
 
         if full:
             s += "Coords:\n" + self.coords.__str__() +  "\nElems:\n" + self.elems.__str__()
@@ -436,7 +446,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Get the entities of a lower dimensionality.
 
         """
-        return self.eltype.getEntities(level)
+        return self.elType().getEntities(level)
 
 
 
@@ -467,7 +477,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         If the eltype is not defined, or the requested entity level is
         outside the range 0..3, the return value is None.
         """
-        sel = self.eltype.getEntities(level)
+        sel = self.elType().getEntities(level)
         ent = self.elems.selectNodes(sel)
         ent.eltype = sel.eltype
         if unique:
@@ -545,7 +555,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         This returns a Connectivity table with the elements defined in
         function of the edges. It is equivalent to
-        ```self.elems.insertLevel(self.eltype.getEntities(1))```
+        ```self.elems.insertLevel(self.elType().getEntities(1))```
         but it also stores the definition of the edges and the returned
         element to edge connectivity.
         """
@@ -614,7 +624,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             enr = indices[:,0]
             M = Mesh(self.coords,brd,prop=self.prop[enr])
             # THIS SEEMS SUPERFLUOUS
-            M.setType(brd.eltype)
+            # M.setType(brd.eltype)
 
         if compact:
             M = M.compact()
@@ -672,6 +682,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return unique(ind[:,0])
 
 
+    def getBorderNodes(self):
+        """Return the nodes that are on the border of the Mesh.
+
+        This returns a list with the numbers of the nodes that are on the
+        border of the Mesh.
+        """
+        brd = self.getBorder()
+        return unique(brd)
+
+
     def peel(self):
         """Return a Mesh with the border elements removed.
 
@@ -703,7 +723,6 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
 #############################################################################
     # Adjacency #
-
 
     def adjacency(self,level=0,diflevel=-1):
         """Create an element adjacency table.
@@ -902,6 +921,21 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return (self.edgeAdjacency() >=0).sum(axis=-1)
 
 
+    def nonManifoldNodes(self):
+        """Return the non-manifold nodes of a Mesh.
+
+        Non-manifold nodes are nodes where subparts of a mesh of grade >= 2
+        are connected by a node but not by an edge.
+
+        Returns: an integer array with a sorted list of non-manifold node
+        numbers. Possibly empty (always if the dimensionality of the Mesh
+        is lower than 2). 
+        """
+        ML = self.splitByConnection(1,sort='')
+        nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
+        return unique(concatenate(nm))
+
+
     # BV: REMOVED node2nodeAdjacency:
     #
     # Either use
@@ -943,7 +977,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         that will be passed to :meth:`Coords:fuse`.
         """
         coords,index = self.coords.fuse(**kargs)
-        return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.eltype)
+        return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.elType())
 
 
     def matchCoords(self,mesh,**kargs):
@@ -984,7 +1018,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Returns the indices array of the elems of self that matches
         the faces of mesh
         """
-        sel = self.eltype.getEntities(2)
+        sel = self.elType().getEntities(2)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         fm=Mesh(self.coords,self.getFaces())
@@ -1012,7 +1046,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 elems = inverseUniqueIndex(nodes)[self.elems]
             else:
                 elems = self.elems
-            return self.__class__(coords,elems,prop=self.prop,eltype=self.eltype)
+            return self.__class__(coords,elems,prop=self.prop,eltype=self.elType())
         
         else:
             return self
@@ -1034,7 +1068,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         
         See `cselect` for the complementary operation.
         """
-        M = self.__class__(self.coords,self.elems[selected],eltype=self.eltype)
+        M = self.__class__(self.coords,self.elems[selected],eltype=self.elType())
         if self.prop is not None:
             M.setProp(self.prop[selected])
         if compact:
@@ -1143,14 +1177,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         If the Mesh has no properties, a copy with all elements is returned.
         """
         if self.prop is None:
-            return self.__class__(self.coords,self.elems,eltype=self.eltype)
+            return self.__class__(self.coords,self.elems,eltype=self.elType())
         elif array(val).size == 1:
-            return self.__class__(self.coords,self.elems[self.prop==val],prop=val,eltype=self.eltype)
+            return self.__class__(self.coords,self.elems[self.prop==val],prop=val,eltype=self.elType())
         else:
             t = zeros(self.prop.shape,dtype=bool)
             for v in asarray(val).flat:
                 t += (self.prop == v)
-            return self.__class__(self.coords,self.elems[t],prop=self.prop[t],eltype=self.eltype)
+            return self.__class__(self.coords,self.elems[t],prop=self.prop[t],eltype=self.elType())
         
     
     def withoutProp(self, val):
@@ -1239,11 +1273,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         utils.warn('warn_mesh_reverse')
 
-        if hasattr(self.eltype,'reversed'):
-            elems = self.elems[:,self.eltype.reversed]
+        if hasattr(self.elType(),'reversed'):
+            elems = self.elems[:,self.elType().reversed]
         else:
             elems = self.elems[:,::-1]
-        return self.__class__(self.coords,elems,prop=self.prop,eltype=self.eltype)
+        return self.__class__(self.coords,elems,prop=self.prop,eltype=self.elType())
 
             
     def reflect(self,dir=0,pos=0.0,reverse=True,**kargs):
@@ -1302,17 +1336,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         # totype is a string !
         #
         
-        if elementType(totype) == self.eltype:
+        if elementType(totype) == self.elType():
             return self
         
-        strategy = self.eltype.conversions.get(totype,None)
+        strategy = self.elType().conversions.get(totype,None)
 
         while not type(strategy) is list:
             # This allows for aliases in the conversion database
-            strategy = self.eltype.conversions.get(strategy,None)
+            strategy = self.elType().conversions.get(strategy,None)
             
             if strategy is None:
-                raise ValueError,"Don't know how to convert %s -> %s" % (self.eltype,totype)
+                raise ValueError,"Don't know how to convert %s -> %s" % (self.elName(),totype)
 
         # 'r' and 'v' steps can only be the first and only step
         steptype,stepdata = strategy[0]
@@ -1390,7 +1424,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         .. note:: This is currently only implemented for Meshes of type 'tri3'
           and 'quad4' and for the derived class 'TriSurface'.
         """
-        elname = self.eltype.name()
+        elname = self.elName()
         try:
             mesh_wts = globals()[elname+'_wts']
             mesh_els = globals()[elname+'_els']
@@ -1402,7 +1436,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         X = self.coords[self.elems]
         U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
         e = concatenate([els+i*wts.shape[0] for i in range(self.nelems())])
-        M = self.__class__(U,e,eltype=self.eltype)
+        M = self.__class__(U,e,eltype=self.elType())
         if kargs.get('fuse',True):
             M = M.fuse()
         return M
@@ -1431,7 +1465,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             return [self]
         
         try:
-            strategies = self.eltype.degenerate
+            strategies = self.elType().degenerate
         except:
             return [self]
         
@@ -1556,7 +1590,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             p = adj.frontWalk()
             order = p.argsort()
         newnrs = inverseUniqueIndex(order)
-        return self.__class__(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
+        return self.__class__(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.elType())
 
 
     def reorder(self,order='nodes'):
@@ -1578,7 +1612,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         See also: :meth:`Connectivity.reorder`
         """
         order = self.elems.reorder(order)
-        return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)
+        return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.elType())
 
 
     # for compatibility:
@@ -1826,7 +1860,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         for i in range(iterations):
             c[incl] = (1.-lamb)*c[incl] + lamb*(w[incl]*c[adj][incl]).sum(1)
             c[incl] = (1.-mu)*c[incl] + mu*(w[incl]*c[adj][incl]).sum(1)
-        return self.__class__(c, self.elems, prop=self.prop, eltype=self.eltype)
+        return self.__class__(c, self.elems, prop=self.prop, eltype=self.elType())
 
 
     def __add__(self,other):
@@ -2075,7 +2109,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     ##     v=normalize(v)
     ##     v1=-roll(v,+1,axis=1)
     ##     angfac= arccos( clip(dotpr(v, v1), -1., 1. ))/angle_spec
-    ##     el = self.eltype
+    ##     el = self.elType()
     ##     return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
@@ -2093,7 +2127,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     ##     eangsh= eang.shape
     ##     eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
     ##     eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)        
-    ##     f= self.eltype.faces[1]
+    ##     f= self.elType().faces[1]
     ##     nedginface=len( array(f[ f.keys()[0] ], int)[0] )
     ##     qe=180.*(nedginface-2.)/nedginface
     ##     extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]

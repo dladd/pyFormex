@@ -140,7 +140,7 @@ class Connectivity(ndarray):
         ar = ar.view(self)
 
         ## # Other data 
-        ar.eltype = eltype
+        ar.eltype = eltype  # ! this may be a string!!!!!!!!!!!
         ar.inv = None   # inverse index
 
         return ar
@@ -780,6 +780,8 @@ class Connectivity(ndarray):
                  [3, 2]]))
            
         """
+        from elements import elementType
+        
         if type(selector) == int:
             if hasattr(self,'eltype'):
                 sel = self.eltype.getEntities(selector)
@@ -795,7 +797,7 @@ class Connectivity(ndarray):
         else:
             hi = lo = Connectivity()
         if hasattr(sel,'eltype'):
-            lo.eltype = sel.eltype
+            lo.eltype = elementType(sel.eltype)
         return hi,lo
     
 
@@ -923,6 +925,21 @@ class Connectivity(ndarray):
                 return elems
 
         return self
+
+
+    def sharedNodes(self,elist):
+        """Return the list of nodes shared by all elements in elist
+
+        Parameters:
+
+        - `elist`: an integer list-like with element numbers.
+
+        Returns a 1-D integer array with the list of nodes that are
+        common to all elements in the specified list. This array may be
+        empty.
+        """
+        m,u = multiplicity(self[elist].ravel())
+        return u[m==len(elist)]
 
 
 #######################################################################

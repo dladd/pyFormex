@@ -1225,8 +1225,8 @@ You should seriously consider to bail out now!!!
         splashimage = QtGui.QPixmap(pf.cfg['gui/splash'])
         splash = QtGui.QSplashScreen(splashimage)
         splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.SplashScreen)
-        splash.setFont(QtGui.QFont("Helvetica",24))
-        splash.showMessage(pf.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
+        splash.setFont(QtGui.QFont("Helvetica",20))
+        splash.showMessage(pf.Version,QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop,QtCore.Qt.red)
         splash.show()
 
     # create GUI, show it, run it

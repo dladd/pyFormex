@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""A class for storig and handling adjacency tables.
+"""A class for storing and handling adjacency tables.
 
 This module defines a specialized array class for representing adjacency
 of items of a single type. This is e.g. used in mesh models, to store
@@ -31,7 +31,6 @@ the adjacent elements.
 """
 
 from arraytools import *
-
 
 ############### Utility functions ##############
 
@@ -239,7 +238,7 @@ class Adjacency(ndarray):
         ar = ar.view(clas)
 
         if normalize:
-            ar = ar.normalize().view(clas)
+            ar = reduceAdjacency(ar).view(clas)
 
         return ar
 
@@ -258,13 +257,65 @@ class Adjacency(ndarray):
         """
         return self.shape[1]
 
+
     ### normalize ###
 
-    sort = sortAdjacency
-    normalize = reduceAdjacency
+
+    def normalize(self):
+        """Normalize an adjacency table.
+
+        A normalized adjacency table is one where each row:
+
+        - does not contain the row index itself,
+        - does not contain duplicates,
+        - is sorted in ascending order,
+
+        and that has at least one row without -1 value.
+
+        By default, an Adjacency is normalized when it is constructed.
+        Performing operations on an Adjacency may however leave it in
+        a non-normalized state. Calling this method will normalize it again.
+        This can obviously also be obtained by creating a new Adjacency
+        with self as data.
+
+        Returns: an integer array with shape (adj.shape[0],maxc), with
+        ``maxc <= adj.shape[1]``, where row `i` retains the unique non-negative
+        numbers of the original array except the value `i`, and is possibly
+        padded with -1 values.
+
+        Example:
+
+          >>> a = Adjacency([[ 0,  0,  0,  1,  2,  5],
+          ...                [-1,  0,  1, -1,  1,  3],
+          ...                [-1, -1,  0, -1, -1,  2],
+          ...                [-1, -1,  1, -1, -1,  3],
+          ...                [-1, -1, -1, -1, -1, -1],
+          ...                [-1, -1,  0, -1, -1,  5]])
+          >>> a.normalize()
+          Adjacency([[ 1,  2,  5],
+                 [-1,  0,  3],
+                 [-1, -1,  0],
+                 [-1, -1,  1],
+                 [-1, -1, -1],
+                 [-1, -1,  0]])
+        """
+        return Adjacency(self)
+    
 
     ### operations ###
-    
+
+    def pairs(self):
+        """Return all pairs of adjacent element.
+
+        Returns an integer array with two columns, where each row contains
+        a pair of adjacent elements. The element number in the first columne
+        is always the smaller of the two element numbers.
+        """
+        p = [ [[i,j] for j in k if j >= 0] for i,k in enumerate(self[:-1]) if max(k) >= 0]
+        p = row_stack(p)
+        return p[p[:,1] > p[:,0]]
+  
+  
     def diff(self,adj):
         """Return the difference between two adjacency tables.
 
@@ -272,24 +323,17 @@ class Adjacency(ndarray):
         The return value is an adjacency table of the same length, where each
         row contains the numbers in self but not in adj
         """
-        adj = sortAdjacency(concatenate([self,adj],axis=-1))
+        adj = concatenate([self,adj],axis=-1)
+        adj = sortAdjacency(adj)
         dup = adj[:,:-1] == adj[:,1:] # duplicate items
         adj[dup] = -1
         adj = roll(adj,-1,axis=-1)
         adj[dup] = -1
         adj = roll(adj,1,axis=-1)
-        return reduceAdjacency(adj)
+        return Adjacency(adj)
+
 
     ### frontal methods ###
-
-    # BV: Conceptually, this is a function of an adjacency table
-    #     But we currently do not have adjacency tables as a separate
-    #     class. We construct them ad hoc from Connectivity tables.
-    #  Should we create an Adjacency class ?? Our Conectivity is
-    #  more efficient in storage, because we have a constant plexitude.
-    #  Implementing an Adjacency class could have the benefit of many
-    # available graph algorithms (is there something in numpy?)
-
 
     def frontFactory(self,startat=0,frontinc=1,partinc=1):
         """Generator function returning the frontal elements.
