@@ -200,7 +200,10 @@ class Geometry(object):
         return self.coords.inertia(*args,**kargs)
 
     def info(self):
-        return "coords" + str(self.coords.shape)
+        return "Geometry: coords shape = %s; level = %s" % (self.coords.shape,self.level())
+    def level(self):
+        """Return the dimensionality of the Geometry, or -1 if unknown"""
+        return -1
 
     def distanceFromPlane(self,*args,**kargs):
         return self.coords.distanceFromPlane(*args,**kargs)

@@ -1028,6 +1028,36 @@ class Formex(Geometry):
         """
         return self.coords.shape
 
+    
+    def level(self):
+        """Return the level (dimensionality) of the Formex.
+
+        The level or dimensionality of a geometrical object is the minimum
+        number of parametric directions required to describe the object.
+        Thus we have the following values:
+
+        0: points
+        1: lines
+        2: surfaces
+        3: volumes
+
+        Because the geometrical meaning of a Formex is not always defined,
+        the level may be unknown. In that case, -1 is returned.
+
+        If the Formex has an 'eltype' set, the value is determined from
+        the Element database. Else, the value is equal to the plexitude minus
+        one for plexitudes up to 3, an equal to 2 for any higher plexitude
+        (since the default is to interprete a higher plexitude as a polygon).
+        """
+        from elements import elementType
+        if self.eltype is not None:
+            return elementType(self.eltype).ndim
+        else:
+            if self.nplex() > 2:
+                return 2
+            else:
+                return self.nplex()-1
+
 
     # Coordinates
     def view(self):

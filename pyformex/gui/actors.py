@@ -527,7 +527,6 @@ class GeomActor(Actor):
 
 
     def draw(self,**kargs):
-        
         mode = self.mode
         if mode is None:
             if 'mode' in kargs:
@@ -536,7 +535,7 @@ class GeomActor(Actor):
                 canvas = kargs.get('canvas',pf.canvas)
                 mode = canvas.rendermode
 
-        if mode.endswith('wire'):
+        if mode.endswith('wire') and self.object.level() > 1:
             if not hasattr(self,'wire'):
                 import copy
                 wire = copy.copy(self)

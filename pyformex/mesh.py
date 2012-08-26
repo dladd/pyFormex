@@ -342,7 +342,7 @@ class Mesh(Geometry):
             
     def ndim(self):
         return 3
-    def ngrade(self):
+    def level(self):
         return self.elType().ndim
     def nelems(self):
         return self.elems.shape[0]
@@ -393,7 +393,7 @@ class Mesh(Geometry):
 Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
   BBox: %s, %s
   Size: %s
-""" % (self.ncoords(),self.nelems(),self.nplex(),self.grade(),self.elName(),bb[0],bb[1],bb[1]-bb[0])
+""" % (self.ncoords(),self.nelems(),self.nplex(),self.level(),self.elName(),bb[0],bb[1],bb[1]-bb[0])
 
         if full:
             s += "Coords:\n" + self.coords.__str__() +  "\nElems:\n" + self.elems.__str__()
@@ -924,14 +924,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     def nonManifoldNodes(self):
         """Return the non-manifold nodes of a Mesh.
 
-        Non-manifold nodes are nodes where subparts of a mesh of grade >= 2
+        Non-manifold nodes are nodes where subparts of a mesh of level >= 2
         are connected by a node but not by an edge.
 
         Returns: an integer array with a sorted list of non-manifold node
         numbers. Possibly empty (always if the dimensionality of the Mesh
         is lower than 2). 
         """
-        if self.ngrade() < 2:
+        if self.level() < 2:
             return []
                 
         ML = self.splitByConnection(1,sort='')
@@ -942,7 +942,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     def nonManifoldEdges(self):
         """Return the non-manifold edges of a Mesh.
 
-        Non-manifold edges are edges where subparts of a mesh of grade 3
+        Non-manifold edges are edges where subparts of a mesh of level 3
         are connected by an edge but not by an face.
 
         Returns: an integer array with a sorted list of non-manifold edge
@@ -955,7 +955,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
           self.edges[self.nonManifoldEdges()]
         """
-        if self.ngrade() < 3:
+        if self.level() < 3:
             return []
 
         elems = self.getElemEdges() 
@@ -968,7 +968,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     def nonManifoldEdgeNodes(self):
         """Return the non-manifold edge nodes of a Mesh.
 
-        Non-manifold edges are edges where subparts of a mesh of grade 3
+        Non-manifold edges are edges where subparts of a mesh of level 3
         are connected by an edge but not by an face.
 
         Returns: an integer array with a sorted list of numbers of nodes
@@ -976,7 +976,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Possibly empty (always if the dimensionality of the Mesh
         is lower than 3). 
         """
-        if self.ngrade() < 3:
+        if self.level() < 3:
             return []
                 
         ML = self.splitByConnection(2,sort='')
