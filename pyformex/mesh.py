@@ -939,7 +939,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return unique(concat(nm))
 
 
-    def nonManifoldEdgeNodes(self):
+    def nonManifoldEdges(self):
         """Return the non-manifold edges of a Mesh.
 
         Non-manifold edges are edges where subparts of a mesh of grade 3
@@ -947,14 +947,39 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Returns: an integer array with a sorted list of non-manifold edge
         numbers. Possibly empty (always if the dimensionality of the Mesh
+        is lower than 3).
+
+        As a side effect, this constructs the list of edges in the object.
+        The definition of the nonManifold edges in tgerms of the nodes can
+        thus be got from ::
+
+          self.edges[self.nonManifoldEdges()]
+        """
+        if self.ngrade() < 3:
+            return []
+
+        elems = self.getElemEdges() 
+        p = self.partitionByConnection(2,sort='')
+        eL = [ elems[p==i] for i in unique(p) ] 
+        nm = [ intersect1d(ei,ej) for ei,ej in combinations(eL,2) ]
+        return unique(concat(nm))
+
+
+    def nonManifoldEdgeNodes(self):
+        """Return the non-manifold edge nodes of a Mesh.
+
+        Non-manifold edges are edges where subparts of a mesh of grade 3
+        are connected by an edge but not by an face.
+
+        Returns: an integer array with a sorted list of numbers of nodes
+        on the non-manifold edges.
+        Possibly empty (always if the dimensionality of the Mesh
         is lower than 3). 
         """
         if self.ngrade() < 3:
             return []
                 
         ML = self.splitByConnection(2,sort='')
-        # We should insert edge level to get edge numbers
-        # Currenttly this returns node numbers
         nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
         return unique(concat(nm))
 
@@ -1265,7 +1290,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
 
     def splitRandom(self,n,compact=True):
-        """Split a mesh in n parts, distributing the elements randomly.
+        """Split a Mesh in n parts, distributing the elements randomly.
 
         Returns a list of n Mesh objects, constituting together the same
         Mesh as the original. The elements are randomly distributed over

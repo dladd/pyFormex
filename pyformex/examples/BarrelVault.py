@@ -26,10 +26,6 @@
 
 Create a parametric barrel vault.
 
-level = 'beginner'
-topics = ['frame']
-techniques = ['dialog']
-
 Description
 ===========
 This is a pyFormex application. It is equivalent to the Barrelvault example
