@@ -1985,6 +1985,13 @@ class BoundVectors(Coords):
         return Coords(self.heads()-self.origins())
 
 
+    def actor(self,**kargs):
+        """_This allows a BoundVectors object to be drawn directly."""
+        from gui.actors import GeomActor
+        from formex import Formex,connect
+        return GeomActor(connect([self.origins(),self.heads()]),**kargs)
+
+
 
 class CoordinateSystem(Coords):
     """A CoordinateSystem defines a coordinate system in 3D space.
