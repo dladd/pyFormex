@@ -388,7 +388,7 @@ class Coords(ndarray):
 
         Example:
 
-          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]], \
                   [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
           >>> print X.average()
           [[ 2.  0.  0.]
@@ -479,7 +479,7 @@ class Coords(ndarray):
         Parameters:
 
         - `mass`: float array with ncoords weight values. The default is to
-          attribute a weight 1. to each point.
+          attribute a weight 1 to each point.
 
         Returns a tuple of:
 
@@ -1605,10 +1605,12 @@ class Coords(ndarray):
         - `order`: permutation of [0,1,2], specifying the order in which
           the subsequent axes are used to sort the points.
 
-        Returns: int array which is a permutation of range(self.npoints()).
-          If taken in the specified order, it is guaranteed that no point can
-          have a coordinate that is larger that the corresponding coordinate
-          of the next point.
+        Returns: 
+
+        An int array which is a permutation of range(self.npoints()).
+        If taken in the specified order, it is guaranteed that no point can
+        have a coordinate that is larger that the corresponding coordinate
+        of the next point.
         """
         n = self.shape[0]
         nmax = iinfo('int64').max # max integer, a bit above 2 million
@@ -2099,8 +2101,10 @@ def pattern(s,aslist=False):
     - `aslist`: bool: if True, the points are returned as lists of
       integer coordinates instead of a :class:`Coords` object.
 
-    Returns a :class:`Coords` with the generated points (default) or a list
-      of tuples with 3 integer coordinates (if `aslist` is True).
+    Returns:
+    
+    A :class:`Coords` with the generated points (default) or a list
+    of tuples with 3 integer coordinates (if `aslist` is True).
 
     Example:
 

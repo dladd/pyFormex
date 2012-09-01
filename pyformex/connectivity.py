@@ -235,8 +235,10 @@ class Connectivity(ndarray):
         A degenerate element is a row which contains at least two
         equal values. 
 
-        Returns: a boolean array with shape (self.nelems(),).
-          The True values flag the degenerate rows.
+        Returns: 
+
+        A boolean array with shape (self.nelems(),).
+        The True values flag the degenerate rows.
 
         Example:
         
@@ -277,7 +279,10 @@ class Connectivity(ndarray):
         """Remove the degenerate elements from a Connectivity table.
 
         Degenerate elements are rows with repeating values.
-        Returns a Connectivity with the degenerate elements removed.
+        
+        Returns: 
+
+        A Connectivity with the degenerate elements removed.
 
         Example:
         
@@ -444,7 +449,9 @@ class Connectivity(ndarray):
         will only remove the duplicate rows that have matching values at
         matching positions.
 
-        Returns a new Connectivity with the duplicate elements removed.
+        Returns:
+
+        A new Connectivity with the duplicate elements removed.
 
         Example:
         
@@ -482,7 +489,8 @@ class Connectivity(ndarray):
           - 'random': the elements are randomly renumbered.
           - 'reverse': the elements are renumbered in reverse order.
 
-        Returns:
+       	Returns:
+
           A 1-D integer array which is a permutation of
           `arange(self.nelems()`, such that taking the elements in this order
           will produce a Connectivity reordered as requested. In case an
@@ -547,7 +555,9 @@ class Connectivity(ndarray):
     def nParents(self):
         """Return the number of elements connected to each node.
 
-        Returns a 1-D int array with the number of elements connected
+        Returns:
+
+        A 1-D int array with the number of elements connected
         to each node. The length of the array is equal to the highest
         node number + 1. Unused node numbers will have a count of zero.
            
@@ -565,7 +575,9 @@ class Connectivity(ndarray):
 
         `nodes`: a single node number or a list/array thereof
 
-        Returns: an int array with the numbers of the elements that
+        Returns: 
+
+        An int array with the numbers of the elements that
         contain at least one of the specified nodes.
            
         Example:
@@ -582,7 +594,9 @@ class Connectivity(ndarray):
 
         `nodes`: a single node number or a list/array thereof
 
-        Returns: an int array with the numbers of the elements that
+        Returns: 
+        
+        An int array with the numbers of the elements that
         do not contain any of the specified nodes.
            
         Example:
@@ -597,7 +611,9 @@ class Connectivity(ndarray):
     def adjacency(self,kind='e',mask=None):
         """Return a table of adjacent items.
 
-        Returns an element adjacency table (kind='e') or node adjacency
+        Returns:
+     
+        An element adjacency table (kind='e') or node adjacency
         table (kind='n').
 
         An element `i` is said to be adjacent to element `j`, if the two
@@ -618,7 +634,9 @@ class Connectivity(ndarray):
 
             self[mask].adjacency('n')
         
-        Returns: an Adjacency array with shape (nr,nc),
+        Returns: 
+
+        An Adjacency array with shape (nr,nc),
         where row `i` holds a sorted list of all the items that are
         adjacent to item `i`, padded with -1 values to create an equal
         list length for all items.
@@ -683,7 +701,9 @@ class Connectivity(ndarray):
           Each row of `selector` holds a list of the local node numbers that
           should be retained in the new Connectivity table.
 
-        Returns a :class:`Connectivity` object with shape
+        Returns:
+
+        A :class:`Connectivity` object with shape
         `(self.nelems*selector.nelems,selector.nplex)`. This function
         does not collapse the duplicate elements. The eltype of the result
         is equal to that of the selector, possibly None.
@@ -744,7 +764,9 @@ class Connectivity(ndarray):
           This is equivalent to using :meth:`selectNodes`, which
           is prefered when you do not need the higher level info. 
         
-        Return value: a tuple of two Connectivities `hi`,`lo`, where:
+        Returns: 
+
+        A tuple of two Connectivities `hi`,`lo`, where:
     
         - `hi`: defines the original elements in function of the intermediate
           level ones,
@@ -852,7 +874,9 @@ class Connectivity(ndarray):
         There is no point in resolving a plexitude 2 structure.
         Plexitudes lower than 2 can not be resolved.
 
-        Returns a plex-2 Connectivity with all connections between node
+        Returns: 
+
+        A plex-2 Connectivity with all connections between node
         pairs. In each element the nodes are sorted.
 
         Example:
@@ -1049,7 +1073,7 @@ class Connectivity(ndarray):
         - return_magic: if True, return a codes,magic tuple. The default is
           to return only the codes.
           
-        Return value(s):
+        Returns:
     
         - codes: an (nelems,) shaped array with the element code numbers,
         - magic: the information needed to restore the original rows from
@@ -1122,7 +1146,9 @@ class Connectivity(ndarray):
         - magic: the magic information as returned by Connectivity.encode,
           with argument return_magic=True.
 
-        Returns a Connectivity table.
+        Returns: 
+
+        A Connectivity table.
 
         Example:
         
@@ -1177,7 +1203,9 @@ def findConnectedLineElems(elems):
     - `elems`: Connectivity-like. Any plexitude is allowed, but only the
       first and the last column are relevant. 
 
-    Returns: a tuple of:
+    Returns: 
+
+    A tuple of:
 
     - `con`: a Connectivity with the same shape as the input Connectivity
       `elems`, holding a single chain extracted from the input and filled

@@ -337,13 +337,14 @@ def norm(v,n=2):
 def horner(a,u):
     """Compute the value of a polynom using Horner's rule.
 
-    Params:
+    Parameters:
 
     - `a`: float(n+1,nd), `nd`-dimensional coefficients of the polynom of
       degree `n`, starting from lowest degree.
     - `u`: float(nu), parametric values where the polynom is evaluated
 
     Returns:
+
     float(nu,nd), nd-dimensional values of the polynom.
 
     >>> print horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0])
@@ -367,7 +368,9 @@ def solveMany(A,b,direct=True):
     - `A`: (ndof,ndof,nsys) shaped float array.
     - `b`: (ndof,nrhs,nsys) shaped float array.
 
-    Returns: a float array `x` with same shape as `b`, where ``x[:,i,j]``
+    Returns: 
+
+    A float array `x` with same shape as `b`, where ``x[:,i,j]``
     solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
 
     For ndof in [1,2,3], all solutions are by default computed directly and
@@ -1816,14 +1819,16 @@ def unitDivisor(div,start=0):
 def uniformParamValues(n,umin=0.0,umax=1.0):
     """Create a set of uniformly distributed parameter values in a range.
 
-    Parameters:
+    Parameters: 
 
-    `n`: int: number of intervals in which the range should be divided.
+    - `n`: int: number of intervals in which the range should be divided.
       The number of values returned is ``n+1``.
-    `umin`,`umax`: float: start and end value of the interval. Default
+    - `umin`,`umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
-    Returns: a float array with n+1 equidistant values in the range umin..umax.
+    Returns: 
+
+      A float array with n+1 equidistant values in the range umin..umax.
       For n > 0, both of the endpoints are included. For n=0, a single
       value at the center of the interval will be returned. For n<0, an
       empty array is returned.

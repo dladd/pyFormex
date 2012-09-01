@@ -96,7 +96,7 @@ So let's create a property record in our database. The Prop() method does just
 that. It also returns the property record, so you can directly use it further in
 your code.  ::
 
-   >>> Stick = P.Prop(color='green',name='Stick',weight=25, \
+   >>> Stick = P.Prop(color='green',name='Stick',weight=25,\
            comment='This could be anything: a gum, a frog, a usb-stick,...'})
    >>> print Stick
 
@@ -109,7 +109,7 @@ your code.  ::
 Notice the auto-generated `nr` field. Here's another example, with a tag::
 
    >>> author = P.Prop(tag='author',name='Alfred E Neuman',\
-           address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+           address=CascadingDict({'street':'Krijgslaan',  'city':'Gent','country':'Belgium'}))
    >>> print author
 
      nr = 1
@@ -307,7 +307,7 @@ bound
    in 2 ways:
 
 * as a list of 6 items [ u_0, u_1, u_2, r_0, r_1, r_2 ]. These items have 2
-     possible values:
+  possible values:
 
      0
         The degree of freedom is not restrained.
@@ -316,7 +316,7 @@ bound
         The degree of freedom is restrained.
 
 * as a string. This string is a standard boundary type. Abaqus will recognize
-     the following strings:
+  the following strings:
 
 * PINNED
 

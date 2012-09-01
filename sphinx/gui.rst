@@ -103,7 +103,7 @@ decorations around it, but these are very much OS and window manager
 dependent and are therefore not shown in the figure.
 
 Finally, you can also start the GUI with the instruction
- ``startGUI()`` from a pyFormex script executed in non-GUI mode.
+``startGUI()`` from a pyFormex script executed in non-GUI mode.
 
 .. _`fig:gui`:
 
@@ -119,8 +119,8 @@ Basic use of the GUI
 
 As is still in its infancy, the GUI is subject to frequent changes and it would
 make no sense to cover here every single aspect of it. Rather we will describe
-the most important functions, so that users can quickly get used to working with
-. Also we will present some of the more obscure features that users may not
+the most important functions, so that users can quickly get used to working with.
+Also we will present some of the more obscure features that users may not
 expect but yet might be very useful.
 
 The window (figure :ref:`fig:gui`) comprises 5 parts. From top to bottom these
@@ -249,14 +249,14 @@ rotate
    is a fairly complex operation:
 
 * Moving the mouse radially with respect to the center of the screen rotates
-     around an axis lying in the screen and perpendicular to the direction of the
-     movement.
+  around an axis lying in the screen and perpendicular to the direction of the
+  movement.
 
 * Moving tangentially rotates around an axis perpendicular to the screen (the
-     screen z-axis), but only if the mouse was not too close to the center of the
-     screen when the button was pressed.
+  screen z-axis), but only if the mouse was not too close to the center of the
+  screen when the button was pressed.
 
-   Try it out on some examples to get a feeling of the workinhg of mouse rotation.
+  Try it out on some examples to get a feeling of the workinhg of mouse rotation.
 
 pan
    Pressing the middle (or simultanuous left+right) mouse button and holding it
@@ -273,9 +273,9 @@ zoom
 
 * vertical movement zooms by changing camera distance.
 
-   The first mode keeps the perspective, the second changes it. Moving right and
-   upzooms in, left and down zooms out. Moving diagonally from upper left to lower
-   right more or less keeps the image size, while changing the perspective.
+  The first mode keeps the perspective, the second changes it. Moving right and
+  upzooms in, left and down zooms out. Moving diagonally from upper left to lower
+  right more or less keeps the image size, while changing the perspective.
 
 
 Interactive selection

@@ -55,7 +55,7 @@ his default preferences, the current configuration system of (still under
 development) does not allow such distinction yet. Still, since the topic is so
 important to the user and the configuration system in is already quite complex,
 we tought it was necessary to provide already some information on how to
-configure . Be aware though that important changes to this system will likely
+configure. Be aware though that important changes to this system will likely
 occur.
 
 
@@ -172,8 +172,7 @@ General section
 * ``browser = 'firefox'``: sets the name of the browser to be used to access the
   website.
 
-* ``uselib = False``: do not use the acceleration library. The default (True) is to
-  use it when it is available.
+* ``uselib = False``: do not use the acceleration library. The default (True) is to use it when it is available.
 
 
 Section ``[gui]``
