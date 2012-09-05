@@ -466,11 +466,14 @@ class Triade(Drawable):
     """An OpenGL actor representing a triade of global axes.
     
     - `pos`: position on the canvas: two characters, of which first sets
-       horizontal position ('l', 'c' or 'r') and second sets vertical
-       position ('b', 'c' or 't').
+      horizontal position ('l', 'c' or 'r') and second sets vertical
+      position ('b', 'c' or 't').
+
     - `size`: size in pixels of the zone displaying the triade.
+
     - `pat`: shape to be drawn in the coordinate planes. Default is a square.
       '16' givec a triangle. '' disables the planes.
+
     - `legend`: text symbols to plot at the end of the axes. A 3-character
       string or a tuple of 3 strings.
       

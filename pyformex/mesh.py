@@ -554,10 +554,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Defines the elements in function of its edges.
 
         This returns a Connectivity table with the elements defined in
-        function of the edges. It is equivalent to
-        ```self.elems.insertLevel(self.elType().getEntities(1))```
-        but it also stores the definition of the edges and the returned
-        element to edge connectivity.
+        function of the edges. It is equivalent to ```self.elems.inser
+        tLevel(self.elType().getEntities(1))```but it also stores the 
+        definition of the edges and the returned element to edge connectivity.
         """
         if self.elem_edges is None:
             self.elem_edges,self.edges = self.elems.insertLevel(1)
@@ -1456,9 +1455,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           along the edges of the elements. Accepted type and value depend
           on the element type of the Mesh. Currently implemented:
 
-          tri3: ndiv is a single int value specifying the number of
+        - 'tri3': ndiv is a single int value specifying the number of
             divisions (of equal size) for each edge.
-          quad4: ndiv is a sequence of two int values nx,ny, specifying
+
+        - 'quad4': ndiv is a sequence of two int values nx,ny, specifying
             the number of divisions along the first, resp. second
             parametric direction of the element
 
@@ -1466,7 +1466,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           fused. If False, the Mesh is only fused over each individual
           element of the original Mesh.
 
-        Returns: a Mesh where each element is replaced by a number of
+        Returns: 
+
+          A Mesh where each element is replaced by a number of
           smaller elements of the same type.
 
         .. note:: This is currently only implemented for Meshes of type 'tri3'
@@ -1655,7 +1657,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           - 'reverse': number the elements in reverse order. 
 
         Returns:
-          A Mesh equivalent with self but with the elements ordered as specified.
+
+        A Mesh equivalent with self but with the elements ordered as specified.
 
         See also: :meth:`Connectivity.reorder`
         """
@@ -1856,15 +1859,15 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         but will result in less smoothing per iteration.
         
         - `exclnod`: It contains a list of node indices to exclude from the smoothing.
-           If exclnod is 'border', all nodes on the border of the mesh will
-           be unchanged, and the smoothing will only act inside.
-           If exclnod is 'inner', only the nodes on the border of the mesh will
-           take part to the smoothing.
+          If exclnod is 'border', all nodes on the border of the mesh will
+          be unchanged, and the smoothing will only act inside.
+          If exclnod is 'inner', only the nodes on the border of the mesh will
+          take part to the smoothing.
         
         - `exclelem`: It contains a list of elements to exclude from the smoothing.
-           The nodes of these elements will not take part to the smoothing.
-           If exclnod and exclelem are used at the same time the union of them
-           will be exluded from smoothing.
+          The nodes of these elements will not take part to the smoothing.
+          If exclnod and exclelem are used at the same time the union of them
+          will be exluded from smoothing.
         """
         if iterations < 1: 
             return self

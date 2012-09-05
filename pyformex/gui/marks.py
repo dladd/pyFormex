@@ -37,7 +37,9 @@ class Mark(Drawable):
     """A 2D drawing inserted at a 3D position of the scene.
 
     The minimum attributes and methods are:
+
       pos    : 3D point where the mark will be drawn
+
       draw() : function to draw the mark
     """
     

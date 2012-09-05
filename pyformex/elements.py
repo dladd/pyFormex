@@ -84,6 +84,7 @@ class ElementType(object):
     The elements guarantee a fixed local numbering scheme of the vertices.
     One should however not rely on a specific numbering scheme of edges, faces
     or elements.
+
     For solid elements, it is guaranteed that the vertices of all faces are
     numbered in a consecutive order spinning positively around the outward
     normal on the face.
@@ -107,19 +108,19 @@ class ElementType(object):
 
     Conversion actions:
 
-    'm': add new nodes to the element by taking the mean values of existing
-         nodes. data is a list of tuples containing the nodes numbers whose
-         coorrdinates have to be averaged.
-    's': select nodes from the existing ones. data is a list of the node numbers
-         to retain in the new element. This can be used to reduce the plexitude
-         but also just to reorder the existing nodes.
-    'v': perform a conversion via an intermediate type. data is the name of the
-         intermediate element type. The current element will first be converted
-         to the intermediate type, and then conversion from that type to the
-         target will be attempted. 
-    'r': randomly choose one of the possible conversions. data is a list of
-         element names. This can e.g. be used to select randomly between
-         different but equivalent conversion paths.
+    - 'm': add new nodes to the element by taking the mean values of existing
+      nodes. data is a list of tuples containing the nodes numbers whose
+      coorrdinates have to be averaged.
+    - 's': select nodes from the existing ones. data is a list of the node
+      numbers to retain in the new element. This can be used to reduce the
+      plexitude but also just to reorder the existing nodes.
+    - 'v': perform a conversion via an intermediate type. data is the name of
+      the intermediate element type. The current element will first be converted
+      to the intermediate type, and then conversion from that type to the
+      target will be attempted. 
+    - 'r': randomly choose one of the possible conversions. data is a list of
+      element names. This can e.g. be used to select randomly between
+      different but equivalent conversion paths.
 
     """
     
@@ -958,10 +959,14 @@ def elementType(name=None,nplex=-1):
     - `nplex`: plexitude of the element. If specified and no element name
       was given, the default element type for this plexitude is returned.
 
-    Returns: a subclass of :class:`ElementType`
+    Returns: 
 
-    Errors: if neither `name` nor `nplex` can resolve into an element type,
-      an error is raised.
+    A subclass of :class:`ElementType`
+
+    Errors: 
+
+    If neither `name` nor `nplex` can resolve into an element type,
+    an error is raised.
 
     Example:
     

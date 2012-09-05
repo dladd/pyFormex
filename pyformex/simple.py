@@ -251,7 +251,9 @@ def sphere(ndiv=6):
     then projected on a sphere with unit radius. The higher `ndiv` is taken,
     the better the approximation. `ndiv=1` results in an icosahedron.
 
-    Returns: a Mesh with eltype 'tri3', representing a triangulated
+    Returns: 
+
+      A Mesh with eltype 'tri3', representing a triangulated
       approximation of a spherical surface with radius 1 and center
       at the origin.
     """

@@ -287,7 +287,7 @@ class Curve(Geometry):
           per part of the curve used in the pre-approximation. This is
           pre-approximation is currently required to compute curve lengths.
 
-        Note:: This is an alternative for Curve.approx, and may replace it
+        .. Note:: This is an alternative for Curve.approx, and may replace it
         completely in future.
         """
         if equidistant:
@@ -382,7 +382,7 @@ class PolyLine(Curve):
         Else it is closed by adding a segment from the last to the first
         point (even if these are coincident).
 
-        ..warning :: This method changes the PolyLine inplace.
+        .. warning:: This method changes the PolyLine inplace.
         """
         if not self.closed:
             self.closed = True
@@ -395,7 +395,7 @@ class PolyLine(Curve):
         If the PolyLine is closed, it is opened by removing the last segment.
         Else, it is returned unchanged.
 
-        ..warning :: This method changes the PolyLine inplace.
+        .. warning:: This method changes the PolyLine inplace.
 
         Use :meth:`split` if you want to open the PolyLine without losing
         a segment.
