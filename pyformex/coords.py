@@ -479,7 +479,7 @@ class Coords(ndarray):
         Parameters:
 
         - `mass`: float array with ncoords weight values. The default is to
-          attribute a weight 1 to each point.
+          attribute a weight 1.0 to each point.
 
         Returns a tuple of:
 

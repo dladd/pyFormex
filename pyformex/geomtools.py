@@ -94,8 +94,8 @@ def projectedArea(x,dir):
      
     Returns: 
 
-    A single float value with the area inside the polygon projected
-    in the specified direction.
+      A single float value with the area inside the polygon projected
+      in the specified direction.
 
     Note that if the polygon is planar and the specified direction is that
     of the normal on its plane, the returned area is that of the planar
@@ -420,7 +420,9 @@ def pointsAtLines(q,m,t):
       a single line or a set of lines.
     - `t`: array of parameter values, broadcast compatible with `q` and `m`.
 
-    Returns: An array with the points at parameter values t.
+    Returns:
+
+      An array with the points at parameter values t.
     """
     t = t[...,newaxis]
     return q+t*m
@@ -437,7 +439,7 @@ def pointsAtSegments(S,t):
 
     Returns: 
 
-    An array with the points at parameter values t.
+      An array with the points at parameter values t.
     """
     q0 = S[...,0,:]
     q1 = S[...,1,:]
@@ -459,9 +461,9 @@ def intersectionTimesLWL(q1,m1,q2,m2,mode='all'):
 
     Returns: 
 
-    A tuple of (nq1,nq2) shaped (`mode=all`) arrays of parameter
-    values t1 and t2, such that the intersection points are given by
-    q1+t1*m1 and q2+t2*m2.
+      A tuple of (nq1,nq2) shaped (`mode=all`) arrays of parameter
+      values t1 and t2, such that the intersection points are given by
+      ``q1+t1*m1`` and ``q2+t2*m2``.
     """
     if mode == 'all':
         q1 = asarray(q1).reshape(-1,1,3)
@@ -513,8 +515,8 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
 
     Returns: 
 
-    A (nq,np) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by q+t*m.
+      A (nq,np) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
         return (dotpr(p,n) - inner(q,n)) / inner(m,n)
@@ -551,9 +553,9 @@ def intersectionTimesSWP(S,p,n,mode='all'):
 
     Returns: 
 
-    A (nS,np) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by
-    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
+      A (nS,np) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given by
+      `(1-t)*S[...,0,:] + t*S[...,1,:]`.
 
     This function is comparable to intersectionTimesLWP, but ensures that
     parameter values 0<=t<=1 are points inside the line segments.
@@ -580,9 +582,9 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
 
     Returns: 
 
-    If `return_all==True`, a (nS,np,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3)
-    and line and plane indices with shape (n), where n <= nS*np.
+      If `return_all==True`, a (nS,np,3) shaped (`mode=all`) array of
+      intersection points, else, a tuple of intersection points with shape (n,3)
+      and line and plane indices with shape (n), where n <= nS*np.
     """
     S = asanyarray(S).reshape(-1,2,3)
     p = asanyarray(p).reshape(-1,3)
@@ -620,8 +622,8 @@ def intersectionTimesLWT(q,m,F,mode='all'):
 
     Returns: 
 
-    A (nq,nF) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given q+tm.
+      A (nq,nF) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given q+tm.
     """
     Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
     return intersectionTimesLWP(q,m,F[...,0,:],Fn,mode)
@@ -643,9 +645,9 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
 
     Returns: 
 
-    If `return_all==True`, a (nq,nF,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3)
-    and line and plane indices with shape (n), where n <= nq*nF.
+      If `return_all==True`, a (nq,nF,3) shaped (`mode=all`) array of
+      intersection points, else, a tuple of intersection points with shape (n,3)
+      and line and plane indices with shape (n), where n <= nq*nF.
     """
     q = asanyarray(q).reshape(-1,3)
     m = asanyarray(m).reshape(-1,3)
@@ -691,9 +693,9 @@ def intersectionTimesSWT(S,F,mode='all'):
 
     Returns: 
 
-    A (nS,nF) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by
-    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
+      A (nS,nF) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given by
+      `(1-t)*S[...,0,:] + t*S[...,1,:]`.
     """
     Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
     return intersectionTimesSWP(S,F[...,0,:],Fn,mode)
@@ -716,9 +718,9 @@ def intersectionPointsSWT(S,F,mode='all',return_all=False):
 
     Returns: 
 
-    If `return_all==True`, a (nS,nF,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3)
-    and line and plane indices with shape (n), where n <= nS*nF.
+      If `return_all==True`, a (nS,nF,3) shaped (`mode=all`) array of
+      intersection points, else, a tuple of intersection points with shape (n,3)
+      and line and plane indices with shape (n), where n <= nS*nF.
     """
     
     S = asanyarray(S).reshape(-1,2,3)
@@ -763,7 +765,7 @@ def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
 
     Returns: 
 
-    A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
+      A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
     """
     if mode == 'all':
         p1 = asanyarray(p1).reshape(-1,1,1,3)
@@ -795,8 +797,9 @@ def intersectionLinesPWP(p1,n1,p2,n2,mode='all'):
 
     Returns: 
 
-    A tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
-    points q and vectors m, such that the intersection lines are given by q+t*m.
+      A tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
+      points q and vectors m, such that the intersection lines are given by
+      ``q+t*m``.
     """
     if mode == 'all':
         p1 = asanyarray(p1).reshape(-1,1,3)
@@ -823,8 +826,8 @@ def intersectionTimesPOP(X,p,n,mode='all'):
 
     Returns: 
 
-    A (nX,np) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by X+t*n.
+      A (nX,np) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given by X+t*n.
     """
     if mode == 'all':
         return (dotpr(p,n) - inner(X,n)) / dotpr(n,n)
@@ -859,8 +862,8 @@ def intersectionTimesPOL(X,q,m,mode='all'):
 
     Returns: 
 
-    A (nX,nq) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by q+t*m.
+      A (nX,nq) shaped (`mode=all`) array of parameter values t,
+      such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
         return (inner(X,m) - dotpr(q,m)) / dotpr(m,m)
@@ -913,7 +916,7 @@ def distancesPFL(X,q,m,mode='all'):
 
     Returns: 
 
-    A (nX,nq) shaped (`mode=all`) array of distances.
+      A (nX,nq) shaped (`mode=all`) array of distances.
     """
     X = X.astype(float64)
     q = q.astype(float64)
@@ -943,7 +946,7 @@ def distancesPFS(X,S,mode='all'):
 
     Returns: 
 
-    A (nX,nS) shaped (`mode=all`) array of distances.
+      A (nX,nS) shaped (`mode=all`) array of distances.
     """
     q0 = S[...,0,:]
     q1 = S[...,1,:]

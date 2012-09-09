@@ -44,17 +44,6 @@ except ImportError:
     warning("You do not have fontforge and its Python bindings.\nPlease install python-fontforge and then try again.")
     exit()
 
-  
-def listFonts():
-    """List all fonts known to the system."""
-
-    cmd = 'fc-list : file'
-    sta,out = utils.runCommand(cmd)
-    if sta:
-        warning("fc-list could not find your font files.\nMaybe you do not have fontconfig installed?")
-    else:
-        return [ f.strip(' :') for f in out.split('\n') ]
-
 
 # Define some extra font files
 extra_fonts = odict.ODict([
@@ -189,7 +178,7 @@ chdir (__file__)
 
 print dir(fontforge)
 
-fonts = listFonts() + [ f for f in extra_fonts if os.path.exists(f) ]
+fonts = utils.listFontFiles() + [ f for f in extra_fonts if os.path.exists(f) ]
 print "Number of available fonts: %s" % len(fonts)
 
 fontname1 = None

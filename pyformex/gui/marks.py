@@ -38,9 +38,8 @@ class Mark(Drawable):
 
     The minimum attributes and methods are:
 
-      pos    : 3D point where the mark will be drawn
-
-      draw() : function to draw the mark
+    - `pos` : 3D point where the mark will be drawn
+    - `draw()` : method to draw the mark
     """
     
     def __init__(self,pos,nolight=True,**kargs):

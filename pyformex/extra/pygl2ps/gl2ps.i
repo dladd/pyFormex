@@ -24,7 +24,7 @@
 //
 
 /*
-  Adapted for gl2ps-1.3.2 by Benedict Verhegghe
+  Adapted for gl2ps-1.3.3 by Benedict Verhegghe
   Original by Toby White and Lothar Birk (Jan 2004)
 */
 %module gl2ps

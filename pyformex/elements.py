@@ -618,7 +618,7 @@ Hex27.drawfaces = [ Hex27.faces.selectNodes(i) for i in Quad9.drawfaces ]
 ######################################################################
 ########## element type conversions ##################################
 
-_conversion_doc_ = """Element type conversion
+_dev_doc_ = """Element type conversion
 
 Element type conversion in pyFormex is a powerful feature to transform
 Mesh type objects. While mostly used to change the element type, there
@@ -660,13 +660,13 @@ Currently, the following step types are defined:
 
 The operation of these methods is as follows:
 
-:'s' (select): This is the most common conversion type. It selects a set of
+- 's' (select): This is the most common conversion type. It selects a set of
   nodes of the input element, and creates one or more new elements with these
   nodes. The data field is a list of tuples defining for each created element
   which node numbers from the source element should be included. This method
   will usually decrease the plexitude of the elements.
 
-:'a' (average): Creates new nodes the position of which is computed as
+- 'a' (average): Creates new nodes the position of which is computed as
   an average of existing nodes. The data field is a list of tuples with
   the numbers of the nodes that should be averaged for each new node. The
   resulting new nodes are added in order at the end of the existing nodes.
@@ -674,11 +674,11 @@ The operation of these methods is as follows:
   follow to put the (old and new) nodes in the proper order.
   This method will usually increase the plexitude of the elements.
 
-:'v' (via): The conversion is made via an intermediate element type. The source
+- 'v' (via): The conversion is made via an intermediate element type. The source
   Mesh is first converted to this intermediate type, and the result is then
   transformed to the target type.
 
-:r' (random): Chooses a random method between a list of alternatives. The data
+- 'r' (random): Chooses a random method between a list of alternatives. The data
   field is a list of conversion method names defined for the same element
   (and thus inside the same dictionary). While this could be considered
   an amusement (e.g. used in the Carpetry example), there are serious
@@ -961,19 +961,19 @@ def elementType(name=None,nplex=-1):
 
     Returns: 
 
-    A subclass of :class:`ElementType`
+      A subclass of :class:`ElementType`
 
     Errors: 
 
-    If neither `name` nor `nplex` can resolve into an element type,
-    an error is raised.
+      If neither `name` nor `nplex` can resolve into an element type,
+      an error is raised.
 
     Example:
     
-    >>> elementType('tri3').name()
-    'tri3'
-    >>> elementType(nplex=2).name()
-    'line2'
+      >>> elementType('tri3').name()
+      'tri3'
+      >>> elementType(nplex=2).name()
+      'line2'
     """
     eltype = name
 

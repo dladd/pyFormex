@@ -48,7 +48,7 @@ def resizeImage(image,w=0,h=0):
       the image.
 
     Returns a QImage with the requested size.
-   """     
+    """     
     if not isinstance(image,QImage):
         image = QImage(image)
 
