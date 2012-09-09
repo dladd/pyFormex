@@ -64,7 +64,7 @@ class Geometry(object):
       the coords attribute. The original object is unchanged, the returned
       one is the changed copy.
 
-    When using the first method, a statement like ```B = A.scale(0.5)```
+    When using the first method, a statement like ``B = A.scale(0.5)``
     will result in both `A` and `B` pointing to the same scaled object,
     while with the second method, `A` would still be the untransformed
     object. Since the latter is in line with the design philosophy of

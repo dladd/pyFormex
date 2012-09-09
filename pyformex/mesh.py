@@ -491,8 +491,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Return the set of unique node numbers in the Mesh.
 
         This returns only the node numbers that are effectively used in
-        the connectivity table. For a compacted Mesh, it is equal to
-        ```arange(self.nelems)```.
+        the connectivity table. For a compacted Mesh, it is equivalent to
+        ``arange(self.nelems)``.
         This function also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
@@ -515,7 +515,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Return the unique edges of all the elements in the Mesh.
 
         This is a convenient function to create a table with the element
-        edges. It is equivalent to ```self.getLowerEntities(1,unique=True)```,
+        edges. It is equivalent to ``self.getLowerEntities(1,unique=True)``,
         but this also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
@@ -528,7 +528,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Return the unique faces of all the elements in the Mesh.
 
         This is a convenient function to create a table with the element
-        faces. It is equivalent to ```self.getLowerEntities(2,unique=True)```,
+        faces. It is equivalent to ``self.getLowerEntities(2,unique=True)``,
         but this also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
@@ -541,7 +541,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Return the cells of the elements.
 
         This is a convenient function to create a table with the element
-        cells. It is equivalent to ```self.getLowerEntities(3,unique=True)```,
+        cells. It is equivalent to ``self.getLowerEntities(3,unique=True)``,
         but this also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
@@ -554,9 +554,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Defines the elements in function of its edges.
 
         This returns a Connectivity table with the elements defined in
-        function of the edges. It is equivalent to ```self.elems.inser
-        tLevel(self.elType().getEntities(1))```but it also stores the 
-        definition of the edges and the returned element to edge connectivity.
+        function of the edges. It returns the equivalent of
+        ``self.elems.insertLevel(self.elType().getEntities(1))``
+        but as a side effect it also stores the definition of the edges
+        and the returned element to edge connectivity in the attributes
+        `edges`, resp. `elem_edges`.
         """
         if self.elem_edges is None:
             self.elem_edges,self.edges = self.elems.insertLevel(1)

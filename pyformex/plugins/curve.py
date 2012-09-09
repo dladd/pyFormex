@@ -287,8 +287,8 @@ class Curve(Geometry):
           per part of the curve used in the pre-approximation. This is
           pre-approximation is currently required to compute curve lengths.
 
-        .. Note:: This is an alternative for Curve.approx, and may replace it
-        completely in future.
+        .. note:: This is an alternative for Curve.approx, and may replace it
+           completely in future.
         """
         if equidistant:
             S = self.approximate(npre,equidistant=False)

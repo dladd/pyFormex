@@ -169,7 +169,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             # Save directly from current rendering
             pf.debug("Saving image from canvas with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
             GL.glFlush()
-            qim = canvas.grabFrameBuffer()
+            qim = canvas.grabFrameBuffer(withAlpha=False)
         else:
             pf.debug("Saving image from virtual buffer with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
             vcanvas = QtOpenGL.QGLFramebufferObject(w,h)
@@ -180,8 +180,10 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             qim = vcanvas.toImage()
             vcanvas.release()
             canvas.resize(wc,hc)
+            GL.glFlush()
             del vcanvas
-            
+
+        pf.debug("Image has alpha channel: %s" % qim.hasAlphaChannel())
         print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
         if qim.save(fn,fmt,quality):
             sta = 0

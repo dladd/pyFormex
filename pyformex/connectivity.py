@@ -237,8 +237,8 @@ class Connectivity(ndarray):
 
         Returns: 
 
-        A boolean array with shape (self.nelems(),).
-        The True values flag the degenerate rows.
+          A boolean array with shape (self.nelems(),).
+          The True values flag the degenerate rows.
 
         Example:
         
@@ -280,9 +280,7 @@ class Connectivity(ndarray):
 
         Degenerate elements are rows with repeating values.
         
-        Returns: 
-
-        A Connectivity with the degenerate elements removed.
+        Returns a Connectivity with the degenerate elements removed.
 
         Example:
         
@@ -308,16 +306,16 @@ class Connectivity(ndarray):
 
         Returns:
         
-        A list of Connectivities of which the first one contains
-        the originally non-degenerate elements and the last one contains
-        the elements that could not be reduced and may be empty.
-        If the original Connectivity does not have an element type set,
-        or the element type does not have any reduction schemes defined,
-        a list with only the original is returned.
+          A list of Connectivities of which the first one contains
+          the originally non-degenerate elements and the last one contains
+          the elements that could not be reduced and may be empty.
+          If the original Connectivity does not have an element type set,
+          or the element type does not have any reduction schemes defined,
+          a list with only the original is returned.
 
-        Remark: If the Connectivity is part of a Mesh, you should use the
-        Mesh.reduceDegenerate method instead, as that one will preserve
-        the property numbers into the resulting Meshes.
+        .. note:: If the Connectivity is part of a Mesh, you should use the
+           Mesh.reduceDegenerate method instead, as that one will preserve
+           the property numbers into the resulting Meshes.
 
         Example:
         
@@ -381,8 +379,6 @@ class Connectivity(ndarray):
 
     
     def testDuplicate(self,permutations=True):
-    #    This algorithm is faster than encode,
-    #    but for nplex=2 enmagic2 would probably still be faster.
         """Test the Connectivity list for duplicates.
 
         By default, duplicates are elements that consist of the same set of
@@ -451,7 +447,7 @@ class Connectivity(ndarray):
 
         Returns:
 
-        A new Connectivity with the duplicate elements removed.
+          A new Connectivity with the duplicate elements removed.
 
         Example:
         
@@ -475,7 +471,7 @@ class Connectivity(ndarray):
         - `order`: specifies how to reorder the elements. It is either one
           of the special string values defined below, or else it is an index
           with length equal to the number of elements. The index should be
-          a permutation of the numbers in `range(self.nelems()`. Each value
+          a permutation of the numbers in ``range(self.nelems()``. Each value
           gives of the number of the old element that should be placed at
           this position. Thus, the order values are the old element numbers
           on the position of the new element number.
@@ -492,10 +488,10 @@ class Connectivity(ndarray):
        	Returns:
 
           A 1-D integer array which is a permutation of
-          `arange(self.nelems()`, such that taking the elements in this order
+          ``arange(self.nelems()``, such that taking the elements in this order
           will produce a Connectivity reordered as requested. In case an
           explicit order was specified as input, this order is returned after
-          checking that it is indeed a permutation of `range(self.nelems()`.
+          checking that it is indeed a permutation of ``range(self.nelems()``.
 
         Example:
 
@@ -532,8 +528,8 @@ class Connectivity(ndarray):
     def inverse(self):
         """Return the inverse index of a Connectivity table.
 
-        This returns the inverse index of the Connectivity, as computed
-        by :func:`arraytools.inverseIndex`. See 
+        Returns the inverse index of the Connectivity, as computed
+        by :func:`arraytools.inverseIndex`.
            
         Example:
         
@@ -557,9 +553,9 @@ class Connectivity(ndarray):
 
         Returns:
 
-        A 1-D int array with the number of elements connected
-        to each node. The length of the array is equal to the highest
-        node number + 1. Unused node numbers will have a count of zero.
+          A 1-D int array with the number of elements connected
+          to each node. The length of the array is equal to the highest
+          node number + 1. Unused node numbers will have a count of zero.
            
         Example:
         
@@ -577,8 +573,8 @@ class Connectivity(ndarray):
 
         Returns: 
 
-        An int array with the numbers of the elements that
-        contain at least one of the specified nodes.
+          An int array with the numbers of the elements that
+          contain at least one of the specified nodes.
            
         Example:
         
@@ -596,8 +592,8 @@ class Connectivity(ndarray):
 
         Returns: 
         
-        An int array with the numbers of the elements that
-        do not contain any of the specified nodes.
+          An int array with the numbers of the elements that
+          do not contain any of the specified nodes.
            
         Example:
         
@@ -611,9 +607,7 @@ class Connectivity(ndarray):
     def adjacency(self,kind='e',mask=None):
         """Return a table of adjacent items.
 
-        Returns:
-     
-        An element adjacency table (kind='e') or node adjacency
+        Create an element adjacency table (kind='e') or node adjacency
         table (kind='n').
 
         An element `i` is said to be adjacent to element `j`, if the two
@@ -636,10 +630,10 @@ class Connectivity(ndarray):
         
         Returns: 
 
-        An Adjacency array with shape (nr,nc),
-        where row `i` holds a sorted list of all the items that are
-        adjacent to item `i`, padded with -1 values to create an equal
-        list length for all items.
+          An Adjacency array with shape (nr,nc),
+          where row `i` holds a sorted list of all the items that are
+          adjacent to item `i`, padded with -1 values to create an equal
+          list length for all items.
            
         Example:
         
@@ -703,10 +697,10 @@ class Connectivity(ndarray):
 
         Returns:
 
-        A :class:`Connectivity` object with shape
-        `(self.nelems*selector.nelems,selector.nplex)`. This function
-        does not collapse the duplicate elements. The eltype of the result
-        is equal to that of the selector, possibly None.
+          A :class:`Connectivity` object with shape
+          ``(self.nelems*selector.nelems,selector.nplex)``. This function
+          does not collapse the duplicate elements. The eltype of the result
+          is equal to that of the selector, possibly None.
            
         Example:
         
@@ -765,14 +759,13 @@ class Connectivity(ndarray):
           is prefered when you do not need the higher level info. 
         
         Returns: 
-
-        A tuple of two Connectivities `hi`,`lo`, where:
     
-        - `hi`: defines the original elements in function of the intermediate
-          level ones,
-        - `lo`: defines the intermediate level items in function of the lowest
-          level ones (the original nodes). If the `selector` has an `eltype`
-          attribute, then `lo` will inherit the same `eltype` value.
+        - `hi`: a :class:`Connectivity` defining the original elements
+          in function of the intermediatelevel ones,
+        - `lo`: a :class:`Connectivity` defining the intermediate level
+          items in function of the lowest level ones (the original nodes).
+          If the `selector` has an `eltype` attribute, then `lo` will inherit
+          the same `eltype` value.
           
         Intermediate level items that consist of the same items in any
         permutation order are collapsed to single items.
@@ -874,10 +867,10 @@ class Connectivity(ndarray):
         There is no point in resolving a plexitude 2 structure.
         Plexitudes lower than 2 can not be resolved.
 
-        Returns: 
+        Returns:
 
-        A plex-2 Connectivity with all connections between node
-        pairs. In each element the nodes are sorted.
+          A plex-2 Connectivity with all connections between node
+          pairs. In each element the nodes are sorted.
 
         Example:
         
@@ -1045,141 +1038,141 @@ class Connectivity(ndarray):
     # BV: the methods below should probably be removed,
     # after a check that they are not essential
 
-    @deprecation("tangle has been renamed to combine") 
-    def tangle(self,*args,**kargs):
-        return self.combine(*args,**kargs)
+    ## @deprecation("tangle has been renamed to combine") 
+    ## def tangle(self,*args,**kargs):
+    ##     return self.combine(*args,**kargs)
     
     
-    @deprecation("untangle has been deprecated. Use insertLevel instead.") 
-    def untangle(self,ind):
-        return self.insertLevel(ind)
+    ## @deprecation("untangle has been deprecated. Use insertLevel instead.") 
+    ## def untangle(self,ind):
+    ##     return self.insertLevel(ind)
 
 
-    @deprecation(_future_deprecation)
-    def encode(self,permutations=True,return_magic=False):
-        """_Encode the element connectivities into single integer numbers.
+    ## @deprecation(_future_deprecation)
+    ## def encode(self,permutations=True,return_magic=False):
+    ##     """_Encode the element connectivities into single integer numbers.
 
-        Each row of numbers is encoded into a single integer value, such that
-        equal rows result in the same number and different rows yield
-        different numbers. Furthermore, enough information can be kept to
-        restore the original rows from these single integer numbers.
-        This is seldom needed however, because the original data are
-        available from the Connectivity table itself.
+    ##     Each row of numbers is encoded into a single integer value, such that
+    ##     equal rows result in the same number and different rows yield
+    ##     different numbers. Furthermore, enough information can be kept to
+    ##     restore the original rows from these single integer numbers.
+    ##     This is seldom needed however, because the original data are
+    ##     available from the Connectivity table itself.
 
-        - permutations: if True(default), two rows are considered equal if
-          they contain the same numbers regardless of their order.
-          If False, two rows are only equal if they contain the same
-          numbers at the same position.
-        - return_magic: if True, return a codes,magic tuple. The default is
-          to return only the codes.
+    ##     - permutations: if True(default), two rows are considered equal if
+    ##       they contain the same numbers regardless of their order.
+    ##       If False, two rows are only equal if they contain the same
+    ##       numbers at the same position.
+    ##     - return_magic: if True, return a codes,magic tuple. The default is
+    ##       to return only the codes.
           
-        Returns:
+    ##     Returns:
     
-        - codes: an (nelems,) shaped array with the element code numbers,
-        - magic: the information needed to restore the original rows from
-          the codes. See Connectivity.decode()
+    ##     - codes: an (nelems,) shaped array with the element code numbers,
+    ##     - magic: the information needed to restore the original rows from
+    ##       the codes. See Connectivity.decode()
 
-        Example:
+    ##     Example:
         
-          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).encode(return_magic=True)
-          (array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
+    ##       >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).encode(return_magic=True)
+    ##       (array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
           
-        *The use of this function is deprecated.*
-        """
-        def compact_encode2(data):
-            """Encode two columns of integers into a single column.
+    ##     *The use of this function is deprecated.*
+    ##     """
+    ##     def compact_encode2(data):
+    ##         """Encode two columns of integers into a single column.
 
-            This is like enmagic2 but results in smaller encoded values, because
-            the original values are first replaced by indices into the sets of unique
-            values.
-            This encoding scheme is therefore usable for repeated application
-            on multiple columns.
+    ##         This is like enmagic2 but results in smaller encoded values, because
+    ##         the original values are first replaced by indices into the sets of unique
+    ##         values.
+    ##         This encoding scheme is therefore usable for repeated application
+    ##         on multiple columns.
 
-            The return value is the list of codes, the magic value used in encoding,
-            and the two sets of uniq values for the columns, needed to restore the
-            original data. Decoding can be done with compact_decode2.
-            """
-            # We could use a single compaction vector?
-            uniqa, posa = unique(data[:,0], return_inverse=True)
-            uniqb, posb = unique(data[:,1], return_inverse=True)
-            # We could insert the encoding directly here,
-            # or use an encoding function with 2 arguments
-            # to avoid the column_stack operation
-            rt = column_stack([posa, posb])
-            codes, magic = enmagic2(rt)
-            return codes,magic,uniqa,uniqb
+    ##         The return value is the list of codes, the magic value used in encoding,
+    ##         and the two sets of uniq values for the columns, needed to restore the
+    ##         original data. Decoding can be done with compact_decode2.
+    ##         """
+    ##         # We could use a single compaction vector?
+    ##         uniqa, posa = unique(data[:,0], return_inverse=True)
+    ##         uniqb, posb = unique(data[:,1], return_inverse=True)
+    ##         # We could insert the encoding directly here,
+    ##         # or use an encoding function with 2 arguments
+    ##         # to avoid the column_stack operation
+    ##         rt = column_stack([posa, posb])
+    ##         codes, magic = enmagic2(rt)
+    ##         return codes,magic,uniqa,uniqb
         
         
-        if permutations:
-            data = self.copy()
-            data.sort(axis=1)
-        else:
-            data = self
+    ##     if permutations:
+    ##         data = self.copy()
+    ##         data.sort(axis=1)
+    ##     else:
+    ##         data = self
             
-        magic = []
-        codes = data[:,0]
-        for i in range(1,data.shape[1]):
-            cols = column_stack([codes,data[:,i]])
-            codes,mag,uniqa,uniqb = compact_encode2(cols)
-            # insert at the front so we can process in order
-            magic.insert(0,(mag,uniqa,uniqb))
+    ##     magic = []
+    ##     codes = data[:,0]
+    ##     for i in range(1,data.shape[1]):
+    ##         cols = column_stack([codes,data[:,i]])
+    ##         codes,mag,uniqa,uniqb = compact_encode2(cols)
+    ##         # insert at the front so we can process in order
+    ##         magic.insert(0,(mag,uniqa,uniqb))
 
-        if return_magic:
-            return codes,magic
-        else:
-            return codes
+    ##     if return_magic:
+    ##         return codes,magic
+    ##     else:
+    ##         return codes
 
 
-    @deprecation(_future_deprecation)
-    @staticmethod
-    def decode(codes,magic):
-        """Decode element codes into a Connectivity table.
+    ## @deprecation(_future_deprecation)
+    ## @staticmethod
+    ## def decode(codes,magic):
+    ##     """Decode element codes into a Connectivity table.
 
-        This is the inverse operation of the Connectivity.encode() method.
-        It recreates a Connectivity table from the (codes,magic) information.
+    ##     This is the inverse operation of the Connectivity.encode() method.
+    ##     It recreates a Connectivity table from the (codes,magic) information.
 
-        This is a static method, and should be invoked as
-        ```Connectivity.decode(codes,magic)```.
+    ##     This is a static method, and should be invoked as
+    ##     ``Connectivity.decode(codes,magic)``.
         
-        - codes: code numbers as returned by Connectivity.encode, or a subset
-          thereof.
-        - magic: the magic information as returned by Connectivity.encode,
-          with argument return_magic=True.
+    ##     - codes: code numbers as returned by Connectivity.encode, or a subset
+    ##       thereof.
+    ##     - magic: the magic information as returned by Connectivity.encode,
+    ##       with argument return_magic=True.
 
-        Returns: 
+    ##     Returns: 
 
-        A Connectivity table.
+    ##     A Connectivity table.
 
-        Example:
+    ##     Example:
         
-          >>> Connectivity.decode(array([0,1,3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
-          Connectivity([[0, 1, 2],
-                 [0, 1, 3],
-                 [0, 2, 3]])
+    ##       >>> Connectivity.decode(array([0,1,3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
+    ##       Connectivity([[0, 1, 2],
+    ##              [0, 1, 3],
+    ##              [0, 2, 3]])
 
-        *The use of this function is deprecated.*
-        """
+    ##     *The use of this function is deprecated.*
+    ##     """
 
-        def compact_decode2(codes,magic,uniqa,uniqb):
-            """Decodes a single integer value into the original 2 values.
+    ##     def compact_decode2(codes,magic,uniqa,uniqb):
+    ##         """Decodes a single integer value into the original 2 values.
 
-            This is the inverse operation of compact_encode2.
-            Thus compact_decode2(*compact_encode(data)) will return data.
+    ##         This is the inverse operation of compact_encode2.
+    ##         Thus compact_decode2(*compact_encode(data)) will return data.
 
-            codes can be a subset of the encoded values, but the other 3 arguments
-            should be exactly those from the compact_encode2 result.
-            """
-            # decoding returns the indices into the uniq numberings
-            pos = demagic2(codes,magic)
-            return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
+    ##         codes can be a subset of the encoded values, but the other 3 arguments
+    ##         should be exactly those from the compact_encode2 result.
+    ##         """
+    ##         # decoding returns the indices into the uniq numberings
+    ##         pos = demagic2(codes,magic)
+    ##         return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
         
-        data = []
-        for mag in magic:
-            cols = compact_decode2(codes,mag[0],mag[1],mag[2])
-            data.insert(0,cols[:,1])
-            codes = cols[:,0]
-        data.insert(0,codes)
-        return Connectivity(column_stack(data))
+    ##     data = []
+    ##     for mag in magic:
+    ##         cols = compact_decode2(codes,mag[0],mag[1],mag[2])
+    ##         data.insert(0,cols[:,1])
+    ##         codes = cols[:,0]
+    ##     data.insert(0,codes)
+    ##     return Connectivity(column_stack(data))
 
 ############################################################################
 
@@ -1204,8 +1197,6 @@ def findConnectedLineElems(elems):
       first and the last column are relevant. 
 
     Returns: 
-
-    A tuple of:
 
     - `con`: a Connectivity with the same shape as the input Connectivity
       `elems`, holding a single chain extracted from the input and filled

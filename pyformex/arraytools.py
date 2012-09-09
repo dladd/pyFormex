@@ -319,7 +319,7 @@ def norm(v,n=2):
     """Return thr `n`-norm of the vector `v`.
 
     Default is the quadratic norm (vector length).
-    `n == 1` returns the sum.
+    ``n == 1`` returns the sum.
     ``n<=0`` returns the max absolute value.
     """
     a = asarray(v).flat
@@ -345,7 +345,7 @@ def horner(a,u):
 
     Returns:
 
-    float(nu,nd), nd-dimensional values of the polynom.
+      float(nu,nd), nd-dimensional values of the polynom.
 
     >>> print horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0])
     [[ 1.5  2.   2.5]
@@ -370,8 +370,8 @@ def solveMany(A,b,direct=True):
 
     Returns: 
 
-    A float array `x` with same shape as `b`, where ``x[:,i,j]``
-    solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
+      A float array `x` with same shape as `b`, where ``x[:,i,j]``
+      solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
 
     For ndof in [1,2,3], all solutions are by default computed directly and
     simultaneously. If ``direct=False`` is specified, a general linear
