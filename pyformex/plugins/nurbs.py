@@ -67,7 +67,7 @@ class Coords4(ndarray):
     Just like :class:`Coords`, the class :class:`Coords4` is derived from
     :class:`numpy.ndarray`.
 
-    Parameters
+    Parameters:
         
     `data`: array_like
       If specified, data should evaluate to an array of floats, with the
@@ -81,7 +81,7 @@ class Coords4(ndarray):
 
     `w`: array_like
       If specified, the w values are used to denormalize the homogeneous
-       data such that the last component becomes w.
+      data such that the last component becomes w.
 
     `dtyp`: data-type
       The datatype to be used. It not specified, the datatype of `data`
@@ -170,7 +170,9 @@ class Coords4(ndarray):
     def toCoords(self):
         """Convert homogeneous coordinates to cartesian coordinates.
 
-        Returns a :class:`Coords` object with the cartesian coordinates
+        Returns: 
+
+        A :class:`Coords` object with the cartesian coordinates
         of the points. Points at infinity (w=0) will result in
         Inf or NaN value. If there are no points at infinity, the
         resulting :class:`Coords` point set is equivalent to the
@@ -359,10 +361,10 @@ class NurbsCurve(Geometry4):
 
         Parameters:
 
-        `u`: (nu,) shaped float array: parametric values at which a point
+        `u`: (nu,) shaped float array, parametric values at which a point
           is to be placed.
 
-        Returns: (nu,3) shaped Coords with nu points at the specified
+        Returns (nu,3) shaped Coords with nu points at the specified
         parametric values.
         
         """
@@ -435,7 +437,9 @@ class NurbsCurve(Geometry4):
         u is a vector with knot parameter values to be inserted into the
         curve. The control points are adapted to keep the curve unchanged.
 
-        Returns a Nurbs curve equivalent with the original but with the
+        Returns: 
+
+        A Nurbs curve equivalent with the original but with the
         specified knot values inserted in the knot vector, and the control
         points adapted.
         """
@@ -460,7 +464,9 @@ class NurbsCurve(Geometry4):
         u is a vector with knot parameter values to be inserted into the
         curve. The control points are adapted to keep the curve unchanged.
 
-        Returns a Nurbs curve equivalent with the original but with the
+        Returns: 
+
+        A Nurbs curve equivalent with the original but with the
         specified knot values inserted in the knot vector, and the control
         points adapted.
         """
@@ -595,7 +601,7 @@ class NurbsSurface(Geometry4):
         - `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
           a point is to be placed.
 
-        Returns: (nu,3) shaped Coords with `nu` points at the specified
+        Returns (nu,3) shaped Coords with `nu` points at the specified
         parametric values.
         
         """
@@ -629,9 +635,11 @@ class NurbsSurface(Geometry4):
         - `m`: tuple of two int values (mu,mv). The points and derivatives up
           to order mu in u direction and mv in v direction are returned.
 
-        Returns: (nu+1,nv+1,nu,3) shaped Coords with `nu` points at the
-          specified parametric values. The slice (0,0,:,:) contains the
-          points.
+        Returns: 
+
+        (nu+1,nv+1,nu,3) shaped Coords with `nu` points at the
+        specified parametric values. The slice (0,0,:,:) contains the
+        points.
         
         """     
         # sanitize arguments for library call
@@ -676,7 +684,9 @@ def globalInterpolationCurve(Q,degree=3,strategy=0.5):
     is a NURBS curve of the given degree, passing through all the
     points. 
 
-    Returns a NurbsCurve through the given point set. The number of
+    Returns: 
+
+    A NurbsCurve through the given point set. The number of
     control points is the same as the number of input points.
 
     .. warning:: Currently there is the limitation that two consecutive
@@ -727,13 +737,16 @@ def uniformParamValues(n,umin=0.0,umax=1.0):
 
     `n`: int: number of intervals in which the range should be divided.
       The number of values returned is ``n+1``.
-    `umin`,`umax`: float: start and end value of the interval. Default
+
+    `umin`, `umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
-    Returns: a float array with n+1 equidistant values in the range umin..umax.
-      For n > 0, both of the endpoints are included. For n=0, a single
-      value at the center of the interval will be returned. For n<0, an
-      empty array is returned.
+    Returns: 
+
+    A float array with n+1 equidistant values in the range umin..umax.
+    For n > 0, both of the endpoints are included. For n=0, a single
+    value at the center of the interval will be returned. For n<0, an
+    empty array is returned.
     
     Example:
     
@@ -824,10 +837,12 @@ def pointsOnBezierCurve(P,u):
     """Compute points on a Bezier curve
 
     Parameters:
+
     P is an array with n+1 points defining a Bezier curve of degree n.
     u is a vector with nu parameter values between 0 and 1.
 
     Returns:
+
     An array with the nu points of the Bezier curve corresponding with the
     specified parametric values.
     ERROR: currently u is a single paramtric value!
@@ -846,10 +861,12 @@ def deCasteljou(P,u):
     """Compute points on a Bezier curve using deCasteljou algorithm
 
     Parameters:
+
     P is an array with n+1 points defining a Bezier curve of degree n.
     u is a single parameter value between 0 and 1.
 
     Returns:
+
     A list with point sets obtained in the subsequent deCasteljou
     approximations. The first one is the set of control points, the last one
     is the point on the Bezier curve.

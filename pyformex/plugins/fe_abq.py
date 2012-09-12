@@ -1387,8 +1387,8 @@ def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
     - `summary`: if True, a summary with minimum and maximum is written
     - `total`: if True, sums the values for each key
 
-    Remark: the `kind` argument is not used, but is included so that we can
-    easily call it with a `Results` dict as arguments
+    'Remark that the `kind` argument is not used, but is included so that we can
+    easily call it with a `Results` dict as arguments.'
     """
     if type(set) == str or type(set) == int:
         set = [ set ]

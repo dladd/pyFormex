@@ -67,6 +67,7 @@ def inertia(X,mass=None):
     points. The default is to attribute a mass=1 to all points.
 
     The result is a tuple of two float arrays:
+
       - the center of gravity: shape (3,)
       - the inertia tensor: shape (6,) with the following values (in order):
         Ixx, Iyy, Izz, Ixy, Ixz, Iyz 
