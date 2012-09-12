@@ -692,7 +692,13 @@ The operation of these methods is as follows:
   reducing the effect.
 
 """
-
+Line2.conversions = {
+    'line3'   : [ ('a', [ (0,1) ]), 
+                  ('s', [ (0,2,1) ]), 
+                  ],
+    'line2-2' : [ ('v', 'line3'), 
+                  ('s', [ (0,2), (2,1) ]), ],
+    }
 Line3.conversions = {
     'line2'   : [ ('s', [ (0,2) ]), ],
     'line2-2' : [ ('s', [ (0,1), (1,2) ]), ],
