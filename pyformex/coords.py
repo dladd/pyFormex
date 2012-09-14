@@ -59,9 +59,10 @@ def bbox(objects):
       :meth:`bbox`).
 
     Returns:
-      A Coords object with two points: the first contains the minimal
-      coordinate values, the second has the maximal ones of the overall
-      bounding box. 
+
+    A Coords object with two points: the first contains the minimal
+    coordinate values, the second has the maximal ones of the overall
+    bounding box. 
 
     Example:
     
@@ -249,7 +250,7 @@ class Coords(ndarray):
     ncoords = npoints
 
     def x(self):
-        """Return the X-coordinates of all points.
+        """Returns the X-coordinates of all points.
 
         Returns an array with all the X-coordinates in the Coords.
         The returned array has the same shape as the Coords array along
@@ -273,7 +274,7 @@ class Coords(ndarray):
         return self[...,1]
     
     def z(self):
-        """Return the Z-coordinates of all points.
+        """Returns the Z-coordinates of all points.
 
         Returns an array with all the Z-coordinates in the Coords.
         The returned array has the same shape as the Coords array along
@@ -288,7 +289,7 @@ class Coords(ndarray):
     # Size, Bounds
     
     def bbox(self):
-        """Return the bounding box of a set of points.
+        """Returns the bounding box of a set of points.
 
         The bounding box is the smallest rectangular volume in the global
         coordinates, such that no point of the :class:`Coords` are outside
@@ -296,8 +297,8 @@ class Coords(ndarray):
 
         Returns:
         
-          A Coords object with shape(2,3): the first point contains the
-          minimal coordinates, the second has the maximal ones. 
+        A Coords object with shape(2,3): the first point contains the
+        minimal coordinates, the second has the maximal ones. 
 
         Example:
 
@@ -317,7 +318,7 @@ class Coords(ndarray):
 
     # THIS COULD BE MADE AN OPTION OF THE bbox METHOD
     def apt(self,align):
-        """Return an alignment point of a Coords.
+        """Returns an alignment point of a Coords.
 
         Align point are points whose coordinates are either the minimal
         value, the maximal value or the middle value for the Coords.
@@ -354,7 +355,7 @@ class Coords(ndarray):
 
 
     def center(self):
-        """Return the center of the :class:`Coords`.
+        """Returns the center of the :class:`Coords`.
 
         The center of a :class:`Coords` is the center of its bbox().
         The return value is a (3,) shaped :class:`Coords` object.
@@ -372,7 +373,7 @@ class Coords(ndarray):
 
 
     def average(self,wts=None,axis=0):
-        """Return a (weighted) average of the :class:`Coords`.
+        """Returns a (weighted) average of the :class:`Coords`.
 
         The average of a :class:`Coords` is a :class:`Coords` with one
         axis less than the original, obtained by averaging all the points
@@ -388,8 +389,8 @@ class Coords(ndarray):
 
         Example:
 
-          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]], \
-                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
+          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
+          [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
           >>> print X.average()
           [[ 2.  0.  0.]
            [ 3.  0.  0.]
@@ -405,7 +406,7 @@ class Coords(ndarray):
         
 
     def centroid(self):
-        """Return the centroid of the :class:`Coords`.
+        """Returns the centroid of the :class:`Coords`.
 
         The centroid of a :class:`Coords` is the point whose coordinates
         are the mean values of all points.
@@ -426,9 +427,9 @@ class Coords(ndarray):
 
 
     def sizes(self):
-        """Return the sizes of the :class:`Coords`.
+        """Returns the sizes of the :class:`Coords`.
 
-        Return an array with the length of the bbox along the 3 axes.
+        Returns an array with the length of the bbox along the 3 axes.
         
         Example:
 
@@ -441,7 +442,7 @@ class Coords(ndarray):
 
 
     def dsize(self):
-        """Return an estimate of the global size of the :class:`Coords`.
+        """Returns an estimate of the global size of the :class:`Coords`.
 
         This estimate is the length of the diagonal of the bbox().
         
@@ -456,7 +457,7 @@ class Coords(ndarray):
 
     
     def bsphere(self):
-        """Return the diameter of the bounding sphere of the :class:`Coords`.
+        """Returns the diameter of the bounding sphere of the :class:`Coords`.
 
         The bounding sphere is the smallest sphere with center in the
         center() of the :class:`Coords`, and such that no points of the
@@ -474,7 +475,7 @@ class Coords(ndarray):
     # Inertia
 
     def inertia(self,mass=None):
-        """Return inertia related quantities of the :class:`Coords`.
+        """Returns inertia related quantities of the :class:`Coords`.
 
         Parameters:
 
@@ -500,7 +501,7 @@ class Coords(ndarray):
     #  Distance
 
     def distanceFromPlane(self,p,n):
-        """Return the distance of all points from the plane (p,n).
+        """Returns the distance of all points from the plane (p,n).
 
         p is a point specified by 3 coordinates.
         n is the normal vector to a plane, specified by 3 components.
@@ -525,7 +526,7 @@ class Coords(ndarray):
 
 
     def distanceFromLine(self,p,n):
-        """Return the distance of all points from the line (p,n).
+        """Returns the distance of all points from the line (p,n).
 
         p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
         p is a point on the line specified by 3 coordinates.
@@ -550,7 +551,7 @@ class Coords(ndarray):
 
 
     def distanceFromPoint(self,p):
-        """Return the distance of all points from the point p.
+        """Returns the distance of all points from the point p.
 
         p is a single point specified by 3 coordinates.
 
@@ -571,7 +572,7 @@ class Coords(ndarray):
 
 
     def closestToPoint(self,p):
-        """Return the point closest to point p.
+        """Returns the point closest to point p.
 
         """
         d = self.distanceFromPoint(p)
@@ -579,7 +580,7 @@ class Coords(ndarray):
     
 
     def directionalSize(self,n,p=None,_points=False):
-        """Return the extreme distances from the plane p,n.
+        """Returns the extreme distances from the plane p,n.
 
         The direction n can be specified by a 3 component vector or by
         a single integer 0..2 designing one of the coordinate axes.
@@ -607,7 +608,7 @@ class Coords(ndarray):
 
 
     def directionalExtremes(self,n,p=None):
-        """Return extremal planes in the direction n.
+        """Returns extremal planes in the direction n.
 
         `n` and `p` have the same meaning as in `directionalSize`.
 
@@ -619,7 +620,7 @@ class Coords(ndarray):
 
 
     def directionalWidth(self,n):
-        """Return the width of a Coords in the given direction.
+        """Returns the width of a Coords in the given direction.
 
         The direction can be specified by a 3 component vector or by
         a single integer 0..2 designating one of the coordinate axes.
@@ -655,14 +656,14 @@ class Coords(ndarray):
         
         Returns: 
 
-          A 1D integer array with same length as the number of points.
-          For each point the value is 1 (True) if the point is above the
-          minimum clipping plane and below the maximum clipping plane,
-          or 0 (False) otherwise.
-          An unspecified clipping plane corresponds with an infinitely low or
-          high value. The return value can directly be used as an index to
-          obtain a :class:`Coords` with the points satisfying the test (or not).
-          See the examples below.
+        A 1D integer array with same length as the number of points.
+        For each point the value is 1 (True) if the point is above the
+        minimum clipping plane and below the maximum clipping plane,
+        or 0 (False) otherwise.
+        An unspecified clipping plane corresponds with an infinitely low or
+        high value. The return value can directly be used as an index to
+        obtain a :class:`Coords` with the points satisfying the test (or not).
+        See the examples below.
 
         Example:
 
@@ -742,7 +743,7 @@ class Coords(ndarray):
 
    
     def scale(self,scale,dir=None,center=None,inplace=False):
-        """Return a copy scaled with scale[i] in direction i.
+        """Returns a copy scaled with scale[i] in direction i.
 
         The scale should be a list of 3 scaling factors for the 3 axis
         directions, or a single scaling factor.
@@ -824,7 +825,7 @@ class Coords(ndarray):
 
 
     def centered(self):
-        """Return a centered copy of the Coords.
+        """Returns a centered copy of the Coords.
 
         Returns a Coords which is a translation thus that the center
         coincides with the origin.
@@ -872,7 +873,7 @@ class Coords(ndarray):
     
 
     def rotate(self,angle,axis=2,around=None):
-        """Return a copy rotated over angle around axis.
+        """Returns a copy rotated over angle around axis.
 
         The angle is specified in degrees.
         The axis is either one of (0,1,2) designating the global axes,
@@ -900,7 +901,7 @@ class Coords(ndarray):
     
 
     def shear(self,dir,dir1,skew,inplace=False):
-        """Return a copy skewed in the direction dir of plane (dir,dir1).
+        """Returns a copy skewed in the direction dir of plane (dir,dir1).
 
         The coordinate dir is replaced with (dir + skew * dir1).
         """
@@ -1104,7 +1105,7 @@ class Coords(ndarray):
 
 
     def bump1(self,dir,a,func,dist):
-        """Return a :class:`Coords` with a one-dimensional bump.
+        """Returns a :class:`Coords` with a one-dimensional bump.
 
         - `dir` specifies the axis of the modified coordinates;
         - `a` is the point that forces the bumping;
@@ -1119,7 +1120,7 @@ class Coords(ndarray):
 
     
     def bump2(self,dir,a,func):
-        """Return a :class:`Coords` with a two-dimensional bump.
+        """Returns a :class:`Coords` with a two-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
         a is the point that forces the bumping;
@@ -1143,7 +1144,7 @@ class Coords(ndarray):
     # the distance and a point for defining the intensity (3-D) of the
     # modification
     def bump(self,dir,a,func,dist=None):
-        """Return a :class:`Coords` with a bump.
+        """Returns a :class:`Coords` with a bump.
 
         A bump is a modification of a set of coordinates by a non-matching
         point. It can produce various effects, but one of the most common
@@ -1348,10 +1349,8 @@ class Coords(ndarray):
           in the :class:`Coords`. This allows to project each point on an
           individual plane.
 
-        Returns: 
-
-          a :class:`Coords` with same shape as original, with all the
-          points projected on the specified plane(s).
+        Returns a :class:`Coords` with same shape as original, with all the
+        points projected on the specified plane(s).
         """
         if type(n) is int:
             x = self.copy()
@@ -1422,7 +1421,9 @@ class Coords(ndarray):
         - `return_indices`: if True, also returns an index of the points that
           have a projection on the surface.
 
-        Returns a Coords with the same shape as the input. If `return_indices`
+        Returns:
+
+        A Coords with the same shape as the input. If `return_indices`
         is True, also returns an index of the points that have a projection
         on the surface. This index is a sequential one, no matter what the
         shape of the input Coords is.
@@ -1908,11 +1909,11 @@ class Coords(ndarray):
 
         Returns:
 
-          A :class:`Coords` with an extra (first) axis, containing the
-          concatenation of the interpolations of `self` and `X` at all
-          values in `div`.
-          Its shape is (n,) + self.shape, where n is the number of values
-          in `div`.
+        A :class:`Coords` with an extra (first) axis, containing the
+        concatenation of the interpolations of `self` and `X` at all
+        values in `div`.
+        Its shape is (n,) + self.shape, where n is the number of values
+        in `div`.
         
         An interpolation of F and G at value v is a :class:`Coords` H where
         each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
@@ -2046,9 +2047,7 @@ class CoordinateSystem(Coords):
 def origin():
     """Return a single point with coordinates [0.,0.,0.].
 
-    Returns:
-
-      A :class:`Coords` object with shape(3,) holding three zero coordinates.
+    Returns a :class:`Coords` object with shape(3,) holding three zero coordinates.
     """
     return Coords(zeros((3),dtype=Float))
 
@@ -2101,9 +2100,7 @@ def pattern(s,aslist=False):
     - `aslist`: bool: if True, the points are returned as lists of
       integer coordinates instead of a :class:`Coords` object.
 
-    Returns:
-    
-    A :class:`Coords` with the generated points (default) or a list
+    Returns a :class:`Coords` with the generated points (default) or a list
     of tuples with 3 integer coordinates (if `aslist` is True).
 
     Example:

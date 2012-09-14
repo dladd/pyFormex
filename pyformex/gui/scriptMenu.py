@@ -163,7 +163,8 @@ class ScriptMenu(QtGui.QMenu):
 
     ::
 
-      ScriptMenu('History',files=["/my/script1.py","/some/other/script.pye"],recursive=False)
+      ScriptMenu('History',files=["/my/script1.py","/some/other/script.pye"],
+                 recursive=False)
 
     is typically used to create a history menu of previously visited files.
 

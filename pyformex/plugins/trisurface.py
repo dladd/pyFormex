@@ -1148,12 +1148,12 @@ Quality: %s .. %s
         - `angle`: The angle by which the normals on adjacent triangles
           should differ in order for the edge to be marked as a feature. 
 
-        Returns: 
-
-        A boolean array with shape (nedg,) where the feature angles
+        Returns a boolean array with shape (nedg,) where the feature angles
         are marked with True.
 
-        .. note:: As a side effect, this also sets the `elem_edges` and `edges`
+        .. note:: 
+
+           As a side effect, this also sets the `elem_edges` and `edges`
            attributes, which can be used to get the edge data with the same
            numbering as used in the returned mask. Thus, the following
            constructs a Mesh with the feature edges of a surface S::
@@ -1216,11 +1216,11 @@ Quality: %s .. %s
 
         Returns: 
 
-          A tuple of two TriSurfaces, or a single TriSurface,
-          depending on the value of `side`. The returned surfaces will have
-          their normals fixed wherever possible. Property values will be set
-          containing the triangle number of the original surface from which
-          the elements resulted.
+        A tuple of two TriSurfaces, or a single TriSurface,
+        depending on the value of `side`. The returned surfaces will have
+        their normals fixed wherever possible. Property values will be set
+        containing the triangle number of the original surface from which
+        the elements resulted.
         """
         def finalize(Sp,Sn,I):
             # Result
@@ -1703,7 +1703,7 @@ Quality: %s .. %s
         
         - `alpha`, `beta`: float: parameters for the laplace method.
 
-        Returns: the smoothed TriSurface
+        Returns the smoothed TriSurface
         """
         method = method.lower()
 

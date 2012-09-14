@@ -533,9 +533,11 @@ def fmtConnectorBehavior(prop):
     Implemented: Elasticity,  Stop
     Examples: 
     Elasticity
-    P.Prop(name='connbehavior1',ConnectorBehavior='',Elasticity=dict(component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
+    P.Prop(name='connbehavior1',ConnectorBehavior='',Elasticity=dict(
+    component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
     Stop:
-    P.Prop(name='connbehavior3',ConnectorBehavior='',Stop=dict(component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))
+    P.Prop(name='connbehavior3',ConnectorBehavior='',Stop=dict(
+    component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))
     """
     out = ''
     for p in prop:
@@ -755,7 +757,8 @@ def fmtGeneralContact(prop):
 
     Example:
     
-      >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
+      >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[
+      ['surf11', 'surf12'],['surf21',surf22]])
     
     """
     out = ''
@@ -789,7 +792,9 @@ def fmtContactPair(prop):
     
     Example:
     
-    >>> P.Prop(name='contact0',interaction=Interaction(name ='contactprop', surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001]), master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
+    >>> P.Prop(name='contact0',interaction=Interaction(name ='contactprop',
+    surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001]), 
+    master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
     """
     out = ''
     for p in prop:
@@ -824,7 +829,8 @@ def fmtConstraint(prop):
     
     Example:
 
-    >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no', master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
+    >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no', 
+    master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
     """
     for p in prop:
         out =''

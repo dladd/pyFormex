@@ -630,10 +630,10 @@ class Connectivity(ndarray):
         
         Returns: 
 
-          An Adjacency array with shape (nr,nc),
-          where row `i` holds a sorted list of all the items that are
-          adjacent to item `i`, padded with -1 values to create an equal
-          list length for all items.
+        An Adjacency array with shape (nr,nc),
+        where row `i` holds a sorted list of all the items that are
+        adjacent to item `i`, padded with -1 values to create an equal
+        list length for all items.
            
         Example:
         
@@ -697,10 +697,10 @@ class Connectivity(ndarray):
 
         Returns:
 
-          A :class:`Connectivity` object with shape
-          ``(self.nelems*selector.nelems,selector.nplex)``. This function
-          does not collapse the duplicate elements. The eltype of the result
-          is equal to that of the selector, possibly None.
+        A :class:`Connectivity` object with shape
+        ``(self.nelems*selector.nelems,selector.nplex)``.
+        This function does not collapse the duplicate elements. The eltype 
+        of the result is equal to that of the selector, possibly None.
            
         Example:
         
@@ -840,7 +840,8 @@ class Connectivity(ndarray):
 
         Example:
 
-          >>> hi,lo = Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[1,2],[2,0]])
+          >>> hi,lo = Connectivity([[0,1,2],[0,2,1],[0,3,2]]).\
+          insertLevel([[0,1],[1,2],[2,0]])
           >>> hi.combine(lo)
           Connectivity([[0, 1, 2],
                  [0, 2, 1],
@@ -1362,9 +1363,9 @@ def connectedLineElems(elems,return_indices=False):
              [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
              
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]],True)
-      ([Connectivity([[1, 0],
-             [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])], [array([[ 0, -1],
-             [ 1,  1]], dtype=int32), array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])
+      ([Connectivity([[1, 0],[0, 2]]), Connectivity([[4, 5]]),
+       Connectivity([[0, 3]])], [array([[ 0, -1],[ 1,  1]], dtype=int32),
+       array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])
              
       >>> connectedLineElems([[0,1,2],[2,0,3],[0,3,1],[4,5,2]])
       [Connectivity([[3, 0, 2],
@@ -1375,7 +1376,7 @@ def connectedLineElems(elems,return_indices=False):
     the first return value could be reconstructed::
 
       first = [
-          where(i[:,-1:] > 0, elems[i[:,0]], elems[i[:,0],::-1]) \
+          where(i[:,-1:] > 0, elems[i[:,0]], elems[i[:,0],::-1])
           for i in second
       ]
       

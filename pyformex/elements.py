@@ -96,7 +96,8 @@ class ElementType(object):
       0-dimensional elements: ['point']
       1-dimensional elements: ['line2', 'line3']
       2-dimensional elements: ['tri3', 'tri6', 'quad4', 'quad6', 'quad8', 'quad9']
-      3-dimensional elements: ['tet4', 'tet10', 'tet14', 'tet15', 'wedge6', 'hex8', 'hex16', 'hex20', 'icosa']
+      3-dimensional elements: ['tet4', 'tet10', 'tet14', 'tet15', 'wedge6', 'hex8',
+                               'hex16', 'hex20', 'icosa']
 
     Optional attributes:
 

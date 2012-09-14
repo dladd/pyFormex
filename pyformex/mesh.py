@@ -928,7 +928,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Non-manifold nodes are nodes where subparts of a mesh of level >= 2
         are connected by a node but not by an edge.
 
-        Returns: an integer array with a sorted list of non-manifold node
+        Returns an integer array with a sorted list of non-manifold node
         numbers. Possibly empty (always if the dimensionality of the Mesh
         is lower than 2). 
         """
@@ -946,7 +946,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Non-manifold edges are edges where subparts of a mesh of level 3
         are connected by an edge but not by an face.
 
-        Returns: an integer array with a sorted list of non-manifold edge
+        Returns an integer array with a sorted list of non-manifold edge
         numbers. Possibly empty (always if the dimensionality of the Mesh
         is lower than 3).
 
@@ -972,7 +972,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Non-manifold edges are edges where subparts of a mesh of level 3
         are connected by an edge but not by an face.
 
-        Returns: an integer array with a sorted list of numbers of nodes
+        Returns an integer array with a sorted list of numbers of nodes
         on the non-manifold edges.
         Possibly empty (always if the dimensionality of the Mesh
         is lower than 3). 
@@ -1458,20 +1458,18 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           on the element type of the Mesh. Currently implemented:
 
         - 'tri3': ndiv is a single int value specifying the number of
-            divisions (of equal size) for each edge.
+          divisions (of equal size) for each edge.
 
         - 'quad4': ndiv is a sequence of two int values nx,ny, specifying
-            the number of divisions along the first, resp. second
-            parametric direction of the element
+          the number of divisions along the first, resp. second
+          parametric direction of the element
 
         - `fuse`: bool, if True (default), the resulting Mesh is completely
           fused. If False, the Mesh is only fused over each individual
           element of the original Mesh.
 
-        Returns: 
-
-          A Mesh where each element is replaced by a number of
-          smaller elements of the same type.
+        Returns a Mesh where each element is replaced by a number of
+        smaller elements of the same type.
 
         .. note:: This is currently only implemented for Meshes of type 'tri3'
           and 'quad4' and for the derived class 'TriSurface'.

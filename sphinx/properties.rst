@@ -109,7 +109,8 @@ your code.  ::
 Notice the auto-generated `nr` field. Here's another example, with a tag::
 
    >>> author = P.Prop(tag='author',name='Alfred E Neuman',\
-           address=CascadingDict({'street':'Krijgslaan',  'city':'Gent','country':'Belgium'}))
+           address=CascadingDict({'street':'Krijgslaan',\
+           'city':'Gent','country':'Belgium'}))
    >>> print author
 
      nr = 1
@@ -149,13 +150,15 @@ path to it.  ::
    >>> print author.address.street
      Wiemersdreef
    >>> author = P.Prop(tag='author',alias='John Doe',\
-           address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
+           address={'city': 'London', 'street': 'Downing Street 10',\
+                    'country': 'United Kingdom'})
    >>> print author
 
      nr = 2
      tag = author
      alias = John Doe
-     address = {'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'} 
+     address = {'city': 'London', 'street': 'Downing Street 10',\
+                'country': 'United Kingdom'} 
 
 In the examples above, we have given a name to the created property records, so
 that we could address them in the subsequent print and field assigment

@@ -92,10 +92,8 @@ def projectedArea(x,dir):
     - `dir`: either a global axis number (0, 1 or 2) or a direction vector
       consisting of 3 floats, specifying the projection direction.
      
-    Returns: 
-
-      A single float value with the area inside the polygon projected
-      in the specified direction.
+    Returns a single float value with the area inside the polygon projected
+    in the specified direction.
 
     Note that if the polygon is planar and the specified direction is that
     of the normal on its plane, the returned area is that of the planar
@@ -420,9 +418,7 @@ def pointsAtLines(q,m,t):
       a single line or a set of lines.
     - `t`: array of parameter values, broadcast compatible with `q` and `m`.
 
-    Returns:
-
-      An array with the points at parameter values t.
+    Returns an array with the points at parameter values t.
     """
     t = t[...,newaxis]
     return q+t*m
@@ -437,9 +433,7 @@ def pointsAtSegments(S,t):
       a set of line segments.
     - `t`: array of parameter values, broadcast compatible with `S`.
 
-    Returns: 
-
-      An array with the points at parameter values t.
+    Returns an array with the points at parameter values t.
     """
     q0 = S[...,0,:]
     q1 = S[...,1,:]
@@ -459,11 +453,9 @@ def intersectionTimesLWL(q1,m1,q2,m2,mode='all'):
     - `mode`: `all` to calculate the intersection of each line (q1,m1) with all lines
       (q2,m2) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A tuple of (nq1,nq2) shaped (`mode=all`) arrays of parameter
-      values t1 and t2, such that the intersection points are given by
-      ``q1+t1*m1`` and ``q2+t2*m2``.
+    Returns a tuple of (nq1,nq2) shaped (`mode=all`) arrays of parameter
+    values t1 and t2, such that the intersection points are given by
+    ``q1+t1*m1`` and ``q2+t2*m2``.
     """
     if mode == 'all':
         q1 = asarray(q1).reshape(-1,1,3)
@@ -513,10 +505,8 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
     - `mode`: `all` to calculate the intersection of each line (q,m) with
       all planes (p,n) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nq,np) shaped (`mode=all`) array of parameter values t,
-      such that the intersection points are given by q+t*m.
+    Returns a (nq,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
         return (dotpr(p,n) - inner(q,n)) / inner(m,n)
@@ -551,11 +541,9 @@ def intersectionTimesSWP(S,p,n,mode='all'):
     - `mode`: `all` to calculate the intersection of each line segment S with
       all planes (p,n) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nS,np) shaped (`mode=all`) array of parameter values t,
-      such that the intersection points are given by
-      `(1-t)*S[...,0,:] + t*S[...,1,:]`.
+    Returns a (nS,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by
+    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
 
     This function is comparable to intersectionTimesLWP, but ensures that
     parameter values 0<=t<=1 are points inside the line segments.
@@ -620,9 +608,7 @@ def intersectionTimesLWT(q,m,F,mode='all'):
     - `mode`: `all` to calculate the intersection of each line (q,m) with
       all triangles F or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nq,nF) shaped (`mode=all`) array of parameter values t,
+    Returns a (nq,nF) shaped (`mode=all`) array of parameter values t,
       such that the intersection points are given q+tm.
     """
     Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
@@ -691,11 +677,9 @@ def intersectionTimesSWT(S,F,mode='all'):
     - `mode`: `all` to calculate the intersection of each line segment S with
       all triangles F or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nS,nF) shaped (`mode=all`) array of parameter values t,
-      such that the intersection points are given by
-      `(1-t)*S[...,0,:] + t*S[...,1,:]`.
+    Returns a (nS,nF) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by
+    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
     """
     Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
     return intersectionTimesSWP(S,F[...,0,:],Fn,mode)
@@ -763,9 +747,7 @@ def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
     - `mode`: `all` to calculate the intersection of each plane (p1,n1) with
       all planes (p2,n2) and (p3,n3) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
+    Returns a (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
     """
     if mode == 'all':
         p1 = asanyarray(p1).reshape(-1,1,1,3)
@@ -795,11 +777,9 @@ def intersectionLinesPWP(p1,n1,p2,n2,mode='all'):
     - `mode`: `all` to calculate the intersection of each plane (p1,n1) with
       all planes (p2,n2) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
-      points q and vectors m, such that the intersection lines are given by
-      ``q+t*m``.
+    Returns a tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
+    points q and vectors m, such that the intersection lines are given by
+    ``q+t*m``.
     """
     if mode == 'all':
         p1 = asanyarray(p1).reshape(-1,1,3)
@@ -824,10 +804,8 @@ def intersectionTimesPOP(X,p,n,mode='all'):
     - `mode`: `all` to calculate the intersection for each point X with
       all planes (p,n) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nX,np) shaped (`mode=all`) array of parameter values t,
-      such that the intersection points are given by X+t*n.
+    Returns a (nX,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by X+t*n.
     """
     if mode == 'all':
         return (dotpr(p,n) - inner(X,n)) / dotpr(n,n)
@@ -860,9 +838,7 @@ def intersectionTimesPOL(X,q,m,mode='all'):
     - `mode`: `all` to calculate the intersection for each point X with
       all lines (q,m) or `pair` for pairwise intersections.
 
-    Returns: 
-
-      A (nX,nq) shaped (`mode=all`) array of parameter values t,
+    Returns a (nX,nq) shaped (`mode=all`) array of parameter values t,
       such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
@@ -914,9 +890,7 @@ def distancesPFL(X,q,m,mode='all'):
     - `mode`: `all` to calculate the distance of each point X from
       all lines (q,m) or `pair` for pairwise distances.
 
-    Returns: 
-
-      A (nX,nq) shaped (`mode=all`) array of distances.
+    Returns a (nX,nq) shaped (`mode=all`) array of distances.
     """
     X = X.astype(float64)
     q = q.astype(float64)
@@ -944,9 +918,7 @@ def distancesPFS(X,S,mode='all'):
     - `mode`: `all` to calculate the distance of each point X from
       all line segments S or `pair` for pairwise distances.
 
-    Returns: 
-
-      A (nX,nS) shaped (`mode=all`) array of distances.
+    Returns a (nX,nS) shaped (`mode=all`) array of distances.
     """
     q0 = S[...,0,:]
     q1 = S[...,1,:]

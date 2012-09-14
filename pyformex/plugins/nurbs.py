@@ -361,8 +361,8 @@ class NurbsCurve(Geometry4):
 
         Parameters:
 
-        `u`: (nu,) shaped float array, parametric values at which a point
-          is to be placed.
+        - `u`: (nu,) shaped float array, parametric values at which a point
+        is to be placed.
 
         Returns (nu,3) shaped Coords with nu points at the specified
         parametric values.
@@ -735,10 +735,10 @@ def uniformParamValues(n,umin=0.0,umax=1.0):
 
     Parameters:
 
-    `n`: int: number of intervals in which the range should be divided.
+    - `n`: int: number of intervals in which the range should be divided.
       The number of values returned is ``n+1``.
 
-    `umin`, `umax`: float: start and end value of the interval. Default
+    - `umin`, `umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
     Returns: 
