@@ -389,8 +389,8 @@ class Coords(ndarray):
 
         Example:
 
-          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
-          [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
+          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]], \
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
           >>> print X.average()
           [[ 2.  0.  0.]
            [ 3.  0.  0.]
@@ -466,7 +466,7 @@ class Coords(ndarray):
         Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bsphere()
-          2.12132
+          2.12132024765
           
         """
         return self.distanceFromPoint(self.center()).max()
@@ -2037,6 +2037,9 @@ class CoordinateSystem(Coords):
 
     def actor(self,**kargs):
         """_This allows a CoordinateSystem object to be drawn directly."""
+        #
+        # BV: THIS DOES NOT WORK: USE drawAxes(CS) instead
+        #
         from gui.actors import AxesActor
         return AxesActor(self,**kargs)
 
