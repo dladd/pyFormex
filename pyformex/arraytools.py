@@ -343,9 +343,7 @@ def horner(a,u):
       degree `n`, starting from lowest degree.
     - `u`: float(nu), parametric values where the polynom is evaluated
 
-    Returns:
-
-      float(nu,nd), nd-dimensional values of the polynom.
+    Returns float(nu,nd), nd-dimensional values of the polynom.
 
     >>> print horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0])
     [[ 1.5  2.   2.5]
@@ -368,10 +366,8 @@ def solveMany(A,b,direct=True):
     - `A`: (ndof,ndof,nsys) shaped float array.
     - `b`: (ndof,nrhs,nsys) shaped float array.
 
-    Returns: 
-
-      A float array `x` with same shape as `b`, where ``x[:,i,j]``
-      solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
+    Returns: a float array `x` with same shape as `b`, where ``x[:,i,j]``
+    solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
 
     For ndof in [1,2,3], all solutions are by default computed directly and
     simultaneously. If ``direct=False`` is specified, a general linear
@@ -440,7 +436,7 @@ def anyVector(v):
 def unitVector(v):
     """Return a unit vector in the direction of v.
 
-    `v` is either an integer specifying one of the global axes (0,1,2),
+    - `v` is either an integer specifying one of the global axes (0,1,2),
     or a 3-element array or compatible.
     """
     if array(v).size == 1:
@@ -830,10 +826,12 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None):
 
     This functions tests that all integer numbers in the array are within the
     range math:`nmin <= i < nmax`
+
+    Parameters:
     
-    nrs: an integer array of any shape.
-    nmin: minimum allowed value. If set to None, the test is skipped.
-    nmax: maximum allowed value + 1! If set to None, the test is skipped.
+    - `nrs`: an integer array of any shape.
+    - `nmin`: minimum allowed value. If set to None, the test is skipped.
+    - `nmax`: maximum allowed value + 1! If set to None, the test is skipped.
     Default range is [0,unlimited].
 
     If the numbers are no unique or one of the limits is passed, an error
@@ -1321,10 +1319,8 @@ def argNearestValue(values,target):
     - `values`: a list of float values
     - `target`: a float value
 
-    Returns: 
-
-      The position of the item in `values` that is
-      nearest to `target`.
+    Returns the position of the item in `values` that is
+    nearest to `target`.
 
     Example:
     
@@ -1343,10 +1339,8 @@ def nearestValue(values,target):
     
     ``target``: a single value
 
-    Returns: 
-
-      The item in ``values`` values that is
-      nearest to ``target``.
+    Returns the item in ``values`` values that is
+    nearest to ``target``.
     """
     return values[argNearestValue(values,target)]
 
@@ -1615,8 +1609,8 @@ def multiplicity(a):
 
     Returns a tuple of:
 
-    - mult: the multiplicity of the unique values in a
-    - uniq: the sorted list of unique values in a
+    - 'mult': the multiplicity of the unique values in a
+    - 'uniq': the sorted list of unique values in a
 
     Example:
 

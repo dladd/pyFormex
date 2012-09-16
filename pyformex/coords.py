@@ -60,9 +60,9 @@ def bbox(objects):
 
     Returns:
 
-    A Coords object with two points: the first contains the minimal
-    coordinate values, the second has the maximal ones of the overall
-    bounding box. 
+      A Coords object with two points: the first contains the minimal
+      coordinate values, the second has the maximal ones of the overall
+      bounding box. 
 
     Example:
     
@@ -100,10 +100,12 @@ def bboxIntersection(A,B):
 def testBbox(A,bb,dirs=[0,1,2],nodes='any'):
     """Test which part of A is inside a given bbox, applied in directions dirs.
 
-    A is any object having bbox and a test method (Formex, Mesh).
-    bb is a bounding box, i.e. a (2,3) shape float array.
-    dirs is a list of the three coordinate axes or a subset thereof.
-    nodes has the same meaing as in Formex.test and Mesh.test.
+    Parameters:
+
+    - `A`: is any object having bbox and a test method (Formex, Mesh).
+    - `bb`: is a bounding box, i.e. a (2,3) shape float array.
+    - `dirs`: is a list of the three coordinate axes or a subset thereof.
+    - `nodes`: has the same meaing as in Formex.test and Mesh.test.
 
     The result is a bool array flagging the elements that are inside the given
     bounding box.
@@ -295,9 +297,7 @@ class Coords(ndarray):
         coordinates, such that no point of the :class:`Coords` are outside
         that volume.
 
-        Returns:
-        
-        A Coords object with shape(2,3): the first point contains the
+        Returns a Coords object with shape(2,3): the first point contains the
         minimal coordinates, the second has the maximal ones. 
 
         Example:
@@ -503,8 +503,10 @@ class Coords(ndarray):
     def distanceFromPlane(self,p,n):
         """Returns the distance of all points from the plane (p,n).
 
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
+        Parameters:
+
+        - `p`: is a point specified by 3 coordinates.
+        - `n`: is the normal vector to a plane, specified by 3 components.
 
         The return value is a float array with shape ``self.pshape()`` with
         the distance of each point to the plane through p and having normal n.
@@ -529,8 +531,11 @@ class Coords(ndarray):
         """Returns the distance of all points from the line (p,n).
 
         p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
-        p is a point on the line specified by 3 coordinates.
-        n is a vector specifying the direction of the line through p.
+
+        Parameters:
+
+        - `p`: is a point on the line specified by 3 coordinates.
+        - `n`: is a vector specifying the direction of the line through p.
 
         The return value is a [...] shaped array with the distance of
         each point to the line through p with direction n.
@@ -582,11 +587,13 @@ class Coords(ndarray):
     def directionalSize(self,n,p=None,_points=False):
         """Returns the extreme distances from the plane p,n.
 
-        The direction n can be specified by a 3 component vector or by
-        a single integer 0..2 designing one of the coordinate axes.
+        Parameters:
 
-        p is any point in space. If not specified, it is taken as the
-        center() of the Coords.
+        - `n`: the direction can be specified by a 3 component vector or by
+          a single integer 0..2 designing one of the coordinate axes.
+
+        - `p`: is any point in space. If not specified, it is taken as the
+          center() of the Coords.
 
         The return value is a tuple of two float values specifying the
         extreme distances from the plane p,n.
@@ -656,14 +663,14 @@ class Coords(ndarray):
         
         Returns: 
 
-        A 1D integer array with same length as the number of points.
-        For each point the value is 1 (True) if the point is above the
-        minimum clipping plane and below the maximum clipping plane,
-        or 0 (False) otherwise.
-        An unspecified clipping plane corresponds with an infinitely low or
-        high value. The return value can directly be used as an index to
-        obtain a :class:`Coords` with the points satisfying the test (or not).
-        See the examples below.
+          A 1D integer array with same length as the number of points.
+          For each point the value is 1 (True) if the point is above the
+          minimum clipping plane and below the maximum clipping plane,
+          or 0 (False) otherwise.
+          An unspecified clipping plane corresponds with an infinitely low or
+          high value. The return value can directly be used as an index to
+          obtain a :class:`Coords` with the points satisfying the test (or not).
+          See the examples below.
 
         Example:
 
@@ -934,10 +941,10 @@ class Coords(ndarray):
     def affine(self,mat,vec=None):
         """Returns a general affine transform of the :class:`Coords` object.
 
-        `mat`: a 3x3 float matrix
-        
-        `vec`: a length 3 list or array of floats
-        
+        Parameters:
+
+        - `mat`: a 3x3 float matrix       
+        - `vec`: a length 3 list or array of floats       
         The returned object has coordinates given by ``self * mat + vec``.
         """
         out = dot(self,mat)
@@ -967,10 +974,12 @@ class Coords(ndarray):
     def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg):
         """Converts from cylindrical to cartesian after scaling.
 
-        dir specifies which coordinates are interpreted as resp.
-        distance(r), angle(theta) and height(z). Default order is [r,theta,z].
-        scale will scale the coordinate values prior to the transformation.
-        (scale is given in order r,theta,z).
+        Parameters:
+
+        - `dir`: specifies which coordinates are interpreted as resp.
+          distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+        - `scale`: will scale the coordinate values prior to the transformation.
+          (scale is given in order r,theta,z).
         The resulting angle is interpreted in degrees.
         """
         # We put in a optional scaling, because doing this together with the
@@ -1001,9 +1010,11 @@ class Coords(ndarray):
     def toCylindrical(self,dir=[0,1,2],angle_spec=Deg):
         """Converts from cartesian to cylindrical coordinates.
 
-        dir specifies which coordinates axes are parallel to respectively the
-        cylindrical axes distance(r), angle(theta) and height(z). Default
-        order is [x,y,z].
+        Parameters:
+
+        - `dir`: specifies which coordinates axes are parallel to respectively the
+          cylindrical axes distance(r), angle(theta) and height(z). Default
+          order is [x,y,z].
         The angle value is given in degrees.
         """
         f = zeros_like(self)
@@ -1017,10 +1028,11 @@ class Coords(ndarray):
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg,colat=False):
         """Converts from spherical to cartesian after scaling.
 
-        - `dir` specifies which coordinates are interpreted as resp.
-          longitude(theta), latitude(phi) and distance(r).
-        - `scale` will scale the coordinate values prior to the transformation.
+        Parameters:
 
+        - `dir`: specifies which coordinates are interpreted as resp.
+          longitude(theta), latitude(phi) and distance(r).
+        - `scale`: will scale the coordinate values prior to the transformation.
         Angles are interpreted in degrees.
         Latitude, i.e. the elevation angle, is measured from equator in
         direction of north pole(90). South pole is -90.
@@ -1046,23 +1058,25 @@ class Coords(ndarray):
 
         Just like with spherical(), the input coordinates are interpreted as
         the longitude, latitude and distance in a spherical coordinate system.
+        
+        Parameters:
 
-        `dir` specifies which coordinates are interpreted as resp.
-        longitude(theta), latitude(phi) and distance(r).
-        Angles are then interpreted in degrees.
-        Latitude, i.e. the elevation angle, is measured from equator in
-        direction of north pole(90). South pole is -90.
-        If colat=True, the third coordinate is the colatitude (90-lat) instead.
+        - `dir`: specifies which coordinates are interpreted as resp.longitude(theta), 
+          latitude(phi) and distance(r).
+          Angles are then interpreted in degrees.
+          Latitude, i.e. the elevation angle, is measured from equator in
+          direction of north pole(90). South pole is -90.
+          If colat=True, the third coordinate is the colatitude (90-lat) instead.
 
-        `scale` will scale the coordinate values prior to the transformation.
+        - `scale`: will scale the coordinate values prior to the transformation.
 
-        The `n` and `e` parameters define exponential transformations of the
-        north_south (latitude), resp. the east_west (longitude) coordinates.
-        Default values of 1 result in a circle.
+        - `n`, `e`: parameters define exponential transformations of the
+          north_south (latitude), resp. the east_west (longitude) coordinates.
+          Default values of 1 result in a circle.
 
-        `k` adds 'eggness' to the shape: a difference between the northern and
-        southern hemisphere. Values > 0 enlarge the southern hemishpere and
-        shrink the northern.
+        - `k`: adds 'eggness' to the shape: a difference between the northern and
+          southern hemisphere. Values > 0 enlarge the southern hemishpere and
+          shrink the northern.
         """
         def c(o,m):
             c = cos(o)
@@ -1088,11 +1102,13 @@ class Coords(ndarray):
     def toSpherical(self,dir=[0,1,2],angle_spec=Deg):
         """Converts from cartesian to spherical coordinates.
 
-        `dir` specifies which coordinates axes are parallel to respectively
-        the spherical axes distance(r), longitude(theta) and latitude(phi).
-        Latitude is the elevation angle measured from equator in direction
-        of north pole(90). South pole is -90.
-        Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
+        Parameters:
+
+        - `dir`: specifies which coordinates axes are parallel to respectively
+          the spherical axes distance(r), longitude(theta) and latitude(phi).
+          Latitude is the elevation angle measured from equator in direction
+          of north pole(90). South pole is -90.
+          Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
 
         The returned angle values are given in degrees.
         """
@@ -1107,10 +1123,12 @@ class Coords(ndarray):
     def bump1(self,dir,a,func,dist):
         """Returns a :class:`Coords` with a one-dimensional bump.
 
-        - `dir` specifies the axis of the modified coordinates;
-        - `a` is the point that forces the bumping;
-        - `dist` specifies the direction in which the distance is measured;
-        - `func` is a function that calculates the bump intensity from distance
+        Parameters:
+
+        - `dir`: specifies the axis of the modified coordinates;
+        - `a`: is the point that forces the bumping;
+        - `dist`: specifies the direction in which the distance is measured;
+        - `func`: is a function that calculates the bump intensity from distance
           and should be such that ``func(0) != 0``.
         """
         f = self.copy()
@@ -1122,10 +1140,12 @@ class Coords(ndarray):
     def bump2(self,dir,a,func):
         """Returns a :class:`Coords` with a two-dimensional bump.
 
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        func is a function that calculates the bump intensity from distance
-        !! func(0) should be different from 0.
+        Parameters:
+
+        - `dir`: specifies the axis of the modified coordinates;       
+        - `a`: is the point that forces the bumping;
+        - `func`: is a function that calculates the bump intensity from distance
+          !! func(0) should be different from 0.
         """
         f = self.copy()
         dist = [0,1,2]
@@ -1149,18 +1169,20 @@ class Coords(ndarray):
         A bump is a modification of a set of coordinates by a non-matching
         point. It can produce various effects, but one of the most common
         uses is to force a surface to be indented by some point.
+
+        Parameters:
         
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        func is a function that calculates the bump intensity from distance
-        (!! func(0) should be different from 0)
-        dist is the direction in which the distance is measured : this can
-        be one of the axes, or a list of one or more axes.
-        If only 1 axis is specified, the effect is like function bump1
-        If 2 axes are specified, the effect is like bump2
-        This function can take 3 axes however.
-        Default value is the set of 3 axes minus the direction of modification.
-        This function is then equivalent to bump2.
+        - `dir`: specifies the axis of the modified coordinates;
+        - `a`: is the point that forces the bumping;
+        - `func`: is a function that calculates the bump intensity from distance
+          (!! func(0) should be different from 0)
+        - `dist`: is the direction in which the distance is measured : this can
+          be one of the axes, or a list of one or more axes.
+          If only 1 axis is specified, the effect is like function bump1
+          If 2 axes are specified, the effect is like bump2
+          This function can take 3 axes however.
+          Default value is the set of 3 axes minus the direction of modification.
+          This function is then equivalent to bump2.
         """
         f = self.copy()
         if dist == None:
@@ -1210,9 +1232,12 @@ class Coords(ndarray):
         """Map a :class:`Coords` by a 3-D function.
 
         This is one of the versatile mapping functions.
-        func is a numerical function which takes three arguments and produces
-        a list of three output values. The coordinates [x,y,z] will be
-        replaced by func(x,y,z).
+
+        Parameters:
+
+        - `func`: is a numerical function which takes three arguments and produces
+          a list of three output values. The coordinates [x,y,z] will be
+          replaced by func(x,y,z).
         The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
         numpy module.
@@ -1235,9 +1260,11 @@ class Coords(ndarray):
     def map1(self,dir,func,x=None):
         """Map one coordinate by a 1-D function of one coordinate.
 
-        `func` is a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by func(coord[x]).
-        If no x is specified, x is taken equal to dir. 
+        Parameters:
+
+        - `func`: is a numerical function which takes one argument and produces
+          one result. The coordinate dir will be replaced by func(coord[x]).
+          If no x is specified, x is taken equal to dir. 
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
         numpy module.
@@ -1253,8 +1280,10 @@ class Coords(ndarray):
     def mapd(self,dir,func,point,dist=None):
         """Map one coordinate by a function of the distance to a point.
 
-        `func` a numerical function which takes one argument and produces
-        one result. The coordinate `dir` will be replaced by ``func(d)``,
+        Parameters:
+
+        - `func`: a numerical function which takes one argument and produces
+          one result. The coordinate `dir` will be replaced by ``func(d)``,
         where ``d`` is calculated as the distance to `point`.
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
@@ -1423,10 +1452,10 @@ class Coords(ndarray):
 
         Returns:
 
-        A Coords with the same shape as the input. If `return_indices`
-        is True, also returns an index of the points that have a projection
-        on the surface. This index is a sequential one, no matter what the
-        shape of the input Coords is.
+          A Coords with the same shape as the input. If `return_indices`
+          is True, also returns an index of the points that have a projection
+          on the surface. This index is a sequential one, no matter what the
+          shape of the input Coords is.
         """
         import olist
         from geomtools import anyPerpendicularVector
@@ -1608,10 +1637,10 @@ class Coords(ndarray):
 
         Returns: 
 
-        An int array which is a permutation of range(self.npoints()).
-        If taken in the specified order, it is guaranteed that no point can
-        have a coordinate that is larger that the corresponding coordinate
-        of the next point.
+          An int array which is a permutation of range(self.npoints()).
+          If taken in the specified order, it is guaranteed that no point can
+          have a coordinate that is larger that the corresponding coordinate
+          of the next point.
         """
         n = self.shape[0]
         nmax = iinfo('int64').max # max integer, a bit above 2 million
@@ -1856,20 +1885,22 @@ class Coords(ndarray):
         This convenience function uses the :func:`numpy.fromstring`
         function to read coordinates from a string.
 
-        `fil`: a string containing a single sequence of float numbers separated
-        by whitespace and a possible separator string.
+        Parameters:
 
-        `sep`: the separator used between the coordinates. If not a space,
-        all extra whitespace is ignored. 
+        - `fil`: a string containing a single sequence of float numbers separated
+          by whitespace and a possible separator string.
 
-        `ndim`: number of coordinates per point. Should be 1, 2 or 3 (default).
-        If 1, resp. 2, the coordinate string only holds x, resp. x,y
-        values.
+        - `sep`: the separator used between the coordinates. If not a space,
+          all extra whitespace is ignored. 
 
-        `count`: total number of coordinates to read. This should be a multiple
-        of 3. The default is to read all the coordinates in the string.
-        count can be used to force an error condition if the string
-        does not contain the expected number of values.
+        - `ndim`: number of coordinates per point. Should be 1, 2 or 3 (default).
+          If 1, resp. 2, the coordinate string only holds x, resp. x,y
+          values.
+
+        - `count`: total number of coordinates to read. This should be a multiple
+          of 3. The default is to read all the coordinates in the string.
+          count can be used to force an error condition if the string
+          does not contain the expected number of values.
 
         The return value is  Coords object.
         """
@@ -1909,11 +1940,11 @@ class Coords(ndarray):
 
         Returns:
 
-        A :class:`Coords` with an extra (first) axis, containing the
-        concatenation of the interpolations of `self` and `X` at all
-        values in `div`.
-        Its shape is (n,) + self.shape, where n is the number of values
-        in `div`.
+          A :class:`Coords` with an extra (first) axis, containing the
+          concatenation of the interpolations of `self` and `X` at all
+          values in `div`.
+          Its shape is (n,) + self.shape, where n is the number of values
+          in `div`.
         
         An interpolation of F and G at value v is a :class:`Coords` H where
         each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
