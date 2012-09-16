@@ -634,11 +634,9 @@ def growAxis(a,add,axis=-1,fill=0):
     - `fill`: int or float
       The value to set the new elements to.
 
-    Returns:
-
-      An array with same dimension and type as `a`, but with a length along
-      `axis` equal to ``a.shape[axis]+add``. The new elements all have the
-      value `fill`.
+    Returns an array with same dimension and type as `a`, but with a length along
+    `axis` equal to ``a.shape[axis]+add``. The new elements all have the
+    value `fill`.
 
     Example:
 
@@ -680,10 +678,8 @@ def reorderAxis(a,order,axis=-1):
       - 'reverse': the elements along axis are placed in reverse order
       - 'random': the elements along axis are placed in random order
 
-    Returns:
-
-      An array with the same elements of self, where only the order
-      along the specified axis has been changed.
+    Returns an array with the same elements of self, where only the order
+    along the specified axis has been changed.
 
     Example::
     
@@ -1250,9 +1246,7 @@ def sortByColumns(a):
 
     - `a`: array_like, 2-D
 
-    Returns:
-
-      A 1-D integer array specifying the order in which the rows have to
+    Returns a 1-D integer array specifying the order in which the rows have to
       be taken to obtain an array sorted by columns.
     
     Example::
@@ -1324,8 +1318,8 @@ def argNearestValue(values,target):
 
     Example:
     
-    >>> argNearestValue([0.1,0.5,0.9],0.7)
-    1
+      >>> argNearestValue([0.1,0.5,0.9],0.7)
+      1
     """
     v = array(values).ravel()
     c = v - target
@@ -1686,9 +1680,7 @@ def movingView(a, size):
     - `a` : array_like: array for wihch to create a moving view
     - `size` : int: size of the moving view
 
-    Returns:
-    
-      An array that is a view of the original array with an extra first
+    Returns an array that is a view of the original array with an extra first
       axis of length w.
 
       Using swapaxes(0,axis) moving views over any axis can be created.
@@ -1817,7 +1809,7 @@ def uniformParamValues(n,umin=0.0,umax=1.0):
 
     - `n`: int: number of intervals in which the range should be divided.
       The number of values returned is ``n+1``.
-    - `umin`,`umax`: float: start and end value of the interval. Default
+    - `umin`, `umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
     Returns: 

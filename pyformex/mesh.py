@@ -1656,9 +1656,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           - 'random': number the elements in a random order.
           - 'reverse': number the elements in reverse order. 
 
-        Returns:
-
-        A Mesh equivalent with self but with the elements ordered as specified.
+        Returns a Mesh equivalent with self but with the elements ordered as specified.
 
         See also: :meth:`Connectivity.reorder`
         """

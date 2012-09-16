@@ -966,9 +966,7 @@ def elementType(name=None,nplex=-1):
     - `nplex`: plexitude of the element. If specified and no element name
       was given, the default element type for this plexitude is returned.
 
-    Returns: 
-
-      A subclass of :class:`ElementType`
+    Returns a subclass of :class:`ElementType`
 
     Errors: 
 

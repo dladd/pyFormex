@@ -235,10 +235,8 @@ class Connectivity(ndarray):
         A degenerate element is a row which contains at least two
         equal values. 
 
-        Returns: 
-
-          A boolean array with shape (self.nelems(),).
-          The True values flag the degenerate rows.
+        Returns a boolean array with shape (self.nelems(),).
+        The True values flag the degenerate rows.
 
         Example:
         
@@ -445,9 +443,7 @@ class Connectivity(ndarray):
         will only remove the duplicate rows that have matching values at
         matching positions.
 
-        Returns:
-
-          A new Connectivity with the duplicate elements removed.
+        Returns a new Connectivity with the duplicate elements removed.
 
         Example:
         
@@ -551,11 +547,9 @@ class Connectivity(ndarray):
     def nParents(self):
         """Return the number of elements connected to each node.
 
-        Returns:
-
-          A 1-D int array with the number of elements connected
-          to each node. The length of the array is equal to the highest
-          node number + 1. Unused node numbers will have a count of zero.
+        Returns a 1-D int array with the number of elements connected
+        to each node. The length of the array is equal to the highest
+        node number + 1. Unused node numbers will have a count of zero.
            
         Example:
         
@@ -571,10 +565,8 @@ class Connectivity(ndarray):
 
         `nodes`: a single node number or a list/array thereof
 
-        Returns: 
-
-          An int array with the numbers of the elements that
-          contain at least one of the specified nodes.
+        Returns an int array with the numbers of the elements that
+        contain at least one of the specified nodes.
            
         Example:
         
@@ -590,10 +582,8 @@ class Connectivity(ndarray):
 
         `nodes`: a single node number or a list/array thereof
 
-        Returns: 
-        
-          An int array with the numbers of the elements that
-          do not contain any of the specified nodes.
+        Returns an int array with the numbers of the elements that
+        do not contain any of the specified nodes.
            
         Example:
         
@@ -697,10 +687,10 @@ class Connectivity(ndarray):
 
         Returns:
 
-        A :class:`Connectivity` object with shape
-        ``(self.nelems*selector.nelems,selector.nplex)``.
-        This function does not collapse the duplicate elements. The eltype 
-        of the result is equal to that of the selector, possibly None.
+          A :class:`Connectivity` object with shape
+          ``(self.nelems*selector.nelems,selector.nplex)``.
+          This function does not collapse the duplicate elements. The eltype 
+          of the result is equal to that of the selector, possibly None.
            
         Example:
         
@@ -868,10 +858,8 @@ class Connectivity(ndarray):
         There is no point in resolving a plexitude 2 structure.
         Plexitudes lower than 2 can not be resolved.
 
-        Returns:
-
-          A plex-2 Connectivity with all connections between node
-          pairs. In each element the nodes are sorted.
+        Returns a plex-2 Connectivity with all connections between node
+        pairs. In each element the nodes are sorted.
 
         Example:
         
