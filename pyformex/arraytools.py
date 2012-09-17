@@ -447,7 +447,7 @@ def unitVector(v):
         ul = length(u)
         if ul <= 0.0:
             raise ValueError,"Zero length vector %s" % v
-        u /= ul
+        u = u/ul
     return u
 
 
@@ -1435,7 +1435,7 @@ def matchIndex(target,values):
       currently undefined which of those positions is returned.
 
     Remark that after ``m = matchIndex(target,values)`` the equality
-    ``values[m] == target`` holds in all the non-negative positions of `m`.
+    ``target[m] == values`` holds in all the non-negative positions of `m`.
 
     Example::
     
