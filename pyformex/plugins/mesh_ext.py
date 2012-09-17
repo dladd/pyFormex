@@ -49,7 +49,7 @@ def rings(self, sources, nrings):
     A list of rings is returned, from zero (equal to sources) to step.
     If step is -1, all rings are returned.
     """
-    r=self.frontWalk(startat=sources,maxval=nrings, front_increment=1)
+    r=self.frontWalk(startat=sources,maxval=nrings, frontinc=1)
     ar, rr= arange(len(r)), range(r.max()+1)
     return [ar[r==i] for i in rr ]
 
