@@ -316,13 +316,19 @@ class Adjacency(ndarray):
         return p[p[:,1] > p[:,0]]
   
   
-    def diff(self,adj):
-        """Return the difference between two adjacency tables.
+    def symdiff(self,adj):
+        """Return the symmetric difference of two adjacency tables.
 
-        self and adj are two adjacency tables with the same number of rows.
-        The return value is an adjacency table of the same length, where each
-        row contains the numbers in self but not in adj
+        Parameters:
+
+        - `adj`: Adjacency with the same number of rows as `self`.
+
+        Returns an adjacency table of the same length, where each
+        row contains all the (nonnegative) numbers of the corresponding
+        rows of self and adj, except those that occur in both.
         """
+        if adj.nelems() != self.nelems():
+            raise ValueError,"`adj` should have same number of rows as `self`"
         adj = concatenate([self,adj],axis=-1)
         adj = sortAdjacency(adj)
         dup = adj[:,:-1] == adj[:,1:] # duplicate items

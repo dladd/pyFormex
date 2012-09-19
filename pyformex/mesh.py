@@ -746,7 +746,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         its neighbours connected by the specified geometrical subitems.
         """
         if diflevel > level:
-            return self.adjacency(level).diff(self.adjacency(diflevel))
+            return self.adjacency(level).symdiff(self.adjacency(diflevel))
 
         if level == 0:
             elems = self.elems

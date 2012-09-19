@@ -58,20 +58,20 @@ def run():
     delay(0)
 
     a = Formex([0.,0.,0.]).toMesh()   # a point at the origin
-    print a.eltype
+    print a.elName()
     draw(a,color='black')
 
     delay(sleep)
 
     b = a.extrude(nx,1.,0,degree=degree)  # point extruded to quadratic line 
-    print b.eltype
+    print b.elName()
     draw(b.coords,wait=False)
     draw(b,color='red')
 
     c = b.extrude(ny,1.,1,degree=degree)  # line extruded to quadratic surface
     if serendipity:
         c = c.convert('quad8')#.compact()
-    print c.eltype
+    print c.elName()
     draw(c.coords,wait=False)
     draw(c,color='blue')
 
@@ -81,11 +81,11 @@ def run():
     #d = d.convert('hex20')
     d = c.extrude(nz,1.,2,degree=degree)  # surface extruded to quadratic volume
     d = d.compact()
-    print d.eltype
+    print d.elName()
     #d = d.reverse()
     if show3Dbyborder:
         d = d.getBorderMesh()
-    print "Shown as %s" % d.eltype
+    print "Shown as %s" % d.elName()
     clear()
     draw(d.coords,wait=False)
     #drawNumbers(d.coords)
@@ -106,11 +106,11 @@ def run():
     a = a[a>=0]
     d.prop[a] = 3
     # color the node but not face adjacent elements cyan
-    a = adj[0].diff(adj[2])[central]
+    a = adj[0].symdiff(adj[2])[central]
     a = a[a>=0]
     d.prop[a] = 4
     # color the node but not edge adjacent elements red
-    a = adj[0].diff(adj[1])[central]
+    a = adj[0].symdiff(adj[1])[central]
     a = a[a>=0]
     d.prop[a] = 1
     clear()
