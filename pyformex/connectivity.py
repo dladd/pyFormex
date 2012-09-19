@@ -1513,7 +1513,7 @@ def adjacencyArrays(elems,nsteps=1):
            [1, 2]]), array([], shape=(5, 0), dtype=int64)]
 
     """
-    utils.warn("depr_adjacencyArrays")
+    #utils.warn("depr_adjacencyArrays")
     elems = Connectivity(elems)
     if len(elems.shape) != 2 or elems.shape[1] != 2:
         raise ValueError,"""Expected a set of 2-node elements."""
