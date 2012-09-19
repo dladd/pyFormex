@@ -306,7 +306,7 @@ def projection(A,B,axis=-1):
 
 
 def orthog(A,B,axis=-1):
-    """Return the (signed) length of the projection of vector of A on B.
+    """Return the component of vector of A that is orthogonal to B.
 
     The components of the vectors are stored along the specified array axis
     (default axis is the last).
@@ -591,11 +591,11 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
 
 
 # WHAT IF EITHER vec1 or vec2 is // to upvec?
-def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
-    """Return a rotation matrix for rotating vector vec1 to vec2
+def vectorRotation(vec1,vec2,upvec=None):
+    """Return a rotation matrix for rotating vector vec1 to vec2.
 
-    The rotation matrix will be such that the plane of vec2 and the
-    rotated upvec will be parallel to the original upvec.
+    If upvec is specified, the rotation matrix will be such that the plane of
+    vec2 and the rotated upvec will be parallel to the original upvec.
 
     This function is like :func:`arraytools.rotMatrix`, but allows the
     specification of vec1.
@@ -603,11 +603,21 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     """
     u = normalize(vec1)
     u1 = normalize(vec2)
-    w = normalize(upvec)
-    v = normalize(cross(w,u))
-    w = normalize(cross(u,v))
-    v1 = normalize(cross(w,u1))
-    w1 = normalize(cross(u1,v1))
+    if upvec is None:
+        w = cross(u,u1)
+        if length(w) == 0.: # vec1 and vec2 are parallel
+            x,y,z = u
+            w = array([1.,0.,0.]) if x==0. and y==0. else array([-y,x,0.])
+        w = normalize(w)
+        v = normalize(cross(w,u))
+        v1 = normalize(cross(w,u1))
+        w1 = w
+    else:
+        w = normalize(upvec)
+        v = normalize(cross(w,u))
+        w = normalize(cross(u,v))
+        v1 = normalize(cross(w,u1))
+        w1 = normalize(cross(u1,v1))
     mat1 = column_stack([u,v,w])
     mat2 = row_stack([u1,v1,w1])
     mat = dot(mat1,mat2)
