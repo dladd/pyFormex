@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)

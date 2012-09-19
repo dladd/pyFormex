@@ -1035,7 +1035,11 @@ They will need to be tuned for the release.
 
 - Go to the `pkg` directory. The `_do` procedure should always be executed
   from here.
-- Unpack latest release: `_do unpack`. This unpacks the latest source
+- Unpack latest release::
+
+  _do unpack
+
+  This unpacks the latest source
   distribution (from the `dist/` or `dist/pyformex/` subdirectory) in
   a directory `pyformex-VERSION` and copies the `debian-template` as a
   starting `debian` subdirectory.
@@ -1050,13 +1054,22 @@ They will need to be tuned for the release.
    files in `debian-template` instead of those in `pyformex-VERSION/debian`.
    Then do a `_do clean unpack`.
 
-- Build the packages: `_do build`. This will build the python modules, 
+- Build the packages:: 
+
+  _do build`
+
+  This will build the python modules, 
   the compiled libraries and the extra binaries under a path 
   `pyformex-VERSION/debian/tmp` and install the needed files into
   the package directories `pyformex`, `pyformex-lib` and `pyformex-extras`.
 
   Check that no errors occur during the procedure. A log file is written 
   for each package.
+
+- Test installing and running of the packages::
+
+  _do install
+
 
 - If OK, build final (signed): _do final
 - upload: dput mentors PYFVER.changes

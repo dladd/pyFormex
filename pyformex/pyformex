@@ -71,10 +71,9 @@ else:
     # pointless _bindir parent is first: it can be removed
     # pyformex path is not there: add it at the front
     # so, just overwrite first path
-    sys.path[0] = pyformex.__path__
+    sys.path[0] = pyformex_path
 
-#from pyformex.main import run
-from main import run
+from pyformex.main import run
 
 if __name__ == "__main__":
     sys.exit(run(sys.argv[1:]))
