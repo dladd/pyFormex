@@ -29,8 +29,7 @@
 
 from draw2d import *
 from plugins.objects import *
-from plugins.tools_menu import _drawables
-from plugins.geometry_menu import autoname 
+import plugins.geometry_menu as gm
 from gui import menu
 
 # We subclass the DrawableObject to change its toggleAnnotation method
@@ -106,7 +105,7 @@ def createNurbsCurve(N,name=None):
 
     If no name is returned, the curve is not stored.
     """
-    an = autoname['nurbscurve']
+    an = gm.autoname['nurbscurve']
     drawNurbs(N)
     if name is None:
         name = an.peek()
@@ -173,7 +172,7 @@ _menu = 'Nurbs'
 def create_menu(before='help'):
     """Create the menu."""
     MenuData = [
-        ("&Select drawable",_drawables.ask),
+        ("&Select drawable",selection.ask),
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),

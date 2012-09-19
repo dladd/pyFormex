@@ -95,8 +95,13 @@ def _init_():
     drawable = pf.GUI.drawable
     selection = pf.GUI.selection['geometry']
     drawAll = drawable.draw
-    
 
+
+def geomList():
+    """Return a list with all the currently displayed geometry actors"""
+    return selection.check()
+            
+ 
 def set_selection(clas='geometry'):
     sel = pf.GUI.selection.get(clas)
     if sel:

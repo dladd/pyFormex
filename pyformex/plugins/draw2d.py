@@ -36,9 +36,8 @@ from odict import ODict
 from geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.nurbs import *
-from plugins.tools_menu import _drawables
 from plugins import objects
-from plugins.geometry_menu import autoname,autoName
+from plugins.geometry_menu import autoname,autoName,geomList
 from gui.draw import *
 
 draw_mode_2d = ['point','polyline','curve','nurbs','circle']
@@ -298,7 +297,7 @@ def create_grid():
         ny = int(ceil(height/dy))
         obj = None
         if autosize:
-            obj = _drawables.check()
+            obj = geomList()
             if obj:
                 bb = bbox(obj)
                 nx = ny = 20
