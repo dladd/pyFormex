@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
@@ -73,10 +73,25 @@ else:
     # so, just overwrite first path
     sys.path[0] = pyformex_path
 
-#from pyformex.main import run
-from main import run
-
+TEST=0
+if len(sys.argv) > 1:
+    print sys.argv
+    if sys.argv[1] == "--testpyf":
+        from pyformex.main import run
+        TEST=1
+    elif sys.argv[1] == "--testnopyf":
+        from main import run
+        TEST=2
+if TEST:
+    for m in sys.modules:
+        try:
+            print "MODULE %s: %s" % (m,sys.modules[m].__path__)
+        except:
+            print "MODULE %s: " % (m)
+    sys.exit()
+    
 if __name__ == "__main__":
+    from main import run
     sys.exit(run(sys.argv[1:]))
 
 # End
