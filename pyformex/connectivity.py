@@ -1475,16 +1475,6 @@ def demagic2(codes,magic):
 # and opportunity, and replaced by more general infrastrucuture
 #
 
-@deprecation(_future_deprecation)
-def adjacencyList(elems):
-    """Create adjacency lists for 2-node elements."""
-    if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""
-    elems = elems.astype(int)
-    ok = [ where(elems==i) for i in range(elems.max()+1) ]
-    return [ list(elems[w[0],1-w[1]]) for w in ok ]
-
-
 def adjacencyArrays(elems,nsteps=1):
     """Create adjacency arrays for 2-node elements.
 

@@ -2066,15 +2066,6 @@ class CoordinateSystem(Coords):
         return Coords(self[:3]-self[3])
 
 
-    def actor(self,**kargs):
-        """_This allows a CoordinateSystem object to be drawn directly."""
-        #
-        # BV: THIS DOES NOT WORK: USE drawAxes(CS) instead
-        #
-        from gui.actors import AxesActor
-        return AxesActor(self,**kargs)
-
-
 
 # Creating special coordinate sets
 
