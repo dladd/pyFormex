@@ -31,7 +31,7 @@ defines a few essential functions.
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.7-a1"
+__version__ = "0.8.7-a2"
 __revision__ = '2436:2439M'
 Version = 'pyFormex %s' % __version__
 FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!

@@ -1075,4 +1075,24 @@ They will need to be tuned for the release.
 - upload: dput mentors PYFVER.changes
   
 
+Using the local debian repository
+=================================
+
+Our local repository contains unofficial debian packages for intermediate releases and some extra packages that are not in the official Debian repositories. 
+
+These packages are constructed with the same quality as the official packages.
+
+To access our local repository, add the following to your `/etc/apt/sources.list`::
+
+  deb http://bumps.ugent.be/repos/debian/ sid main
+
+Install the key that was used to sign the packages, you can do::
+
+  wget -O - http://bumps.ugent.be/repos/pyformex-pubkey.gpg | apt-key add -
+
+Then, to install all the latest pyformex packages, just do::
+
+   apt-get update
+   apt-get pyformex pyformex-lib pyformex-extra
+
 .. End
