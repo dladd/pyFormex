@@ -64,6 +64,10 @@ pyformex.bindir = _bindir
 # from other packages installed next to pyformex.
 pyformex_path = pyformex.__path__[0]
 
+print "pyformex_path = %s" % pyformex_path
+print "bindir = %s" % _bindir
+print "sys.path before = %s" % sys.path
+
 if pyformex_path == _bindir:
     # pyformex path is second, its parent is first: exchange the two
     sys.path[:2] = sys.path[1::-1]
@@ -72,6 +76,8 @@ else:
     # pyformex path is not there: add it at the front
     # so, just overwrite first path
     sys.path[0] = pyformex_path
+
+print "sys.path after = %s" % sys.path
 
 from pyformex.main import run
 
