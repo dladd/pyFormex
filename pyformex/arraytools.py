@@ -577,17 +577,13 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     rx = arctan(mat[1,2]/mat[2,2])
     ry = -arcsin(mat[0,2])
     rz = arctan(mat[0,1]/mat[0,0])
-    R = dot(dot(rotationMatrix(rx,0,Rad),rotationMatrix(ry,1,Rad)),rotationMatrix(rz,2,Rad))
-    T = isClose(mat,R,rtol=1.e-3,atol=1.e-5)
-    w = where(~T.ravel())[0]
-    w = w.tolist()
-    if w == [3,4,5,6,7,8]:
-        rx = pi + rx
-    elif w == [0,1,3,4,6,7]:
-        rz = pi + rz
-    elif w == [0,1,5,8]:
-        ry = pi - ry
-    return rx / angle_spec, ry / angle_spec, rz / angle_spec
+    for rxi in [rx,pi+rx]:
+        for ryi in [ry,pi-ry]:
+            for rzi in [rz,pi+rz]:
+                R = dot(dot(rotationMatrix(rxi,0,Rad),rotationMatrix(ryi,1,Rad)),rotationMatrix(rzi,2,Rad))
+                T = isClose(mat,R,rtol=1.e-3,atol=1.e-3)
+                if T.all():
+                    return rxi / angle_spec, ryi / angle_spec, rzi / angle_spec
 
 
 # WHAT IF EITHER vec1 or vec2 is // to upvec?

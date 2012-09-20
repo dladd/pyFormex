@@ -892,17 +892,10 @@ def distancesPFL(X,q,m,mode='all'):
 
     Returns a (nX,nq) shaped (`mode=all`) array of distances.
     """
-    X = X.astype(float64)
-    q = q.astype(float64)
-    m = m.astype(float64)
+    Y = intersectionPointsPOL(X,q,m,mode)
     if mode == 'all':
-        X = asanyarray(X).reshape(-1,1,3)
-        q = asanyarray(q).reshape(1,-1,3)
-        m = asanyarray(m).reshape(1,-1,3)
-    C = length(X-q)
-    A = abs(dotpr(X,m)-dotpr(q,m))/length(m)
-    d = sqrt(abs(C**2-A**2))
-    return d
+        X = asarray(X).reshape(-1,1,3)
+    return length(Y-X)
 
 
 def distancesPFS(X,S,mode='all'):
