@@ -418,7 +418,18 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         return self.coords[self.elems].mean(axis=1)
 
-    
+
+     # getCoords is defined in Geometry: use it, but change the docstring
+     # TODO: make sure that this does not change Geometry.getCoords.__doc__
+     getCoords.__doc__ = 
+     """Get the coords data.
+
+     Returns the full array of coordinates stored in the Mesh object.
+     Note that this may contain points that are not used in the mesh.
+     :meth:`compact` will remove the unused points.
+     """
+
+
     def getElems(self):
         """Get the elems data.
 
