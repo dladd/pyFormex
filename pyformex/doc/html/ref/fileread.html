@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>16. fileread — Read geometry from file in a whole number of formats. &mdash; pyFormex v0.8.7-a2 documentation</title>
+
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.7-a2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="17. filewrite — Write geometry to file in a whole number of formats." href="filewrite.html" />
+    <link rel="prev" title="15. geomtools — Basic geometrical operations." href="geomtools.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
+  </head>
+  <body>
+
+<div class="header">
+  <a href="http://pyformex.org">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geomtools.html" title="15. geomtools — Basic geometrical operations."
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
+</form>
+
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geomtools.html"
+                        title="previous chapter">15. <tt class="docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filewrite.html"
+                        title="next chapter">17. <tt class="docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fileread">
+<span id="fileread-read-geometry-from-file-in-a-whole-number-of-formats"></span><span id="sec-ref-fileread"></span><h1>16. <a class="reference internal" href="#module-fileread" title="fileread: Read geometry from file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">fileread</span></tt></a> &#8212; Read geometry from file in a whole number of formats.<a class="headerlink" href="#module-fileread" title="Permalink to this headline">¶</a></h1>
+<p>This module defines basic routines to read geometrical data
+from a file and the specialized importers to read files in a number of
+well known standardized formats.</p>
+<p>The basic routines are very versatile as well as optimized (using the version
+in the pyFormex C-library) and allow to easily create new exporters for
+other formats.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fileread</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fileread</span></tt></p>
+<dl class="function">
+<dt id="fileread.getParams">
+<tt class="descclassname">fileread.</tt><tt class="descname">getParams</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#fileread.getParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip the parameters from a comment line</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.readNodes">
+<tt class="descclassname">fileread.</tt><tt class="descname">readNodes</tt><big>(</big><em>fil</em><big>)</big><a class="headerlink" href="#fileread.readNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a set of nodes from an open mesh file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.readElems">
+<tt class="descclassname">fileread.</tt><tt class="descname">readElems</tt><big>(</big><em>fil</em>, <em>nplex</em><big>)</big><a class="headerlink" href="#fileread.readElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a set of elems of plexitude nplex from an open mesh file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.readEsets">
+<tt class="descclassname">fileread.</tt><tt class="descname">readEsets</tt><big>(</big><em>fil</em><big>)</big><a class="headerlink" href="#fileread.readEsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the eset data of type generate</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.readMeshFile">
+<tt class="descclassname">fileread.</tt><tt class="descname">readMeshFile</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#fileread.readMeshFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a nodes/elems model from file.</p>
+<p>Returns a dict:</p>
+<ul class="simple">
+<li><cite>node</cite>: a Coords with all nodes</li>
+<li><cite>elems</cite>: a list of Connectivities</li>
+<li><cite>esets</cite>: a list of element sets</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.extractMeshes">
+<tt class="descclassname">fileread.</tt><tt class="descname">extractMeshes</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#fileread.extractMeshes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the Meshes read from a .mesh file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileread.convertInp">
+<tt class="descclassname">fileread.</tt><tt class="descname">convertInp</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#fileread.convertInp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an Abaqus .inp to a .mesh set of files</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geomtools.html" title="15. geomtools — Basic geometrical operations."
+             >previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
+      Last updated on Sep 21, 2012.
+    <span class="right">
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
+    </div>
+  </body>
+</html>

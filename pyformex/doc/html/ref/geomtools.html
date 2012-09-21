@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>32. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>15. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="33. nurbs — Using NURBS in pyFormex." href="nurbs.html" />
-    <link rel="prev" title="31. trisurface — Operations on triangulated surfaces." href="trisurface.html" />
+    <link rel="next" title="16. fileread — Read geometry from file in a whole number of formats." href="fileread.html" />
+    <link rel="prev" title="14. utils — A collection of miscellaneous utility functions." href="utils.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="nurbs.html" title="33. nurbs — Using NURBS in pyFormex."
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+          <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -99,11 +99,11 @@
    
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="trisurface.html"
-                        title="previous chapter">31. <tt class="docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+  <p class="topless"><a href="utils.html"
+                        title="previous chapter">14. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="nurbs.html"
-                        title="next chapter">33. <tt class="docutils literal"><span class="pre">nurbs</span></tt> &#8212; Using NURBS in pyFormex.</a></p>
+  <p class="topless"><a href="fileread.html"
+                        title="next chapter">16. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fileread</span></tt> &#8212; Read geometry from file in a whole number of formats.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-geomtools">
-<span id="geomtools-basic-geometrical-operations"></span><span id="sec-ref-geomtools"></span><h1>32. <a class="reference internal" href="#module-geomtools" title="geomtools: Basic geometrical operations."><tt class="xref py py-mod docutils literal"><span class="pre">geomtools</span></tt></a> &#8212; Basic geometrical operations.<a class="headerlink" href="#module-geomtools" title="Permalink to this headline">¶</a></h1>
+<span id="geomtools-basic-geometrical-operations"></span><span id="sec-ref-geomtools"></span><h1>15. <a class="reference internal" href="#module-geomtools" title="geomtools: Basic geometrical operations."><tt class="xref py py-mod docutils literal"><span class="pre">geomtools</span></tt></a> &#8212; Basic geometrical operations.<a class="headerlink" href="#module-geomtools" title="Permalink to this headline">¶</a></h1>
 <p>This module defines some basic operations on simple geometrical entities
 such as lines, triangles, circles, planes.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
@@ -170,7 +170,7 @@ The area is always positive.</p>
 <li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
 consisting of 3 floats, specifying the projection direction.</li>
 </ul>
-<p>Returns: a single float value with the area inside the polygon projected
+<p>Returns a single float value with the area inside the polygon projected
 in the specified direction.</p>
 <p>Note that if the polygon is planar and the specified direction is that
 of the normal on its plane, the returned area is that of the planar
@@ -325,7 +325,7 @@ is the z-axis, the result is the x-axis.</p>
 a single line or a set of lines.</li>
 <li><cite>t</cite>: array of parameter values, broadcast compatible with <cite>q</cite> and <cite>m</cite>.</li>
 </ul>
-<p>Returns: An array with the points at parameter values t.</p>
+<p>Returns an array with the points at parameter values t.</p>
 </dd></dl>
 
 <dl class="function">
@@ -338,7 +338,7 @@ a single line or a set of lines.</li>
 a set of line segments.</li>
 <li><cite>t</cite>: array of parameter values, broadcast compatible with <cite>S</cite>.</li>
 </ul>
-<p>Returns: An array with the points at parameter values t.</p>
+<p>Returns an array with the points at parameter values t.</p>
 </dd></dl>
 
 <dl class="function">
@@ -354,9 +354,9 @@ set of lines.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q1,m1) with all lines
 (q2,m2) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A tuple of (nq1,nq2) shaped (<cite>mode=all</cite>) arrays of parameter
+<p>Returns a tuple of (nq1,nq2) shaped (<cite>mode=all</cite>) arrays of parameter
 values t1 and t2, such that the intersection points are given by
-q1+t1*m1 and q2+t2*m2.</p>
+<tt class="docutils literal"><span class="pre">q1+t1*m1</span></tt> and <tt class="docutils literal"><span class="pre">q2+t2*m2</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -384,7 +384,7 @@ or a set of planes.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q,m) with
 all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nq,np) shaped (<cite>mode=all</cite>) array of parameter values t,
+<p>Returns a (nq,np) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by q+t*m.</p>
 </dd></dl>
 
@@ -411,7 +411,7 @@ or a set of planes.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line segment S with
 all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nS,np) shaped (<cite>mode=all</cite>) array of parameter values t,
+<p>Returns a (nS,np) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by
 <cite>(1-t)*S[...,0,:] + t*S[...,1,:]</cite>.</p>
 <p>This function is comparable to intersectionTimesLWP, but ensures that
@@ -434,9 +434,11 @@ all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 segments are returned. Default is to return only the points that lie
 on the segments.</li>
 </ul>
-<p>Returns: if <cite>return_all==True</cite>, a (nS,np,3) shaped (<cite>mode=all</cite>) array of
+<p>Returns:</p>
+<blockquote>
+<div>If <cite>return_all==True</cite>, a (nS,np,3) shaped (<cite>mode=all</cite>) array of
 intersection points, else, a tuple of intersection points with shape (n,3)
-and line and plane indices with shape (n), where n &lt;= nS*np.</p>
+and line and plane indices with shape (n), where n &lt;= nS*np.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -453,8 +455,10 @@ or a set of lines.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q,m) with
 all triangles F or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nq,nF) shaped (<cite>mode=all</cite>) array of parameter values t,
-such that the intersection points are given q+tm.</p>
+<dl class="docutils">
+<dt>Returns a (nq,nF) shaped (<cite>mode=all</cite>) array of parameter values t,</dt>
+<dd>such that the intersection points are given q+tm.</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -472,9 +476,11 @@ all triangles F or <cite>pair</cite> for pairwise intersections.</li>
 <li><cite>return_all</cite>: if True, all intersection points are returned. Default is
 to return only the points that lie inside the triangles.</li>
 </ul>
-<p>Returns: if <cite>return_all==True</cite>, a (nq,nF,3) shaped (<cite>mode=all</cite>) array of
+<p>Returns:</p>
+<blockquote>
+<div>If <cite>return_all==True</cite>, a (nq,nF,3) shaped (<cite>mode=all</cite>) array of
 intersection points, else, a tuple of intersection points with shape (n,3)
-and line and plane indices with shape (n), where n &lt;= nq*nF.</p>
+and line and plane indices with shape (n), where n &lt;= nq*nF.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -490,7 +496,7 @@ and line and plane indices with shape (n), where n &lt;= nq*nF.</p>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line segment S with
 all triangles F or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nS,nF) shaped (<cite>mode=all</cite>) array of parameter values t,
+<p>Returns a (nS,nF) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by
 <cite>(1-t)*S[...,0,:] + t*S[...,1,:]</cite>.</p>
 </dd></dl>
@@ -505,14 +511,17 @@ such that the intersection points are given by
 line segments.</li>
 <li><cite>F</cite>: (nF,3,3) shaped array, defining a single triangle or a set of
 triangles.</li>
-<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection points of each line segment S       with all triangles F or <cite>pair</cite> for pairwise intersections.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection points of each line segment S       
+with all triangles F or <cite>pair</cite> for pairwise intersections.</li>
 <li><cite>return_all</cite>: if True, all intersection points are returned. Default is
 to return only the points that lie on the segments and inside the
 triangles.</li>
 </ul>
-<p>Returns: if <cite>return_all==True</cite>, a (nS,nF,3) shaped (<cite>mode=all</cite>) array of
+<p>Returns:</p>
+<blockquote>
+<div>If <cite>return_all==True</cite>, a (nS,nF,3) shaped (<cite>mode=all</cite>) array of
 intersection points, else, a tuple of intersection points with shape (n,3)
-and line and plane indices with shape (n), where n &lt;= nS*nF.</p>
+and line and plane indices with shape (n), where n &lt;= nS*nF.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -528,7 +537,7 @@ or a set of planes.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each plane (p1,n1) with
 all planes (p2,n2) and (p3,n3) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (np1,np2,np3,3) shaped (<cite>mode=all</cite>) array of intersection points.</p>
+<p>Returns a (np1,np2,np3,3) shaped (<cite>mode=all</cite>) array of intersection points.</p>
 </dd></dl>
 
 <dl class="function">
@@ -543,8 +552,9 @@ or a set of planes.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each plane (p1,n1) with
 all planes (p2,n2) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A tuple of (np1,np2,3) shaped (<cite>mode=all</cite>) arrays of intersection
-points q and vectors m, such that the intersection lines are given by q+t*m.</p>
+<p>Returns a tuple of (np1,np2,3) shaped (<cite>mode=all</cite>) arrays of intersection
+points q and vectors m, such that the intersection lines are given by
+<tt class="docutils literal"><span class="pre">q+t*m</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -561,7 +571,7 @@ or a set of planes.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection for each point X with
 all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nX,np) shaped (<cite>mode=all</cite>) array of parameter values t,
+<p>Returns a (nX,np) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by X+t*n.</p>
 </dd></dl>
 
@@ -587,8 +597,10 @@ or a set of lines.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the intersection for each point X with
 all lines (q,m) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: A (nX,nq) shaped (<cite>mode=all</cite>) array of parameter values t,
-such that the intersection points are given by q+t*m.</p>
+<dl class="docutils">
+<dt>Returns a (nX,nq) shaped (<cite>mode=all</cite>) array of parameter values t,</dt>
+<dd>such that the intersection points are given by q+t*m.</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -624,7 +636,7 @@ or a set of lines.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the distance of each point X from
 all lines (q,m) or <cite>pair</cite> for pairwise distances.</li>
 </ul>
-<p>Returns: A (nX,nq) shaped (<cite>mode=all</cite>) array of distances.</p>
+<p>Returns a (nX,nq) shaped (<cite>mode=all</cite>) array of distances.</p>
 </dd></dl>
 
 <dl class="function">
@@ -641,7 +653,7 @@ segment or a set of line segments.</li>
 <li><cite>mode</cite>: <cite>all</cite> to calculate the distance of each point X from
 all line segments S or <cite>pair</cite> for pairwise distances.</li>
 </ul>
-<p>Returns: A (nX,nS) shaped (<cite>mode=all</cite>) array of distances.</p>
+<p>Returns a (nX,nS) shaped (<cite>mode=all</cite>) array of distances.</p>
 </dd></dl>
 
 <dl class="function">
@@ -744,12 +756,12 @@ be inside the simplex.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="nurbs.html" title="33. nurbs — Using NURBS in pyFormex."
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
              >next</a> |</li>
         <li class="right" >
-          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+          <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -757,7 +769,7 @@ be inside the simplex.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -834,6 +834,7 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None):
     - `nrs`: an integer array of any shape.
     - `nmin`: minimum allowed value. If set to None, the test is skipped.
     - `nmax`: maximum allowed value + 1! If set to None, the test is skipped.
+
     Default range is [0,unlimited].
 
     If the numbers are no unique or one of the limits is passed, an error
@@ -1615,6 +1616,7 @@ def multiplicity(a):
     Example:
 
       >>> multiplicity([0,3,5,1,4,1,0,7,1])
+      (array([2, 3, 1, 1, 1, 1]), array([0, 1, 3, 4, 5, 7]))
     """
     bins = unique(a)
     mult,b = histogram(a,bins=concatenate([bins,[max(a)+1]]))
@@ -1790,16 +1792,19 @@ def randomNoise(shape,min=0.0,max=1.0):
 def unitDivisor(div,start=0):
     """Divide a unit interval in equal parts.
 
-    div: an integer or a list of floating point values.
-
-    If it is an integer, returns a list of floating point values
-    dividing the interval 0.0 toi 1.0 in div equal parts.
-    If start=1 is given, the first value (0.0) will be skipped.
-    
-    If div is a list, just returns div as a 1D array.
-
     This function is intended to be used by interpolation functions
     that accept an input as either an int or a list of floats.
+
+    Parameters:
+    
+    - `div`: an integer, or a list of floating point values.
+      If it is an integer, returns a list of floating point values
+      dividing the interval 0.0 toi 1.0 in div equal parts.
+    - `start`: Set to 1 to skip the start value (0.0) of the interval.
+
+    Returns: If `div` is a an integer, returns the floating point values
+    dividing the unit interval in div equal parts. If `div` is a list,
+    just returns `div` as a 1D array.
     """
     div = asarray(div).ravel()
     if div.size == 1 and div.dtype.kind=='i':

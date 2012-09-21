@@ -659,8 +659,11 @@ def fileTypeFromExt(fname):
     >>> fileTypeFromExt('pyformex')
     ''
     >>> fileTypeFromExt('pyformex.pgf')
+    'pgf'
     >>> fileTypeFromExt('pyformex.pgf.gz')
+    'pgf.gz'
     >>> fileTypeFromExt('pyformex.gz')
+    'gz'
     """
     name,ext = os.path.splitext(fname)
     ext = fileType(ext)

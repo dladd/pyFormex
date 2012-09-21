@@ -1351,10 +1351,9 @@ def connectedLineElems(elems,return_indices=False):
              [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
              
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]],True)
-      ([Connectivity([[1, 0],[0, 2]]), Connectivity([[4, 5]]),
-       Connectivity([[0, 3]])], [array([[ 0, -1],[ 1,  1]], dtype=int32),
-       array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])
-             
+      ([Connectivity([[1, 0],
+             [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])], [array([[ 0, -1],
+             [ 1,  1]], dtype=int32), array([[3, 1]], dtype=int32), array([[2, 1]], dtype=int32)])
       >>> connectedLineElems([[0,1,2],[2,0,3],[0,3,1],[4,5,2]])
       [Connectivity([[3, 0, 2],
              [2, 1, 0],

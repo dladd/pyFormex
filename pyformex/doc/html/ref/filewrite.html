@@ -1,0 +1,260 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>17. filewrite — Write geometry to file in a whole number of formats. &mdash; pyFormex v0.8.7-a2 documentation</title>
+
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.7-a2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="18. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
+    <link rel="prev" title="16. fileread — Read geometry from file in a whole number of formats." href="fileread.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
+  </head>
+  <body>
+
+<div class="header">
+  <a href="http://pyformex.org">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
+</form>
+
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fileread.html"
+                        title="previous chapter">16. <tt class="docutils literal docutils literal"><span class="pre">fileread</span></tt> &#8212; Read geometry from file in a whole number of formats.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widgets.html"
+                        title="next chapter">18. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-filewrite">
+<span id="filewrite-write-geometry-to-file-in-a-whole-number-of-formats"></span><span id="sec-ref-filewrite"></span><h1>17. <a class="reference internal" href="#module-filewrite" title="filewrite: Write geometry to file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">filewrite</span></tt></a> &#8212; Write geometry to file in a whole number of formats.<a class="headerlink" href="#module-filewrite" title="Permalink to this headline">¶</a></h1>
+<p>This module defines bothe the basic routines to write geometrical data
+to a file and the specialized exporters to write files in a number of
+well known standardized formats.</p>
+<p>The basic routines are very versatile as well as optimized (using the version
+in the pyFormex C-library) and allow to easily create new exporters for
+other formats.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
+<dl class="function">
+<dt id="filewrite.writeData">
+<tt class="descclassname">filewrite.</tt><tt class="descname">writeData</tt><big>(</big><em>data</em>, <em>fil</em>, <em>fmt=' '</em><big>)</big><a class="headerlink" href="#filewrite.writeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an array of numerical data to an open file.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>data</cite>: a numerical array of int or float type</li>
+<li><cite>fil</cite>: an open file object</li>
+<li><cite>fmt</cite>: a format string defining how a single data item is written.
+It should be one of:<ul>
+<li>&#8216;&#8217;: an empty string: in this case the data are written in binary
+mode, using the function numpy.tofile.</li>
+<li>&#8216; &#8216;: a single space: in this case the data are written in text
+mode, separated by a space, also using the function numpy.tofile.
+At the end, a newline is added. All the data of the array thus appear
+on a single line.</li>
+<li>a format string compatible with the array data type. In this case
+float arrays will be forced to float32 and int arrays to int32.
+The format string should contain a valid format converter for a
+a single data item in both Python and C. They should also contain
+the necessary spacing or separator. Examples are &#8216;%5i &#8216; for int data
+and &#8216;%f,&#8217; or &#8216;%10.3e&#8217; for float data. The array will be converted
+to a 2D array, keeping the lengt of the last axis. The all elements
+will be written row by row using the specified format string, and a
+newline character will be written after each row.
+This mode is written by pyFormex function misc.tofile_int32 or
+misc.tofile_float32, which have accelerated versions in the pyFormex
+C library.</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="filewrite.writeIData">
+<tt class="descclassname">filewrite.</tt><tt class="descname">writeIData</tt><big>(</big><em>data</em>, <em>fil</em>, <em>fmt</em>, <em>ind=1</em><big>)</big><a class="headerlink" href="#filewrite.writeIData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an indexed array of numerical data to an open file.</p>
+<dl class="docutils">
+<dt>ind = i: autoindex from i</dt>
+<dd>array: use these indices</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="filewrite.writeOFF">
+<tt class="descclassname">filewrite.</tt><tt class="descname">writeOFF</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big><a class="headerlink" href="#filewrite.writeOFF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a mesh of polygons to a file in OFF format.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fn</cite>: file name, by preference ending on &#8216;.off&#8217;</li>
+<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
+<cite>ncoords</cite> vertices.</li>
+<li><cite>elems</cite>: int array with shape (nelems,nplex), with the definition of
+<cite>nelems</cite> polygon elements.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="filewrite.writeGTS">
+<tt class="descclassname">filewrite.</tt><tt class="descname">writeGTS</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>edges</em>, <em>faces</em><big>)</big><a class="headerlink" href="#filewrite.writeGTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a mesh of triangles to a file in GTS format.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fn</cite>: file name, by preference ending on &#8216;.gts&#8217;</li>
+<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
+<cite>ncoords</cite> vertices.</li>
+<li><cite>edges</cite>: int array with shape (nedges,2), with the definition of
+<cite>nedges</cite> edges in function of the vertex indices.</li>
+<li><cite>faces</cite>: int array with shape (nfaces,3), with the definition of
+<cite>nfaces</cite> triangles in function of the edge indices.</li>
+</ul>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
+             >previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
+      Last updated on Sep 21, 2012.
+    <span class="right">
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,549 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>50. polygon — Polygonal facets. &mdash; pyFormex v0.8.7-a2 documentation</title>
+
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.7-a2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="51. postproc — Postprocessing functions" href="postproc.html" />
+    <link rel="prev" title="49. plot2d — plot2d.py" href="plot2d.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
+  </head>
+  <body>
+
+<div class="header">
+  <a href="http://pyformex.org">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="postproc.html" title="51. postproc — Postprocessing functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot2d.html" title="49. plot2d — plot2d.py"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
+</form>
+
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plot2d.html"
+                        title="previous chapter">49. <tt class="docutils literal docutils literal docutils literal"><span class="pre">plot2d</span></tt> &#8212; plot2d.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="postproc.html"
+                        title="next chapter">51. <tt class="docutils literal"><span class="pre">postproc</span></tt> &#8212; Postprocessing functions</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-polygon">
+<span id="polygon-polygonal-facets"></span><span id="sec-ref-polygon"></span><h1>50. <a class="reference internal" href="#module-polygon" title="polygon: Polygonal facets."><tt class="xref py py-mod docutils literal"><span class="pre">polygon</span></tt></a> &#8212; Polygonal facets.<a class="headerlink" href="#module-polygon" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">polygon</span></tt></p>
+<dl class="class">
+<dt id="polygon.Polygon">
+<em class="property">class </em><tt class="descclassname">polygon.</tt><tt class="descname">Polygon</tt><big>(</big><em>border</em>, <em>normal=2</em>, <em>holes=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#polygon.Polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Polygon is a flat surface bounded by a closed PolyLine.</p>
+<p>The border is specified as a Coords object with shape (nvertex,3)
+specifying the vertex coordinates in order.
+While the Coords are 3d, only the first 2 components are used.</p>
+<dl class="method">
+<dt id="polygon.Polygon.npoints">
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.npoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of points and edges.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.vectors">
+<tt class="descname">vectors</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the vectors from each point to the next one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.angles">
+<tt class="descname">angles</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angles of the line segments with the x-axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.externalAngles">
+<tt class="descname">externalAngles</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.externalAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angles between subsequent line segments.</p>
+<p>The returned angles are the change in direction between the segment
+ending at the vertex and the segment leaving.
+The angles are given in degrees, in the range ]-180,180].
+The sum of the external angles is always (a multiple of) 360.
+A convex polygon has all angles of the same sign.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.isConvex">
+<tt class="descname">isConvex</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.isConvex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the polygon is convex and turning anticlockwise.</p>
+<p>Returns:</p>
+<ul class="simple">
+<li>+1 if the Polygon is convex and turning anticlockwise,</li>
+<li>-1 if the Polygon is convex, but turning clockwise,</li>
+<li>0 if the Polygon is not convex.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.internalAngles">
+<tt class="descname">internalAngles</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.internalAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the internal angles.</p>
+<p>The returned angles are those between the two line segments at
+each vertex.
+The angles are given in degrees, in the range ]-180,180].
+These angles are the complement of the</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Polygon with reversed order of vertices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.fill">
+<tt class="descname">fill</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.fill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the surface inside the polygon with triangles.</p>
+<p>Returns a TriSurface filling the surface inside the polygon.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.area">
+<tt class="descname">area</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area inside a polygon.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.addNoise">
+<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.addNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.centered">
+<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.centered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.hyperCylindrical">
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.position">
+<tt class="descname">position</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;position&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.position" title="coords.Coords.position"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.position()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#polygon.Polygon.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#polygon.Polygon.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#polygon.Polygon.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="polygon.Polygon.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#polygon.Polygon.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">polygon</span></tt></p>
+<dl class="function">
+<dt id="polygon.projected">
+<tt class="descclassname">polygon.</tt><tt class="descname">projected</tt><big>(</big><em>X</em>, <em>N</em><big>)</big><a class="headerlink" href="#polygon.projected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns 2-D coordinates of a set of 3D coordinates.</p>
+<p>The returned 2D coordinates are still stored in a 3D Coords object.
+The last coordinate will however (approximately) be zero.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="postproc.html" title="51. postproc — Postprocessing functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot2d.html" title="49. plot2d — plot2d.py"
+             >previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
+      Last updated on Sep 21, 2012.
+    <span class="right">
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
+    </div>
+  </body>
+</html>

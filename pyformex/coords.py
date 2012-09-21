@@ -944,7 +944,8 @@ class Coords(ndarray):
         Parameters:
 
         - `mat`: a 3x3 float matrix       
-        - `vec`: a length 3 list or array of floats       
+        - `vec`: a length 3 list or array of floats
+        
         The returned object has coordinates given by ``self * mat + vec``.
         """
         out = dot(self,mat)
@@ -980,6 +981,7 @@ class Coords(ndarray):
           distance(r), angle(theta) and height(z). Default order is [r,theta,z].
         - `scale`: will scale the coordinate values prior to the transformation.
           (scale is given in order r,theta,z).
+          
         The resulting angle is interpreted in degrees.
         """
         # We put in a optional scaling, because doing this together with the
@@ -1015,6 +1017,7 @@ class Coords(ndarray):
         - `dir`: specifies which coordinates axes are parallel to respectively the
           cylindrical axes distance(r), angle(theta) and height(z). Default
           order is [x,y,z].
+          
         The angle value is given in degrees.
         """
         f = zeros_like(self)
@@ -1033,6 +1036,7 @@ class Coords(ndarray):
         - `dir`: specifies which coordinates are interpreted as resp.
           longitude(theta), latitude(phi) and distance(r).
         - `scale`: will scale the coordinate values prior to the transformation.
+        
         Angles are interpreted in degrees.
         Latitude, i.e. the elevation angle, is measured from equator in
         direction of north pole(90). South pole is -90.
@@ -1181,8 +1185,8 @@ class Coords(ndarray):
           If only 1 axis is specified, the effect is like function bump1
           If 2 axes are specified, the effect is like bump2
           This function can take 3 axes however.
-          Default value is the set of 3 axes minus the direction of modification.
-          This function is then equivalent to bump2.
+          Default value is the set of 3 axes minus the direction of
+          modification. This function is then equivalent to bump2.
         """
         f = self.copy()
         if dist == None:
@@ -1238,6 +1242,7 @@ class Coords(ndarray):
         - `func`: is a numerical function which takes three arguments and produces
           a list of three output values. The coordinates [x,y,z] will be
           replaced by func(x,y,z).
+          
         The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
         numpy module.
@@ -1264,7 +1269,8 @@ class Coords(ndarray):
 
         - `func`: is a numerical function which takes one argument and produces
           one result. The coordinate dir will be replaced by func(coord[x]).
-          If no x is specified, x is taken equal to dir. 
+          If no x is specified, x is taken equal to dir.
+          
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
         numpy module.
@@ -1284,10 +1290,11 @@ class Coords(ndarray):
 
         - `func`: a numerical function which takes one argument and produces
           one result. The coordinate `dir` will be replaced by ``func(d)``,
-        where ``d`` is calculated as the distance to `point`.
-        The function must be applicable on arrays, so it should only
-        include numerical operations and functions understood by the
-        :mod:`numpy` module.
+          where ``d`` is calculated as the distance to `point`.
+          The function must be applicable on arrays, so it should only
+          include numerical operations and functions understood by the
+          :mod:`numpy` module.
+          
         By default, the distance d is calculated in 3-D, but one can specify
         a limited set of axes to calculate a 2-D or 1-D distance.
         This method is one of several mapping methods. See also

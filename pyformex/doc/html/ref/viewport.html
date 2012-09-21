@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="23. camera — OpenGL camera handling" href="camera.html" />
-    <link rel="prev" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
+    <link rel="next" title="27. camera — OpenGL camera handling" href="camera.html" />
+    <link rel="prev" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="23. camera — OpenGL camera handling"
+          <a href="camera.html" title="27. camera — OpenGL camera handling"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="canvas.html" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
+          <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="canvas.html"
-                        title="previous chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
+                        title="previous chapter">25. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="camera.html"
-                        title="next chapter">23. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+                        title="next chapter">27. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-viewport">
-<span id="viewport-interactive-opengl-canvas-embedded-in-a-qt4-widget"></span><span id="sec-ref-viewport"></span><h1>22. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#module-viewport" title="Permalink to this headline">¶</a></h1>
+<span id="viewport-interactive-opengl-canvas-embedded-in-a-qt4-widget"></span><span id="sec-ref-viewport"></span><h1>26. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#module-viewport" title="Permalink to this headline">¶</a></h1>
 <p>This module implements user interaction with the OpenGL canvas defined in
 module <a class="reference internal" href="canvas.html#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a>.
 <cite>QtCanvas</cite> is a single interactive OpenGL canvas, while <cite>MultiCanvas</cite>
@@ -616,11 +616,19 @@ On RELEASE, add the line to the drawing.</p>
 <p>This sets or changes the rendermode and lighting attributes.
 If lighting is not specified, it is set depending on the rendermode.</p>
 <p>If the canvas has not been initialized, this merely sets the
-attributes self.rendermode and self.lighting.
+attributes self.rendermode and self.settings.lighting.
 If the canvas was already initialized (it has a camera), and one of
 the specified settings is fdifferent from the existing, the new mode
 is set, the canvas is re-initialized according to the newly set mode,
 and everything is redrawn with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setToggle">
+<tt class="descname">setToggle</tt><big>(</big><em>attr</em>, <em>onoff</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setToggle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or toggle a boolean settings attribute</p>
+<p>Furthermore, if a Canvas method do_ATTR is defined, it will be called
+with the new toggle state as a parameter.</p>
 </dd></dl>
 
 <dl class="method">
@@ -900,7 +908,7 @@ off-center zooming.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.draw_focus_rectangle">
-<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>ofs=0</em>, <em>color=(1.0</em>, <em>0.2</em>, <em>0.4)</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the focus rectangle.</p>
 <p>The specified width is HALF of the line width</p>
 </dd></dl>
@@ -914,14 +922,14 @@ off-center zooming.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="viewport.NewMultiCanvas">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">NewMultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas">
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">NewiMultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
 <p>The MultiCanvas implements a central QT widget containing one or more
 QtCanvas widgets.</p>
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.changeLayout">
-<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.changeLayout">
+<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the lay-out of the viewports on the OpenGL widget.</p>
 <p>nvps: number of viewports
 ncols: number of columns
@@ -947,37 +955,40 @@ will be added or removed to match the requested number.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.createView">
-<tt class="descname">createView</tt><big>(</big><em>shared=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.createView" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.createView">
+<tt class="descname">createView</tt><big>(</big><em>shared=None</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.createView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new viewport</p>
 <p>If another QtCanvas instance is passed, both will share the same
 display lists and textures.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.addView">
-<tt class="descname">addView</tt><big>(</big><em>view</em>, <em>row</em>, <em>col</em>, <em>rowspan=1</em>, <em>colspan=1</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.addView">
+<tt class="descname">addView</tt><big>(</big><em>view</em>, <em>row</em>, <em>col</em>, <em>rowspan=1</em>, <em>colspan=1</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new viewport and make it visible</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.removeView">
-<tt class="descname">removeView</tt><big>(</big><em>view=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.removeView" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.removeView">
+<tt class="descname">removeView</tt><big>(</big><em>view=None</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.removeView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a view from the canvas</p>
 <p>If view is None, the last one is removed.
 You can not remove a view when there is only one left.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.setCurrent">
-<tt class="descname">setCurrent</tt><big>(</big><em>view</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.setCurrent">
+<tt class="descname">setCurrent</tt><big>(</big><em>view</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the specified viewport the current one.</p>
-<p>view can be either a viewport or viewport number.</p>
+<p>view can be either a viewport or viewport number.
+The current viewport is the one that will be used for drawing
+operations. This may be different from the viewport having GUI
+focus (pf.canvas).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.setStretch">
-<tt class="descname">setStretch</tt><big>(</big><em>rowstretch</em>, <em>colstretch</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.setStretch" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.setStretch">
+<tt class="descname">setStretch</tt><big>(</big><em>rowstretch</em>, <em>colstretch</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.setStretch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the row and column stretch factors.</p>
 <p>rowstretch and colstretch are lists of stretch factors to be applied
 on the subsequent rows/columns. If the lists are shorter than the
@@ -985,8 +996,8 @@ number of rows/columns, the</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.NewMultiCanvas.link">
-<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.link" title="Permalink to this definition">¶</a></dt>
+<dt id="viewport.NewiMultiCanvas.link">
+<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="headerlink" href="#viewport.NewiMultiCanvas.link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Link viewport vp to to</p>
 </dd></dl>
 
@@ -1117,12 +1128,12 @@ The default OpenGL format can be changed by command line options:</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="23. camera — OpenGL camera handling"
+          <a href="camera.html" title="27. camera — OpenGL camera handling"
              >next</a> |</li>
         <li class="right" >
-          <a href="canvas.html" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
+          <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1130,7 +1141,7 @@ The default OpenGL format can be changed by command line options:</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

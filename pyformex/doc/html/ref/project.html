@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>10. project — project.py &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>13. project — project.py &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" />
-    <link rel="prev" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
+    <link rel="next" title="14. utils — A collection of miscellaneous utility functions." href="utils.html" />
+    <link rel="prev" title="12. simple — Predefined geometries with a simple shape." href="simple.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
+          <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
+          <a href="simple.html" title="12. simple — Predefined geometries with a simple shape."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="simple.html"
-                        title="previous chapter">9. <tt class="docutils literal docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
+                        title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="utils.html"
-                        title="next chapter">11. <tt class="docutils literal docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
+                        title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,12 +138,12 @@
           <div class="body">
             
   <div class="section" id="module-project">
-<span id="project-project-py"></span><span id="sec-ref-project"></span><h1>10. <a class="reference internal" href="#module-project" title="project: project.py"><tt class="xref py py-mod docutils literal"><span class="pre">project</span></tt></a> &#8212; project.py<a class="headerlink" href="#module-project" title="Permalink to this headline">¶</a></h1>
+<span id="project-project-py"></span><span id="sec-ref-project"></span><h1>13. <a class="reference internal" href="#module-project" title="project: project.py"><tt class="xref py py-mod docutils literal"><span class="pre">project</span></tt></a> &#8212; project.py<a class="headerlink" href="#module-project" title="Permalink to this headline">¶</a></h1>
 <p>Functions for managing a project in pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">project</span></tt></p>
 <dl class="class">
 <dt id="project.Project">
-<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename=None</em>, <em>access='wr'</em>, <em>convert=True</em>, <em>signature='pyFormex 0.8.7-a1 (Rev. 2382M)'</em>, <em>compression=5</em>, <em>binary=True</em>, <em>data={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename=None</em>, <em>access='wr'</em>, <em>convert=True</em>, <em>signature='pyFormex 0.8.7-a2 (Rev. 2451M)'</em>, <em>compression=5</em>, <em>binary=True</em>, <em>data={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project: a persistent storage of pyFormex data.</p>
 <p>A pyFormex Project is a regular Python dict that can contain named data
 of any kind, and can be saved to a file to create persistence over
@@ -281,6 +281,23 @@ uses a binary format. Using binary=False is deprecated.</p>
 may override values read from the file.</p>
 </li>
 </ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">d</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">e</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;f&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mktemp</span><span class="p">(</span><span class="s">&#39;.pyf&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">dict</span><span class="o">.</span><span class="n">__str__</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: 1, &#39;c&#39;: 3, &#39;b&#39;: 2, &#39;e&#39;: {&#39;g&#39;: 5, &#39;f&#39;: 4}, &#39;d&#39;: [1, 2, 3]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">dict</span><span class="o">.</span><span class="n">__str__</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">dict</span><span class="o">.</span><span class="n">__str__</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: 1, &#39;c&#39;: 3, &#39;b&#39;: 2, &#39;e&#39;: {&#39;g&#39;: 5, &#39;f&#39;: 4}, &#39;d&#39;: [1, 2, 3]}</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="project.Project.header_data">
 <tt class="descname">header_data</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.header_data" title="Permalink to this definition">¶</a></dt>
@@ -289,13 +306,13 @@ may override values read from the file.</p>
 
 <dl class="method">
 <dt id="project.Project.save">
-<tt class="descname">save</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.save" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">save</tt><big>(</big><em>quiet=False</em><big>)</big><a class="headerlink" href="#project.Project.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the project to file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="project.Project.readHeader">
-<tt class="descname">readHeader</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.readHeader" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">readHeader</tt><big>(</big><em>quiet=False</em><big>)</big><a class="headerlink" href="#project.Project.readHeader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the header from a project file.</p>
 <p>Tries to read the header from different legacy formats,
 and if succesfull, adjusts the project attributes according
@@ -305,7 +322,7 @@ Returns the open file if succesfull.</p>
 
 <dl class="method">
 <dt id="project.Project.load">
-<tt class="descname">load</tt><big>(</big><em>try_resolve=False</em><big>)</big><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load</tt><big>(</big><em>try_resolve=False</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a project from file.</p>
 <p>The loaded definitions will update the current project.</p>
 </dd></dl>
@@ -335,6 +352,30 @@ of the data inside.</p>
 <dt id="project.Project.delete">
 <tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unrecoverably delete the project file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.pop">
+<tt class="descname">pop</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#project.Project.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for a class method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.popitem">
+<tt class="descname">popitem</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#project.Project.popitem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for a class method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#project.Project.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for a class method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.update">
+<tt class="descname">update</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#project.Project.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for a class method.</p>
 </dd></dl>
 
 </dd></dl>
@@ -370,12 +411,12 @@ of the data inside.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
+          <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              >next</a> |</li>
         <li class="right" >
-          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
+          <a href="simple.html" title="12. simple — Predefined geometries with a simple shape."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -383,7 +424,7 @@ of the data inside.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

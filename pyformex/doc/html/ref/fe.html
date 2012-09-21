@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>39. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" />
-    <link rel="prev" title="39. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
+    <link rel="next" title="40. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" />
+    <link rel="prev" title="38. export — Classes and functions for exporting geometry in various formats." href="export.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+          <a href="fe_abq.html" title="40. fe_abq — Exporting finite element models in Abaqus™ input file format."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+          <a href="export.html" title="38. export — Classes and functions for exporting geometry in various formats."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -99,11 +99,11 @@
    
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="properties.html"
-                        title="previous chapter">39. <tt class="docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+  <p class="topless"><a href="export.html"
+                        title="previous chapter">38. <tt class="docutils literal docutils literal docutils literal"><span class="pre">export</span></tt> &#8212; Classes and functions for exporting geometry in various formats.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fe_abq.html"
-                        title="next chapter">41. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
+                        title="next chapter">40. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-fe">
-<span id="fe-finite-element-models-in-pyformex"></span><span id="sec-ref-fe"></span><h1>40. <a class="reference internal" href="#module-fe" title="fe: Finite Element Models in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">fe</span></tt></a> &#8212; Finite Element Models in pyFormex.<a class="headerlink" href="#module-fe" title="Permalink to this headline">¶</a></h1>
+<span id="fe-finite-element-models-in-pyformex"></span><span id="sec-ref-fe"></span><h1>39. <a class="reference internal" href="#module-fe" title="fe: Finite Element Models in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">fe</span></tt></a> &#8212; Finite Element Models in pyFormex.<a class="headerlink" href="#module-fe" title="Permalink to this headline">¶</a></h1>
 <p>Finite element models are geometrical models that consist of a unique
 set of nodal coordinates and one of more sets of elements.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe</span></tt></p>
@@ -458,6 +458,21 @@ old ones.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="fe.Model.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="fe.Model.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a deep copy of the object.</p>
@@ -759,9 +774,30 @@ coords blocks, allowing to accomodate better to versatile applications.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="fe.FEModel.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.FEModel.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.FEModel.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.FEModel.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="fe.FEModel.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.FEModel.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.FEModel.mplex">
+<tt class="descname">mplex</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.FEModel.mplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximum plexitude of the model.</p>
 </dd></dl>
 
 <dl class="method">
@@ -773,12 +809,6 @@ three coordinate directions. If it is a single value, all directions
 are scaled to the same size.
 Directions for which the geometry has a size smaller than tol times
 the maximum size are not rescaled.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe.FEModel.mplex">
-<tt class="descname">mplex</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.FEModel.mplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum plexitude of the model.</p>
 </dd></dl>
 
 <dl class="method">
@@ -870,12 +900,12 @@ The return value is a merged fe Model.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+          <a href="fe_abq.html" title="40. fe_abq — Exporting finite element models in Abaqus™ input file format."
              >next</a> |</li>
         <li class="right" >
-          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+          <a href="export.html" title="38. export — Classes and functions for exporting geometry in various formats."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -883,7 +913,7 @@ The return value is a merged fe Model.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

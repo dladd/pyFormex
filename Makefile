@@ -296,5 +296,9 @@ pubpdf:
 	make -C ${SPHINXDIR} pubpdf
 
 
+# Test all modules
+# Currently this tests only the core modules
+testall:
+	cd pyformex; for f in *.py; do pyformex --testmodule $${f%.py}; done
 
 # End

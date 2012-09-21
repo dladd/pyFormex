@@ -89,16 +89,15 @@ class ElementType(object):
     numbered in a consecutive order spinning positively around the outward
     normal on the face.
 
-    The list of available element types can be found by:
+    The list of available element types can be found from:
     
     >>> printElementTypes()
     Available Element Types:
-      0-dimensional elements: ['point']
-      1-dimensional elements: ['line2', 'line3']
-      2-dimensional elements: ['tri3', 'tri6', 'quad4', 'quad6', 'quad8', 'quad9']
-      3-dimensional elements: ['tet4', 'tet10', 'tet14', 'tet15', 'wedge6', 'hex8',
-                               'hex16', 'hex20', 'icosa']
-
+      0-dimensional elements: ['Point']
+      1-dimensional elements: ['Line2', 'Line3']
+      2-dimensional elements: ['Tri3', 'Tri6', 'Quad4', 'Quad6', 'Quad8', 'Quad9']
+      3-dimensional elements: ['Tet4', 'Tet10', 'Tet14', 'Tet15', 'Wedge6', 'Hex8', 'Hex16', 'Hex20', 'Hex27', 'Icosa']
+      
     Optional attributes:
 
     - `conversions`: Defines possible strategies for conversion of the element
@@ -293,7 +292,7 @@ class ElementType(object):
 
 
 # all registered element types:
-_registered_element_types = {}
+_registered_element_types = ODict()
 
 
 def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs):
@@ -966,7 +965,7 @@ def elementType(name=None,nplex=-1):
     - `nplex`: plexitude of the element. If specified and no element name
       was given, the default element type for this plexitude is returned.
 
-    Returns a subclass of :class:`ElementType`
+    Returns a subclass of :class:`ElementType`.
 
     Errors: 
 
@@ -1014,7 +1013,7 @@ def elementTypes(ndim=None):
     if ndim is None:
         return _registered_element_types.keys()
     else:
-        return [ k for k,v in _registered_element_types.iteritems() if v.ndim==ndim] 
+        return [ k for k,v in _registered_element_types.items() if v.ndim==ndim] 
 
 
 def printElementTypes():

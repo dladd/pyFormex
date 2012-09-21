@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>25. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
-    <link rel="prev" title="20. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
+    <link rel="next" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
+    <link rel="prev" title="24. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="20. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="gluttext.html"
-                        title="previous chapter">20. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
+                        title="previous chapter">24. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="viewport.html"
-                        title="next chapter">22. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+                        title="next chapter">26. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-canvas">
-<span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>21. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
+<span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>25. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
 <dl class="class">
 <dt id="canvas.ActorList">
@@ -191,8 +191,11 @@ colors (max. 4 are used).</li>
 <li>bgimage: background image filename</li>
 <li>slcolor: the highlight color</li>
 <li>rendermode: the rendering mode</li>
-<li>shading: True is smooth, False is flat</li>
-<li>lighting: True or False</li>
+<li>shading: boolean (smooth/flat shading)</li>
+<li>lighting: boolean (lights on/off)</li>
+<li>alphablend: boolean (transparency on/off)</li>
+<li>culling: boolean</li>
+<li>avgnormals: boolean</li>
 </ul>
 <p>The list of default settings includes:</p>
 <ul class="simple">
@@ -313,11 +316,19 @@ Finally, it stores the lighting information.</p>
 <p>This sets or changes the rendermode and lighting attributes.
 If lighting is not specified, it is set depending on the rendermode.</p>
 <p>If the canvas has not been initialized, this merely sets the
-attributes self.rendermode and self.lighting.
+attributes self.rendermode and self.settings.lighting.
 If the canvas was already initialized (it has a camera), and one of
 the specified settings is fdifferent from the existing, the new mode
 is set, the canvas is re-initialized according to the newly set mode,
 and everything is redrawn with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setToggle">
+<tt class="descname">setToggle</tt><big>(</big><em>attr</em>, <em>onoff</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setToggle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or toggle a boolean settings attribute</p>
+<p>Furthermore, if a Canvas method do_ATTR is defined, it will be called
+with the new toggle state as a parameter.</p>
 </dd></dl>
 
 <dl class="method">
@@ -597,7 +608,7 @@ off-center zooming.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.draw_focus_rectangle">
-<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>ofs=0</em>, <em>color=(1.0</em>, <em>0.2</em>, <em>0.4)</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the focus rectangle.</p>
 <p>The specified width is HALF of the line width</p>
 </dd></dl>
@@ -672,12 +683,12 @@ None to leave it unchanged.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              >next</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="20. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -685,7 +696,7 @@ None to leave it unchanged.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

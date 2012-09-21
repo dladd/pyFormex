@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Modeling Geometry &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>Modeling Geometry with pyFormex &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
     <link rel="next" title="The Canvas" href="drawing.html" />
     <link rel="prev" title="The Graphical User Interface" href="gui.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="gui.html" title="The Graphical User Interface"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
       </ul>
     </div>
@@ -99,7 +99,7 @@
    
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Modeling Geometry</a><ul>
+<li><a class="reference internal" href="#">Modeling Geometry with pyFormex</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#the-formex-model">The <strong>Formex</strong> model</a></li>
 <li><a class="reference internal" href="#the-mesh-model">The <strong>Mesh</strong> model</a></li>
@@ -148,8 +148,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="modeling-geometry">
-<span id="cha-geometry"></span><h1>Modeling Geometry<a class="headerlink" href="#modeling-geometry" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="modeling-geometry-with-pyformex">
+<span id="cha-geometry"></span><h1>Modeling Geometry with pyFormex<a class="headerlink" href="#modeling-geometry-with-pyformex" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This document still needs to be written!</p>
@@ -164,6 +164,25 @@ and export them in various formats.</p>
 <span id="sec-geom-intro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><em>Everything is geometry</em></div></blockquote>
+<p>In everyday life, geometry is ubiquitous. Just look around you: all the things you see, whether objects or living organisms or natural phenomena like clouds, they all have a shape or geometry. This holds for all concrete things, even if they are ungraspable, like a rainbow, or have no defined or fixed shape, like water. The latter evidently takes the shape of its container. Only abstract concepts do not have a geometry. Any material thing has though <a class="footnote-reference" href="#quantum" id="id1">[1]</a>, hence our claim: everything is geometry.</p>
+<p>Since geometry is such an important aspect of everybody&#8217;s life, one would expect that it would take an important place in education (base as well as higher). Yet we see that in the educational system of many developed countries, attention for geometry has vaned during the last decades.
+Important for craftsmen, technician, engineer, designer, artist</p>
+<p>We will give some general ideas about geometry, but do not pretend to be a full
+geometry course. Only concepts needed for or related to modleing with pyFormex.</p>
+<p>We could define the geometry of an object as the space it occupies. In our three-dimensional world, any object is also 3D. Some objects however have very small dimensions in one or more directions (e.g. a thin wire or a sheet of paper). It may be convenient then to model these only in one or two dimensions. <a class="footnote-reference" href="#d" id="id2">[2]</a></p>
+<p>Concrete things also have a material. THIngs going wrong is mostly mechanical: geometry/materail</p>
+<table class="docutils footnote" frame="void" id="quantum" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>We obviously look here at matter in the way we observe it with our senses (visual, tactile) and not in a quantum-mechanics way.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="d" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Mathematically we can also define geometry with higher dimensionality than 3, but this is of little practical use.</td></tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="the-formex-model">
 <span id="sec-formex-model"></span><h2>The <strong>Formex</strong> model<a class="headerlink" href="#the-formex-model" title="Permalink to this headline">¶</a></h2>
@@ -197,7 +216,7 @@ and export them in various formats.</p>
         <li class="right" >
           <a href="gui.html" title="The Graphical User Interface"
              >previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
       </ul>
     </div>
@@ -205,7 +224,7 @@ and export them in various formats.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

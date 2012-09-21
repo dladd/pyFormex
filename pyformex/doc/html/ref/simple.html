@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>12. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="10. project — project.py" href="project.html" />
-    <link rel="prev" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
+    <link rel="next" title="13. project — project.py" href="project.html" />
+    <link rel="prev" title="11. mesh — Finite element meshes in pyFormex." href="mesh.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="project.html" title="10. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -99,11 +99,11 @@
    
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="connectivity.html"
-                        title="previous chapter">8. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+  <p class="topless"><a href="mesh.html"
+                        title="previous chapter">11. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="project.html"
-                        title="next chapter">10. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+                        title="next chapter">13. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-simple">
-<span id="simple-predefined-geometries-with-a-simple-shape"></span><span id="sec-ref-simple"></span><h1>9. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#module-simple" title="Permalink to this headline">¶</a></h1>
+<span id="simple-predefined-geometries-with-a-simple-shape"></span><span id="sec-ref-simple"></span><h1>12. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#module-simple" title="Permalink to this headline">¶</a></h1>
 <p>This module contains some functions, data and classes for generating
 Formex structures representing simple geometric shapes.
 You need to import this module in your scripts to have access to its
@@ -279,11 +279,11 @@ follows. First an icosahedron is constructed. Its triangular facets are
 subdivided by dividing all edges in <cite>ndiv</cite> parts. The resulting mesh is
 then projected on a sphere with unit radius. The higher <cite>ndiv</cite> is taken,
 the better the approximation. <cite>ndiv=1</cite> results in an icosahedron.</p>
-<dl class="docutils">
-<dt>Returns: a Mesh with eltype &#8216;tri3&#8217;, representing a triangulated</dt>
-<dd>approximation of a spherical surface with radius 1 and center
-at the origin.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+<div>A Mesh with eltype &#8216;tri3&#8217;, representing a triangulated
+approximation of a spherical surface with radius 1 and center
+at the origin.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -385,12 +385,12 @@ axes through the points xmin and xmax.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="project.html" title="10. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -398,7 +398,7 @@ axes through the points xmin and xmax.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

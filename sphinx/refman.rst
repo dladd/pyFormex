@@ -115,6 +115,7 @@ main pyformex path are considered to belong to the pyformex core functionality.
    ref/utils
    ref/geomtools
    ref/fileread
+   ref/filewrite
 
 
 .. _sec:gui-modules:
@@ -126,7 +127,7 @@ These modules are located under pyformex/gui.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 13
+   :numbered: 17
 
    ref/widgets
    ref/menu
@@ -156,36 +157,46 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 28
+   :numbered: 32
 
    ref/calpy_itf
    ref/cameratools
    ref/curve
    ref/datareader
-   ref/draw2d
    ref/dxf
    ref/export
-   ref/f2flu
-   ref/mesh_ext
-   ref/trisurface
-   ref/nurbs
-   ref/isopar
-   ref/section2d
-   ref/inertia
-   ref/units
-   ref/properties
    ref/fe
    ref/fe_abq
    ref/fe_post
-   ref/postproc
    ref/flavia
+   ref/inertia
+   ref/isopar
    ref/lima
-   ref/turtle
-   ref/tetgen
-   ref/tools
+   ref/mesh_ext
+   ref/nurbs
    ref/objects
    ref/plot2d
+   ref/polygon
+   ref/postproc
+   ref/properties
    ref/pyformex_gts
+   ref/section2d
+   ref/sectionize
+   ref/tetgen
+   ref/tools
+   ref/trisurface
+   ref/turtle
+   ref/units
+
+..   ref/centerline  still relevant?
+..   ref/draw2d   gives errors on py2rst
+..   ref/fe_ast  needs work
+..   ref/f2flu  still relevant?
+..   ref/formian
+..   ref/meshlist  still relevant?
+..   ref/partition  still relevant?
+..   ref/surface_abq  still relevant?
+..   ref/wrl    gives errors on py2rst
 
 .. _sec:menu-modules:
 
@@ -210,6 +221,8 @@ Currently avaliable:
 - jobs menu
 - postproc_menu
 
+.. - fe_menu     used?
+
 .. _sec:tools-modules:
 
 pyFormex tools
@@ -222,17 +235,18 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 52
+   :numbered: 60
 
    ref/olist
    ref/mydict
    ref/odict
-   ref/track
    ref/collection
    ref/config
    ref/flatkeydb
    ref/sendmail
    ref/timer
+
+.. ref/track    errors on py2rst
 
 .. End
 

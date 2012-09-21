@@ -50,7 +50,8 @@ For original pyFormex scripts, the use of this module is discouraged.
 
 Translate formian code to python
 
-No change :
+No change ::
+
   + - * / 
   sign (defined further)
   abs 

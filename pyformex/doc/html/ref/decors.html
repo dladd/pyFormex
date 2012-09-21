@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>22. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="19. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
-    <link rel="prev" title="17. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
+    <link rel="next" title="23. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
+    <link rel="prev" title="21. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="marks.html" title="19. marks — OpenGL marks for annotating 3D actors."
+          <a href="marks.html" title="23. marks — OpenGL marks for annotating 3D actors."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="21. actors — OpenGL actors for populating the 3D scene."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="actors.html"
-                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+                        title="previous chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="marks.html"
-                        title="next chapter">19. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
+                        title="next chapter">23. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-decors">
-<span id="decors-2d-decorations-for-the-opengl-canvas"></span><span id="sec-ref-decors"></span><h1>18. <a class="reference internal" href="#module-decors" title="decors: 2D decorations for the OpenGL canvas."><tt class="xref py py-mod docutils literal"><span class="pre">decors</span></tt></a> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
+<span id="decors-2d-decorations-for-the-opengl-canvas"></span><span id="sec-ref-decors"></span><h1>22. <a class="reference internal" href="#module-decors" title="decors: 2D decorations for the OpenGL canvas."><tt class="xref py py-mod docutils literal"><span class="pre">decors</span></tt></a> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>
 <dl class="class">
 <dt id="decors.Decoration">
@@ -525,22 +525,15 @@ different settings.</p>
 <dt id="decors.Triade">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Triade</tt><big>(</big><em>pos='lb', siz=100, pat='3:012934', legend='xyz', color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big><a class="headerlink" href="#decors.Triade" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a triade of global axes.</p>
-<ul>
-<li><dl class="first docutils">
-<dt><cite>pos</cite>: position on the canvas: two characters, of which first sets</dt>
-<dd><p class="first last">horizontal position (&#8216;l&#8217;, &#8216;c&#8217; or &#8216;r&#8217;) and second sets vertical
-position (&#8216;b&#8217;, &#8216;c&#8217; or &#8216;t&#8217;).</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><cite>size</cite>: size in pixels of the zone displaying the triade.</p>
-</li>
-<li><p class="first"><cite>pat</cite>: shape to be drawn in the coordinate planes. Default is a square.
-&#8216;16&#8217; givec a triangle. &#8216;&#8217; disables the planes.</p>
-</li>
-<li><p class="first"><cite>legend</cite>: text symbols to plot at the end of the axes. A 3-character
-string or a tuple of 3 strings.</p>
-</li>
+<ul class="simple">
+<li><cite>pos</cite>: position on the canvas: two characters, of which first sets
+horizontal position (&#8216;l&#8217;, &#8216;c&#8217; or &#8216;r&#8217;) and second sets vertical
+position (&#8216;b&#8217;, &#8216;c&#8217; or &#8216;t&#8217;).</li>
+<li><cite>size</cite>: size in pixels of the zone displaying the triade.</li>
+<li><cite>pat</cite>: shape to be drawn in the coordinate planes. Default is a square.
+&#8216;16&#8217; givec a triangle. &#8216;&#8217; disables the planes.</li>
+<li><cite>legend</cite>: text symbols to plot at the end of the axes. A 3-character
+string or a tuple of 3 strings.</li>
 </ul>
 <dl class="method">
 <dt id="decors.Triade.drawGL">
@@ -634,12 +627,12 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="marks.html" title="19. marks — OpenGL marks for annotating 3D actors."
+          <a href="marks.html" title="23. marks — OpenGL marks for annotating 3D actors."
              >next</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="21. actors — OpenGL actors for populating the 3D scene."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -647,7 +640,7 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

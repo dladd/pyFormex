@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="32. geomtools — Basic geometrical operations." href="geomtools.html" />
-    <link rel="prev" title="30. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
+    <link rel="next" title="59. turtle — Turtle graphics for pyFormex" href="turtle.html" />
+    <link rel="prev" title="57. tools — tools.py" href="tools.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
+          <a href="turtle.html" title="59. turtle — Turtle graphics for pyFormex"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
+          <a href="tools.html" title="57. tools — tools.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -99,11 +99,11 @@
    
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="mesh_ext.html"
-                        title="previous chapter">30. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
+  <p class="topless"><a href="tools.html"
+                        title="previous chapter">57. <tt class="docutils literal docutils literal docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="geomtools.html"
-                        title="next chapter">32. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+  <p class="topless"><a href="turtle.html"
+                        title="next chapter">59. <tt class="docutils literal"><span class="pre">turtle</span></tt> &#8212; Turtle graphics for pyFormex</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-trisurface">
-<span id="trisurface-operations-on-triangulated-surfaces"></span><span id="sec-ref-trisurface"></span><h1>31. <a class="reference internal" href="#module-trisurface" title="trisurface: Operations on triangulated surfaces."><tt class="xref py py-mod docutils literal"><span class="pre">trisurface</span></tt></a> &#8212; Operations on triangulated surfaces.<a class="headerlink" href="#module-trisurface" title="Permalink to this headline">¶</a></h1>
+<span id="trisurface-operations-on-triangulated-surfaces"></span><span id="sec-ref-trisurface"></span><h1>58. <a class="reference internal" href="#module-trisurface" title="trisurface: Operations on triangulated surfaces."><tt class="xref py py-mod docutils literal"><span class="pre">trisurface</span></tt></a> &#8212; Operations on triangulated surfaces.<a class="headerlink" href="#module-trisurface" title="Permalink to this headline">¶</a></h1>
 <p>A triangulated surface is a surface consisting solely of triangles.
 Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.</p>
@@ -494,24 +494,32 @@ The non feature edges then represent edges on a rather smooth surface.</p>
 <li><cite>angle</cite>: The angle by which the normals on adjacent triangles
 should differ in order for the edge to be marked as a feature.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a boolean array with shape (nedg,) where the feature angles</dt>
-<dd>are marked with True.</dd>
-</dl>
+<p>Returns a boolean array with shape (nedg,) where the feature angles
+are marked with True.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>As a side effect, this also sets the <cite>elem_edges</cite> and <cite>edges</cite>
+attributes, which can be used to get the edge data with the same
+numbering as used in the returned mask. Thus, the following
+constructs a Mesh with the feature edges of a surface S:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">featureEdges</span><span class="p">()</span>
+<span class="n">Mesh</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="n">S</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.partitionByAngle">
-<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>firstprop=0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the surface by splitting it at sharp edges.</p>
 <p>The surface is partitioned in parts in which all elements can be
 reach without ever crossing a sharp edge angle. More precisely,
 any two elements that can be connected by a line not crossing an
 edge between two elements having their normals differ more than
 angle (in degrees), will belong to the same part.</p>
-<p>The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
+<p>The partitioning is returned as an integer array specifying the part
+number for eacht triangle.</p>
 <p>By default the parts are assigned property numbers in decreasing
 order of the number of triangles in the part. Setting the sort
 argument to &#8216;area&#8217; will sort the parts according to decreasing
@@ -532,13 +540,12 @@ is to return a tuple of two surfaces, with the parts at the positive,
 resp. negative side of the plane as defined by the normal vector.
 If a &#8216;+&#8217; or &#8216;-&#8216; is specified, only the corresponding part is returned.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a tuple of two TriSurfaces, or a single TriSurface,</dt>
-<dd>depending on the value of <cite>side</cite>. The returned surfaces will have
+<p>Returns:</p>
+<p>A tuple of two TriSurfaces, or a single TriSurface,
+depending on the value of <cite>side</cite>. The returned surfaces will have
 their normals fixed wherever possible. Property values will be set
 containing the triangle number of the original surface from which
-the elements resulted.</dd>
-</dl>
+the elements resulted.</p>
 </dd></dl>
 
 <dl class="method">
@@ -631,7 +638,7 @@ the node neighbourhood</li>
 <ul class="simple">
 <li><cite>alpha</cite>, <cite>beta</cite>: float: parameters for the laplace method.</li>
 </ul>
-<p>Returns: the smoothed TriSurface</p>
+<p>Returns the smoothed TriSurface</p>
 </dd></dl>
 
 <dl class="method">
@@ -1275,8 +1282,8 @@ outside the range 0..3, the return value is None.</p>
 <tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the set of unique node numbers in the Mesh.</p>
 <p>This returns only the node numbers that are effectively used in
-the connectivity table. For a compacted Mesh, it is equal to
-<tt class="docutils literal"><span class="pre">`arange(self.nelems)`</span></tt>.
+the connectivity table. For a compacted Mesh, it is equivalent to
+<tt class="docutils literal"><span class="pre">arange(self.nelems)</span></tt>.
 This function also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -1295,7 +1302,7 @@ the coords attribute.</p>
 <tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique edges of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
-edges. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(1,unique=True)`</span></tt>,
+edges. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(1,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -1305,7 +1312,7 @@ requests can return it without the need for computing it again.</p>
 <tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique faces of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
-faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(2,unique=True)`</span></tt>,
+faces. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(2,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -1315,7 +1322,7 @@ requests can return it without the need for computing it again.</p>
 <tt class="descname">getCells</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getCells" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cells of the elements.</p>
 <p>This is a convenient function to create a table with the element
-cells. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(3,unique=True)`</span></tt>,
+cells. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(3,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -1386,6 +1393,14 @@ contain at least one complete element of the border Mesh (i.e. an
 element of the first lower hierarchical level). Thus, in a volume Mesh,
 elements only touching the border by a vertex or an edge are not
 considered border elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getBorderNodes">
+<tt class="descname">getBorderNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getBorderNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the nodes that are on the border of the Mesh.</p>
+<p>This returns a list with the numbers of the nodes that are on the
+border of the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1476,28 +1491,36 @@ all nodes are considered connections.</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.partitionByConnection">
-<tt class="descname">partitionByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>firstprop=0</em>, <em>nparts=-1</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>sort='number'</em>, <em>nparts=-1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect the connected parts of a Mesh.</p>
 <p>The Mesh is partitioned in parts in which all elements are
 connected. Two elements are connected if it is possible to draw a
 continuous (poly)line from a point in one element to a point in
 the other element without leaving the Mesh.
-The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
+The partitioning is returned as a integer array having a value
+for ech element corresponding to the part number it belongs to.</p>
+<p>By default the parts are sorted in decreasing order of the number
+of elements. If you specify nparts, you may wish to switch off the
+sorting by specifying sort=&#8217;&#8216;.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.splitByConnection">
-<tt class="descname">splitByConnection</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the Mesh into connected parts.</p>
-<p>Returns a list of Meshes that each form a connected part.</p>
+<p>Returns a list of Meshes that each form a connected part.
+By default the parts are sorted in decreasing order of the number
+of elements.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.largestByConnection">
-<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">largestByConnection</tt><big>(</big><em>level=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the largest connected part of the Mesh.</p>
+<p>This is equivalent with, but more efficient than</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">splitByConnection</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1560,6 +1583,29 @@ The <cite>mode</cite> argument specifies how a single frontal step is done:</p>
 <dt id="trisurface.TriSurface.nEdgeAdjacent">
 <tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of adjacent elems.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nonManifoldNodes">
+<tt class="descname">nonManifoldNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nonManifoldNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the non-manifold nodes of a Mesh.</p>
+<p>Non-manifold nodes are nodes where subparts of a mesh of level &gt;= 2
+are connected by a node but not by an edge.</p>
+<p>Returns an integer array with a sorted list of non-manifold node
+numbers. Possibly empty (always if the dimensionality of the Mesh
+is lower than 2).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nonManifoldEdgeNodes">
+<tt class="descname">nonManifoldEdgeNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nonManifoldEdgeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the non-manifold edge nodes of a Mesh.</p>
+<p>Non-manifold edges are edges where subparts of a mesh of level 3
+are connected by an edge but not by an face.</p>
+<p>Returns an integer array with a sorted list of numbers of nodes
+on the non-manifold edges.
+Possibly empty (always if the dimensionality of the Mesh
+is lower than 3).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1752,7 +1798,7 @@ It the Mesh has no props, an empty dict is returned.</p>
 <dl class="method">
 <dt id="trisurface.TriSurface.splitRandom">
 <tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitRandom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split a mesh in n parts, distributing the elements randomly.</p>
+<dd><p>Split a Mesh in n parts, distributing the elements randomly.</p>
 <p>Returns a list of n Mesh objects, constituting together the same
 Mesh as the original. The elements are randomly distributed over
 the subMeshes.</p>
@@ -1830,29 +1876,21 @@ for the current element type.</p>
 <tt class="descname">subdivide</tt><big>(</big><em>*ndiv</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.subdivide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subdivide the elements of a Mesh.</p>
 <p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
+<ul class="simple">
+<li><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
 along the edges of the elements. Accepted type and value depend
-on the element type of the Mesh. Currently implemented:</p>
-<dl class="docutils">
-<dt>tri3: ndiv is a single int value specifying the number of</dt>
-<dd><p class="first last">divisions (of equal size) for each edge.</p>
-</dd>
-<dt>quad4: ndiv is a sequence of two int values nx,ny, specifying</dt>
-<dd><p class="first last">the number of divisions along the first, resp. second
-parametric direction of the element</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
+on the element type of the Mesh. Currently implemented:</li>
+<li>&#8216;tri3&#8217;: ndiv is a single int value specifying the number of
+divisions (of equal size) for each edge.</li>
+<li>&#8216;quad4&#8217;: ndiv is a sequence of two int values nx,ny, specifying
+the number of divisions along the first, resp. second
+parametric direction of the element</li>
+<li><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
 fused. If False, the Mesh is only fused over each individual
-element of the original Mesh.</p>
-</li>
+element of the original Mesh.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a Mesh where each element is replaced by a number of</dt>
-<dd>smaller elements of the same type.</dd>
-</dl>
+<p>Returns a Mesh where each element is replaced by a number of
+smaller elements of the same type.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This is currently only implemented for Meshes of type &#8216;tri3&#8217;
@@ -1921,13 +1959,14 @@ index automatically:</p>
 <li>&#8216;elems&#8217;: the nodes are number in order of their appearance in the
 Mesh connectivity.</li>
 <li>&#8216;random&#8217;: the nodes are numbered randomly.</li>
+<li>&#8216;front&#8217;: the nodes are numbered in order of their frontwalk.</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.renumberElems">
 <tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.renumberElems" title="Permalink to this definition">¶</a></dt>
-<dd><p>Renumber the elements of a Mesh.</p>
+<dd><p>Reorder the elements of a Mesh.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>order</cite>: either a 1-D integer array with a permutation of
@@ -1935,14 +1974,30 @@ Mesh connectivity.</li>
 the following predefined strings:<ul>
 <li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
 <li>&#8216;random&#8217;: number the elements in a random order.</li>
-<li>&#8216;reverse&#8217;: number the elements in.</li>
+<li>&#8216;reverse&#8217;: number the elements in reverse order.</li>
 </ul>
 </li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A Mesh equivalent with self but with the elements ordered as specified.</dd>
-</dl>
+<p>Returns a Mesh equivalent with self but with the elements ordered as specified.</p>
+<p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.reorder">
+<tt class="descname">reorder</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.reorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder the elements of a Mesh.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: either a 1-D integer array with a permutation of
+<tt class="docutils literal"><span class="pre">arange(self.nelems())</span></tt>, specifying the requested order, or one of
+the following predefined strings:<ul>
+<li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
+<li>&#8216;random&#8217;: number the elements in a random order.</li>
+<li>&#8216;reverse&#8217;: number the elements in reverse order.</li>
+</ul>
+</li>
+</ul>
+<p>Returns a Mesh equivalent with self but with the elements ordered as specified.</p>
 <p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
 </dd></dl>
 
@@ -2378,12 +2433,12 @@ Each face of the cube is represented by two triangles.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
+          <a href="turtle.html" title="59. turtle — Turtle graphics for pyFormex"
              >next</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
+          <a href="tools.html" title="57. tools — tools.py"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -2391,7 +2446,7 @@ Each face of the cube is represented by two triangles.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

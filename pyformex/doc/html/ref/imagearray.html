@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>25. imagearray — Convert bitmap images into numpy arrays. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>29. imagearray — Convert bitmap images into numpy arrays. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="26. imageViewer — A general image viewer" href="imageViewer.html" />
-    <link rel="prev" title="24. image — Saving OpenGL renderings to image files." href="image.html" />
+    <link rel="next" title="30. imageViewer — A general image viewer" href="imageViewer.html" />
+    <link rel="prev" title="28. image — Saving OpenGL renderings to image files." href="image.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="26. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="image.html" title="24. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="image.html"
-                        title="previous chapter">24. <tt class="docutils literal docutils literal docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
+                        title="previous chapter">28. <tt class="docutils literal docutils literal docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="imageViewer.html"
-                        title="next chapter">26. <tt class="docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
+                        title="next chapter">30. <tt class="docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-imagearray">
-<span id="imagearray-convert-bitmap-images-into-numpy-arrays"></span><span id="sec-ref-imagearray"></span><h1>25. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#module-imagearray" title="Permalink to this headline">¶</a></h1>
+<span id="imagearray-convert-bitmap-images-into-numpy-arrays"></span><span id="sec-ref-imagearray"></span><h1>29. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#module-imagearray" title="Permalink to this headline">¶</a></h1>
 <p>This module contains functions to convert bitmap images into numpy
 arrays and vice versa.</p>
 <p>This code was based on ideas found on the PyQwt mailing list.</p>
@@ -148,8 +148,7 @@ arrays and vice versa.</p>
 <dt id="imagearray.resizeImage">
 <tt class="descclassname">imagearray.</tt><tt class="descname">resizeImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em><big>)</big><a class="headerlink" href="#imagearray.resizeImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and optionally resize an image.</p>
-<blockquote>
-<div><p>Parameters:</p>
+<p>Parameters:</p>
 <ul class="simple">
 <li><cite>image</cite>: a QImage, or any data that can be converted to a QImage,
 e.g. the name of a raster image file.</li>
@@ -157,7 +156,6 @@ e.g. the name of a raster image file.</li>
 A value &lt;= 0 will be replaced with the corresponding actual size of
 the image.</li>
 </ul>
-</div></blockquote>
 <p>Returns a QImage with the requested size.</p>
 </dd></dl>
 
@@ -268,12 +266,12 @@ OpenGL axis points upwards, while bitmap images are stored downwards.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="26. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
              >next</a> |</li>
         <li class="right" >
-          <a href="image.html" title="24. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -281,7 +279,7 @@ OpenGL axis points upwards, while bitmap images are stored downwards.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

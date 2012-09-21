@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Graphical User Interface &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>The Graphical User Interface &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,9 +49,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
-    <link rel="next" title="Modeling Geometry" href="geometry.html" />
+    <link rel="next" title="Modeling Geometry with pyFormex" href="geometry.html" />
     <link rel="prev" title="Running pyFormex" href="running.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
@@ -75,12 +75,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geometry.html" title="Modeling Geometry"
+          <a href="geometry.html" title="Modeling Geometry with pyFormex"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="running.html" title="Running pyFormex"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
       </ul>
     </div>
@@ -126,7 +126,7 @@
                         title="previous chapter">Running pyFormex</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geometry.html"
-                        title="next chapter">Modeling Geometry</a></p>
+                        title="next chapter">Modeling Geometry with pyFormex</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -217,10 +217,8 @@ appears, it will look like the one shown in the figure
 <a class="reference internal" href="#fig-gui"><em>The pyFormex main window</em></a>. Your window manager will most likely have put some
 decorations around it, but these are very much OS and window manager
 dependent and are therefore not shown in the figure.</p>
-<dl class="docutils">
-<dt>Finally, you can also start the GUI with the instruction</dt>
-<dd><tt class="docutils literal"><span class="pre">startGUI()</span></tt> from a pyFormex script executed in non-GUI mode.</dd>
-</dl>
+<p>Finally, you can also start the GUI with the instruction
+<tt class="docutils literal"><span class="pre">startGUI()</span></tt> from a pyFormex script executed in non-GUI mode.</p>
 <div class="figure align-center" id="fig-gui">
 <img alt="pyFormex GUI" src="_images/gui.png" />
 <p class="caption">The pyFormex main window</p>
@@ -230,8 +228,8 @@ dependent and are therefore not shown in the figure.</p>
 <h2>Basic use of the GUI<a class="headerlink" href="#basic-use-of-the-gui" title="Permalink to this headline">¶</a></h2>
 <p>As is still in its infancy, the GUI is subject to frequent changes and it would
 make no sense to cover here every single aspect of it. Rather we will describe
-the most important functions, so that users can quickly get used to working with
-. Also we will present some of the more obscure features that users may not
+the most important functions, so that users can quickly get used to working with.
+Also we will present some of the more obscure features that users may not
 expect but yet might be very useful.</p>
 <p>The window (figure <a class="reference internal" href="#fig-gui"><em>The pyFormex main window</em></a>) comprises 5 parts. From top to bottom these
 are:</p>
@@ -308,22 +306,14 @@ canvas: the scene will rotate. Rotating in 3D by a 2D translation of the mouse
 is a fairly complex operation:</dd>
 </dl>
 <ul>
-<li><dl class="first docutils">
-<dt>Moving the mouse radially with respect to the center of the screen rotates</dt>
-<dd><p class="first last">around an axis lying in the screen and perpendicular to the direction of the
+<li><p class="first">Moving the mouse radially with respect to the center of the screen rotates
+around an axis lying in the screen and perpendicular to the direction of the
 movement.</p>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt>Moving tangentially rotates around an axis perpendicular to the screen (the</dt>
-<dd><blockquote class="first">
-<div><p>screen z-axis), but only if the mouse was not too close to the center of the
+<li><p class="first">Moving tangentially rotates around an axis perpendicular to the screen (the
+screen z-axis), but only if the mouse was not too close to the center of the
 screen when the button was pressed.</p>
-</div></blockquote>
-<p class="last">Try it out on some examples to get a feeling of the workinhg of mouse rotation.</p>
-</dd>
-</dl>
+<p>Try it out on some examples to get a feeling of the workinhg of mouse rotation.</p>
 </li>
 </ul>
 <dl class="docutils">
@@ -341,11 +331,9 @@ direction of the movement:</dd>
 <li><p class="first">horizontal movement zooms by camera lens angle,</p>
 </li>
 <li><p class="first">vertical movement zooms by changing camera distance.</p>
-<blockquote>
-<div><p>The first mode keeps the perspective, the second changes it. Moving right and
+<p>The first mode keeps the perspective, the second changes it. Moving right and
 upzooms in, left and down zooms out. Moving diagonally from upper left to lower
 right more or less keeps the image size, while changing the perspective.</p>
-</div></blockquote>
 </li>
 </ul>
 </div>
@@ -433,12 +421,12 @@ use is illustrated in the example Stl.py.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geometry.html" title="Modeling Geometry"
+          <a href="geometry.html" title="Modeling Geometry with pyFormex"
              >next</a> |</li>
         <li class="right" >
           <a href="running.html" title="Running pyFormex"
              >previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
       </ul>
     </div>
@@ -446,7 +434,7 @@ use is illustrated in the example Stl.py.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

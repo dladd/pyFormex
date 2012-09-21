@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
     <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -103,7 +103,7 @@
                         title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="connectivity.html"
-                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+                        title="next chapter">8. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -173,7 +173,7 @@ coords, thus changing the object itself, and returns itself,</li>
 the coords attribute. The original object is unchanged, the returned
 one is the changed copy.</li>
 </ul>
-<p>When using the first method, a statement like <tt class="docutils literal"><span class="pre">`B</span> <span class="pre">=</span> <span class="pre">A.scale(0.5)`</span></tt>
+<p>When using the first method, a statement like <tt class="docutils literal"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">A.scale(0.5)</span></tt>
 will result in both <cite>A</cite> and <cite>B</cite> pointing to the same scaled object,
 while with the second method, <cite>A</cite> would still be the untransformed
 object. Since the latter is in line with the design philosophy of
@@ -238,6 +238,21 @@ arguments of these methods:</p>
 <a class="reference internal" href="#geometry.Geometry.addNoise" title="geometry.Geometry.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">addNoise()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.rot" title="geometry.Geometry.rot"><tt class="xref py py-meth docutils literal"><span class="pre">rot()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.trl" title="geometry.Geometry.trl"><tt class="xref py py-meth docutils literal"><span class="pre">trl()</span></tt></a>.</p>
+<dl class="method">
+<dt id="geometry.Geometry.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="geometry.Geometry.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.copy" title="Permalink to this definition">¶</a></dt>
@@ -530,7 +545,7 @@ If fil is a string, the file is closed prior to returning.</p>
         <li class="right" >
           <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -538,7 +553,7 @@ If fil is a string, the file is closed prior to returning.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

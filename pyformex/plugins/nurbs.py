@@ -362,7 +362,7 @@ class NurbsCurve(Geometry4):
         Parameters:
 
         - `u`: (nu,) shaped float array, parametric values at which a point
-        is to be placed.
+          is to be placed.
 
         Returns (nu,3) shaped Coords with nu points at the specified
         parametric values.

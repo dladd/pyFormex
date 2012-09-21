@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>11. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>14. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="12. elements — Definition of elements." href="elements.html" />
-    <link rel="prev" title="10. project — project.py" href="project.html" />
+    <link rel="next" title="15. geomtools — Basic geometrical operations." href="geomtools.html" />
+    <link rel="prev" title="13. project — project.py" href="project.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="elements.html" title="12. elements — Definition of elements."
+          <a href="geomtools.html" title="15. geomtools — Basic geometrical operations."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="project.html" title="10. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="project.html"
-                        title="previous chapter">10. <tt class="docutils literal docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+                        title="previous chapter">13. <tt class="docutils literal docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="elements.html"
-                        title="next chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
+  <p class="topless"><a href="geomtools.html"
+                        title="next chapter">15. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-utils">
-<span id="utils-a-collection-of-miscellaneous-utility-functions"></span><span id="sec-ref-utils"></span><h1>11. <a class="reference internal" href="#module-utils" title="utils: A collection of miscellaneous utility functions."><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt></a> &#8212; A collection of miscellaneous utility functions.<a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h1>
+<span id="utils-a-collection-of-miscellaneous-utility-functions"></span><span id="sec-ref-utils"></span><h1>14. <a class="reference internal" href="#module-utils" title="utils: A collection of miscellaneous utility functions."><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt></a> &#8212; A collection of miscellaneous utility functions.<a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">utils</span></tt></p>
 <dl class="class">
 <dt id="utils.NameSequence">
@@ -479,8 +479,11 @@ without the leading dot.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex&#39;</span><span class="p">)</span>
 <span class="go">&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.pgf&#39;</span><span class="p">)</span>
+<span class="go">&#39;pgf&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.pgf.gz&#39;</span><span class="p">)</span>
+<span class="go">&#39;pgf.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fileTypeFromExt</span><span class="p">(</span><span class="s">&#39;pyformex.gz&#39;</span><span class="p">)</span>
+<span class="go">&#39;gz&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -706,6 +709,13 @@ is returned.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.listFontFiles">
+<tt class="descclassname">utils.</tt><tt class="descname">listFontFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.listFontFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all fonts known to the system.</p>
+<p>Returns a list of path names to all the font files found on the system.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.interrogate">
 <tt class="descclassname">utils.</tt><tt class="descname">interrogate</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#utils.interrogate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print useful information about item.</p>
@@ -729,12 +739,12 @@ is returned.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="elements.html" title="12. elements — Definition of elements."
+          <a href="geomtools.html" title="15. geomtools — Basic geometrical operations."
              >next</a> |</li>
         <li class="right" >
-          <a href="project.html" title="10. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -742,7 +752,7 @@ is returned.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

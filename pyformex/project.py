@@ -201,7 +201,7 @@ class Project(TrackedDict):
         if filename and access=='w':
             # destroy existing contents
             self.save()
-        print "INITIAL hits = %s" % self.hits
+        pf.debug("INITIAL hits = %s" % self.hits,pf.DEBUG.PROJECT)
 
 
     def __str__(self):
@@ -230,10 +230,11 @@ class Project(TrackedDict):
     def save(self,quiet=False):
         """Save the project to file."""
         if 'w' not in self.access:
-            pf.debug("Not saving because Project file opened readonly")
+            pf.debug("Not saving because Project file opened readonly",pf.DEBUG.PROJECT)
             return
 
-        print("Project variables changed: %s" % self.hits,pf.DEBUG.PROJECT)
+        if not quiet:
+            print("Project variables changed: %s" % self.hits)
 
         if self.filename is None:
             import tempfile

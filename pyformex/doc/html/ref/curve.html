@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>35. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="30. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
-    <link rel="prev" title="28. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
+    <link rel="next" title="36. datareader — Numerical data reader" href="datareader.html" />
+    <link rel="prev" title="34. cameratools — Camera tools" href="cameratools.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
+          <a href="datareader.html" title="36. datareader — Numerical data reader"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
+          <a href="cameratools.html" title="34. cameratools — Camera tools"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -99,11 +99,11 @@
    
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="toolbar.html"
-                        title="previous chapter">28. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+  <p class="topless"><a href="cameratools.html"
+                        title="previous chapter">34. <tt class="docutils literal docutils literal docutils literal"><span class="pre">cameratools</span></tt> &#8212; Camera tools</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="mesh_ext.html"
-                        title="next chapter">30. <tt class="docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
+  <p class="topless"><a href="datareader.html"
+                        title="next chapter">36. <tt class="docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-curve">
-<span id="curve-definition-of-curves-in-pyformex"></span><span id="sec-ref-curve"></span><h1>29. <a class="reference internal" href="#module-curve" title="curve: Definition of curves in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">curve</span></tt></a> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
+<span id="curve-definition-of-curves-in-pyformex"></span><span id="sec-ref-curve"></span><h1>35. <a class="reference internal" href="#module-curve" title="curve: Definition of curves in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">curve</span></tt></a> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
 <p>This module defines classes and functions specialized for handling
 one-dimensional geometry in pyFormex. These may be straight lines, polylines,
 higher order curves and collections thereof. In general, the curves are 3D,
@@ -320,8 +320,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -585,6 +588,21 @@ they wil be repeated. If you give more, they will be ignored.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Curve.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Curve.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a deep copy of the object.</p>
@@ -632,7 +650,10 @@ the <cite>coords</cite> argument.</p>
 <p>If the PolyLine is already closed, it is returned unchanged.
 Else it is closed by adding a segment from the last to the first
 point (even if these are coincident).</p>
-<p>..warning :: This method changes the PolyLine inplace.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method changes the PolyLine inplace.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -641,7 +662,10 @@ point (even if these are coincident).</p>
 <dd><p>Open a closed PolyLine.</p>
 <p>If the PolyLine is closed, it is opened by removing the last segment.
 Else, it is returned unchanged.</p>
-<p>..warning :: This method changes the PolyLine inplace.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method changes the PolyLine inplace.</p>
+</div>
 <p>Use <a class="reference internal" href="#curve.PolyLine.split" title="curve.PolyLine.split"><tt class="xref py py-meth docutils literal"><span class="pre">split()</span></tt></a> if you want to open the PolyLine without losing
 a segment.</p>
 </dd></dl>
@@ -1059,9 +1083,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.PolyLine.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.PolyLine.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -1076,14 +1109,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.PolyLine.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.PolyLine.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1092,6 +1120,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1119,8 +1158,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1449,9 +1491,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.Line.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Line.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -1466,14 +1517,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Line.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.Line.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Line.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1482,6 +1528,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Line.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1509,8 +1566,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1543,7 +1603,10 @@ If fil is a string, the file is closed prior to returning.</p>
 <p>If the PolyLine is already closed, it is returned unchanged.
 Else it is closed by adding a segment from the last to the first
 point (even if these are coincident).</p>
-<p>..warning :: This method changes the PolyLine inplace.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method changes the PolyLine inplace.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1552,7 +1615,10 @@ point (even if these are coincident).</p>
 <dd><p>Open a closed PolyLine.</p>
 <p>If the PolyLine is closed, it is opened by removing the last segment.
 Else, it is returned unchanged.</p>
-<p>..warning :: This method changes the PolyLine inplace.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method changes the PolyLine inplace.</p>
+</div>
 <p>Use <a class="reference internal" href="#curve.Line.split" title="curve.Line.split"><tt class="xref py py-meth docutils literal"><span class="pre">split()</span></tt></a> if you want to open the PolyLine without losing
 a segment.</p>
 </dd></dl>
@@ -2149,9 +2215,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.BezierSpline.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.BezierSpline.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -2166,14 +2241,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.BezierSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.BezierSpline.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2182,6 +2252,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2209,8 +2290,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -2558,9 +2642,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.CardinalSpline.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -2575,14 +2668,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.CardinalSpline.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2591,6 +2679,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2618,8 +2717,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -3065,9 +3167,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline2.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.CardinalSpline2.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline2.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -3082,14 +3193,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.CardinalSpline2.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.CardinalSpline2.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3098,6 +3204,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline2.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3125,8 +3242,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -3475,9 +3595,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.NaturalSpline.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.NaturalSpline.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.NaturalSpline.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -3492,14 +3621,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.NaturalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.NaturalSpline.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3508,6 +3632,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.NaturalSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3535,8 +3670,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -3885,9 +4023,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc3.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc3.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.Arc3.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc3.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc3.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc3.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -3902,14 +4049,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc3.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.Arc3.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc3.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3918,6 +4060,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc3.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3945,8 +4098,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -4294,9 +4450,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.Arc.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -4311,14 +4476,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Arc.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.Arc.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4327,6 +4487,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4343,8 +4514,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -4714,9 +4888,18 @@ If the curve is closed, the extend parameter is disregarded.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Spiral.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Spiral.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
+<dt id="curve.Spiral.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Spiral.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Spiral.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Spiral.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
 </dd></dl>
 
 <dl class="method">
@@ -4731,14 +4914,9 @@ to split all all nodes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="curve.Spiral.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
+<dt id="curve.Spiral.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Spiral.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4747,6 +4925,17 @@ the maximum size are not rescaled.</p>
 <dd><p>Return the total length of the curve.</p>
 <p>This is only available for curves that implement the &#8216;lengths&#8217;
 method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Spiral.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Geometry scaled to the given size.</p>
+<p>size can be a single value or a list of three values for the
+three coordinate directions. If it is a single value, all directions
+are scaled to the same size.
+Directions for which the geometry has a size smaller than tol times
+the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -4774,8 +4963,11 @@ equally over the parameter space.</li>
 per part of the curve used in the pre-approximation. This is
 pre-approximation is currently required to compute curve lengths.</li>
 </ul>
-<p>Note:: This is an alternative for Curve.approx, and may replace it
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an alternative for Curve.approx, and may replace it
 completely in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -4852,12 +5044,12 @@ with curl 0.375058 through 8 points.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
+          <a href="datareader.html" title="36. datareader — Numerical data reader"
              >next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
+          <a href="cameratools.html" title="34. cameratools — Camera tools"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -4865,7 +5057,7 @@ with curl 0.375058 through 8 points.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

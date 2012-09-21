@@ -1,0 +1,457 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>9. adjacency — A class for storing and handling adjacency tables. &mdash; pyFormex v0.8.7-a2 documentation</title>
+
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.7-a2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="10. elements — Definition of elements." href="elements.html" />
+    <link rel="prev" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
+  </head>
+  <body>
+
+<div class="header">
+  <a href="http://pyformex.org">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="elements.html" title="10. elements — Definition of elements."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
+</form>
+
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="connectivity.html"
+                        title="previous chapter">8. <tt class="docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="elements.html"
+                        title="next chapter">10. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-adjacency">
+<span id="adjacency-a-class-for-storing-and-handling-adjacency-tables"></span><span id="sec-ref-adjacency"></span><h1>9. <a class="reference internal" href="#module-adjacency" title="adjacency: A class for storing and handling adjacency tables."><tt class="xref py py-mod docutils literal"><span class="pre">adjacency</span></tt></a> &#8212; A class for storing and handling adjacency tables.<a class="headerlink" href="#module-adjacency" title="Permalink to this headline">¶</a></h1>
+<p>This module defines a specialized array class for representing adjacency
+of items of a single type. This is e.g. used in mesh models, to store
+the adjacent elements.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">adjacency</span></tt></p>
+<dl class="class">
+<dt id="adjacency.Adjacency">
+<em class="property">class </em><tt class="descclassname">adjacency.</tt><tt class="descname">Adjacency</tt><a class="headerlink" href="#adjacency.Adjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for storing and handling adjacency tables.</p>
+<p>An adjacency table defines a neighbouring relation between elements of
+a single collection. The nature of the relation is not important, but
+should be a binary relation: two elements are either related or they are
+not.</p>
+<p>Typical applications in pyFormex are the adjacency tables for storing
+elements connected by a node, or by an edge, or by a node but not by an
+edge, etcetera.</p>
+<p>Conceptually the adjacency table corresponds with a graph. In graph
+theory however the data are usually stored as a set of tuples <cite>(a,b)</cite>
+indicating a connection between the elements <cite>a</cite> and <cite>b</cite>.
+In pyFormex elements are numbered consecutively from 0 to nelems-1, where
+nelems is the number of elements. If the user wants another numbering,
+he can always keep an array with the actual numbers himself.
+Connections between elements are stored in an efficient two-dimensional
+array, holding a row for each element. This row contains the numbers
+of the connected elements.
+Because the number of connections can be different for each
+element, the rows are padded with an invalid elements number (-1).</p>
+<p>A normalized Adjacency is one where all rows do not contain duplicate
+nonnegative entries and are sorted in ascending order and where no column
+contains only -1 values.
+Also, since the adjacency is defined within a single collection, no row
+should contain a value higher than the maximum row index.</p>
+<p>A new Adjacency table is created with the following syntax</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Adjacency</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">ncon</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>data</cite>: should be compatible with an integer array with shape
+<cite>(nelems,ncon)</cite>, where <cite>nelems</cite> is the number of elements and
+<cite>ncon</cite> is the maximum number of connections per element.</li>
+<li><cite>dtyp</cite>: can be specified to force an integer type but is set by
+default from the passed <cite>data</cite>.</li>
+<li><cite>copy</cite>: can be set True to force copying the data. By default, the
+specified data will be used without copying, if possible.</li>
+<li><cite>ncon</cite>: can be specified to force a check on the plexitude of the
+data, or to set the plexitude for an empty Connectivity.
+An error will be raised if the specified data do not match the
+specified plexitude.</li>
+<li><cite>normalize</cite>: boolean: if True (default) the Adjacency will be normalized
+at creation time.</li>
+<li><cite>allow_self</cite>: boolean: if True, connections of elements with itself are
+allowed. The default (False) will remove self-connections when the table
+is normalized.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Adjacency</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="go">[[-1  1  2]</span>
+<span class="go"> [ 0  2  3]</span>
+<span class="go"> [-1  1  3]</span>
+<span class="go"> [-1  1  2]</span>
+<span class="go"> [-1 -1 -1]]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="adjacency.Adjacency.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#adjacency.Adjacency.nelems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of elements in the Adjacency table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.maxcon">
+<tt class="descname">maxcon</tt><big>(</big><big>)</big><a class="headerlink" href="#adjacency.Adjacency.maxcon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximum number of connections for any element.</p>
+<p>This returns the row count of the Adjacency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.normalize">
+<tt class="descname">normalize</tt><big>(</big><big>)</big><a class="headerlink" href="#adjacency.Adjacency.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize an adjacency table.</p>
+<p>A normalized adjacency table is one where each row:</p>
+<ul class="simple">
+<li>does not contain the row index itself,</li>
+<li>does not contain duplicates,</li>
+<li>is sorted in ascending order,</li>
+</ul>
+<p>and that has at least one row without -1 value.</p>
+<p>By default, an Adjacency is normalized when it is constructed.
+Performing operations on an Adjacency may however leave it in
+a non-normalized state. Calling this method will normalize it again.
+This can obviously also be obtained by creating a new Adjacency
+with self as data.</p>
+<p>Returns: an integer array with shape (adj.shape[0],maxc), with
+<tt class="docutils literal"><span class="pre">maxc</span> <span class="pre">&lt;=</span> <span class="pre">adj.shape[1]</span></tt>, where row <cite>i</cite> retains the unique non-negative
+numbers of the original array except the value <cite>i</cite>, and is possibly
+padded with -1 values.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Adjacency</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span>               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+<span class="go">Adjacency([[ 1,  2,  5],</span>
+<span class="go">       [-1,  0,  3],</span>
+<span class="go">       [-1, -1,  0],</span>
+<span class="go">       [-1, -1,  1],</span>
+<span class="go">       [-1, -1, -1],</span>
+<span class="go">       [-1, -1,  0]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.pairs">
+<tt class="descname">pairs</tt><big>(</big><big>)</big><a class="headerlink" href="#adjacency.Adjacency.pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all pairs of adjacent element.</p>
+<p>Returns an integer array with two columns, where each row contains
+a pair of adjacent elements. The element number in the first columne
+is always the smaller of the two element numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.symdiff">
+<tt class="descname">symdiff</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#adjacency.Adjacency.symdiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the symmetric difference of two adjacency tables.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>adj</cite>: Adjacency with the same number of rows as <cite>self</cite>.</li>
+</ul>
+<p>Returns an adjacency table of the same length, where each
+row contains all the (nonnegative) numbers of the corresponding
+rows of self and adj, except those that occur in both.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.frontFactory">
+<tt class="descname">frontFactory</tt><big>(</big><em>startat=0</em>, <em>frontinc=1</em>, <em>partinc=1</em><big>)</big><a class="headerlink" href="#adjacency.Adjacency.frontFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator function returning the frontal elements.</p>
+<p>This is a generator function and is normally not used directly,
+but via the <a class="reference internal" href="#adjacency.Adjacency.frontWalk" title="adjacency.Adjacency.frontWalk"><tt class="xref py py-meth docutils literal"><span class="pre">frontWalk()</span></tt></a> method.</p>
+<p>It returns an int array with a value for each element.
+On the initial call, all values are -1, except for the elements
+in the initial front, which get a value 0. At each call a new front
+is created with all the elements that are connected to any of the
+current front and which have not yet been visited. The new front 
+elements get a value equal to the last front&#8217;s value plus the
+<cite>frontinc</cite>. If the front becomes empty and a new starting front is
+created, the front value is extra incremented with <cite>partinc</cite>.</p>
+<p>Parameters: see <a class="reference internal" href="#adjacency.Adjacency.frontWalk" title="adjacency.Adjacency.frontWalk"><tt class="xref py py-meth docutils literal"><span class="pre">frontWalk()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Adjacency</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">A</span><span class="o">.</span><span class="n">frontFactory</span><span class="p">():</span> <span class="k">print</span> <span class="n">p</span>
+<span class="go">[ 0 -1 -1 -1 -1]</span>
+<span class="go">[ 0  1  1 -1 -1]</span>
+<span class="go">[ 0  1  1  2 -1]</span>
+<span class="go">[0 1 1 2 4]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="adjacency.Adjacency.frontWalk">
+<tt class="descname">frontWalk</tt><big>(</big><em>startat=0</em>, <em>frontinc=1</em>, <em>partinc=1</em>, <em>maxval=-1</em><big>)</big><a class="headerlink" href="#adjacency.Adjacency.frontWalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walks through the elements by their node front.</p>
+<p>A frontal walk is executed starting from the given element(s).
+A number of steps is executed, each step advancing the front
+over a given number of single pass increments. The step number at
+which an element is reached is recorded and returned.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>startat</cite>: initial element numbers in the front. It can be a single
+element number or a list of numbers.</li>
+<li><cite>frontinc</cite>: increment for the front number on each frontal step.</li>
+<li><cite>partinc</cite>: increment for the front number when the front</li>
+<li><cite>maxval</cite>: maximum frontal value. If negative (default) the walk will
+continue until all elements have been reached. If non-negative,
+walking will stop as soon as the frontal value reaches this
+maximum.</li>
+</ul>
+<p>Returns: an array of integers specifying for each element in which step
+the element was reached by the walker.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Adjacency</span><span class="p">([</span>
+<span class="gp">... </span>      <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="p">[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">A</span><span class="o">.</span><span class="n">frontWalk</span><span class="p">()</span>
+<span class="go">[0 1 1 1 2 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">adjacency</span></tt></p>
+<dl class="function">
+<dt id="adjacency.sortAdjacency">
+<tt class="descclassname">adjacency.</tt><tt class="descname">sortAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#adjacency.sortAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort an adjacency table.</p>
+<p>An adjacency table is an integer array where each row lists the numbers
+of the items that are connected to the item with number equal to the row
+index. Rows are padded with -1 value to create rows of equal length.</p>
+<p>This function sorts the rows of the adjacency table in ascending order
+and removes all columns containing only -1 values.</p>
+<p>Paramaters:</p>
+<ul class="simple">
+<li><cite>adj</cite>: an 2-D integer array with values &gt;=0 or -1</li>
+</ul>
+<p>Returns: an integer array with shape (adj.shape[0],maxc), with
+maxc &lt;= adj.shape[1], where the rows are sorted in ascending order
+and where columns with only -1 values are removed.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sortAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">array([[ 0,  1,  2],</span>
+<span class="go">       [-1,  1,  3],</span>
+<span class="go">       [ 0,  1,  3],</span>
+<span class="go">       [-1, -1, -1]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="adjacency.reduceAdjacency">
+<tt class="descclassname">adjacency.</tt><tt class="descname">reduceAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#adjacency.reduceAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce an adjacency table.</p>
+<p>An adjacency table is an integer array where each row lists the numbers
+of the items that are connected to the item with number equal to the row
+index. Rows are padded with -1 values to create rows of equal length.</p>
+<p>A reduced adjacency table is one where each row:</p>
+<ul class="simple">
+<li>does not contain the row index itself,</li>
+<li>does not contain duplicates,</li>
+<li>is sorted in ascending order,</li>
+</ul>
+<p>and that has at least one row without -1 value.</p>
+<p>Paramaters:</p>
+<ul class="simple">
+<li><cite>adj</cite>: an 2-D integer array with value &gt;=0 or -1</li>
+</ul>
+<p>Returns: an integer array with shape (adj.shape[0],maxc), with
+maxc &lt;= adj.shape[1], where row <cite>i</cite> retains the unique non-negative
+numbers of the original array except the value <cite>i</cite>, and is possibly
+padded with -1 values.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reduceAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">array([[ 1,  2,  5],</span>
+<span class="go">       [-1,  0,  3],</span>
+<span class="go">       [-1, -1,  0],</span>
+<span class="go">       [-1, -1,  1],</span>
+<span class="go">       [-1, -1, -1],</span>
+<span class="go">       [-1, -1,  0]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="elements.html" title="10. elements — Definition of elements."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             >previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
+      Last updated on Sep 21, 2012.
+    <span class="right">
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
+    </div>
+  </body>
+</html>

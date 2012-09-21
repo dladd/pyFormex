@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>41. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>40. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="42. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
-    <link rel="prev" title="40. fe — Finite Element Models in pyFormex." href="fe.html" />
+    <link rel="next" title="41. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
+    <link rel="prev" title="39. fe — Finite Element Models in pyFormex." href="fe.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+          <a href="fe_post.html" title="41. fe_post — A postprocessor for ABAQUS output files."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+          <a href="fe.html" title="39. fe — Finite Element Models in pyFormex."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="fe.html"
-                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+                        title="previous chapter">39. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fe_post.html"
-                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
+                        title="next chapter">41. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-fe_abq">
-<span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>41. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
+<span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>40. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
 <p>This module provides functions and classes to export finite element models
 from pyFormex in the Abaqus™ input format (.inp).
 The exporter handles the mesh geometry as well as model, node and element
@@ -579,9 +579,11 @@ from the len of the constants list</p>
 Implemented: Elasticity,  Stop
 Examples: 
 Elasticity
-P.Prop(name=&#8217;connbehavior1&#8217;,ConnectorBehavior=&#8217;&#8216;,Elasticity=dict(component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
+P.Prop(name=&#8217;connbehavior1&#8217;,ConnectorBehavior=&#8217;&#8216;,Elasticity=dict(
+component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
 Stop:
-P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=dict(component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))</p>
+P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=dict(
+component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))</p>
 </dd></dl>
 
 <dl class="function">
@@ -672,7 +674,8 @@ different identifiers for the different elements in the surface. Thus:</p>
 </li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">generalinteraction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop1&#39;</span><span class="p">),</span><span class="n">exl</span> <span class="o">=</span><span class="p">[[</span><span class="s">&#39;surf11&#39;</span><span class="p">,</span> <span class="s">&#39;surf12&#39;</span><span class="p">],[</span><span class="s">&#39;surf21&#39;</span><span class="p">,</span><span class="n">surf22</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">generalinteraction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop1&#39;</span><span class="p">),</span><span class="n">exl</span> <span class="o">=</span><span class="p">[</span>
+<span class="go">[&#39;surf11&#39;, &#39;surf12&#39;],[&#39;surf21&#39;,surf22]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -688,7 +691,9 @@ different identifiers for the different elements in the surface. Thus:</p>
 <li>interaction: interaction properties : name or Dict</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;contact0&#39;</span><span class="p">,</span><span class="n">interaction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop&#39;</span><span class="p">,</span> <span class="n">surfacebehavior</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">pressureoverclosure</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;hard&#39;</span><span class="p">,</span><span class="s">&#39;linear&#39;</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]),</span> <span class="n">master</span> <span class="o">=</span><span class="s">&#39;quadtubeINTSURF1&#39;</span><span class="p">,</span>  <span class="n">slave</span><span class="o">=</span><span class="s">&#39;hexstentEXTSURF&#39;</span><span class="p">,</span> <span class="n">contacttype</span><span class="o">=</span><span class="s">&#39;NODE TO SURFACE&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;contact0&#39;</span><span class="p">,</span><span class="n">interaction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop&#39;</span><span class="p">,</span>
+<span class="go">surfacebehavior=True, pressureoverclosure=[&#39;hard&#39;,&#39;linear&#39;,0.0, 0.0, 0.001]), </span>
+<span class="go">master =&#39;quadtubeINTSURF1&#39;,  slave=&#39;hexstentEXTSURF&#39;, contacttype=&#39;NODE TO SURFACE&#39;)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -706,7 +711,8 @@ different identifiers for the different elements in the surface. Thus:</p>
 <p>-type (surf2surf, node2surf)
 -no rotation</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">constraint</span><span class="o">=</span><span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;constr1&#39;</span><span class="p">,</span> <span class="n">adjust</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="n">master</span> <span class="o">=</span> <span class="s">&#39;hexstentbarSURF&#39;</span><span class="p">,</span> <span class="n">slave</span> <span class="o">=</span> <span class="s">&#39;hexstentEXTSURF&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;NODE TO SURFACE&#39;</span><span class="p">)</span>    
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">constraint</span><span class="o">=</span><span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;constr1&#39;</span><span class="p">,</span> <span class="n">adjust</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> 
+<span class="go">master = &#39;hexstentbarSURF&#39;, slave = &#39;hexstentEXTSURF&#39;,type=&#39;NODE TO SURFACE&#39;)    </span>
 </pre></div>
 </div>
 </dd></dl>
@@ -759,6 +765,28 @@ Each term is again a list with three values:</p>
 </div>
 <p>This forces the displacement in Y-direction of nodes 209 and 32 to
 be equal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtMass">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtMass</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtMass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format mass</p>
+<p>Required:</p>
+<ul class="simple">
+<li>mass : mass magnitude</li>
+<li>set : name of the element set on which mass is applied</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtInertia">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtInertia</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtInertia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format rotary inertia</p>
+<p>Required:</p>
+<ul class="simple">
+<li>inertia : inertia tensor i11, i22, i33, i12, i13, i23</li>
+<li>set : name of the element set on which inertia is applied</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -883,8 +911,8 @@ axes. Default is to use the local axes wherever defined.</li>
 <li><cite>summary</cite>: if True, a summary with minimum and maximum is written</li>
 <li><cite>total</cite>: if True, sums the values for each key</li>
 </ul>
-<p>Remark: the <cite>kind</cite> argument is not used, but is included so that we can
-easily call it with a <cite>Results</cite> dict as arguments</p>
+<p>&#8216;Remark that the <cite>kind</cite> argument is not used, but is included so that we can
+easily call it with a <cite>Results</cite> dict as arguments.&#8217;</p>
 </dd></dl>
 
 <dl class="function">
@@ -972,12 +1000,12 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+          <a href="fe_post.html" title="41. fe_post — A postprocessor for ABAQUS output files."
              >next</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+          <a href="fe.html" title="39. fe — Finite Element Models in pyFormex."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -985,7 +1013,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>11. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,10 +49,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
-    <link rel="prev" title="12. elements — Definition of elements." href="elements.html" />
+    <link rel="next" title="12. simple — Predefined geometries with a simple shape." href="simple.html" />
+    <link rel="prev" title="10. elements — Definition of elements." href="elements.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,12 +75,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="widgets.html" title="14. widgets — A collection of custom widgets used in the pyFormex GUI"
+          <a href="simple.html" title="12. simple — Predefined geometries with a simple shape."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="elements.html" title="12. elements — Definition of elements."
+          <a href="elements.html" title="10. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="elements.html"
-                        title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
+                        title="previous chapter">10. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="widgets.html"
-                        title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+  <p class="topless"><a href="simple.html"
+                        title="next chapter">12. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-mesh">
-<span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>13. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
+<span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>11. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
 <p>This module defines the Mesh class, which can be used to describe discrete
 geometrical models like those used in Finite Element models.
 It also contains some useful functions to create such models.</p>
@@ -345,8 +345,8 @@ outside the range 0..3, the return value is None.</p>
 <tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the set of unique node numbers in the Mesh.</p>
 <p>This returns only the node numbers that are effectively used in
-the connectivity table. For a compacted Mesh, it is equal to
-<tt class="docutils literal"><span class="pre">`arange(self.nelems)`</span></tt>.
+the connectivity table. For a compacted Mesh, it is equivalent to
+<tt class="docutils literal"><span class="pre">arange(self.nelems)</span></tt>.
 This function also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -365,7 +365,7 @@ the coords attribute.</p>
 <tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique edges of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
-edges. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(1,unique=True)`</span></tt>,
+edges. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(1,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -375,7 +375,7 @@ requests can return it without the need for computing it again.</p>
 <tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique faces of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
-faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(2,unique=True)`</span></tt>,
+faces. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(2,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -385,7 +385,7 @@ requests can return it without the need for computing it again.</p>
 <tt class="descname">getCells</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getCells" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cells of the elements.</p>
 <p>This is a convenient function to create a table with the element
-cells. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(3,unique=True)`</span></tt>,
+cells. It is equivalent to <tt class="docutils literal"><span class="pre">self.getLowerEntities(3,unique=True)</span></tt>,
 but this also stores the result internally so that future
 requests can return it without the need for computing it again.</p>
 </dd></dl>
@@ -395,10 +395,11 @@ requests can return it without the need for computing it again.</p>
 <tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElemEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the elements in function of its edges.</p>
 <p>This returns a Connectivity table with the elements defined in
-function of the edges. It is equivalent to
-<tt class="docutils literal"><span class="pre">`self.elems.insertLevel(self.eltype.getEntities(1))`</span></tt>
-but it also stores the definition of the edges and the returned
-element to edge connectivity.</p>
+function of the edges. It returns the equivalent of
+<tt class="docutils literal"><span class="pre">self.elems.insertLevel(self.elType().getEntities(1))</span></tt>
+but as a side effect it also stores the definition of the edges
+and the returned element to edge connectivity in the attributes
+<cite>edges</cite>, resp. <cite>elem_edges</cite>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -467,6 +468,14 @@ contain at least one complete element of the border Mesh (i.e. an
 element of the first lower hierarchical level). Thus, in a volume Mesh,
 elements only touching the border by a vertex or an edge are not
 considered border elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getBorderNodes">
+<tt class="descname">getBorderNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the nodes that are on the border of the Mesh.</p>
+<p>This returns a list with the numbers of the nodes that are on the
+border of the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -557,28 +566,36 @@ all nodes are considered connections.</li>
 
 <dl class="method">
 <dt id="mesh.Mesh.partitionByConnection">
-<tt class="descname">partitionByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>firstprop=0</em>, <em>nparts=-1</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.partitionByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>sort='number'</em>, <em>nparts=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.partitionByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect the connected parts of a Mesh.</p>
 <p>The Mesh is partitioned in parts in which all elements are
 connected. Two elements are connected if it is possible to draw a
 continuous (poly)line from a point in one element to a point in
 the other element without leaving the Mesh.
-The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
+The partitioning is returned as a integer array having a value
+for ech element corresponding to the part number it belongs to.</p>
+<p>By default the parts are sorted in decreasing order of the number
+of elements. If you specify nparts, you may wish to switch off the
+sorting by specifying sort=&#8217;&#8216;.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.splitByConnection">
-<tt class="descname">splitByConnection</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitByConnection</tt><big>(</big><em>level=0</em>, <em>startat=0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the Mesh into connected parts.</p>
-<p>Returns a list of Meshes that each form a connected part.</p>
+<p>Returns a list of Meshes that each form a connected part.
+By default the parts are sorted in decreasing order of the number
+of elements.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.largestByConnection">
-<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">largestByConnection</tt><big>(</big><em>level=0</em><big>)</big><a class="headerlink" href="#mesh.Mesh.largestByConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the largest connected part of the Mesh.</p>
+<p>This is equivalent with, but more efficient than</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">splitByConnection</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -641,6 +658,46 @@ The <cite>mode</cite> argument specifies how a single frontal step is done:</p>
 <dt id="mesh.Mesh.nEdgeAdjacent">
 <tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of adjacent elems.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nonManifoldNodes">
+<tt class="descname">nonManifoldNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nonManifoldNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the non-manifold nodes of a Mesh.</p>
+<p>Non-manifold nodes are nodes where subparts of a mesh of level &gt;= 2
+are connected by a node but not by an edge.</p>
+<p>Returns an integer array with a sorted list of non-manifold node
+numbers. Possibly empty (always if the dimensionality of the Mesh
+is lower than 2).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nonManifoldEdges">
+<tt class="descname">nonManifoldEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nonManifoldEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the non-manifold edges of a Mesh.</p>
+<p>Non-manifold edges are edges where subparts of a mesh of level 3
+are connected by an edge but not by an face.</p>
+<p>Returns an integer array with a sorted list of non-manifold edge
+numbers. Possibly empty (always if the dimensionality of the Mesh
+is lower than 3).</p>
+<p>As a side effect, this constructs the list of edges in the object.
+The definition of the nonManifold edges in tgerms of the nodes can
+thus be got from</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nonManifoldEdges</span><span class="p">()]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nonManifoldEdgeNodes">
+<tt class="descname">nonManifoldEdgeNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nonManifoldEdgeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the non-manifold edge nodes of a Mesh.</p>
+<p>Non-manifold edges are edges where subparts of a mesh of level 3
+are connected by an edge but not by an face.</p>
+<p>Returns an integer array with a sorted list of numbers of nodes
+on the non-manifold edges.
+Possibly empty (always if the dimensionality of the Mesh
+is lower than 3).</p>
 </dd></dl>
 
 <dl class="method">
@@ -833,7 +890,7 @@ It the Mesh has no props, an empty dict is returned.</p>
 <dl class="method">
 <dt id="mesh.Mesh.splitRandom">
 <tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitRandom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split a mesh in n parts, distributing the elements randomly.</p>
+<dd><p>Split a Mesh in n parts, distributing the elements randomly.</p>
 <p>Returns a list of n Mesh objects, constituting together the same
 Mesh as the original. The elements are randomly distributed over
 the subMeshes.</p>
@@ -911,29 +968,21 @@ for the current element type.</p>
 <tt class="descname">subdivide</tt><big>(</big><em>*ndiv</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.subdivide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subdivide the elements of a Mesh.</p>
 <p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
+<ul class="simple">
+<li><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
 along the edges of the elements. Accepted type and value depend
-on the element type of the Mesh. Currently implemented:</p>
-<dl class="docutils">
-<dt>tri3: ndiv is a single int value specifying the number of</dt>
-<dd><p class="first last">divisions (of equal size) for each edge.</p>
-</dd>
-<dt>quad4: ndiv is a sequence of two int values nx,ny, specifying</dt>
-<dd><p class="first last">the number of divisions along the first, resp. second
-parametric direction of the element</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
+on the element type of the Mesh. Currently implemented:</li>
+<li>&#8216;tri3&#8217;: ndiv is a single int value specifying the number of
+divisions (of equal size) for each edge.</li>
+<li>&#8216;quad4&#8217;: ndiv is a sequence of two int values nx,ny, specifying
+the number of divisions along the first, resp. second
+parametric direction of the element</li>
+<li><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
 fused. If False, the Mesh is only fused over each individual
-element of the original Mesh.</p>
-</li>
+element of the original Mesh.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a Mesh where each element is replaced by a number of</dt>
-<dd>smaller elements of the same type.</dd>
-</dl>
+<p>Returns a Mesh where each element is replaced by a number of
+smaller elements of the same type.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This is currently only implemented for Meshes of type &#8216;tri3&#8217;
@@ -1002,13 +1051,14 @@ index automatically:</p>
 <li>&#8216;elems&#8217;: the nodes are number in order of their appearance in the
 Mesh connectivity.</li>
 <li>&#8216;random&#8217;: the nodes are numbered randomly.</li>
+<li>&#8216;front&#8217;: the nodes are numbered in order of their frontwalk.</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.renumberElems">
-<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumberElems" title="Permalink to this definition">¶</a></dt>
-<dd><p>Renumber the elements of a Mesh.</p>
+<dt id="mesh.Mesh.reorder">
+<tt class="descname">reorder</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder the elements of a Mesh.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>order</cite>: either a 1-D integer array with a permutation of
@@ -1016,14 +1066,30 @@ Mesh connectivity.</li>
 the following predefined strings:<ul>
 <li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
 <li>&#8216;random&#8217;: number the elements in a random order.</li>
-<li>&#8216;reverse&#8217;: number the elements in.</li>
+<li>&#8216;reverse&#8217;: number the elements in reverse order.</li>
 </ul>
 </li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A Mesh equivalent with self but with the elements ordered as specified.</dd>
-</dl>
+<p>Returns a Mesh equivalent with self but with the elements ordered as specified.</p>
+<p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.renumberElems">
+<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumberElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder the elements of a Mesh.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: either a 1-D integer array with a permutation of
+<tt class="docutils literal"><span class="pre">arange(self.nelems())</span></tt>, specifying the requested order, or one of
+the following predefined strings:<ul>
+<li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
+<li>&#8216;random&#8217;: number the elements in a random order.</li>
+<li>&#8216;reverse&#8217;: number the elements in reverse order.</li>
+</ul>
+</li>
+</ul>
+<p>Returns a Mesh equivalent with self but with the elements ordered as specified.</p>
 <p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
 </dd></dl>
 
@@ -1141,24 +1207,16 @@ outer border of the mesh seperately to reduce mesh shrinkage.</p>
 <p>Higher values of k can reduce shrinkage even more
 (up to a point where the mesh expands),
 but will result in less smoothing per iteration.</p>
-<ul>
-<li><dl class="first docutils">
-<dt><cite>exclnod</cite>: It contains a list of node indices to exclude from the smoothing.</dt>
-<dd><p class="first last">If exclnod is &#8216;border&#8217;, all nodes on the border of the mesh will
+<ul class="simple">
+<li><cite>exclnod</cite>: It contains a list of node indices to exclude from the smoothing.
+If exclnod is &#8216;border&#8217;, all nodes on the border of the mesh will
 be unchanged, and the smoothing will only act inside.
 If exclnod is &#8216;inner&#8217;, only the nodes on the border of the mesh will
-take part to the smoothing.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><cite>exclelem</cite>: It contains a list of elements to exclude from the smoothing.</dt>
-<dd><p class="first last">The nodes of these elements will not take part to the smoothing.
+take part to the smoothing.</li>
+<li><cite>exclelem</cite>: It contains a list of elements to exclude from the smoothing.
+The nodes of these elements will not take part to the smoothing.
 If exclnod and exclelem are used at the same time the union of them
-will be exluded from smoothing.</p>
-</dd>
-</dl>
-</li>
+will be exluded from smoothing.</li>
 </ul>
 </dd></dl>
 
@@ -1572,12 +1630,12 @@ not fuse them.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="widgets.html" title="14. widgets — A collection of custom widgets used in the pyFormex GUI"
+          <a href="simple.html" title="12. simple — Predefined geometries with a simple shape."
              >next</a> |</li>
         <li class="right" >
-          <a href="elements.html" title="12. elements — Definition of elements."
+          <a href="elements.html" title="10. elements — Definition of elements."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1585,7 +1643,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

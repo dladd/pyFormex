@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>53. pyformex_gts — Operations on triangulated surfaces using GTS functions. &mdash; pyFormex v0.8.7-a2 documentation</title>
+
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.7-a2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="54. section2d — Some functions operating on 2D structures." href="section2d.html" />
+    <link rel="prev" title="52. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
+  </head>
+  <body>
+
+<div class="header">
+  <a href="http://pyformex.org">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="54. section2d — Some functions operating on 2D structures."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="52. properties — General framework for attributing properties to geometrical elements."
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
+</form>
+
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="properties.html"
+                        title="previous chapter">52. <tt class="docutils literal docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="section2d.html"
+                        title="next chapter">54. <tt class="docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyformex_gts">
+<span id="pyformex-gts-operations-on-triangulated-surfaces-using-gts-functions"></span><span id="sec-ref-pyformex-gts"></span><h1>53. <a class="reference internal" href="#module-pyformex_gts" title="pyformex_gts: Operations on triangulated surfaces using GTS functions."><tt class="xref py py-mod docutils literal"><span class="pre">pyformex_gts</span></tt></a> &#8212; Operations on triangulated surfaces using GTS functions.<a class="headerlink" href="#module-pyformex_gts" title="Permalink to this headline">¶</a></h1>
+<p>This module provides access to GTS from insisde pyFormex.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">pyformex_gts</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">pyformex_gts</span></tt></p>
+<dl class="function">
+<dt id="pyformex_gts.boolean">
+<tt class="descclassname">pyformex_gts.</tt><tt class="descname">boolean</tt><big>(</big><em>self</em>, <em>surf</em>, <em>op</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#pyformex_gts.boolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a boolean operation with another surface.</p>
+<p>Boolean operations between surfaces are a basic operation in
+free surface modeling. Both surfaces should be closed orientable
+non-intersecting manifolds.
+Use the <tt class="xref py py-meth docutils literal"><span class="pre">check()</span></tt> method to find out.</p>
+<p>The boolean operations are set operations on the enclosed volumes:
+union(&#8216;+&#8217;), difference(&#8216;-&#8216;) or intersection(&#8216;*&#8217;).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>surf</cite>: a closed manifold surface</li>
+<li><cite>op</cite>: boolean operation: one of &#8216;+&#8217;, &#8216;-&#8216; or &#8216;*&#8217;.</li>
+<li><cite>check</cite>: boolean: check that the surfaces are not self-intersecting;
+if one of them is, the set of self-intersecting faces is written
+(as a GtsSurface) on standard output</li>
+<li><cite>verbose</cite>: boolean: print statistics about the surface</li>
+</ul>
+<p>Returns: a closed manifold TriSurface</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyformex_gts.intersection">
+<tt class="descclassname">pyformex_gts.</tt><tt class="descname">intersection</tt><big>(</big><em>self</em>, <em>surf</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#pyformex_gts.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection curve of two surfaces.</p>
+<p>Boolean operations between surfaces are a basic operation in
+free surface modeling. Both surfaces should be closed orientable
+non-intersecting manifolds.
+Use the <tt class="xref py py-meth docutils literal"><span class="pre">check()</span></tt> method to find out.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>surf</cite>: a closed manifold surface</li>
+<li><cite>check</cite>: boolean: check that the surfaces are not self-intersecting;
+if one of them is, the set of self-intersecting faces is written
+(as a GtsSurface) on standard output</li>
+<li><cite>verbose</cite>: boolean: print statistics about the surface</li>
+</ul>
+<p>Returns: a list of intersection curves.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyformex_gts.inside">
+<tt class="descclassname">pyformex_gts.</tt><tt class="descname">inside</tt><big>(</big><em>self</em>, <em>pts</em><big>)</big><a class="headerlink" href="#pyformex_gts.inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test which of the points pts are inside the surface.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>pts</cite>: a (usually 1-plex) Formex or a data structure that can be used
+to initialize a Formex.</li>
+</ul>
+<p>Returns an integer array with the indices of the points that are
+inside the surface. The indices refer to the onedimensional list
+of points as obtained from pts.points().</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="54. section2d — Some functions operating on 2D structures."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="52. properties — General framework for attributing properties to geometrical elements."
+             >previous</a> |</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
+      Last updated on Sep 21, 2012.
+    <span class="right">
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
+    </div>
+  </body>
+</html>

@@ -33,13 +33,7 @@ This is a collection of the most prominent changes in pyFormex 0.8.7
 compared to the previous release 0.8.6. There are a lot of new features,
 code reorganizations and bug fixes. The most important new feature is a new
 model for user applications. Besides the classical `pyFormex script`, there
-is now also a `pyFormex app`. The rules for these are slighly different, but
-when sticking to some simple rules, a single source file may be executed 
-either as a script or as an app. The main purpose of the new app model twofold:
-
-- allow an applications to easily import definitions from another app,
-- allow an application to be run from a compiled file, with having the .py 
-  source available.
+is now also a `pyFormex app`. See below (Scripting)
 
 
 Installation
@@ -94,10 +88,13 @@ Core
   arrays.
 - coords.py: new functions bboxIntersection, testBbox, align. 
   New Coords methods: apt, sort, boxes
+- Mesh: many new, expanded and revised methods
 
 
 Gui 
 ---
+- Application menu, containing all examples.
+
 
 Widgets
 -------
@@ -105,30 +102,70 @@ Widgets
 
 Drawing
 -------
+New functions: drawPrincipal, drawImage
 
 Scripting
 ---------
+Scripting is the most important feature of pyFormex and has been available
+right from the beginning. Now there is a new model for user application: `app`.
+While the syntactic rules for apps are only slighly different from those of 
+the classical scripts, the execution engine functions quite diferently. Apps
+are imported as Python modules. The app source should define a 'run'
+method to be executed when run by pyFormex. The outermost code is only 
+executed once (when the module is loaded).
+
+The main purposes of the new app model are twofold:
+
+- allow an applications to easily import definitions from another app,
+- allow an application to be run from a compiled file, with having the .py 
+  source available.
+
+By sticking to some simple rules (as shown in the template.py), 
+a single source file may be used either as a script or as an app. 
 
 
 Plugin menus
 ------------
+- geometry menu: has been extended and now contains integrated parts from the
+  former specialized Formex, Mesh and Surface menus.
+- new plugin menu dxf_tools: contains functionality for reading and writing .DXF
+  files. Currently limited to line type objects (line, polyline, arc, circle),
+  but easily expandable.
+- postproc menu now allows timestepping through the subsequent results
 
 
 Plugins
 -------
+- dxf plugin has been extended with new functionality for reading and writing 
+  .DXF files. 
+  Currently limited to line type objects (line, polyline, arc, circle),
+  but easily expandable.
+- nurbs: some extra functions
+- trisurface.TriSurface: new methods: perimeters, quality; moved gts functions
+  to pyformex_gts
 - new plugin pyformex_gts: contains all the functionality using the GTS library
   and external gts commands.
-- new plugin dxf_tools: contains functionality for reading and writing .DXF
-  files. Currently limited to line type objects (line, polyline, arc, circle),
-  but easily expandable.
 - new plugin meshlist, defining a MeshList class. Consider using the olist.List
   class instead.
 
-External
---------
+
+Extra
+-----
+The installation procedure for (some of) the extra software has been changed.
+A Makefile is used and `make all` should perform the installation.
+- gts: now makes used of standard installed GTS library. It only creates some
+  external commands that make use of the library.
+- dxfparser: now also reads Circle objects from a .DXF file. 
+
 
 Examples
 --------
+New examples: Nurbs, FontForge, Icosahedron, Texture, NonManifold, Boolean,
+NurbsDecompose, Icons, Inside
+
+Many of the examples have been adapted to the new app style. Others need
+further work
+
 
 Data
 ----

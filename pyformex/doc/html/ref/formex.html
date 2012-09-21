@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.7-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a1',
+        VERSION:     '0.8.7-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -290,6 +290,25 @@ with the number of nodes per element.</p>
 <dd><p>Return the shape of the Formex.</p>
 <p>The shape of a Formex is the shape of its data array,
 i.e. a tuple (nelems, nplex, ndim).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.level">
+<tt class="descname">level</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the level (dimensionality) of the Formex.</p>
+<p>The level or dimensionality of a geometrical object is the minimum
+number of parametric directions required to describe the object.
+Thus we have the following values:</p>
+<p>0: points
+1: lines
+2: surfaces
+3: volumes</p>
+<p>Because the geometrical meaning of a Formex is not always defined,
+the level may be unknown. In that case, -1 is returned.</p>
+<p>If the Formex has an &#8216;eltype&#8217; set, the value is determined from
+the Element database. Else, the value is equal to the plexitude minus
+one for plexitudes up to 3, an equal to 2 for any higher plexitude
+(since the default is to interprete a higher plexitude as a polygon).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1004,6 +1023,15 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Geometry object.
+Note that subclasses may store more points in this array than are used
+to define the geometry.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a deep copy of the object.</p>
@@ -1347,7 +1375,7 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1355,7 +1383,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Aug 02, 2012.
+      Last updated on Sep 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

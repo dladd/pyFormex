@@ -161,14 +161,14 @@ class Adjacency(ndarray):
 
     A new Adjacency table is created with the following syntax ::
     
-      Connectivity(data=[],dtyp=None,copy=False,ncon=0,normalize=True)
+      Adjacency(data=[],dtyp=None,copy=False,ncon=0,normalize=True)
 
     Parameters:
     
     - `data`: should be compatible with an integer array with shape
       `(nelems,ncon)`, where `nelems` is the number of elements and
       `ncon` is the maximum number of connections per element. 
-    - `dtype`: can be specified to force an integer type but is set by
+    - `dtyp`: can be specified to force an integer type but is set by
       default from the passed `data`. 
     - `copy`: can be set True to force copying the data. By default, the
       specified data will be used without copying, if possible.
@@ -181,6 +181,8 @@ class Adjacency(ndarray):
     - `allow_self`: boolean: if True, connections of elements with itself are
       allowed. The default (False) will remove self-connections when the table
       is normalized.
+
+    .. warning: The `allow_self` parameter is currently inactive.
 
     Example:
 

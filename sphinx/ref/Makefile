@@ -32,15 +32,18 @@
 # of Sphinx are not yet powerful enough.
 # 
 
-COREMODULES= arraytools collection config connectivity coords elements  \
-  flatkeydb formex geometry mesh mydict odict olist project \
+COREMODULES= adjacency arraytools collection config connectivity coords \
+  elements fileread filewrite \
+  flatkeydb formex geometry geomtools mesh mydict odict olist project \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
   image imageViewer imagearray marks menu\
   scriptMenu toolbar viewport widgets 
-PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post flavia geomtools \
-  inertia isopar lima mesh_ext nurbs objects plot2d postproc properties \
-  section2d tetgen tools trisurface turtle units
+PLUGINMODULES= calpy_itf cameratools curve datareader dxf export \
+  fe fe_abq fe_post flavia \
+  inertia isopar lima mesh_ext nurbs objects plot2d polygon \
+  postproc properties pyformex_gts section2d sectionize \
+  tetgen tools trisurface turtle units 
 #AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 AUTOREF= $(COREMODULES) $(GUIMODULES) $(PLUGINMODULES)
 AUTOSRC= $(addsuffix .rst, ${AUTOREF})
