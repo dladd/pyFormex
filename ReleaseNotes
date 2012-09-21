@@ -26,64 +26,44 @@
   
 
 
-pyFormex 0.8.6  Releasenotes
+pyFormex 0.8.7  Releasenotes
 ============================
 
-This is a collection of the most prominent changes in pyFormex 0.8.6
-compared to the previous release 0.8.5. There are not many new features
-in this release. The major change is the installation procedure, triggered
-by our attempts to create Debian packages. And we have a couple of bug fixes.
+This is a collection of the most prominent changes in pyFormex 0.8.7
+compared to the previous release 0.8.6. There are a lot of new features,
+code reorganizations and bug fixes. The most important new feature is a new
+model for user applications. Besides the classical `pyFormex script`, there
+is now also a `pyFormex app`. The rules for these are slighly different, but
+when sticking to some simple rules, a single source file may be executed 
+either as a script or as an app. The main purpose of the new app model twofold:
+
+- allow an applications to easily import definitions from another app,
+- allow an application to be run from a compiled file, with having the .py 
+  source available.
 
 
 Installation
 ------------
-- The installation procedure now includes a configuration file (setup.py)
-  which sets the default installation prefix to '/usr/local'. The command to
-  install (if you accept the defaults) is thus::
+- The installation procedure for (some of) the extra packages has been
+  changed. They now rely more on installed or installable packages from
+  your distribution. This will allow to create binary packages for them.
 
-    python setup.py install
-
-- Secondly, if the compilation of the acceleration libraries fails, the 
-  installation procedure continues without the libraries.
-
-- Finally, it is now possible to enforce installation without the libraries,
-  by using the command::
-
-    python setup.py install --no-accel
+- We have set up a local repository where intermediate releases in Debian
+  package format can be found.
 
 
 Gui
 ---
-- Camera Settings dialog, with e.g. interactive front and back plane
-  clipping
-- Save current camera settings (and restore)
   
-
-
-pyFormex 0.8.5  Releasenotes
-============================
-
-This is a collection of the most prominent changes in pyFormex 0.8.5
-compared to the previous release 0.8.4. Like always, besides the new
-things mentioned below, we also have lots of bug fixes, code cleanup
-and functionality enhancements.
-
-
 
 Documentation
 -------------
-- The official documentation is now on the new website at
-  http://www.nongnu.org/pyformex/doc/index.html
-
-
-Installation
-------------
-- The post-install script will normally not need to run pyformex, easing
-  the installation in sandboxed environments.
 
 
 Command line
 ------------
+- two options (debug, debulevel) to support the debug level setting. See
+  man page or `pyformex --help`.
 
 
 Configuration
@@ -92,21 +72,32 @@ Configuration
 
 Core
 ----
-- coords: new Coords methods: average, inertia, centered; 
-  new class BoundVectors; new functions pattern and xpattern
-- formex: the pattern and mpattern functions are replaced by the functions 
-  pattern and xpattern in the coords module. Some functions are provided 
-  for compatibility, but users are urged to transform their code to the 
-  new conventions.
-- geomtools: new functions pointsAtLines, pointsAtSegments, distancesPFL, 
-  distancesPFS; mode parameter to intersection* functions
-- Mesh: new methods: partitionByAngle, avgNodes, removeDuplicate, enhanced
-  and unified connect, extrude and revolve methods
+- adjacency.py: new module holding a specialized Adjacency class. This replaces
+  and extends some methods that were previously available in connectivity.py.
+  The Adjacency class provides general front progression algorithms.
+- track.py: new module defining the classes TrackedDict and TrackedList. These
+  are like the corresponding Python dict and list, but with tracking 
+  facilities added, allowing to know whether or not changes have been applied
+  to the contents. 
+- fileread.py: a collection of general functions for reading geometrical data
+  from a file. It is mostly intended to be used by specific file format
+  converters/importers.
+- olist.py: new list manipulation functions `remove` and `toFront`. 
+- olist.List: new *experimental* class which allows execution of a method
+  on each of its members. 
+- Implemented debug levels, allowing debug messages to be switched on/off.  
+- arraytools: new functions: concat, complement, sortSubsets, multiplicity,
+  unitDivisor, uniformParamValues
+  In `vectorRotation`, upvec now defaults to None.
+- project: Project is now a TrackedDict
+- connectivity.Connectivity: a mask can be used to construct partial adjacency
+  arrays.
+- coords.py: new functions bboxIntersection, testBbox, align. 
+  New Coords methods: apt, sort, boxes
 
-Gui
+
+Gui 
 ---
-- canvas background can have a horizontal grading
-- more configuration settings can be changed from the GUI
 
 Widgets
 -------
@@ -114,8 +105,6 @@ Widgets
 
 Drawing
 -------
-- faster drawing of large lists
-- improved Nurbs drawing
 
 Scripting
 ---------
@@ -123,27 +112,26 @@ Scripting
 
 Plugin menus
 ------------
-- geometry_menu: added(moved) some functionality from Surface menu,
-  added (some) DXF import
 
 
 Plugins
 -------
-- curve: Curve.endpoints method; Arc (enhanced) and Line (new) classes,
-  PolyLine concatenation (append), BezierSpline.toMesh
-- dxf: added import of some entities from .DXF files: Line, Polyline, Arc
+- new plugin pyformex_gts: contains all the functionality using the GTS library
+  and external gts commands.
+- new plugin dxf_tools: contains functionality for reading and writing .DXF
+  files. Currently limited to line type objects (line, polyline, arc, circle),
+  but easily expandable.
+- new plugin meshlist, defining a MeshList class. Consider using the olist.List
+  class instead.
 
 External
 --------
-- a new program *dxfparser* is provided to import (parts of) .DXF files.
-- pyformex-search script for searching the pyFormex source
 
 Examples
 --------
-New examples:
-- Multicut
-- ExtrudeMesh
-- Connect
 
+Data
+----
+The data directory contains a modified teapot model.
 
 .. End

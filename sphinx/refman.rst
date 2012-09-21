@@ -87,7 +87,6 @@ the need to explicitely import them.
    ref/coords
    ref/formex
 
-
    ref/arraytools
    ref/script
    ref/draw
@@ -108,11 +107,14 @@ main pyformex path are considered to belong to the pyformex core functionality.
 
    ref/geometry
    ref/connectivity
+   ref/adjacency
+   ref/elements
+   ref/mesh
    ref/simple
    ref/project
    ref/utils
-   ref/elements
-   ref/mesh
+   ref/geomtools
+   ref/fileread
 
 
 .. _sec:gui-modules:
@@ -156,16 +158,21 @@ path, these modules are in no way different from other pyFormex modules.
    :maxdepth: 1
    :numbered: 28
 
+   ref/calpy_itf
+   ref/cameratools
    ref/curve
+   ref/datareader
+   ref/draw2d
+   ref/dxf
+   ref/export
+   ref/f2flu
    ref/mesh_ext
    ref/trisurface
-   ref/geomtools
    ref/nurbs
    ref/isopar
    ref/section2d
    ref/inertia
    ref/units
-   ref/datareader
    ref/properties
    ref/fe
    ref/fe_abq
@@ -174,17 +181,34 @@ path, these modules are in no way different from other pyFormex modules.
    ref/flavia
    ref/lima
    ref/turtle
-   ref/dxf
-   ref/export
    ref/tetgen
    ref/tools
    ref/objects
    ref/plot2d
-..   ref/formex_menu
-..   ref/tools_menu
-..   ref/surface_menu
-..   ref/postproc_menu
+   ref/pyformex_gts
 
+.. _sec:menu-modules:
+
+pyFormex plugin menus
+=====================
+
+Plugin menus are optionally loadable menus for the pyFormex GUI, providing
+specialized interactive functionality. Because these are still under heavy
+development, they are currently not documented. Look to the source code or
+try them out in the GUI. They can be loaded from the File menu option and 
+switched on permanently from the Settings menu.
+
+Currently avaliable:
+
+- geometry_menu
+- formex_menu
+- surface_menu
+- tools_menu
+- draw2d_menu
+- nurbs_menu
+- dxf_tools
+- jobs menu
+- postproc_menu
 
 .. _sec:tools-modules:
 
@@ -203,6 +227,7 @@ elsewhere.
    ref/olist
    ref/mydict
    ref/odict
+   ref/track
    ref/collection
    ref/config
    ref/flatkeydb

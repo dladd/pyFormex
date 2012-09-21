@@ -75,7 +75,6 @@ else:
 
 TEST=0
 if len(sys.argv) > 1:
-    print sys.argv
     if sys.argv[1] == "--testpyf":
         from pyformex.main import run
         TEST=1
