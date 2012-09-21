@@ -176,6 +176,14 @@ class Geometry(object):
 
     ########### Return information about the coords #################
 
+    def getCoords(self):
+        """Get the coords data.
+
+        Returns the full array of coordinates stored in the Geometry object.
+        Note that subclasses may store more points in this array than are used
+        to define the geometry.
+        """
+        return self.coords
     def x(self):
         return self.coords.x()
     def y(self):

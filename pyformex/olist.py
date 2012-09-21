@@ -145,6 +145,15 @@ def collectOnLength(items,return_indices=False):
         return res
 
 
+class List(list):
+    def __init__(self,*args):
+        list.__init__(self,*args)
+    def __getattr__(self, attr):
+        def on_all(*args, **kwargs):
+            return List([ getattr(obj, attr)(*args, **kwargs) for obj in self ])
+        return on_all
+
+
 if __name__ == "__main__":
 
     a = [1,2,3,5,6,7]
@@ -161,5 +170,21 @@ if __name__ == "__main__":
     print(flatten([1,2,a,[a]]))
     print(flatten([1,2,a,[a]],recurse=True))
       
+
+
+    class String(str):
+        def __init__(self,s):
+            str.__init__(s)
+            self.length = len(s)
+        def Len(self):
+            return len(self)
+
+    A = String("aa")
+    B = String("bbbb")
+
+    L = List([A,B])
+    print L.upper()
+
+    print L.Len()
     
 # End
