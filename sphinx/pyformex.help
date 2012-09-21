@@ -1,3 +1,4 @@
+['../pyformex/pyformex', '--help']
 Usage
 =====
   pyformex [<options>] [ [ scriptname [scriptargs] ] ...]
@@ -8,14 +9,17 @@ transformations.
 
 Options
 =======
---gui                   start the GUI (default if no scriptfile argument is
-                        given)
---nogui                 do not load the GUI (default if a scriptfile argument
-                        is given)
---interactive, -i       Go into interactive mode after processing the command
+--gui                   Start the GUI (this is the default when no scriptname
+                        argument is given)
+--nogui                 Do not start the GUI (this is the default when a
+                        scriptname argument is given)
+--interactive           Go into interactive mode after processing the command
                         line parameters. This is implied by the --gui option.
---force-dri             Force use of Direct Rendering
---force-nodri           Disables the Direct Rendering
+--dri                   Use Direct Rendering Infrastructure. By default,
+                        direct rendering will be used if available.
+--nodri                 Do not use the Direct Rendering Infrastructure. This
+                        may be used to turn off the direc rendering, e.g. to
+                        allow better capturing of images and movies.
 --uselib                Use the pyFormex C lib if available. This is the
                         default.
 --nouselib              Do not use the pyFormex C-lib.
@@ -27,9 +31,15 @@ Options
                         --config option.
 --redirect              Redirect standard output to the message board (ignored
                         with --nogui)
---debug=DEBUG           display debugging info to sys.stdout
+--noredirect            Do not redirect standard output to the message board.
+--debug=DEBUG           Display debugging information to sys.stdout. The value
+                        is a comma-separated list of (case-insensitive)
+                        strings corresponding with the attributes of the
+                        DebugLevels class. The individual values are OR-ed
+                        together to produce a final debug value. The special
+                        value 'all' can be used to switch on all debug info.
 --debuglevel=DEBUGLEVEL
-                        display debugging info to sys.stdout. The value is an
+                        Display debugging info to sys.stdout. The value is an
                         int with the bits of the requested debug levels set. A
                         value of -1 switches on all debug info. If this option
                         is used, it overrides the --debug option.
@@ -41,15 +51,23 @@ Options
                         TESTMODULE is the name of the module, using . as path
                         separator.
 --testcamera            Print camera settings whenever they change.
---testexecutor          test alternate executor: only for developers!
---fastnurbs             test C library nurbs drawing: only for developers!
---listfiles             list the pyformex Python source files.
---search                search the pyformex source for a specified pattern and
+--testexecutor          Test alternate executor: only for developers!
+--fastnurbs             Test C library nurbs drawing: only for developers!
+--listfiles             List the pyformex Python source files.
+--search                Search the pyformex source for a specified pattern and
                         exit. This can optionally be followed by -- followed
-                        by options for the grep command. The final argument is
-                        the pattern to search.
---remove                remove the pyformex installation and exit
---whereami              show where the pyformex package is installed and exit
---detect                show detected helper software and exit
+                        by options for the grep command. Adding -a  will use
+                        the extended search path. The final argument is the
+                        pattern to search.
+--remove                Remove the pyFormex installation and exit. This option
+                        only works when pyFormex was installed from a tarball
+                        release using the supplied install procedure. If you
+                        install from a distribution package (e.g. Debian), you
+                        should use your distribution's package tools to remove
+                        pyFormex. If you run pyFormex directly from SVN
+                        sources, you should just remove the whole checked out
+                        source tree.
+--whereami              Show where the pyformex package is installed and exit
+--detect                Show detected helper software and exit
 --version               show program's version number and exit
 --help, -h              show this help message and exit

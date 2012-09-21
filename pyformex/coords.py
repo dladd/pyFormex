@@ -854,9 +854,9 @@ class Coords(ndarray):
         one for each of the coordinate axes. The character determines how
         the structure is aligned in the corresponding direction:
 
-        - ``-``: aligned on the minimal value of the bounding box,
-        - ``+``: aligned on the maximal value of the bounding box,
-        - ``0``: aligned on the middle value of the bounding box.
+        - '-': aligned on the minimal value of the bounding box,
+        - '+': aligned on the maximal value of the bounding box,
+        - '0': aligned on the middle value of the bounding box.
         
         Any other value will make the alignment in that direction unchanged.
 
