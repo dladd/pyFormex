@@ -25,15 +25,11 @@
 
 """Clock
 
-level = 'advanced'
-topics = []
-techniques = []
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = []
-_techniques = []
+_techniques = ['timer']
 
 from gui.draw import *
 import simple
@@ -75,7 +71,7 @@ class AnalogClock(object):
         """
         hrot = - hrs*30. - min*0.5
         mrot = - min*6.
-        pf.canvas.removeActor(self.hands)
+        undraw(self.hands)
         MH = draw(self.mainhand.rot(mrot),bbox=None,color='red',linewidth=self.linewidth)
         HH = draw(self.hourhand.rot(hrot),bbox=None,color='red',linewidth=self.linewidth)
         self.hands = [MH,HH]

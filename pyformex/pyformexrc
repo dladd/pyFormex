@@ -153,8 +153,11 @@ easter_egg = ()
 layout = 1
 showfocus = True
 
+wireframe_mode = 'smart'    # set to 'gl' for old behavior   
 
 # Default canvas settings
+# Beware: when adding a value here, it has also to be added to
+# CanvasSettings
 [canvas]
 bgcolor = 'grey90'      # background color (single color or list of 2 or 4)
 bgimage = ''            # background image, filename

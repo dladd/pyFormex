@@ -568,13 +568,13 @@ class Canvas(object):
         is set, the canvas is re-initialized according to the newly set mode,
         and everything is redrawn with the new mode.
         """
-        print "SETTING RENDERMODE"
+        #print "SETTING RENDERMODE"
         if mode not in Canvas.rendermodes:
             raise ValueError,"Invalid render mode %s" % mode
         if lighting not in [True,False]:
             lighting = mode.startswith('smooth')
 
-        print "MODE=%s, light=%s" % (mode,lighting)
+        #print "MODE=%s, light=%s" % (mode,lighting)
         if mode != self.rendermode or lighting != self.settings.lighting:
             self.rendermode = mode
             self.settings.lighting = lighting
@@ -733,27 +733,22 @@ class Canvas(object):
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
-        
-        if self.rendermode == 'wireframe':
-            if self.background:
-                glSmooth()
-                glFill()
-            else:
-                glLine()
-                
-        elif self.rendermode.startswith('flat'):
-            if self.background:
-                glSmooth()
-            else:
-                glFlat()
-            glFill()
-               
-        elif self.rendermode.startswith('smooth'):
-            glSmooth()
-            glFill()
+
+        # Default openGL mode
+        glSmooth()
+        glFill()
+
+        # Set optimal openGL mode    
+        if self.rendermode.startswith('flat'): 
+            glFlat()
             
-        else:
-            raise RuntimeError,"Unknown rendering mode"
+        if self.rendermode == 'wireframe' and pf.cfg['gui/wireframe_mode'] == 'gl':
+            glLine()
+
+        # If we have a shaded background, need smooth/fill anyhow
+        if self.background:
+            glSmooth()
+            glFill()   
 
         self.setLighting(self.settings.lighting)
 

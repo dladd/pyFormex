@@ -627,7 +627,7 @@ from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
 The newly generated documentation is not automatically published on the
 pyFormex website. Currently, only the project manager can do that. After you
 have made substantial improvements (and checked them in), you should contact 
-the project maanger and ask him to publish the new docs.
+the project manager and ask him to publish the new docs.
 
   
 Create a distribution

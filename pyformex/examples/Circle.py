@@ -25,12 +25,8 @@
 
 """Circle
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['circle', 'connect','dialog', 'animation']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['connect','dialog', 'animation']

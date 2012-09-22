@@ -26,13 +26,8 @@
 """ColorScale
 
 Example showing the use of the 'colorscale' plugin.
-
-level = 'normal'
-topics = ['FEA']
-techniques = ['dialog', 'color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['FEA']
 _techniques = ['dialog', 'color']
@@ -101,15 +96,15 @@ def show():
     if custom:
         palet = map(GLColor,[mincol,medcol,maxcol])
 
-    mw,mh = pf.canvas.Size()
+    mw,mh = pf.canvas.getSize()
     x,y = position
-    if autopos:
-        x = mw / 2
     if autosize:
         h = int(0.9*(mh-y))
         w = min(0.1*mw,100)
     else:
         w,h = size
+    if autopos:
+        x = 100
         
 
     # ok, now draw it
@@ -157,7 +152,8 @@ def run():
     # This is another way to avoid multiple executions.
     if dialog:
         return
-    
+
+    clear()
     ## # Update the data items from saved values
     ## try:
     ##     saved_data = named('ColorScale_data')
@@ -177,6 +173,7 @@ def run():
 
     # Block other scripts 
     scriptLock(__file__)
+
 
 if __name__ == 'draw':
     run()
