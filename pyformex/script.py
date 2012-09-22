@@ -249,6 +249,8 @@ exitrequested = False
 stepmode = False
 starttime = 0.0
 
+scriptInit = None  # can be set to execute something before each script
+
 # BV: do we need this??
 #pye = False
 
@@ -514,23 +516,44 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
     This function does nothing if no appname/filename is passed or no current
     script/app was set.
     If arguments are given, they are passed to the script. If `step` is True,
-    the script is executed in step mode.
+    the script is executed in step mode. The 'refresh' parameter will reload
+    the app.
     """
     global stepmode
     if appname is None:
         appname = pf.cfg['curfile']
     if not appname:
         return
+
+    print "RUNNING %s" % appname
+    if scriptInit:
+        print "INITFUNC"
+        scriptInit()
     
     if pf.GUI:
         pf.GUI.setcurfile(appname)
        
     if utils.is_script(appname):
+        print "RUNNING SCRIPT %s" % appname
         stepmode = step
         return runScript(appname,argv)
     else:
+        print "RUNNING APP %s" % appname
         return runApp(appname,argv,refresh)
-  
+
+
+def runAll(applist,refresh=False):
+    """Run all the scripts/apps in given list."""
+    #pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
+    for f in applist:
+        while pf.scriptlock:
+            print "WAITING BECAUSE OF SCRIPT LOCK"
+            sleep(5)
+        runAny(f,refresh=refresh)
+        if exitrequested:
+            break
+    #pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""

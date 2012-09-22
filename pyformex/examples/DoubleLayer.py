@@ -24,12 +24,10 @@
 ##
 """DoubleLayer
 
-level = 'beginner'
-topics = ['structure']
-techniques = ['color']
-
+Shows a spatial frame structure consisting of two layers of horizontal
+bars (in red and green) connected by diagonals (blue).
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['structure']
 _techniques = ['color']
@@ -40,6 +38,7 @@ from plugins import formian
 
 def run():
     clear()
+    wireframe()
     n=10; a=2./3.; d=1./n;
     e1 = Formex([[[0,0,d],[2,0,d]],[[2,0,d],[1,1,d]],[[1,1,d],[0,0,d]]],prop=1)
     e2 = Formex([[[0,0,d],[1,1-a,0]],[[2,0,d],[1,1-a,0]],[[1,1,d],[1,1-a,0]]],prop=3)

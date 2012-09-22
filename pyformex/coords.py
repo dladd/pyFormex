@@ -2144,29 +2144,27 @@ def pattern(s,aslist=False):
      [ 0.  1.  0.]]
 
     """
-    warn("warn_pattern")
-
     x = y = z = 0
     l = []
     insert = True
     for c in s:
-        if c == "/":
+        if c == '/':
             insert = False
             continue
-        if c == "0":
+        elif c == '0':
             x = y = z = 0
+        elif c == '9' or c == '.':
+            pass
         else:
-            i = ord(c)
-            d = i/16
-            if d == 3:
+            j,i = divmod(ord(c),16)
+            if j == 3:
                 pass
-            elif d == 4:
+            elif j == 4:
                 z += 1
-            elif d == 6:
+            elif j == 6:
                 z -= 1
             else:
                 raise RuntimeError,"Unknown character '%c' in pattern input" % c
-            i %= 16
             if i == 1:
                 x += 1
             elif i == 2:
@@ -2187,14 +2185,14 @@ def pattern(s,aslist=False):
             elif i == 8:
                 x += 1
                 y -= 1
-            elif i == 9 or i == 14:
-                pass
             else:
-                raise RuntimeError,"Unknown pattern character %c ignored" % c
+                raise RuntimeError,"Unknown character '%c' in pattern input" % c
         if insert:
             l.append((x,y,z))
         insert = True
-    return Coords(l)
+    if not aslist:
+        l = Coords(l)
+    return l
 
 
 def xpattern(s,nplex=1):
@@ -2207,6 +2205,17 @@ def xpattern(s,nplex=1):
 
     If the number of points produced by `s` is not a multiple of `nplex`,
     an error is raised.
+
+    Example:
+
+    >>> print xpattern('.12.34',3)
+    [[[ 0.  0.  0.]
+      [ 1.  0.  0.]
+      [ 1.  1.  0.]]
+    <BLANKLINE>
+     [[ 1.  1.  0.]
+      [ 0.  1.  0.]
+      [ 0.  0.  0.]]]
     """
     x = Coords(pattern(s))
     try:

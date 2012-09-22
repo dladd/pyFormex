@@ -324,28 +324,6 @@ class AppMenu(QtGui.QMenu):
         self.runAllFiles(self.files)
 
 
-    ### THIS should be moved to a playAll function in draw/app module
-    ### Currently, it is only intended for testing the examples
-    ### THus we can permit to add some adhoc solutions, like resetting
-    ### the layout at each new app
-    def runAllFiles(self,files,randomize=False,pause=0.):
-        """Run all the apps in given list."""
-        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
-        if randomize:
-            random.shuffle(files)
-        for f in files:
-            while pf.scriptlock:
-                print "WAITING BECAUSE OF SCRIPT LOCK"
-                draw.sleep(5)
-            draw.layout(1)
-            self.runScript(f)
-            if draw.exitrequested:
-                break
-            ## if pause > 0.:
-            ##     sleep(pause)
-        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
-
-
     def runRandom(self):
         """Run a random script."""
         i = random.randint(0,len(self.files)-1)
@@ -355,7 +333,18 @@ class AppMenu(QtGui.QMenu):
     def runAllRandom(self):
         """Run all apps in a random order."""
         self.runAllFiles(self.files,randomize=True)
-                       
+        
+
+    def runAllFiles(self,files,randomize=False):
+        """Run all apps."""
+        def init():
+            from gui.draw import layout
+            layout(1)
+        if randomize:
+            random.shuffle(files)
+        script.scriptInit = init
+        script.runAll(files,refresh=True,)
+        script.scriptInit = None
 
     def reload(self):
         """Reload the scripts from dir.

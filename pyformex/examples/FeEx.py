@@ -24,9 +24,6 @@
 ##
 """FeEx
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
 _status = 'unchecked'
 _level = 'advanced'

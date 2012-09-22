@@ -404,28 +404,6 @@ class ScriptMenu(QtGui.QMenu):
         pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
 
 
-    ### THIS should be moved to a playAll function in draw/script module
-    ### Currently, it is only intended for testing the examples
-    ### Thus we can permit to add some adhoc solutions, like resetting
-    ### the layout at each new script
-    def runAllFiles(self,files,randomize=False,pause=0.):
-        """Run all the scripts in given list."""
-        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
-        if randomize:
-            random.shuffle(files)
-        for f in files:
-            while pf.scriptlock:
-                print "WAITING BECAUSE OF SCRIPT LOCK"
-                draw.sleep(5)
-            draw.layout(1)
-            self.runScript(f)
-            if draw.exitrequested:
-                break
-            ## if pause > 0.:
-            ##     sleep(pause)
-        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
-
-
     def runRandom(self):
         """Run a random script."""
         i = random.randint(0,len(self.files)-1)
@@ -437,6 +415,18 @@ class ScriptMenu(QtGui.QMenu):
         pf.debug("Playing all scripts in random order",pf.DEBUG.SCRIPT)
         self.runAllFiles(self.files,randomize=True)
         pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
+
+
+    def runAllFiles(self,files,randomize=False):
+        """Run all the scripts in given list."""
+        def init():
+            from gui.draw import layout
+            layout(1)
+        if randomize:
+            random.shuffle(files)
+        script.scriptInit = init
+        script.runAll(files)
+        script.scriptInit = None
                        
 
     def reload(self):

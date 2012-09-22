@@ -24,18 +24,15 @@
 ##
 """Colored
 
-level = 'beginner'
-topics = ['surface']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['surface']
 _techniques = ['color']
 
 from gui.draw import *
 from gui.actors import *
+
 
 def run():
     smooth()
@@ -54,8 +51,8 @@ def run():
     for shape in Shapes:
         F = Formex(shape).replic2(4,2)
         color3 = resize(color2,F.shape()) # full color
-        print F.shape(),color3
-        print GLColor(color3)
+        #print F.shape(),color3
+        #print [ GLColor(c) for c in color3]
         #continue
         for c in [ color0,color1,color2,color3]:
             for mode in Rendermode:
@@ -63,12 +60,12 @@ def run():
                 renderMode(mode)
                 FA = GeomActor(F,color=c)
                 drawActor(FA)
-                #zoomAll()
+                zoomAll()
                 for light in Lights:
                     lights(light)
                     print "%s: color %s, mode %s, lights %s" % (i,str(c),mode,light)
                     i += 1
-                    pause(2)
+                    pause(1)
 
 
 if __name__ == 'draw':

@@ -24,11 +24,8 @@
 ##
 """Cones
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['connect','dialog']
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['connect','dialog']

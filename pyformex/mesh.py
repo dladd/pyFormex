@@ -1741,7 +1741,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if type(coordslist) is list:
             clist = coordslist
         elif isinstance(coordslist,Mesh):
-            utils.warn("warn_mesh_connect")
+            # Removed warning in 0.8.7
+            # utils.warn("warn_mesh_connect")
             clist = [ self.coords, coordslist.coords ]
             if degree == 2:
                 raise ValueError,"This only works for linear connection"
@@ -1786,12 +1787,6 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if eltype:
             M = M.convert(eltype)
         return M
-
-
-    # deprecated in 0.8.5
-    def connectSequence(self,coordslist,div=1,degree=1,loop=False,eltype=None):
-        utils.deprec("Mesh.connectSequence is deprecated: use Mesh.connect instead")
-        return self.connect(coordslist,div=div,degree=degree,loop=loop,eltype=eltype)
 
 
     def extrude(self,n,step=1.,dir=0,degree=1,eltype=None):

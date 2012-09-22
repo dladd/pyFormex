@@ -75,8 +75,6 @@ warn_mesh_reflect = "The Mesh.reflect will now by default reverse the elements a
 
 radio_enabler = "A 'radio' type input item can currently not be used as an enabler for other input fields."
 
-warn_pattern = "The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer."
-
 warn_no_dxfparser = """..
 
 No dxfparser

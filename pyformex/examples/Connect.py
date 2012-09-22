@@ -25,12 +25,8 @@
 
 """Connect
 
-level = 'normal'
-topics = ['formex','surface']
-techniques = ['connect','color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['formex','surface']
 _techniques = ['connect','color']
@@ -55,12 +51,11 @@ def run():
     def annot(char):
         [ drawText3D(G[i][0,0]+[-0.5,0.,0.],"%s%s"%(char,i)) for i,Gi in enumerate(G) ]
 
-
     # Apply a general mapping function : x,y,x -> [ newx, newy, newz ]
     G = [ Gi.map(lambda x,y,z:[x,y+0.01*float(i+1)**1.5*x**2,z]) for i,Gi in enumerate(G) ]
     clear()
-    annot('G')
     draw(G)
+    annot('G')
 
     setDrawOptions({'bbox':'last'})
 
@@ -78,8 +73,8 @@ def run():
 
     # Create a triangular grid of bars
     clear()
-    annot('G')
     draw(G)
+    annot('G')
     # Connect Gi[j] with Gi[j+1] to create horizontals   
     K1 = [ connect([i,i],bias=[0,1]) for i in G ]
     draw(K1,color=blue)
@@ -94,8 +89,8 @@ def run():
 
     # Create triangles
     clear()
-    annot('G')
     draw(G)
+    annot('G')
 
     L1 = [ connect([i,i,j],bias=[0,1,0]) for i,j in zip(G[:-1],G[1:]) ] 
     draw(L1,color=red)
@@ -113,8 +108,8 @@ def run():
 
     # Connecting multiplex Formices using nodid
     clear()
-    annot('K')
     draw(K1)
+    annot('K')
     L1 = [ connect([i,i,j],nodid=[0,1,0]) for i,j in zip(K1[:-1],K1[1:]) ]
     draw(L1,color=red)
     L2 = [ connect([i,j,j],nodid=[1,0,1]) for i,j in zip(K1[:-1],K1[1:]) ] 
@@ -134,9 +129,10 @@ def run():
     M = L.toMesh()
     print "nelems = %s, nplex = %s, coords = %s" % (M.nelems(),M.nplex(),M.coords.shape)
     clear()
-    draw(M,color=yellow,mode=flatwire)
+    draw(M,color=yellow,mode='flatwire')
     drawNumbers(M)
     draw(M.getBorderMesh(),color=black,linewidth=6)
+    
 
     # Convert to a surface
     from plugins.trisurface import TriSurface

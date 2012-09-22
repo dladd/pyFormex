@@ -475,7 +475,7 @@ class TriSurface(Mesh):
             a = args[0]
 
             if isinstance(a,Mesh):
-                if a.nplex() != 3 or a.eltype.name() != 'tri3':
+                if a.nplex() != 3 or a.elName() != 'tri3':
                     raise ValueError,"Only meshes with plexitude 3 and eltype 'tri3' can be converted to TriSurface!"
                 Mesh.__init__(self,a.coords,a.elems,a.prop,'tri3')
 

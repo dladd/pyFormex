@@ -24,12 +24,13 @@
 ##
 """Cube
 
-level = 'normal'
-topics = ['geometry','surface']
-techniques = ['color','elements','reverse']
-
+Show (the faces of) a cube with different colors.
+The user is presented a dialog where he can choose whether the faces
+of the cube are drawn as triangles or as quadrilaterals, and what color
+scheme is to be used: no color (black), a single color, a single color per
+face, or a color gradient over the faces.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
 _techniques = ['color','elements','reverse']

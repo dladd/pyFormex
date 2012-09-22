@@ -437,7 +437,7 @@ def unitVector(v):
     """Return a unit vector in the direction of v.
 
     - `v` is either an integer specifying one of the global axes (0,1,2),
-    or a 3-element array or compatible.
+      or a 3-element array or compatible.
     """
     if array(v).size == 1:
         u = zeros((3),dtype=Float)

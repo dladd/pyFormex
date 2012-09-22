@@ -25,12 +25,8 @@
 
 """ConnectMesh
 
-level = 'normal'
-topics = ['mesh']
-techniques = ['connect','color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
 _techniques = ['connect','color']
