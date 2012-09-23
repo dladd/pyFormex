@@ -23,12 +23,17 @@
 ##
 """FontForge
 
-Demonstrate the use of FontForge library to render text.
+This example demonstrates the use of FontForge library to render text. To be
+able to run it, you need to have the FontForge library and its Python bindings
+installed. On Debian GNU/Linux you can achieve this by installing the package
+'python-fontforge'.
+
+
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['curve', 'font']
-_techniques = ['bezier']
+_techniques = ['bezier','borderfill']
 
 from gui.draw import *
 import odict
@@ -155,6 +160,7 @@ def show(fontname1,character1,fontname2=None,character2=None,connect=False,fill=
 
     drawCurve(curve1,blue,fill)
     
+    return
 
     if connect:
         curve2 = charCurve(fontname2,character2)
@@ -194,11 +200,12 @@ def run():
         _I('fontname1',fontname1,choices=fonts),
         _I('character1',character1,max=1),
         _I('fill',fill),
-        _I('connect',connect),
-        _I('fontname2',fontname2,choices=fonts),
-        _I('character2',character2,max=1),
+# TODO: CONNECT NOT YET WORKING
+#        _I('connect',connect),
+#        _I('fontname2',fontname2,choices=fonts),
+#        _I('character2',character2,max=1),
         ],enablers=[
-        ('connect',True,'fontname2','character2')
+#        ('connect',True,'fontname2','character2')
         ])
 
     if not res:

@@ -24,12 +24,17 @@
 ##
 """World
 
-level = 'normal'
-topics = ['image']
-techniques = ['color','filename']
+This examples shows how to use an image file to set colors on a
+structure.
 
+The user can select an image file. A rectangular grid with corrersponding
+number of cells is constructed. The grid is shown with the colors from the
+image and can possibly be transformed to a sphere or a half sphere.
+
+.. note:
+  This example is slow when using high resolution images.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['image']
 _techniques = ['color','filename']

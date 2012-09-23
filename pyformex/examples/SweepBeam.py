@@ -23,21 +23,19 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""H-beam
+"""Sweep Beam
 
-level = 'normal'
-topics = ['geometry','surface']
-techniques = ['color']
-
+This example demonstrates several ways to construct 3D geometry from a
+2D section. The cross section of an H-beam is converted to a 3D beam by
+sweeping, extruding, revolving or connecting.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
-_techniques = ['color']
+_techniques = ['color','sweep']
 
 from gui.draw import *
 from plugins import curve
-#from mesh import Mesh
 import simple
 
 def run():

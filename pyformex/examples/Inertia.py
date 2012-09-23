@@ -24,12 +24,8 @@
 ##
 """Inertia
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color','axes']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['color','axes']
@@ -58,11 +54,10 @@ def showPrincipal1(F):
     pf.debug("Principal Directions:\n%s" % Iaxes)
 
     siz = F.dsize()
-    H = Axes.scale(siz).affine(Iaxes.transpose(),C)
+    H = unitAxes().scale(siz).affine(Iaxes.transpose(),C)
     Ax,Ay,Az = Iaxes[:,0],Iaxes[:,1],Iaxes[:,2]
     G = Formex([[C,C+Ax],[C,C+Ay],[C,C+Az]],3)
     draw([F,G,H])
-    sleep(2)
     return C,I,Iprin,Iaxes
 
 
@@ -70,8 +65,6 @@ def run():
     reset()
     wireframe()
     view('front')
-
-    Axes = unitAxes()
 
     #F = Formex('l:1').replic(2,2,1).replic(2,2,2).scale(2)
     nx,ny,nz = 2,3,4
@@ -81,14 +74,15 @@ def run():
     Fr = F
     C,I,Ip,Ia = showPrincipal1(Fr)
 
+    pause(2)
     Fr = F.rotate(30,0).rotate(45,1).rotate(60,2)
     C,I,Ip,Ia = showPrincipal1(Fr)
 
 
-    sleep(2)
-    Fo = Formex([[C]])
-    Fc = connect([Fo,Fr],loop=True)
-    draw(Fc)
+    ## sleep(2)
+    ## Fo = Formex([[C]])
+    ## Fc = connect([Fo,Fr],loop=True)
+    ## draw(Fc)
 
 if __name__ == 'draw':
     run()

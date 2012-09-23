@@ -24,11 +24,18 @@
 ##
 """Super Shape
 
-level = 'advanced'
-topic = ['geometry']
-techniques = ['dialog','persistence']
+This example illustrates the power of the superspherical transformation.
+It is also a nice example of dedicated GUI construction and of the use
+of files to store data.
+
+The example creates sphere-like structures by applying a superspherical
+transformation to a planar grid. The parameters defining the grid and the
+transformation can be set from a modeless GUI. The grid as well as the
+resulting structure can be shown. The parameters can also be saved to a
+file. Finally, the GUi also allows to replay the whole set of saved
+structures.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topic = ['geometry']
 _techniques = ['dialog','persistence']
@@ -44,6 +51,10 @@ tol = 1.e-4
 
 gname = NameSequence('Grid-0')
 sname = NameSequence('Shape-0')
+
+color = None
+bkcolor = None
+colormap = None
 
 
 def createGrid():
@@ -90,7 +101,7 @@ def drawGrid():
 
 def drawSuperShape():
     """Show the last created super shape"""
-    global color
+    global color,colormap
     clear()
     smoothwire()
     if type(color) == str and color.startswith('file:'):
@@ -102,7 +113,7 @@ def drawSuperShape():
         color,colormap = image2glcolor(im.scaled(nx,ny))[0]
         print color.shape
 
-    draw(F,color=color,colormap=colormap)
+    draw(F,color=color,colormap=colormap,bkcolor=bkcolor)
 
 
 def acceptData():
@@ -145,7 +156,7 @@ def close():
 
 def save():
     global savefile
-    show_shape()
+    show()
     if savefile is None:
         filename = askNewFilename(filter="Text files (*.txt)")
         if filename:
@@ -200,6 +211,7 @@ dialog_items = [
         _I('post','',),
         _I('name',sname.peek(),),
         _I('color','red',),
+        _I('bkcolor','yellow',),
 #        _I('texture','None',),
         ]),
     ]
@@ -209,7 +221,7 @@ dialog_actions = [
     ('Reset',reset),
     ('Replay',replay),
     ('Save',save),
-    ('Show Grid',showGrid),
+    ('Grid',showGrid),
     ('Show',show)
     ]
 

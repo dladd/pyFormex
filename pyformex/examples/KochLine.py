@@ -24,21 +24,29 @@
 ##
 """Koch line
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color']
+This example illustrates the use of the 'lima' plugin to create subsequent
+generations of a Koch line. The Koch line is a line with fractal properties.
+Six generations of the Koch line are created. They are drawn in one of three
+ways:
 
+- all on top of each other
+- in a series one above the other
+- as radii of an n-pointed star  
+
+The actual draw method is choosen randomly. Execute again to see another one.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
-_topics = ['geometry']
-_techniques = ['color']
+_topics = ['illustration']
+_techniques = ['color','lime']
 
 from gui.draw import *
 from plugins.lima import lima
 
 def run():
+    clear()
     wireframe()
+    view('front')
     linewidth(2)
     n = 6 # number of generations
 
@@ -46,18 +54,16 @@ def run():
     F = [ Formex(lima("F",{"F":"F*F//F*F"},i,
                       { 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' }),i)
           for i in range(n) ]
-    # and display them in series
-    clear()
+
     # scale each Formex individually to obtain same length
     sc = [ 3**(-i) for i in range(n) ]
     sz = sc[0]/3.
-
     F = [F[i].scale(sc[i]) for i in range(n)] 
 
-
+    # display all lines in one (randomly choosen) of three ways 
     mode = random.randint(3)
     if mode == 0:
-        # on top of each other
+        # all on top of each other
         draw([F[i].translate([0,sz*(i-1),0]) for i in range(n)])
 
     elif mode == 1:

@@ -23,14 +23,10 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Clock
-
-level = 'beginner'
-topics = ['dialog']
-techniques = []
+"""Widgets
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['dialog']
 _techniques = []

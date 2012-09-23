@@ -25,22 +25,23 @@
 
 """Slice
 
-level = 'advanced'
-topics = ['surface']
-techniques = ['color','widgets']
+This example illustrates the 'cutWithPlane' method applied on a
+surface and the animation of the results.
 
+A model of a horse is repeatedly cut by a plane and the cut-off parts
+are rotated and translated.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['surface']
-_techniques = ['color','widgets']
+_techniques = ['color','widgets','animation']
 
 from gui.draw import *
 from plugins.trisurface import TriSurface
 
 def askSlices(bb):
     res = askItems([('Direction',0),
-                    ('# slices',25),
+                    ('# slices',15),
                     ('total rot',70.),
                    ],caption = 'Define the slicing planes')
     if res:
@@ -81,21 +82,31 @@ def run():
     G = []
     old = seterr(all='ignore')
     setDrawOptions({'bbox':None})
+
+    clear()
+    A = None
     for i,p in enumerate(P):
         F1,F = F.cutWithPlane(p,-n)
         if F1.nelems() > 0:
             F1.setProp(i)
         G = [ g.rot(a,around=p) for g in G ] 
         G.append(F1)
-        clear()
-        draw([F,G])
-
+        #clear()
+        B = draw([F,G])
+        if A:
+            undraw(A)
+        A = B
+            
     seterr(**old)
 
     x = pf.canvas.width()/2
     y = pf.canvas.height() - 40
-    drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
-
+    T = drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
+    for i in range(10):
+        pause(0.3)
+        undecorate(T)
+        pause(0.3)
+        decorate(T)
 
 if __name__ == 'draw':
     run()

@@ -24,14 +24,10 @@
 ##
 """Formex Structure
 
-level = 'beginner'
-topics = ['illustration']
-techniques = ['draw']
-
 This script creates an image of how coordinates are structures in a Formex.
-It was intended mainly for the manual.
+It was intended mainly to create an illustration for the manual.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['illustration']
 _techniques = ['draw']

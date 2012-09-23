@@ -24,15 +24,17 @@
 ##
 """Interpolate
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color']
+This examples illustrates the working of the 'interpolate' method.
 
+First, two lines are created, each one consisting of two line segments.
+Then new lines are created by interpolating between the two.
+Next, an interpolation is created with the element order swapped.
+Finally, the lines are subdivided in smaller segments.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
-_techniques = ['color']
+_techniques = ['color','interpolate']
 
 from gui.draw import *
 
@@ -44,32 +46,36 @@ def run():
     b = Formex([[[0,1,0],[1,1,0]],[[1,1,0],[2,1,0]]])
     message("Two lines")
     draw(a+b)
+    drawNumbers(a+b)
 
     n = 10
     v = 1./n * arange(n+1)
     p = arange(n)
     
+    pause()
     c = interpolate(a,b,v)
     c.setProp(p)
     message("Interpolate between the two")
     draw(c)
     drawNumbers(c)
 
-    sleep(2)
+    pause()
     d = interpolate(a,b,v,swap=True)
     d.setProp(p)
     clear()
     message("Interpolate again with swapped order")
     draw(d)
     drawNumbers(d)
-    return
+    #return
 
-    sleep(2)
+    pause()
     f = c.divide(v)
     f.setProp((1,2))
     clear()
     message("Divide the set of lines")
     draw(f)
+    drawNumbers(f)
+
 
 if __name__ == 'draw':
     run()

@@ -24,12 +24,11 @@
 ##
 """Lamella Dome
 
-level = 'beginner'
-topics = ['geometry','domes']
-techniques = ['color']
-
+The lamella dome is a framed dome that has no meridional nor horizontal bars,
+but only diagonal bars spiraling downwards from the top ring to the bottom
+ring.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry','domes']
 _techniques = ['color']

@@ -24,12 +24,8 @@
 ##
 """Novation
 
-level = 'normal'
-topics = ['geometry','surface']
-techniques = ['dialog', 'persistence', 'color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
 _techniques = ['dialog', 'persistence', 'color']

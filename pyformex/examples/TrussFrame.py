@@ -24,12 +24,8 @@
 ##
 """TrussFrame
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['color']

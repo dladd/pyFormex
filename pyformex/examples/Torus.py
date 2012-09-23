@@ -24,12 +24,8 @@
 ##
 """Torus
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['color']

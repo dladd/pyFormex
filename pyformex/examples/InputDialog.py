@@ -25,14 +25,10 @@
 
 """InputDialog
 
-Example showing the use of the InputDialog
-
-level = 'normal'
-topics = []
-techniques = ['dialog']
+Example showing the use of input dialogs. 
 
 """
-_status = 'unchecked'
+_status = 'failed'
 _level = 'normal'
 _topics = []
 _techniques = ['dialog']
@@ -119,7 +115,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
-    # Release script lock
+    print "# Release script lock"
     scriptRelease(__file__)
 
 
@@ -136,6 +132,7 @@ def timeOut():
 
 
 def run():
+    global dialog
     # Update the data items from saved values
     try:
         saved_data = named('InputDialog_data')
@@ -144,7 +141,7 @@ def run():
         pass
 
     # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,enablers=input_enablers,autoprefix=True,caption='InputDialog',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = Dialog(input_data,enablers=input_enablers,autoprefix=True,caption='InputDialog',actions = [('Close',close),('Show',show)],default='Show')
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut

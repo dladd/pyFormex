@@ -24,12 +24,8 @@
 ##
 """X-shaped truss
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['color']
@@ -137,6 +133,7 @@ def run():
     """This is the application main function."""
     wireframe()
     reset()
+    delay(1)
     def example(diag=True,vert=True):
         truss = X_truss(12,2.35,2.65,diag,vert)
 

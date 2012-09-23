@@ -26,9 +26,9 @@
 """NurbsCurve
 
 This example illustrates the use of the NurbsCurve class from the nurbs
-plugin.
+plugin. 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'curve']
 _techniques = ['nurbs','connect','border']

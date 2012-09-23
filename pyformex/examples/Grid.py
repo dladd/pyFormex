@@ -24,43 +24,25 @@
 ##
 """Grid
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['dialog']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
-_techniques = ['dialog']
+_techniques = ['dialog','actor']
 
 from gui.draw import *
 import gui.actors
 
 
-def base(type,m,n=None):
-    """A regular pattern for type.
-
-    type = 'tri' or 'quad' or 'triline' or 'quadline'
-    m = number of cells in direction 0
-    n = number of cells in direction 1
-    """
-    n = n or m
-    if type == 'triline':
-        return Formex('l:164').replic2(m,n,1,1,0,1,0,-1)
-    elif type == 'quadline':
-        return Formex('l:2').replic2(m+1,n,1,1) + \
-               Formex('l:1').replic2(m,n+1,1,1)
-    elif type == 'tri':
-        return Formex('3:012934').replic2(m,n)
-    elif type == 'quad':
-        return Formex('4:0123').replic2(m,n)
-    else:
-        raise ValueError,"Unknown type '%s'" % str(type)
-
 def run():
-    # This is the old input format, but relies on auto-conversion 
-    res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',{'choices':['Box','Plane']}),('alpha',0.3)])
+    clear()
+    res = askItems([
+        _I('nx',4),
+        _I('ny',3),
+        _I('nz',2),
+        _I('Grid type',itemtype='radio',choices=['Box','Plane']),
+        _I('alpha',0.3)
+        ])
 
     if not res:
         return
@@ -75,10 +57,8 @@ def run():
         GA = actors.CoordPlaneActor(nx=nx,linewidth=0.2,alpha=alpha)
 
     smooth()
-    pf.canvas.addActor(GA)
-    pf.canvas.setBbox(GA.bbox())
-    zoomAll()
-    pf.canvas.update()
+    drawActor(GA)
+    zoomBbox(GA.bbox())
 
 if __name__ == 'draw':
     run()

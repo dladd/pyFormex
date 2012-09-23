@@ -24,101 +24,109 @@
 ##
 """Isopar
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['dialog', 'color','isopar']
+This example illustrates the power of the isoparametric transformation
+(isopar). An isoparametric transformation is a geometrical transformation
+defined by an initial regular configuration of some points and some deformed
+configuration of the same points. These points do not have to be part of the
+structure that is to be transformed. The deformed positions form the parameters
+in the transformation.
 
+In the example a 1D, 2D, or 3D regular grid is constructed and then deformed
+by a 1D, 2D or 3D isoparametric transformation. The parameters of the
+transformations are hardwirded in the script.
+
+First the points defining the isoparametric transformation are shown.
+Then, the original and the transformed structure are first shown
+superimposed, in black and red respectively. Transparency is set on.
+After the pause, the original structure is removed, and transparency is set off.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
-_techniques = ['dialog', 'color','isopar']
+_techniques = ['dialog', 'color','isopar','undraw']
 
 from gui.draw import *
 
 from plugins import isopar
-import simple
 import elements
 
-def run():
-    wireframe()
+# First and second order elements to be used for geometry, resp. transform
+elems1 = [ elements.Line2, elements.Quad4, elements.Hex8 ]
+elems2 = [ elements.Line3, elements.Quad9, elements.Hex27 ]
 
-    ttype = ask("Select type of transformation",['Cancel','1D','2D','3D'])
-    if not ttype or ttype ==  'Cancel':
+
+def run():
+    clear()
+    res = askItems([
+        _I('geometry','3D',itemtype='radio',choices=['1D','2D','3D']),
+        _I('transformation','3D',itemtype='radio',choices=['1D','2D','3D']),
+        _I('Show trf points',False),
+        ])
+    if not res:
         return
 
-    tdim = int(ttype[0])
+    sdim = int(res['geometry'][0])
+    tdim = int(res['transformation'][0])
 
     # create a unit quadratic grid in tdim dimensions
-    x = Coords(simple.regularGrid([0.]*tdim, [1.]*tdim, [2]*tdim)).reshape(-1,3)
-    x1 = Formex(x)
-    x2 = x1.copy()
+    eltype = elems2[tdim-1]
+    x0 = Formex(eltype.vertices)
 
-    # move a few points
+    # create a copy and move a few points
+    x1 = x0.copy()
     if tdim == 1:
-        eltype = 'line3'
-        x2[1] = x2[1].rot(-22.5)
-        x2[2] = x2[2].rot(22.5)
+        x1[1] = x1[1].rot(-20)
+        x1[2] = x1[2].rot(20)
     elif tdim == 2:
-        eltype = 'quad9'
-        x2[5] = x2[2].rot(-22.5)
-        x2[8] = x2[2].rot(-45.)
-        x2[7] = x2[2].rot(-67.5)
-        x2[4] = x2[8] * 0.6
+        x1[6] = x1[3].rot(-22.5)
+        x1[2] = x1[3].rot(-45.)
+        x1[5] = x1[3].rot(-67.5)
+        x1[8] = x1[2] * 0.6
     else:
-        eltype = 'hex27'
         tol = 0.01
-        d = x2.distanceFromPoint(x2[0])
+        d = x1.distanceFromPoint(x1[0])
         w = where((d > 0.5+tol) * (d < 1.0 - tol))[0]
         # avoid error messages during projection 
         errh = seterr(all='ignore')
-        x2[w] = x2.projectOnSphere(0.5)[w]
+        x1[w] = x1.projectOnSphere(0.5)[w]
         w = where(d > 1.+tol)[0]
-        x2[w] = x2.projectOnSphere(1.)[w]
+        x1[w] = x1.projectOnSphere(1.)[w]
         seterr(**errh)
 
     clear()
-    message('This is the set of nodes in natural coordinates')
-    draw(x1,color=blue)
-    message('This is the set of nodes in cartesian coordinates')
-    draw(x2,color=red)
-    drawNumbers(x2,color=red)
-    drawNumbers(x1)
-
-    n = 8
-    stype = ask("Select type of structure",['Cancel','1D','2D','3D'])
-    if stype == 'Cancel':
-        return
-
-    sdim = int(stype[0])
     if sdim == 1:
-        F = simple.line([0.,0.,0.],[1.,1.,0.],10)
-    elif sdim == 2:
-        F = simple.rectangle(1,1,1.,1.)
+        wireframe()
     else:
-        ## v = array(elements.Hex8.vertices)
-        ## f = array(elements.Hex8.faces[1])
-        ## F = Formex(v[f])
-        F = elements.Hex8.toFormex()
+        smoothwire()
 
-    if sdim > 1:
-        for i in range(sdim):
-            F = F.replic(n,1.,dir=i)
+    # Create the structure
+    n = 8
+    F = elems1[sdim-1].toFormex()
+    for i in range(sdim):
+        F = F.replic(n,1.,dir=i)
 
-    if sdim < tdim:
-        F = F.trl(2,0.5)
-    clear()
+    for i in range(sdim,tdim):
+        F = F.trl(i,0.5)
+        
+    transparent()
     message('This is the initial Formex')
     FA=draw(F)
     sz = F.sizes()
 
-
-    if sdim < tdim:
-        sz[sdim:tdim] = 2.
+    sz[sz==0.] = 1.
+    x0 = x0.scale(sz)
     x1 = x1.scale(sz)
-    x2 = x2.scale(sz)
 
-    G=F.isopar(eltype,x2.points(),x1.points())
+    if res['Show trf points']:
+        message('This is the set of nodes in natural coordinates')
+        draw(x0,color=blue,nolights=True)
+        message('This is the set of nodes in cartesian coordinates')
+        draw(x1,color=red,nolights=True)
+        drawNumbers(x1,color=red)
+        drawNumbers(x1)
+        pause()
+
+    G=F.isopar(eltype.name(),x1.points(),x0.points())
     G.setProp(1)
 
     message('This is the transformed Formex')
@@ -126,6 +134,7 @@ def run():
 
     pause()
     undraw(FA)
+    transparent(False)
 
 if __name__ == 'draw':
     run()

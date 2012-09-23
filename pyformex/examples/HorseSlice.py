@@ -24,15 +24,20 @@
 ##
 """HorseTorse
 
-level = 'advanced'
-topics = ['geometry','surface','mesh']
-techniques = ['intersection']
+This example illustrates working with triangulated surfaces in pyFormex.
+A triangulated surface (TriSurface) is read from the file 'horse.off'
+in the pyformex data directory. The surface is drawn.
 
+Next the surface is intersected with a series of parallel plan. A dialog
+dialog pops up where the user can set the parameters to define this planes.
+Finally, the intersection curves are drawn on the surface. The 'ontop' option
+will draw the curves fully visible (like if the surface were transparent).
+The 'remove surface' option removes the surface, leaving only the curves.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry','surface','mesh']
-_techniques = ['intersection']
+_techniques = ['intersection','dialog']
 
 from gui.draw import *
 from plugins.trisurface import TriSurface
@@ -50,6 +55,7 @@ def run():
         ('number of sections',20),
         ('color','red'),
         ('ontop',False),
+        ('remove surface',False),
         ]) 
     if not res:
         return
@@ -62,8 +68,9 @@ def run():
     linewidth(2)
     draw(slices,color=c,view=None,bbox='last',nolight=True,ontop=res['ontop'])
 
-
-    #undraw(SA)
+    if res['remove surface']:
+        undraw(SA)
+        
     zoomAll()
 
 if __name__ == 'draw':

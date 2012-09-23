@@ -25,12 +25,8 @@
 #
 """Torus variants
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['programming','widgets','globals']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['programming','widgets','globals']
@@ -59,6 +55,7 @@ def series():
         
 def drawTorus(m,n):
     clear()
+    print m,n
     draw(torus(m,n),None)
     
 def nice():
@@ -66,6 +63,7 @@ def nice():
 
 
 def run():
+    global m,n
     m = 20
     n = 10
     while not dialogTimedOut():

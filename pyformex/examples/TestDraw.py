@@ -25,12 +25,8 @@
 """TestDraw
 
 Example for testing the low level drawing functions
-
-level = 'normal'
-topics = ['geometry','mesh','drawing']
-techniques = ['widgets','dialog','random','color']
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','mesh','drawing']
 _techniques = ['widgets','dialog','random','color']
@@ -38,8 +34,6 @@ _techniques = ['widgets','dialog','random','color']
 from gui.draw import *
 
 from numpy.random import rand
-from gui.widgets import simpleInputItem as I
-
     
 setDrawOptions({'clear':True, 'bbox':'auto'})
 linewidth(2) # The linewidth option is not working nyet
@@ -100,10 +94,10 @@ eltype = 'auto'
 color = 'element'
 pos = None
 items = [
-    I('geom',geom,'radio',choices=geom_mode,text='Geometry Model'),
-    I('nplex',nplex,'select',choices=plexitude,text='Plexitude'),
-    I('eltype',eltype,'select',choices=element_type,text='Element Type'),
-    I('color',color,'select',choices=color_mode,text='Color Mode'),
+    _I('geom',geom,'radio',choices=geom_mode,text='Geometry Model'),
+    _I('nplex',nplex,'select',choices=plexitude,text='Plexitude'),
+    _I('eltype',eltype,'select',choices=element_type,text='Element Type'),
+    _I('color',color,'select',choices=color_mode,text='Color Mode'),
     ]
 
 dialog = None
@@ -143,8 +137,11 @@ def timeOut():
     close()
 
 def run():
+    global dialog
+    clear()
+    lights(False)
     # Create the non-modal dialog widget and show it
-    dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = Dialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
     dialog.timeout = timeOut
     dialog.show()
     scriptLock(__file__)

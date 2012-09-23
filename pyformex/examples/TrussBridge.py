@@ -24,12 +24,8 @@
 ##
 """TrussBridge
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['color']
@@ -52,6 +48,7 @@ n = N/2  # number of modules for half bridge
 b = B/2
 
 def run():
+    delay(1)
     clear()
 
     # We start with the bottom girder, and copy it to the top

@@ -24,11 +24,8 @@
 ##
 """Torus
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color','dialog','transform','function']
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['color','dialog','transform','function']
@@ -67,7 +64,9 @@ def run():
 
     # Add the returned data to the global variables
     globals().update(res)
-    F = Formex('3:012934',[0,1]).replic2(m,n,1,1)
+
+    # Construct the geometry
+    F = Formex('3:.12.34',[0,1]).replic2(m,n,1,1)
     if f0:
         F = addFlares(F)
 

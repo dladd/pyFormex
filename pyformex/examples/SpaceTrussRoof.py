@@ -24,12 +24,8 @@
 ##
 """Double Layer Flat Space Truss Roof
 
-level = 'normal'
-topics = ['geometry']
-techniques = ['dialog', 'animation', 'color', 'import', 'connect', 'interpolate']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
 _techniques = ['dialog', 'animation', 'color', 'import', 'connect', 'interpolate']
@@ -59,24 +55,27 @@ dia.setProp(1)
 col = (Formex([[[0,0,-colht],[0,0,0]]]).replic2(ncx,2,m,ny) + Formex([[[0,m,-colht],[0,m,0]]]).replic2(2,ncy-2,nx,m)).scale([dx,dx,1])
 col.setProp(2)
 
-F = top+bot+dia+col
+roof = top+bot+dia+col
 
 def run():
+    reset()
     clear()
     linewidth(1)
-    draw(F)
+    delay(1)
 
-    F = F.rotate(-90,0) # put the structure upright
-    clear()
+    F = roof.rotate(-90,0) # put the structure upright
     draw(F)
 
     createView('myview1',(30.,0.,0.))
     view('myview1',True)
 
+
+    setDrawOptions({'bbox':'last'})
     for i in range(19):
         createView('myview2',(i*10.,20.,0.))
         view('myview2',True)
-
+        delay(0.1)
+        
     # fly tru
     if ack("Do you want to fly through the structure?"):
         totaltime = 10

@@ -24,12 +24,9 @@
 ##
 """Pattern
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color','pattern']
-
+This example shows the predefined geometries from simple.Pattern.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['color','pattern']

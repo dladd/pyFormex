@@ -24,13 +24,9 @@
 ##
 """Viewports.py
 
-level = 'advanced'
-topics = ['surface']
-techniques = ['viewport', 'color']
-
 Demonstrate multiple viewports.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['surface']
 _techniques = ['viewport', 'color']
@@ -42,6 +38,9 @@ def atExit():
     reset()
 
 def run():
+    reset()
+    smoothwire()
+    
     nsl = 0
     F = Formex.read(getcfg('datadir')+'/horse.pgf')
 

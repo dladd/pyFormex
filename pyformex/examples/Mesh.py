@@ -25,14 +25,6 @@
 
 """Mesh
 
-level = 'beginner'
-topics = ['geometry', 'mesh']
-techniques = ['extrude','border','pause']
-
-.. Description
-
-Mesh
-----
 This example illustrates some of the powerful methods provided by the
 **Mesh** class. The example constructs a 2D or 3D (selectable by the user)
 mesh by extruding a point into a line, the line into a surface, and in case
@@ -52,22 +44,22 @@ element numbers included:
 At each step the number of elements is printed.
 
 Remark
-------
+......
 The script pauses at each step.
 The user should click the **STEP** button to move the the next step, or the
 **CONTINUE** button to move to the end of the script.
 
 Script
-------
+......
 Notice how the same script with the same methods is working for both the 2D
 and the 3D cases.
 
 Exercises
----------
+.........
 1. Make this script also work for the 1D case. 
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry', 'mesh']
 _techniques = ['extrude','border','pause']
@@ -79,13 +71,9 @@ def atExit():
     
 
 def run():
-    pf.GUI.setBusy()
-    #draw.logfile = open('pyformex.log','w')
-
     clear()
     smoothwire()
     transparent()
-
 
     n = 3,2,5
     a = Formex(origin())
@@ -94,11 +82,12 @@ def run():
     if res == "None":
         return
     if res == "Help":
-        showDescription()
+        showDoc()
         return
 
+    showInfo("At each step, press Play/Step to continue")
+    
     ndim = int(res[0])
-
 
     if ndim == 2:
         view('front')

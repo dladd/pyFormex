@@ -24,13 +24,9 @@
 ##
 """HorseTorse
 
-level = 'advanced'
-topics = ['geometry','surface']
-techniques = ['animation', 'color']
-
 Torsing a horse is like horsing a torse.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry','surface']
 _techniques = ['animation', 'color']

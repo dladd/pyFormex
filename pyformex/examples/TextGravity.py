@@ -25,32 +25,23 @@
 """TextGravity
 
 Show the use of the text gravity parameter.
-
-level = 'beginner'
-topics = []
-techniques = ['text']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = []
 _techniques = ['text']
 
 from gui.draw import *
+from gui.decors import Grid
 
 def run():
     clear()
     lights(False)
     x = pf.canvas.width()//2
     y = pf.canvas.height()//2
-    x,y = 600,300
-    print x,y
 
-    from gui.decors import Grid
-
-    d = 50
-
-    G = Grid(x-50,y-50,x+50,y+50,2,2)
+    s = 100
+    G = Grid(x-s,y-s,x+s,y+s,2,2)
     decorate(G)
 
     delay(2)
@@ -58,7 +49,6 @@ def run():
         T = drawText("XXX  %s  XXX"%g,x,y,gravity=g)
         wait()
         undecorate(T)
-
 
     delay(1)
     from gui.gluttext import GLUTFONTS
