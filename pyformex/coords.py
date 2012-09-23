@@ -2153,7 +2153,7 @@ def pattern(s,aslist=False):
             continue
         elif c == '0':
             x = y = z = 0
-        elif c == '9' or c == '.':
+        elif c == '.':
             pass
         else:
             j,i = divmod(ord(c),16)
@@ -2185,6 +2185,8 @@ def pattern(s,aslist=False):
             elif i == 8:
                 x += 1
                 y -= 1
+            elif i == 9:
+                pass
             else:
                 raise RuntimeError,"Unknown character '%c' in pattern input" % c
         if insert:

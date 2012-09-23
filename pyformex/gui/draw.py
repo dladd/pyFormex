@@ -199,20 +199,27 @@ def showDoc(obj=None,rst=True,modal=False):
       reStructuredText and will be nicely formatted accordingly.
       If False, the docstring is shown as plain text.
     """
+    text = None
     if obj is None:
         if not pf.GUI.canPlay:
             return
         obj = pf.prefcfg['curfile']
         if utils.is_script(obj):
-            print "obj is a script"
-            showDescription(obj)
-            return
+            #print "obj is a script"
+            from scriptMenu import getDocString
+            text = getDocString(obj)
+            obj = None
         else:
             import apps
             obj = apps.load(obj)
 
-    text = utils.forceReST(obj.__doc__,underline=True)
+    if obj:
+        text = obj.__doc__
+
+    if text is None:
+        raise ValueError,"No documentation found for object %s" % obj
     
+    text = utils.forceReST(text,underline=True)
     if pf.GUI.doc_dialog is None:
         if modal:
             actions=[('OK',None)]
@@ -225,36 +232,6 @@ def showDoc(obj=None,rst=True,modal=False):
         pf.GUI.doc_dialog.raise_()
         pf.GUI.doc_dialog.update()
         pf.app.processEvents()
-
-
-# DEV: to be removed in 0.9.1
-@utils.deprecation("`showDescription` is deprecated: use `showDoc` to display the complete docstring.")
-def showDescription(filename=None,modal=False):
-    """Show the Description part of the docstring of a pyFormex script.
-
-    If no file name is specified, the current script is used.
-    If the script's docstring has no Description part, a default text is
-    shown.
-    """
-    from scriptMenu import getDocString,getDescription
-    if pf.GUI.canPlay:
-        scriptfile = pf.prefcfg['curfile']
-        doc = getDocString(scriptfile)
-        des = getDescription(doc)
-        if len(des.strip()) == 0:
-            des = """.. NoDescription
-
-No help available
-=================
-
-The maintainers of this script have not yet added a description
-for this example.
-
-You can study the source code, and if anything is unclear,
-ask for help on the pyFormex `Support tracker <%s>`_.
-""" % pf.cfg['help/support']
-
-        showText(des,modal=False)
 
 
 def editFile(fn,exist=False):
@@ -693,6 +670,8 @@ def draw(F,shrink=None,
                 view = pf.canvas.options['view']
             if bbox == 'auto':
                 bbox = coords.bbox(FL)
+            if bbox == 'last':
+                bbox = None
             #print("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             pf.canvas.setCamera(bbox,view)
             #setView(view)
@@ -1670,7 +1649,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
     pf.GUI.enableButtons(pf.GUI.actions,['Continue'],True)
 
     for elem in path:
-        center,eye = elem[:2]
+        eye,center = elem[:2]
         if nplex == 3:
             upv = elem[2] - center
         else:

@@ -480,7 +480,7 @@ def forceReST(text,underline=False):
     return "..\n\n" + text
 
 
-def underlineHeader(s,char='"'):
+def underlineHeader(s,char='-'):
     """Underline the first line of a text.
 
     Adds a new line of text below the first line of s. The new line

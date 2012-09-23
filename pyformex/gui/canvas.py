@@ -1051,31 +1051,126 @@ class Canvas(object):
         self.display()
 
         
+    ## def setCamera(self,bbox=None,angles=None):
+    ##     """Sets the camera looking under angles at bbox.
+
+    ##     This function sets the camera angles and adjusts the zooming.
+    ##     The camera distance remains unchanged.
+        
+    ##     If a bbox is specified, the camera will be zoomed to make the whole
+    ##     bbox visible.
+    ##     If no bbox is specified, the current scene bbox will be used.
+    ##     If no current bbox has been set, it will be calculated as the
+    ##     bbox of the whole scene.
+
+    ##     If no camera angles are given, the camera orientation is kept.
+    ##     angles can be a set of 3 angles, or a string
+    ##     """
+    ##     self.makeCurrent()
+    ##     # go to a distance to have a good view with a 45 degree angle lens
+    ##     if bbox is not None:
+    ##         pf.debug("SETTING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
+    ##         self.setBbox(bbox)
+    ##     pf.debug("USING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
+    ##     X0,X1 = self.bbox
+    ##     center = 0.5*(X0+X1)
+    ##     # calculating the bounding circle: this is rather conservative
+    ##     self.camera.setCenter(*center)
+    ##     if type(angles) is str:
+    ##         angles = self.view_angles.get(angles)
+    ##     if angles is not None:
+    ##         try:
+    ##             self.camera.setAngles(angles)
+    ##         except:
+    ##             raise ValueError,'Invalid view angles specified'
+    ##     # Currently, we keep the default fovy/aspect
+    ##     # and change the camera distance to focus
+    ##     fovy = self.camera.fovy
+    ##     #pf.debug("FOVY: %s" % fovy,pf.DEBUG.DRAW)
+    ##     self.camera.setLens(fovy,self.aspect)
+    ##     # Default correction is sqrt(3)
+    ##     correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
+    ##     tf = coords.tand(fovy/2.)
+
+    ##     import simple
+    ##     bbix = simple.regularGrid(X0,X1,[1,1,1])
+    ##     bbix = dot(bbix,self.camera.rot[:3,:3])
+    ##     bbox = coords.Coords(bbix).bbox()
+    ##     dx,dy,dz = bbox[1] - bbox[0]
+    ##     vsize = max(dx/self.aspect,dy)
+    ##     dsize = bbox.dsize()
+    ##     offset = dz
+    ##     dist = (vsize/tf + offset) / correction
+        
+    ##     if dist == nan or dist == inf:
+    ##         pf.debug("DIST: %s" % dist,pf.DEBUG.DRAW)
+    ##         return
+    ##     if dist <= 0.0:
+    ##         dist = 1.0
+    ##     self.camera.setDist(dist)
+    ##     ## print "vsize,dist = %s, %s" % (vsize,dist)
+    ##     ## near,far = 0.01*dist,100.*dist
+    ##     ## print "near,far = %s, %s" % (near,far)
+    ##     #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
+    ##     near,far = dist-1.0*dsize,dist+1.0*dsize
+    ##     # print "near,far = %s, %s" % (near,far)
+    ##     #print (0.0001*vsize,0.01*dist,near)
+    ##     # make sure near is positive
+    ##     near = max(near,0.0001*vsize,0.01*dist,finfo(coords.Float).tiny)
+    ##     # make sure far > near
+    ##     if far <= near:
+    ##         far += finfo(coords.Float).eps
+    ##     #print "near,far = %s, %s" % (near,far)
+    ##     self.camera.setClip(near,far)
+    ##     self.camera.resetArea()
+
+        
     def setCamera(self,bbox=None,angles=None):
         """Sets the camera looking under angles at bbox.
 
-        This function sets the camera angles and adjusts the zooming.
-        The camera distance remains unchanged.
-        
-        If a bbox is specified, the camera will be zoomed to make the whole
-        bbox visible.
-        If no bbox is specified, the current scene bbox will be used.
-        If no current bbox has been set, it will be calculated as the
-        bbox of the whole scene.
+        This function sets the camera parameters to view the specified
+        bbox volume from the specified viewing direction.
 
-        If no camera angles are given, the camera orientation is kept.
-        angles can be a set of 3 angles, or a string
+        Parameters:
+
+        - `bbox`: the bbox of the volume looked at
+        - `angles`: the camera angles specifying the viewing direction.
+          It can also be a string, the key of one of the predefined
+          camera directions
+
+        If no angles are specified, the viewing direction remains constant.
+        The scene center (camera focus point), camera distance, fovy and
+        clipping planes are adjusted to make the whole bbox viewed from the
+        specified direction fit into the screen.
+
+        If no bbox is specified, the following remain constant:
+        the center of the scene, the camera distance, the lens opening
+        and aspect ratio, the clipping planes. In other words the camera
+        is moving on a spherical surface and keeps focusing on the same
+        point.
+
+        If both are specified, then first the scene center is set,
+        then the camera angles, and finally the camera distance.
+
+        In the current implementation, the lens fovy and aspect are not
+        changed by this function. Zoom adjusting is performed solely by
+        changing the camera distance.
         """
+        #
+        # TODO: we should add the rectangle (digital) zooming to
+        #       the docstring
+        
         self.makeCurrent()
-        # go to a distance to have a good view with a 45 degree angle lens
+        
+        # set scene center
         if bbox is not None:
             pf.debug("SETTING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
             self.setBbox(bbox)
-        pf.debug("USING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
-        X0,X1 = self.bbox
-        center = 0.5*(X0+X1)
-        # calculating the bounding circle: this is rather conservative
-        self.camera.setCenter(*center)
+            X0,X1 = self.bbox
+            center = 0.5*(X0+X1)
+            self.camera.setCenter(*center)
+
+        # set camera angles
         if type(angles) is str:
             angles = self.view_angles.get(angles)
         if angles is not None:
@@ -1083,46 +1178,50 @@ class Canvas(object):
                 self.camera.setAngles(angles)
             except:
                 raise ValueError,'Invalid view angles specified'
-        # Currently, we keep the default fovy/aspect
-        # and change the camera distance to focus
-        fovy = self.camera.fovy
-        #pf.debug("FOVY: %s" % fovy,pf.DEBUG.DRAW)
-        self.camera.setLens(fovy,self.aspect)
-        # Default correction is sqrt(3)
-        correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
-        tf = coords.tand(fovy/2.)
 
-        import simple
-        bbix = simple.regularGrid(X0,X1,[1,1,1])
-        bbix = dot(bbix,self.camera.rot[:3,:3])
-        bbox = coords.Coords(bbix).bbox()
-        dx,dy,dz = bbox[1] - bbox[0]
-        vsize = max(dx/self.aspect,dy)
-        dsize = bbox.dsize()
-        offset = dz
-        dist = (vsize/tf + offset) / correction
-        
-        if dist == nan or dist == inf:
-            pf.debug("DIST: %s" % dist,pf.DEBUG.DRAW)
-            return
-        if dist <= 0.0:
-            dist = 1.0
-        self.camera.setDist(dist)
-        ## print "vsize,dist = %s, %s" % (vsize,dist)
-        ## near,far = 0.01*dist,100.*dist
-        ## print "near,far = %s, %s" % (near,far)
-        #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
-        near,far = dist-1.0*dsize,dist+1.0*dsize
-        # print "near,far = %s, %s" % (near,far)
-        #print (0.0001*vsize,0.01*dist,near)
-        # make sure near is positive
-        near = max(near,0.0001*vsize,0.01*dist,finfo(coords.Float).tiny)
-        # make sure far > near
-        if far <= near:
-            far += finfo(coords.Float).eps
-        #print "near,far = %s, %s" % (near,far)
-        self.camera.setClip(near,far)
-        self.camera.resetArea()
+        # set camera distance and clipping planes
+        if bbox is not None:
+            # Currently, we keep the default fovy/aspect
+            # and change the camera distance to focus
+            fovy = self.camera.fovy
+            #pf.debug("FOVY: %s" % fovy,pf.DEBUG.DRAW)
+            self.camera.setLens(fovy,self.aspect)
+            # Default correction is sqrt(3)
+            correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
+            tf = coords.tand(fovy/2.)
+
+            import simple
+            bbix = simple.regularGrid(X0,X1,[1,1,1])
+            bbix = dot(bbix,self.camera.rot[:3,:3])
+            bbox = coords.Coords(bbix).bbox()
+            dx,dy,dz = bbox[1] - bbox[0]
+            vsize = max(dx/self.aspect,dy)
+            dsize = bbox.dsize()
+            offset = dz
+            dist = (vsize/tf + offset) / correction
+
+            if dist == nan or dist == inf:
+                pf.debug("DIST: %s" % dist,pf.DEBUG.DRAW)
+                return
+            if dist <= 0.0:
+                dist = 1.0
+            self.camera.setDist(dist)
+
+            ## print "vsize,dist = %s, %s" % (vsize,dist)
+            ## near,far = 0.01*dist,100.*dist
+            ## print "near,far = %s, %s" % (near,far)
+            #near,far = dist-1.2*offset/correction,dist+1.2*offset/correction
+            near,far = dist-1.0*dsize,dist+1.0*dsize
+            # print "near,far = %s, %s" % (near,far)
+            #print (0.0001*vsize,0.01*dist,near)
+            # make sure near is positive
+            near = max(near,0.0001*vsize,0.01*dist,finfo(coords.Float).tiny)
+            # make sure far > near
+            if far <= near:
+                far += finfo(coords.Float).eps
+            #print "near,far = %s, %s" % (near,far)
+            self.camera.setClip(near,far)
+            self.camera.resetArea()
 
 
     def project(self,x,y,z,locked=False):
