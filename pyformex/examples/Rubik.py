@@ -73,7 +73,7 @@ for the displayed cube by pressing the **Permutations** button.
 This number is not stored, it is calculated each time. It's a nice example
 of how easily Python can handle huge numbers.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['illustration','game']
 _techniques = ['color','dialog','draw','persistence','random']
@@ -267,6 +267,7 @@ dia = widgets.InputDialog(
     ])
 
 def run():
+    global cube, busy
     transparent(False)
     clear()
     renderMode('flatwire')

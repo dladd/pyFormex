@@ -31,7 +31,7 @@ techniques = ['dialog', 'draw', 'persistence','random']
 acknowledgements = ['Tomas Praet']
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['illustration','geometry']
 _techniques = ['dialog', 'draw', 'persistence','random']
@@ -533,7 +533,7 @@ def timeOut():
 
 def openDialog():
     """Create and display the dialog"""
-    global dialog,explanation
+    global dialog, explanation, Illusion, Explain
     data_items = [
         _I('Illusion',Illusion,choices=method.keys()),
         _I('Explain',Explain,text='Show explanation'),
@@ -553,6 +553,7 @@ def openDialog():
     
 
 def run():
+    global Illusion, Explain
     Illusion = None
     Explain = False
     try:
