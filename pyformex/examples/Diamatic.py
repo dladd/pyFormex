@@ -24,10 +24,6 @@
 ##
 """Diamatic dome
 
-level = 'beginner'
-topics = ['structure','domes']
-techniques = ['color']
-
 """
 _status = 'checked'
 _level = 'beginner'

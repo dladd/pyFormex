@@ -25,11 +25,6 @@
 
 """Optical Illusions
 
-level = 'normal'
-topics = ['illustration','geometry']
-techniques = ['dialog', 'draw', 'persistence','random']
-acknowledgements = ['Tomas Praet']
-
 """
 _status = 'checked'
 _level = 'normal'

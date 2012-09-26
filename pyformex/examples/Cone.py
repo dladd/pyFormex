@@ -46,12 +46,9 @@ def run():
     n=64
 
     F = simple.sector(r,360.,n,n,h=h,diag=None)
-    #F.coords = F.coords.flare(h/4,r/2,dir=[2,0],end=1,exp=5.)
     F.setProp(0)
     draw(F,view='bottom')
-    setDrawOptions({'bbox':None})
-    zoomAll()
-    zoom(3)
+    #setDrawOptions({'bbox':None})
 
     print map(str,range(4))
     ans = ask('How many balls do you want?',['0','1','2','3'])
@@ -67,20 +64,18 @@ def run():
         B1.setProp(1)
         draw(B1)
 
-    if nb > 1:
-        B2 = B.translate([0.2*r,0.,1.15*h])
-        B2.setProp(2)
-        draw(B2)
+        if nb > 1:
+            B2 = B.translate([0.2*r,0.,1.15*h])
+            B2.setProp(2)
+            draw(B2)
 
-    if nb > 2:
-        B3 = B.translate([-0.2*r,0.1*r,1.25*h])
-        B3.setProp(6)
-        draw(B3)
+        if nb > 2:
+            B3 = B.translate([-0.2*r,0.1*r,1.25*h])
+            B3.setProp(6)
+            draw(B3)
 
-    zoomAll()
-    zoom(3)
-
-    focus(B1)
+        zoomAll()
+    
 
 if __name__ == 'draw':
     run()

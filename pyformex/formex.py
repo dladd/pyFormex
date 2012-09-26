@@ -1657,8 +1657,11 @@ maxprop  = %s
         the line through the point and perpendicular to the bisector of the
         angle. See Diamatic example."""
         e = tand(0.5*angle)
-        return self.map(lambda x,y,z:[where(y==0,x,(x*x+x*y*e)/sqrt(x*x+y*y)),where(x==0,y,(x*y+y*y*e)/sqrt(x*x+y*y)),0])
-
+        errh = seterr(divide='ignore',invalid='ignore') # ignore division errors
+        res = self.map(lambda x,y,z:[where(y==0,x,(x*x+x*y*e)/sqrt(x*x+y*y)),where(x==0,y,(x*y+y*y*e)/sqrt(x*x+y*y)),0])
+        seterr(**errh) # reactivate division errors
+        return res
+    
 
     def circulize1(self):
         """Transforms the first octant of the 0-1 plane into 1/6 of a circle.
@@ -1669,7 +1672,10 @@ maxprop  = %s
         This function is especially suited to create circular domains where
         all bars have nearly same length. See the Diamatic example.
         """
-        return self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
+        errh = seterr(divide='ignore',invalid='ignore') # ignore division errors
+        res =self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
+        seterr(**errh) # reactivate division errors
+        return res
 
 
     def shrink(self,factor):
