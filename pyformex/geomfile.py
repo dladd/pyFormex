@@ -194,7 +194,7 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# objtype='Formex'; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        head = "# objtype='Formex'; nelems=%r; nplex=%r; props=%r; eltype=%r; sep=%r" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')

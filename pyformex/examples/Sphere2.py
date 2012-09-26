@@ -24,12 +24,8 @@
 ##
 """Sphere2
 
-level = 'normal'
-topics = ['geometry','surface','sphere']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface','sphere']
 _techniques = ['color']
@@ -40,6 +36,15 @@ from simple import sphere2,sphere3
 def run():
     reset()
 
+    F1=Formex(array([[[1, 1], [-1, 1], [-1, -1], [1, -1]]]))
+    print F1
+    print F1.eltype
+    writeGeomFile('F.pgf', [F1])
+    F2=readGeomFile('F.pgf').values()[0]
+    print F2
+    print F2.eltype
+    draw(F2)
+    return
     nx = 4
     ny = 4
     m = 1.6
