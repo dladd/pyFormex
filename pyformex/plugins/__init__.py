@@ -84,7 +84,8 @@ def find_plugin_menus():
         'tools_menu',
         'draw2d_menu',
         'nurbs_menu',
-        'dxf_tools',
+        'dxf_menu',
+        'bifmesh_menu',
         'jobs_menu',
         'postproc_menu',
         ]

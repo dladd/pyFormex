@@ -54,6 +54,7 @@ from plugins import objects,trisurface,inertia,partition,sectionize,dxf,tetgen,s
 import commands, os, timer
 
 _name_ = 'geometry_menu'
+
 ################### automatic naming of objects ##########################
 
 _autoname = {}
@@ -950,7 +951,7 @@ def loadDxfMenu():
 
 def create_menu():
     """Create the plugin menu."""
-    from dxf_tools import importDxf
+    from dxf_menu import importDxf
     _init_()
     MenuData = [
         ("&Import ",[

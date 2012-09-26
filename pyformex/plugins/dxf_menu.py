@@ -20,7 +20,7 @@ from plugins.curve import *
 from gui import menu
 from connectivity import Connectivity
 
-_name_ = 'dxf_tools'
+_name_ = 'dxf_menu'
     
 def importDxf(convert=False,keep=False):
     """Import a DXF file.
