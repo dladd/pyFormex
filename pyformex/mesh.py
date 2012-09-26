@@ -1950,13 +1950,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
             raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)
-        eltype = set([ m.eltype for m in meshes if m.eltype is not None ])
+        eltype = set([ m.elType() for m in meshes ])
         if len(eltype) > 1:
-            raise ValueError,"Cannot concatenate meshes with different eltype: %s" % [ e.name() for e in eltype ]
-        if len(eltype) == 1:
-            eltype = eltype.pop()
-        else:
-            eltype = None
+            raise ValueError,"Cannot concatenate meshes with different eltype: %s" % [ m.elName() for m in meshes ]
 
         # Keep the available props
         prop = [m.prop for m in meshes if m.prop is not None]
@@ -1969,7 +1965,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             
         coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
-        return clas(coords,elems,prop=prop,eltype=eltype)
+        return clas(coords,elems,prop=prop,eltype=eltype.pop())
 
  
     # Test and clipping functions

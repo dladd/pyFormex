@@ -33,9 +33,12 @@ I showed her how I could get to the same result with just a few lines of
 pyFormex code.
 
 Later I added some nice utilities to make it worthwile as a programming example.
-It would be nice now to add a GUI to create and position the shapes.
+It would be nice a nice exercise to add a GUI to create and position the shapes.
 """
-_status = 'unchecked'
+_status = 'checked'
+_level = 'normal'
+_topics = ['illustration']
+_techniques = ['animation']
 
 from gui.draw import *
    
@@ -96,7 +99,7 @@ class Shape(Geometry):
 
 def run():
     clear()
-    smooth()
+    flat()
 
     wall = Shape('square',[80.,60.],[10.,0.],'red')
     window = Shape('square',[10.,10.],[30.,30.],'white')
@@ -111,12 +114,15 @@ def run():
     zoomAll()
 
     # lower the sun
-    delay(2)
+    n = 100
+    delay(10./n)
     setDrawOptions({'bbox':None})
     sun.hide()
-    for y in range(10):
-        sun.move(1,-8)
+    for y in range(n):
+        sun.move(0,sqrt(0.4*(n-y)/n))
+        sun.move(1,-100./n)
         sun.redraw()
+
         
     sun.hide()
     

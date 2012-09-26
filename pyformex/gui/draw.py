@@ -1036,7 +1036,8 @@ def undraw(itemlist):
     the item that was drawn from the canvas.
     A single item or a list of items may be specified.
     """
-    pf.canvas.removeAny(itemlist)
+    if itemlist:
+        pf.canvas.removeAny(itemlist)
     pf.canvas.update()
     pf.app.processEvents()
     
@@ -1600,8 +1601,8 @@ def zoomRectangle():
     
 def zoomBbox(bb):
     """Zoom thus that the specified bbox becomes visible."""
-    pf.canvas.setBbox(bb)
-    pf.canvas.setCamera()
+    #pf.canvas.setBbox(bb)
+    pf.canvas.setCamera(bbox=bb)
     pf.canvas.update()
     
 

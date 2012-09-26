@@ -24,11 +24,8 @@
 ##
 """Double Layer Flat Space Truss Roof
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['color'] 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
 _techniques = ['color'] 

@@ -27,12 +27,8 @@
 
 Computing geometrical properties of plane sections.
 
-level = 'normal'
-topics = ['geometry','section2d']
-techniques = []
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','section2d']
 _techniques = []
