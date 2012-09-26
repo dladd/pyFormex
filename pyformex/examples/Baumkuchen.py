@@ -44,18 +44,18 @@ def run():
     # Create a grid of beam elements
     a1 = Formex('l:2').replic2(m+1,n,1,1,0,1) + \
          Formex('l:1').replic2(m,n+1,1,1,0,1)
-    draw(a1,'front')
+    draw(a1,view='front')
     p = array(a1.center())
     p[2] = e1
     f = lambda x:1-(x/18)**2/2
     a2 = a1.bump(2,p,f,1)
-    draw(a2,'bottom',color='red')
+    draw(a2,view='bottom',color='red')
     p[2] = e2
     a3 = a2.bump(2,p,lambda x:1-(x/6)**2/2,0)
-    draw(a3,'bottom',color='green')
+    draw(a3,view='bottom',color='green')
     # Replicate the structure in x-direction
     a4 = a3.replicate(k,dir=0,step=m)
-    draw(a4,'bottom',color='blue')
+    draw(a4,view='bottom',color='blue')
     return
 
 if __name__ == 'draw':

@@ -24,17 +24,8 @@
 ##
 #
 
-"""Rubik
-
-level = 'normal'
-topics = ['illustration','game']
-techniques = ['color','dialog','draw','persistence','random']
-createdby = ['tpraet']
-
-.. Description
-
-Rubik's cube
-============
+"""Rubik's cube
+===============
 
 Overview
 --------
@@ -271,6 +262,7 @@ def run():
     transparent(False)
     clear()
     renderMode('flatwire')
+    view('iso')
     cube = createCube()
     busy = False
     refresh()
