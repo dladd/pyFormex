@@ -24,6 +24,12 @@
 ##
 """Sphere2
 
+Displays subsequent approximations of a sphere. In each step two spheres
+are drawn: the left ons is a frame structure (simple.sphere2), the right
+one a triangulated surface (simple.sphere3).
+
+Remark that simple.sphere3 contains degenerate triangles at the north and
+south pole.
 """
 _status = 'checked'
 _level = 'normal'
@@ -35,24 +41,15 @@ from simple import sphere2,sphere3
 
 def run():
     reset()
-
-    F1=Formex(array([[[1, 1], [-1, 1], [-1, -1], [1, -1]]]))
-    print F1
-    print F1.eltype
-    writeGeomFile('F.pgf', [F1])
-    F2=readGeomFile('F.pgf').values()[0]
-    print F2
-    print F2.eltype
-    draw(F2)
-    return
-    nx = 4
+    nx = 4   # initial value for number of modules
     ny = 4
-    m = 1.6
-    ns = 6
+    m = 1.6  # refinement at each step
+    ns = 6   # number of steps
 
     smooth()
     setView('front')
     for i in range(ns):
+        print "nx=%s, ny=%s" % (nx,ny)
         b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
         s = sphere3(nx,ny,bot=-90,top=90)
         s = s.translate(0,1.0)
@@ -63,6 +60,7 @@ def run():
         draw(s,bbox=bb)#,color='random')
         nx = int(m*nx)
         ny = int(m*ny)
+        pause(2)
 
 if __name__ == 'draw':
     run()

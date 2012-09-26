@@ -24,11 +24,8 @@
 ##
 """Wire stent analysis
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['color'] 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
 _techniques = ['color'] 
@@ -52,7 +49,7 @@ import datetime
 
 
 def geometry():
-    from apps.WireStent import DoubleHelixStent
+    from examples.WireStent import DoubleHelixStent
     global wire_diameter
     
     # create a Doublehelix stent with fixed geometry

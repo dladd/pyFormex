@@ -25,9 +25,6 @@
 
 """Hesperia
 
-level = 'advanced'
-topics = ['geometry', 'FEA', 'domes', 'surface']
-techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
 _status = 'unchecked'
 _level = 'advanced'
