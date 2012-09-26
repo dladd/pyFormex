@@ -28,7 +28,7 @@ Displays subsequent approximations of a sphere. In each step two spheres
 are drawn: the left ons is a frame structure (simple.sphere2), the right
 one a triangulated surface (simple.sphere3).
 
-Remark that simple.sphere3 contains degenerate triangles at the north and
+Remark that simple.sphere3 may contain degenerate triangles at the north and
 south pole.
 """
 _status = 'checked'

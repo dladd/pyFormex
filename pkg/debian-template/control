@@ -2,7 +2,8 @@ Source: pyformex
 Section: science
 Priority: optional
 Maintainer: Benedict Verhegghe <benedict.verhegghe@ugent.be>
-Build-Depends: debhelper (>= 8.0.0), 
+Build-Depends: debhelper (>= 8.0.0),
+	       hardening-wrapper,
 	       python-all-dev (>= 2.6.6-3~), 
 	       python-numpy (>=1.0), 
 	       libglu1-mesa-dev,
@@ -10,7 +11,7 @@ Build-Depends: debhelper (>= 8.0.0),
 	       libgts-dev,
 	       libglib2.0-dev
 Build-Depends-Indep: libjs-jquery, libjs-underscore
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://pyformex.org
 Vcs-Svn: svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex
 Vcs-Browser: http://svn.savannah.nongnu.org/viewvc/trunk/pyformex/?root=pyformex

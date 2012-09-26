@@ -27,7 +27,7 @@ unpack() {
     [ -d "$PYFDIR" ] && rm -rf $PYFDIR
     tar xf $SOURCE
     cp -a debian-template $PYFDIR/debian
-    ln -sfn ${SOURCE} ${ORIG}
+    ln -fn ${SOURCE} ${ORIG}
     # For now !!!
     #rm $PYFDIR/debian/*.doc-base
 }

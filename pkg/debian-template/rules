@@ -4,8 +4,8 @@
 
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
-
 export DH_OPTIONS
+export DEB_BUILD_HARDENING=1
 
 %:
 	@echo "BV: USING DEFAULT RULE $@"
@@ -14,10 +14,10 @@ export DH_OPTIONS
 
 
 build:
-	@echo "BV: BUILD" 
+	@echo "BV: BUILD"
 	dh_auto_build
 	@echo "Building extras"
-	make -C $(CURDIR)/pyformex/extra
+	DEB_BUILD_HARDENING=1 make -C $(CURDIR)/pyformex/extra
 
 binary:
 	dh binary --with=python2
@@ -34,23 +34,8 @@ override_dh_install:
 	dh_install -a
 
 
-#binary:
-#	@echo "BV: BINARY" 
-#	dh_auto_test
-#	dh_testroot
-#	dh_prep
-#	dh_installdirs
-#	@echo "BV: INSTALL" 
-#	dh_auto_install
-#	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra install prefix=/usr
-#	@echo "BV: PACKAGE PYFORMEX" 
-#	dh_install -i --exclude=".so"
-#	dh_installdocs
-#	@echo "BV: INSTALL PYFORMEX-lib and PYFORMEX-extra" 
-#	dh_install -a
-
-
 override_dh_python2:
+	dh_numpy
 	dh_python2
 	# Replace embedded Javascript libraries with symlinks
 	set -e; if [ -d "debian/pyformex" ]; then \
