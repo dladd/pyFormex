@@ -92,8 +92,6 @@ def largestSubMesh(M):
 
 def selectPart(M,x0,x1):
     """
-    NEEDED
-    
     Select part of section between x0 and x1
 
     section is a list of Mesh objects.
@@ -107,6 +105,7 @@ def selectPart(M,x0,x1):
     if M.prop is not None:
         M = largestSubMesh(M)
     return meshToPolyLine2(M)
+
 
 def cutPart(M,x0,x1):
     """Cut part of section at plane thru x0 and return part between x0 and x1"""
@@ -135,6 +134,7 @@ def cutPart(M,x0,x1):
 
 def getPart(section,x0,x1,cutat=-1):
     """Return a cut or a selected part, depending on cutat parameter."""
+    print section,x0,x1,cutat
     if cutat == 0:
         #cut at plane x0
         return cutPart(section,x0,x1)
@@ -146,6 +146,7 @@ def getPart(section,x0,x1,cutat=-1):
     else:
         # select parts between x0 and x1 only
        return selectPart(section,x0,x1)
+
 
 def connectPolyLines(plist):
     """Connect a set of PolyLines into a single one.
@@ -744,6 +745,22 @@ def inputSlicingParameters():
         export({'slice_data':res})
 
 
+def createBranches(branch):
+    """Create the branch control lines for the input lines."""
+    # roll the first part to the end
+    branch = branch[1:]+branch[:1]
+
+    # reverse the uneven branches
+    for i in range(1,6,2):
+        branch[i] = branch[i].reverse()
+    
+    print "Branch control lines:"
+    for i in range(6):
+        print " %s, %s" % divmod(i,2)
+        print branch[i].coords
+    export({'branch':branch})
+
+
 def inputControlLines():
     """Enter three polyline paths in counterclockwise direction."""
     branch = []
@@ -775,7 +792,7 @@ def inputControlLines():
             break
     if len(branch) == 6:
         print "OK, I have %s branches" % len(branch)
-
+        
         # roll the first part to the end
         branch = branch[1:]+branch[:1]
 
@@ -784,32 +801,6 @@ def inputControlLines():
             branch[i] = branch[i].reverse()
         print branch
         export({'branch':branch})
-
-def exampleData():
-    
-    export({'surface':TriSurface.read('bif.off')})
-    draw(named('surface'), color='red', alpha=0.3)
-    export({'central_point': Coords([[0.61, -1.69, 0.]])})
-    drawCentralPoint()
-    C=[
-       [ [6.98, -29.], [5.6, -3.8],],        [ [5.6, -3.8],[9.1, 18.3]  ], 
-       [[0.93, 17.1], [0.66, 1.46], ],       [[0.66, 1.46], [-2.06, 15.2], ]  , 
-       [ [-9.4, 15.], [-7., 2.1], [-3.2, -3.36],],     [ [-3.2, -3.36],  [-2.1, -30.]]
-       ]
-    branch=[PolyLine(c) for c  in C]
-    draw([b.coords for b in branch], marksize=5,flat=True, alpha=1)
-    if len(branch) == 6:
-        print "OK, I have %s branches" % len(branch)
-
-        # roll the first part to the end
-        branch = branch[1:]+branch[:1]
-
-        # reverse the uneven branches
-        for i in range(1,6,2):
-            branch[i] = branch[i].reverse()
-        export({'branch':branch})
-        drawHelperLines()
-        showInfo('now continue to Create Center Lines')
 
 
 def inputCentralPoint():
@@ -844,7 +835,7 @@ def drawControlLines():
 
 def drawCentralPoint():
     cp = named('central_point')
-    print "cp",cp
+    print "Central Point = %s" % cp
     draw(cp,bbox='last',color='black', marksize=8,flat=True, alpha=1)
 
 def drawCenterLines():
@@ -926,6 +917,51 @@ def drawAll():
     drawCenterLines()
 
 
+#############################################################################
+######### Create a menu with interactive tasks #############
+
+
+def example():
+    clear()
+    transparent(True)
+    showInfo("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation.")
+    
+    showInfo('1. Input the bifurcation surface model')
+    examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
+    print examplefile
+    export({'surface':TriSurface.read(examplefile)})
+    drawSurface()
+    
+    showInfo('2. Create the central point of the bifurcation')
+    cp = Coords([-1.92753589,  0.94010758, -0.1379855])
+    export({'central_point': cp})
+    drawCentralPoint()
+
+    showInfo('3. Create the helper lines for the mesher')
+    C = [[-37.03591156,   8.31724453,   1.63392556],
+         [ -1.33486605,   7.92148924,   1.30256796],
+         [ 21.08015823,  12.05531025,   1.80960774],
+         [ 20.50785065,   1.38687587,   0.07305704],
+         [  3.34683752,   0.61276931,   0.07497934],
+         [ 19.63776588,  -1.73410368,  -0.4297086 ],
+         [ 18.50249481, -12.7657938 ,  -2.22132683],
+         [ -3.43801689,  -6.69040442,  -1.06601918],
+         [-35.59408188,  -6.04877567,  -0.72103143]]
+    C = Coords(C)
+    drawNumbers(C)
+    C = C.reshape(3,3,3)
+    branch = []
+    for i in range(3):
+        for j in range(2):
+            branch.append(PolyLine(C[i,j:j+2]))
+    print branch
+    export({'branch':branch})
+    createBranches(branch)
+    drawHelperLines()
+
+    showInfo('Notice the order of the input points!\n\n4. Create the Center Lines')
+
+
 def updateData(data,newdata):
     """Update the input data fields with new data values"""
     if newdata:
@@ -953,17 +989,14 @@ def deleteAll():
     resetData()
     reset()
 
-#############################################################################
-######### Create a menu with interactive tasks #############
-
 _menu_ = 'BifMesh'
 
 def create_menu():
     """Create the %s menu.""" % _menu_
     MenuData = [
-        ("&Input Example Data",exampleData),
-        ("&Import Bifurcation Geometry",importGeometry),
+        ("&Run through example",example),
         ("---",None),
+        ("&Import Bifurcation Geometry",importGeometry),
         ("&Input Central Point",inputCentralPoint),
         ("&Input Helper Lines",inputControlLines),
         ("&Input Slicing Parameters",inputSlicingParameters),
