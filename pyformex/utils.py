@@ -591,7 +591,7 @@ file_description = {
     'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
     'gts': 'GTS files (*.gts)',
     'icon': 'Icons (*.xpm)',
-    'img': 'Images (*.png *.jpg *.eps *.gif)',
+    'img': 'Images (*.png *.jpg *.eps *.gif *.bmp)',
     'inp': 'Abaqus input files (*.inp)',
     'neu': 'Gambit Neutral files (*.neu)',
     'off': 'OFF files (*.off)',

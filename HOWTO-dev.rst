@@ -1073,10 +1073,24 @@ They will need to be tuned for the release.
 
 - If OK, build final (signed): _do final
 - upload: dput mentors PYFVER.changes
+
+Uploading to the local debian repository
+----------------------------------------
+You should be on a machine with access to /net/bumps/var. This is currently
+only bumper or bumpy (when at bioMMeda).
+
+In the pyformex pkg subdirectory, after creating the signed debian packages,
+do::
+
+  reprepro -b /net/bumps/var/www/repos/debian include unstable pyformex_$VERSION_amd64.changes
+
   
+
 
 Using the local debian repository
 =================================
+
+.. note:: This belongs in the pyFormex install guide.
 
 Our local repository contains unofficial debian packages for intermediate releases and some extra packages that are not in the official Debian repositories. 
 
@@ -1094,5 +1108,6 @@ Then, to install all the latest pyformex packages, just do::
 
    apt-get update
    apt-get pyformex pyformex-lib pyformex-extra
+
 
 .. End

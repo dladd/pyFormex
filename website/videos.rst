@@ -28,6 +28,7 @@
 .. _`pyFormex GUI`: http://www.youtube.com/watch?v=ZFB1tRXIOJo
 .. _`Bifurcation meshing`: http://www.youtube.com/watch?v=T1pVFCzrmGI
 .. _`Image projection`: http://www.youtube.com/watch?v=0nscJWbl5rQ
+.. _`Transforming cube`: http://users.ugent.be/~tpraet/files/cube/cube.html
 
 .. index:: Videos
 
@@ -40,5 +41,6 @@ it available on YouTube. Here are the links:
 - `Bifurcation meshing`_: Hexahedral meshing of a carotid
   bifurcation. By Gianluca.
 - `Image projection`_: Projection  of a 2-D image on a 3-D surface. By Gianluca.
+- `Transforming cube`_: Movies of transforming cubes created in pyFormex. By Tomas.
 
 .. End

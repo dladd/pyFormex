@@ -588,13 +588,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         isbrd = (ncon<=1)   # < 1 should not occur 
         brd = lo[isbrd]
         #
-        # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
-        # LOOSES THE eltype
-        # SHOULD BE FIXED, BUT NEEDS TO BE CHECKED !!! BV
-        #  ### BV uncommented for checking, report if not working ###
-        # brd.eltype = sel.eltype
         if brd.eltype is None:
-            raise ValueError,"THIS ERROR SOHULD NOT OCCUR! CONTACT MAINTAINERS!"
+            raise ValueError,"THIS ERROR SHOULD NOT OCCUR! CONTACT MAINTAINERS!"
         if not return_indices:
             return brd
         
@@ -624,8 +619,6 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             brd,indices = self.getFreeEntities(return_indices=True,level=level)
             enr = indices[:,0]
             M = Mesh(self.coords,brd,prop=self.prop[enr])
-            # THIS SEEMS SUPERFLUOUS
-            # M.setType(brd.eltype)
 
         if compact:
             M = M.compact()
@@ -1438,7 +1431,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if prop is not None:
             prop = concatenate([m.prop for m in ml])
         elems = concatenate([m.elems for m in ml],axis=0)
-        eltype = set([m.eltype for m in ml])
+        eltype = set([m.elName() for m in ml])
         if len(eltype) > 1:
             raise RuntimeError,"Invalid choices for random conversions"
         eltype = eltype.pop()

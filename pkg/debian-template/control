@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 8.0.0),
 	       libgts-dev,
 	       libglib2.0-dev
 Build-Depends-Indep: libjs-jquery, libjs-underscore
-Standards-Version: 3.9.3
+Standards-Version: 3.9.2
 Homepage: http://pyformex.org
 Vcs-Svn: svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex
 Vcs-Browser: http://svn.savannah.nongnu.org/viewvc/trunk/pyformex/?root=pyformex

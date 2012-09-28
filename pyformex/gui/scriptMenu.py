@@ -236,7 +236,11 @@ class ScriptMenu(QtGui.QMenu):
 
     def loadSubmenus(self,dirs=[]):
         if not dirs:
-            dirs = os.listdir(self.dir)
+            try:
+                dirs = os.listdir(self.dir)
+            except:
+                pf.debug("Could not open path '%s'" % self.dir,pf.DEBUG.MISC)
+                dirs = []
         filtr = lambda s:os.path.isdir(os.path.join(self.dir,s))
         dirs = filter(filtr,dirs)
         filtr = lambda s: s[0]!='.' and s[0]!='_'
