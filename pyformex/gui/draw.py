@@ -747,6 +747,7 @@ def askDrawOptions(d={}):
 
 
 def reset():
+    """reset the canvas"""
     pf.canvas.resetDefaults()
     pf.canvas.resetOptions()
     pf.GUI.drawwait = pf.cfg['draw/wait']
@@ -755,8 +756,8 @@ def reset():
 
 
 def resetAll():
-    wireframe()
     reset()
+    wireframe()
 
 
 def shrink(v):
@@ -1977,6 +1978,19 @@ def setLocalAxes(mode=True):
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
          
+ 
+def resetGUI():
+    """Reset the GUI to its default operating mode.
+
+    When an exception is raised during the execution of a script, the GUI
+    may be left in a non-consistent state.
+    This function may be called to reset most of the GUI components
+    to their default operating mode. 
+    """
+    ## resetPick()
+    pf.GUI.resetCursor()
+    pf.GUI.enableButtons(pf.GUI.actions,['Play','Step'],True)
+    pf.GUI.enableButtons(pf.GUI.actions,['Continue','Stop'],False)
 
 
 #  deprecated alternative spellings

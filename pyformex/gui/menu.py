@@ -456,20 +456,6 @@ saveAs = NotImplemented
 ##         print("Open editor")
 ##         pf.GUI.showEditor()
 
- 
-def resetGUI():
-    """Reset the GUI to its default operating mode.
-
-    When an exception is raised during the execution of a script, the GUI
-    may be left in a non-consistent state.
-    This function may be called to reset most of the GUI components
-    to their default operating mode. 
-    """
-    ## resetPick()
-    pf.GUI.resetCursor()
-    pf.GUI.enableButtons(pf.GUI.actions,['Play','Step'],True)
-    pf.GUI.enableButtons(pf.GUI.actions,['Continue','Stop'],False)
-
 
 def resetWarnings():
     """Reset the warning filters to the default."""
@@ -541,7 +527,7 @@ def createMenuData():
         (_('&App Info'),draw.showDoc),
         ("---",None),
         ## (_('&Reset Picking Mode'),resetPick),
-        (_('&Reset GUI'),resetGUI),
+        (_('&Reset GUI'),draw.resetGUI),
         (_('&Reset Warning Filters'),resetWarnings),
         (_('&Force Finish Script'),script.force_finish),
         (_('&Unload Current App'),unloadCurrentApp),

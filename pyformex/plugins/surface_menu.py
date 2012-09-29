@@ -647,6 +647,8 @@ def partitionByAngle():
             p = S.partitionByAngle(angle=res['angle'],sort=res['sort by'])
             S = S.setProp(p + res['firstprop'])
             print("Partitioned in %s parts (%s seconds)" % (len(S.propSet()),t.seconds()))
+            for p in S.propSet():
+                print " p: %s; n: %s" % (p,(S.prop==p).sum())
             selection.draw()
          
  

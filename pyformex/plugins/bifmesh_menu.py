@@ -32,11 +32,13 @@ PhD research by Gianluca De Santis at bioMMeda (Ghent University).
 
 import pyformex as pf
 import plugins.vascularsweepingmesher as vsm
+import plugins.geometry_menu as gm
+import plugins.surface_menu as sm
+
 from connectivity import connectedLineElems
 from plugins.trisurface import fillBorder
 from plugins.draw2d import *
 from gui import menu
-from gui.widgets import FileSelection
 from utils import runCommand
 
 import sys
@@ -49,6 +51,14 @@ _surface = None
 
 
 ##################### Functions ####################################
+
+
+def importGeometry():
+    sm.importSurface()
+
+
+def positionGeometry():
+    pass
 
 def getData(*args):
     """Return global data"""
@@ -134,7 +144,6 @@ def cutPart(M,x0,x1):
 
 def getPart(section,x0,x1,cutat=-1):
     """Return a cut or a selected part, depending on cutat parameter."""
-    print section,x0,x1,cutat
     if cutat == 0:
         #cut at plane x0
         return cutPart(section,x0,x1)
@@ -321,14 +330,14 @@ def splineIt():
     # cross splines
     spc = [[ ci.approx(ntot=niso) for ci in c ] for c in cs]
     export({'cross_splines':spc})
-    #drawCrossSplines()
+    clear()
+    drawCrossSplines()
 
     # axis spline
     [hi0,  hi1, hi2,hi3, hi4, hi5]=[array([h.coords for h in hi]) for hi in spc]
     clv=[ PolyLine( (hi[:, 0]+hi[:, -1])*0.5  ) for hi in [hi0, hi2, hi4] ]
     axis = [BezierSpline(c.coords,curl=1./3.).approx(ntot=nsl) for c,nsl in zip(clv,nslice)]
     export({'axis_splines':axis})
-    clear()
     drawAxisSplines()
 
     # longitudinal splines
@@ -357,6 +366,7 @@ def splineIt():
         spl = [[BezierSpline([ci.coords[j] for ci in c],curl=1./3.) for j in range(niso+1)] for c in spc]
     export({'long_splines':spl})
     drawLongSplines()
+
 
 def divPolyLine(pts, div, closed=None):
     """it takes the points, build a PolyLine and divide it in pieces. If div is an integer, it returns the point used to divide the polyline in div-equal pieces, otherwise it returns the points needed to divide the PolyLine at the values of curvilinear abscissa of the array div. So div=array([0., 0.5, 0.7, 0.85, 0.95, 0.97, 1.  ])
@@ -644,8 +654,6 @@ def centerline2D(S,s0,s1):
     - `s0`,`s1`: helper polylines on opposing sides of the surface.
 
     """
-    print type(S)
-    print S.coords.shape
     sections = slicer(S,s0,s1,visual=False)
     if drawOption('visual'):
         draw(sections,color='red', alpha=1, flat=True)
@@ -686,25 +694,6 @@ def centerlines():
     #if drawOption('visual'):
     drawCenterLines()
 
-
-def importGeometry():
-    f=FileSelection()
-    f.show()
-    fn=f.getFilename()
-    fext = fn[-4:]
-    if fext=='.pgf':    
-        surface=readGeomFile(fn).values()[0]
-    elif (fext=='.stl') or (fext=='.off') or (fext=='.gts'):
-        surface=TriSurface.read(fn)
-    else:
-        Error('wrong file extension')
-    export({'surface':surface})
-    drawSurface()
-
-
-def positionGeometry():
-    pass
-
 _draw_options = [
     ['visual',False],
     ['numbers',False],
@@ -731,11 +720,6 @@ except:
     export({'slice_data':dict(_slice_data)})
 
 
-def show():
-    dialog.acceptData()
-    globals().update(dialog.results)
-    print dialog.results
-
 def inputSlicingParameters():
     """Input the slicing parameters"""
     
@@ -759,12 +743,14 @@ def createBranches(branch):
         print " %s, %s" % divmod(i,2)
         print branch[i].coords
     export({'branch':branch})
+    drawHelperLines()
 
 
 def inputControlLines():
     """Enter three polyline paths in counterclockwise direction."""
     branch = []
     BA = []
+    perspective(False)
     for i in range(6):
         pf.message("""..
 
@@ -790,17 +776,12 @@ def inputControlLines():
             branch.append(obj)
         else:
             break
-    if len(branch) == 6:
-        print "OK, I have %s branches" % len(branch)
         
-        # roll the first part to the end
-        branch = branch[1:]+branch[:1]
-
-        # reverse the uneven branches
-        for i in range(1,6,2):
-            branch[i] = branch[i].reverse()
-        print branch
-        export({'branch':branch})
+    if len(branch) == 6:
+        undraw(BA)
+        createBranches(branch)
+    else:
+        warning("Incorrect definition of helper lines")
 
 
 def inputCentralPoint():
@@ -920,33 +901,40 @@ def drawAll():
 #############################################################################
 ######### Create a menu with interactive tasks #############
 
+def nextStep(msg):
+    return ask(msg,['Cancel','Continue']) == 'Continue'
 
 def example():
     clear()
     transparent(True)
-    showInfo("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation.")
+    if not nextStep("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation."):
+        return
     
-    showInfo('1. Input the bifurcation surface model')
+    if not nextStep('1. Input the bifurcation surface model'):
+        return
+    
     examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
     print examplefile
     export({'surface':TriSurface.read(examplefile)})
     drawSurface()
     
-    showInfo('2. Create the central point of the bifurcation')
+    if not nextStep('2. Create the central point of the bifurcation'):
+        return
     cp = Coords([-1.92753589,  0.94010758, -0.1379855])
     export({'central_point': cp})
     drawCentralPoint()
 
-    showInfo('3. Create the helper lines for the mesher')
-    C = [[-37.03591156,   8.31724453,   1.63392556],
-         [ -1.33486605,   7.92148924,   1.30256796],
-         [ 21.08015823,  12.05531025,   1.80960774],
-         [ 20.50785065,   1.38687587,   0.07305704],
-         [  3.34683752,   0.61276931,   0.07497934],
-         [ 19.63776588,  -1.73410368,  -0.4297086 ],
-         [ 18.50249481, -12.7657938 ,  -2.22132683],
-         [ -3.43801689,  -6.69040442,  -1.06601918],
-         [-35.59408188,  -6.04877567,  -0.72103143]]
+    if not nextStep('3. Create the helper lines for the mesher. This step is best done with perspective off.'):
+        return
+    C = [[-33.93232346,   7.50834751,   0.        ],
+         [ -1.96555257,   6.90520096,   0.        ],
+         [ 19.08426476,  10.4637661 ,   0.        ],
+         [ 19.14457893,   1.2959373 ,   0.        ],
+         [  2.61836171,   0.87373471,   0.        ],
+         [ 19.08426476,  -1.59916639,   0.        ],
+         [ 19.02395058, -12.6970644 ,   0.        ],
+         [ -1.84492326,  -6.30370998,   0.        ],
+         [-34.29421234,  -4.61489964,   0.        ]]
     C = Coords(C)
     drawNumbers(C)
     C = C.reshape(3,3,3)
@@ -954,12 +942,19 @@ def example():
     for i in range(3):
         for j in range(2):
             branch.append(PolyLine(C[i,j:j+2]))
-    print branch
-    export({'branch':branch})
     createBranches(branch)
-    drawHelperLines()
 
-    showInfo('Notice the order of the input points!\n\n4. Create the Center Lines')
+    if not nextStep('4. Notice the order of the input points!\n\n4. Create the Center Lines'):
+        return
+    centerlines()
+
+    if not nextStep('5. Slice the bifurcation'):
+        return
+    sliceIt()
+
+    if not nextStep('6. Create Spline Mesh'):
+        return
+    splineIt()
 
 
 def updateData(data,newdata):
@@ -1056,6 +1051,7 @@ def reload_menu():
 ######### What to do when the script is executed ###################
 
 def run():
+    resetGUI()
     resetData()
     reset()
     reload_menu()
