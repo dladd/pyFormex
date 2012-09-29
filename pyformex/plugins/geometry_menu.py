@@ -182,6 +182,8 @@ def importGeometry(select=True,draw=True,ftype=None):
     """
     if ftype is None:
         ftype = ['pgf','pyf','surface','off','stl','gts','smesh','neu','all']
+    elif type(ftype) is list:
+        pass
     else:
         ftype = [ftype]
     types = utils.fileDescription(ftype)
@@ -208,7 +210,7 @@ def importPgf():
     importGeometry(ftype='pgf')
 
 def importSurface():
-    importGeometry(ftype='surface')
+    importGeometry(ftype=['surface','pgf','all'])
 
 def importTetgen():
     importGeometry(ftype='tetgen')
