@@ -1283,20 +1283,22 @@ class Coords(ndarray):
         return f
 
 
-    def mapd(self,dir,func,point,dist=None):
+    def mapd(self,dir,func,point=[0.,0.,0.],dist=None):
         """Map one coordinate by a function of the distance to a point.
 
         Parameters:
 
-        - `func`: a numerical function which takes one argument and produces
-          one result. The coordinate `dir` will be replaced by ``func(d)``,
-          where ``d`` is calculated as the distance to `point`.
-          The function must be applicable on arrays, so it should only
-          include numerical operations and functions understood by the
-          :mod:`numpy` module.
-          
-        By default, the distance d is calculated in 3-D, but one can specify
-        a limited set of axes to calculate a 2-D or 1-D distance.
+        - `dir`: 0, 1 or 2: the coordinate that will be replaced with
+          ``func(d)``, where `d` is calculated as the distance to `point`.
+        - `func`: a numerical function which takes one float argument and
+          produce one float result. The function must be applicable on arrays,
+          so it should only include numerical operations and functions
+          understood by the :mod:`numpy` module.
+        - `point`: the point to where the distance `d` is computed.
+        - `dist`: a list of coordinate directions that are used to compute
+          the distances `d`. It can also be a single coordinate direction.
+          The default is to use 3-D distances.
+
         This method is one of several mapping methods. See also
         :meth:`map3` and :meth:`map1`.
         

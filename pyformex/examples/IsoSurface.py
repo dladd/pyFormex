@@ -1,6 +1,6 @@
-# $Id$ *** pyformex app ***
+# $Id$ *** pyformex ***
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -22,46 +22,53 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Barrel Vault
 
-Create a parametric barrel vault.
+"""IsoSurface
+
+This example illustrates the use of the isosurface plugin to construct
+isosurface through a set of data
 """
 _status = 'checked'
 _level = 'beginner'
-_topics = ['frame']
-_techniques = ['dialog']
+_topics = ['surface']
+_techniques = ['isosurface']
 
 from gui.draw import *
+from plugins import isosurface as sf
+import elements
 
 def run():
-    global barrel
-    reset()
-    wireframe()
-    
-    res = askItems([
-        dict(name='m',value=10,text='number of modules in axial direction'),
-        dict(name='n',value=8,text='number of modules in tangential direction'),
-        dict(name='r',value=10.,text='barrel radius'),
-        dict(name='a',value=180.,text='barrel opening angle'),
-        dict(name='l',value=30.,text='barrel length'),
-        ])
-    if not res:
-        return
 
-    globals().update(res)
+    clear()
+    smooth()
 
-    # Diagonals
-    d = Formex('l:5',1).rosette(4,90).translate([1,1,0]).replic2(m,n,2,2)
-    # Longitudinals
-    h = Formex('l:1',3).replic2(2*m,2*n+1,1,1)
-    # End bars
-    e = Formex('l:2',0).replic2(2,2*n,2*m,1)
-    # Create barrel
-    barrel = (d+h+e).rotate(90,1).translate(0,r).scale([1.,a/(2*n),l/(2*m)]).cylindrical()
+    # data space: create a grid to visualize
+    nx,ny,nz = 10,8,6
+    F = elements.Hex8.toFormex().rep([nx,ny,nz],[0,1,2],[1.0]*3).setProp(1)
+    draw(F,mode='wireframe')
 
-    draw(barrel)
+    # function to generate data: the distance from the origin
+    dist = lambda x,y,z: sqrt(x*x+y*y+z*z)
+    data = fromfunction(dist,(nx+1,ny+1,nz+1))
+
+    # level at which the isosurface is computed
+    isolevel = 9
+    pf.GUI.setBusy()
+    tri = sf.isosurface(data,isolevel)
+    pf.GUI.setBusy(False)
+
+    if len(tri) > 0:
+        S = TriSurface(tri)
+        draw(S)
+        export({'isosurf':S})
+
+    else:
+        print "No surface found"
 
 
+# The following is to make it work as a script
 if __name__ == 'draw':
     run()
+
+
 # End

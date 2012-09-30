@@ -134,8 +134,9 @@ def polygonNormals(x):
     nk = roll(ni,-1)
     v1 = x-x[:,nj]
     v2 = x[:,nk]-x
-    return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
-
+    n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
+    #print "NANs: %s" % isnan(n).sum()
+    return n
 
 def triangleInCircle(x):
     """Compute the incircles of the triangles x

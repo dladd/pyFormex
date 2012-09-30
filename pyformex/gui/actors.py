@@ -535,22 +535,31 @@ class GeomActor(Actor):
                 canvas = kargs.get('canvas',pf.canvas)
                 mode = canvas.rendermode
 
-        if mode.endswith('wire') and self.object.level() > 1:
-            if not hasattr(self,'wire'):
-                import copy
-                wire = copy.copy(self)
-                wire.mode = 'wireframe' # Lock the mode
-                wire.nolight = True
-                wire.ontop = False # True will make objects transparent for edges
-                wire.list = None
-                Drawable.prepare_list(wire,color=asarray(black))
-                self.wire = wire
+        if mode.endswith('wire'):
+            try:
+                if self.object.level() > 1:
 
-            # Add the existing wire to the extra list, and then draw w/o wire
-            if self.wire not in self.extra:
-                self.extra.append(self.wire)
-                # AVOID RECURSION
-                self.wire.extra = []
+                    if not hasattr(self,'wire'):
+                        import copy
+                        wire = copy.copy(self)
+                        wire.mode = 'wireframe' # Lock the mode
+                        wire.nolight = True
+                        wire.ontop = False # True will make objects transparent for edges
+                        wire.list = None
+                        Drawable.prepare_list(wire,color=asarray(black))
+                        self.wire = wire
+
+                    # Add the existing wire to the extra list, and then draw w/o wire
+                    if self.wire not in self.extra:
+                        self.extra.append(self.wire)
+                        # AVOID RECURSION
+                        self.wire.extra = []
+
+            except:
+                # AVOID error (which should not occur)
+                print "GEOMACTOR.draw: %s" % type(self.object)
+                #print self.object.level()
+                pass
                 
             mode = mode[:-4]
 

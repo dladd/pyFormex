@@ -1541,7 +1541,9 @@ def vectorPairAreaNormals(vec1,vec2):
     """
     normal = cross(vec1.reshape(-1,3),vec2.reshape(-1,3))
     area = vectorLength(normal)
+    errh = seterr(divide='ignore',invalid='ignore')
     normal /= area.reshape((-1,1))
+    seterr(**errh)
     return area,normal
 
 

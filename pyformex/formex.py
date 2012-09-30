@@ -1546,6 +1546,9 @@ maxprop  = %s
         ind,ok = M.elems.testDuplicate()
         return self.select(ind[ok])
 
+   
+    unique = removeDuplicate
+
 
     ## def nonzero(self):
     ##     """Return a Formex which holds only the nonzero elements.
@@ -1734,7 +1737,13 @@ maxprop  = %s
         ## the replication of the properties is automatic!
         return Formex(f,self.prop,self.eltype)
 
-    rep = replicate
+
+    def rep(self,n,dir=0,step=1.0):
+        """Like replicate, but allow repeated replication"""
+        F = self
+        for ni,diri,stepi in zip(n,dir,step):
+            F = F.replicate(ni,diri,stepi)
+        return F
 
 
     def replic(self,n,step=1.0,dir=0):
@@ -1781,6 +1790,7 @@ maxprop  = %s
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.prop,self.eltype)
 
+    ros = rosette
 
     def translatem(self,*args,**kargs):
         """Multiple subsequent translations in axis directions.
@@ -2023,16 +2033,7 @@ maxprop  = %s
     #
     
     nnodes = npoints
-
-#########################################################################
-    #
-    # Convenient short notations and aliases
-    #
-    
-    rep = replic
-    ros = rosette
-    unique = removeDuplicate
-
+ 
 
 ##############################################################################
 #
