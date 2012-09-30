@@ -36,23 +36,63 @@ _techniques = ['isosurface']
 from gui.draw import *
 from plugins import isosurface as sf
 import elements
+from gui.imagearray import image2numpy
+
+    
+def loadImage(file,grey=True):
+    """Load a grey image into a numpy array"""
+    im = image2numpy(file,order='RGB',indexed=False)
+    if grey:
+        # Do type conversion because auto conversion produces float64
+        im = im.sum(axis=-1).astype(Float) / 3.
+    return im
+
+def loadImages(files,glmode=True):
+    images = [ loadImage(f) for f in files ]
+    images = dstack(images)
+    if glmode:
+        images /= 255.
+    return images
+
 
 def run():
-
     clear()
     smooth()
 
-    # data space: create a grid to visualize
-    nx,ny,nz = 10,8,6
-    F = elements.Hex8.toFormex().rep([nx,ny,nz],[0,1,2],[1.0]*3).setProp(1)
-    draw(F,mode='wireframe')
+    ans = ask("This IsoSurface example can either reconstruct a surface from a series of 2D images, or it can use data generated from a function. Use which data?",["Cancel","Generated from function","Image files"])
+    if ans == "Image files":
+        fp = askDirname()
+        if not fp:
+            return
 
-    # function to generate data: the distance from the origin
-    dist = lambda x,y,z: sqrt(x*x+y*y+z*z)
-    data = fromfunction(dist,(nx+1,ny+1,nz+1))
+        files = utils.listTree(fp,listdirs=False)
+        print(files)
 
-    # level at which the isosurface is computed
-    isolevel = 9
+        data = loadImages(files)
+
+        # level at which the isosurface is computed
+        isolevel = data.mean()
+
+    elif ans == "Generated from function":
+        # data space: create a grid to visualize
+        nx,ny,nz = 10,8,6
+        F = elements.Hex8.toFormex().rep([nx,ny,nz],[0,1,2],[1.0]*3).setProp(1)
+        draw(F,mode='wireframe')
+
+        # function to generate data: the distance from the origin
+        dist = lambda x,y,z: sqrt(x*x+y*y+z*z)
+        data = fromfunction(dist,(nx+1,ny+1,nz+1))
+
+        # level at which the isosurface is computed
+        isolevel = 9
+        
+    else:
+        return
+
+    print("IMAGE DATA: %s, %s" % (data.shape,data.dtype))
+    print("isolevel: %s" % isolevel)
+    
+    # Compute the isosurface    
     pf.GUI.setBusy()
     tri = sf.isosurface(data,isolevel)
     pf.GUI.setBusy(False)

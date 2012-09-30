@@ -203,7 +203,7 @@ def rgb2qimage(rgb):
         """Convert the 3D numpy array `rgb` into a 32-bit QImage.  `rgb` must
         have three dimensions with the vertical, horizontal and RGB image axes."""
         if len(rgb.shape) != 3:
-                raise ValueError("rgb2QImage can expects the first (or last) dimension to contain exactly three (R,G,B) channels")
+                raise ValueError("rgb2QImage expects the first (or last) dimension to contain exactly three (R,G,B) channels")
         if rgb.shape[2] != 3:
                 raise ValueError("rgb2QImage can only convert 3D arrays")
 

@@ -78,7 +78,6 @@ def create():
     siz = array(S.sizes())
     tr = array(trl)
     P = Formex(P.reshape(-1, 3)).resized(sc*siz).centered().translate(tr*siz)
-
     draw(P, marksize=1, color='black')
     zoomAll()
 
