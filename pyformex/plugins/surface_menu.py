@@ -639,12 +639,13 @@ def partitionByAngle():
         res  = askItems([_I('angle',60.),
                          _I('firstprop',1),
                          _I('sort by',choices=['number','area','none']),
+                         _I('old algorithm',False),
                          ])
         pf.app.processEvents()
         if res:
             selection.remember()
             t = timer.Timer()
-            p = S.partitionByAngle(angle=res['angle'],sort=res['sort by'])
+            p = S.partitionByAngle(angle=res['angle'],sort=res['sort by'],alt=res['old algorithm'])
             S = S.setProp(p + res['firstprop'])
             print("Partitioned in %s parts (%s seconds)" % (len(S.propSet()),t.seconds()))
             for p in S.propSet():
