@@ -840,7 +840,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           self.splitByConnection(level)[0]
         """
         p = self.partitionByConnection(level=level)
-        return self.withProp(0)
+        return self.setProp(p).withProp(0)
 
 
     def growSelection(self,sel,mode='node',nsteps=1):
