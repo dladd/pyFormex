@@ -1,0 +1,2 @@
+#!/bin/sh
+../pyformex/pyformex-3 --config=pyformex.conf --noredirect 2>&1 |tee 2to3.out

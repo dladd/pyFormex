@@ -85,7 +85,7 @@ def drawFEModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
 def run():
     global parts,M,F
     
-    na,ma = 4,2  # Size of domain A   
+    na,ma = 4,3  # Size of domain A   
     nb,mb = 3,4  # size of domain B
     # Make sure the property numbers never clash!
     pa,pb,pc = 3,4,5 # Properties corresponding to domains A,B,C
@@ -105,8 +105,10 @@ def run():
     B = baseB.replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
     # Change every second element of B to property pb1
     B.prop[arange(B.prop.size) % 2 == 1] = pb1
+    print B.prop
     C = A.rotate(90).setProp(pc)
     parts = [A,B,C]
+    draw(parts)
     
     # First convert parts to Meshes
     parts = [ p.toMesh() for p in parts ]
@@ -117,7 +119,8 @@ def run():
     # Create the finite element model
     # A model contains a single set of nodes and one or more sets of elements
     M = mergedModel(parts)
-    drawFEModel(M)
+    #drawFEModel(M)
+    #return
 
     # Transfer the properties from the parts in a global set
     elemprops = concatenate([part.prop for part in parts])

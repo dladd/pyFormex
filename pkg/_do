@@ -26,7 +26,7 @@ setup() {
 unpack() {
     [ -d "$PYFDIR" ] && rm -rf $PYFDIR
     tar xf $SOURCE
-    cp -a debian-template $PYFDIR/debian
+    rsync debian-template/ $PYFDIR/debian --exclude .svn -a
     ln -fn ${SOURCE} ${ORIG}
     # For now !!!
     #rm $PYFDIR/debian/*.doc-base
@@ -76,6 +76,11 @@ clean() {
     popd
 }
 
+
+distclean() {
+    clean
+    rm -rf $PYFDIR
+}
 
 bump() {
     OLDPKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
