@@ -22,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Menu with pyFormex scripts."""
+"""Menu with pyFormex apps."""
 
 import pyformex as pf
 import apps
@@ -36,7 +36,6 @@ import os,random
 from gettext import gettext as _
     
 catname = 'apps.cat'
-
 
 
 def sortSets(d):
@@ -285,43 +284,63 @@ class AppMenu(QtGui.QMenu):
 
 
     def run(self,action):
-        """Run the selected app."""
+        """Run the selected app.
+
+        This function is executed when the menu item is selected.
+        """
         app = str(action.text())
         if app in self.files:
+            self.runApp(app,play=self.autoplay)
+    
+
+    def runApp(self,app,play=True):
+        """Set/Run the specified app.
+
+        Set the specified app as the current app,
+        and run it if play==True.
+        """
+        self.current = app
+        if play:
             appname = self.fullAppName(app)
             pf.debug("Running application %s" % appname,pf.DEBUG.APPS|pf.DEBUG.MENU)
             script.runAny(appname)
+        
 
+    def runAll(self,first=0,last=None):
+        """Run all apps in the range [first,last].
 
-    def runNext(self):
-        """Run the next app."""
-        try:
-            i = self.files.index(self.current) + 1
-        except ValueError:
-            i = 0
-            print("You should first run a app from the menu, to define the next")
-            return
-        pf.debug("This is app %s out of %s" % (i,len(self.files)),pf.DEBUG.APPS|pf.DEBUG.MENU)
-        if i < len(self.files):
-            script.runAny(self.files[i])
+        If last is None, the length of the file list is used.
+        Notice that the range is Python style.
+        """
+        if last is None:
+            last = len(self.files)
+        pf.debug("Playing apps %s to %s in order" % (first,last),pf.DEBUG.APPS)
+        for i in range(first,last):
+            self.runApp(self.files[i])
+        pf.debug("Finished playing apps",pf.DEBUG.APPS)
 
 
     def runAllNext(self):
-        """Run the current and all following apps."""
+        """Run all the next apps, starting with the current one.
+
+        If there is no current, start  from the first.
+        """
         try:
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-            print("You should first run a app from the menu, to define the following")
-            return
-        pf.debug("Running apps %s-%s" % (i,len(self.files)),pf.DEBUG.APPS|pf.DEBUG.MENU)
-        self.runAllFiles(self.files[i:])
-        pf.debug("Exiting runAllNext",pf.DEBUG.APPS|pf.DEBUG.MENU)
-        
+        self.runAll(i)
 
-    def runAll(self):
-        """Run all apps."""
-        self.runAllFiles(self.files)
+
+    def runNext(self):
+        """Run the next app, or the first if none was played yet.
+
+        """
+        try:
+            i = self.files.index(self.current) + 1
+        except ValueError:
+            i = 0
+        self.runApp(self.files[i])
 
 
     def runRandom(self):

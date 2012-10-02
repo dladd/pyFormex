@@ -362,7 +362,7 @@ class ScriptMenu(QtGui.QMenu):
     def runScript(self,filename,play=True):
         """Set/Run the specified script.
 
-        Set the specified scripts as the current script,
+        Set the specified script as the current script,
         and run it if play==True.
         """
         self.current = filename

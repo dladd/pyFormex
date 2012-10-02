@@ -525,20 +525,20 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
     if not appname:
         return
 
-    print "RUNNING %s" % appname
+    #print "RUNNING %s" % appname
     if scriptInit:
-        print "INITFUNC"
+        #print "INITFUNC"
         scriptInit()
     
     if pf.GUI:
         pf.GUI.setcurfile(appname)
        
     if utils.is_script(appname):
-        print "RUNNING SCRIPT %s" % appname
+        #print "RUNNING SCRIPT %s" % appname
         stepmode = step
         return runScript(appname,argv)
     else:
-        print "RUNNING APP %s" % appname
+        #print "RUNNING APP %s" % appname
         return runApp(appname,argv,refresh)
 
 
