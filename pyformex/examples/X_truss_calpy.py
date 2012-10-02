@@ -24,9 +24,6 @@
 ##
 """X-shaped truss analysis
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['color','persistence'] 
 """
 _status = 'unchecked'
 _level = 'advanced'
@@ -34,7 +31,7 @@ _topics = ['FEA']
 _techniques = ['color','persistence'] 
 
 from gui.draw import *
-from apps.X_truss import X_truss
+from examples.X_truss import X_truss
 
 ############################
 # Load the needed calpy modules    
@@ -197,4 +194,5 @@ def run():
 
 if __name__ == 'draw':
     run()
+    
 # End

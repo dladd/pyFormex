@@ -156,7 +156,7 @@ class UnitsSystem(object):
         if isinstance(ent,list):
             return [ self.Get(e) for e in ent ]
         else:
-            if self.units.has_key(ent):
+            if ent in self.units:
                 return self.units[ent]
             else:
                 return ent

@@ -32,7 +32,7 @@ _techniques = ['function','import','dialog','viewport']
 
 from gui.draw import *
 import simple
-from apps.Cube import cube_tri
+from examples.Cube import cube_tri
 from geomtools import *
 
 

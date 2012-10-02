@@ -154,7 +154,7 @@ class Table(QtGui.QDialog):
 
 
 
-if globals().has_key('tbl'):
+if 'tbl' in globals():
     if tbl is not None:
         tbl.close()
 tbl = None

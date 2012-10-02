@@ -470,7 +470,7 @@ def createGrid():
             _I('bias',0.),
              ]
         )
-    if pf.PF.has_key(_data_):
+    if _data_ in pf.PF:
         dia.updateData(pf.PF[_data_])
     res = dia.getResults()
     if res:
@@ -504,7 +504,7 @@ def createRectangle():
             _I('diag','up',choices=['none','up','down','x-both']),
              ]
         )
-    if pf.PF.has_key(_data_):
+    if _data_ in pf.PF:
         dia.updateData(pf.PF[_data_])
     res = dia.getResults()
     if res:
@@ -539,7 +539,7 @@ def createCylinder():
             _I('diag','up',choices=['none','up','down','x-both']),
             ],
         )
-    if pf.PF.has_key(_data_):
+    if _data_ in pf.PF:
         dia.updateData(pf.PF[_data_])
     res = dia.getResults()
     if res:
@@ -579,7 +579,7 @@ def createCone():
         'div_along_circ':12,
         'diagonals':'up',
         }
-    if pf.PF.has_key(_data_):
+    if _data_ in pf.PF:
         res.update(pf.PF[_data_])
         
     res = askItems(store=res, items=[
@@ -626,7 +626,7 @@ def createSphere():
             ('method','geo','nx','ny'),
             ],
         )
-    if pf.PF.has_key(_data_):
+    if _data_ in pf.PF:
         dia.updateData(pf.PF[_data_])
     res = dia.getResults()
     if res:

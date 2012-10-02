@@ -397,7 +397,7 @@ class GeometryFile(object):
                     obj = self.readBezierSpline(ncoords,closed,degree,sep)
             elif objtype == 'NurbsCurve':
                 obj = self.readNurbsCurve(ncoords,nknots,closed,sep)
-            elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
+            elif objtype in globals() and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
                 message("Can not (yet) read objects of type %s from geometry file: skipping" % objtype)

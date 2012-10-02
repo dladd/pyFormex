@@ -147,7 +147,7 @@ def grow(rule='',clearing=True,text=True,ngen=-1,colors=True,viewports=False):
 
 def setDefaultGenerations(rule):
     rule = str(rule)
-    if limas.has_key(rule):
+    if rule in limas:
         ngen = limas[rule][2]
         d = currentDialog()
         if d:

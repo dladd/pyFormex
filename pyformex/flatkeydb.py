@@ -258,7 +258,7 @@ class FlatDB(dict):
         record with an existing key is not allowed.
         If you want to overwrite the old record, use insert() instead.
         """
-        if self.has_key(record[self.key]):
+        if record[self.key] in self:
             self.key_error_handler(record[self.key])
         else:
             self.insert(record)
@@ -404,7 +404,7 @@ class FlatDB(dict):
 
         This returns a list of primary keys of the matching records.
         """
-        return [ i for i in self.iterkeys() if self[i].has_key(key) and
+        return [ i for i in self.iterkeys() if key in self[i] and
                  self[i][key] == value ]  
 
 

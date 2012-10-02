@@ -218,7 +218,7 @@ def createDialog():
         )
 
     # Update its data from stored values
-    if pf.PF.has_key('_Sweep_data_'):
+    if '_Sweep_data_' in pf.PF:
         dialog.updateData(pf.PF['_Sweep_data_'])
 
     # Always install a timeout in official examples!

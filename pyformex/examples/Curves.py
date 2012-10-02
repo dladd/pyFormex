@@ -209,7 +209,7 @@ def run():
         actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
         default='Show')
 
-    if pf.PF.has_key('_Curves_data_'):
+    if '_Curves_data_' in pf.PF:
         #print pf.PF['_Curves_data_']
         dialog.updateData(pf.PF['_Curves_data_'])
 

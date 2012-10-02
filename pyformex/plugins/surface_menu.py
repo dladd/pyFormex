@@ -381,7 +381,7 @@ def fillBorders():
             _I('Filling method',itemtype='radio',choices=['radial','border']),
             _I('merge',False,text='Merge fills into current surface'),
             ])
-        if pf.PF.has_key(_data_):
+        if _data_ in pf.PF:
             dia.updateData(pf.PF[_data_])
         res = dia.getResults()
         if res:

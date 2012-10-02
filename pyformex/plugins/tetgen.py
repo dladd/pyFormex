@@ -198,7 +198,7 @@ def getInts(line,nint):
 
 def addElem(elems,nrs,e,n,nplex):
     """Add an element to a collection."""
-    if not elems.has_key(nplex):
+    if nplex not in elems:
         elems[nplex] = []
         nrs[nplex] = []
     elems[nplex].append(e)

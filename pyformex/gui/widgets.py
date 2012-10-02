@@ -911,9 +911,9 @@ class InputInteger(InputItem):
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QIntValidator(self)
-        if kargs.has_key('min'):
+        if 'min' in kargs:
             self.validator.setBottom(int(kargs['min']))
-        if kargs.has_key('max'):
+        if 'max' in kargs:
             self.validator.setTop(int(kargs['max']))
         self.input.setValidator(self.validator)
         self.layout().insertWidget(1,self.input)
@@ -941,11 +941,11 @@ class InputFloat(InputItem):
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QDoubleValidator(self)
-        if kargs.has_key('min'):
+        if 'min' in kargs:
             self.validator.setBottom(float(kargs['min']))
-        if kargs.has_key('max'):
+        if 'max' in kargs:
             self.validator.setTop(float(kargs['max']))
-        if kargs.has_key('dec'):
+        if 'dec' in kargs:
             self.validator.setDecimals(int(kargs['dec']))
         self.input.setValidator(self.validator)
         self.layout().insertWidget(1,self.input)
@@ -1027,7 +1027,7 @@ class InputSlider(InputInteger):
         #self.slider.setPageStep(5)
         self.slider.setTracking(1)
         self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
-        if kargs.has_key('func'):
+        if 'func' in kargs:
             self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])            
         self.layout().addWidget(self.slider)
 

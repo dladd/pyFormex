@@ -70,7 +70,7 @@ class FeResult(object):
         self.elnr = 0
 
     def dataSize(self,key,data):
-        if self.datasize.has_key(key):
+        if key in self.datasize:
             return self.datasize[key]
         else:
             return len(data)
@@ -107,7 +107,7 @@ class FeResult(object):
         self.nodnr += 1
 
     def Element(self,nr,typ,conn):
-        if not self.elems.has_key(typ):
+        if typ not in self.elems:
             self.elems[typ] = []
         self.elems[typ].append(conn)
 
@@ -160,7 +160,7 @@ class FeResult(object):
         self.labels[tag] = value
 
     def NodeOutput(self,key,nodid,data):
-        if not self.R.has_key(key):
+        if key not in self.R:
             self.R[key] = zeros((self.nnodes,self.dataSize(key,data)),dtype=float32)
         if key == 'U':
             self.R[key][nodid-1][self.displ-1] = data
@@ -229,7 +229,7 @@ class FeResult(object):
 
     def getIncs(self,step):
         """Return all the incs for given step."""
-        if self.res.has_key(step):
+        if step in self.res:
             return self.res[step].keys()
         
     def nextStep(self):
@@ -288,7 +288,7 @@ class FeResult(object):
         comp = components.find(key[-1])
         if comp >= 0:
             key = key[:-1]
-        if self.R.has_key(key):
+        if key in self.R:
             val = self.R[key]
             if comp in range(val.shape[1]):
                 return val[:,comp]

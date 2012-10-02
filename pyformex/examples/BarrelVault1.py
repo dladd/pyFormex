@@ -24,10 +24,6 @@
 ##
 """Barrel Vault Shell
 
-level = 'beginner'
-topics = ['frame']
-techniques = ['dialog']
-
 """
 _status = 'checked'
 _level = 'beginner'
@@ -60,7 +56,6 @@ def run():
     barrel = g.rotate(90,1).translate(0,r).scale([1.,a/n,l/m]).cylindrical()
 
     draw(barrel,color=red,bkcolor=blue)
-    #drawNumbers(barrel.coords)
 
 if __name__ == 'draw':
     run()

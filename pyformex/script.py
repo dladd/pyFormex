@@ -107,7 +107,7 @@ def forget(names):
     """Remove the global variables specified in list."""
     g = pf.PF
     for name in names:
-        if g.has_key(name):
+        if name in g:
             del g[name]
 
 
@@ -120,7 +120,7 @@ def rename(oldnames,newnames):
     """Rename the global variables in oldnames to newnames."""
     g = pf.PF
     for oldname,newname in zip(oldnames,newnames):
-        if g.has_key(oldname):
+        if oldname in g:
             g[newname] = g[oldname]
             del g[oldname]
 
@@ -155,7 +155,7 @@ def listAll(clas=None,like=None,filter=None,dic=None,sort=False):
 
 def named(name):
     """Returns the global object named name."""
-    if pf.PF.has_key(name):
+    if name in pf.PF:
         dic = pf.PF
     else:
         raise NameError,"Name %s is not in pyformex.PF" % name
@@ -341,7 +341,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             
     finally:
         # honour the exit function
-        if g.has_key('atExit'):
+        if 'atExit' in g:
             atExit = g['atExit']
             try:
                 atExit()

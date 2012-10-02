@@ -177,7 +177,7 @@ class Config(Dict):
                 if k[0] == '_':
                     del data[k]
         if name:
-            if not self.has_key(name) or not isinstance(self[name],dict):
+            if name not in self or not isinstance(self[name],dict):
                 self[name] = Dict()
             self[name].update(data)
         else:

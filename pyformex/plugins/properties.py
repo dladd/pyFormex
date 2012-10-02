@@ -174,7 +174,7 @@ class ElemSection(CDict):
         search in 'self.secDB'.
         """
         if isinstance(section, str):
-            if self.secDB.has_key(section):
+            if section in self.secDB:
                 self.section = self.secDB[section]
             else:
                 warning("Section '%s' is not in the database" % section)
@@ -192,7 +192,7 @@ class ElemSection(CDict):
 
     def computeSection(self,section):
         """Compute the section characteristics of specific sections."""
-        if not section.has_key('sectiontype'):
+        if 'sectiontype' not in section:
             return
         if section['sectiontype'] == 'circ':
             r = section['radius']
@@ -216,7 +216,7 @@ class ElemSection(CDict):
         search in 'self.matDB'.
         """
         if isinstance(material, str) :
-            if self.matDB.has_key(material):
+            if material in self.matDB:
                 self.material = self.matDB[material] 
             else:
                 warning("Material '%s'  is not in the database" % material)
@@ -493,7 +493,7 @@ class PropertyDB(Dict):
         d.nr = len(prop)
         if tag is not None:
             d.tag = str(tag)
-        if name is None and kargs.has_key('setname'):
+        if name is None and 'setname' in kargs:
             # allow for backwards compatibility
             import warnings
             warnings.warn("!! 'setname' is deprecated, please use 'name'")
@@ -544,11 +544,11 @@ class PropertyDB(Dict):
             if type(tag) != list:
                 tag = [ tag ]
             tag = map(str,tag)   # tags are always converted to strings!
-            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
+            prop = [ p for p in prop if 'tag' in p and p['tag'] in tag ]
         for a in attr:
-            prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
+            prop = [ p for p in prop if a in p and p[a] is not None ]
         for a in noattr:
-            prop = [ p for p in prop if not p.has_key(a) or p[a] is None ]
+            prop = [ p for p in prop if a not in p or p[a] is None ]
         if delete:
             self._delete(prop,kind=kind)
         return prop

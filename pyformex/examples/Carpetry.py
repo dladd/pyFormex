@@ -45,7 +45,7 @@ def atExit():
 def drawMesh(M):
     clear()
     draw(M)
-    drawText("%s %s elements" % (M.nelems(),M.eltype),20,20,size=20)
+    drawText("%s %s elements" % (M.nelems(),M.elName()),20,20,size=20)
 
 def run():
     # make sure this is a good aspect ratio if you want a movie
@@ -79,17 +79,13 @@ def run():
         nconv = random.randint(minconv,maxconv)
 
         while (len(conversions) < nconv and M.nelems() < maxelems) or M.nelems() < minelems:
-            possible_conversions = M.eltype.conversions.keys()
+            possible_conversions = M.elType().conversions.keys()
             i = random.randint(len(possible_conversions))
             conv = possible_conversions[i]
             conversions.append(conv)
-            #clear()
-            #draw(M)
-            #print "%s -> %s" % (M.eltype,conv)
             M = M.convert(conv)
-            #print "type %s, plex %s" % (M.eltype,M.nplex())
 
-        if M.eltype != Tri3:
+        if M.elType() != Tri3:
             M = M.convert('tri3')
             conversions.append('tri3')
 
@@ -100,8 +96,6 @@ def run():
         key = possible_keys[random.randint(nkeys)]
         print "colored by %s" % key
         func = V[key][0]
-        print M.eltype
-        print M.elems.eltype
         S = trisurface.TriSurface(M)
         val = func(S)
         export({'surface':S})

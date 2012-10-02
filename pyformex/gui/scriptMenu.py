@@ -373,39 +373,43 @@ class ScriptMenu(QtGui.QMenu):
             pf.debug("Drawing Options: %s" % pf.canvas.options,pf.DEBUG.DRAW)
             draw.reset()
             draw.play()
+        
 
+    def runAll(self,first=0,last=None):
+        """Run all scripts in the range [first,last].
 
-    def runNext(self):
-        """Run the next script."""
-        try:
-            i = self.files.index(self.current) + 1
-        except ValueError:
-            i = 0
-            print("You should first run a script from the menu, to define the next")
-            return
-        pf.debug("This is script %s out of %s" % (i,len(self.files)),pf.DEBUG.SCRIPT)
-        if i < len(self.files):
+        If last is None, the length of the file list is used.
+        Notice that the range is Python style.
+        """
+        if last is None:
+            last = len(self.files)
+        pf.debug("Playing scripts %s to %s in order" % (first,last),pf.DEBUG.SCRIPT)
+        for i in range(first,last):
             self.runScript(self.files[i])
+        pf.debug("Finished playing scripts",pf.DEBUG.SCRIPT)
 
 
     def runAllNext(self):
-        """Run the current and all following scripts."""
+        """Run all the next scripts, starting with the current one.
+
+        If there is no current, start  from the first.
+        """
         try:
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-            print("You should first run a script from the menu, to define the following")
-            return
-        pf.debug("Running scripts %s-%s" % (i,len(self.files)),pf.DEBUG.SCRIPT)
-        self.runAllFiles(self.files[i:])
-        pf.debug("Exiting runAllNext",pf.DEBUG.SCRIPT)
-        
+        self.runAll(i)
 
-    def runAll(self):
-        """Run all scripts."""
-        pf.debug("Playing all scripts in order",pf.DEBUG.SCRIPT)
-        self.runAllFiles(self.files)
-        pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
+
+    def runNext(self):
+        """Run the next script, or the first if none was played yet.
+
+        """
+        try:
+            i = self.files.index(self.current) + 1
+        except ValueError:
+            i = 0
+        self.runScript(self.files[i])
 
 
     def runRandom(self):
@@ -417,20 +421,11 @@ class ScriptMenu(QtGui.QMenu):
     def runAllRandom(self):
         """Run all scripts in a random order."""
         pf.debug("Playing all scripts in random order",pf.DEBUG.SCRIPT)
-        self.runAllFiles(self.files,randomize=True)
+        order = range(len(self.files))
+        random.shuffle(order)
+        for i in order:
+            self.runScript(self.files[i])
         pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
-
-
-    def runAllFiles(self,files,randomize=False):
-        """Run all the scripts in given list."""
-        def init():
-            from gui.draw import layout
-            layout(1)
-        if randomize:
-            random.shuffle(files)
-        script.scriptInit = init
-        script.runAll(files)
-        script.scriptInit = None
                        
 
     def reload(self):

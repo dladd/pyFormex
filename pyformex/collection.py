@@ -75,7 +75,7 @@ class Collection(object):
         else:
             key = int(key)
             data = unique(data)
-            if self.d.has_key(key):
+            if key in self.d:
                 self.d[key] = union1d(self.d[key],data)
             elif data.size > 0:
                 self.d[key] = data
@@ -98,7 +98,7 @@ class Collection(object):
 
         else:
             key = int(key)
-            if self.d.has_key(key):
+            if key in self.d:
                 data = setdiff1d(self.d[key],unique(data))
                 if data.size > 0:
                     self.d[key] = data
@@ -109,7 +109,7 @@ class Collection(object):
     
     def has_key(self,key):
         """Check whether the collection has an entry for the key."""
-        return self.d.has_key(key)
+        return key in self.d
 
     def __setitem__(self,key,data):
         """Set new values for the given key."""

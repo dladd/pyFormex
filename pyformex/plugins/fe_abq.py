@@ -260,7 +260,7 @@ def fmtMaterial(mat):
         out += "*HYPERELASTIC, %s" % mat.type.upper()
         
         if mat.type.lower() == 'ogden':     
-            if mat.has_key('order'):
+            if 'order' in mat:
                 order=mat.order
             else:
                 order=len(mat.constants)/3.
@@ -269,7 +269,7 @@ def fmtMaterial(mat):
         
         if mat.type.lower() == 'polynomial':
             ord=(-5. + (25.+8.*len(mat.constants))**0.5)/2. # Nparameters = ((N+1)*(N+2))/2 + N-1 --> Inverse to find order N
-            if mat.has_key('order'):
+            if 'order' in mat:
                 order=mat.order
             else:
                 order=ord
@@ -277,7 +277,7 @@ def fmtMaterial(mat):
                     raise ValueError,"Wrong number of parameters"
                 
         if mat.type.lower() == 'reduced polynomial':
-            if mat.has_key('order'):
+            if 'order' in mat:
                 order=mat.order
             else:
                 order=len(mat.constants)/2.
@@ -2005,7 +2005,7 @@ Script: %s
                 # default is all elements
                 set = range(telems)
 
-            if p.has_key('eltype'):
+            if 'eltype' in p:
                 pf.debug('Elements of type %s: %s' % (p.eltype,set),pf.DEBUG.ABQ)
 
                 setname = esetName(p)

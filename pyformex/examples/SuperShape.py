@@ -245,7 +245,7 @@ def createDialog():
         )
 
     # Update its data from stored values
-    if pf.PF.has_key('_SuperShape_data_'):
+    if '_SuperShape_data_' in pf.PF:
         dialog.updateData(pf.PF['_SuperShape_data_'])
 
     # Always install a timeout in official examples!

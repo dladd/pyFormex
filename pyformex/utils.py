@@ -104,7 +104,7 @@ def hasModule(name,check=False):
     The result is remembered in the the_version dict.
     The optional argument check==True forces a new detection.
     """
-    if the_version.has_key(name) and not check:
+    if name in the_version and not check:
         return the_version[name]
     else:
         return checkModule(name)
@@ -119,7 +119,7 @@ def hasExternal(name,force=False):
     The external command is only checked on the first call.
     The result is remembered in the the_external dict.
     """
-    if the_external.has_key(name) and not force:
+    if name in the_external and not force:
         return the_external[name]
     else:
         return checkExternal(name)

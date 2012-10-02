@@ -198,7 +198,7 @@ def run():
         default = 'Show',
         )
     
-    if pf.PF.has_key('_Nurbs_data_'):
+    if '_Nurbs_data_' in pf.PF:
         dialog.updateData(pf.PF['_Nurbs_data_'])
 
     dialog.timeout = timeOut

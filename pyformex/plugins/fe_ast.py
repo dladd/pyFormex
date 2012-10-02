@@ -439,7 +439,7 @@ Script: %s
             
             setname = esetName(p)
             
-            if p.has_key('eltype'):
+            if 'eltype' in p:
                 print('Writing elements of type %s: %s' % (p.eltype,set))
                 gl,gr = self.model.splitElems(set)
                 elems = self.model.getElems(gr)

@@ -209,7 +209,7 @@ def assignProperties():
 
         p = res['Property']
         sel = pickElements()
-        if sel.has_key(0):
+        if 0 in sel:
             pf.debug("PICKED NUMBERS:%s" % sel)
             F.prop[sel[0]] = p
         undraw(FA)
@@ -231,7 +231,7 @@ def selectProperties():
     res = askItems([('Property Name','p')])
     if res:
         p = res['Property Name']
-        if pf.PF.has_key(p):
+        if p in pf.PF:
             F.setProp(pf.PF[p])
 
 
