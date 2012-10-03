@@ -565,7 +565,7 @@ class TriSurface(Mesh):
     
     def getElemEdges(self):
         """Get the faces' edge numbers."""
-        if self.elem_edges is None:
+        if self.elem_edges is None:  
             self.elem_edges,self.edges = self.elems.insertLevel(1)
         return self.elem_edges
 
@@ -1162,11 +1162,11 @@ Quality: %s .. %s
              Mesh(S.coords,S.edges[p])
         """
         # Get the edge angles
-        cosa,conn2 = self.edgeCosAngles(return_mask=True)
+        cosangles,conn2 = self.edgeCosAngles(return_mask=True)
         # initialize all edges as features
         feature = ones((self.edges.shape[0],),dtype=bool)
         # unmark edges with small angle
-        feature[conn2] = cosa <= cosd(angle)
+        feature[conn2] = cosangles[conn2] <= cosd(angle)
         return feature
 
 #
