@@ -309,7 +309,7 @@ class ScriptMenu(QtGui.QMenu):
     def loadCatalog(self):
         catfile = os.path.join(self.dir,catname)
         if os.path.exists(catfile):
-            execfile(catfile,globals())
+            pf.execFile(catfile,globals())
             for k in kat:
                 if k == 'all':
                     files = col[k]

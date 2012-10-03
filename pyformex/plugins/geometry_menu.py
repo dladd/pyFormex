@@ -731,6 +731,27 @@ def reverseMesh():
     selection.draw()
     
 
+def doOnSelectedMeshes(method):
+    """Apply some method to all selected meshes"""
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    meshes = [ method(m) for m in meshes ]
+    export2(selection.names,meshes)
+    clear()
+    selection.draw()
+
+
+def removeDegenerate():
+    doOnSelectedMeshes(Mesh.removeDegenerate)
+    
+
 def compactMesh():
     """Compact the Mesh"""
     if not selection.check():
@@ -1058,6 +1079,7 @@ def create_menu():
             ("&Subdivide",subdivideMesh),
             ("&Compact",compactMesh),
             ("&Fuse nodes",fuseMesh),
+            ("&Remove degenerate",removeDegenerate),
             ("&Renumber nodes",[
                 ("In element order",renumberMesh),
                 ("In random order",renumberMeshRandom),

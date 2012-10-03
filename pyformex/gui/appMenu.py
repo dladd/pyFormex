@@ -236,7 +236,7 @@ class AppMenu(QtGui.QMenu):
     def loadCatalog(self):
         catfile = os.path.join(self.dir,catname)
         if os.path.exists(catfile):
-            execfile(catfile,globals())
+            pf.execFile(catfile,globals())
             for k in kat:
                 if k == 'all':
                     files = col[k]
@@ -306,6 +306,32 @@ class AppMenu(QtGui.QMenu):
             script.runAny(appname)
         
 
+    def runMany(self,seq):
+        """Run a sequence of apps.
+
+        The sequence is specified as a list of indices in the self.fiels list.
+        """
+        from gui.draw import layout
+        for i in seq:
+            layout(1)
+            self.runApp(self.files[i])
+       
+
+    def runNext(self):
+        """Run the next app, or the first if none was played yet."""
+        try:
+            i = self.files.index(self.current) + 1
+        except ValueError:
+            i = 0
+        self.runMany([i])
+
+
+    def runRandom(self):
+        """Run a random script."""
+        i = random.randint(0,len(self.files)-1)
+        self.runMany([i])
+
+
     def runAll(self,first=0,last=None):
         """Run all apps in the range [first,last].
 
@@ -314,10 +340,7 @@ class AppMenu(QtGui.QMenu):
         """
         if last is None:
             last = len(self.files)
-        pf.debug("Playing apps %s to %s in order" % (first,last),pf.DEBUG.APPS)
-        for i in range(first,last):
-            self.runApp(self.files[i])
-        pf.debug("Finished playing apps",pf.DEBUG.APPS)
+        self.runMany(range(first,last))
 
 
     def runAllNext(self):
@@ -329,41 +352,15 @@ class AppMenu(QtGui.QMenu):
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-        self.runAll(i)
-
-
-    def runNext(self):
-        """Run the next app, or the first if none was played yet.
-
-        """
-        try:
-            i = self.files.index(self.current) + 1
-        except ValueError:
-            i = 0
-        self.runApp(self.files[i])
-
-
-    def runRandom(self):
-        """Run a random script."""
-        i = random.randint(0,len(self.files)-1)
-        self.runScript(self.files[i])
+        self.runMany(range(i,len(self.files)))
 
 
     def runAllRandom(self):
-        """Run all apps in a random order."""
-        self.runAllFiles(self.files,randomize=True)
-        
+        """Run all scripts in a random order."""
+        order = range(len(self.files))
+        random.shuffle(order)
+        self.runMany(order)
 
-    def runAllFiles(self,files,randomize=False):
-        """Run all apps."""
-        def init():
-            from gui.draw import layout
-            layout(1)
-        if randomize:
-            random.shuffle(files)
-        script.scriptInit = init
-        script.runAll(files,refresh=True,)
-        script.scriptInit = None
 
     def reload(self):
         """Reload the scripts from dir.
@@ -371,6 +368,7 @@ class AppMenu(QtGui.QMenu):
         This is only available if a directory path was specified and
         no files.
         """
+        pf.debug("Reloading this menu",pf.DEBUG.APPS)
         if self.dir:
             self.clear()
             self.menus = []

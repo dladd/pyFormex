@@ -39,6 +39,16 @@ Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
 
+# Compatibility with Python2 and Python3
+# We keep these in separate modules, because the ones for 2k might
+# not compile in 3k and vice-versa.
+import sys
+if sys.hexversion < 0x03000000:
+    from compat_2k import *
+else:
+    from compat_3k import *
+
+
 # Installation type. Should be one of:
 # 'R(elease)': installed from a released tarball with the included install
 #              procedure. This is the default.

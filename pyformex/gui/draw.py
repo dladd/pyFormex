@@ -825,7 +825,7 @@ def drawFreeEdges(M,color='black'):
     draw(B,color=color,nolight=True)
     
 
-def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=True):
+def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=None):
     """Draw numbers on all elements of F.
 
     numbers is an array with F.nelems() integer numbers.
@@ -836,6 +836,8 @@ def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=T
     or to allow to view a mark at the centroids.
     If an offset is specified, it is added to the shown numbers.
     """
+    if ontop is None:
+        ontop = getcfg('draw/numbersontop')
     try:
         X = F.centroids()
     except:
