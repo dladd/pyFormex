@@ -29,6 +29,7 @@ rendering capabilities of pyFormex. The full contents of this module
 is available to scripts running in the pyFormex GUI without the need
 to import it.
 """
+from __future__ import print_function
 import pyformex as pf
 import threading,os,sys,types,copy,commands,time
 
@@ -250,12 +251,12 @@ def editFile(fn,exist=False):
     The main author of pyFormex uses 'emacsclient' as editor command,
     to load the files in a running copy of Emacs.
     """
-    print "Edit File: %s" % fn
+    print("Edit File: %s" % fn)
     if pf.cfg['editor']:
         if exist and not os.path.exists(fn):
             return
         pid = utils.spawn('%s %s' % (pf.cfg['editor'],fn))
-        print pid
+        print(pid)
     else:
         warning('No known editor was found or configured')
 

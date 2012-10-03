@@ -26,6 +26,7 @@
 
 Demonstrate multiple viewports.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['surface']
@@ -33,7 +34,7 @@ _techniques = ['viewport', 'color']
 
 from gui.draw import *
 def atExit():
-    print "EXITING"
+    print("EXITING")
     layout(1)
     reset()
 

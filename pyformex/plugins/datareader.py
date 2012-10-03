@@ -36,6 +36,7 @@ FloatString = re.compile('(?P<float>[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE]\d+)?)(?P<st
 
 def splitFloat(s):
     """Match a floating point number at the beginning of a string
+from __future__ import print_function
 
     If the beginning of the string matches a floating point number,
     a list is returned with the float and the remainder of the string;

@@ -36,6 +36,7 @@ BezierCurve
 This example illustrates the use of Bernstein polynomials to evaluate points
 on a Bezier curve.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'curve']

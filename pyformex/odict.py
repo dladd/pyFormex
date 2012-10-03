@@ -35,6 +35,7 @@ def __newobj__(cls, *args):
 
 class ODict(dict):
     """**An ordered dictionary.**
+from __future__ import print_function
 
     This is a dictionary that keeps the keys in order.
     The default order is the insertion order. The current order can be
@@ -211,7 +212,7 @@ if __name__ == "__main__":
     d.sort(['a','b','c'])
     print(d)
     d = ODict([('a',1),('b',2),('c',3),('a',3)])
-    print d
+    print(d)
     d['d'] = 4
     d['e'] = 5
     d['f'] = 6

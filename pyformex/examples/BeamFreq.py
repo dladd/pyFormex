@@ -31,6 +31,7 @@ ftp://bumps.ugent.be/pub/calix/
 Make sure you have version 1.5-a8 or higher.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['FEA','curve','drawing']
@@ -171,8 +172,8 @@ stop
     nshow = min(nshow,ndof)
     freq = eig[:nshow,2]
     basefreq = freq[0]
-    print "Frequencies: %s" % freq
-    print "Multipliers: %s" % (freq/freq[0])
+    print("Frequencies: %s" % freq)
+    print("Multipliers: %s" % (freq/freq[0]))
 
     a = fromfile(fil,sep=' ',).reshape(-1,nnod,6)
     # print a.shape

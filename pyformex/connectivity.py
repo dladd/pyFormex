@@ -32,6 +32,7 @@ are described by refering to the node numbers.
 In a mesh model, points common to adjacent elements are unique, and
 adjacency of elements can easily be detected from common node numbers. 
 """
+from __future__ import print_function
 
 from arraytools import *
 from adjacency import *
@@ -177,9 +178,9 @@ class Connectivity(ndarray):
                 # try to read legacy pickle format, which did not save
                 # the element type (rev < 2360)
                 ndarray.__setstate__(self,state)
-                print "WARNING: Connectivity was restored without element type!"
+                print("WARNING: Connectivity was restored without element type!")
             except:
-                print "I could not unpickle the Connectivity, neither in old not new format"
+                print("I could not unpickle the Connectivity, neither in old not new format")
                 raise
             
 
@@ -922,9 +923,9 @@ class Connectivity(ndarray):
             eltype = ElementType(self.eltype)
             key = eltype.name()
             if scheme.haskey(key):
-                print 'key = %s' % key
+                print('key = %s' % key)
                 trl = scheme[key]
-                print 'trl = %s' % trl
+                print('trl = %s' % trl)
                 elems = self[trl]
                 if not reverse:
                     delattr(self,'eltype')
@@ -1545,5 +1546,5 @@ if __name__ == "__main__":
 
     print(Connectivity().report())
     
-    print connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
+    print(connectedLineElems([[0,1],[0,2],[0,3],[4,5]]))
 # End

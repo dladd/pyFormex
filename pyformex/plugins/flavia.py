@@ -28,6 +28,7 @@ Interface with flavia FE result files.
 
 (C) 2010 Benedict Verhegghe.
 """
+from __future__ import print_function
 from arraytools import *
 from mesh import Mesh,mergeMeshes
 from plugins.fe_post import FeResult
@@ -68,20 +69,20 @@ def readMesh(fn):
         elif line.startswith('Mesh'):
             s = shlex.split(line.lower())
             s = dict(zip(s[0::2],s[1::2]))
-            print s
+            print(s)
             ndim = int(s['dimension'])
             nplex = int(s['nnode'])
             eltype = element_type_translation[s['elemtype']][nplex]
-            print "eltype = %s, ndim = %s" % (eltype,ndim)
+            print("eltype = %s, ndim = %s" % (eltype,ndim))
         elif line.startswith('Coordinates'):
             coords = readCoords(fil,ndim)
-            print "Coords %s" % str(coords.shape)
+            print("Coords %s" % str(coords.shape))
         elif line.startswith('Elements'):
             elems,props = readElems(fil,nplex)
-            print "Elements %s %s" % (elems.shape,props.shape)
+            print("Elements %s %s" % (elems.shape,props.shape))
             meshes.append((elems,props))
         else:
-            print line
+            print(line)
     elems,props = [m[0] for m in meshes],[m[1] for m in meshes]
     maxnod = max([ e.max() for e in elems])
     coords = coords[:maxnod+1]
@@ -144,20 +145,20 @@ def readResults(fn,nnodes,ndim):
             name = s[1]
             restype = s[4]
             domain = s[5]
-            print domain
+            print(domain)
             if domain != 'onnodes':
-                print "Currently only results on nodes can be read"
-                print "Skipping %s %s" % (name,domain)
+                print("Currently only results on nodes can be read")
+                print("Skipping %s %s" % (name,domain))
                 nres = 0
                 continue
             nres = element_results_count[restype][ndim]
         elif line.startswith('Values'):
             if nres > 0:
                 result = readResult(fil,nnodes,nres)
-                print name
+                print(name)
                 results[name] = result
         else:
-            print line
+            print(line)
     return results
 
 
@@ -221,21 +222,21 @@ if __name__ == "draw":
     meshfile = name+'.flavia.msh'
     resfile = utils.changeExt(meshfile,'res')
     M = readMesh(meshfile)
-    print M.coords.shape,M.elems.shape
-    print M.coords,M.elems
+    print(M.coords.shape,M.elems.shape)
+    print(M.coords,M.elems)
     draw(M)
     R = readResults(resfile,M)
     DB = createFeResult(M,R)
     DB.printSteps()
-    print DB.R
-    print DB.datasize
+    print(DB.R)
+    print(DB.datasize)
     DB1 = FeResult()
-    print DB1.datasize
+    print(DB1.datasize)
 
     for key in [ 'U0','U1','U2','U3']:
         v = DB.getres(key)
         if v is not None:
-            print "%s: %s" % (key,v.shape)
+            print("%s: %s" % (key,v.shape))
 
     
 

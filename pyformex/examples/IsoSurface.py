@@ -28,6 +28,7 @@
 This example illustrates the use of the isosurface plugin to construct
 isosurface through a set of data
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['surface']
@@ -103,7 +104,7 @@ def run():
         export({'isosurf':S})
 
     else:
-        print "No surface found"
+        print("No surface found")
 
 
 # The following is to make it work as a script

@@ -40,6 +40,7 @@ The application shows two viewports. In the left viewport element per
 element interpolation is shown. The right viewport shows the result of the
 nodal averaging.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = [ 'mesh','postprocess']
@@ -73,17 +74,17 @@ def run():
     # We use 3 data per GP, because we will use the data directly as colors
     ngp = prod(gprule) # number of datapoints per element
     data = random.rand(M.nelems(),ngp,3)
-    print "Number of data points per element: %s" % ngp
-    print "Original element data: %s" % str(data.shape)
+    print("Number of data points per element: %s" % ngp)
+    print("Original element data: %s" % str(data.shape))
     # compute the data at the nodes, per element
     endata = Q.GP2Nodes(data)
-    print "Element nodal data: %s" % str(endata.shape)
+    print("Element nodal data: %s" % str(endata.shape))
     # compute nodal averages
     nodata = Q.NodalAvg(M.elems+1,endata,M.nnodes())
-    print "Average nodal data: %s" % str(nodata.shape)
+    print("Average nodal data: %s" % str(nodata.shape))
     # extract the colors per element
     colors = nodata[M.elems]
-    print "Color data: %s" % str(colors.shape)
+    print("Color data: %s" % str(colors.shape))
     layout(2)
 
     viewport(0)

@@ -33,12 +33,13 @@ try:
     QtGui.QColor.setAllowX11ColorNames(True)
     pf.X11 = True
 except:
-    print "WARNING: THIS IS NOT AN X11 WINDOW SYSTEM!"
-    print "SOME THINGS MAY NOT WORK PROPERLY!"
+    print("WARNING: THIS IS NOT AN X11 WINDOW SYSTEM!")
+    print("SOME THINGS MAY NOT WORK PROPERLY!")
     pf.X11 = False
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
+from __future__ import print_function
 
     The output is a tuple of three RGB float values ranging from 0.0 to 1.0.
     The input can be any of the following:

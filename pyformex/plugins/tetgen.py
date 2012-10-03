@@ -30,6 +30,7 @@ tetgen program
 tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
 See http://tetgen.org
 """
+from __future__ import print_function
 from coords import *
 from connectivity import Connectivity
 from mesh import Mesh
@@ -125,8 +126,8 @@ def readPolyFile(fn):
     line = skipComments(fil)
     nelems,nbmark = getInts(line,2)
     facetInfo = readFacetsBlock(fil,nelems,nbmark)
-    print "NEXT LINE:"
-    print line
+    print("NEXT LINE:")
+    print(line)
     return nodeInfo[0],facetinfo[0]
 
     ## s = line.strip('\n').split()
@@ -444,7 +445,7 @@ def checkSelfIntersectionsWithTetgen(self,verbose=False):
     from plugins.tetgen import writeSurface
     cmd = 'tetgen -d '
     tmp = tempfile.mktemp('')
-    print tmp
+    print(tmp)
     pf.message("Writing temp file %s" % tmp)
     writeSurface(tmp,self.coords, self.elems)
     if verbose:

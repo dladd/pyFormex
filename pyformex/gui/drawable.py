@@ -59,6 +59,7 @@ _nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9', 'hex20' ]
 
 def glColor(color,alpha=None):
     """Set the OpenGL color, possibly with transparency.
+from __future__ import print_function
 
     color is a tuple of 3 or 4 real values.
     alpha is a single real value.
@@ -482,7 +483,7 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,alpha=1.0,normals='auto',sampli
             
         GLU.gluDeleteNurbsRenderer(nurb)
 
-    print "drawNurbsSurfaces: %s seconds" % t.seconds()
+    print("drawNurbsSurfaces: %s seconds" % t.seconds())
 
 
 def quad4_quad8(x):
@@ -570,7 +571,7 @@ def drawQuadraticSurfaces(x,e,color=None):
     xx[...,1,:,:] = 2*xx[...,1,:,:] - 0.5*(xx[...,0,:,:] + xx[...,2,:,:])
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsSurfaces(xx,knots,knots,color)
-    print "drawQuadraticSurfaces: %s seconds" % t.seconds()
+    print("drawQuadraticSurfaces: %s seconds" % t.seconds())
 
 
 def color_multiplex(color,nparts):
@@ -790,7 +791,7 @@ def nodalSum2(val,elems,tol):
     cnt
     On return each value is replaced with the sum of values at that node.
     """
-    print "!!!!nodalSum2!!!!"
+    print("!!!!nodalSum2!!!!")
     val[:] = normalize(val)
     import timer
     from pyformex.lib import misc
@@ -804,7 +805,7 @@ def nodalSum2(val,elems,tol):
     ##     #averageDirection(k,tol)
     ##     misc.averageDirection(k,tol)
     ##     val[wi] = k
-    print "TIME %s \n" % t.seconds()
+    print("TIME %s \n" % t.seconds())
 
 
 def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):

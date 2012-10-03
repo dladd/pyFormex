@@ -40,6 +40,7 @@ Then, the original and the transformed structure are first shown
 superimposed, in black and red respectively. Transparency is set on.
 After the pause, the original structure is removed, and transparency is set off.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry']

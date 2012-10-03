@@ -29,6 +29,7 @@ This module defines a specialized array class for representing adjacency
 of items of a single type. This is e.g. used in mesh models, to store
 the adjacent elements.
 """
+from __future__ import print_function
 
 from arraytools import *
 

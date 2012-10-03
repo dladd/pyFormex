@@ -29,6 +29,7 @@ from datetime import datetime
 
 class Timer(object):
     """A class for measuring elapsed time.
+from __future__ import print_function
 
     A Timer object measures elapsed real time since a specified time, which
     by default is the time of the creation of the Timer.

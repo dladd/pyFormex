@@ -64,6 +64,7 @@ for the displayed cube by pressing the **Permutations** button.
 This number is not stored, it is calculated each time. It's a nice example
 of how easily Python can handle huge numbers.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['illustration','game']

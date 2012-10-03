@@ -30,6 +30,7 @@ but to be loaded into pyFormex using the plugin facility.
 The geometry menu is intended to become the major interactive geometry menu
 in pyFormex. 
 """
+from __future__ import print_function
 
 import pyformex as pf
 import utils
@@ -154,7 +155,7 @@ def readGeometry(filename,filetype=None):
     if filetype is None:
         filetype = utils.fileTypeFromExt(filename)
         
-    print "Reading file of type %s" % filetype
+    print("Reading file of type %s" % filetype)
 
     if filetype == 'pgf' or filetype == 'pgf.gz':
         res = GeometryFile(filename).read()
@@ -194,12 +195,12 @@ def importGeometry(select=True,draw=True,ftype=None):
         res = readGeometry(fn)
         export(res)
         #selection.readFromFile(fn)
-        print "Items read: %s" % [ "%s(%s)" % (k,res[k].__class__.__name__) for k in res]
+        print("Items read: %s" % [ "%s(%s)" % (k,res[k].__class__.__name__) for k in res])
         if select:
             selection.set(res.keys())
-            print selection.names
+            print(selection.names)
             surface_menu.selection.set([n for n in selection.names if isinstance(named(n),TriSurface)])
-            print surface_menu.selection.names
+            print(surface_menu.selection.names)
 
             if draw:
                 selection.draw()
@@ -268,7 +269,7 @@ def writeGeometry(obj,filename,filetype=None,shortlines=False):
     if filetype is None:
         filetype = utils.fileTypeFromExt(filename)
         
-    print "Writing file of type %s" % filetype
+    print("Writing file of type %s" % filetype)
 
     if filetype in [ 'pgf', 'pgf.gz', 'pyf' ]:
         # Can write anything
@@ -370,7 +371,7 @@ def toMesh(suffix=''):
     if suffix:
         names = [ n + suffix for n in names ]
 
-    print "CONVERTING %s" % names
+    print("CONVERTING %s" % names)
     meshes =  dict([ (n,o.toMesh()) for n,o in zip(names,objects) if hasattr(o,'toMesh')])
     print("Converted %s" % meshes.keys())
     export(meshes)
@@ -395,7 +396,7 @@ def toSurface(suffix=''):
     objects = [ named(n) for n in names ]
 
     ok = [ o.nplex()==3 for o in objects ]
-    print ok
+    print(ok)
     if not all(ok):
         warning("Only objects with plexitude 3 can be converted to TriSurface. I can not convert the following objects: %s" % [ n for i,n in zip(ok,names) if not i ])
         return
@@ -403,7 +404,7 @@ def toSurface(suffix=''):
     if suffix:
         names = [ n + suffix for n in names ]
     
-    print "CONVERTING %s" % names
+    print("CONVERTING %s" % names)
     surfaces =  dict([ (n,TriSurface(o)) for n,o in zip(names,objects)])
     print("Converted %s" % surfaces.keys())
     export(surfaces)
@@ -636,12 +637,12 @@ def createSphere():
             name = autoName(res['object type']).next()
         if res['method'] == 'icosa':
             F = simple.sphere(res['ndiv'])
-            print "Surface has %s vertices and %s faces" % (F.ncoords(),F.nelems())
+            print("Surface has %s vertices and %s faces" % (F.ncoords(),F.nelems()))
             F = convert_Mesh_TriSurface(F,res['object type'])
         else:
             F = simple.sphere3(res['nx'],res['ny'])
             F = convertFormex(F,res['object type'])
-            print "Surface has  %s faces" % F.nelems()
+            print("Surface has  %s faces" % F.nelems())
         export({name:F})
         selection.set([name])
         if res['object type'] == 'TriSurface':
@@ -709,9 +710,9 @@ def transformPrincipal():
        
 def narrow_selection(clas):
     global selection
-    print "SELECTION ALL TYPES",selection.names
+    print("SELECTION ALL TYPES",selection.names)
     selection.set([n for n in selection.names if isinstance(named(n),clas)])
-    print "SELECTION MESH TYPE",selection.names
+    print("SELECTION MESH TYPE",selection.names)
     
 
 def reverseMesh():
@@ -797,8 +798,8 @@ def fuseMesh():
         ppb = res['Points per box'],
         ) for m in meshes ]
     after = [ m.ncoords() for m in meshes ]
-    print "Number of points before fusing: %s" % before
-    print "Number of points after fusing: %s" % after
+    print("Number of points before fusing: %s" % before)
+    print("Number of points after fusing: %s" % after)
 
     names = [ "%s_fused" % n for n in selection.names ]
     export2(names,meshes)
@@ -822,7 +823,7 @@ def subdivideMesh():
 
     meshes = [ named(n) for n in selection.names ]
     eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
-    print "eltypes in selected meshes: %s" % eltypes
+    print("eltypes in selected meshes: %s" % eltypes)
     if len(eltypes) > 1:
         warning("I can only subdivide meshes with the same element type\nPlease narrow your selection before trying conversion.")
         return
@@ -865,7 +866,7 @@ def convertMesh():
 
     meshes = [ named(n) for n in selection.names ]
     eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
-    print "eltypes in selected meshes: %s" % eltypes
+    print("eltypes in selected meshes: %s" % eltypes)
     if len(eltypes) > 1:
         warning("I can only convert meshes with the same element type\nPlease narrow your selection before trying conversion.")
         return
@@ -882,22 +883,22 @@ def convertMesh():
             ])
         if res:
             globals().update(res)
-            print "Selected conversion %s" % _conversion
+            print("Selected conversion %s" % _conversion)
             totype = _conversion.split()[-1]
             names = [ "%s_converted" % n for n in selection.names ]
             meshes = [ m.convert(totype) for m in meshes ]
             if _merge == 'Each':
                 meshes = [ m.fuse() for m in meshes ]
             elif  _merge == 'All':
-                print _merge
+                print(_merge)
                 coords,elems = mergeMeshes(meshes)
-                print elems
+                print(elems)
                 ## names = [ "_merged_mesh_%s" % e.nplex() for e in elems ]
                 ## meshes = [ Mesh(coords,e,eltype=meshes[0].eltype) for e in elems ]
                 ## print meshes[0].elems
                 meshes = [ Mesh(coords,e,m.prop,m.eltype) for e,m in zip(elems,meshes) ]
             if _compact:
-                print "compacting meshes"
+                print("compacting meshes")
                 meshes = [ m.compact() for m in meshes ]
                 
             export2(names,meshes)

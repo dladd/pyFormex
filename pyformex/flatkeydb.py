@@ -30,6 +30,7 @@ A simple database stored as a flat text file.
 | (C) 2005 Benedict Verhegghe.
 | Distributed under the GNU GPL version 3 or later.
 """
+from __future__ import print_function
 
 
 # A few utility functions

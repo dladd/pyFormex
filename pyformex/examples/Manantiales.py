@@ -27,6 +27,7 @@
 A building with a scallop dome roof, inspired by the shape of
 Los Manantiales by Felix Candela.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface','domes']
@@ -152,12 +153,12 @@ def run():
         nmod = 8,
         mmod = 8,
         )
-    print defaults
+    print(defaults)
     try:
         defaults.update(named('_Manantiales_data'))
     except:
         pass
-    print defaults
+    print(defaults)
 
     nmod = 8      # number of modules in radial direction
     mmod = 8      # number of modules over 1 arcade in tangential direction 

@@ -43,6 +43,7 @@ from prefMenu import updateSettings
 
 def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     """Open a (new or old) Project file.
+from __future__ import print_function
 
     A dialog is presented to ask the user for a Project file name and the
     access modalities. The parameters help in setting sensible defaults
@@ -93,7 +94,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
         pf.GUI.setBusy(False)
 
     proj.hits = 0
-    print "START COUNTING HITS"
+    print("START COUNTING HITS")
     return proj
 
 
@@ -489,7 +490,7 @@ def showImage():
 
 
 def listAll():
-    print pf.PF
+    print(pf.PF)
 
 
 
@@ -535,7 +536,7 @@ def recordSession(stop=0):
     global _recording_pid
     from guimain import hasDRI
 
-    print "RECORDING with dri=%s" % pf.options.dri
+    print("RECORDING with dri=%s" % pf.options.dri)
 
     ok = utils.checkExternal('recordmydesktop')
     if not ok:
@@ -548,18 +549,18 @@ def recordSession(stop=0):
     if not fn:
         return
     
-    print "Recording your session to file %s" % fn
+    print("Recording your session to file %s" % fn)
     x,y,w,h = pf.GUI.XGeometry()
     cmd = "recordmydesktop -x %s -y %s --width %s --height %s --no-frame -o %s" % (x,y,w,h,fn)
-    print cmd
+    print(cmd)
     pid = utils.spawn(cmd)
-    print "Recording pid = %s" % pid
+    print("Recording pid = %s" % pid)
     _recording_pid = pid
 
 
 def stopRecording(stop=15):
     global _recording_pid
-    print "STOP RECORDING"
+    print("STOP RECORDING")
     if _recording_pid:
         # Was recording: finish it
         utils.killProcesses([_recording_pid],stop)

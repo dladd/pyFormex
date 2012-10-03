@@ -26,6 +26,7 @@
 
 Example for testing the low level drawing functions
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','mesh','drawing']
@@ -111,10 +112,10 @@ def show():
     globals().update(res)
 
     G = select_geom(geom,nplex,eltype)
-    print "GEOM: nelems=%s, nplex=%s" % (G.nelems(),G.nplex())
+    print("GEOM: nelems=%s, nplex=%s" % (G.nelems(),G.nplex()))
     C = select_color(G,color)
     if C is not None:
-        print "COLORS: shape=%s" % str(C.shape)
+        print("COLORS: shape=%s" % str(C.shape))
     draw(G,color=C,clear=True)
 
 

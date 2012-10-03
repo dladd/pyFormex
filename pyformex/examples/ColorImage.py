@@ -34,6 +34,7 @@ the image pixel values.
 Finally, before the result is drawn, the geometry can be transformed into some
 other shape or be projected on a another surface.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['image']
@@ -62,7 +63,7 @@ def loadImage(fn):
         return None
 
     w,h = image.width(),image.height()
-    print "size = %sx%s" % (w,h)
+    print("size = %sx%s" % (w,h))
 
     diag = currentDialog()
     if diag:
@@ -113,7 +114,7 @@ def run():
     globals().update(res)
 
     if image is None:
-        print "Loading image"
+        print("Loading image")
         loadImage(filename)
 
     if image is None:
@@ -121,10 +122,10 @@ def run():
 
     # Create the colors
     color,colortable = image2glcolor(image.scaled(nx,ny))
-    print "Converting image to color array"
+    print("Converting image to color array")
 
     # Create a 2D grid of nx*ny elements
-    print "Creating grid"
+    print("Creating grid")
     R = float(nx)/pi
     L = float(ny)
     F = Formex('4:0123').replic2(nx,ny).centered()
@@ -132,11 +133,11 @@ def run():
 
     # Transform grid and draw
     def drawTransform(transform):
-        print "Transforming grid"
+        print("Transforming grid")
         trf = transforms[transform]
         G = trf(F)
         clear()
-        print "Drawing Colored grid"
+        print("Drawing Colored grid")
         draw(G,color=color,colormap=colortable)
         drawText('Created with pyFormex',20,20,size=24)
 

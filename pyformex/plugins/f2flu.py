@@ -30,6 +30,7 @@ pyFormex models to Fluent.
 This script should be executed with the command
    pyformex --nogui f2flu.py  <stl_model>
 """
+from __future__ import print_function
 
 import sys
 from plugins import tetgen

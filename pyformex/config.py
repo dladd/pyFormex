@@ -48,6 +48,7 @@ What
    Config dictionary. The current version is limited to one level of
    sectioning.
 """
+from __future__ import print_function
 
 import copy
 from mydict import Dict,returnNone

@@ -34,6 +34,7 @@ image and can possibly be transformed to a sphere or a half sphere.
 .. note:
   This example is slow when using high resolution images.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['image']
@@ -63,9 +64,9 @@ def run():
 
     # Create the colors
     color,colormap = image2glcolor(im.scaled(nx,ny))
-    print "Size of colors: %s" % str(color.shape)
+    print("Size of colors: %s" % str(color.shape))
     if colormap is not None:
-        print "Size of colormap: %s" % str(colormap.shape)
+        print("Size of colormap: %s" % str(colormap.shape))
 
 
     part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])

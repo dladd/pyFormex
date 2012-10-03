@@ -26,6 +26,7 @@
 """Connect
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['formex','surface']
@@ -46,7 +47,7 @@ def run():
 
     # Split in parts by testing y-position; note use of implicit loop!
     G = [ F.clip(F.test(dir=1,min=i-0.5,max=i+0.5)) for i in range(5) ]
-    print [ Gi.nelems() for Gi in G ]
+    print([ Gi.nelems() for Gi in G ])
 
     def annot(char):
         [ drawText3D(G[i][0,0]+[-0.5,0.,0.],"%s%s"%(char,i)) for i,Gi in enumerate(G) ]
@@ -125,9 +126,9 @@ def run():
     draw(L)
 
     # Convert to a Mesh
-    print "nelems = %s, nplex = %s, coords = %s" % (L.nelems(),L.nplex(),L.coords.shape)
+    print("nelems = %s, nplex = %s, coords = %s" % (L.nelems(),L.nplex(),L.coords.shape))
     M = L.toMesh()
-    print "nelems = %s, nplex = %s, coords = %s" % (M.nelems(),M.nplex(),M.coords.shape)
+    print("nelems = %s, nplex = %s, coords = %s" % (M.nelems(),M.nplex(),M.coords.shape))
     clear()
     draw(M,color=yellow,mode='flatwire')
     drawNumbers(M)
@@ -137,10 +138,10 @@ def run():
     # Convert to a surface
     from plugins.trisurface import TriSurface
     S = TriSurface(M)
-    print "nelems = %s, nplex = %s, coords = %s" % (S.nelems(),S.nplex(),S.coords.shape)
+    print("nelems = %s, nplex = %s, coords = %s" % (S.nelems(),S.nplex(),S.coords.shape))
     clear()
     draw(S)
-    print "Total surface area: %s" % S.area()
+    print("Total surface area: %s" % S.area())
     export({'surface-1':S})
     setDrawOptions({'bbox':'auto'})
 

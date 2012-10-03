@@ -26,6 +26,7 @@
 
 This module provides access to GTS from insisde pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from coords import *

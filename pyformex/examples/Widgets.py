@@ -26,6 +26,7 @@
 """Widgets
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['dialog']
@@ -34,15 +35,15 @@ _techniques = []
 from gui.draw import *
 
 def run():
-    print error("This is a simulated error, to demonstrate how an error message would be shown to the user.\nJust click OK and the error will go away.")
+    print(error("This is a simulated error, to demonstrate how an error message would be shown to the user.\nJust click OK and the error will go away."))
 
-    print warning("""
+    print(warning("""
 <h1>This is a warning.</h1>
 A warning draws attention of the user on special conditions.<br/>
 Remark that we can use plain text or html.
-""")
+"""))
 
-    print showInfo("""..
+    print(showInfo("""..
 
 A text in ReST
 ==============
@@ -51,9 +52,9 @@ A text in ReST
   It just displays information for the user.
 - ReST text is automatically detected if it starts with '..'.
 
-""")
+"""))
 
-    print ask("Answer this question with yes or no",['Yes','No']) 
+    print(ask("Answer this question with yes or no",['Yes','No'])) 
 
 if __name__ == 'draw':
     run()

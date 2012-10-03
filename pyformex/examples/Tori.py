@@ -26,6 +26,7 @@
 """Torus variants
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
@@ -55,7 +56,7 @@ def series():
         
 def drawTorus(m,n):
     clear()
-    print m,n
+    print(m,n)
     draw(torus(m,n),None)
     
 def nice():

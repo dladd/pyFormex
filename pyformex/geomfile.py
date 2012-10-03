@@ -28,6 +28,7 @@
 This module defines a class to work with files in the native
 pyFormex Geometry File Format.
 """
+from __future__ import print_function
 
 import utils
 import filewrite
@@ -87,7 +88,7 @@ class GeometryFile(object):
         """
         self.fil.close()
         self.__init__(self.fil.name,mode)
-        print self.fil,self.writing,self.isname
+        print(self.fil,self.writing,self.isname)
 
 
     def close(self):

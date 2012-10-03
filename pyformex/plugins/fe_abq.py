@@ -46,6 +46,7 @@ Then there are higher level functions that read data from the property module
 and write them to the Abaqus input file and some data classes to organize all
 the data involved with the finite element model.
 """
+from __future__ import print_function
 
 from plugins.properties import *
 from plugins.fe import *
@@ -248,7 +249,7 @@ def fmtMaterial(mat):
     
     out ="*MATERIAL, NAME=%s\n" % mat.name
     materialswritten.append(mat.name)
-    print materialswritten
+    print(materialswritten)
     
     if mat.elasticity is None or mat.elasticity == 'linear':
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
@@ -724,7 +725,7 @@ def fmtSurfaceInteraction(prop):
                 out += "*FRICTION\n%s\n" % float(p.friction)
         if p.surfacebehavior:
             out += "*Surface Behavior"
-            print "writing Surface Behavior"
+            print("writing Surface Behavior")
             if p.noseparation == True:
                 out += ", no separation"
             if p.pressureoverclosure:	
@@ -2157,14 +2158,14 @@ if __name__ == "script" or __name__ == "draw":
 
     def TestwriteFormatLines():
         a = arange(27)
-        print fmtData1D(a)
-        print fmtData1D(a,5)
-        print fmtData1D(a,12)
+        print(fmtData1D(a))
+        print(fmtData1D(a,5))
+        print(fmtData1D(a,12))
 
         a = a.reshape(3,9)
-        print fmtData(a)
-        print fmtData(a,5)
-        print fmtData(a,12)
+        print(fmtData(a))
+        print(fmtData(a,5))
+        print(fmtData(a,12))
 
     TestwriteFormatLines()
     exit()

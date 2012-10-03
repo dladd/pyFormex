@@ -26,6 +26,7 @@
 """Circle
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
@@ -101,7 +102,7 @@ def run():
             conn1 = concatenate([conn[1:],conn[:1]])
             G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn),c2.select(conn1)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
             smooth()
-            print G.eltype
+            print(G.eltype)
             draw(G)
 
         if res['Fly Through']:

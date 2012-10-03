@@ -27,6 +27,7 @@
 This script creates an image of how coordinates are structures in a Formex.
 It was intended mainly to create an illustration for the manual.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['illustration']

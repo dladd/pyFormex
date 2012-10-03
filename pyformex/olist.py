@@ -29,6 +29,7 @@ While most of these functions look (and work) like set operations, their
 result differs from using Python builtin Sets in that they preserve the
 order of the items in the lists.
 """
+from __future__ import print_function
 
 def roll(a,n=1):
     """Roll the elements of a list n positions forward (backward if n < 0)"""
@@ -183,8 +184,8 @@ if __name__ == "__main__":
     B = String("bbbb")
 
     L = List([A,B])
-    print L.upper()
+    print(L.upper())
 
-    print L.Len()
+    print(L.Len())
     
 # End

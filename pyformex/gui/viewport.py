@@ -29,6 +29,7 @@ module :mod:`canvas`.
 `QtCanvas` is a single interactive OpenGL canvas, while `MultiCanvas`
 implements a dynamic array of multiple canvases.
 """
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -711,7 +712,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             if self.trackfunc:
-                print "ENABLE TRACKING"
+                print("ENABLE TRACKING")
                 pf.canvas.camera.setTracking(True)
 
         elif action == MOVE:
@@ -1461,8 +1462,8 @@ Viewport %s;  Current:%s;  Settings:
 
     def link(self,vp,to):
         """Link viewport vp to to"""
-        print "LINK %s to %s" % (vp,to)
-        print "LINKING CURRENTLY DISABLED"
+        print("LINK %s to %s" % (vp,to))
+        print("LINKING CURRENTLY DISABLED")
         return
         nvps = len(self.all)
         if vp in range(nvps) and to in range(nvps) and vp != to:
@@ -1706,7 +1707,7 @@ Viewport %s;  Current:%s;  Settings:
 
     def link(self,vp,to):
         """Link viewport vp to to"""
-        print "LINK %s to %s" % (vp,to)
+        print("LINK %s to %s" % (vp,to))
         nvps = len(self.all)
         if vp in range(nvps) and to in range(nvps) and vp != to:
             to = self.all[to]

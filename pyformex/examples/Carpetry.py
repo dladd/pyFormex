@@ -28,6 +28,7 @@
 This example illustrates the use of the Mesh conversion techniques and the
 creation of colored value plots on surfaces.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['mesh','illustration','surface']
@@ -89,12 +90,12 @@ def run():
             M = M.convert('tri3')
             conversions.append('tri3')
 
-        print "%s patches" % M.nelems()
-        print "conversions: %s" % conversions
+        print("%s patches" % M.nelems())
+        print("conversions: %s" % conversions)
 
         # Coloring
         key = possible_keys[random.randint(nkeys)]
-        print "colored by %s" % key
+        print("colored by %s" % key)
         func = V[key][0]
         S = trisurface.TriSurface(M)
         val = func(S)
@@ -112,7 +113,7 @@ def run():
     if pf.interactive:
         canvasSize(nx*200,ny*200)
         #canvasSize(720,576)
-        print "running interactively"
+        print("running interactively")
         n = 1#ask("How many?",['0','1000','100','10','1'])
         n = int(n)
         save = False#ack("Save images?")
@@ -131,10 +132,10 @@ def run():
 
     else:
         import sys
-        print sys.argv
-        print argv
+        print(sys.argv)
+        print(argv)
         canvasSize(nx*200,ny*200)
-        print "just saving image"
+        print("just saving image")
         from gui import image,guimain
         carpet(M)
         image.save('testje2.png')

@@ -27,6 +27,7 @@
 This module contains the functions to detect and load the pyFormex
 plugin menus.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from types import ModuleType
@@ -138,7 +139,7 @@ def show_menu(name,before='help'):
 def close_menu(name):
     """Close the menu."""
     name.replace('_menu','')
-    print "CLOSING MENU %s" % name 
+    print("CLOSING MENU %s" % name) 
     pf.GUI.menu.removeItem(name)
 
 
@@ -156,12 +157,12 @@ def register_plugin_menu(name,menudata,before=['help']):
 def reload_menu(name):
     """Reload the menu."""
     before = pf.GUI.menu.nextitem(_menu)
-    print "Menu %s was before %s" % (_menu,before)
+    print("Menu %s was before %s" % (_menu,before))
     close_menu()
     import plugins
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print pf.GUI.menu.actionList()
+    print(pf.GUI.menu.actionList())
 
 # End

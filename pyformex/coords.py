@@ -37,6 +37,7 @@ transformation methods of this class.
 While the user will mostly use the higher level classes, he might occasionally
 find good reason to use the :class:`Coords` class directly as well.
 """
+from __future__ import print_function
 
 from arraytools import *
 from lib import misc
@@ -2423,8 +2424,8 @@ if __name__ == "__main__":
         try:
             testX(Coords())
         except:
-            print "Some test(s) failed for an empty Coords"
-            print "But that surely is no surprise"
+            print("Some test(s) failed for an empty Coords")
+            print("But that surely is no surprise")
         return
 
         

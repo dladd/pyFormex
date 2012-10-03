@@ -35,6 +35,7 @@ This function is called creating a dome with diagonals (g).
 The 'withProp method' is then used to create a copy without the diagonals (h).
 Both are drawn at the same time, juxtaposed by the align function.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','domes']

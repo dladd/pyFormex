@@ -29,6 +29,7 @@ This module defines the Mesh class, which can be used to describe discrete
 geometrical models like those used in Finite Element models.
 It also contains some useful functions to create such models.
 """
+from __future__ import print_function
 
 from coords import *
 from formex import Formex
@@ -1789,9 +1790,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         over `n` steps of length `step` in direction of axis `dir`.
           
         """
-        print "Extrusion over %s steps of length %s" % (n,step)
+        print("Extrusion over %s steps of length %s" % (n,step))
         x = [ self.coords.trl(dir,i*n*step/degree) for i in range(1,degree+1) ]
-        print bbox(x)
+        print(bbox(x))
         return self.connect([self.coords] + x,n*degree,degree=degree,eltype=eltype)
         #return self.connect(self.trl(dir,n*step),n*degree,degree=degree,eltype=eltype)
 

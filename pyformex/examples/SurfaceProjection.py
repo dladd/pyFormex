@@ -30,6 +30,7 @@ trisurface.intersectSurfaceWithLines as a method to render a 2D image
 onto a 3D surface.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']
@@ -134,14 +135,14 @@ def run():
     globals().update(res)
 
     nx,ny = px*kx,py*ky # pixels
-    print 'The image is reconstructed with %d x %d pixels'%(nx, ny)
+    print('The image is reconstructed with %d x %d pixels'%(nx, ny))
 
     F = Formex('4:0123').replic2(nx,ny).centered()
     if image is None:
-        print "Loading image"
+        print("Loading image")
         image = loadImage(filename)
         wpic,hpic = image.width(),image.height()
-        print "Image size is %sx%s" % (wpic,hpic)
+        print("Image size is %sx%s" % (wpic,hpic))
 
     if image is None:
         return
@@ -150,7 +151,7 @@ def run():
     color,colortable = image2glcolor(image.scaled(nx,ny))
     # Reorder by patch
     pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
-    print "Shape of the colors array: %s" % str(pcolor.shape)
+    print("Shape of the colors array: %s" % str(pcolor.shape))
 
     mH = makeGrid(px,py,'Quad8')
 
@@ -165,7 +166,7 @@ def run():
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()
     zoom(0.5)
-    print "Create %s x %s patches" % (px,py)
+    print("Create %s x %s patches" % (px,py))
 
     # Create the transforms
     base = makeGrid(1,1,'Quad8').coords[0]
@@ -184,12 +185,12 @@ def run():
 
         x = connect([mH0.points(), mH1.points()])
         dx = draw(x)
-        print "Creating intersection with surface"
+        print("Creating intersection with surface")
         pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
 
         if len(x) != len(pts):
-            print "Some of the lines do not intersect the surface:"
-            print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
+            print("Some of the lines do not intersect the surface:")
+            print(" %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil)))
             return
 
     dp = draw(pts, marksize=6, color='white')
@@ -200,11 +201,11 @@ def run():
         x = connect([mH0.points(),mH2.points()])
         dx = draw(x)
 
-    print "Create projection mapping using the grid points"
+    print("Create projection mapping using the grid points")
     d2 = drawImage(mH2.trl([0.,0.,0.01]),base,patch)
     # small translation to make sure the image is above the surface, not cutting it
 
-    print "Finally show the finished image"
+    print("Finally show the finished image")
     undraw(dp);
     undraw(dx);
     undraw(d0);

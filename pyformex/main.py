@@ -25,6 +25,12 @@
 
 # This is the only pyFormex module that is imported by the main script,
 # so this is the place to put startup code
+"""pyFormex main module
+
+This module contains the main function of pyFormex, which is run by the
+startup script.
+"""
+from __future__ import print_function
 import pyformex as pf
 
 import sys,os
@@ -52,7 +58,7 @@ if os.path.exists(os.path.join(pyformexdir,'.svn')):
 
     msg = checkLibraries()
     if msg:
-        print "Rebuilding pyFormex libraries, please wait"
+        print("Rebuilding pyFormex libraries, please wait")
         cmd = "cd %s/..; make lib" % pyformexdir
         os.system(cmd)
         msg = checkLibraries()
@@ -95,7 +101,7 @@ if utils.SaneVersion(found_version) < utils.SaneVersion(minimal_version):
     startup_warnings += """
 Your Python version is %s, but pyFormex requires Python >= %s. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 requires only minor adjustements. Lower versions are problematic.
 """ % (found_version,minimal_version)
-    print startup_warnings
+    print(startup_warnings)
     sys.exit()
     
 if utils.SaneVersion(found_version[:3]) > utils.SaneVersion(target_version):
@@ -144,11 +150,11 @@ def printcfg(key):
 def remove_pyFormex(pyformexdir,bindir):
     """Remove the pyFormex installation."""
     if pf.installtype == 'P':
-        print "It looks like this version of pyFormex was installed from a distribution package. You should use your distribution's package tools to remove the pyFormex installation."
+        print("It looks like this version of pyFormex was installed from a distribution package. You should use your distribution's package tools to remove the pyFormex installation.")
         return
     
     if pf.installtype == 'S':
-        print "It looks like you are running pyFormex directly from a source tree at %s. I will not remove it. If you have enough privileges, you can just remove the whole source tree from the file system." % pyformexdir
+        print("It looks like you are running pyFormex directly from a source tree at %s. I will not remove it. If you have enough privileges, you can just remove the whole source tree from the file system." % pyformexdir)
         return
     
         
@@ -547,7 +553,7 @@ def run(argv=[]):
             else:
                 files = utils.sourceFiles(relative=True,extended=extended)
             if pf.options.listfiles:
-                print '\n'.join(files)
+                print('\n'.join(files))
             else:
                 cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],''.join([" '%s'" % f for f in files]))
                 #print cmd 

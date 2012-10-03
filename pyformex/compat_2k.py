@@ -32,9 +32,22 @@ Note that we can not implement this as a single module and test for
 the Python version inside that module. The differences between the
 versions might cause compilation to fail.
 """
-
+from __future__ import print_function
+from __future__ import print_function
+## except:
+##     import sys
+##     print("""
+## You system is running an old version of Python:
+## %s
+## In a near future we will no longer support this Python version.
+## We strongly urge you to upgrade to at least Python 2.6
+## """ % sys.version)
+##     s = raw_input('Type YES if you want to continue with this version: ')
+##     if s != 'YES':
+##         sys.exit()
+        
+    
 def execFile(*args,**kargs):
-    print "IT WORKS"
     return execfile(*args,**kargs)
 
 # End

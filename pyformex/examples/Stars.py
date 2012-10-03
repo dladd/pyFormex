@@ -30,6 +30,7 @@ applied on the geometry and the stars are place with random position and
 orientation in a confined space. Finally, the stars are drawn with random
 RGB colors.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']

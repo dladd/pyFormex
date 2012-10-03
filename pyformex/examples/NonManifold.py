@@ -27,6 +27,7 @@
 This example illustrates the detection of non-manifold nodes and edges in a
 Mesh.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
@@ -94,20 +95,20 @@ def showNonMan(M):
         drawNumbers(M,color=red)
         
     nm = M.nonManifoldNodes()
-    print nm
+    print(nm)
     if len(nm) > 0:
         draw(M.coords[nm],marksize=10,color=red)
         
     nm = M.nonManifoldEdgeNodes()
-    print nm
+    print(nm)
     if len(nm) > 0:
         draw(M.coords[nm],marksize=10,color=blue)
 
     nm = M.nonManifoldEdges()
-    print nm
+    print(nm)
     if len(nm) > 0:
         ed = M.edges[nm]
-        print ed
+        print(ed)
         ME = Mesh(M.coords,ed,eltype='line2')
         draw(ME,color=cyan,linewidth=5)
     

@@ -53,6 +53,7 @@ This process is illustrated in this example.
 - Finally F3 is obtained by rotating F2 over 180 degrees around the z-axis
   (and adding it to F2).
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']

@@ -27,6 +27,7 @@
 
 Graphic Tools for pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from coords import *

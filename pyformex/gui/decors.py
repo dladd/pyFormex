@@ -22,7 +22,12 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""2D decorations for the OpenGL canvas."""
+"""2D decorations for the OpenGL canvas.
+
+2D decorations are objects that are drawn in 2D on the flat canvas
+instead of through the 3D OpenGL engine.
+"""
+from __future__ import print_function
 
 from OpenGL import GL
 from PyQt4 import QtOpenGL

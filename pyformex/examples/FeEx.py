@@ -25,6 +25,7 @@
 """FeEx
 
 """
+from __future__ import print_function
 _status = 'unchecked'
 _level = 'advanced'
 _topics = ['FEA']
@@ -254,7 +255,7 @@ def getPickedElems(K,p):
         
 
 def printModel():
-    print "model:",model
+    print("model:",model)
 
 
 ################# Add properties ######################
@@ -289,7 +290,7 @@ def setMaterial():
         if K:
             for k in range(len(parts)):
                 e = getPickedElems(K,k) + model.celems[k]
-                print k,e
+                print(k,e)
                 if len(e) > 0:
                     PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
 
@@ -315,9 +316,9 @@ def setBoundary():
         ycon = res['y-constraint']
         nodeset = pickNodes()
         if len(nodeset) > 0:
-            print nodeset
+            print(nodeset)
             bcon = [int(xcon),int(ycon),0,0,0,0]
-            print "SETTING BCON %s" % bcon
+            print("SETTING BCON %s" % bcon)
             PDB.nodeProp(set=nodeset,bound=[xcon,ycon,0,0,0,0])
 
 def deleteAllBcons():
@@ -348,8 +349,8 @@ def setCLoad():
         yload = res['y-load']
         nodeset = pickNodes()
         if len(nodeset) > 0:
-            print nodeset
-            print "SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.]
+            print(nodeset)
+            print("SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.])
             PDB.nodeProp(set=nodeset,tag="Load-%s"%lc,cload=[xload,yload,0.,0.,0.,0.])
             nloads = max(nloads,lc+1)
 
@@ -378,7 +379,7 @@ def setELoad():
         for k in K.keys():
             v = K[k]
             elems,edges = v // 4, v % 4
-            print k,elems,edges
+            print(k,elems,edges)
             for el,edg in zip(elems,edges):
                 for label in 'xy':
                     if edge_load[label] != 0.:
@@ -389,12 +390,12 @@ def deleteAllELoads():
 
 
 def printDB():
-    print "\n*** Node properties:"
+    print("\n*** Node properties:")
     for p in PDB.nprop:
-        print p
-    print "\n*** Element properties:"
+        print(p)
+    print("\n*** Element properties:")
     for p in PDB.eprop:
-        print p
+        print(p)
 
 
 ############################# Abaqus ##############################
@@ -408,7 +409,7 @@ def createAbaqusInput():
 
     jobname = res['JobName']
     if not jobname:
-        print "No Job Name: writing to sys.stdout"
+        print("No Job Name: writing to sys.stdout")
         jobname = None
 
     out = [ Output(type='history'),
@@ -449,7 +450,7 @@ def createCalixInput():
     header = res['header']
     nzem = int(res['zem'])
     if not jobname:
-        print "No Job Name: writing to sys.stdout"
+        print("No Job Name: writing to sys.stdout")
         jobname = None
 
     filnam = jobname+'.dta'
@@ -460,7 +461,7 @@ def createCalixInput():
     nelems = model.celems[-1]
     nplex = [ e.shape[1] for e in model.elems ]
     if min(nplex) != max(nplex):
-        print [ e.shape for e in model.elems ]
+        print([ e.shape for e in model.elems ])
         warning("All parts should have same element type")
         return
     nodel = nplex[0]
@@ -476,7 +477,7 @@ def createCalixInput():
     matnr = zeros(nelems,dtype=int32)
     for i,mat in enumerate(matprops):  # proces in same order as above!
         matnr[mat.set] = i+1
-    print matnr
+    print(matnr)
     nmats = mats.shape[0]
     nloads = 0
     # Header
@@ -725,7 +726,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
     import calpy
     reload(calpy)
-    print calpy.__path__
+    print(calpy.__path__)
     
     calpy.options.optimize=True
     from calpy import femodel,fe_util,plane
@@ -746,18 +747,18 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             verbose = res['Verbose Mode']
 
     if not jobname:
-        print "No Job Name: bailing out"
+        print("No Job Name: bailing out")
         return
    
     # OK, start calpy
-    print "Starting the Calpy analysis module --- this might take some time"
+    print("Starting the Calpy analysis module --- this might take some time")
     pf.app.processEvents()
     starttime = time.clock()
 
     calpyModel = femodel.FeModel(2,"elast","Plane_Stress")
     calpyModel.nnodes = model.coords.shape[0]
     calpyModel.nelems = model.celems[-1]
-    print [ e.shape for e in model.elems ]
+    print([ e.shape for e in model.elems ])
     nplex = [ e.shape[1] for e in model.elems ]
     if min(nplex) != max(nplex):
         warning("All parts should have same element type")
@@ -787,7 +788,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
     # The number of free DOFs remaining
     calpyModel.ndof = bcon.max()
-    print "Number of DOF's: %s" % calpyModel.ndof
+    print("Number of DOF's: %s" % calpyModel.ndof)
 
     
     # We extract the materials/sections from the property database
@@ -858,7 +859,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # returns the value after assembling.
     # Also notice that the indexing inside the bcon array uses numpy
     # convention (starting at 0), thus no adding 1 is needed!
-    print "Assembling Concentrated Loads"
+    print("Assembling Concentrated Loads")
     f = zeros((calpyModel.ndof,calpyModel.nloads),float)
     for p in PDB.getProp('n',attr=['cload']):
         lc = 0
@@ -874,7 +875,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         for n in nodeset:
             f[:,lc] = fe_util.AssembleVector(f[:,lc],F,bcon[n])
 
-    print "Assembling distributed loads"
+    print("Assembling distributed loads")
     # This is a bit more complex. See Calpy for details
     # We first generate the input data in a string, then read them with the
     # calpy femodel.ReadBoundaryLoads function and finally assemble them with
@@ -895,7 +896,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         # one day we make the storage more effective
         # Also, remember calpy numbers are +1 !
         g = p.group
-        print "Group %s" % g
+        print("Group %s" % g)
         for e in p.set:
             s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,lc,xload,yload)
             nb[g] += 1
@@ -907,8 +908,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             Plane.AddBoundaryLoads(f,calpyModel,idloads,dloads,nodes,matnr,coords,bcon,mats)
     
     if verbose:
-        print "Calpy.Loads"
-        print f
+        print("Calpy.Loads")
+        print(f)
 
     ############ Create global stiffness matrix ##########
     s = calpyModel.ZeroStiffnessMatrix(0)
@@ -919,10 +920,10 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
     ############ Solve the system of equations ##########
     v = calpyModel.SolveSystem(s,f)
-    print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
+    print("Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime))
     displ = fe_util.selectDisplacements (v,bcon)
     if verbose:
-        print "Displacements",displ
+        print("Displacements",displ)
 
     if flavia:
         flavia.WriteMeshFile(jobname,"Quadrilateral",model.nnodel,coord,nodes,matnr)
@@ -931,8 +932,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # compute stresses
     for lc in range(calpyModel.nloads):
         
-        print "Results for load case %d" %(lc+1)
-        print "Displacements"
+        print("Results for load case %d" %(lc+1))
+        print("Displacements")
         aprint(displ[:,:,lc],header=['x','y'],numbering=True)
 
         if flavia:
@@ -946,12 +947,12 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             #P.debug = 1
             stresg = P.StressGP (v[:,lc],mats)
             if verbose:
-                print "elem group %d" % i
-                print "GP Stress\n", stresg
+                print("elem group %d" % i)
+                print("GP Stress\n", stresg)
             
             strese = P.GP2Nodes(stresg)
             if verbose:
-                print "Nodal Element Stress\n", strese
+                print("Nodal Element Stress\n", strese)
 
             #print "Nodes",e+1
             stresn,count = P.NodalAcc(e+1,strese,nnod=calpyModel.nnodes,nodata=stresn,nodn=count)
@@ -963,7 +964,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         stresn /= count.reshape(-1,1)
         #print "AVG",stresn
         if verbose:
-            print "Averaged Nodal Stress\n"
+            print("Averaged Nodal Stress\n")
             aprint(stresn,header=['sxx','syy','sxy'],numbering=True)
                 
         if flavia:
@@ -1027,16 +1028,16 @@ def autoRun2():
     right = model.coords.test(dir=0,min=xmax-xtol,max=xmax+xtol)
     leftnrs = where(left)[0]
     rightnrs = where(right)[0]
-    print leftnrs
-    print rightnrs
+    print(leftnrs)
+    print(rightnrs)
     
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
     ny *= 2
     PDB.nodeProp(set=leftnrs,bound=[1,1,0,0,0,0])
     PDB.nodeProp(set=rightnrs,cload=[10.,0.,0.,0.,0.,0.])
 
-    print "This example is incomplete."
-    print PDB
+    print("This example is incomplete.")
+    print(PDB)
     #runCalpyAnalysis('FeEx',verbose=True)
 
 def autoConv():

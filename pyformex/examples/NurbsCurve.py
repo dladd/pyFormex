@@ -28,6 +28,7 @@
 This example illustrates the use of the NurbsCurve class from the nurbs
 plugin. 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'curve']
@@ -131,7 +132,7 @@ def showAll():
     res = dialog.results
     export({'_Nurbs_data_':res})
     for points in predefined:
-        print res
+        print(res)
         res['points'] = points
         drawNurbs(**res)
 

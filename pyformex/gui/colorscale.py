@@ -46,6 +46,7 @@ Palette = {
 
 class ColorScale(object):
     """Mapping floating point values into colors.
+from __future__ import print_function
 
     A colorscale maps floating point values within a certain range
     into colors and can be used to provide visual representation

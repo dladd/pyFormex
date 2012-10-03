@@ -68,6 +68,7 @@ No change ::
   ref(i,j)|F  -> F.reflect(i-1,j)
 
 """
+from __future__ import print_function
 
 from formex import Formex
 

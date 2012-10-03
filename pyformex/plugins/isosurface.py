@@ -29,6 +29,7 @@ This Code is based on the example by Paul Bourke from
 http://paulbourke.net/geometry/polygonise/
    
 """
+from __future__ import print_function
 from numpy import *
 
 #  edgeTable[256].  It corresponds to the 2^8 possible combinations of

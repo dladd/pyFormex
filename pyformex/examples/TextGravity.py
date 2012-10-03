@@ -26,6 +26,7 @@
 
 Show the use of the text gravity parameter.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = []

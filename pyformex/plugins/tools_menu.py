@@ -27,6 +27,7 @@
 
 Graphic Tools plugin menu for pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from gui import menu
@@ -263,7 +264,7 @@ def query(mode):
 def pick_actors():
     set_selection('actor')
 def pick_elements():
-    print _drawables.names
+    print(_drawables.names)
     set_selection('element')
 def pick_points():
     set_selection('point')
@@ -319,8 +320,8 @@ def edit_points(K):
             o = pf.canvas.actors[k].object
             n =  _drawables.names[k]
             ind = K[k]
-            print "CHANGING points %s of object %s" % (ind,n)
-            print o[ind]
+            print("CHANGING points %s of object %s" % (ind,n))
+            print(o[ind])
         
    
 def setpropCollection(K,prop):
@@ -472,13 +473,13 @@ def sendMail():
         return
 
     msg = sendmail.message(**res)
-    print msg
+    print(msg)
     to = res['to'].split(',')
     cc = res['cc'].split(',')
     sendmail.sendmail(message=msg,sender=res['sender'],to=to+cc)
-    print "Mail has been sent to %s" % to 
+    print("Mail has been sent to %s" % to) 
     if cc:
-        print "  with copy to %s" % cc
+        print("  with copy to %s" % cc)
 
 ###################### images #############################
         
@@ -516,7 +517,7 @@ def selectImage(extra_items=[]):
             return None
 
         w,h = image.width(),image.height()
-        print "size = %sx%s" % (w,h)
+        print("size = %sx%s" % (w,h))
 
         diag = currentDialog()
         if diag:
@@ -540,7 +541,7 @@ def selectImage(extra_items=[]):
         return None
 
     if image is None:
-        print "Loading image"
+        print("Loading image")
         load_image(filename)
 
     image = resizeImage(image,res['nx'],res['ny'])

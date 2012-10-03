@@ -31,6 +31,7 @@ from PyQt4 import QtGui
 
 def getFont(font=None,size=None):
     """Get the best fonts matching font name and size
+from __future__ import print_function
 
     If nothing is specified, returns the default GUI font.
     """

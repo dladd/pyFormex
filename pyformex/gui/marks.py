@@ -35,6 +35,7 @@ import gluttext
 
 class Mark(Drawable):
     """A 2D drawing inserted at a 3D position of the scene.
+from __future__ import print_function
 
     The minimum attributes and methods are:
 

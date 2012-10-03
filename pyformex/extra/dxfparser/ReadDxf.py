@@ -35,16 +35,17 @@ The script starts by preference with a docstring (like this),
 composed of a short first line, then a blank line and
 one or more lines explaining the intention of the script.
 """
+from __future__ import print_function
 clear()
 wireframe()
 from pyformex.plugins.geomtools import anyPerpendicularVector as av
 
-print av([0.,0.,1.])
-print av([0.,1.,1.])
-print av([1.,1.,1.])
-print av([1.,0.,1.])
-print av([1.,0.,0.])
-print av([0.,1.,0.])
+print(av([0.,0.,1.]))
+print(av([0.,1.,1.]))
+print(av([1.,1.,1.]))
+print(av([1.,0.,1.]))
+print(av([1.,0.,0.]))
+print(av([0.,1.,0.]))
 exit()
 
 
@@ -59,10 +60,10 @@ class LineDrawing(object):
     """
     def __init__(self,data):
         self.all = data
-        print data
-        print [ type(i) for i in data ]
-        print [ i.__class__ for i in data ]
-        print Arc,Line,PolyLine
+        print(data)
+        print([ type(i) for i in data ])
+        print([ i.__class__ for i in data ])
+        print(Arc,Line,PolyLine)
         self.lines = [ i for i in data if i.__class__ == Line ]
         self.polylines = [  i for i in data if type(i) is PolyLine ]
         self.arcs = [ i for i in data if type(i) is Arc ]
@@ -70,15 +71,15 @@ class LineDrawing(object):
 
 
     def report(self):
-        print "LineDrawing: %s Lines, %s PolyLines, %s Arcs" % (len(self.lines),len(self.polylines),len(self.arcs))
+        print("LineDrawing: %s Lines, %s PolyLines, %s Arcs" % (len(self.lines),len(self.polylines),len(self.arcs)))
  
 
     def assembleCurves(self):
-        print len(self.all)
+        print(len(self.all))
         FL = [Formex([a.endPoints()]).setProp(i) for i,a in enumerate(self.all)]
         FL = Formex.concatenate(FL)
-        print FL.shape()
-        print FL
+        print(FL.shape())
+        print(FL)
         M = FL.toMesh()
         self.parts = M.partitionByConnection()
         return M.setProp(self.parts)
@@ -86,7 +87,7 @@ class LineDrawing(object):
 
     def setProp(self,prop):
         for a,p in zip(self.all,prop):
-            print a,p
+            print(a,p)
             a.setProp(p)
 
         
@@ -101,12 +102,12 @@ else:
     model = convertDXF(open(fn).read())
 
 for a in model:
-    print a.prop
+    print(a.prop)
 draw(model)
 
 D = LineDrawing(model)
 D.assembleCurves()
-print D.parts
+print(D.parts)
 #D.setProp(D.parts)
 clear()
 for a,c in zip(D.all,D.parts):

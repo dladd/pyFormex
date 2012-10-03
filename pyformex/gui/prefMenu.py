@@ -38,6 +38,7 @@ import draw
 
 def updateSettings(res,save=None):
     """Update the current settings (store) with the values in res.
+from __future__ import print_function
 
     res is a dictionary with configuration values.
     The current settings will be updated with the values in res.
@@ -69,7 +70,7 @@ def updateSettings(res,save=None):
             changed = True
             
         # if not saved, set in cfg
-        print "Setting %s = %s" % (k,res[k])
+        print("Setting %s = %s" % (k,res[k]))
         #print pf.cfg.keys()
         if pf.cfg[k] != res[k]:
             pf.cfg[k] = res[k]
@@ -297,8 +298,8 @@ def createLightDialogItems(light=0,enabled=True):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
     val = pf.cfg[tgt]
-    print "LIGHT %s" % light
-    print "CFG %s " % val
+    print("LIGHT %s" % light)
+    print("CFG %s " % val)
     #print "DICT %s" % pf.canvas.lights.lights[light].__dict__
     #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
@@ -331,7 +332,7 @@ def setRendering():
         matname=str(matname)
         mat = pf.GUI.materials[matname]
         val = utils.prefixDict(mat.dict(),'material/')
-        print "UPDATE",val
+        print("UPDATE",val)
         dia.updateData(val)
     
     def close():
@@ -339,7 +340,7 @@ def setRendering():
         
     def accept(save=False):
         dia.acceptData()
-        print "RESULTS",dia.results
+        print("RESULTS",dia.results)
         if dia.results['render/mode'].startswith('smooth'):
             res = utils.subDict(dia.results,'render/',strip=False)
             matname = dia.results['render/material']
@@ -350,15 +351,15 @@ def setRendering():
         else:
             res = utils.selectDict(dia.results,['render/mode','render/lighting'])
         res['_save_'] = save
-        print "RES",res
+        print("RES",res)
         updateSettings(res)
-        print pf.cfg
+        print(pf.cfg)
         vp = pf.GUI.viewports.current
         vp.resetLighting()
         #if pf.cfg['render/mode'] != vp.rendermode:
-        print "SETMODE %s %s" % (pf.cfg['render/mode'],pf.cfg['render/lighting'])
+        print("SETMODE %s %s" % (pf.cfg['render/mode'],pf.cfg['render/lighting']))
         vp.setRenderMode(pf.cfg['render/mode'],pf.cfg['render/lighting'])
-        print vp.rendermode,vp.lighting
+        print(vp.rendermode,vp.lighting)
         vp.update()
         toolbar.updateLightButton()
         
@@ -500,12 +501,12 @@ def setDebug():
     items = [ _I(o,bool(pf.options.debuglevel & v)) for o,v in zip(options,values) ]
     res = draw.askItems(items)
     if res:
-        print res
+        print(res)
         debug = 0
         for o,v in zip(options,values):
             if res[o]:
                 debug |= v
-        print "debuglevel = %s" % debug
+        print("debuglevel = %s" % debug)
         pf.options.debuglevel = debug
         
 
@@ -515,7 +516,7 @@ def setOptions():
     items = [ _I(o,getattr(pf.options,o)) for o in options ]
     res = draw.askItems(items)
     if res:
-        print res
+        print(res)
         for o in options:
             setattr(pf.options,o,res[o])
             print("Options: %s" % pf.options)

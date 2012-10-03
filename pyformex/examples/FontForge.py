@@ -30,6 +30,7 @@ installed. On Debian GNU/Linux you can achieve this by installing the package
 
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['curve', 'font']
@@ -100,26 +101,26 @@ def glyphCurve(c):
 
 def charContour(fontfile,character):
     font = fontforge.open(fontfile,5)
-    print "FONT INFO FOR %s" % font
-    print dir(font)
-    print font.gpos_lookups
+    print("FONT INFO FOR %s" % font)
+    print(dir(font))
+    print(font.gpos_lookups)
 
     g = font[ord(character)]
-    print "GLYPH INFO FOR %s" % g
-    print dir(g)
-    print g.getPosSub
+    print("GLYPH INFO FOR %s" % g)
+    print(dir(g))
+    print(g.getPosSub)
 
 
     l = g.layers[1]
-    print len(l)
+    print(len(l))
     c = l[0]
-    print c
-    print dir(c)
-    print c.closed
-    print c.is_quadratic
-    print c.isClockwise()
-    print len(c)
-    print c.reverseDirection()
+    print(c)
+    print(dir(c))
+    print(c.closed)
+    print(c.is_quadratic)
+    print(c.isClockwise())
+    print(len(c))
+    print(c.reverseDirection())
 
     if c.isClockwise():
         c = c.reverseDirection()
@@ -168,8 +169,8 @@ def show(fontname1,character1,fontname2=None,character2=None,connect=False,fill=
         drawCurve(curve2,red,fill)
     return
 
-    print curve1.nparts
-    print curve2.nparts
+    print(curve1.nparts)
+    print(curve2.nparts)
 
     F0 = curve1.toFormex()
     F1 = curve2.toFormex()
@@ -182,10 +183,10 @@ def show(fontname1,character1,fontname2=None,character2=None,connect=False,fill=
 
 chdir (__file__)
 
-print dir(fontforge)
+print(dir(fontforge))
 
 fonts = utils.listFontFiles() + [ f for f in extra_fonts if os.path.exists(f) ]
-print "Number of available fonts: %s" % len(fonts)
+print("Number of available fonts: %s" % len(fonts))
 
 fontname1 = None
 fontname2 = None

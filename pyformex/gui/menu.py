@@ -27,6 +27,7 @@
 This modules implements specialized classes and functions for building
 the pyFormex GUI menu system.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from pyformex.gui import *
@@ -304,7 +305,7 @@ class Menu(BaseMenu,QtGui.QMenu):
             self.setWindowTitle(title)
         else:
             if tearoff:
-                print "TEAR OFF menus currently not implemented"
+                print("TEAR OFF menus currently not implemented")
                 tearoff = False
             self.setTearOffEnabled(tearoff)
         self.done = False
@@ -461,7 +462,7 @@ def resetWarnings():
     """Reset the warning filters to the default."""
     del pf.prefcfg['warnings/filters']
     print("This will only become effective in your future sessions!")
-    print "FILTERS:",pf.prefcfg['warnings/filters']
+    print("FILTERS:",pf.prefcfg['warnings/filters'])
 
             
 # The menu actions can be simply function names instead of strings, if the
@@ -512,7 +513,7 @@ def unloadCurrentApp():
     
 def printSysPath():
     import sys
-    print sys.path
+    print(sys.path)
     
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""

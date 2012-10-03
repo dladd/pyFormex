@@ -28,6 +28,7 @@
 Position an object A thus that its three points X are aligned with the
 three points X of object B.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']

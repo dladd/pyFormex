@@ -29,6 +29,7 @@ Formex structures representing simple geometric shapes.
 You need to import this module in your scripts to have access to its
 contents.
 """
+from __future__ import print_function
 
 from formex import *
 

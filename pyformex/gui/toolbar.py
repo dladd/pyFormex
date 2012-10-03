@@ -26,6 +26,7 @@
 
 This module defines the functions for creating the pyFormex window toolbars.
 """
+from __future__ import print_function
 
 import pyformex as pf
 import os

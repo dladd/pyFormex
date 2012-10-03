@@ -43,6 +43,7 @@ During the display of the first half of the set of texts,
 the previous text is removed after each new one is shown.
 During the second half, all texts remain on the canvas.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = []

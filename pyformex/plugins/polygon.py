@@ -26,6 +26,7 @@
 """Polygonal facets.
 
 """
+from __future__ import print_function
 
 import pyformex as pf
 from formex import *
@@ -137,7 +138,7 @@ class Polygon(Geometry):
 
         Returns a TriSurface filling the surface inside the polygon.
         """
-        print "AREA(self) %s" % self.area()
+        print("AREA(self) %s" % self.area())
         # creating elems array at once (more efficient than appending)
         #from gui.draw import draw,pause,undraw
         from geomtools import insideTriangle
@@ -156,7 +157,7 @@ class Polygon(Geometry):
             for j in srt:
                 #print "ANGLE: %s" % c[j]
                 if c[j] > 180.:
-                    print "OOPS, I GOT STUCK"
+                    print("OOPS, I GOT STUCK")
                     #
                     # We could return here also the remaining part
                     #
@@ -230,12 +231,12 @@ if __name__ == 'draw':
     ae = PG.externalAngles()
     ai = PG.internalAngles()
 
-    print "Direction angles:", a
-    print "External angles:", ae
-    print "Internal angles:", ai
+    print("Direction angles:", a)
+    print("External angles:", ae)
+    print("Internal angles:", ai)
 
-    print "Sum of external angles: ",ae.sum()
-    print "The polygon is convex: %s" % PG.isConvex()
+    print("Sum of external angles: ",ae.sum())
+    print("The polygon is convex: %s" % PG.isConvex())
 
     # choose one of these
     #B = PL.coords

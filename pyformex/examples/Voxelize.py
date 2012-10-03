@@ -28,6 +28,7 @@
 This example illustrates the use of the gtsinside program to create a
 voxelization of a closed surface.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['surface']
@@ -55,24 +56,24 @@ def run():
 
     bb = S.bbox()
     bb1 = [ 1.1*bb[0]-0.1*bb[1], 1.1*bb[1]-0.1*bb[0]]
-    print bb
-    print bb1
+    print(bb)
+    print(bb1)
     nmax = 100
     sz = bb1[1]-bb1[0]
     step = sz.max() / (nmax-1)
     n = (sz / step).astype(Int)
-    print n
+    print(n)
     P = Formex(simple.regularGrid(bb1[0],bb1[0]+n*step,n).reshape(-1,3))
     draw(P, marksize=1, color='black')
     #drawNumbers(P)
     zoomAll()
     ind = S.inside(P)
     vox = zeros(n+1,dtype=uint8)
-    print vox.shape
+    print(vox.shape)
     vox1 = vox.reshape(-1)
-    print vox1.shape,ind.max()
+    print(vox1.shape,ind.max())
     vox1[ind] = 1
-    print vox.max()
+    print(vox.max())
     P.setProp(vox1)
     draw(P, marksize=8)
 
@@ -80,7 +81,7 @@ def run():
     chdir(dirname)
     # Create output file
     if not checkWorkdir():
-        print "Could not open a directory for writing. I have to stop here"
+        print("Could not open a directory for writing. I have to stop here")
         return
     
     fs = utils.NameSequence('horse','.png')

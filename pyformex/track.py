@@ -29,6 +29,7 @@ Functions for creating classes with access tracking facilities.
 This can e.g. be use to detect if the contents of a list or dict
 has been changed.
 """
+from __future__ import print_function
 
 # List of methods to track. These are the methods that can possibly
 # change the object. Objects of type 'list' and 'dict' are covered.

@@ -32,6 +32,7 @@ The point is extruded in the x-direction, resulting in a line.
 The line is further extrude in y-direction to yield a quadratic surface.
 A final extrusion in the z-direction delivers a quadratic volume.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['mesh']
@@ -58,20 +59,20 @@ def run():
     delay(0)
 
     a = Formex([0.,0.,0.]).toMesh()   # a point at the origin
-    print a.elName()
+    print(a.elName())
     draw(a,color='black')
 
     delay(sleep)
 
     b = a.extrude(nx,1.,0,degree=degree)  # point extruded to quadratic line 
-    print b.elName()
+    print(b.elName())
     draw(b.coords,wait=False)
     draw(b,color='red')
 
     c = b.extrude(ny,1.,1,degree=degree)  # line extruded to quadratic surface
     if serendipity:
         c = c.convert('quad8')#.compact()
-    print c.elName()
+    print(c.elName())
     draw(c.coords,wait=False)
     draw(c,color='blue')
 
@@ -81,11 +82,11 @@ def run():
     #d = d.convert('hex20')
     d = c.extrude(nz,1.,2,degree=degree)  # surface extruded to quadratic volume
     d = d.compact()
-    print d.elName()
+    print(d.elName())
     #d = d.reverse()
     if show3Dbyborder:
         d = d.getBorderMesh()
-    print "Shown as %s" % d.elName()
+    print("Shown as %s" % d.elName())
     clear()
     draw(d.coords,wait=False)
     #drawNumbers(d.coords)
@@ -97,7 +98,7 @@ def run():
         draw(e,color=cyan)
 
     drawNumbers(d)
-    print "central = %s" % central
+    print("central = %s" % central)
     d.setProp(7)
     d.prop[central] = 0
     adj = [ d.adjacency(i) for i in range(3) ]

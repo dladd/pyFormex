@@ -27,6 +27,7 @@
 
 Functions for managing a project in pyFormex.
 """
+from __future__ import print_function
 import pyformex as pf
 from track import TrackedDict
 from pyformex import utils
@@ -242,7 +243,7 @@ class Project(TrackedDict):
             self.filename = fn
         else:
             if not quiet:
-                print "Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip)
+                print("Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip))
             #print("  Contents: %s" % self.keys()) 
         f = open(self.filename,'w'+self.mode)
         # write header
@@ -294,7 +295,7 @@ class Project(TrackedDict):
             except:
                 s = s.strip()
                 if not quiet:
-                    print "Header = '%s'" % s
+                    print("Header = '%s'" % s)
                 if s=='gzip' or s=='' or 'pyFormex' in s:
                     # transitional format
                     self.gzip = 5
@@ -318,18 +319,18 @@ class Project(TrackedDict):
         f = self.readHeader(quiet)
         if self.format < highest_format:
             if not quiet:
-                print "Format looks like %s" % self.format
+                print("Format looks like %s" % self.format)
             utils.warn('warn_old_project')
         with f:
             try:
                 if not quiet:
-                    print "Unpickling gzip"
+                    print("Unpickling gzip")
                 pyf = gzip.GzipFile(fileobj=f,mode='rb')
                 p = pickle_load(pyf,try_resolve)
                 pyf.close()
             except:
                 if not quiet:
-                    print "Unpickling clear"
+                    print("Unpickling clear")
                 p = pickle_load(f,try_resolve)
             self.update(p)
     
@@ -345,11 +346,11 @@ class Project(TrackedDict):
         be read back immediately.
         """
         self.load(True)
-        print "GOT KEYS %s" % self.keys()
+        print("GOT KEYS %s" % self.keys())
         if filename is not None:
             self.filename = filename
         self.access = 'w'
-        print "Will now save to %s" % self.filename
+        print("Will now save to %s" % self.filename)
         self.save()
     
 
@@ -361,7 +362,7 @@ class Project(TrackedDict):
         of the data inside.
         """
         f = self.readHeader()
-        print self.format,self.gzip
+        print(self.format,self.gzip)
         if f:
             if self.gzip:
                 try: 
@@ -382,7 +383,7 @@ class Project(TrackedDict):
                     else:
                         break
                 fu.close()
-                print "Uncompressed %s to %s" % (self.filename,fn)
+                print("Uncompressed %s to %s" % (self.filename,fn))
                 
             else:    
                 utils.warn("The contents of the file does not appear to be compressed.")

@@ -26,6 +26,7 @@
 
 Generic 2D plotting functions for pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from pyformex import utils

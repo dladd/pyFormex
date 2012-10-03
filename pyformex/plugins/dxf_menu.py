@@ -12,6 +12,7 @@ handles import and export of the dxf model. The tools are mostly interactive.
 While they are intende mostly to be imported in other applications, a plugin
 menu is provided for standard tasks.
 """
+from __future__ import print_function
 
 from gui.draw import *
 from plugins import dxf
@@ -88,10 +89,10 @@ def importDxfText(text=None):
         
     pf.GUI.setBusy()
     parts = dxf.convertDXF(text)
-    print "Imported %s entities" % len(parts)
+    print("Imported %s entities" % len(parts))
     coll = dxf.collectByType(parts)
     parts = [ p for p in parts if type(p) is not types.FunctionType ]
-    print "Kept %s entities of type Arc, Line, PolyLine" % len(parts)
+    print("Kept %s entities of type Arc, Line, PolyLine" % len(parts))
     pf.GUI.setBusy(False)
     export({'_dxf_import_':parts,'_dxf_sel_':parts})
     wireframe()
@@ -144,13 +145,13 @@ def printSelection():
     selection = [ s for s in selection if s < len(parts) ]
     print("Selected entities: %s" % selection)
     for p in olist.select(parts,selection):
-        print "PART %s: %s" % (p.prop,p)
+        print("PART %s: %s" % (p.prop,p))
         if hasattr(p,'endp'):
-            print "  End Points: %s" % p.endp
+            print("  End Points: %s" % p.endp)
         if hasattr(p,'freep'):
-            print "  Free Points: %s" % p.freep
+            print("  Free Points: %s" % p.freep)
         if hasattr(p,'endd'):
-            print "  End Directions: %s" % p.endd
+            print("  End Directions: %s" % p.endd)
 
 
 def renumberDxf():
@@ -174,7 +175,7 @@ def exportDxfText():
         fn = askFilename(cur=cur,filter=types,exist=False)
         if fn:
             dxf.exportDxfText(fn,parts)
-            print "Wrote .dxftext file %s" % fn
+            print("Wrote .dxftext file %s" % fn)
 
 
 def exportDxf():
@@ -199,7 +200,7 @@ def exportLines():
         fn = askFilename(cur=cur,filter=types,exist=False)
         if fn:
             dxf.exportDxf(fn,F)
-            print "Wrote .dxf file %s" % fn
+            print("Wrote .dxf file %s" % fn)
 
 
 def editArc(p):
@@ -242,7 +243,7 @@ def editParts():
         except:
             newp = None
         if newp:
-            print "Replacing part %s" % p.prop
+            print("Replacing part %s" % p.prop)
             parts[i] = newp
                 
 
@@ -270,9 +271,9 @@ def splitArcs():
             if res:
                 asp = res['split_angle']
                 newp = [ Arc(center=p._center,radius=p.radius,angles=ap).setProp(p.prop) for ap in [ (a[0],asp), (asp,a[1]) ] ]
-                print "NEW: %s" % len(newp)
+                print("NEW: %s" % len(newp))
                 parts[i:i+1] = newp
-        print "# of parts: %s" % len(parts)
+        print("# of parts: %s" % len(parts))
     drawCell()
                 
 
@@ -299,9 +300,9 @@ def splitLines():
                 asp = res['split parameter value']
                 xm = (1.0-asp) * x0 + asp * x1
                 newp = [ Line([x0,xm]).setProp(p.prop), Line([xm,x1]).setProp(p.prop) ]
-                print "NEW: %s" % len(newp)
+                print("NEW: %s" % len(newp))
                 parts[i:i+1] = newp
-        print "# of parts: %s" % len(parts)
+        print("# of parts: %s" % len(parts))
     drawCell()
 
 
@@ -343,7 +344,7 @@ def convertToFormex():
 
         coll = dxf.collectByType(parts)
         lines = dxf.toLines(chordal=chordal,arcdiv=ndiv)
-        print "Number of lines: %s" % _lines.nelems()
+        print("Number of lines: %s" % _lines.nelems())
         export({'_dxf_lines_':lines})
 
         clear()
@@ -403,7 +404,7 @@ def drawParts(zoom=True,showpoints=None,shownumbers=None,showbif=None):
         drawNumbers(endpoints)
     if showbif and 'bifurc' in pf.PF:
         bif = named('bifurc')
-        print bif
+        print(bif)
         for b in bif:
             for i in b:
                 p = parts[i]

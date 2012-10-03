@@ -29,6 +29,7 @@ in all pyFormex scripts. These functions are available in GUI and NONGUI
 applications, without the need to explicitely importing the :mod:`script`
 module.
 """
+from __future__ import print_function
 
 import pyformex as pf
 import formex
@@ -547,7 +548,7 @@ def runAll(applist,refresh=False):
     #pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
     for f in applist:
         while pf.scriptlock:
-            print "WAITING BECAUSE OF SCRIPT LOCK"
+            print("WAITING BECAUSE OF SCRIPT LOCK")
             sleep(5)
         runAny(f,refresh=refresh)
         if exitrequested:

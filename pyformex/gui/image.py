@@ -29,6 +29,7 @@ OpenGL rendering and the pyFormex GUI to image files. There are even
 provisions for automatic saving to a series of files and creating
 a movie from these images.
 """
+from __future__ import print_function
 
 
 import pyformex as pf
@@ -184,7 +185,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             del vcanvas
 
         pf.debug("Image has alpha channel: %s" % qim.hasAlphaChannel())
-        print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
+        print("SAVING %s in format %s with quality %s" % (fn,fmt,quality))
         if qim.save(fn,fmt,quality):
             sta = 0
         else:
@@ -436,10 +437,10 @@ def changeBackgroundColorXPM(fn,color):
     for l in t[::-1]:
         if l.startswith('"'):
             c = l[1]
-            print "Found '%s' as background character" % c
+            print("Found '%s' as background character" % c)
             break
     if not c:
-        print "Can not change background color of '%s' " % fn
+        print("Can not change background color of '%s' " % fn)
         return
     for i,l in enumerate(t):
         if l.startswith('"%s c ' % c):
@@ -473,7 +474,7 @@ def createMovie(files,encoder='ffmpeg',**kargs):
     """Create a movie from a saved sequence of images.
 
     """
-    print "Encoding %s" % files
+    print("Encoding %s" % files)
 
     if encoder == 'convert':
         outfile = 'output.gif'
@@ -486,7 +487,7 @@ def createMovie(files,encoder='ffmpeg',**kargs):
         cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % files
     pf.debug(cmd,pf.DEBUG.IMAGE)
     utils.runCommand(cmd)
-    print "Created file %s" % outfile
+    print("Created file %s" % outfile)
 
 
 def saveMovie(filename,format,windowname=None):

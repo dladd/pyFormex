@@ -27,6 +27,7 @@
 
 Example showing the use of the 'colorscale' plugin.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['FEA']
@@ -85,7 +86,7 @@ def show():
     lights(False)
     dialog.acceptData()
     res = dialog.results
-    print res
+    print(res)
     globals().update(res)
 
     
@@ -142,7 +143,7 @@ def timeOut():
 
 
 def atUnload():
-    print "Unloading? Wait, I want to close the dialog first"
+    print("Unloading? Wait, I want to close the dialog first")
     close()
 
 dialog = None

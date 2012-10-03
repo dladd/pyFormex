@@ -30,6 +30,7 @@ This is a plugin for pyFormex.
 
 See the Section2D example for an example of its use.
 """
+from __future__ import print_function
 
 from plugins import sectionize
 from numpy import *

@@ -27,6 +27,7 @@ Finite Element Plugin Menu for pyFormex.
 
 (C) 2009 Benedict Verhegghe.
 """
+from __future__ import print_function
 
 from plugins import formex_menu,trisurface
 import simple

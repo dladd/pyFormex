@@ -52,6 +52,7 @@ Notice that the curve with weigths equal to sqrt(2)/2 exactly represents a
 circle.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'curve']

@@ -28,6 +28,7 @@
 Computing geometrical properties of plane sections.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','section2d']
@@ -61,14 +62,14 @@ def close_loop_example():
     drawNumbers(M,color=red)
     drawNumbers(M.coords,color=blue)
 
-    print "Original elements:",M.elems
+    print("Original elements:",M.elems)
     conn = connectivity.connectedLineElems(M.elems)
     if len(conn) > 1:
         message("This curve is not a closed circumference")
         return None
     
     sorted = conn[0]
-    print "Sorted elements:",sorted
+    print("Sorted elements:",sorted)
 
     showInfo('Click to continue')
     clear()
@@ -96,7 +97,7 @@ def run():
         draw(F)
         S = sectionChar(F)
         S.update(extendedSectionChar(S))
-        print mydict.CDict(S)
+        print(mydict.CDict(S))
         G = Formex([[[S['xG'],S['yG']]]])
         draw(G,bbox='last')
         showaxes([S['xG'],S['yG'],0.],S['alpha'],F.dsize(),'red')

@@ -26,6 +26,7 @@
 """FeAbq
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
@@ -57,13 +58,13 @@ def abq_eltype(nplex):
 
 def printModel(M):
     """print the model M"""
-    print "===================\nMERGED MODEL"
-    print "NODES"
-    print M.coords
+    print("===================\nMERGED MODEL")
+    print("NODES")
+    print(M.coords)
     for i,e in enumerate(M.elems):
-        print "PART %s" %i
-        print e
-    print "==================="
+        print("PART %s" %i)
+        print(e)
+    print("===================")
 
 
 def drawFEModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
@@ -105,7 +106,7 @@ def run():
     B = baseB.replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
     # Change every second element of B to property pb1
     B.prop[arange(B.prop.size) % 2 == 1] = pb1
-    print B.prop
+    print(B.prop)
     C = A.rotate(90).setProp(pc)
     parts = [A,B,C]
     draw(parts)
@@ -154,9 +155,9 @@ def run():
         'thickness': 0.02,
         'material': 'steel',
         }
-    print thin_plate
-    print medium_plate
-    print thick_plate
+    print(thin_plate)
+    print(medium_plate)
+    print(thick_plate)
 
     # Create element sets according to the properties pa,pb,pb1,pc:
     esets = {}
@@ -169,17 +170,17 @@ def run():
     P.elemProp(set=esets[pb1],eltype=eb,section=ElemSection(section=thick_plate,material=steel))
     P.elemProp(set=esets[pc],eltype=ec,section=ElemSection(section=medium_plate,material=steel))
 
-    print "Element properties"
+    print("Element properties")
     for p in P.getProp('e'):
-        print p
+        print(p)
 
     # Set the nodal properties
     xmin,xmax = M.coords.bbox()[:,0]
     bnodes = where(M.coords.test(min=xmax-0.01))[0] # Right end nodes
     lnodes = where(M.coords.test(max=xmin+0.01))[0] # Left end nodes
 
-    print "Boundary nodes: %s" % bnodes
-    print "Loaded nodes: %s" % lnodes
+    print("Boundary nodes: %s" % bnodes)
+    print("Loaded nodes: %s" % lnodes)
 
     P.nodeProp(tag='init',set=bnodes,bound=[1,1,0,0,0,0])
     P.nodeProp(tag='step1',set=lnodes,name='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
@@ -191,17 +192,17 @@ def run():
     F.prop[bnodes] = pbc
     F.prop[lnodes] = pld
 
-    print "Node properties"
+    print("Node properties")
     for p in P.getProp('n'):
-        print p
+        print(p)
 
     while ack("Renumber nodes?"):
         # renumber the nodes randomly
-        print [e.eltype  for e in M.elems]
+        print([e.eltype  for e in M.elems])
         old,new = M.renumber()
-        print old,new
-        print [e for e in M.elems]
-        print [e.eltype  for e in M.elems]
+        print(old,new)
+        print([e for e in M.elems])
+        print([e.eltype  for e in M.elems])
         drawFEModel(M)
         if widgets.input_timeout > 0:
             break

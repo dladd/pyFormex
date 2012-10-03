@@ -35,6 +35,7 @@ resulting structure can be shown. The parameters can also be saved to a
 file. Finally, the GUi also allows to replay the whole set of saved
 structures.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topic = ['geometry']
@@ -86,7 +87,7 @@ def createSuperShape():
     else:
         F = F.scale(scale)
     if post:
-        print "Post transformation"
+        print("Post transformation")
         F = eval(post)
     export({name:F})
 
@@ -105,13 +106,13 @@ def drawSuperShape():
     clear()
     smoothwire()
     if type(color) == str and color.startswith('file:'):
-        print "trying to convert color"
+        print("trying to convert color")
         im = QtGui.QImage('Elevation-800.jpg')
-        print im
-        print im.isNull()
+        print(im)
+        print(im.isNull())
         nx,ny = grid_size
         color,colormap = image2glcolor(im.scaled(nx,ny))[0]
-        print color.shape
+        print(color.shape)
 
     draw(F,color=color,colormap=colormap,bkcolor=bkcolor)
 
@@ -162,7 +163,7 @@ def save():
         if filename:
             savefile = open(filename,'a')
     if savefile:
-        print "Saving to file"
+        print("Saving to file")
         savefile.write('%s\n' % str(dialog.results))
         savefile.flush()
         globals().update({'grid_name':gname.next(),'name':sname.next(),})
@@ -182,7 +183,7 @@ def replay():
     if filename:
         savefile = open(filename,'r')
         for line in savefile:
-            print line
+            print(line)
             globals().update(eval(line))
             replayShape()
         savefile = open(filename,'a')

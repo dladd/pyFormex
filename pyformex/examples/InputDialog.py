@@ -28,6 +28,7 @@
 Example showing the use of input dialogs. 
 
 """
+from __future__ import print_function
 _status = 'failed'
 _level = 'normal'
 _topics = []
@@ -106,7 +107,7 @@ def show():
     from utils import formatDict
     dialog.acceptData()
     res = dialog.results
-    print formatDict(res)
+    print(formatDict(res))
 
 
 def close():
@@ -115,7 +116,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
-    print "# Release script lock"
+    print("# Release script lock")
     scriptRelease(__file__)
 
 

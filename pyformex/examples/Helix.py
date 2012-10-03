@@ -28,6 +28,7 @@ This is basically the same example as Torus.py, but it constructs the
 resulting geometry step by step, making it suited for a first time
 initiation.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']

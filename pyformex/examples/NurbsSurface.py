@@ -48,6 +48,7 @@ Several parts can be drawn on request of the user:
 - randompoints: a set of randomly distributed points on the surface.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'surface']
@@ -116,7 +117,7 @@ def run():
         return
 
     globals().update(options)
-    print options
+    print(options)
     
     ###########################
     ####   CONTROL GRID
@@ -180,8 +181,8 @@ def run():
         # draw the isocurves
         draw(Vc,color=red,linewidth=2,nolight=True)#,ontop=True)
         color = 0.5*random.rand(Uc[0].coords.shape[0],3)
-        print color.shape
-        print color
+        print(color.shape)
+        print(color)
         draw(Uc,color=[red,yellow,green,cyan,blue,magenta],linewidth=3,nolight=True)#,ontop=True)
 
     ###########################

@@ -25,6 +25,7 @@
 """Double Layer Flat Space Truss Roof
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
@@ -127,9 +128,9 @@ def run():
 
     # Print node and element property databases
     for p in P.nprop:
-        print p
+        print(p)
     for p in P.eprop:
-        print p
+        print(p)
 
 
 

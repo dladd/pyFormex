@@ -29,6 +29,7 @@ level = 'beginner'
 topics = ['geometry']
 techniques = ['stepmode','cylindrical'] 
 """
+from __future__ import print_function
 
 clear()
 

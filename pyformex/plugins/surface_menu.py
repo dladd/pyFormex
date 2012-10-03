@@ -27,6 +27,7 @@
 
 Surface operations plugin menu for pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from gui import actors,colors,decors,widgets,menu
@@ -649,7 +650,7 @@ def partitionByAngle():
             S = S.setProp(p + res['firstprop'])
             print("Partitioned in %s parts (%s seconds)" % (len(S.propSet()),t.seconds()))
             for p in S.propSet():
-                print " p: %s; n: %s" % (p,(S.prop==p).sum())
+                print(" p: %s; n: %s" % (p,(S.prop==p).sum()))
             selection.draw()
          
  
@@ -994,9 +995,9 @@ def slicer():
         pf.GUI.setBusy(True)
         t = timer.Timer()
         slices = S.slice(dir=axis,nplanes=nslices)
-        print "Sliced in %s seconds" % t.seconds()
+        print("Sliced in %s seconds" % t.seconds())
         pf.GUI.setBusy(False)
-        print [ s.nelems() for s in slices ]
+        print([ s.nelems() for s in slices ])
         draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
         export({'%s/slices' % selection[0]:slices}) 
 
@@ -1019,12 +1020,12 @@ def spliner():
         pf.GUI.setBusy(True)
         slices = S.slice(dir=axis,nplanes=nslices)
         pf.GUI.setBusy(False)
-        print [ s.nelems() for s in slices ]
+        print([ s.nelems() for s in slices ])
         split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
         split = olist.flatten(split)
         hasnan = [ isnan(s.coords).any() for s in split ]
-        print hasnan
-        print sum(hasnan)
+        print(hasnan)
+        print(sum(hasnan))
         #print [s.closed for s in split]
         export({'%s/split' % selection[0]:split}) 
         draw(split,color='blue',bbox='last',view=None)

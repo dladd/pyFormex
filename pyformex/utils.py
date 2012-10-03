@@ -23,6 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """A collection of miscellaneous utility functions."""
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -70,6 +71,7 @@ known_externals = {
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
+from __future__ import print_function
 
     name is either a module or an external program whose availability has
     been registered.
@@ -1099,7 +1101,7 @@ def interrogate(item):
         firstline = doc.split('\n')[0]
         info["DOC:     "] = firstline
     for i in info.items():
-        print("%s %s"% i) 
+        print("%s %s"% i)
 
 
 def inverseDict(d):

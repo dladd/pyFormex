@@ -7,6 +7,7 @@ Illustrates some special techniques on Nurbs Curves:
 - inserting knots
 - curve decomposing
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['Geometry', 'Curve']
@@ -58,7 +59,7 @@ def run():
     _options.knot_values = True
 
     N = NurbsCurve(C.coords,degree=degree)#,blended=False)
-    print N
+    print(N)
     _options.linewidth = 1
     _options.color = magenta
     _options.knotsize = 5
@@ -93,7 +94,7 @@ def run():
     if ack("Decompose curve?"):
 
         N1 = N.decompose()
-        print N1
+        print(N1)
         _options.linewidth = 5
         _options.color = red
         _options.knotsize = 10

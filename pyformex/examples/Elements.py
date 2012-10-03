@@ -28,6 +28,7 @@
 This example is intended for testing the drawing functions for each of the
 implemented element types. 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','mesh']
@@ -49,7 +50,7 @@ def showElement(eltype,options):
     el = elementType(eltype)
 
     if options['Show report']:
-        print el.report()
+        print(el.report())
 
     M = el.toMesh()
     

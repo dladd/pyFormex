@@ -25,6 +25,7 @@
 """Sphere_stl
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
@@ -64,7 +65,7 @@ def run():
 
         clear()
         draw(G)
-        print G.bbox()
+        print(G.bbox())
         L = G.translate([0,bot,r]).spherical()
         clear()
         draw(L)

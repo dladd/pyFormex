@@ -43,6 +43,7 @@ import timer
 
 class Actor(Drawable):
     """An Actor is anything that can be drawn in an OpenGL 3D Scene.
+from __future__ import print_function
 
     The visualisation of the Scene Actors is dependent on camera position and
     angles, clipping planes, rendering mode and lighting.
@@ -557,7 +558,7 @@ class GeomActor(Actor):
 
             except:
                 # AVOID error (which should not occur)
-                print "GEOMACTOR.draw: %s" % type(self.object)
+                print("GEOMACTOR.draw: %s" % type(self.object))
                 #print self.object.level()
                 pass
                 

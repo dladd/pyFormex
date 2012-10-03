@@ -32,6 +32,7 @@ if the key is not found in the CDict itself.
 (C) 2005,2008 Benedict Verhegghe
 Distributed under the GNU GPL version 3 or later
 """
+from __future__ import print_function
 
 import copy
 

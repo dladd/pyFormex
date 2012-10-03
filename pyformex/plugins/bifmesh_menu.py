@@ -29,6 +29,7 @@ a structured hexahedral mesh. These tools were developed as part of the
 PhD research by Gianluca De Santis at bioMMeda (Ghent University).
 
 """
+from __future__ import print_function
 
 import pyformex as pf
 import plugins.vascularsweepingmesher as vsm
@@ -136,7 +137,7 @@ def cutPart(M,x0,x1):
         p1,p0 = meshlist
         pl = PolyLine(Coords.concatenate([p0.coords,p1.coords]))
     else:
-        print [ p.nelems() for p in meshlist]
+        print([ p.nelems() for p in meshlist])
         [ draw(p,color=c) for p,c in zip(meshlist,pf.canvas.settings.colormap) ]
         pl = longestItem(meshlist)
     return pl
@@ -420,7 +421,7 @@ def seedingSelection():
     long_splines=named('long_splines')
     #draw(long_splines, linewidth=1, color='gray' ,flat=True, alpha=1)
     drawNumbers(Formex( [long_splines[i][0].subPoints(1)[-1]  for i in  [0, 2, 4] ]))
-    print '-----select the seeding parameters for the 3 branches. Each branch is divided in 3 portions (close, central, far from the bif). Only 2 need to be input, while the 3rd (central) is calculated as transition.-----'
+    print('-----select the seeding parameters for the 3 branches. Each branch is divided in 3 portions (close, central, far from the bif). Only 2 need to be input, while the 3rd (central) is calculated as transition.-----')
 
 
     nseeds = '[5,3 ]'#param mesh blocks
@@ -437,7 +438,7 @@ def seedingSelection():
     #dialog.show()
     res = dialog.getResult()
     sat=[ seeding3zones(nseeds=eval(res[ns]),zonesizes=eval(res[ra])) for ns, ra in zip (['nseeds0', 'nseeds1', 'nseeds2'] , ['ratios0', 'ratios1', 'ratios2'] ) ]
-    print 'seeds:', [sum([len(i) for i in j])-1 for j in sat]
+    print('seeds:', [sum([len(i) for i in j])-1 for j in sat])
     drawseeds=drawLongitudinalSeeding(long_splines, sat)
     items = [
     _I('sel','Yes','radio',choices=['Yes', 'Repeat'], text='accept seeding ?')
@@ -560,7 +561,7 @@ def meshBranch(HC,OC,nlong,ncirc,ntr,nbl):
 
 
 def setMappingParameters():
-    print '\n---mesh_Block_nlong is an integer = how many hex stacked longitudinally per block \n\n---mesh_Block_ncirc = how many hex in a quarter of section \n\n---mesh_Block_nrad = how many hex radially from inner pattern to boundary layer. It can be either an integer or an array (0.0 to 1.0) \n\n---mesh_boundary_layer = how many hex radially in the boundary layer. It can be either an integer or an array (0.0 is the inner, 1.0 is the wall surface)'
+    print('\n---mesh_Block_nlong is an integer = how many hex stacked longitudinally per block \n\n---mesh_Block_ncirc = how many hex in a quarter of section \n\n---mesh_Block_nrad = how many hex radially from inner pattern to boundary layer. It can be either an integer or an array (0.0 to 1.0) \n\n---mesh_boundary_layer = how many hex radially in the boundary layer. It can be either an integer or an array (0.0 is the inner, 1.0 is the wall surface)')
 
     mesh_param = [ 1,2,3,4,5,6,8, 9, 10, 11, 12, 13, 14, 15 ]#param mesh blocks
     items = [
@@ -584,7 +585,7 @@ def sweepingMesherAlongSeededSplines():
     #dialog0.show()
 
     res0 = dialog0.getResult()
-    print res0['domain']
+    print(res0['domain'])
     
     try: res= named('mesh_block_selection')
     except:
@@ -606,7 +607,7 @@ def sweepingMesherAlongSeededSplines():
         M=Model(n, e)
         export({'CFD_lumen_model':M})
         export({'inner_surface_mesh':Smesh})
-        print 'the lumen has been meshed with %d nodes and %d elements'%(len(n), len(concatenate(e)))
+        print('the lumen has been meshed with %d nodes and %d elements'%(len(n), len(concatenate(e))))
         clear()
         drawLumenMesh()
 
@@ -738,10 +739,10 @@ def createBranches(branch):
     for i in range(1,6,2):
         branch[i] = branch[i].reverse()
     
-    print "Branch control lines:"
+    print("Branch control lines:")
     for i in range(6):
-        print " %s, %s" % divmod(i,2)
-        print branch[i].coords
+        print(" %s, %s" % divmod(i,2))
+        print(branch[i].coords)
     export({'branch':branch})
     drawHelperLines()
 
@@ -816,7 +817,7 @@ def drawControlLines():
 
 def drawCentralPoint():
     cp = named('central_point')
-    print "Central Point = %s" % cp
+    print("Central Point = %s" % cp)
     draw(cp,bbox='last',color='black', marksize=8,flat=True, alpha=1)
 
 def drawCenterLines():
@@ -914,7 +915,7 @@ def example():
         return
     
     examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
-    print examplefile
+    print(examplefile)
     export({'surface':TriSurface.read(examplefile)})
     drawSurface()
     

@@ -29,6 +29,7 @@ This example demonstrates several ways to construct 3D geometry from a
 2D section. The cross section of an H-beam is converted to a 3D beam by
 sweeping, extruding, revolving or connecting.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
@@ -105,7 +106,7 @@ def run():
     else:
         return
 
-    print "Computing: %s seconds" % t.seconds()
+    print("Computing: %s seconds" % t.seconds())
     #print Beam.prop
     #print Beam.elems.shape
 
@@ -113,7 +114,7 @@ def run():
     clear()
     #draw(Beam,color='red',linewidth=2)
     draw(Beam.getBorderMesh(),color='red',linewidth=2)
-    print "Drawing: %s seconds" % t.seconds()
+    print("Drawing: %s seconds" % t.seconds())
     export({'Beam':Beam})
 
 

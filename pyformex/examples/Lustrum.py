@@ -38,6 +38,7 @@ the transformation of a character '5' from a 'blippo' font to be converted
 to an OpenGL model. This functionality is currently not included in pyFormex,
 but we are working on an equivalent using the 'fontforge' library.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['curve','drawing','illustration']

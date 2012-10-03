@@ -34,6 +34,7 @@ setup(name="pygl2ps",
 Python wrapper for GL2PS library by Christophe Geuzaine.
 See http://www.geuz.org/gl2ps/
 """,
+from __future__ import print_function
       license="GNU LGPL (Library General Public License)",
       py_modules=["gl2ps"],
       ext_modules=[Extension("_gl2ps",

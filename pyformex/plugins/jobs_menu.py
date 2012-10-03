@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+"""Jobs Menu
 
+"""
+from __future__ import print_function
 import pyformex as pf
 from gui import menu
 
@@ -175,9 +178,9 @@ def submitToCluster(filename=None):
             reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
             cmd = "scp %s %s:%s" % (filename,host,reqdir)
             ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
-            print ret
+            print(ret)
             ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
-            print ret
+            print(ret)
         
 
 def killClusterJob(jobname=None):
@@ -188,10 +191,10 @@ def killClusterJob(jobname=None):
         host = pf.cfg.get('jobs/host','mecaflix')
         reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
         cmd = "touch %s/%s.kill" % (reqdir,jobname)
-        print host
-        print cmd
+        print(host)
+        print(cmd)
         ret = call(['ssh',host,"%s" % cmd])
-        print ret
+        print(ret)
        
 
 the_host = None
@@ -247,7 +250,7 @@ def changeTargetDir(fn):
 def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     """Get results back from cluster."""
     global the_jobname
-    print "getRESULTS"
+    print("getRESULTS")
     if targetdir is None:
         targetdir = pf.cfg['workdir']
     if jobname is None:
@@ -262,7 +265,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
                 _I('jobname',the_jobname,choices=the_jobnames)
                 ]
 
-        print jobname_input
+        print(jobname_input)
         res = askItems(jobname_input + [
             _I('target dir',targetdir,itemtype='button',func=changeTargetDir),
             ('.fil',True),

@@ -4,6 +4,7 @@
 This example shows how to find out if points are inside a closed surface.
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']
@@ -87,14 +88,14 @@ def create():
 def testInside(S,P):
     """Test which of the points P are inside surface S"""
 
-    print "Testing %s points against %s faces" % (P.nelems(),S.nelems())
+    print("Testing %s points against %s faces" % (P.nelems(),S.nelems()))
 
     bb = bboxIntersection(S,P)
     drawBbox(bb,color=array(red),linewidth=2)
 
     t = timer.Timer()
     ind = S.inside(P)
-    print "gtsinside: %s points / %s faces: found %s inside points in %s seconds" % (P.nelems(),S.nelems(),len(ind),t.seconds())
+    print("gtsinside: %s points / %s faces: found %s inside points in %s seconds" % (P.nelems(),S.nelems(),len(ind),t.seconds()))
 
     if len(ind) > 0:
         draw(P[ind],color=green,marksize=3,ontop=True,nolight=True,bbox='last')

@@ -28,6 +28,7 @@
 The :mod:`nurbs` module defines functions and classes to manipulate
 NURBS curves and surface in pyFormex.
 """
+from __future__ import print_function
 from coords import *
 from lib import nurbs
 from plugins import curve
@@ -312,7 +313,7 @@ class NurbsCurve(Geometry4):
             nextra1 = (nextra+1) // 2
             #nextra1 = 0
             nextra2 = nextra-nextra1
-            print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
+            print("extra %s = %s + %s" % (nextra,nextra1,nextra2))
             control = Coords4(concatenate([control[-nextra1:],control,control[:nextra2]],axis=0))
 
         nctrl = control.shape[0]
@@ -375,7 +376,7 @@ class NurbsCurve(Geometry4):
         try:
             pts = nurbs.curvePoints(ctrl,knots,u)
             if isnan(pts).any():
-                print "We got a NaN"
+                print("We got a NaN")
                 raise RuntimeError
         except:
             raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
@@ -403,8 +404,8 @@ class NurbsCurve(Geometry4):
         try:
             pts = nurbs.curveDerivs(ctrl,knots,u,d)
             if isnan(pts).any():
-                print "We got a NaN"
-                print pts
+                print("We got a NaN")
+                print(pts)
                 raise RuntimeError
         except:
             raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
@@ -613,7 +614,7 @@ class NurbsSurface(Geometry4):
         try:
             pts = nurbs.surfacePoints(ctrl,U,V,u)
             if isnan(pts).any():
-                print "We got a NaN"
+                print("We got a NaN")
                 raise RuntimeError
         except:
             raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
@@ -654,7 +655,7 @@ class NurbsSurface(Geometry4):
         try:
             pts = nurbs.surfaceDerivs(ctrl,U,V,u,mu,mv)
             if isnan(pts).any():
-                print "We got a NaN"
+                print("We got a NaN")
                 raise RuntimeError
         except:
             raise RuntimeError,"Some error occurred during the evaluation of the Nurbs surface"
@@ -901,12 +902,12 @@ def frenet(d1,d2,d3=None):
     l = length(d1)
     # What to do when l is 0? same as with k?
     if l.min() == 0.0:
-        print "l is zero at %s" % where(l==0.0)[0]
+        print("l is zero at %s" % where(l==0.0)[0])
     e1 = d1 / l.reshape(-1,1)
     e2 = d2 - dotpr(d2,e1).reshape(-1,1)*e1
     k = length(e2)
     if k.min() == 0.0:
-        print "k is zero at %s" % where(k==0.0)[0]
+        print("k is zero at %s" % where(k==0.0)[0])
     w = where(k==0.0)[0]
     # where k = 0: set e2 to mean of previous and following
     e2 /= k.reshape(-1,1)

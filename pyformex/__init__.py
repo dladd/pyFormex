@@ -27,6 +27,7 @@
 This module initializes the pyFormex global variables and
 defines a few essential functions.
 """
+from __future__ import print_function
 
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.

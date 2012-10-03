@@ -37,6 +37,7 @@ class Lima(object):
 
     def status (self):
         """Print the status of the Lima"""
+from __future__ import print_function
         print("Lima status:")
         print("  Axiom: %s" % self.axiom)
         print("  Rules: %r" % self.rule)

@@ -29,6 +29,7 @@ representing geometry in pyFormex. The Formex class implements most
 functionality of Formex algebra in a consistent and easy to understand
 syntax.
 """
+from __future__ import print_function
 
 from coords import *
 from utils import deprecation,functionBecameMethod,deprec,warn

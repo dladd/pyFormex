@@ -49,6 +49,7 @@ consisting of quadrilaterals). The number of elements along the
 splines can be chosen. The number of elements across the splines is
 currently unused.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry','surface']
@@ -142,17 +143,17 @@ class SplineSurface(Geometry):
 
 
     def createGrid(self,nu,nv=None):
-        print "Creating grid %s x %s" % (nu,nv)
+        print("Creating grid %s x %s" % (nu,nv))
         if nv is None:
             nv = self.curves[0].nparts
 
         CA = [ C.approx(ntot=nu) for C in self.curves ]
-        print "Curves have %s points" % CA[0].coords.shape[0]
-        print "There are %s curves" % len(CA)
+        print("Curves have %s points" % CA[0].coords.shape[0])
+        print("There are %s curves" % len(CA))
         if not self.uclosed:
             nu += 1 
         grid = Coords(stack([CAi.coords[:nu] for CAi in CA]))
-        print "Created grid %s x %s" % grid.shape[:2]
+        print("Created grid %s x %s" % grid.shape[:2])
         return grid
 
 
@@ -228,9 +229,9 @@ def createPowerCurves(nu,nv):
     sy = 0.5*sx
     sz = 0.25*sx
     powers = 1. * (arange(nv+1) * 2 - nv) / float(nv)
-    print powers
+    print(powers)
     powers = exp(powers)
-    print powers
+    print(powers)
     CL = [ C.map1(1,lambda x:sy*(x/sx)**e,0).map1(2,lambda x:sz*(x/sx)**e,1) for e in powers ]
     return CL
 
@@ -245,8 +246,8 @@ def readSplines():
     f = GeometryFile(fn)
     obj = f.read()
     T = obj.values()
-    print len(T)
-    print [len(Si.coords) for Si in T]
+    print(len(T))
+    print([len(Si.coords) for Si in T])
     return T
 
     
@@ -261,7 +262,7 @@ def removeInvalid(CL):
     CL = [ Ci for Ci in CL if not isnan(Ci.coords).any() ]
     nd = len(CL)
     if nc > nd:
-        print "Removed %s invalid curves, leaving %s" % (nc-nd,nd)
+        print("Removed %s invalid curves, leaving %s" % (nc-nd,nd))
     return CL
 
 
@@ -272,7 +273,7 @@ def area(C,nroll=0):
     The nroll parameter may be specified to roll the coordinates
     appropriately.
     """
-    print nroll
+    print(nroll)
     from plugins.section2d import PlaneSection
     F = C.toFormex().rollAxes(nroll)
     S = PlaneSection(F)
@@ -321,15 +322,15 @@ def run():
         reverse = True
 
     ncurves = len(CL)
-    print "Created %s BezierSpline curves" % ncurves
+    print("Created %s BezierSpline curves" % ncurves)
     CL = removeInvalid(CL)
 
     if reverse:
         areas = [ area(Ci,nroll) for Ci in CL ]
-        print areas
+        print(areas)
         for i,a in enumerate(areas):
             if a < 0.0:
-                print "Reversing curve %s" % i
+                print("Reversing curve %s" % i)
                 CL[i] = CL[i].reverse()
 
     if align:
@@ -344,7 +345,7 @@ def run():
 
     draw(CL)
     export({'splines':CL})
-    print "Number of points in the curves:",[ Ci.coords.shape[0] for Ci in CL]
+    print("Number of points in the curves:",[ Ci.coords.shape[0] for Ci in CL])
 
     PL = [Ci.approx(1) for Ci in CL]
 
@@ -352,7 +353,7 @@ def run():
     if createPL:
         export({'polylines':PL})
         draw(PL,color=red)
-        print "Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL]
+        print("Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL])
 
 
     S = SplineSurface(CL,nu)
@@ -362,7 +363,7 @@ def run():
 
     if refine:
         clear()
-        print "Refining to %s" % nv
+        print("Refining to %s" % nv)
         S = SplineSurface(S.vCurves(),nv)
         N = gridToMesh(S.grid,closed = S.uclosed)
         draw(N,color=magenta,bkcolor='olive')

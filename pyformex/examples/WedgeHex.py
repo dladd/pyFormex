@@ -35,6 +35,7 @@ of which some elements are degenerate (those touching the axis). The
 splitDegenerate method is then used to split the mesh in nondegenerat meshes
 of Wedge6 (magenta) and Hex8 (cyan) type.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
@@ -66,9 +67,9 @@ def run():
     ML = R.fuse().splitDegenerate()
     # keep only the non-empty meshes
     ML = [ m for m in ML if m.nelems() > 0 ]
-    print "After splitting: %s meshes:" % len(ML)
+    print("After splitting: %s meshes:" % len(ML))
     for m in ML:
-        print "  %s elements of type %s" % (m.nelems(),m.eltype)
+        print("  %s elements of type %s" % (m.nelems(),m.eltype))
     ML = [ Mi.setProp(i+4) for i,Mi in enumerate(ML) ]
     draw(ML)
 

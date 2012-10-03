@@ -27,6 +27,7 @@
 Examples showing the use of the 'curve' plugin
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','curve']
@@ -83,7 +84,7 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,appr
         S = S.scale(scale)
 
     im = curvetypes.index(ctype)
-    print "%s control points" % S.coords.shape[0]
+    print("%s control points" % S.coords.shape[0])
     #draw(S.coords,color=red,nolight=True)
 
     if approx:

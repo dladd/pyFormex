@@ -25,6 +25,7 @@
 """CircumCircle
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
@@ -77,7 +78,7 @@ def run():
     zoomAll()   
 
     if not ack("Keep both viewports ?"):
-        print "Removing a viewport"
+        print("Removing a viewport")
         # remove last viewport
         removeViewport()
 

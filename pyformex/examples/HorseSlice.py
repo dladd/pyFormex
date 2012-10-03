@@ -34,6 +34,7 @@ Finally, the intersection curves are drawn on the surface. The 'ontop' option
 will draw the curves fully visible (like if the surface were transparent).
 The 'remove surface' option removes the surface, leaving only the curves.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry','surface','mesh']

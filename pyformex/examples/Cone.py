@@ -30,6 +30,7 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'color']
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry','surface']
@@ -50,7 +51,7 @@ def run():
     draw(F,view='bottom')
     #setDrawOptions({'bbox':None})
 
-    print map(str,range(4))
+    print(map(str,range(4)))
     ans = ask('How many balls do you want?',['0','1','2','3'])
 
     try:

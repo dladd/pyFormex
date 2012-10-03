@@ -28,6 +28,7 @@ A triangulated surface is a surface consisting solely of triangles.
 Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.
 """
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -646,14 +647,14 @@ class TriSurface(Mesh):
         uncompressed on the fly during the reading and the uncompressed
         versions are deleted after reading.
         """
-        print fn
+        print(fn)
         ftype = utils.fileTypeFromExt(fn)
-        print "FTYPE %s" % ftype
+        print("FTYPE %s" % ftype)
         gzip = ftype.endswith('.gz')
         if gzip:
             fn = utils.gunzip(fn,unzipped='',remove=False)
             ftype = ftype[:-3]
-            print fn
+            print(fn)
         if ftype == 'off':
             surf = TriSurface(*read_off(fn))
         elif ftype == 'gts':
@@ -1065,7 +1066,7 @@ Quality: %s .. %s
         dist = res[0]
         if return_points:
             points = res[1]
-        print "Vertex distance: %s seconds" % t.seconds(True)
+        print("Vertex distance: %s seconds" % t.seconds(True))
         #print dist
         
         # distance from edges
@@ -1078,7 +1079,7 @@ Quality: %s .. %s
             dist[okE[closer]] = distE[closer]
             if return_points:
                 points[okE[closer]] = res[2][closer]
-        print "Edge distance: %s seconds" % t.seconds(True)
+        print("Edge distance: %s seconds" % t.seconds(True))
         #print dist
 
         # distance from faces
@@ -1091,7 +1092,7 @@ Quality: %s .. %s
             dist[okF[closer]] = distF[closer]
             if return_points:
                 points[okF[closer]] = res[2][closer]
-        print "Face distance: %s seconds" % t.seconds(True)
+        print("Face distance: %s seconds" % t.seconds(True))
         #print dist
 
         if return_points:
@@ -1457,7 +1458,7 @@ Quality: %s .. %s
 
         if (ncut < 1).any() or (ncut > 2).any():
             # Maybe we should issue a warning and ignore these cases?
-            print "NCUT: ",ncut
+            print("NCUT: ",ncut)
             raise ValueError, "I expected all triangles to be cut along 1 or 2 edges. I do not know how to proceed now."
 
         if return_intersection:
@@ -1496,20 +1497,20 @@ Quality: %s .. %s
         
         # Process the elements cutting two edges
         ########################################
-        print "Cutting 2 edges"
+        print("Cutting 2 edges")
         ncut2 = ncut==2     # selector over whole range
-        print ncut
-        print ncut2
-        print p_pos.sum(axis=-1)==2
+        print(ncut)
+        print(ncut2)
+        print(p_pos.sum(axis=-1)==2)
         if ncut2.any():
             prop2 = where(ncut2)[0]
             fac2 = fac[ncut2]
             ele2 = ele[ncut2]
             pp2 = p_pos[ele2]
-            print "ele",ele2,pp2
+            print("ele",ele2,pp2)
             ncut2p = pp2.sum(axis=-1)==1   # selector over ncut2 elems
             ncut2n = pp2.sum(axis=-1)==2
-            print ncut2p,ncut2n 
+            print(ncut2p,ncut2n) 
 
             if ncut2p.any():
                 #print "# one vertex at positive side"
@@ -1517,9 +1518,9 @@ Quality: %s .. %s
                 fac1 = fac2[ncut2p]
                 ele1 = ele2[ncut2p]
 
-                print "ele1,1p",ele1
+                print("ele1,1p",ele1)
                 cutedg1 = cutedg[fac1]
-                print cutedg,fac1,cutedg1,fac1[cutedg1]
+                print(cutedg,fac1,cutedg1,fac1[cutedg1])
                 cut_edges =  fac1[cutedg1].reshape(-1,2)
                 #print cut_edges
 
@@ -1916,7 +1917,7 @@ Quality: %s .. %s
         # THIS IS WORK IN PROGRESS
         self.getElemEdges()
         edglen = length(self.coords[self.edges[:,1]]-self.coords[self.edges[:,0]])
-        print edglen
+        print(edglen)
         return self
 
 
@@ -2420,7 +2421,7 @@ def intersectLineWithPlaneOne2One(q,m,p,n):
 @deprecation("checkPointInsideTriangleOne2One is deprecated: use geomtools.insideTriangle instead")
 def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
     """_return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it. """
-    print tpi.shape, pi.shape
+    print(tpi.shape, pi.shape)
     tpi3= column_stack([tpi[:, 0], tpi[:, 1], pi, tpi[:, 0], pi, tpi[:, 2], pi, tpi[:, 1], tpi[:, 2]]).reshape(pi.shape[0]*3,  3, 3)
     #areas
     Atpi3=(length(cross(tpi3[:,1]-tpi3[:,0],tpi3[:,2]-tpi3[:,1]))*0.5).reshape(pi.shape[0], 3).sum(axis=1)#area and sum

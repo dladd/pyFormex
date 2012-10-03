@@ -30,6 +30,7 @@ This example illustrates the use of the mesh smoothing algorithm.
 The smoothing is applied to a hexahedral, tetrahedral, quadrilateral,
 and triangular mesh.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'mesh','illustration']

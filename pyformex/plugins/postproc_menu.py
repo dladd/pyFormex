@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+"""Postprocessing Menu
 
+"""
+from __future__ import print_function
 import pyformex as pf
 from gui import menu
 
@@ -213,9 +216,9 @@ def named_item(items,name):
 
 
 def showModel(nodes=True,elems=True):
-    print 'Elements in model:'
+    print('Elements in model:')
     for k,v in DB.elems.iteritems():
-        print "%s: %s" % (k,len(v))
+        print("%s: %s" % (k,len(v)))
     M = [ Mesh(DB.nodes,el,eltype='quad%d'%el.shape[1],prop=i) for i,el in enumerate(DB.elems.itervalues()) ]
     if nodes:
         draw([m.coords for m in M],nolight=True)
@@ -258,9 +261,9 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     if type(elems) != list:
         elems = [ elems ]
 
-    print ["ELEMS: %s" % str(el.shape) for el in elems ]
+    print(["ELEMS: %s" % str(el.shape) for el in elems ])
     if val is not None:
-        print "VAL: %s" % str(val.shape)
+        print("VAL: %s" % str(val.shape))
 
     # draw undeformed structure
     if showref:
@@ -334,7 +337,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         if val is None:
             F = [ draw(df,color='blue',view=None,bbox='last',wait=False) for df in deformed ]
         else:
-            print [ df.report() + "\nCOLORS %s" % str(cval[el].shape)  for df,el in zip(deformed,elems) ]
+            print([ df.report() + "\nCOLORS %s" % str(cval[el].shape)  for df,el in zip(deformed,elems) ])
             F = [ draw(df,color=cval[el],view=None,bbox='last',wait=False) for df,el in zip(deformed,elems) ]
         T = drawText('Deformation scale = %s' % dsc,200,10)
 
@@ -617,8 +620,8 @@ def importFlavia(fn=None):
         name = os.path.splitext(os.path.basename(fn))[0].replace('.flavia','')
         export({name:db})
         db.printSteps()
-        print db.R
-        print db.datasize
+        print(db.R)
+        print(db.datasize)
         
         selection.set([name])
         selectDB(db)
@@ -709,7 +712,7 @@ def show_results(data):
         elems = [ DB.elems[elgroup] ]
 
     dscale = data['dscale']
-    print DB.step,DB.inc
+    print(DB.step,DB.inc)
     displ = DB.getres('U')
     if displ is not None:
         displ = displ[:,0:3]
@@ -721,11 +724,11 @@ def show_results(data):
                 # all displacements are zero
                 dscale = 1.
             else:
-                print siz0,siz1
+                print(siz0,siz1)
                 w = where(siz0 > 0.0)[0]
-                print w
+                print(w)
                 dscale = 0.5/(siz1[w]/siz0[w]).max()
-                print dscale
+                print(dscale)
                 dscale = niceNumber(0.5/(siz1[w]/siz0[w]).max())
 
     if animate:
@@ -791,7 +794,7 @@ def open_dialog():
     close_dialog()
 
     def set_inc_choices(step):
-        print "Setting incs for step %s" % step
+        print("Setting incs for step %s" % step)
         dialog['inc'].setChoices(DB.getIncs(int(step)))
 
 

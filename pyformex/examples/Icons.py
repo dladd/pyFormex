@@ -30,6 +30,7 @@ Create an icon file from a pyFormex model rendering.
 
 This application was used to create some of the toolbar icons for pyFormex
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry']
@@ -115,7 +116,7 @@ def icon_script():
         curve = FontForge.charCurve(fontname,'S')
         curve = curve.scale(2.5/curve.sizes()[1]).centered()
         FontForge.drawCurve(curve,color=red,fill=True,with_border=False,with_points=False)
-        print curve.bbox()
+        print(curve.bbox())
     zoomAll()
 
 

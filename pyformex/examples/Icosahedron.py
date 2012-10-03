@@ -36,6 +36,7 @@ is repeatedly shown while it is shrinking, until it completely
 disappears inside the red sphere. Finally, an intermediate configuration
 is shown.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['Mesh','Geometry','Sphere']

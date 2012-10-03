@@ -30,6 +30,7 @@ While the drawing operations themselves are in 2D, they can be performed
 on a plane with any orientation in space. The constructed geometry always
 has 3D coordinates in the global cartesian coordinate system.
 """
+from __future__ import print_function
 
 from simple import circle
 from odict import ODict
@@ -170,16 +171,16 @@ def selectObject(mode=None):
 the_zvalue = 0.
     
 def draw_object(mode,npoints=-1):
-    print "z value = %s" % the_zvalue
+    print("z value = %s" % the_zvalue)
     points = drawPoints2D(mode,npoints=-1,zvalue=the_zvalue)
     if points is None:
         return
-    print "POINTS %s" % points
+    print("POINTS %s" % points)
     obj = drawnObject(points,mode=mode)
     if obj is None:
         pf.canvas.removeHighlight()
         return
-    print "OBJECT IS %s" % obj
+    print("OBJECT IS %s" % obj)
     res = askItems([
         ('name',autoname[mode].peek(),{'text':'Name for storing the object'}),
         ('color','blue','color',{'text':'Color for the object'}),
@@ -197,7 +198,7 @@ def draw_object(mode,npoints=-1):
     if mode != 'point':
         draw(obj,color=color,nolight=True)
     if mode == 'nurbs':
-        print "DRAWING KNOTS"
+        print("DRAWING KNOTS")
         draw(obj.knotPoints(),color=color,marksize=5)
     return name
     
@@ -224,10 +225,10 @@ def objectName(actor):
     """Find the exported name corresponding to a canvas actor"""
     if hasattr(actor,'object'):
         obj = actor.object
-        print "OBJECT",obj
+        print("OBJECT",obj)
         for name in pf.PF:
-            print name
-            print named(name)
+            print(name)
+            print(named(name))
             if named(name) is obj:
                 return name
     return None
@@ -252,14 +253,14 @@ def splitPolyLine(c):
   
 def split_curve():
     k = pickActors(filter='single',oneshot=True)
-    print k
-    print k[-1]
+    print(k)
+    print(k[-1])
     if -1 not in k:
         return
     nr = k[-1][0]
     actor = pf.canvas.actors[nr]
     name = objectName(actor)
-    print "Enter a point to split %s" % name
+    print("Enter a point to split %s" % name)
     c = named(name)
     cs = splitPolyLine(c)
     if len(cs) == 2:

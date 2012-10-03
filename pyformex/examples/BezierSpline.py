@@ -32,6 +32,7 @@ The image shows open (left) and closed (right) BezierSpline curves of
 degrees 1(red), 2(magenta) and 3(blue).
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'curve']
@@ -80,7 +81,7 @@ def run():
         draw(pts)
         drawNumbers(pts)
         for d,c in zip(degrees,colors):
-            print "DEGREE %s, %s" % (d,closed)
+            print("DEGREE %s, %s" % (d,closed))
             B = BezierSpline(coords=pts,closed=closed,degree=d)
             collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
             draw(B,color=c)

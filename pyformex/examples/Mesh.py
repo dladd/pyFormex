@@ -59,6 +59,7 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['geometry', 'mesh']

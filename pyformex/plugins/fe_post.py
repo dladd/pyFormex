@@ -32,6 +32,7 @@ script with the 'postabq' command. Use it as follows::
 
 Then execute the created script from inside pyFormex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from arraytools import *

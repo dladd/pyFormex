@@ -30,6 +30,7 @@ def structuredQuadMeshGrid(sgx=3, sgy=3, isopquad=None):
 
 def structuredHexMeshGrid(dx, dy, dz, isophex='hex64'):
     """it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
+from __future__ import print_function
     If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
     TODO: include other optons to get the control points for other isoparametric transformation for hex."""
     sgx, sgy, sgz=dx, dy, dz
@@ -123,7 +124,7 @@ def cpQuarterLumen(lumb, centp, edgesq=0.75, diag=0.6*2**0.5, verbos=False):
     gridext=array(zip(xa[xar3], arcp[xar3]))
     gridext=Coords.interpolate(Coords(gridext[:, 0]), Coords(gridext[:, 1]),div=3)
     gridext=swapaxes(gridext, 0, 1) .reshape(2*fx,16,  3)
-    if verbos:print '---one Quarter of section is submapped in %d internal and %d transitional quad regions---'%(gridint.shape[0],gridext.shape[0] )
+    if verbos:print('---one Quarter of section is submapped in %d internal and %d transitional quad regions---'%(gridint.shape[0],gridext.shape[0] ))
 #    gridG=concatenate([gridint, gridext], axis=0)
 #    print '---one Quarter of section is submapped in %d quad regions---'%gridG.shape[0]
 #    [draw(Formex(fo).setProp(i)) for  i, fo in enumerate(gridG) ]
@@ -187,14 +188,14 @@ def cpOneSection(hc, oc=None,isBranchingSection=False, verbos=False ):
     
     ##create control points for the boundary layer of 1 full section.
     if verbos:
-        if isBranchingSection:print "--BRANCHING SECTION:section located at the center of the bifurcation"
+        if isBranchingSection:print("--BRANCHING SECTION:section located at the center of the bifurcation")
     cpbl, hlum=cpBoundaryLayer(hc,  centr=oc, issection0=isBranchingSection)
     
     ##split the inner lumen in quarters and check if the isop can be applied
     sectype= hlum.shape[0]/24.
     if sectype!=float(int(sectype)): raise ValueError,"BE CAREFUL: the number of points along each circular section need to be 24*int in order to allow mapping!"
     else: 
-        if verbos:print "----the number of points on 1 slice is suitable for ISOP MESHING----"
+        if verbos:print("----the number of points on 1 slice is suitable for ISOP MESHING----")
     npq= sectype*6
     hlum1=concatenate([hlum, [hlum[0]]], axis=0)
     quartsec=[hlum1[npq*i:npq*(i+1)+1] for i in range(4)]#split in quarters
@@ -218,11 +219,11 @@ def cpAllSections(HC, OC, start_end_branching=[False, False]):
         i=cpOneSection(hc, oc,  isBranchingSection=isBr )
         cpain.append(i[0]), cpatr.append(i[1]), cpabl.append(i[2])
     cpain, cpatr, cpabl=[ array(i) for i in [cpain, cpatr, cpabl] ]
-    print '# sections= %d,  # inner quad reg = %d, # trans quad reg = %d, # boundary-layer quad reg = %d' %(cpain.shape[0],cpain.shape[1], cpatr.shape[1], cpabl.shape[1])
-    if start_end_branching==[True, True]: print '--this vessel BIFURCATES both at FIRST AND LAST section'
-    if start_end_branching==[True, False]: print '--this vessel BIFURCATES at FIRST section'
-    if start_end_branching==[False, True]: print '--this vessel BIFURCATES at LAST section'
-    if start_end_branching==[False, False]: print '--this vessel DOES NOT BIFURCATE'
+    print('# sections= %d,  # inner quad reg = %d, # trans quad reg = %d, # boundary-layer quad reg = %d' %(cpain.shape[0],cpain.shape[1], cpatr.shape[1], cpabl.shape[1]))
+    if start_end_branching==[True, True]: print('--this vessel BIFURCATES both at FIRST AND LAST section')
+    if start_end_branching==[True, False]: print('--this vessel BIFURCATES at FIRST section')
+    if start_end_branching==[False, True]: print('--this vessel BIFURCATES at LAST section')
+    if start_end_branching==[False, False]: print('--this vessel DOES NOT BIFURCATE')
     #[visualizeSubmappingQuadRegion(i) for i in cpain]
     #[visualizeSubmappingQuadRegion(i) for i in cpatr]
     #[visualizeSubmappingQuadRegion(i) for i in cpabl]

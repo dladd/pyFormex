@@ -26,6 +26,7 @@
 """Clock
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = []
@@ -103,7 +104,7 @@ class AnalogClock(object):
         
     def stop(self):
         """Stop a running clock."""
-        print "STOP"
+        print("STOP")
         if self.timer:
             self.timer.stop()
 

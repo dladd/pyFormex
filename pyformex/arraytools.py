@@ -31,6 +31,7 @@ everything from this module::
 
   from arraytools import * 
 """
+from __future__ import print_function
 
 from numpy import *
 import utils

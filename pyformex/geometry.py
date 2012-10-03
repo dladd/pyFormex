@@ -28,6 +28,7 @@ This module defines a generic Geometry superclass which adds all the
 possibilities of coordinate transformations offered by the
 Coords class to the derived classes.
 """
+from __future__ import print_function
 
 from coords import Coords
 

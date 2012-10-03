@@ -27,6 +27,7 @@
 This tries to load the compiled libraries, and replaces those that failed
 to load with the (slower) Python versions.
 """
+from __future__ import print_function
 
 __all__ = [ 'misc', 'nurbs', 'drawgl', 'accelerated' ]
 

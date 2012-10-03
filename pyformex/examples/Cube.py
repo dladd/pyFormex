@@ -30,6 +30,7 @@ of the cube are drawn as triangles or as quadrilaterals, and what color
 scheme is to be used: no color (black), a single color, a single color per
 face, or a color gradient over the faces.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']

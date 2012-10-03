@@ -39,6 +39,7 @@ directly is 7. Higher order curves are approximated by a PolyLine.
 For the last (highest degree) Nurbs curve, also a set of 100 points along
 the curve are shown.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'curve']
@@ -96,11 +97,11 @@ def run():
     setDrawOptions({'bbox':None})
 
     cmap = colormap() * 2
-    print cmap
+    print(cmap)
     n = min(len(C.coords),cmap)
     dmax = 7 # maximum Nurbs degree we can draw in OpenGL
     for d in range(1,n):
-        print d
+        print(d)
         c = cmap[ (d-1) % len(cmap) ] # wrap around if color map is too short
         N = NurbsCurve(C.coords,degree=d)
         if d <= dmax:

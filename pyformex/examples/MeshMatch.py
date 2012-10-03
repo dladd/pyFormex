@@ -33,6 +33,7 @@ squares. The matching node numbers from the two meshes are printed out.
 Then, after a pause, the parts of both meshes that are connected to the
 common nodes are drawn.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
@@ -68,8 +69,8 @@ def run():
     n1 = where(match>=0)[0]     # node numbers in Mesh M1
     n0 = match[n1]              # node numbers in Mesh M
 
-    print "List of the %s matching nodes" % len(n1)
-    print column_stack([n0,n1])
+    print("List of the %s matching nodes" % len(n1))
+    print(column_stack([n0,n1]))
 
     draw(M.coords[n0],marksize=10,bbox='last',ontop=True)
 

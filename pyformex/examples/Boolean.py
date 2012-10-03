@@ -26,6 +26,7 @@
 
 Perform boolean operations on surfaces
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']

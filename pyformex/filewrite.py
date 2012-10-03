@@ -35,6 +35,7 @@ other formats.
 
 
 """
+from __future__ import print_function
 import pyformex as pf
 import numpy as np
 from lib import misc

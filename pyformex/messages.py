@@ -26,6 +26,7 @@
 """Error and Warning Messages
 
 """
+from __future__ import print_function
 
 import pyformex as pf
 

@@ -26,6 +26,7 @@
 
 Create, measure and approximate cross section of a Formex.
 """
+from __future__ import print_function
 
 import pyformex as pf
 import simple

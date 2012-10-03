@@ -22,7 +22,12 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Graphical User Interface for pyFormex."""
+"""Graphical User Interface for pyFormex.
+
+This module contains the main functions responsible for constructing
+and starting the pyFormex GUI.
+"""
+from __future__ import print_function
 
 import pyformex as pf
 from pyformex.gui import signals
@@ -89,7 +94,7 @@ def sizeReport(w,t=None):
 def hasDRI():
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
-    print dri
+    print(dri)
     return dri
 
 ################# Message Board ###############
@@ -543,7 +548,7 @@ class Gui(QtGui.QMainWindow):
     def toggleCoordsTracker(self,onoff=None):
         def track(x,y,z):
             X,Y,Z = pf.canvas.unProject(x,y,z,True)
-            print "%s --> %s" % ((x,y,z),(X,Y,Z))
+            print("%s --> %s" % ((x,y,z),(X,Y,Z)))
             pf.GUI.coordsbox.setValues([X,Y,Z])
 
         if onoff is None:
@@ -886,7 +891,7 @@ class Gui(QtGui.QMainWindow):
         if exitDialog():
             self.drawlock.free()
             dooze = pf.cfg['gui/dooze']
-            print "Exiting in %s seconds" % dooze
+            print("Exiting in %s seconds" % dooze)
             draw.sleep(dooze)
             # force reset redirect
             sys.stderr.flush()
@@ -1022,8 +1027,8 @@ def windowExists(windowname):
 def windowId():
     """Return the X windowid of the main pyFormex window."""
     info = QtGui.QX11Info()
-    print info
-    print "%x" % info.appRootWindow()
+    print(info)
+    print("%x" % info.appRootWindow())
     
 
 

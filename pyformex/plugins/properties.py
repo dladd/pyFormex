@@ -27,6 +27,7 @@
 Properties can really be just about any Python object.
 Properties can be attributed to a set of geometrical elements.
 """
+from __future__ import print_function
 
 from flatkeydb import FlatDB
 from mydict import Dict,CDict
@@ -830,6 +831,6 @@ if __name__ == "script" or  __name__ == "draw":
 
     P.Prop(set='cylinder',name='cylsurf',surftype='element',label='SNEG')
 
-    print P.getProp(attr=['surftype'])
+    print(P.getProp(attr=['surftype']))
 
 # End

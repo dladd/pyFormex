@@ -29,6 +29,7 @@ pyFormex GUI. The user can apply them to change the GUI or to add
 interactive widgets to his scripts. Of course he can also use all the
 Qt widgets directly.
 """
+from __future__ import print_function
 
 import os,types
 from PyQt4 import QtCore, QtGui
@@ -254,7 +255,7 @@ class InputItem(QtGui.QWidget):
                 layout.addStretch()
             layout.addWidget(self.label)
             if 'a' in kargs.get('stretch',''):
-                print 'test'
+                print('test')
                 layout.addStretch()
 
         if 'data' in kargs:
@@ -267,11 +268,11 @@ class InputItem(QtGui.QWidget):
             try:
                 self.input.setReadOnly(kargs['readonly'])
             except:
-                print "Can not set readonly: %s,%s" % (name,kargs)
+                print("Can not set readonly: %s,%s" % (name,kargs))
 
         if 'width' in kargs:
             try:
-                print 'SETTING WIDTH',self.input
+                print('SETTING WIDTH',self.input)
                 self.input.setMinimumWidth(kargs['width'])
             except:
                 pass
@@ -574,8 +575,8 @@ class ListWidget(QtGui.QListWidget):
     def sizeHint(self):
         if self.maxh > 0:
             w,h = objSize(QtGui.QListWidget.sizeHint(self))
-            print w
-            print h
+            print(w)
+            print(h)
             print("QListWidget hints size %s,%s" % (w,h),pf.DEBUG.WIDGET)
             h = max(h,self.maxh)
             return QtCore.QSize(w,h)
@@ -2436,23 +2437,23 @@ class TableModel(QtCore.QAbstractTableModel):
     
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
-            print "Setting items at %s to %s" % (str(index),str(value))
+            print("Setting items at %s to %s" % (str(index),str(value)))
             try:
                 r,c = [index.row(),index.column()]
-                print "Setting value at %s,%s to %s" %(r,c,value)
+                print("Setting value at %s,%s to %s" %(r,c,value))
                 value = eval(str(value.toString()))
-                print "Setting value at %s,%s to %s" %(r,c,value)
+                print("Setting value at %s,%s to %s" %(r,c,value))
                 self.arraydata[index.row()][index.column()] = value
-                print "Succesfully changed data"
+                print("Succesfully changed data")
                 self.dataChanged.emit(index,index) #not sure if needed, ?way to check?
 #                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index) #or maybe this one
-                print "Signaled success"
+                print("Signaled success")
                 return True
             except:
-                print "Could not set the value"
+                print("Could not set the value")
                 return False
         else:
-            print "CAN  NOT EDIT"
+            print("CAN  NOT EDIT")
         return False
 
 from numpy import ndarray,asarray
@@ -2481,28 +2482,28 @@ class ArrayModel(TableModel):
 
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
-            print "Setting items at %s to %s" % (str(index),str(value))
+            print("Setting items at %s to %s" % (str(index),str(value)))
             try:
                 r,c = [index.row(),index.column()]
-                print "Setting value at %s,%s to %s" %(r,c,value)
+                print("Setting value at %s,%s to %s" %(r,c,value))
                 if isinstance(self.arraydata[index.row()][index.column()],float):
                     value,ok = value.toDouble()
                 elif isinstance(self.arraydata[index.row()][index.column()],int):
                     value,ok = value.toInt()
                 else:
-                    print "Editing of other than float or int arrays is not implemented yet!"
+                    print("Editing of other than float or int arrays is not implemented yet!")
                     ok = False
                 if not ok:
                     raise ValueError
-                print "Setting value at %s,%s to %s" %(r,c,value)
+                print("Setting value at %s,%s to %s" %(r,c,value))
                 self.arraydata[index.row()][index.column()] = value
                 self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 return True
             except:
-                print "Could not set the value"
+                print("Could not set the value")
                 return False
         else:
-            print "CAN  NOT EDIT"
+            print("CAN  NOT EDIT")
         return False
 
 

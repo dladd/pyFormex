@@ -30,6 +30,7 @@ one-dimensional geometry in pyFormex. These may be straight lines, polylines,
 higher order curves and collections thereof. In general, the curves are 3D,
 but special cases may be created for handling plane curves.
 """
+from __future__ import print_function
 
 # I wrote this software in my free time, for my joy, not as a commissioned task.
 # Any copyright claims made by my employer should therefore be considered void.
@@ -1466,7 +1467,7 @@ class Arc(Curve):
                 begin,end = self.sub_points(array([0.0,1.0]),0)
                 self.coords = Coords([begin,self._center,end])
             except:
-                print "Invalid data for Arc"
+                print("Invalid data for Arc")
                 raise
 
     def getCenter(self):

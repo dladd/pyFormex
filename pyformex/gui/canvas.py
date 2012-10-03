@@ -75,6 +75,7 @@ def glLineSmooth(onoff):
 
 def glLineStipple(factor,pattern):
     """Set the line stipple pattern.
+from __future__ import print_function
 
     When drawing lines, OpenGl can use a stipple pattern. The stipple
     is defined by two values: a pattern (on/off) of maximum 16 bits,
@@ -473,7 +474,7 @@ class CanvasSettings(Dict):
 #
 
 def print_camera(self):
-    print self.report()
+    print(self.report())
 
     
 class Canvas(object):

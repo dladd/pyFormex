@@ -28,6 +28,7 @@
 Postprocessing means collecting a geometrical model and computed values
 from a numerical simulation, and render the values on the domain.
 """
+from __future__ import print_function
 
 from arraytools import *
 

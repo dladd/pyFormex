@@ -26,6 +26,7 @@
 """Nurbs menu
 
 """
+from __future__ import print_function
 
 from draw2d import *
 from plugins.objects import *
@@ -59,7 +60,7 @@ ntoggles = len(selection.annotations)
 def toggleEdgeNumbers():
     selection.toggleAnnotation(0+ntoggles)
 def toggleNodeNumbers():
-    print "SURFACE_MENU: %s" % selection
+    print("SURFACE_MENU: %s" % selection)
     selection.toggleAnnotation(1+ntoggles)
 def toggleNormals():
     selection.toggleAnnotation(2+ntoggles)
@@ -118,10 +119,10 @@ def createNurbsCurve(N,name=None):
     name = res['name']
     if name == an.peek():
         an.next()
-    print name
-    print pf.PF
+    print(name)
+    print(pf.PF)
     export({name:N})
-    print pf.PF
+    print(pf.PF)
     selection.set([name])
     return name
 
@@ -130,11 +131,11 @@ def createInteractive():
     mode='nurbs'
     res = askItems([('degree',3),('closed',False)])
     obj_params.update(res)
-    print "z value = %s" % the_zvalue
+    print("z value = %s" % the_zvalue)
     points = drawPoints2D(mode,npoints=-1,zvalue=the_zvalue)
     if points is None:
         return
-    print "POINTS %s" % points
+    print("POINTS %s" % points)
     N = drawnObject(points,mode=mode)
     pf.canvas.removeHighlight()
     if N:
@@ -205,16 +206,16 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     before = pf.GUI.menu.nextitem(_menu)
-    print "Menu %s was before %s" % (_menu,before)
+    print("Menu %s was before %s" % (_menu,before))
     close_menu()
     import plugins
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print pf.GUI.menu.actionList()
+    print(pf.GUI.menu.actionList())
 
 def test_menu():
-    print "TEST2"
+    print("TEST2")
     
 ####################################################################
 

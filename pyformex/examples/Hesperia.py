@@ -26,6 +26,7 @@
 """Hesperia
 
 """
+from __future__ import print_function
 _status = 'unchecked'
 _level = 'advanced'
 _topics = ['geometry', 'FEA', 'domes', 'surface']
@@ -186,9 +187,9 @@ def createGeometry():
     # Scale to the real geometry
     scale = 7000. / F.sizes()[2]
     pf.message("Applying scale factor %s " % scale)
-    print F.bbox()
+    print(F.bbox())
     F = F.scale(scale)
-    print F.bbox()
+    print(F.bbox())
 
     clear()
     draw(F,alpha=0.4)
@@ -284,20 +285,20 @@ def createFrameModel():
     elems = S.elems  # the triangles
 
     # Create edges and faces from edges
-    print "The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces())
+    print("The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces()))
 
     # Remove the edges between to quad triangles
     drawNumbers(S.coords)
     quadtri = where(S.prop==6)[0]
     nquadtri = quadtri.shape[0]
-    print "%s triangles are part of quadrilateral faces" % nquadtri
+    print("%s triangles are part of quadrilateral faces" % nquadtri)
     faces = S.getElemEdges()[quadtri]
     cnt,ind,xbin = histogram2(faces.reshape(-1),arange(faces.max()+1))
     rem = where(cnt==2)[0]
-    print "Total edges %s" % len(S.edges)
-    print "Removing %s edges" % len(rem)
+    print("Total edges %s" % len(S.edges))
+    print("Removing %s edges" % len(rem))
     edges = S.edges[complement(rem,n=len(S.edges))]
-    print "Remaining edges %s" % len(edges)
+    print("Remaining edges %s" % len(edges))
 
     # Create the steel structure
     E = Formex(nodes[edges])
@@ -308,11 +309,11 @@ def createFrameModel():
     warning("Beware! This script is currently under revision.")
     
     conn = connections(quadtri)
-    print conn
+    print(conn)
 
     # Filter out the single connection edges
     internal = [ c[0] for c in conn if len(c[1]) > 1 ]
-    print "Internal edges in quadrilaterals: %s" % internal
+    print("Internal edges in quadrilaterals: %s" % internal)
     
     E = Formex(nodes[edges],1)
     E.prop[internal] = 6
@@ -323,7 +324,7 @@ def createFrameModel():
     # Remove internal edges
     tubes = edges[E.prop != 6]
 
-    print "Number of tube elements after removing %s internals: %s" % (len(internal),tubes.shape[0])
+    print("Number of tube elements after removing %s internals: %s" % (len(internal),tubes.shape[0]))
 
     D = Formex(nodes[tubes],1)
     clear()
@@ -336,7 +337,7 @@ def createFrameModel():
     b1 = b-2*t
     h1 = h-2*t
     A = b*h - b1*h1
-    print b*h**3
+    print(b*h**3)
     I1 = (b*h**3 - b1*h1**3) / 12
     I2 = (h*b**3 - h1*b1**3) / 12
     I12 = 0
@@ -356,8 +357,8 @@ def createFrameModel():
         'shear_modulus' : 81500,
         'density' : 7.85e-9,
         }
-    print tube
-    print steel
+    print(tube)
+    print(steel)
 
     tubesection = ElemSection(section=tube,material=steel)
 
@@ -365,12 +366,12 @@ def createFrameModel():
 
     # Area of triangles
     area,normals = S.areaNormals()
-    print "Area:\n%s" % area
+    print("Area:\n%s" % area)
     # compute bar lengths
     bars = nodes[tubes]
     barV = bars[:,1,:] - bars[:,0,:]
     barL = sqrt((barV*barV).sum(axis=-1))
-    print "Member length:\n%s" % barL
+    print("Member length:\n%s" % barL)
 
 
     ### DEFINE LOAD CASE (ask user) ###
@@ -393,7 +394,7 @@ def createFrameModel():
     if res['Steel']:
         # the STEEL weight
         lwgt = steel['density'] * tube['cross_section'] * 9810  # mm/s**2
-        print "Weight per length %s" % lwgt
+        print("Weight per length %s" % lwgt)
         # assemble steel weight load
         for e,L in zip(tubes,barL):
             NODLoad[nlc,e] += [ 0., 0., - L * lwgt / 2 ]
@@ -420,7 +421,7 @@ def createFrameModel():
         nlc += 1
 
     # For Abaqus: put the nodal loads in the properties database
-    print NODLoad
+    print(NODLoad)
     PDB = PropertyDB()
     for lc in range(nlc):
         for i,P in enumerate(NODLoad[lc]):
@@ -477,7 +478,7 @@ def createFrameModel():
     else:
         fe_model = Dict(dict(solver='Abaqus',nodes=nodes,elems=elems,prop=PDB,botnodes=botnodes,nsteps=nlc))
     export({'fe_model':fe_model})
-    print "FE model created and exported as 'fe_model'"
+    print("FE model created and exported as 'fe_model'")
 
 
 #################### SHELL MODEL ########################################
@@ -491,7 +492,7 @@ def createShellModel():
     # Turn the Formex structure into a TriSurface
     # This guarantees that element i of the Formex is element i of the TriSurface
     S = TriSurface(F)
-    print "The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces())
+    print("The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces()))
     nodes = S.coords
     elems = S.elems  # the triangles
 
@@ -513,8 +514,8 @@ def createShellModel():
         'shear_modulus': 26200,
         'density': 2.5e-9,        # T/mm**3
         }
-    print glass_plate
-    print glass
+    print(glass_plate)
+    print(glass)
     glasssection = ElemSection(section=glass_plate,material=glass)
 
     PDB = PropertyDB()
@@ -525,7 +526,7 @@ def createShellModel():
 
     # Area of triangles
     area,normals = S.areaNormals()
-    print "Area:\n%s" % area
+    print("Area:\n%s" % area)
 
     ### DEFINE LOAD CASE (ask user) ###
     res = askItems([('Glass',True),('Snow',False)])
@@ -569,7 +570,7 @@ def createShellModel():
 
     botofs = bot + [ 0.,0.,-0.2]
     bbot2 = concatenate([bot,botofs],axis=1)
-    print bbot2.shape
+    print(bbot2.shape)
     S = Formex(bbot2)
     draw(S)
     
@@ -618,7 +619,7 @@ def createAbaqusInput():
 
     jobname = res['JobName']
     if not jobname:
-        print "No Job Name: writing to sys.stdout"
+        print("No Job Name: writing to sys.stdout")
         jobname = None
 
     out = [ Output(type='history'),
@@ -662,7 +663,7 @@ def runCalpyAnalysis():
     from plugins import calpy_itf
     calpy_itf.check()
     import calpy
-    print calpy
+    print(calpy)
     calpy.options.optimize=True
     from calpy import fe_util,beam3d
     ############################
@@ -687,14 +688,14 @@ def runCalpyAnalysis():
 
     jobname = res['JobName']
     if not jobname:
-        print "No Job Name: bailing out"
+        print("No Job Name: bailing out")
         return
     verbose = res['Verbose Mode']
    
     nnod = FE.nodes.shape[0]
     nel = FE.elems.shape[0]
-    print "Number of nodes: %s" % nnod
-    print "Number of elements: %s" % nel
+    print("Number of nodes: %s" % nnod)
+    print("Number of elements: %s" % nel)
 
     # Create an extra node for beam orientations
     #
@@ -703,7 +704,7 @@ def runCalpyAnalysis():
     extra_node = array([[0.0,0.0,0.0]])
     coords = concatenate([FE.nodes,extra_node])
     nnod = coords.shape[0]
-    print "Adding a node for orientation: %s" % nnod
+    print("Adding a node for orientation: %s" % nnod)
 
     # We extract the materials/sections from the property database
     matprops = FE.prop.getProp(kind='e',attr=['section'])
@@ -720,8 +721,8 @@ def runCalpyAnalysis():
                   mat.moment_inertia_12,
                   ] for mat in matprops]) 
     if verbose:
-        print "Calpy.materials"
-        print mats
+        print("Calpy.materials")
+        print(mats)
     
     # Create element definitions:
     # In calpy, each beam element is represented by 4 integer numbers:
@@ -742,8 +743,8 @@ def runCalpyAnalysis():
                            axis=1)
   
     if verbose:
-        print "Calpy.elements"
-        print elements
+        print("Calpy.elements")
+        print(elements)
 
     # Boundary conditions
     # While we could get the boundary conditions from the node properties
@@ -764,17 +765,17 @@ def runCalpyAnalysis():
     # Also clamp the fake extra node
     s += "  %d  1  1  1  1  1  1\n" % nnod
     if verbose:
-        print "Specified boundary conditions"
-        print s
+        print("Specified boundary conditions")
+        print(s)
     bcon = fe_util.ReadBoundary(nnod,6,s)
     fe_util.NumberEquations(bcon)
     if verbose:
-        print "Calpy.DOF numbering"
-        print bcon # all DOFs are numbered from 1 to ndof
+        print("Calpy.DOF numbering")
+        print(bcon) # all DOFs are numbered from 1 to ndof
 
     # The number of free DOFs remaining
     ndof = bcon.max()
-    print "Number of DOF's: %s" % ndof
+    print("Number of DOF's: %s" % ndof)
 
     # Create load vectors
     # Calpy allows for multiple load cases in a single analysis.
@@ -794,29 +795,29 @@ def runCalpyAnalysis():
     # returns the value after assembling.
     # Also notice that the indexing inside the bcon array uses numpy
     # convention (starting at 0), thus no adding 1 is needed!
-    print "Assembling Concentrated Loads"
+    print("Assembling Concentrated Loads")
     nlc = 1
     loads = zeros((ndof,nlc),float)
     for p in FE.prop.getProp('n',attr=['cload']):
         cload = zeros(6)
         for i,v in p.cload:
             cload[i] += v
-        print cload
-        print cload.shape
+        print(cload)
+        print(cload.shape)
         loads[:,0] = fe_util.AssembleVector(loads[:,0],cload,bcon[p.set,:])
     if verbose:
-        print "Calpy.Loads"
-        print loads
+        print("Calpy.Loads")
+        print(loads)
     # Perform analysis
     # OK, that is really everything there is to it. Now just run the
     # analysis, and hope for the best ;)
     # Enabling the Echo will print out the data.
     # The result consists of nodal displacements and stress resultants.
-    print "Starting the Calpy analysis module --- this might take some time"
+    print("Starting the Calpy analysis module --- this might take some time")
     pf.app.processEvents()
     starttime = time.clock()
     displ,frc = beam3d.static(coords,bcon,mats,elements,loads,Echo=True)
-    print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
+    print("Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime))
     # Export the results, but throw way these for the extra (last) node
     export({'calpy_results':(displ[:-1],frc)})
 
@@ -880,8 +881,8 @@ def postCalpy():
         if autoscale:
             siz0 = Coords(FE.nodes).sizes()
             siz1 = Coords(dis).sizes()
-            print siz0
-            print siz1
+            print(siz0)
+            print(siz1)
             dscale = niceNumber(1./(siz1/siz0).max())
 
         if animate:

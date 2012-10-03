@@ -38,10 +38,11 @@ The script starts by preference with a docstring (like this),
 composed of a short first line, then a blank line and
 one or more lines explaining the intention of the script.
 """
+from __future__ import print_function
 from gui.draw import *
 
 def run():
-    print "This is the pyFormex template script/app"
+    print("This is the pyFormex template script/app")
 
 # The following is to make it work as a script
 if __name__ == 'draw':

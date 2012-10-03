@@ -28,6 +28,7 @@ Usage: pyformex --nogui surface_abq SURFACE_FILES
 Generates input-surface.inp and input-volume.inp with the
 surface and volume modules in Abaqus(R) input format. 
 """
+from __future__ import print_function
 from mesh import Mesh
 from plugins import fe_abq,tetgen
 import os

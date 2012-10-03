@@ -31,6 +31,7 @@ to yield a line (red). The line is extruded in y-direction, resulting in
 a rectangle (blue). Finally, an extrusion in the z-direction gives a
 cuboid (yellow).
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['formex']

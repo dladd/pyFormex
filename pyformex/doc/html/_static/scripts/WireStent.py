@@ -28,6 +28,7 @@ A pyFormex script to generate a geometrical model of a wire stent.
 
 This version is for inclusion in the pyFormex documentation.
 """
+from __future__ import print_function
 
 from formex import *
 

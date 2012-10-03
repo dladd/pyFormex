@@ -27,6 +27,7 @@
 This module allows to import and export some simple geometrical items
 in DXF format.
 """
+from __future__ import print_function
 
 from formex import *
 from plugins import curve
@@ -72,10 +73,10 @@ def readDXF(filename):
     type 'Arc', 'Line', 'Polyline', 'Vertex'.
     """
     import utils,commands
-    print filename
+    print(filename)
     if utils.hasExternal('dxfparser'):
         cmd = 'pyformex-dxfparser %s 2>/dev/null' % filename
-        print cmd
+        print(cmd)
         sta,out = utils.runCommand(cmd)
         if sta==0:
             return out
@@ -192,11 +193,11 @@ def collectByType(entities):
     """Collect the dxf entities by type."""
     coll = {}
     types = set([ type(i) for i in entities ])
-    print "DXF collection:"
+    print("DXF collection:")
     for t in types:
         n = t.__name__
         cn = [ i for i in entities if type(i) == t ]
-        print "  items of type %s: %s" % (n,len(cn))
+        print("  items of type %s: %s" % (n,len(cn)))
         coll[n] = cn
     return coll
 

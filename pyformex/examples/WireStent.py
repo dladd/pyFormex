@@ -28,6 +28,7 @@ level = 'normal'
 topics = ['geometry']
 techniques = ['dialog', 'persistence', 'color']
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry']

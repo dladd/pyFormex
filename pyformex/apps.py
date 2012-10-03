@@ -27,6 +27,7 @@
 This module contains the functions to detect and load the pyFormex
 applications.
 """
+from __future__ import print_function
 
 import pyformex as pf
 import utils
@@ -81,7 +82,7 @@ def setAppDirs():
             if p.added:
                 parent = os.path.dirname(p.path)
                 sys.path.remove(parent)
-        print 'SYSPATH IS NOW:',sys.path
+        print('SYSPATH IS NOW:',sys.path)
     except:
         pass
 
@@ -218,9 +219,9 @@ def unload(appname):
             ## print refcnt
             del app
         else:
-            print "Can not unload %s" % name
+            print("Can not unload %s" % name)
     else:
-        print "Module %s is not loaded" % name
+        print("Module %s is not loaded" % name)
 
 
 def listLoaded():

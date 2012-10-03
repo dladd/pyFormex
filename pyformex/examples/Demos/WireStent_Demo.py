@@ -57,6 +57,7 @@ WireStent.py example, adding lots of drawing instructions and comments.
 More details regarding the used definitions can be found in the pyFormex
 reference manual.
 """
+from __future__ import print_function
 
 # needed if we import this from another script
 from formex import *

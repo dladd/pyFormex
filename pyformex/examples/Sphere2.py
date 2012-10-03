@@ -31,6 +31,7 @@ one a triangulated surface (simple.sphere3).
 Remark that simple.sphere3 may contain degenerate triangles at the north and
 south pole.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface','sphere']
@@ -49,7 +50,7 @@ def run():
     smooth()
     setView('front')
     for i in range(ns):
-        print "nx=%s, ny=%s" % (nx,ny)
+        print("nx=%s, ny=%s" % (nx,ny))
         b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
         s = sphere3(nx,ny,bot=-90,top=90)
         s = s.translate(0,1.0)

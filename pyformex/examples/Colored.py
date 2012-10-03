@@ -25,6 +25,7 @@
 """Colored
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['surface']
@@ -63,7 +64,7 @@ def run():
                 zoomAll()
                 for light in Lights:
                     lights(light)
-                    print "%s: color %s, mode %s, lights %s" % (i,str(c),mode,light)
+                    print("%s: color %s, mode %s, lights %s" % (i,str(c),mode,light))
                     i += 1
                     pause(1)
 

@@ -40,6 +40,7 @@ catname = 'apps.cat'
 
 def sortSets(d):
     """Turn the set values in d into sorted lists.
+from __future__ import print_function
 
     - `d`: a Python dictionary
 
@@ -385,7 +386,7 @@ class AppMenu(QtGui.QMenu):
             appname = self.fullAppName(name)
             app = apps.load(appname)
             if app is None:
-                print "%s is NO MODULE!" % appname
+                print("%s is NO MODULE!" % appname)
                 return
             
         files = self.files

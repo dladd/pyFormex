@@ -29,6 +29,7 @@ arrays and vice versa.
 
 This code was based on ideas found on the PyQwt mailing list.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from PyQt4.QtGui import QImage, QColor

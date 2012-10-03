@@ -27,6 +27,7 @@
 This example shows how to cut a hole in a surface.
 It uses the cutWithPlane function with a series of cutting planes.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'beginner'
 _topics = ['surface']

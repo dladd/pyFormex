@@ -26,6 +26,7 @@
 
 This module defines the Collection class.
 """
+from __future__ import print_function
 
 import pyformex as pf
 from arraytools import *

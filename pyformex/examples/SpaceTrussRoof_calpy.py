@@ -25,6 +25,7 @@
 """Double Layer Flat Space Truss Roof
 
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
@@ -185,10 +186,10 @@ def run():
     message("Output is written to file '%s'" % os.path.realpath(outfilename))
     stdout_saved = sys.stdout
     sys.stdout = outfile
-    print "# File created by pyFormex on %s" % time.ctime()
-    print "# Script name: %s" % pf.scriptName
+    print("# File created by pyFormex on %s" % time.ctime())
+    print("# Script name: %s" % pf.scriptName)
     displ,frc = static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
-    print "# Analysis finished on %s" % time.ctime()
+    print("# Analysis finished on %s" % time.ctime())
     sys.stdout = stdout_saved
     outfile.close()
 

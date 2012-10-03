@@ -26,6 +26,7 @@
 """Exporting finite element models in code Aster file formats (.mail and .comm).
 
 """
+from __future__ import print_function
 
 from plugins.fe_abq import fmtData
 from plugins.properties import *
@@ -288,7 +289,7 @@ def fmtMaterial(mat):
     out = '%s = DEFI_MATERIAU(\n' % mat.name
     
     materialswritten.append(mat.name)
-    print materialswritten
+    print(materialswritten)
     
     if mat.elasticity is None or mat.elasticity == 'linear':
         if mat.poisson_ratio is None and mat.shear_modulus is not None:

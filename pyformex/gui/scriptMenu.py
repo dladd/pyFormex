@@ -38,6 +38,7 @@ catname = 'scripts.cat'
 
 def extractKeyword(s):
     """Extract a ``keyword = value`` pair from a string.
+from __future__ import print_function
 
     If the input string `s` is of the form ``keyword = value``
     a tuple (keyword,value) is returned, else None.

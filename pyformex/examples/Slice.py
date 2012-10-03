@@ -31,6 +31,7 @@ surface and the animation of the results.
 A model of a horse is repeatedly cut by a plane and the cut-off parts
 are rotated and translated.
 """
+from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['surface']

@@ -27,6 +27,7 @@
 
 This is a support module for other pyFormex plugins.
 """
+from __future__ import print_function
 
 import pyformex as pf
 

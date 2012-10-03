@@ -31,6 +31,7 @@ experimental, maybe incomplete or even buggy.
 The functions in this module can be called as functions operating on a
 Mesh object, but are also available as Mesh methods.
 """
+from __future__ import print_function
 
 from mesh import Mesh
 from elements import elementType,_default_facetype

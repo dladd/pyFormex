@@ -34,6 +34,7 @@ other formats.
 
 
 """
+from __future__ import print_function
 import pyformex as pf
 from mesh import *
 import utils

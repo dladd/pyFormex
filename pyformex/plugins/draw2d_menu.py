@@ -30,6 +30,7 @@ While the drawing operations themselves are in 2D, they can be performed
 on a plane with any orientation in space. The constructed geometry always
 has 3D coordinates in the global cartesian coordinate system.
 """
+from __future__ import print_function
 
 
 from draw2d import *
@@ -76,16 +77,16 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     before = pf.GUI.menu.nextitem(_menu)
-    print "Menu %s was before %s" % (_menu,before)
+    print("Menu %s was before %s" % (_menu,before))
     close_menu()
     import plugins
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print pf.GUI.menu.actionList()
+    print(pf.GUI.menu.actionList())
 
 def test_menu():
-    print "TEST2"
+    print("TEST2")
     
 ####################################################################
 
