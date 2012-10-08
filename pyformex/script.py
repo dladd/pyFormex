@@ -126,7 +126,7 @@ def rename(oldnames,newnames):
             del g[oldname]
 
 
-def listAll(clas=None,like=None,filter=None,dic=None,sort=False):
+def listAll(clas=None,like=None,filtr=None,dic=None,sort=False):
     """Return a list of all objects in dictionay that match criteria.
 
     - dic: a dictionary object, defaults to pyformex.PF
@@ -134,7 +134,7 @@ def listAll(clas=None,like=None,filter=None,dic=None,sort=False):
       returned
     - like: a string: if given, only object names starting with this string
       will be returned
-    - filter: a function taking an object name as parameter and returning True
+    - filtr: a function taking an object name as parameter and returning True
       or False. If specified, only objects passing the test will be returned.
 
     The return value is a list of keys from dic.
@@ -147,8 +147,8 @@ def listAll(clas=None,like=None,filter=None,dic=None,sort=False):
         names = [ n for n in names if isinstance(dic[n],clas) ]
     if like is not None:
         names = [ n for n in names if n.startswith(like) ]
-    if filter is not None:
-        names = [ n for n in names if filter(n) ]
+    if filtr is not None:
+        names = [ n for n in names if filtr(n) ]
     if sort:
         names.sort()
     return names
@@ -283,6 +283,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
+    utils.warn('print_function')
     global stepmode,exportNames,starttime
     global exitrequested
     # (We only allow one script executing at a time!)

@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Menu with pyFormex scripts."""
+"""Menu with pyFormex scripts.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -38,7 +41,6 @@ catname = 'scripts.cat'
 
 def extractKeyword(s):
     """Extract a ``keyword = value`` pair from a string.
-from __future__ import print_function
 
     If the input string `s` is of the form ``keyword = value``
     a tuple (keyword,value) is returned, else None.

@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""OpenGL marks for annotating 3D actors."""
+"""OpenGL marks for annotating 3D actors.
+
+"""
+from __future__ import print_function
 
 from OpenGL import GL,GLU
 from colors import *
@@ -35,7 +38,6 @@ import gluttext
 
 class Mark(Drawable):
     """A 2D drawing inserted at a 3D position of the scene.
-from __future__ import print_function
 
     The minimum attributes and methods are:
 

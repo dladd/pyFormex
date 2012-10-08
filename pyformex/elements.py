@@ -31,6 +31,7 @@ that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
 """
 from __future__ import print_function
+
 import pyformex
 from coords import Coords
 from connectivity import Connectivity

@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""OpenGL drawing functions and base class for all drawable objects."""
+"""OpenGL drawing functions and base class for all drawable objects.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -59,7 +62,6 @@ _nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9', 'hex20' ]
 
 def glColor(color,alpha=None):
     """Set the OpenGL color, possibly with transparency.
-from __future__ import print_function
 
     color is a tuple of 3 or 4 real values.
     alpha is a single real value.

@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Definition of some RGB colors and color conversion functions"""
+"""Definition of some RGB colors and color conversion functions
+
+"""
+from __future__ import print_function
 
 from PyQt4 import QtCore,QtGui
 import numpy
@@ -39,7 +42,6 @@ except:
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
-from __future__ import print_function
 
     The output is a tuple of three RGB float values ranging from 0.0 to 1.0.
     The input can be any of the following:

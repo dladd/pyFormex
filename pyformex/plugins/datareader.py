@@ -23,7 +23,10 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
-"""Numerical data reader"""
+"""Numerical data reader
+
+"""
+from __future__ import print_function
 
 __all__ = ['splitFloat','readData']
 
@@ -36,7 +39,6 @@ FloatString = re.compile('(?P<float>[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE]\d+)?)(?P<st
 
 def splitFloat(s):
     """Match a floating point number at the beginning of a string
-from __future__ import print_function
 
     If the beginning of the string matches a floating point number,
     a list is returned with the float and the remainder of the string;

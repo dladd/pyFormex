@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Functions for the Pref menu."""
+"""Functions for the Pref menu.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 from main import savePreferences
@@ -38,7 +41,6 @@ import draw
 
 def updateSettings(res,save=None):
     """Update the current settings (store) with the values in res.
-from __future__ import print_function
 
     res is a dictionary with configuration values.
     The current settings will be updated with the values in res.

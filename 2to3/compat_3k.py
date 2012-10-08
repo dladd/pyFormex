@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -22,40 +22,20 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+"""pyFormex compatibility module for Python3.x
 
-"""Functions related to text and fonts
+The compatibility modules for different Python versions are intended
+to wrap code changes between the versions into functions located at
+a single place.
 
+Note that we can not implement this as a single module and test for
+the Python version inside that module. The differences between the
+versions might cause compilation to fail.
 """
 from __future__ import print_function
-
-import pyformex
-from PyQt4 import QtGui
-
-
-def getFont(font=None,size=None):
-    """Get the best fonts matching font name and size
-
-    If nothing is specified, returns the default GUI font.
-    """
-    if font is None:
-        font = pyformex.GUI.font()
-    else:
-        font = QtGui.QFont(font)
-    if size is not None:
-        font.setPointSize(size)
-    return font
-
-
-def fontHeight(font=None,size=None):
-    """Return the height in pixels of the given font.
-
-    This can be used to determine the canvas coordinates where the text is
-    to be drawn.
-    """
-    font = getFont(font,size)
-    fh = font.pixelSize()
-    if fh < 0:
-        fh = QtGui.QFontInfo(font).pixelSize()
-    return fh
+        
+    
+def execFile(f,*args):
+    return exec(compile(open(f).read(), f, 'exec'),*args)
 
 # End

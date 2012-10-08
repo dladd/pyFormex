@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""OpenGL actors for populating the 3D scene."""
+"""OpenGL actors for populating the 3D scene.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 import sys
@@ -43,7 +46,6 @@ import timer
 
 class Actor(Drawable):
     """An Actor is anything that can be drawn in an OpenGL 3D Scene.
-from __future__ import print_function
 
     The visualisation of the Scene Actors is dependent on camera position and
     angles, clipping planes, rendering mode and lighting.

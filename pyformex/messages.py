@@ -39,6 +39,24 @@ def getMessage(msg):
     msg = str(msg) # allows for msg being a Warning
     return globals().get(msg,msg)
 
+print_function = """..
+
+print is now a function
+-----------------------
+This version of pyFormex enforces scripts to use the print function rather than 
+the print statement. This means that you should not use::
+
+  print something
+
+but rather::
+
+  print(something)
+
+You can convert your scripts automatically with the command::
+
+  2to3 -f print -wn SCRIPTFILE
+
+"""
 
 no_tetgen = """..
 
@@ -114,5 +132,6 @@ depr_mesh_getlowerentities_unique = "The use of the unique argument is deprecate
 
 depr_adjacencyArrays = "adjacencyArrays is deprecated. Use Adjacency.frontWalk() instead."
 depr_mesh_eltype = "The 'eltype' attribute of a Mesh should no longer be used. To get the element type, use Mesh.elType() or Mesh.elName(). To set the element type of a Mesh, use Mesh.setType(eltype)."
+
 
 # End

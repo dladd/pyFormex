@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"Lindenmayer Systems"
+"""Lindenmayer Systems
+
+"""
+from __future__ import print_function
 
 import turtle
 
@@ -37,7 +40,6 @@ class Lima(object):
 
     def status (self):
         """Print the status of the Lima"""
-from __future__ import print_function
         print("Lima status:")
         print("  Axiom: %s" % self.axiom)
         print("  Rules: %r" % self.rule)

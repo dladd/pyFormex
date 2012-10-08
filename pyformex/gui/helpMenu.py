@@ -23,7 +23,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Display help"""
+"""Display help
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 
@@ -38,7 +41,6 @@ from gettext import gettext as _
 
 def help(page=None):
     """Display a html help page.
-from __future__ import print_function
 
     If no page is specified, the help manual is displayed.
 

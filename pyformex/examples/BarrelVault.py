@@ -62,7 +62,6 @@ def run():
 
     draw(barrel)
 
-
 if __name__ == 'draw':
     run()
 # End

@@ -197,7 +197,8 @@ def perm(n=2):
 
 def fac(x):
     """Return the factorial of x"""
-    return reduce(lambda y,z:y*z,range(1,x+1))
+    import functools
+    return functools.reduce(lambda y,z:y*z,range(1,x+1))
 
 # Dialog
 dia = None

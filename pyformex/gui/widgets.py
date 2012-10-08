@@ -394,7 +394,7 @@ class InputString(InputItem):
         """Creates the input item."""
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
-        if max>0:
+        if type(max) is int and max > 0:
             self.input.setMaxLength(max)
         self._is_string_ = type(value) == str
         self.layout().insertWidget(1,self.input)
@@ -541,7 +541,7 @@ class ListWidget(QtGui.QListWidget):
     def __init__(self,maxh=0):
         """Initialize the ListWidget"""
         QtGui.QListWidget.__init__(self)
-	self.maxh = maxh
+        self.maxh = maxh
         self._size = QtGui.QListWidget.sizeHint(self)
         
     def allItems(self):
@@ -1873,8 +1873,12 @@ InputItems.update({
     'select': InputCombo,
 })
 
-keys = InputItems.keys()
-keys.sort()
+#
+# TODO: all itemtypes should become strings. Sorting mixed types
+#       will not work in Python3
+#
+#keys = sorted(InputItems)
+## DO WE USE THIS ANYWHERE?
 
 
 def inputAny(name,value,itemtype,**options):
@@ -1886,73 +1890,11 @@ def inputAny(name,value,itemtype,**options):
     - value: initial value,
     - itemtype: one of the available itemtypes
     """
-    #print name,value,itemtype,options
-
     try:
         f = InputItems[itemtype]
     except:
         f = InputString # default convert to string
     return f(name,value,**options)
-
-                
-## BV removed in 0.9
-## def inputAnyOld(item,parent=None):
-##     """_Create an InputItem with the old data style.
-
-##     This translates the data from the legacy InputItem data to the
-##     new style required by InputAny.
-##     Returns the InputItem constrctured with the data.
-##     """
-##     name,value = item[:2]
-    
-##     if type(item[-1]) == dict:
-##         # we have options
-##         options = item[-1]
-##         item = item[:-1]
-##     else:
-##         options = {}
-
-##     if len(item) > 2 and type(item[2]) == str:
-##         itemtype = item[2]
-##     else:
-##         # No item specified: guess from value or from available options
-##         if 'choices' in options:
-##             itemtype = 'select'
-##         else:
-##             itemtype = type(value)
-
-##     if itemtype == int:
-##         if len(item) > 3 and type(item[3] != dict):
-##             options['min'] = int(item[3])
-##         if len(item) > 4:
-##             options['max'] = int(item[4])
-
-##     elif itemtype == float:
-##         if len(item) > 3 and type(item[3] != dict):
-##             options['min'] = int(item[3])
-##         if len(item) > 4:
-##             options['max'] = int(item[4])
-##         if len(item) > 5:
-##             options['dec'] = int(item[5])
-
-##     elif itemtype == 'select' :
-##         if len(item) > 3:
-##             options['choices'] = item[3]
-
-##     elif itemtype in ['radio','hradio','vradio']:
-##         if len(item) > 3:
-##             options['choices'] = item[3]
-##         options['direction'] = itemtype[0]
-
-##     elif itemtype in ['push','hpush','vpush']:
-##         if len(item) > 3:
-##             options['choices'] = item[3]
-##         options['direction'] = itemtype[0]
-
-##     if parent is not None:
-##         options['parent'] = parent
-
-##     return inputAny(name,value,itemtype,**options)
 
 
 def updateDialogItems(data,newdata):

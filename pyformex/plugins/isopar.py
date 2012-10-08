@@ -23,14 +23,16 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Isoparametric transformations"""
+"""Isoparametric transformations
+
+"""
+from __future__ import print_function
 
 from coords import *
 
 
 def evaluate(atoms,x,y=0,z=0):
     """Build a matrix of functions of coords.
-from __future__ import print_function
 
     - `atoms`: a list of text strings representing a mathematical function of
       `x`, and possibly of `y` and `z`.

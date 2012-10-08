@@ -192,7 +192,8 @@ class FlatDB(dict):
 
     def checkKeys(self, record):
         """Check that record has the required keys."""
-        return reduce(int.__and__,map(record.has_key,self.req_keys),True)
+        import functools
+        return functools.reduce(int.__and__,map(record.has_key,self.req_keys),True)
     
     
     def checkRecord(self, record):

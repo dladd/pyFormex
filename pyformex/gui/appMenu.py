@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Menu with pyFormex apps."""
+"""Menu with pyFormex apps.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 import apps
@@ -40,7 +43,6 @@ catname = 'apps.cat'
 
 def sortSets(d):
     """Turn the set values in d into sorted lists.
-from __future__ import print_function
 
     - `d`: a Python dictionary
 

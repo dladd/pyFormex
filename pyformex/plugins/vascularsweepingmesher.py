@@ -1,5 +1,9 @@
-#!/usr/bin/env python pyformex.py
+# $Id$
 
+"""Vascular Sweeping Mesher
+
+"""
+from __future__ import print_function
 
 ##import os
 from numpy import *

@@ -22,7 +22,9 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""A collection of miscellaneous utility functions."""
+"""A collection of miscellaneous utility functions.
+
+"""
 from __future__ import print_function
 
 import pyformex as pf
@@ -71,7 +73,6 @@ known_externals = {
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
-from __future__ import print_function
 
     name is either a module or an external program whose availability has
     been registered.
@@ -751,7 +752,10 @@ def system(cmd):
     out = P.communicate()[0] # get the stdout
     return sta,out
 
-
+#
+#
+# TODO: replace commands with subprocess module
+#
 ### execute a system command ###
 def system1(cmd):
     import commands

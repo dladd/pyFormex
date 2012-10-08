@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""This implements an OpenGL drawing widget for painting 3D scenes."""
+"""This implements an OpenGL drawing widget for painting 3D scenes.
+
+"""
+from __future__ import print_function
 
 import pyformex as pf
 import coords
@@ -75,7 +78,6 @@ def glLineSmooth(onoff):
 
 def glLineStipple(factor,pattern):
     """Set the line stipple pattern.
-from __future__ import print_function
 
     When drawing lines, OpenGl can use a stipple pattern. The stipple
     is defined by two values: a pattern (on/off) of maximum 16 bits,

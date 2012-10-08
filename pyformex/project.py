@@ -28,6 +28,7 @@
 Functions for managing a project in pyFormex.
 """
 from __future__ import print_function
+
 import pyformex as pf
 from track import TrackedDict
 from pyformex import utils

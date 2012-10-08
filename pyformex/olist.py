@@ -57,7 +57,8 @@ def intersection (a,b):
 
 def concatenate(a):
     """Concatenate a list of lists"""
-    return reduce(list.__add__,a)
+    import functools
+    return functools.reduce(list.__add__,a)
 
 
 def flatten(a,recurse=False):

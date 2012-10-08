@@ -24,7 +24,10 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Specialized dictionary type structures."""
+"""Specialized dictionary type structures.
+
+"""
+from __future__ import print_function
 
 import olist
 
@@ -35,7 +38,6 @@ def __newobj__(cls, *args):
 
 class ODict(dict):
     """**An ordered dictionary.**
-from __future__ import print_function
 
     This is a dictionary that keeps the keys in order.
     The default order is the insertion order. The current order can be

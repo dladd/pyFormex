@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Functions from the File menu."""
+"""Functions from the File menu.
+
+"""
+from __future__ import print_function
 
 import os,shutil
 import pyformex as pf
@@ -43,7 +46,6 @@ from prefMenu import updateSettings
 
 def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     """Open a (new or old) Project file.
-from __future__ import print_function
 
     A dialog is presented to ask the user for a Project file name and the
     access modalities. The parameters help in setting sensible defaults

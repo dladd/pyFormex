@@ -23,7 +23,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Color mapping of a range of values."""
+"""Color mapping of a range of values.
+
+"""
+from __future__ import print_function
 
 from colors import *
 from utils import stuur
@@ -46,7 +49,6 @@ Palette = {
 
 class ColorScale(object):
     """Mapping floating point values into colors.
-from __future__ import print_function
 
     A colorscale maps floating point values within a certain range
     into colors and can be used to provide visual representation
