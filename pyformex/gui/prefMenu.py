@@ -95,6 +95,11 @@ def updateSettings(res,save=None):
 
 
 def settings():
+    """Interactively change the pyformex settings.
+
+    Creates a dialog to change (most of) the pyformex user configuration.
+    To change the canvas setttings, use viewportMenu.canvasSettings.
+    """
     import plugins
     import sendmail
     from elements import elementTypes
@@ -225,7 +230,7 @@ def settings():
             ('Close',close),
             ('Accept and Save',acceptAndSave),
             ('Accept',accept),
-        ],
+            ],
         )
     #dia.resize(800,400)
     dia.show()
@@ -268,7 +273,7 @@ def setLinewidth():
 def setAvgNormalTreshold():
     askConfigPreferences(['render/avgnormaltreshold'])
 def setAvgNormalSize():
-    askConfigPreferences(['mark/avgnormalsize'])
+    askConfigPreferences(['draw/avgnormalsize'])
 
 def setSize():
     pf.GUI.resize(800,600)

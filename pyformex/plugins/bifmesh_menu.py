@@ -927,6 +927,7 @@ def example():
 
     if not nextStep('3. Create the helper lines for the mesher. This step is best done with perspective off.'):
         return
+    perspective(off)
     C = [[-33.93232346,   7.50834751,   0.        ],
          [ -1.96555257,   6.90520096,   0.        ],
          [ 19.08426476,  10.4637661 ,   0.        ],

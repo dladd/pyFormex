@@ -109,8 +109,9 @@ class DebugLevels(object):
     ALL = -1
     NONE = 0
     INFO, WARNING, OPTION, CONFIG, DETECT, MEM, SCRIPT, GUI, MENU, DRAW, \
-          OPENGL, LIB, MOUSE, APPS, IMAGE, MISC, ABQ, WIDGET, PROJECT = \
-          [ 2 ** i for i in range(19) ]
+          CANVAS, OPENGL, LIB, MOUSE, APPS, IMAGE, MISC, ABQ, WIDGET, \
+          PROJECT = \
+          [ 2 ** i for i in range(20) ]
 
 delattr(DebugLevels,'i')
 

@@ -62,7 +62,7 @@ def draw_normals(n,avg=False):
     else:
         C = S.centroids()
         A,N = S.areaNormals()
-    siz = pf.cfg['mark/normalsize']
+    siz = pf.cfg['draw/normalsize']
     if siz == 'area' and not avg:
         siz = sqrt(A).reshape(-1,1)
     else:

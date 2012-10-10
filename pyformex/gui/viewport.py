@@ -265,11 +265,15 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """A canvas for OpenGL rendering.
 
     This class provides interactive functionality for the OpenGL canvas
-    provided by the canvas.Canvas class.
+    provided by the :class:`canvas.Canvas` class.
     
     Interactivity is highly dependent on Qt4. Putting the interactive
     functions in a separate class makes it esier to use the Canvas class
     in non-interactive situations or combining it with other GUI toolsets.
+
+    The QtCanvas constructor may have positional and keyword arguments. The
+    positional arguments are passed to the QtOpenGL.QGLWidget constructor,
+    while the keyword arguments are passed to the canvas.Canvas constructor.
     """
     cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
                      'pick'   : QtCore.Qt.CrossCursor, 
@@ -280,13 +284,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     selection_filters = [ 'none', 'single', 'closest', 'connected', 'closest-connected' ]
 
     
-    def __init__(self,*args):
-        """Initialize an empty canvas with default settings."""
+    def __init__(self,*args,**kargs):
+        """Initialize an empty canvas."""
         QtOpenGL.QGLWidget.__init__(self,*args)
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        canvas.Canvas.__init__(self)
+        canvas.Canvas.__init__(self,**kargs)
         self.setCursorShape('default')
         self.button = None
         self.mod = NONE
@@ -1460,6 +1464,7 @@ Viewport %s;  Current:%s;  Settings:
 %s
 """ % (i, v == self.current, v.settings))
 
+
     def link(self,vp,to):
         """Link viewport vp to to"""
         print("LINK %s to %s" % (vp,to))
@@ -1533,7 +1538,11 @@ class MultiCanvas(FramedGridLayout):
         """
         if shared is not None:
             pf.debug("SHARING display lists WITH %s" % shared,pf.DEBUG.DRAW)
-        canv = QtCanvas(self.parent,shared)
+        try:
+            settings = self.current.settings
+        except:
+            settings = {}
+        canv = QtCanvas(self.parent,shared,settings=settings)
         return(canv)
 
 
@@ -1574,6 +1583,7 @@ class MultiCanvas(FramedGridLayout):
 
 
     def viewIndex(self,view):
+        """Return the index of the specified view"""
         return self.all.index(view)
 
 

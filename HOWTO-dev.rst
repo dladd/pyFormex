@@ -729,7 +729,16 @@ General guidelines
 
 pyFormex modules
 ----------------
+- pyFormex modules should always contain a docstring of at least 3 lines,
+  the first of which can not be empty. Immediately after the docstring you
+  should enforce the use of the print function instead of the print
+  statement, like below::
 
+    """Test module
+    
+    """
+    from __future__ import print_function
+    
 - pyFormex modules providing a functionality that can be used under
   plain Python can, and probably should, end with a section to test
   the modules::

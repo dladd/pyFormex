@@ -435,9 +435,9 @@ class CanvasSettings(Dict):
                     v = map(int,v)
                 elif k == 'transparency':
                     v = max(min(float(v),1.0),0.0)
-                elif k == 'rendermode':
-                    if not v in Canvas.rendermodes:
-                        raise
+                ## elif k == 'rendermode':
+                ##     if not v in clas.rendermodes:
+                ##         raise
                 elif k == 'marktype':
                     pass
                 else:
@@ -507,7 +507,7 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings(**settings)
         self.mode2D = False
-        self.rendermode = pf.cfg['canvas/rendermode']
+        self.rendermode = pf.cfg['draw/rendermode']
         self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None
@@ -572,7 +572,7 @@ class Canvas(object):
         and everything is redrawn with the new mode.
         """
         #print "SETTING RENDERMODE"
-        if mode not in Canvas.rendermodes:
+        if mode not in self.rendermodes:
             raise ValueError,"Invalid render mode %s" % mode
         if lighting not in [True,False]:
             lighting = mode.startswith('smooth')

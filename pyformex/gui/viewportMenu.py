@@ -24,6 +24,7 @@
 ##
 """Viewport Menu.
 
+This module defines the functions of the Viewport menu.
 """
 from __future__ import print_function
 
@@ -147,33 +148,90 @@ def setCanvasSize():
         pf.canvas.resize(int(res['w']),int(res['h']))
 
 
-def viewportSettings():
-    """Interactively set the viewport settings."""
-    mode = pf.canvas.rendermode
-    modes = canvas.Canvas.rendermodes
-    s = pf.canvas.settings
-    if s.bgcolor2 is None:
-        s.bgcolor2 = s.bgcolor
-    res = draw.askItems(
-        [_I('rendermode', mode, choices=modes),
-         _I('linewidth', s.linewidth, itemtype='float'),
-         _I('bgcolor', s.bgcolor, itemtype='color'),
-         _I('bgcolor2', s.bgcolor2, itemtype='color'),
-         _I('fgcolor', s.fgcolor, itemtype='color'),
-         _I('slcolor', s.slcolor, itemtype='color'),
-         _I('Store these settings as defaults', False),
-         ],
-        'Config Dialog')
-    if res:
-        pf.debug(res)
-        pf.canvas.setRenderMode(res['rendermode'])
+def canvasSettings():
+    """Interactively change the canvas settings.
+
+    Creates a dialog to change the canvasSettings of the current or any other
+    viewport
+    """
+    
+    dia = None
+
+    def close():
+        dia.close()
+
+
+    def getVp(vp):
+        """Return the vp corresponding with a vp choice string"""
+        if vp == 'current':
+            vp = pf.GUI.viewports.current
+        elif vp == 'focus':
+            vp = pf.canvas
+        else:
+            vp = pf.GUI.viewports.all[int(vp)]
+        return vp
+
+        
+    def accept(save=False):
+        dia.acceptData()
+        res = dia.results
+        vp = getVp(res['viewport'])
+        pf.debug("Changing Canvas settings for viewport %s to:\n%s"%(pf.GUI.viewports.viewIndex(vp),res),pf.DEBUG.CANVAS)
         pf.canvas.settings.update(res,strict=False)
-        #pf.canvas.clear()
         pf.canvas.redrawAll()
         pf.canvas.update()
-        if res['Store these settings as defaults']:
-            pf.cfg.update(pf.canvas.settings.__dict__,name='canvas')
-        
+        if save:
+            # "SHOULD ADD canvas/
+            res['_save_'] = save
+            #prefMenu.updateSettings(res)
+            #pf.cfg.update(pf.canvas.settings.__dict__,name='canvas')
+
+    def acceptAndSave():
+        accept(save=True)
+
+    def changeViewport(vp):
+        if vp == 'current':
+            vp = pf.GUI.viewports.current
+        elif vp == 'focus':
+            vp = pf.canvas
+        else:
+            vp = pf.GUI.viewports.all[int(vp)]
+        dia.updateData(vp.settings)
+ 
+    canv = pf.canvas
+    vp = pf.GUI.viewports
+    pf.debug("Focus: %s; Current: %s" % (canv,vp),pf.DEBUG.CANVAS)
+    s = canv.settings
+
+    dia = widgets.InputDialog(
+        caption='Canvas Settings',
+        store=canv.settings,
+        items=[
+            _I('viewport',choices=['focus','current']+[str(i) for i in range(len(pf.GUI.viewports.all))],onselect=changeViewport),
+            _I('pointsize',),
+            _I('linewidth',),
+            _I('linestipple',),
+            _I('fgcolor',itemtype='color'),
+            _I('slcolor',itemtype='color'),
+            _I('shading'),
+            _I('lighting'),
+            _I('culling'),
+            _I('alphablend'),
+            _I('transparency',min=0.0,max=1.0),
+            _I('avgnormals',),
+            ],
+        enablers =[
+            ('alphablend',('transparency')),
+            ],
+        actions=[
+            ('Close',close),
+            ('Apply and Save',acceptAndSave),
+            ('Apply',accept),
+            ],
+        )
+    #dia.resize(800,400)
+    dia.show()
+       
 
 def viewportLayout():
     """Set the viewport layout."""
@@ -261,7 +319,7 @@ MenuData = [
         (_('&Highlight Color'),setSlColor), 
         (_('Line&Width'),setLineWidth), 
         (_('&Canvas Size'),setCanvasSize), 
-        (_('&All Viewport Settings'),viewportSettings),
+        (_('&Canvas Settings'),canvasSettings),
         (_('&Global Draw Options'),draw.askDrawOptions),
         (_('&Camera Settings'),cameraSettings),
         (_('&OpenGL Settings'),openglSettings),

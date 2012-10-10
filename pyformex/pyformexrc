@@ -155,9 +155,11 @@ showfocus = True
 
 wireframe_mode = 'smart'    # set to 'gl' for old behavior   
 
+##########################
 # Default canvas settings
-# Beware: when adding a value here, it has also to be added to
-# CanvasSettings
+##########################
+# This should only contain the keys that are also in CanvasSettings
+# Other canvas related settings can be added to the [draw] section
 [canvas]
 bgcolor = 'grey90'      # background color (single color or list of 2 or 4)
 bgimage = ''            # background image, filename
@@ -172,7 +174,6 @@ linewidth = 1.0             # width of lines
 linestipple = (0,1)         # line stipple (factor,pattern)
 marksize = 0.4              # size of 3D marks
 marktype = 'sphere'         # type of 3D mark
-rendermode = 'wireframe'    # default rendering mode
 shading = False
 lighting = False            # default lights off
 alphablend = False
@@ -180,17 +181,15 @@ avgnormals = False
 culling = False
 
 
-[mark]
-avgnormalsize = '_auto_'
-
-
 [draw]
+rendermode = 'wireframe'    # default rendering mode
 numbersontop = True
 wait = 0.0  # time(sec.) to wait between draw operations
 flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
 localaxes = True     # by default, buttons rotate/pan in local axes
 quadline = [] # 'line3' ]
 quadsurf = [] # [ 'quad8', 'quad9', 'hex20' ]
+avgnormalsize = '_auto_'
 
 [pick]
 size=(12,12) # size of the pick window
