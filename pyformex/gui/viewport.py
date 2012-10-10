@@ -43,7 +43,7 @@ import image
 import utils
 import toolbar
 
-
+# TODO
 # BV: UGLY! WE SHOULD GET RID OF THIS
 if pf.X11:
     from ctypes import cdll

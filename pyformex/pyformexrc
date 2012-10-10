@@ -168,17 +168,19 @@ bkcolor = None          # if defined, backsides of planes have this color
 slcolor = 'yellow'      # highlighting color
 colormap = ['black','red','green','blue','cyan','magenta','yellow','white'] 
 bkcolormap = colormap
+smooth = False              # smooth shading off
+fill = False                # polygon filling off
+lighting = False            # default lights off
+alphablend = False          # alphablend (transparency) off
+culling = False             # culling off
+avgnormals = False          
 transparency = 0.5          # default transparency value
 pointsize = 4.0             # size of points
 linewidth = 1.0             # width of lines
 linestipple = (0,1)         # line stipple (factor,pattern)
 marksize = 0.4              # size of 3D marks
 marktype = 'sphere'         # type of 3D mark
-shading = False
-lighting = False            # default lights off
-alphablend = False
-avgnormals = False
-culling = False
+edges = None
 
 
 [draw]

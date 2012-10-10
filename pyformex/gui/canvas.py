@@ -364,12 +364,7 @@ class CanvasSettings(Dict):
       colors (max. 4 are used).
     - bgimage: background image filename
     - slcolor: the highlight color
-    - rendermode: the rendering mode
-    - shading: boolean (smooth/flat shading)
-    - lighting: boolean (lights on/off)
     - alphablend: boolean (transparency on/off)
-    - culling: boolean
-    - avgnormals: boolean
 
     The list of default settings includes:
 
@@ -377,7 +372,12 @@ class CanvasSettings(Dict):
     - bkcolor: the default backface color
     - colormap: the default color map to be used if color is an index
     - bklormap: the default color map to be used if bkcolor is an index
-    - transparency: the default alpha and bkalpha value
+    - smooth: boolean (smooth/flat shading)
+    - lighting: boolean (lights on/off)
+    - culling: boolean
+    - transparency: float (0.0..1.0)
+    - avgnormals: boolean
+    - edges: 'none', 'feature' or 'all' 
     - pointsize: the default size for drawing points
     - marksize: the default size for drawing markers
     - linewidth: the default width for drawing lines
@@ -386,7 +386,8 @@ class CanvasSettings(Dict):
     All items that are not set, will get their value from the configuration
     file(s).
     """
-
+    edge_options = [ 'none','feature','all' ]
+    
     def __init__(self,**kargs):
         """Create a new set of CanvasSettings."""
         Dict.__init__(self)
@@ -426,8 +427,8 @@ class CanvasSettings(Dict):
                         v =  map(saneColor,v)
                 elif k in ['bgimage']:
                     v = str(v)
-                elif k in ['shading', 'lighting', 'culling', 'alphablend',
-                           'avgnormals',]:
+                elif k in ['smooth', 'fill', 'lighting', 'culling',
+                           'alphablend', 'avgnormals',]:
                     v = bool(v)
                 elif k in ['linewidth', 'pointsize', 'marksize']:
                     v = float(v)
@@ -435,6 +436,10 @@ class CanvasSettings(Dict):
                     v = map(int,v)
                 elif k == 'transparency':
                     v = max(min(float(v),1.0),0.0)
+                elif k == 'edges':
+                    v = str(v).lower()
+                    if not v in clas.edge_options:
+                        raise
                 ## elif k == 'rendermode':
                 ##     if not v in clas.rendermodes:
                 ##         raise
@@ -462,13 +467,68 @@ class CanvasSettings(Dict):
         GL.glClearColor(*colors.RGBA(color))
  
 
-    def setDefault(self):
+    def activate(self):
         """Activate the default canvas settings in the GL machine."""
+        if self.smooth:
+            glSmooth()
+        else:
+            glFlat()
+
+        if self.fill:
+            glFill()
+        else:
+            glLine()
+
         GL.glColor4fv(list(self.fgcolor)+[self.transparency,])
         GL.glLineWidth(self.linewidth)
         glLineStipple(*self.linestipple)
         GL.glPointSize(self.pointsize)
 
+
+# A collection of default rendering profiles.
+# These contain the values diffrent from the overall defaults
+RenderProfiles = {
+    'wireframe': {
+        'smooth': False,
+        'fill': False,
+        'lighting': False,
+        'alphablend': False,
+        'transparency': 1.0,
+        'edges': 'none'
+        },
+    'smooth': {
+        'smooth': True,
+        'fill': True,
+        'lighting': True,
+        'alphablend': False,
+        'transparency': 0.5,
+        'edges': 'none'
+        },
+    'smoothwire': {
+        'smooth': True,
+        'fill': True,
+        'lighting': True,
+        'alphablend': False,
+        'transparency': 0.5,
+        'edges': 'all'
+        },
+    'flat': {
+        'smooth': False,
+        'fill': True,
+        'lighting': False,
+        'alphablend': False,
+        'transparency': 0.5,
+        'edges': 'none'
+        },
+    'flatwire': {
+        'smooth': False,
+        'fill': True,
+        'lighting': False,
+        'alphablend': False,
+        'transparency': 0.5,
+        'edges': 'all'
+        },
+    }
 
 ##################################################################
 #
@@ -490,9 +550,6 @@ class Canvas(object):
     
     It does not however contain the viewport size and position.
     """
-
-    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
-                   'smooth_avg']
 
     def __init__(self,settings={}):
         """Initialize an empty canvas with default settings."""
@@ -571,29 +628,18 @@ class Canvas(object):
         is set, the canvas is re-initialized according to the newly set mode,
         and everything is redrawn with the new mode.
         """
-        #print "SETTING RENDERMODE"
-        if mode not in self.rendermodes:
+        pf.debug("Setting rendermode to %s" % mode)
+        if mode not in RenderProfiles:
             raise ValueError,"Invalid render mode %s" % mode
-        if lighting not in [True,False]:
-            lighting = mode.startswith('smooth')
 
-        #print "MODE=%s, light=%s" % (mode,lighting)
+        self.settings.update(RenderProfiles[mode])
+        if lighting is None:
+            lighting = self.settings.lighting
+            
         if mode != self.rendermode or lighting != self.settings.lighting:
             self.rendermode = mode
             self.settings.lighting = lighting
             self.glinit()
-        else:
-            pass
-
-    ## def setToggle(self,attr,onoff):
-    ##     if onoff not in [True,False]:
-    ##         onoff = not getattr(self,attr)
-    ##     setattr(self,attr,onoff)
-    ##     try:
-    ##         func = getattr(self,'do_'+attr)#.capitalize())
-    ##         func(onoff)
-    ##     except:
-    ##         pass
 
 
     def setToggle(self,attr,onoff):
@@ -723,61 +769,11 @@ class Canvas(object):
             self.camera.modelview_callback = print_camera
             self.camera.projection_callback = print_camera
 
-
-    def glinit(self):
-        """Initialize the rendering machine.
-
-        The rendering machine is initialized according to:
-        - self.rendermode: one of
-        - self.lighting
-        """
-        self.setBackground(self.settings.bgcolor,self.settings.bgimage)
-        self.clear()
-        GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
-        GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
-        #GL.glEnable(GL.GL_CULL_FACE)
-
-        # Default openGL mode
-        glSmooth()
-        glFill()
-
-        # Set optimal openGL mode    
-        if self.rendermode.startswith('flat'): 
-            glFlat()
             
-        if self.rendermode == 'wireframe' and pf.cfg['gui/wireframe_mode'] == 'gl':
-            glLine()
-
-        # If we have a shaded background, need smooth/fill anyhow
-        if self.background:
-            glSmooth()
-            glFill()   
-
-        self.setLighting(self.settings.lighting)
-
-        if self.rendermode.endswith('wire'):
-            GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)
-            GL.glPolygonOffset(1.0,1.0) 
-        else:
-            GL.glDisable(GL.GL_POLYGON_OFFSET_FILL)
-            
-
-    def glupdate(self):
-        """Flush all OpenGL commands, making sure the display is updated."""
-        GL.glFlush()
-        
-
     def clear(self):
         """Clear the canvas to the background color."""
         self.settings.setMode()
         self.setDefaults()
-
-
-    def setDefaults(self):
-        """Activate the canvas settings in the GL machine."""
-        self.settings.setDefault()
-        self.do_lighting(self.settings.lighting)
-        GL.glDepthFunc(GL.GL_LESS)
 
     
     def setSize (self,w,h):
@@ -796,6 +792,44 @@ class Canvas(object):
         """_Perform the draawing of a single item"""
         self.setDefaults()
         a.draw(self)
+
+
+    def setDefaults(self):
+        """Activate the canvas settings in the GL machine."""
+        self.settings.activate()
+        # If we have a shaded background, we need smooth/fill anyhow
+        if self.background:
+            glSmooth()
+            glFill()
+        pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
+        self.do_lighting(self.settings.lighting)
+        GL.glDepthFunc(GL.GL_LESS)
+
+
+    def glinit(self):
+        """Initialize the rendering machine.
+
+        The rendering machine is initialized according to self.settings:
+        - self.rendermode: one of
+        - self.lighting
+        """
+        self.setBackground(self.settings.bgcolor,self.settings.bgimage)
+        self.clear()
+        self.setDefaults()
+        GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
+        GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
+        #GL.glEnable(GL.GL_CULL_FACE)
+
+        if self.rendermode.endswith('wire'):
+            GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)
+            GL.glPolygonOffset(1.0,1.0) 
+        else:
+            GL.glDisable(GL.GL_POLYGON_OFFSET_FILL)
+            
+
+    def glupdate(self):
+        """Flush all OpenGL commands, making sure the display is updated."""
+        GL.glFlush()
         
 
     def display(self):

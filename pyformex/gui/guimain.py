@@ -92,9 +92,9 @@ def sizeReport(w,t=None):
 
 
 def hasDRI():
+    """Check whether the OpenGL canvas has DRI enabled."""
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
-    print(dri)
     return dri
 
 ################# Message Board ###############
