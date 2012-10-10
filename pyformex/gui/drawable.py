@@ -114,35 +114,37 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     drawgl.draw_polygons(x,None,color,None,alpha,-1)
     
 
-def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,objtype=-1):
-    """Draw a collection of polygon elements.
+def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,lighting=False,avgnormals=False,objtype=-1):
+    """Draw a collection of polygons.
 
-    This function is like drawPolygons, but the vertices of the polygons
-    are specified by:
-    coords (npts,3) : the coordinates of the points
-    elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
+    The polygons can either be specified as a Formex model or as a Mesh model.
 
-    color is either None or an RGB color array with shape (3,), (nels,3) or
-    (nels,nplex,3).
+    Parameters:
 
-    objtype sets the OpenGL drawing mode. The default (-1) will select the
-    appropriate value depending on the plexitude of the elements:
-    1: point, 2: line, 3: triangle, 4: quad, >4: polygon.
-    The value can be set to GL.GL_LINE_LOOP to draw the element's circumference
-    independent from the drawing mode.
+    - `x`: coordinates of the points. Shape is (nelems,nplex,3) for Formex
+      model, of (nnodes,3) for Mesh model.
+    - `e`: None for a Formex model, definition of the elements (nelems,nplex)
+      for a Mesh model.
+    - `color`: either None or an RGB color array with shape (3,), (nelems,3)
+      or (nelems,nplex,3).
+    - `objtype`: OpenGL drawing mode. The default (-1) will select the
+      appropriate value depending on the plexitude of the elements:
+      1: point, 2: line, 3: triangle, 4: quad, >4: polygon.
+      This value can be set to GL.GL_LINE_LOOP to draw the element's
+      circumference independent from the drawing mode.
     """
     pf.debug("drawPolygons",pf.DEBUG.DRAW)
+    print("Lighting: %s, %s" % (lighting,avgnormals))
     if e is None:
         nelems = x.shape[0]
     else:
         nelems = e.shape[0]
     n = None
-    if mode.startswith('smooth') and objtype==-1:
+    if lighting and objtype==-1:
         if normals is None:
             pf.debug("Computing normals",pf.DEBUG.DRAW)
-            if mode == 'smooth_avg' and e is not None:
+            if avgnormals and e is not None:
                 n = interpolateNormals(x,e,treshold=pf.cfg['render/avgnormaltreshold'])
-                mode = 'smooth'
             else:
                 if e is None:
                     n = geomtools.polygonNormals(x)
@@ -192,13 +194,13 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,
 def drawPolyLines(x,e,color):
     """Draw the circumference of polygons."""
     pf.debug("drawPolyLines",pf.DEBUG.DRAW)
-    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
+    drawPolygons(x,e,color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
 
 
 def drawLines(x,e,color):
     """Draw straight line segments."""
     pf.debug("drawLines",pf.DEBUG.DRAW)
-    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
+    drawPolygons(x,e,color=color,alpha=1.0)
 
 
 def drawBezier(x,color=None,objtype=GL.GL_LINE_STRIP,granularity=100):
@@ -589,7 +591,7 @@ def color_multiplex(color,nparts):
     return color.reshape(-1,3)
 
 
-def draw_faces(x,e,mode,color=None,alpha=1.0,texture=None,texc=None):
+def draw_faces(x,e,color=None,alpha=1.0,texture=None,texc=None,lighting=False,avgnormals=False):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -621,7 +623,7 @@ def draw_faces(x,e,mode,color=None,alpha=1.0,texture=None,texc=None):
             color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
             pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape),pf.DEBUG.DRAW)
 
-    drawPolygons(x,e,mode,color,alpha,texture,texc)
+    drawPolygons(x,e,color,alpha,texture,texc,None,lighting,avgnormals)
 
 
 def drawEdges(x,e,edges,eltype,color=None):
@@ -665,10 +667,10 @@ def drawEdges(x,e,edges,eltype,color=None):
         if eltype == 'line3':
             drawQuadraticCurves(coords,elems,color)
         else:
-            draw_faces(coords,elems,'wireframe',color,1.0)
+            draw_faces(coords,elems,color,1.0)
 
 
-def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0,texture=None,texc=None):
+def drawFaces(x,e,faces,eltype,color=None,alpha=1.0,texture=None,texc=None,lighting=False,avgnormals=False):
     """Draw the faces of a geometry.
 
     This function draws the faces of a geometry collection, usually of a higher
@@ -709,7 +711,7 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0,texture=None,texc=None)
             drawQuadraticSurfaces(coords,elems,color)
         else:
             #print "USING POLYGON"
-            draw_faces(coords,elems,mode,color,alpha,texture,texc)
+            draw_faces(coords,elems,color,alpha,texture,texc,lighting,avgnormals)
 
 
 def drawAtPoints(x,mark,color=None):

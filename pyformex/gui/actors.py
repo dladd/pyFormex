@@ -261,7 +261,7 @@ class AxesActor(Actor):
         if self.draw_planes:
             x = self.cs.trl(-self.cs[3]).scale(self.psize).trl(self.cs[3])
             e = array([[3,1,2],[3,2,0],[3,0,1]])
-            drawPolygons(x,e,mode='flat',color=self.color,alpha=self.alpha)
+            drawPolygons(x,e,color=self.color,alpha=self.alpha)
         
         x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
         e = array([[3,0],[3,1],[3,2]])
@@ -593,6 +593,9 @@ class GeomActor(Actor):
         from canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
+
+        settings = canvas.settings
+        
         if mode is None:
            mode = self.mode
         if mode is None:
@@ -685,10 +688,10 @@ class GeomActor(Actor):
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
                     
-                drawPolygons(self.coords,self.elems,mode,color,alpha,self.texture,None)
+                drawPolygons(self.coords,self.elems,color,alpha,self.texture,None,settings.lighting,settings.avgnormals)
                 if bkcolor is not None:
                     GL.glCullFace(GL.GL_FRONT)
-                    drawPolygons(self.coords,self.elems,mode,bkcolor,bkalpha)
+                    drawPolygons(self.coords,self.elems,canvas.settings,bkcolor,bkalpha,None,None,settings.lighting,settings.avgnormals)
                     GL.glDisable(GL.GL_CULL_FACE)
                     
         else:
@@ -704,12 +707,12 @@ class GeomActor(Actor):
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
 
-                    drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha,self.texture)
+                    drawFaces(self.coords,self.elems,faces,faces.eltype,color,alpha,self.texture,None,settings.lighting,settings.avgnormals)
 
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
-                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,bkcolor,bkalpha)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,bkcolor,bkalpha,None,None,settings.lighting,settings.avgnormals)
                         GL.glDisable(GL.GL_CULL_FACE)
 
    

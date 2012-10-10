@@ -485,6 +485,15 @@ class CanvasSettings(Dict):
         GL.glPointSize(self.pointsize)
 
 
+def extractCanvasSettings(d):
+    """Split a dict in canvas settings and other items.
+
+    Returns a tuple of two dicts: the first one contains the items
+    that are canvas settings, the second one the rest.
+    """
+    return utils.select(d,pf.refcfg['canvas']),utils.remove(d,pf.refcfg['canvas'])
+
+
 # A collection of default rendering profiles.
 # These contain the values diffrent from the overall defaults
 RenderProfiles = {
@@ -709,8 +718,8 @@ class Canvas(object):
             self.background = None
         else:
             self.createBackground()
-            glSmooth()
-            glFill()
+            #glSmooth()
+            #glFill()
         self.clear()
         self.redrawAll()
         #self.update()
@@ -797,11 +806,7 @@ class Canvas(object):
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
         self.settings.activate()
-        # If we have a shaded background, we need smooth/fill anyhow
-        if self.background:
-            glSmooth()
-            glFill()
-        pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
+        #pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
         self.do_lighting(self.settings.lighting)
         GL.glDepthFunc(GL.GL_LESS)
 
@@ -813,9 +818,9 @@ class Canvas(object):
         - self.rendermode: one of
         - self.lighting
         """
+        self.setDefaults()
         self.setBackground(self.settings.bgcolor,self.settings.bgimage)
         self.clear()
-        self.setDefaults()
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
@@ -848,6 +853,9 @@ class Canvas(object):
         
         if self.background:
             #pf.debug("Displaying background",pf.DEBUG.DRAW)
+            # If we have a shaded background, we need smooth/fill anyhow
+            glSmooth()
+            glFill()
             self.background.draw(mode='smooth')
 
         # background decorations

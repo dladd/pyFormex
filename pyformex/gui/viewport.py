@@ -1542,7 +1542,9 @@ class MultiCanvas(FramedGridLayout):
             settings = self.current.settings
         except:
             settings = {}
+        pf.debug("Create new viewport with settings:\n%s"%settings,pf.DEBUG.CANVAS)
         canv = QtCanvas(self.parent,shared,settings=settings)
+        print(canv.settings)
         return(canv)
 
 

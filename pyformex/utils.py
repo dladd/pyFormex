@@ -1003,7 +1003,7 @@ def selectDict(d,keys):
     >>> selectDict(d,[4,0,1])
     {0: 0, 1: 1, 4: 16}
     """
-    return dict([ (k,d[k]) for k in keys if k in d ])
+    return dict([ (k,d[k]) for k in set(d)&set(keys) ])
 
 
 def removeDict(d,keys):
@@ -1022,7 +1022,7 @@ def removeDict(d,keys):
     >>> removeDict(d,[4,0])
     {1: 1, 2: 4, 3: 9, 5: 25}
     """
-    return dict([ (k,d[k]) for k in d if k not in keys ])
+    return dict([ (k,d[k]) for k in set(d)-set(keys) ])
 
 
 def refreshDict(d,src):
