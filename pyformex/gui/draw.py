@@ -82,7 +82,7 @@ def closeDialog(name):
     pf.GUI.closeDialog(name)
 
 
-def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
+def showMessage(text,actions=['OK'],level='info',modal=True,align='00',**kargs):
     """Show a short message widget and wait for user acknowledgement.
 
     There are three levels of messages: 'info', 'warning' and 'error'.
@@ -92,6 +92,8 @@ def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     The return value is the button text. 
     """
     w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
+    if align == '--':
+        w.move(100,100)
     if modal:
         return w.getResult()
     else:

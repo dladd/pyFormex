@@ -134,7 +134,6 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
       circumference independent from the drawing mode.
     """
     pf.debug("drawPolygons",pf.DEBUG.DRAW)
-    print("Lighting: %s, %s" % (lighting,avgnormals))
     if e is None:
         nelems = x.shape[0]
     else:

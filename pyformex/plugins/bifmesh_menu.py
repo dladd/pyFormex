@@ -30,14 +30,13 @@ PhD research by Gianluca De Santis at bioMMeda (Ghent University).
 
 """
 from __future__ import print_function
+from gui.draw import *
 
 import pyformex as pf
 import plugins.vascularsweepingmesher as vsm
 import plugins.geometry_menu as gm
-import plugins.surface_menu as sm
 
-from mesh import mergeMeshes
-from plugins.fe import Model
+from plugins.fe import mergedModel
 from connectivity import connectedLineElems
 from plugins.trisurface import fillBorder
 from plugins.draw2d import *
@@ -57,11 +56,24 @@ _surface = None
 
 
 def importGeometry():
-    sm.importSurface()
+    gm.importSurface()
 
 
 def positionGeometry():
     pass
+
+
+def inputCentralPoint():
+    clear()
+    view('front')
+    drawSurface()
+    transparent()
+    obj = drawObject2D('point',npoints=1,zvalue=0.)
+    obj.specular = 0.
+    if obj is not None:
+        export({'central_point':obj})
+        drawCentralPoint()
+
 
 def getData(*args):
     """Return global data"""
@@ -262,7 +274,7 @@ def sliceBranch(S,cp,s0,s1,cl,nslices):
     h0 = slicer(S,s0,cl,cutat=-1,visual=visual)
     if visual:
         clear()
-        draw(h0,color='red')
+        draw(h0,color='black')
     h1 = slicer(S,cl,s1,cutat=-1,visual=visual)
 #    if visual:
 #        draw(h0,color='red')
@@ -410,6 +422,7 @@ def seeding3zones(nseeds=[10, 10],zonesizes=[0.3, 0.3]):
     seedingarray=[seed0,xtrans+seed0[-1], seed1 ]  
     return seedingarray#concatenate(seedingarray)
 
+
 def drawLongitudinalSeeding(H, at):
     for i, j in zip([0, 2, 4], range(3)):#semibranch,at
         l0=H[i][0].subPoints(10)#0,2,4,napproxlong
@@ -418,43 +431,61 @@ def drawLongitudinalSeeding(H, at):
         draw(divPolyLine(l0,at[j][2]), color='red', marksize=7 ,flat=True, alpha=1)
     zoomAll()
 
-def seedingSelection():
+dialog = None
+SA = None
+def inputLongitudinalSeeds():
+    """Interactive input of the longitudinal meshing seeds.
+
+    """
+    global dialog
+    
+    def show():
+        """Show the current seeds"""
+        global dialog,SA
+        undraw(SA)
+        dialog.acceptData()
+        res = dialog.results
+        if not res:
+            return
+        sat = [ seeding3zones(nseeds=eval(res['nseeds%s'%i]),zonesizes=eval(res['ratios%s'%i])) for i in range(3)]
+        print('# of seeds in branches: %s'% [sum([len(i) for i in j])-1 for j in sat])
+        SA = drawLongitudinalSeeding(long_splines,sat)
+        return sat
+
+    def accept():
+        """Accept the current seeds"""
+        sat = show()
+        if sat:
+            export({'sat':[concatenate(ati) for ati in sat]})
+        dialog.accept()
+
+    def help():
+        showInfo("Set the seeding parameters for the 3 branches. Each branch is divided in 3 parts: close to the bifurcation, far from the bifurcation and the central part between these two. Only the data for the first two need to be entered. The 3rd (central) is calculated as transition.")
+        
     clear()
     long_splines=named('long_splines')
-    #draw(long_splines, linewidth=1, color='gray' ,flat=True, alpha=1)
+    draw(long_splines, linewidth=1, color='gray' ,flat=True, alpha=1)
     drawNumbers(Formex( [long_splines[i][0].subPoints(1)[-1]  for i in  [0, 2, 4] ]))
-    print('-----select the seeding parameters for the 3 branches. Each branch is divided in 3 portions (close, central, far from the bif). Only 2 need to be input, while the 3rd (central) is calculated as transition.-----')
 
-
-    nseeds = '[5,3 ]'#param mesh blocks
+    nseeds = '[5,3 ]'
     ratios = '[0.3, 0.4]'
-    items = [
-    _I('nseeds0',nseeds,'str', text='nseeds_branch0'),
-    _I('ratios0',ratios,'str', text='portions_branch0'),
-    _I('nseeds1',nseeds,'str',text='nseeds_branch1'),
-    _I('ratios1',ratios,'str',text='portions_branch1'),
-    _I('nseeds2',nseeds,'str',text='nseeds_branch2'),
-    _I('ratios2',ratios,'str',text='portions_branch2'),
-    ]    
-    dialog = widgets.InputDialog(items,caption='Ratio Seeding Spline')
-    #dialog.show()
-    res = dialog.getResult()
-    sat=[ seeding3zones(nseeds=eval(res[ns]),zonesizes=eval(res[ra])) for ns, ra in zip (['nseeds0', 'nseeds1', 'nseeds2'] , ['ratios0', 'ratios1', 'ratios2'] ) ]
-    print('seeds:', [sum([len(i) for i in j])-1 for j in sat])
-    drawseeds=drawLongitudinalSeeding(long_splines, sat)
-    items = [
-    _I('sel','Yes','radio',choices=['Yes', 'Repeat'], text='accept seeding ?')
-    ]
-    dialog = widgets.InputDialog(items,caption='Ratio Seeding Spline')   
-    res = dialog.getResult()
-    if res['sel']=='Yes':
-        export({'sat':[concatenate(ati) for ati in sat]})#it is stored for the future wall
-    if res['sel']=='Repeat':
-        undraw(drawseeds)
-        seedingSelection()
+    dialog = Dialog(
+        caption = 'Ratio Seeding Spline',
+        items = [
+            _I('nseeds0',nseeds),
+            _I('ratios0',ratios),
+            _I('nseeds1',nseeds),
+            _I('ratios1',ratios),
+            _I('nseeds2',nseeds),
+            _I('ratios2',ratios),
+            ],
+        actions = [('Cancel',),('Show',show),('Accept',accept),('Help',help)],
+        )
+    dialog.move(100,100)
+    dialog.getResult()
 
 
-def seedLongitudinalSplines (H, at,  curvedSection=True, nPushedSections=6, napproxlong=40, napproxcut=40 ):
+def seedLongSplines (H, at,  curvedSection=True, nPushedSections=6, napproxlong=40, napproxcut=40 ):
     """it takes the Longitudinal Splines (6 semi-braches, 12 longitudinal_splines) and return the control points on them (n_long, n_cross=24) and on the centerlines (n_long)."""
     #at=[concatenate(ati) for ati in at]
     nplong=[ at[0].shape[0]-1, at[1].shape[0]-1, at[2].shape[0] -1]
@@ -521,8 +552,7 @@ def seedLongitudinalSplines (H, at,  curvedSection=True, nPushedSections=6, napp
     return zip( lum012, cent012 )
 
 
-
-def seedingLongitudinalSplines():
+def seedLongitudinalSplines():
 #    res= askItems([
 #    ('curvedSection', True),
 #    ['nPushedSections', 3], 
@@ -535,9 +565,14 @@ def seedingLongitudinalSplines():
     curvedsecs=True
     numpushed=3
     splineapprox=60
+
+    try:
+        seeds = named('sat')
+    except:
+        warning("You need to set the longitudinal seeds first")
+        return
     
-    
-    seededBif=seedLongitudinalSplines (named('long_splines'), named('sat'),  curvedSection=curvedsecs, nPushedSections=numpushed, napproxlong=splineapprox, napproxcut=splineapprox)
+    seededBif = seedLongSplines (named('long_splines'),seeds,  curvedSection=curvedsecs, nPushedSections=numpushed, napproxlong=splineapprox, napproxcut=splineapprox)
     export({'seededBif':seededBif})
     [ drawSeededBranch(seededBif[i][0], seededBif[i][1], propbranch=i+1) for i in range(3) ]
 
@@ -562,58 +597,82 @@ def meshBranch(HC,OC,nlong,ncirc,ntr,nbl):
     return M,xsurf
 
 
-def setMappingParameters():
-    print('\n---mesh_Block_nlong is an integer = how many hex stacked longitudinally per block \n\n---mesh_Block_ncirc = how many hex in a quarter of section \n\n---mesh_Block_nrad = how many hex radially from inner pattern to boundary layer. It can be either an integer or an array (0.0 to 1.0) \n\n---mesh_boundary_layer = how many hex radially in the boundary layer. It can be either an integer or an array (0.0 is the inner, 1.0 is the wall surface)')
-
-    mesh_param = [ 1,2,3,4,5,6,8, 9, 10, 11, 12, 13, 14, 15 ]#param mesh blocks
-    items = [
-    _I('mesh_Block_nlong',2,'select',choices=mesh_param,text='longitudinal'),
-    _I('mesh_Block_ncirc',3,'select',choices=mesh_param,text='circumferential'),
-    _I('mesh_Block_nrad','[0.0, 0.6,1.0]','str',text='radial'),
-    _I('mesh_boundary_layer','[0.0,0.4, 0.8,1.0]','str',text='boundary layer'),
-    ]    
-    dialog = widgets.InputDialog(items,caption='Mesh block parameters')
-    #dialog.show()
-    res = dialog.getResult()
-    export({'mesh_block_selection':res})#it is stored for the future wall
-
-
-def sweepingMesherAlongSeededSplines():
-
-    items0 = [
-    _I('domain','Lumen','radio',choices=['Lumen', ],text='domain'),
-    ]    
-    dialog0 = widgets.InputDialog(items0,caption='Domain selection')
-    #dialog0.show()
-
-    res0 = dialog0.getResult()
-    print(res0['domain'])
-    
-    try: res= named('mesh_block_selection')
+def getMeshingParameters():
+    try:
+        res = named('mesh_block_params')
     except:
-        setMappingParameters()
+        res = {
+            'n_longit': 2,
+            'n_circum': 3,
+            's_radial': '[0.0, 0.6, 1.0]',
+            's_boundary': '[0.0,0.4, 0.8,1.0]'
+            }
+    return res
 
-    longp,longc=int(res['mesh_Block_nlong']), int(res['mesh_Block_ncirc'])
-    longr, longbl=eval(res['mesh_Block_nrad']), eval(res['mesh_boundary_layer'])
 
+def inputMeshingParameters():
+    """Dialog for input of the meshing parameters.
+
+    """
+    dialog = Dialog(
+        caption='Meshing parameters',store=getMeshingParameters(),
+        items = [
+            _I('n_longit',min=1,max=16,tooltip="Number of hex elements in longitudinal direction of a block"),
+            _I('n_circum',min=1,max=16,tooltip="Number of hex elements over the circumference of a 1/4 section"),
+            _I('s_radial',tooltip="Number of hex elements radially from inner pattern to boundary layer. It can be an integer or a list of seeds in the range 0.0 to 1.0"),
+            _I('s_boundary',tooltip="Number of hex elements radially in the boundary layer. It can be an integer or a list of seeds in the range 0.0 to 1.0"),
+            ]
+        )
+    res = dialog.getResult()
+    if res:
+        export({'mesh_block_params':res})
+
+
+def sweepingMesher():
+    """Sweeping hexahedral bifurcation mesher
+
+    Creates a hexahedral mesh inside the branches of the bifurcation.
+    Currently only the lumen mesh is included in this GPL3 version.
+    """
+    # Get the domain
+    dialog = Dialog(
+        caption='Domain selection',
+        items=[
+            _I('domain','Lumen','radio',choices=['Lumen', ]),
+            ]
+        )
+    res = dialog.getResult()
+    if not res:
+        return
+    domain = res['domain']
+    print("Meshing %s" % domain)
+
+    # Get the meshing parameters
+    res = getMeshingParameters()
+    longp,longc = res['n_longit'], res['n_circum']
+    longr,longbl = eval(res['s_radial']), eval(res['s_boundary'])
+
+    # Create the meshes
+    pf.GUI.setBusy(True)
     Vmesh, Smesh=[], []
-    bifbranches=named('seededBif')
+    bifbranches = named('seededBif')
     for branch in bifbranches:
         vmesh, smesh=meshBranch(branch[0], branch[1], longp, longc, longr, longbl)
-        Vmesh.append(vmesh), Smesh.append(smesh)
+        Vmesh.extend(vmesh)
+        Smesh.extend(smesh)
+    pf.GUI.setBusy(False)
 
-    if res0['domain']=='Lumen':
-        m=[]
-        [ m.extend(i) for i in Vmesh ]
-        n, e=mergeMeshes(m)
-        M=Model(n, e)
+    if domain == 'Lumen':
+        ## m=[]
+        ## [ m.extend(i) for i in Vmesh ]
+        ## n, e=mergeMeshes(m)
+        M = mergedModel(Vmesh)
         export({'CFD_lumen_model':M})
         export({'inner_surface_mesh':Smesh})
-        print('the lumen has been meshed with %d nodes and %d elements'%(len(n), len(concatenate(e))))
         clear()
         drawLumenMesh()
 
-    if res0['domain']=='Wall':
+    if domain == 'Wall':
         export({'outer_surface_mesh':Smesh})
         clear()
         [draw(Formex(smesh), linewidth=3, color='red') for smesh in named('outer_surface_mesh') ]
@@ -658,9 +717,9 @@ def centerline2D(S,s0,s1):
 
     """
     sections = slicer(S,s0,s1,visual=False)
-    if drawOption('visual'):
-        draw(sections,color='red', alpha=1, flat=True)
-    draw(sections,color='red', alpha=1, flat=True)
+    ## if drawOption('visual'):
+    ##     draw(sections,color='red', alpha=1, flat=True)
+    draw(sections,color='black', alpha=1, flat=True)
     cl = PolyLine([center2D(s.coords,x0,x1) for s,x0,x1 in zip(sections,s0.coords,s1.coords)])
     return cl
 
@@ -786,18 +845,6 @@ def inputControlLines():
     else:
         warning("Incorrect definition of helper lines")
 
-
-def inputCentralPoint():
-    clear()
-    view('front')
-    drawSurface()
-    transparent()
-    obj = drawObject2D('point',npoints=1,zvalue=0.)
-    obj.specular = 0.
-    if obj is not None:
-        export({'central_point':obj})
-        drawCentralPoint()
-
 ####################### DRAWING ######################################
 
 color_half_branch = ['red','cyan','green','magenta','blue','yellow']
@@ -840,7 +887,7 @@ def drawSeededBranch(branchsections, branchcl, propbranch=0):
     #draw(PolyLine(branchcl))
     #draw(Formex(branchcl).setProp(propbranch))
     #[draw(Formex(sec).setProp(propbranch)) for sec in branchsections]
-from plugins.objects import *
+#from plugins.objects import *
 def drawOuterCrossSections():
     cs = named('cross_sections')
     draw(cs[0:6:2],color='red', linewidth=4,flat=True, alpha=1)
@@ -905,15 +952,24 @@ def drawAll():
 ######### Create a menu with interactive tasks #############
 
 def nextStep(msg):
-    return ask(msg,['Cancel','Continue']) == 'Continue'
+    global stepwise
+    if stepwise:
+        ans = ask(msg,['Quit','Continue','Step'],align='--')
+        if ans == 'Continue':
+            stepwise = False
+        return ans != 'Quit'
+    else:
+        return True
+
 
 def example():
+    global stepwise
+    stepwise = True
+
     clear()
-    transparent(True)
-    if not nextStep("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation."):
-        return
-    
-    if not nextStep('1. Input the bifurcation surface model'):
+    wireframe()
+    view('front')
+    if not nextStep("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation. At each step you can opt to execute a single step, continue the whole procedure, or quit the example.\n\n1. Input the bifurcation surface model"):
         return
     
     examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
@@ -925,10 +981,13 @@ def example():
         return
     cp = Coords([-1.92753589,  0.94010758, -0.1379855])
     export({'central_point': cp})
+    smooth()
+    transparent(True)
     drawCentralPoint()
 
     if not nextStep('3. Create the helper lines for the mesher. This step is best done with perspective off.'):
         return
+    setDrawOptions({'bbox':'last'})
     perspective(False)
     C = [[-33.93232346,   7.50834751,   0.        ],
          [ -1.96555257,   6.90520096,   0.        ],
@@ -948,7 +1007,7 @@ def example():
             branch.append(PolyLine(C[i,j:j+2]))
     createBranches(branch)
 
-    if not nextStep('4. Notice the order of the input points!\n\n4. Create the Center Lines'):
+    if not nextStep('Notice the order of the input points!\n\n4. Create the Center Lines'):
         return
     centerlines()
 
@@ -958,7 +1017,18 @@ def example():
 
     if not nextStep('6. Create Spline Mesh'):
         return
+    perspective(True)
     splineIt()
+
+    if not nextStep('7. Seed the longitudinal splines'):
+        return
+    inputLongitudinalSeeds()
+    seedLongitudinalSplines()
+
+    if not nextStep('8. Run the sweeping hex mesher'):
+        return
+    sweepingMesher()
+    setDrawOptions({'bbox':'auto'})
 
 
 def updateData(data,newdata):
@@ -995,19 +1065,19 @@ def create_menu():
     MenuData = [
         ("&Run through example",example),
         ("---",None),
-        ("&Import Bifurcation Geometry",importGeometry),
-        ("&Input Central Point",inputCentralPoint),
-        ("&Input Helper Lines",inputControlLines),
-        ("&Input Slicing Parameters",inputSlicingParameters),
+        ("&1.  Import Bifurcation Geometry",importGeometry),
+        ("&2.  Input Central Point",inputCentralPoint),
+        ("&3.  Input Helper Lines",inputControlLines),
+        ("&4.  Create Center Lines",centerlines),
+        ("&5a. Input Slicing Parameters",inputSlicingParameters),
+        ("&5b. Slice the bifurcation",sliceIt),
+        ("&6.  Create Spline Mesh",splineIt),
+        ("&7a. Input Longitudinal Seeds",inputLongitudinalSeeds), 
+        ("&7b. Seed Longitudinal Splines",seedLongitudinalSplines),
+        ("&8a. Input Meshing Parameters",inputMeshingParameters), 
+        ("&8b. Sweeping Mesher",sweepingMesher), 
         ("---",None),
-        ("&Create Center Lines",centerlines),
-        ("&Slice the bifurcation",sliceIt),
-        ("&Create Spline Mesh",splineIt),
-        ("&Ratio Seed Selection",seedingSelection), 
-        ("&SeedingLongitudinalSplines",seedingLongitudinalSplines ),
         ("&Create Surface Mesh",surfMesh),
-        ("&Mapping parameters", setMappingParameters), 
-        ("&SweepingMesher",sweepingMesherAlongSeededSplines), 
         ("---",None),
         ("&Draw", [
             ("&All",drawAll),

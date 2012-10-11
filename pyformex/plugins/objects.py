@@ -117,7 +117,7 @@ class Objects(object):
         This lists all the global names in pyformex.PF that match
         the class and/or filter (if specified).
         """
-        return listAll(clas=self.clas,like=self.like,filter=self.filter)
+        return listAll(clas=self.clas,like=self.like,filtr=self.filter)
 
 
     def selectAll(self):
