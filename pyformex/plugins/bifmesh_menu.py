@@ -36,6 +36,8 @@ import plugins.vascularsweepingmesher as vsm
 import plugins.geometry_menu as gm
 import plugins.surface_menu as sm
 
+from mesh import mergeMeshes
+from plugins.fe import Model
 from connectivity import connectedLineElems
 from plugins.trisurface import fillBorder
 from plugins.draw2d import *
@@ -542,8 +544,8 @@ def seedingLongitudinalSplines():
 
 def meshBranch(HC,OC,nlong,ncirc,ntr,nbl):
     """Convenient function: from sections and centerlines to parametric volume mesh and outer surface mesh."""
-    cpAin,cpAtr,cpAbl = cpAllSections(HC,OC,[True,True])
-    hex_cp = [cpStackQ16toH64(i) for i in [cpAin,cpAtr,cpAbl] ]
+    cpAin,cpAtr,cpAbl = vsm.cpAllSections(HC,OC,[True,True])
+    hex_cp = [vsm.cpStackQ16toH64(i) for i in [cpAin,cpAtr,cpAbl] ]
 
     in_block = vsm.structuredHexMeshGrid(nlong,ncirc,ncirc,isophex='hex64')
     tr_block = vsm.structuredHexMeshGrid(nlong,ncirc,ntr,isophex='hex64')
@@ -927,7 +929,7 @@ def example():
 
     if not nextStep('3. Create the helper lines for the mesher. This step is best done with perspective off.'):
         return
-    perspective(off)
+    perspective(False)
     C = [[-33.93232346,   7.50834751,   0.        ],
          [ -1.96555257,   6.90520096,   0.        ],
          [ 19.08426476,  10.4637661 ,   0.        ],
