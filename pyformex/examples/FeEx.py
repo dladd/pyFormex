@@ -55,17 +55,9 @@ PDB = None
 
 # check for existing results
 feresult_base = 'FeResult'
-def numericEnd(s):
-    i = utils.splitEndDigits(s)
-    if len(i[1]) > 0:
-        return int(i[1])
-    else:
-        return -1
-    
 feresults = [ k for k in pf.PF.keys() if k.startswith(feresult_base)]
 if feresults:
-    feresults.sort(lambda a,b:a-b, numericEnd)
-    name = feresults[-1]
+    name = utils.hsorted(feresults)[-1]
 else:
     name = feresult_base
     

@@ -33,6 +33,8 @@ import os,re,sys,tempfile
 from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
+# Some regular expressions
+digits = re.compile(r'(\d+)')
 
 # versions of detected modules
 the_version = {
@@ -317,7 +319,7 @@ def matchAll(regexps,target):
 def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[],symlinks=True):
     """List all files in path.
 
-    If ``dirs==False``, directories are not listed.
+    If ``listdirs==False``, directories are not listed.
     By default the tree is listed top down and entries in the same directory
     are unsorted.
     
@@ -872,8 +874,94 @@ tempFile = tempfile.NamedTemporaryFile
 tempDir = tempfile.mkdtemp
 
 
-# BV: We could turn this into a factory
+def numsplit(s):
+    """Split a string in numerical and non-numerical parts.
 
+    Returns a series of substrings of s. The odd items do not contain
+    any digits. Joined together, the substrings restore the original.
+    The even items only contain digits.
+    The number of items is always odd: if the string ends or starts with a
+    digit, the first or last item is an empty string.
+
+    Example:
+
+    >>> print(numsplit("aa11.22bb"))
+    ['aa', '11', '.', '22', 'bb']
+    >>> print(numsplit("11.22bb"))
+    ['', '11', '.', '22', 'bb']
+    >>> print(numsplit("aa11.22"))
+    ['aa', '11', '.', '22', '']
+    """
+    return digits.split(s)
+
+    
+def hsorted(l):
+    """Sort a list of strings in human order.
+
+    When human sort a list of strings, they tend to interprete the
+    numerical fields like numbers and sort these parts numerically,
+    instead of the lexicographic sorting by the computer.
+
+    Returns the list of strings sorted in human order.
+
+    Example:
+    >>> hsorted(['a1b','a11b','a1.1b','a2b','a1'])
+    ['a1', 'a1.1b', 'a1b', 'a2b', 'a11b']
+    """
+    def human(s):
+        s = digits.split(s)+['0']
+        return zip(s[0::2], map(int, s[1::2]))
+    return sorted(l,key=human)
+
+
+def splitDigits(s,pos=-1):
+    """Split a string at a sequence of digits.
+
+    The input string is split in three parts, where the second part is
+    a contiguous series of digits. The second argument specifies at which
+    numerical substring the splitting is done. By default (pos=-1) this is
+    the last one.
+    
+    Returns a tuple of three strings, any of which can be empty. The
+    second string, if non-empty is a series of digits. The first and last
+    items are the parts of the string before and after that series.
+    Any of the three return values can be an empty string.
+    If the string does not contain any digits, or if the specified splitting
+    position exceeds the number of numerical substrings, the second and
+    third items are empty strings.
+
+    Example:
+
+    >>> splitDigits('abc123')
+    ('abc', '123', '')
+    >>> splitDigits('123')
+    ('', '123', '')
+    >>> splitDigits('abc')
+    ('abc', '', '')
+    >>> splitDigits('abc123def456fghi')
+    ('abc123def', '456', 'fghi')
+    >>> splitDigits('abc123def456fghi',0)
+    ('abc', '123', 'def456fghi')
+    >>> splitDigits('123-456')
+    ('123-', '456', '')
+    >>> splitDigits('123-456',2)
+    ('123-456', '', '')
+    >>> splitDigits('')
+    ('', '', '')
+    """
+    g = numsplit(s)
+    n = len(g)
+    i = 2*pos
+    if i >= -n and i+1 < n:
+        if i >= 0:
+            i += 1
+        #print(g,i,n)
+        return ''.join(g[:i]),g[i],''.join(g[i+1:])
+    else:
+        return s,'',''
+
+
+# BV: We could turn this into a factory
 class NameSequence(object):
     """A class for autogenerating sequences of names.
 
@@ -893,27 +981,29 @@ class NameSequence(object):
 
     Example:
 
-    >>> N = NameSequence('hallo.98')
+    >>> N = NameSequence('abc.98')
     >>> [ N.next() for i in range(3) ]
-    ['hallo.98', 'hallo.99', 'hallo.100']
-    >>> NameSequence('hallo','.png').next()
-    'hallo-000.png'
-    >>> N = NameSequence('/home/user/hallo23','5.png')
+    ['abc.98', 'abc.99', 'abc.100']
+    >>> N = NameSequence('abc-8x.png')
+    >>> [ N.next() for i in range(3) ]
+    ['abc-8x.png', 'abc-9x.png', 'abc-10x.png']
+    >>> NameSequence('abc','.png').next()
+    'abc-000.png'
+    >>> N = NameSequence('/home/user/abc23','5.png')
     >>> [ N.next() for i in range(2) ]
-    ['/home/user/hallo235.png', '/home/user/hallo245.png']
-
+    ['/home/user/abc235.png', '/home/user/abc245.png']
     """
     
     def __init__(self,name,ext=''):
         """Create a new NameSequence from name,ext."""
-        base,number = splitEndDigits(name)
+        prefix,number,suffix = splitDigits(name)
         if len(number) > 0:
             self.nr = int(number)
             format = "%%0%dd" % len(number)
         else:
             self.nr = 0
             format = "-%03d"
-        self.name = base+format+ext
+        self.name = prefix+format+suffix+ext
 
     def next(self):
         """Return the next name in the sequence"""
@@ -935,28 +1025,7 @@ class NameSequence(object):
         i = self.name.find('%')
         j = self.name.find('d',i)
         return self.name[:i]+'*'+self.name[j+1:]
-
-
-string_digits = re.compile('(.*?)(\d*)$')
-digits_string = re.compile('(\d*)(.*)$')
-
-def splitEndDigits(s):
-    """Split a string in any prefix and a numerical end sequence.
-
-    A string like 'abc-0123' will be split in 'abc-' and '0123'.
-    Any of both can be empty.
-    """
-    return string_digits.match(s).groups()
-
-
-def splitStartDigits(s):
-    """Split a string in a numerical sequence and any suffix.
-
-    A string like '0123-abc' will be split in '0123' and '-abc'.
-    Any of both can be empty.
-    """
-    return digits_string.match(s).groups()
-
+    
 
 def prefixDict(d,prefix=''):
     """Prefix all the keys of a dict with the given prefix.
