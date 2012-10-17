@@ -833,8 +833,8 @@ def fmtConstraint(prop):
     >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no', 
     master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
     """
+    out =''
     for p in prop:
-        out =''
         out +="*Tie, name=%s, adjust=%s" % (p.name, p.adjust)
         if p.type is not None:
             out+=",type = %s" % p.type
