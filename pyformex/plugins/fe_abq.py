@@ -554,7 +554,22 @@ def fmtConnectorBehavior(prop):
     return out
 
 
+def fmtSpring(el,setname):
+    """Write a spring of type spring.
 
+    Optional data:
+    
+    - `springstiffness` : spring stiffness (force per relative displacement)
+    """
+    out = ""
+    #if el.sectiontype.upper() != 'GENERAL':
+    out += '*SPRING, ELSET=%s\n' % setname
+    if el.springstiffness:
+        out += '\n%s\n' % float(el.springstiffness)
+
+    return out
+    
+    
 #~ FI need more documentation and examples
 # this sholud be extended to all the element types that has the property SOLID SECTION. now it is only for 3dsolid
     
@@ -1018,7 +1033,7 @@ def writeSet(fil,type,name,set,ofs=1):
             fil.write("%d,\n" % i)
 
     
-
+spring_elems = ['SPRINGA', ]
 connector_elems = ['CONN3D2','CONN2D2']
 frame_elems = ['FRAME3D','FRAME2D']
 truss_elems = [
@@ -1087,6 +1102,9 @@ def writeSection(fil,prop):
             
     if eltype in connector_elems:
         fil.write(fmtConnectorSection(el,setname))
+
+    elif eltype in spring_elems:
+        fil.write(fmtSpring(el,setname))
 
     elif eltype in frame_elems:
         fil.write(fmtFrameSection(el,setname))
