@@ -143,7 +143,7 @@ def drawCurve(curve,color,fill=False,with_border=True,with_points=True):
         if with_border:
             draw(border,color=red)
         #drawNumbers(border.coords,color=red)
-        surface = fillBorder(border,'border')
+        surface = fillBorder(border,'planar')
         draw(surface,color=color)
         #drawNumbers(surface)
     else:

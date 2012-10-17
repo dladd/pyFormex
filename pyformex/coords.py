@@ -321,7 +321,7 @@ class Coords(ndarray):
     def apt(self,align):
         """Returns an alignment point of a Coords.
 
-        Align point are points whose coordinates are either the minimal
+        Alignment point are points whose coordinates are either the minimal
         value, the maximal value or the middle value for the Coords.
         Combining the three values with the three dimensions, a Coords
         has in 27 (3**3) alignment points. The corner points of the
@@ -2229,9 +2229,7 @@ def xpattern(s,nplex=1):
         raise ValueError,"Could not reshape points list to plexitude %s" % nplex
 
 
-
-# IDEA: Add an offset
-def align(L,align):
+def align(L,align,offset=[0.,0.,0.]):
     """Align a list of geometrical objects.
 
     L is a list of geometrical objects (Coords or Geometry or subclasses
@@ -2246,6 +2244,11 @@ def align(L,align):
 
     E.g., the string ``'|--'`` will juxtapose the objects in the x-direction,
     while aligning them on their minimal coordinates in the y- and z- direction.
+
+    An offset may be specified to create a space between the object, instead
+    of juxtaposing them.
+
+    Returns: a list with the aligned objects.
     """
     r = L[:1]
     al = am =''
@@ -2257,7 +2260,7 @@ def align(L,align):
             al += align[i]
             am += align[i]
     for o in L[1:]:
-        r.append(o.align(al,r[-1].apt(am)))
+        r.append(o.align(al,r[-1].apt(am)+offset))
     return r
 
 
