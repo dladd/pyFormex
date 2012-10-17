@@ -566,6 +566,6 @@ def reloadMenu(name='scripts'):
     if menu is not None:
         before = pf.GUI.menu.nextitem(name)
         pf.GUI.menu.removeItem(name)
-        newmenu = createMenu(pf.GUI.menu,before)
+        newmenu = createScriptMenu(pf.GUI.menu,before)
     
 # End

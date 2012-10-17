@@ -400,7 +400,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,mode=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,mode=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,bkalpha=None,linewidth=None,linestipple=None,marksize=None,texture=None,avgnormals=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -466,6 +466,7 @@ class GeomActor(Actor):
         self.setLineStipple(linestipple)
         self.marksize = marksize
         self.setTexture(texture)
+        self.avgnormals = avgnormals
 
 
     def getType(self):
@@ -530,6 +531,7 @@ class GeomActor(Actor):
 
 
     def draw(self,**kargs):
+        #print(self.__dict__.keys())
         mode = self.mode
         if mode is None:
             if 'mode' in kargs:
@@ -537,8 +539,9 @@ class GeomActor(Actor):
             else:
                 canvas = kargs.get('canvas',pf.canvas)
                 mode = canvas.rendermode
-
+        
         if mode.endswith('wire'):
+            #print("WIRE MODE")
             try:
                 if self.object.level() > 1:
 
@@ -560,8 +563,9 @@ class GeomActor(Actor):
 
             except:
                 # AVOID error (which should not occur)
-                print("GEOMACTOR.draw: %s" % type(self.object))
+                #print("GEOMACTOR.draw: %s" % type(self.object))
                 #print self.object.level()
+                raise
                 pass
                 
             mode = mode[:-4]
@@ -590,21 +594,27 @@ class GeomActor(Actor):
         'flatwire'). In these cases, two drawing operations are done:
         one with mode='wireframe' and color=black, and one with mode=mode[:-4].
         """
-        from canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
-
-        settings = canvas.settings
         
         if mode is None:
            mode = self.mode
         if mode is None:
             mode = canvas.rendermode
 
-        if mode.endswith('wire'):
-            mode = mode[:-4]
-                            
+        from mydict import CDict
+        settings = CDict(canvas.settings.RenderProfiles[mode])
+        #canvas.settings.glOverride(settings,canvas.settings) 
+        settings.defaults = canvas.settings
+
         ############# set drawing attributes #########
+        avgnormals = self.avgnormals
+        if avgnormals is None:
+            avgnormals = canvas.settings.avgnormals
+
+        lighting = canvas.settings.lighting
+        #print("ACTORS.drawgl lighting = %s" % lighting)
+
         alpha = self.alpha
         if alpha is None:
             alpha = canvas.settings.transparency
@@ -620,8 +630,9 @@ class GeomActor(Actor):
             # WITH THE EDGECOLOR IN ..wire DRAWING MODES
             # SO NO NEED TO SET bkcolor
             #
-            # NOT SURE IF WE STILL NEED THIS !
+            # NOT SURE IF WE STILL NEED THIS !   YES!!!
             #
+            #raise ValueError,"THIS ERROR SHOULD NOT OCCUR: Contact mainitainers"
             color,colormap = saneColor(color),None
             bkcolor, bkcolormap = None,None
 
@@ -642,6 +653,8 @@ class GeomActor(Actor):
         if self.linestipple is not None:
             glLineStipple(*self.linestipple)
 
+        #print("DRAWGL mode %s" % mode)
+
         if mode.startswith('smooth'):
             if hasattr(self,'specular'):
                 fill_mode = GL.GL_FRONT
@@ -657,7 +670,7 @@ class GeomActor(Actor):
 
         ################## draw the geometry #################
         nplex = self.nplex()
-        
+
         if nplex == 1:
             marksize = self.marksize
             if marksize is None:
@@ -688,10 +701,10 @@ class GeomActor(Actor):
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
                     
-                drawPolygons(self.coords,self.elems,color,alpha,self.texture,None,settings.lighting,settings.avgnormals)
+                drawPolygons(self.coords,self.elems,color,alpha,self.texture,None,None,lighting,avgnormals)
                 if bkcolor is not None:
                     GL.glCullFace(GL.GL_FRONT)
-                    drawPolygons(self.coords,self.elems,canvas.settings,bkcolor,bkalpha,None,None,settings.lighting,settings.avgnormals)
+                    drawPolygons(self.coords,self.elems,bkcolor,bkalpha,None,None,None,lighting,avgnormals)
                     GL.glDisable(GL.GL_CULL_FACE)
                     
         else:
@@ -707,12 +720,12 @@ class GeomActor(Actor):
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
 
-                    drawFaces(self.coords,self.elems,faces,faces.eltype,color,alpha,self.texture,None,settings.lighting,settings.avgnormals)
+                    drawFaces(self.coords,self.elems,faces,faces.eltype,color,alpha,self.texture,None,lighting,avgnormals)
 
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
-                        drawFaces(self.coords,self.elems,faces,faces.eltype,bkcolor,bkalpha,None,None,settings.lighting,settings.avgnormals)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,bkcolor,bkalpha,None,None,lighting,avgnormals)
                         GL.glDisable(GL.GL_CULL_FACE)
 
    

@@ -34,7 +34,7 @@ from numpy import *
 from OpenGL import GL,GLU
 
 from formex import length
-from drawable import saneColor
+from drawable import saneColor,glColor
 import colors
 import camera
 import actors
@@ -44,11 +44,14 @@ import utils
 from mydict import Dict
 
 
+
 def gl_pickbuffer():
     "Return a list of the 2nd numbers in the openGL pick buffer."
     buf = GL.glRenderMode(GL.GL_RENDER)
     return asarray([ r[2] for r in buf ])
 
+
+from OpenGL.GL import glLineWidth as glLinewidth, glPointSize as glPointsize
 
 fill_modes = [ GL.GL_FRONT_AND_BACK, GL.GL_FRONT, GL.GL_BACK ]
 fill_mode = GL.GL_FRONT_AND_BACK
@@ -63,10 +66,12 @@ def glBackFill():
     glFillMode(GL.GL_BACK)
 def glBothFill():
     glFillMode(GL.GL_FRONT_AND_BACK)
-def glFill():
-    GL.glPolygonMode(fill_mode,GL.GL_FILL)
-def glLine():
-    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
+
+def glFill(fill=True):
+    if fill:
+        GL.glPolygonMode(fill_mode,GL.GL_FILL)
+    else:
+        GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
 
 def glLineSmooth(onoff):
     if onoff is True:
@@ -75,7 +80,7 @@ def glLineSmooth(onoff):
     elif onoff is False:
         GL.glDisable(GL.GL_LINE_SMOOTH)
 
-
+    
 def glLineStipple(factor,pattern):
     """Set the line stipple pattern.
 
@@ -91,13 +96,16 @@ def glLineStipple(factor,pattern):
     else:
         GL.glDisable(GL.GL_LINE_STIPPLE)
 
-
-def glSmooth():
+def glSmooth(smooth=True):
     """Enable smooth shading"""
-    GL.glShadeModel(GL.GL_SMOOTH)
+    if smooth:
+        GL.glShadeModel(GL.GL_SMOOTH)
+    else:
+        GL.glShadeModel(GL.GL_FLAT)
+        
 def glFlat():
     """Disable smooth shading"""
-    GL.glShadeModel(GL.GL_FLAT)
+    glSmooth(False)
     
 
 def onOff(onoff):
@@ -150,10 +158,7 @@ def glPolygonFillMode(mode):
 def glPolygonMode(mode):
     if type(mode) is str:
         mode = mode.lower()
-        if mode == 'fill':
-            glFill()
-        elif mode == 'line':
-            glLine()
+        glFill(mode == 'fill')
     
 
 def glShadeModel(model):
@@ -163,16 +168,6 @@ def glShadeModel(model):
             glSmooth()
         elif model == 'flat':
             glFlat()
-        
-def glSettings(settings):
-    pf.debug("GL SETTINGS: %s" % settings,pf.DEBUG.DRAW)
-    glCulling(settings.get('Culling',None))
-    glLighting(settings.get('Lighting',None))
-    glShadeModel(settings.get('Shading',None))
-    glLineSmooth(onOff(settings.get('Line Smoothing',None)))
-    glPolygonFillMode(settings.get('Polygon Fill',None))
-    glPolygonMode(settings.get('Polygon Mode',None))
-    pf.canvas.update()
 
     
 class ActorList(list):
@@ -386,6 +381,65 @@ class CanvasSettings(Dict):
     All items that are not set, will get their value from the configuration
     file(s).
     """
+
+    # A collection of default rendering profiles.
+    # These contain the values diffrent from the overall defaults
+    RenderProfiles = {
+        'wireframe': Dict({
+            'smooth': False,
+            'fill': False,
+            'lighting': False,
+            'alphablend': False,
+            'transparency': 1.0,
+            'edges': 'none',
+            'avgnormals': False,
+            }),
+        'smooth': Dict({
+            'smooth': True,
+            'fill': True,
+            'lighting': True,
+            'alphablend': False,
+            'transparency': 0.5,
+            'edges': 'none',
+            'avgnormals': False,
+            }),
+        'smooth_avg': Dict({
+            'smooth': True,
+            'fill': True,
+            'lighting': True,
+            'alphablend': False,
+            'transparency': 0.5,
+            'edges': 'none',
+            'avgnormals': True,
+            }),
+        'smoothwire': Dict({
+            'smooth': True,
+            'fill': True,
+            'lighting': True,
+            'alphablend': False,
+            'transparency': 0.5,
+            'edges': 'all',
+            'avgnormals': False,
+            }),
+        'flat': Dict({
+            'smooth': False,
+            'fill': True,
+            'lighting': False,
+            'alphablend': False,
+            'transparency': 0.5,
+            'edges': 'none',
+            'avgnormals': False,
+            }),
+        'flatwire': Dict({
+            'smooth': False,
+            'fill': True,
+            'lighting': False,
+            'alphablend': False,
+            'transparency': 0.5,
+            'edges': 'all',
+            'avgnormals': False,
+            }),
+        }
     edge_options = [ 'none','feature','all' ]
     
     def __init__(self,**kargs):
@@ -469,21 +523,44 @@ class CanvasSettings(Dict):
 
     def activate(self):
         """Activate the default canvas settings in the GL machine."""
-        if self.smooth:
-            glSmooth()
-        else:
-            glFlat()
+        self.glOverride(self,self)
+        ## glSmooth(self.smooth)
+        ## glFill(self.fill)
+        ## glLighting(self.lighting)
+        ## glColor(self.fgcolor,self.transparency)
+        ## glLineStipple(*self.linestipple)
+        ## glPointSize(self.pointsize)
 
-        if self.fill:
-            glFill()
-        else:
-            glLine()
 
-        GL.glColor4fv(list(self.fgcolor)+[self.transparency,])
-        GL.glLineWidth(self.linewidth)
-        glLineStipple(*self.linestipple)
-        GL.glPointSize(self.pointsize)
+    @staticmethod
+    def glOverride(settings,default):
+        #if settings != default:
+            #print("OVERRIDE CANVAS SETINGS %s" % settings)
+        for k in settings:
+            if k in ['fgcolor','transparency']:
+                c = settings.get('fgcolor',default.fgcolor)
+                t = settings.get('transparency',default.transparency)
+                glColor(c,t)
+            elif k == 'linestipple':
+                glLineStipple(*settings[k])
+            elif k in ['smooth','fill','lighting','linewidth','pointsize']:
+                func = globals()['gl'+k.capitalize()]
+                func(settings[k])
+            ## else:
+            ##     print("CAN NOT SET %s" % k)
 
+
+def glSettings(settings):
+    pf.debug("GL SETTINGS: %s" % settings,pf.DEBUG.DRAW)
+    glShadeModel(settings.get('Shading',None))
+    glCulling(settings.get('Culling',None))
+    glLighting(settings.get('Lighting',None))
+    glLineSmooth(onOff(settings.get('Line Smoothing',None)))
+    glPolygonFillMode(settings.get('Polygon Fill',None))
+    glPolygonMode(settings.get('Polygon Mode',None))
+    pf.canvas.update()
+    
+            
 
 def extractCanvasSettings(d):
     """Split a dict in canvas settings and other items.
@@ -493,51 +570,6 @@ def extractCanvasSettings(d):
     """
     return utils.select(d,pf.refcfg['canvas']),utils.remove(d,pf.refcfg['canvas'])
 
-
-# A collection of default rendering profiles.
-# These contain the values diffrent from the overall defaults
-RenderProfiles = {
-    'wireframe': {
-        'smooth': False,
-        'fill': False,
-        'lighting': False,
-        'alphablend': False,
-        'transparency': 1.0,
-        'edges': 'none'
-        },
-    'smooth': {
-        'smooth': True,
-        'fill': True,
-        'lighting': True,
-        'alphablend': False,
-        'transparency': 0.5,
-        'edges': 'none'
-        },
-    'smoothwire': {
-        'smooth': True,
-        'fill': True,
-        'lighting': True,
-        'alphablend': False,
-        'transparency': 0.5,
-        'edges': 'all'
-        },
-    'flat': {
-        'smooth': False,
-        'fill': True,
-        'lighting': False,
-        'alphablend': False,
-        'transparency': 0.5,
-        'edges': 'none'
-        },
-    'flatwire': {
-        'smooth': False,
-        'fill': True,
-        'lighting': False,
-        'alphablend': False,
-        'transparency': 0.5,
-        'edges': 'all'
-        },
-    }
 
 ##################################################################
 #
@@ -569,9 +601,9 @@ class Canvas(object):
         self.triade = None
         self.background = None
         self.bbox = None
-        self.resetLighting()
         self.setBbox()
         self.settings = CanvasSettings(**settings)
+        self.resetLighting()
         self.mode2D = False
         self.rendermode = pf.cfg['draw/rendermode']
         self.camera = None
@@ -585,13 +617,15 @@ class Canvas(object):
         return self.width(),self.height()
 
 
-    def do_lighting(self,onoff):
+    def enable_lighting(self,state):
         """Toggle lights on/off."""
-        if onoff:
+        if state:
             self.lightprof.activate()
             self.material.activate()
+            #print("ENABLE LIGHT")
             GL.glEnable(GL.GL_LIGHTING)
         else:
+            #print("DISABLE LIGHT")
             GL.glDisable(GL.GL_LIGHTING)
 
 
@@ -638,31 +672,34 @@ class Canvas(object):
         and everything is redrawn with the new mode.
         """
         pf.debug("Setting rendermode to %s" % mode)
-        if mode not in RenderProfiles:
+        if mode not in CanvasSettings.RenderProfiles:
             raise ValueError,"Invalid render mode %s" % mode
 
-        self.settings.update(RenderProfiles[mode])
+        self.settings.update(CanvasSettings.RenderProfiles[mode])
         if lighting is None:
             lighting = self.settings.lighting
             
         if mode != self.rendermode or lighting != self.settings.lighting:
+            #print("SWITCHING MODE")
             self.rendermode = mode
             self.settings.lighting = lighting
             self.glinit()
 
 
-    def setToggle(self,attr,onoff):
+    def setToggle(self,attr,state):
         """Set or toggle a boolean settings attribute
 
         Furthermore, if a Canvas method do_ATTR is defined, it will be called
-        with the new toggle state as a parameter.
+        with the old and new toggle state as a parameter.
         """
-        if onoff not in [True,False]:
-            onoff = not self.settings[attr]
-        self.settings[attr] = onoff
+        #print("Toggling %s = %s"%(attr,state),pf.DEBUG.CANVAS)
+        oldstate = self.settings[attr]
+        if state not in [True,False]:
+            state = not oldstate
+        self.settings[attr] = state
         try:
             func = getattr(self,'do_'+attr)
-            func(onoff)
+            func(state,oldstate)
         except:
             pass
 
@@ -671,14 +708,21 @@ class Canvas(object):
         self.setToggle('lighting',onoff)
 
 
-    def do_avgnormals(self,onoff):
-        change = (self.rendermode == 'smooth' and self.settings.avgnormals) or \
-                 (self.rendermode == 'smooth_avg' and not self.settings.avgnormals)
-        if change:
+    def do_lighting(self,state,oldstate=None):
+        """Toggle lights on/off."""
+        #print("TOGGLING LIGHTING %s %s"%(state,oldstate))
+        if state != oldstate:
+            self.enable_lighting(state)
+
+
+    def do_avgnormals(self,state,oldstate):
+        #print("Toggling avgnormals",self.rendermode,state,oldstate)
+        if state!=oldstate and self.rendermode.startswith('smooth'):
             if self.settings.avgnormals:
                 self.rendermode = 'smooth_avg'
             else:
                 self.rendermode = 'smooth'
+            #print("REDRAW")
             self.actors.redraw()
             self.display()
        
@@ -807,7 +851,7 @@ class Canvas(object):
         """Activate the canvas settings in the GL machine."""
         self.settings.activate()
         #pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
-        self.do_lighting(self.settings.lighting)
+        self.enable_lighting(self.settings.lighting)
         GL.glDepthFunc(GL.GL_LESS)
 
 
@@ -957,7 +1001,7 @@ class Canvas(object):
         GL.glLoadIdentity()
         self.zoom_2D()
         GL.glDisable(GL.GL_DEPTH_TEST)
-        self.do_lighting(False)
+        self.enable_lighting(False)
         self.mode2D = True
 
  
@@ -970,7 +1014,7 @@ class Canvas(object):
             GL.glPopMatrix()
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glPopMatrix()
-            self.do_lighting(self.settings.lighting)
+            self.enable_lighting(self.settings.lighting)
             self.mode2D = False
        
         

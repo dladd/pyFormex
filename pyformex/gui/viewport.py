@@ -1530,7 +1530,7 @@ class MultiCanvas(FramedGridLayout):
         self.parent = parent
 
 
-    def newView(self,shared=None):
+    def newView(self,shared=None,settings=None):
         """Create a new viewport
 
         If another QtCanvas instance is passed, both will share the same
@@ -1538,13 +1538,16 @@ class MultiCanvas(FramedGridLayout):
         """
         if shared is not None:
             pf.debug("SHARING display lists WITH %s" % shared,pf.DEBUG.DRAW)
-        try:
-            settings = self.current.settings
-        except:
-            settings = {}
+        if settings is None:
+            try:
+                settings = self.current.settings
+            except:
+                settings = {}
         pf.debug("Create new viewport with settings:\n%s"%settings,pf.DEBUG.CANVAS)
+        ##
+        ## BEWARE: shared shouild be positional, settings should be keyword !
         canv = QtCanvas(self.parent,shared,settings=settings)
-        print(canv.settings)
+        #print(canv.settings)
         return(canv)
 
 

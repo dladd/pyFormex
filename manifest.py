@@ -127,6 +127,7 @@ DATA_FILES = listTree(
     includefiles=[
         'README',
         'benedict_6.jpg',
+        'bifurcation.off',
         'blippo.pgf',
         'butterfly.png',
         'hesperia-nieve.prop',

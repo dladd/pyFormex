@@ -139,6 +139,7 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
     else:
         nelems = e.shape[0]
     n = None
+    #print("LIGTHING %s, AVGNORMALS %s" % (lighting,avgnormals))
     if lighting and objtype==-1:
         if normals is None:
             pf.debug("Computing normals",pf.DEBUG.DRAW)
@@ -606,6 +607,7 @@ def draw_faces(x,e,color=None,alpha=1.0,texture=None,texc=None,lighting=False,av
     `nfaces` faces are drawn in the same color.
     This is e.g. convenient when drawing faces of a solid element.
     """
+    pf.debug("draw_faces",pf.DEBUG.DRAW)
     if e is None:
         nelems,nfaces,nplex = x.shape[:3]
         x = x.reshape(-1,nplex,3)
