@@ -81,7 +81,29 @@ def smallestDirection(x,method='inertia'):
         N = sqrt(N)
         N = normalize(N)
         return N
-    
+
+
+def closestPoint(P0,P1):
+    """Find the smallest distance between any two points from P0 and P1.
+
+    P0 and P1 are Coords arrays. Any point of P0 is compared with any point
+    of P1, and the couple with the closest distance is returned.
+
+    Returns a tuple (i,j,d) where i,j are the indices in P0,P1 identifying
+    the closest points, and d is the distance between them.
+    """
+    P0 = P0.reshape(-1,3)
+    P1 = P1.reshape(-1,3)
+    if P0.shape[0] == 1:
+        d = P1.distanceFromPoint(P0[0])
+        j = d.argmin()
+        return 0,j,d[j]
+    else:
+        di = [ closestPoint(x,P1)[1:] for x in P0 ]
+        i = array([d[1] for d in di]).argmin()
+        j,d = di[i]
+    return i,j,d
+   
 
 def projectedArea(x,dir):
     """Compute projected area inside a polygon.

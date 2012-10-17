@@ -1585,7 +1585,7 @@ class Coords(ndarray):
 
         A random amount is added to eacho individual coordinate in the Coords.
         The difference of any coordinate from its original value will
-        not be maximally ``asize+rsize*self.sizes().max()``. The default
+        not be r than ``asize+rsize*self.sizes().max()``. The default
         is to set it to 0.1 times the geometrical size of the structure.
         """
         max = asize + rsize * self.sizes().max()

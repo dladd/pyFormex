@@ -473,12 +473,10 @@ class CanvasSettings(Dict):
         ok = {}
         for k,v in dict.items():
             try:
-                if k in [ 'bgcolor', 'fgcolor', 'bkcolor', 'slcolor']:
+                if k in [ 'bgcolor', 'fgcolor', 'bkcolor', 'slcolor',
+                          'colormap','bkcolormap' ]:
                     if v is not None:
                         v = saneColor(v)
-                elif k in ['colormap','bkcolormap']:
-                    if v is not None:
-                        v =  map(saneColor,v)
                 elif k in ['bgimage']:
                     v = str(v)
                 elif k in ['smooth', 'fill', 'lighting', 'culling',
