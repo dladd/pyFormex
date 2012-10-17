@@ -677,7 +677,7 @@ def fmtSurface(prop):
       *SURFACE, NAME=mysurf, TYPE=element
       1, S1
       2, S2,
-      1, S1
+      3, S1
       7, S3 
     """
     out = ''

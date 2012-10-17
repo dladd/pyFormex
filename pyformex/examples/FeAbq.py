@@ -34,9 +34,9 @@ _techniques = ['persistence', 'dialog', 'color']
 
 from gui.draw import *
 
-from plugins.fe import *
-from plugins.properties import *
-from plugins.fe_abq import *
+from plugins.fe import mergedModel
+from plugins.properties import PropertyDB,ElemSection,Eset
+from plugins.fe_abq import Step,Output,Result,AbqData
 
 
 def base(nplex):
@@ -238,12 +238,12 @@ def run():
     # !! currently output/result request are global to all steps
     # !! this will be changed in future
     #
-    all = AbqData(M,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
+    data = AbqData(M,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
 
     if ack('Export this model in ABAQUS input format?',default='No'):
         fn = askNewFilename(filter='*.inp')
         if fn:
-            all.write(jobname=fn,group_by_group=True)
+            data.write(jobname=fn,group_by_group=True)
 
 # Initialize
 smoothwire()

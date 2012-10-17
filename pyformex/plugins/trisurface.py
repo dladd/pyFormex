@@ -1101,6 +1101,29 @@ Quality: %s .. %s
             return dist
 
 
+    def degenerate(self):
+        """Return a list of the degenerate faces according to area and normals.
+
+        A face is degenerate if its surface is less or equal to zero or the
+        normal has a nan.
+
+        Returns the list of degenerate element numbers in a sorted array. 
+        """
+        return degenerate(*self.areaNormals())
+
+
+    def removeDegenerate(self,compact=False):
+        """Remove the degenerate elements from a TriSurface.
+
+        Returns a TriSurface with all degenerate elements removed.
+        By default, the coords set is unaltered and will still contain
+        all points, even ones that are no longer connected to any element.
+        To reduce the coordinate set, set the compact argument to True
+        or use the :meth:`compact` method afterwards.
+        """
+        return self.cselect(self.degenerate(),compact=False)
+
+
 ##################  Transform surface #############################
     # All transformations now return a new surface
 
@@ -1173,140 +1196,140 @@ Quality: %s .. %s
 #
 # BV RESTORED OLD PARTITIONBYANGLE
 #
-    def OLDedgeFront(self,startat=0,okedges=None,front_increment=1):
-        """Generator function returning the frontal elements.
+    ## def OLDedgeFront(self,startat=0,okedges=None,front_increment=1):
+    ##     """Generator function returning the frontal elements.
    
-        startat is an element number or list of numbers of the starting front.
-        On first call, this function returns the starting front.
-        Each next() call returns the next front.
-        front_increment determines how the property increases at each
-        frontal step. There is an extra increment +1 at each start of
-        a new part. Thus, the start of a new part can always be detected
-        by a front not having the property of the previous plus front_increment.
-        """
-        #print("FRONT_INCREMENT %s" % front_increment)
-        p = -ones((self.nfaces()),dtype=int)
-        if self.nfaces() <= 0:
-            return
-        # Construct table of elements connected to each edge
-        conn = self.edgeConnections()
-        # Bail out if some edge has more than two connected faces
-        if conn.shape[1] != 2:
-            pf.warning("Surface is not a manifold")
-            return
-        # Check size of okedges
-        if okedges is not None:
-            if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-                raise ValueError,"okedges has incorrect shape"
+    ##     startat is an element number or list of numbers of the starting front.
+    ##     On first call, this function returns the starting front.
+    ##     Each next() call returns the next front.
+    ##     front_increment determines how the property increases at each
+    ##     frontal step. There is an extra increment +1 at each start of
+    ##     a new part. Thus, the start of a new part can always be detected
+    ##     by a front not having the property of the previous plus front_increment.
+    ##     """
+    ##     #print("FRONT_INCREMENT %s" % front_increment)
+    ##     p = -ones((self.nfaces()),dtype=int)
+    ##     if self.nfaces() <= 0:
+    ##         return
+    ##     # Construct table of elements connected to each edge
+    ##     conn = self.edgeConnections()
+    ##     # Bail out if some edge has more than two connected faces
+    ##     if conn.shape[1] != 2:
+    ##         pf.warning("Surface is not a manifold")
+    ##         return
+    ##     # Check size of okedges
+    ##     if okedges is not None:
+    ##         if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
+    ##             raise ValueError,"okedges has incorrect shape"
    
-        # Remember edges left for processing
-        todo = ones((self.nedges(),),dtype=bool)
-        elems = clip(asarray(startat),0,self.nfaces())
-        prop = 0
-        while elems.size > 0:
-            # Store prop value for current elems
-            p[elems] = prop
-            yield p
+    ##     # Remember edges left for processing
+    ##     todo = ones((self.nedges(),),dtype=bool)
+    ##     elems = clip(asarray(startat),0,self.nfaces())
+    ##     prop = 0
+    ##     while elems.size > 0:
+    ##         # Store prop value for current elems
+    ##         p[elems] = prop
+    ##         yield p
    
-            prop += front_increment
+    ##         prop += front_increment
    
-            # Determine border
-            edges = unique(self.getElemEdges()[elems])
-            edges = edges[todo[edges]]
-            if edges.size > 0:
-                # flag edges as done
-                todo[edges] = 0
-                # take connected elements
-                if okedges is None:
-                    elems = conn[edges].ravel()
-                else:
-                    elems = conn[edges[okedges[edges]]].ravel()
-                elems = elems[(elems >= 0) * (p[elems] < 0) ]
-                if elems.size > 0:
-                    continue
+    ##         # Determine border
+    ##         edges = unique(self.getElemEdges()[elems])
+    ##         edges = edges[todo[edges]]
+    ##         if edges.size > 0:
+    ##             # flag edges as done
+    ##             todo[edges] = 0
+    ##             # take connected elements
+    ##             if okedges is None:
+    ##                 elems = conn[edges].ravel()
+    ##             else:
+    ##                 elems = conn[edges[okedges[edges]]].ravel()
+    ##             elems = elems[(elems >= 0) * (p[elems] < 0) ]
+    ##             if elems.size > 0:
+    ##                 continue
    
-            # No more elements in this part: start a new one
-            #print("NO MORE ELEMENTS")
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
+    ##         # No more elements in this part: start a new one
+    ##         #print("NO MORE ELEMENTS")
+    ##         elems = where(p<0)[0]
+    ##         if elems.size > 0:
+    ##             # Start a new part
+    ##             elems = elems[[0]]
+    ##             prop += 1
    
    
-    def OLDwalkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
-        """Grow a selection using a frontal method.
+    ## def OLDwalkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
+    ##     """Grow a selection using a frontal method.
    
-        Starting from element `startat`, grow a selection `nsteps` times
-        following the common edges of the triangles.
+    ##     Starting from element `startat`, grow a selection `nsteps` times
+    ##     following the common edges of the triangles.
    
-        The property of each new front is augmented by `front_increment`.
-        """
-        for p in self.OLDedgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            if nsteps > 0:
-                nsteps -= 1
-            elif nsteps == 0:
-                break
-        return p
+    ##     The property of each new front is augmented by `front_increment`.
+    ##     """
+    ##     for p in self.OLDedgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
+    ##         if nsteps > 0:
+    ##             nsteps -= 1
+    ##         elif nsteps == 0:
+    ##             break
+    ##     return p
     
 
-    def OLDpartitionByEdgeFront(self,okedges,startat=0):
-        """Detect different parts of the surface using a frontal method.
+    ## def OLDpartitionByEdgeFront(self,okedges,startat=0):
+    ##     """Detect different parts of the surface using a frontal method.
 
-        okedges flags the edges where the two adjacent triangles are to be
-        in the same part of the surface.
-        startat is a list of elements that are in the first part. 
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
-        """
-        return self.OLDwalkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
+    ##     okedges flags the edges where the two adjacent triangles are to be
+    ##     in the same part of the surface.
+    ##     startat is a list of elements that are in the first part. 
+    ##     The partitioning is returned as a property type array having a value
+    ##     corresponding to the part number. The lowest property number will be
+    ##     firstprop.
+    ##     """
+    ##     return self.OLDwalkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
     
 
 
-    def OLDpartitionByAngle(self,angle=60.,sort='number'):
-        """Partition the surface by splitting it at sharp edges.
+    ## def OLDpartitionByAngle(self,angle=60.,sort='number'):
+    ##     """Partition the surface by splitting it at sharp edges.
 
-        The surface is partitioned in parts in which all elements can be
-        reach without ever crossing a sharp edge angle. More precisely,
-        any two elements that can be connected by a line not crossing an
-        edge between two elements having their normals differ more than
-        angle (in degrees), will belong to the same part.
+    ##     The surface is partitioned in parts in which all elements can be
+    ##     reach without ever crossing a sharp edge angle. More precisely,
+    ##     any two elements that can be connected by a line not crossing an
+    ##     edge between two elements having their normals differ more than
+    ##     angle (in degrees), will belong to the same part.
        
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
+    ##     The partitioning is returned as a property type array having a value
+    ##     corresponding to the part number. The lowest property number will be
+    ##     firstprop.
 
-        By default the parts are assigned property numbers in decreasing
-        order of the number of triangles in the part. Setting the sort
-        argument to 'area' will sort the parts according to decreasing
-        area. Any other value will return the parts unsorted.
-        """
-        conn = self.edgeConnections()
-        # Flag edges that connect two faces
-        conn2 = (conn >= 0).sum(axis=-1) == 2
-        # compute normals and flag small angles over edges
-        cosangle = cosd(angle)
-        a, n = self.areaNormals()
-        n = n[conn[conn2]]
-        small_angle = ones(conn2.shape,dtype=bool)
-        small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        p = self.OLDpartitionByEdgeFront(small_angle)
-        if sort == 'number':
-            h = histogram(p,list(unique(p))+[p.max()+1])[0]
-        elif sort == 'area':
-            h = [a[p==j].sum() for j in unique(p)]
-        else:
-            sort = False
-        if sort:
-            srt = argsort(h)[::-1]
-            inv = inverseUniqueIndex(srt)
-            p = inv[p]
+    ##     By default the parts are assigned property numbers in decreasing
+    ##     order of the number of triangles in the part. Setting the sort
+    ##     argument to 'area' will sort the parts according to decreasing
+    ##     area. Any other value will return the parts unsorted.
+    ##     """
+    ##     conn = self.edgeConnections()
+    ##     # Flag edges that connect two faces
+    ##     conn2 = (conn >= 0).sum(axis=-1) == 2
+    ##     # compute normals and flag small angles over edges
+    ##     cosangle = cosd(angle)
+    ##     a, n = self.areaNormals()
+    ##     n = n[conn[conn2]]
+    ##     small_angle = ones(conn2.shape,dtype=bool)
+    ##     small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
+    ##     p = self.OLDpartitionByEdgeFront(small_angle)
+    ##     if sort == 'number':
+    ##         h = histogram(p,list(unique(p))+[p.max()+1])[0]
+    ##     elif sort == 'area':
+    ##         h = [a[p==j].sum() for j in unique(p)]
+    ##     else:
+    ##         sort = False
+    ##     if sort:
+    ##         srt = argsort(h)[::-1]
+    ##         inv = inverseUniqueIndex(srt)
+    ##         p = inv[p]
         
-        return p
+    ##     return p
 
 
-    def partitionByAngle(self,angle=60.,sort='number',alt=False):
+    def partitionByAngle(self,angle=60.,sort='number'): #,alt=False):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1322,9 +1345,13 @@ Quality: %s .. %s
         order of the number of triangles in the part. Setting the sort
         argument to 'area' will sort the parts according to decreasing
         area. Any other value will return the parts unsorted.
+
+        Beware that the existence of degenerate elements may cause
+        unexpected results. If unsure, use the :meth:`removeDegenerate`
+        method first to remove those elements.
         """
-        if alt:
-            return self.OLDpartitionByAngle(angle=angle,sort=sort)
+        ## if alt:
+        ##     return self.OLDpartitionByAngle(angle=angle,sort=sort)
         
         feat = self.featureEdges(angle=angle)
         p = self.maskedEdgeFrontWalk(mask=~feat,frontinc=0)
@@ -2197,18 +2224,22 @@ Quality: %s .. %s
 ##########################################################################
 ################# Non-member and obsolete functions ######################
 
+def degenerate(area,normals):
+    """Return a list of the degenerate faces according to area and normals.
+
+    area,normals are equal sized arrays with the areas and normals of a
+    list of faces.
+    A face is degenerate if its area is less or equal to zero or the
+    normal has a nan (not-a-number) value.
+
+    Returns a list of the degenerate element numbers as a sorted array. 
+    """
+    return unique(concatenate([where(area<=0)[0],where(isnan(normals))[0]]))
+
+
 def read_error(cnt,line):
     """Raise an error on reading the stl file."""
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
-
-
-def degenerate(area,norm):
-    """Return a list of the degenerate faces according to area and normals.
-
-    A face is degenerate if its surface is less or equal to zero or the
-    normal has a nan.
-    """
-    return unique(concatenate([where(area<=0)[0],where(isnan(norm))[0]]))
 
 
 def read_stla(fn,dtype=Float,large=False,guess=True):
