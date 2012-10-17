@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="5. draw — Create 3D graphical representations." href="draw.html" />
     <link rel="prev" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="arraytools.html" title="3. arraytools — A collection of numerical array utilities."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -191,7 +191,7 @@ module (&#8211;nogui option).</p>
 
 <dl class="function">
 <dt id="script.listAll">
-<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>dic=None</em>, <em>sort=False</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filtr=None</em>, <em>dic=None</em>, <em>sort=False</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all objects in dictionay that match criteria.</p>
 <ul class="simple">
 <li>dic: a dictionary object, defaults to pyformex.PF</li>
@@ -199,7 +199,7 @@ module (&#8211;nogui option).</p>
 returned</li>
 <li>like: a string: if given, only object names starting with this string
 will be returned</li>
-<li>filter: a function taking an object name as parameter and returning True
+<li>filtr: a function taking an object name as parameter and returning True
 or False. If specified, only objects passing the test will be returned.</li>
 </ul>
 <p>The return value is a list of keys from dic.</p>
@@ -305,7 +305,14 @@ is returned to the caller.</p>
 <p>This function does nothing if no appname/filename is passed or no current
 script/app was set.
 If arguments are given, they are passed to the script. If <cite>step</cite> is True,
-the script is executed in step mode.</p>
+the script is executed in step mode. The &#8216;refresh&#8217; parameter will reload
+the app.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="script.runAll">
+<tt class="descclassname">script.</tt><tt class="descname">runAll</tt><big>(</big><em>applist</em>, <em>refresh=False</em><big>)</big><a class="headerlink" href="#script.runAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run all the scripts/apps in given list.</p>
 </dd></dl>
 
 <dl class="function">
@@ -466,7 +473,7 @@ Else, default names will be provided.</p>
         <li class="right" >
           <a href="arraytools.html" title="3. arraytools — A collection of numerical array utilities."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -474,7 +481,7 @@ Else, default names will be provided.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

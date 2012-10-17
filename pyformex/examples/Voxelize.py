@@ -42,8 +42,13 @@ import simple
 
 def showGreyImage(a):
     F = Formex('4:0123').rep([a.shape[1],a.shape[0]],[0,1],[1.,1.]).setProp(a)
-    clear()
-    draw(F)
+    return draw(F)
+
+def saveBinaryImage(a,f):
+    c = flipud(a)
+    c = dstack([c,c,c])
+    im = numpy2qimage(c)
+    im.save(f)
 
 
 def run():
@@ -58,7 +63,14 @@ def run():
     bb1 = [ 1.1*bb[0]-0.1*bb[1], 1.1*bb[1]-0.1*bb[0]]
     print(bb)
     print(bb1)
-    nmax = 100
+
+    res = askItems([
+        _I('Resolution',100),
+        ])
+    if not res:
+        return
+    
+    nmax = res['Resolution']
     sz = bb1[1]-bb1[0]
     step = sz.max() / (nmax-1)
     n = (sz / step).astype(Int)
@@ -87,14 +99,12 @@ def run():
     fs = utils.NameSequence('horse','.png')
     clear()
     flat()
+    A = None
     for frame in vox:
-        showGreyImage(frame)
-        c = flipud(255*frame)
-        c = dstack([c,c,c])
-        im = numpy2qimage(c)
-        f = fs.next()
-        im.save(f)
-    
+        B = showGreyImage(frame)
+        saveBinaryImage(frame*255,fs.next())
+        undraw(A)
+        A = B
 
 # The following is to make it work as a script
 if __name__ == 'draw':

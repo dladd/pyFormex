@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -147,22 +147,28 @@ syntax.</p>
 <dl class="class">
 <dt id="formex.Formex">
 <em class="property">class </em><tt class="descclassname">formex.</tt><tt class="descname">Formex</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#formex.Formex" title="Permalink to this definition">¶</a></dt>
-<dd><p>A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
-A scalar element represents a coordinate (F:uniple).</p>
-<p>A row along the axis 2 is a set of coordinates and represents a point
-(node, vertex, F: signet).
+<dd><p>A structured collection of points in 3D space.</p>
+<p>A Formex is a collection of points in the 3D space, that are structured
+into a set of elements all having the same number of points (e.g. a
+collection of line segments or a collection of triangles.)</p>
+<p>The Formex basically contains (in its <cite>coords</cite> attribute) a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>
+object, which is a Float type array with 3 axes (numbered 0,1,2).
+A scalar element of this array represents a coordinate.</p>
+<p>A row along the last axis (2) is a set of coordinates and represents
+a point (aka. node, vertex).
 For simplicity&#8217;s sake, the current implementation only deals with points
 in a 3-dimensional space. This means that the length of axis 2 is always 3.
-The user can create formices (plural of Formex) in a 2-D space, but
+The user can create Formices (plural of Formex) in a 2-D space, but
 internally these will be stored with 3 coordinates, by adding a third
 value 0. All operations work with 3-D coordinate sets. However, a method
 exists to extract only a limited set of coordinates from the results,
 permitting to return to a 2-D environment</p>
-<p>A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
+<p>A plane along the axes 2 and 1 is a set of points or element. This can be
 thought of as a geometrical shape (2 points form a line segment, 3 points
-make a triangle, ...) or as an element in FE terms. But it really is up to
-the user as to how this set of points is to be interpreted.</p>
-<p>Finally, the whole Formex represents a set of such elements.</p>
+make a triangle, ...) or as an element in Finite Element terms.
+But it really is up to the user as to how this set of points is to be
+interpreted.</p>
+<p>Finally, the whole Formex represents a collection of such elements.</p>
 <p>Additionally, a Formex may have a property set, which is an 1-D array of
 integers. The length of the array is equal to the length of axis 0 of the
 Formex data (i.e. the number of elements in the Formex). Thus, a single
@@ -175,6 +181,48 @@ Properties can be specified at creation time, and they can be set,
 modified or deleted at any time. Of course, the properties that are
 copied in an operation are those that exist at the time of performing
 the operation.</p>
+<p>The Formex data can be initialized by another Formex,
+by a 2D or 3D coordinate list, or by a string to be used in one of the
+pattern functions to create a coordinate list.
+If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
+Internally, Formices always work with 3D coordinates.
+Thus:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]])</span>
+</pre></div>
+</div>
+<p>creates a Formex with two elements, each having 2 points in the global
+z-plane. The innermost level of brackets group the coordinates of a
+point, the next level groups the points in an element, and the outermost
+brackets group all the elements of the Formex.
+Because the coordinates are stored in an array with 3 axes,
+all the elements in a Formex must contain the same number of points.
+This number is called the plexitude of the Formex.</p>
+<p>A Formex may be initialized with a string instead of the numerical
+coordinate data. The string has the format <cite>#:data</cite> where <cite>#</cite> is a
+leader specifying the plexitude of the elements to be created.
+The <cite>data</cite> part of the string is passed to the <a class="reference internal" href="coords.html#coords.pattern" title="coords.pattern"><tt class="xref py py-func docutils literal"><span class="pre">coords.pattern()</span></tt></a>
+function to generate a list of points on a regular grid of unit distances.
+Then the generated points are grouped in elements. If <cite>#</cite> is a number
+it just specifies the plexitude:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:012034&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This creates six points, grouped by 3, thus leading to two elements
+(triangles). The leader can als be the character <cite>l</cite>. In that case
+each generated point is turned into a 2-point (line) element, by
+connecting it to the previous point. The following are two equivalent
+definitions of (the circumference of) a triangle:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;2:010207&#39;</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;l:127&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Formex constructor takes two optional arguments: prop and eltype.
+If a prop argument is specified, the setProp() function will be
+called to assign the specified properties. eltype can be used to
+specify a non-default element type. The default element type is
+derived from the plexitude as follows: 1 = point, 2 = line segment,
+3 = triangle, 4 or more is a polygon. Specifying <tt class="docutils literal"><span class="pre">eltype</span> <span class="pre">=</span> <span class="pre">'tet4'</span></tt>
+will e.g. interprete 4 point elements as a tetraeder.</p>
 <p>Because the <a class="reference internal" href="#formex.Formex" title="formex.Formex"><tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt></a> class is derived from <tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt>,
 the following <a class="reference internal" href="#formex.Formex" title="formex.Formex"><tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt></a> methods exist and return the value of the
 same method applied on the <a class="reference internal" href="coords.html#module-coords" title="coords: A structured collection of 3D coordinates."><tt class="xref py py-attr docutils literal"><span class="pre">coords</span></tt></a> attribute:
@@ -604,6 +652,19 @@ if one&#8217;s points are a permutation of the other&#8217;s.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.unique">
+<tt class="descname">unique</tt><big>(</big><em>permutations=True</em>, <em>rtol=0.0001</em>, <em>atol=1e-06</em><big>)</big><a class="headerlink" href="#formex.Formex.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex which holds only the unique elements.</p>
+<p>Two elements are considered equal when all its points are (nearly)
+coincident. By default any permutation of point order is also allowed.</p>
+<p>Two coordinate value are considered equal if they are both small
+compared to atol or if their difference divided by the second value
+is small compared to rtol.</p>
+<p>If permutations is set False, two elements are not considered equal
+if one&#8217;s points are a permutation of the other&#8217;s.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.test">
 <tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#formex.Formex.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag elements having nodal coordinates between min and max.</p>
@@ -713,6 +774,12 @@ method. The first of the copies is equal to the original.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.rep">
+<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=1.0</em><big>)</big><a class="headerlink" href="#formex.Formex.rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like replicate, but allow repeated replication</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.replic">
 <tt class="descname">replic</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.replic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex with n replications in direction dir with step.</p>
@@ -731,6 +798,16 @@ d1 for each generation in direction d2</p>
 <dl class="method">
 <dt id="formex.Formex.rosette">
 <tt class="descname">rosette</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#formex.Formex.rosette" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex with n rotational replications with angular
+step angle around an axis parallel with one of the coordinate axes
+going through the given point. axis is the number of the axis (0,1,2).
+point must be given as a list (or array) of three coordinates.
+The original Formex is the first of the n replicas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.ros">
+<tt class="descname">ros</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#formex.Formex.ros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex with n rotational replications with angular
 step angle around an axis parallel with one of the coordinate axes
 going through the given point. axis is the number of the axis (0,1,2).
@@ -759,29 +836,6 @@ form a higher plexitude structure.</p>
 <p>Currently, this function correctly transforms: point1 to line2,
 line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 <p>See the &#8216;connect&#8217; function for a more versatile tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.divide">
-<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Divide a plex-2 Formex at the values in div.</p>
-<p>Replaces each member of the Formex by a sequence of members obtained
-by dividing the Formex at the relative values specified in div.
-The values should normally range from 0.0 to 1.0.</p>
-<p>As a convenience, if an integer is specified for div, it is taken as a
-number of divisions for the interval [0..1].</p>
-<p>This function only works on plex-2 Formices (line segments).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.intersectionWithPlane">
-<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of a Formex with the plane (p,n).</p>
-<p>Currently this only works for plex-2 and plex-3 Formices.</p>
-<p>The intersection of the Formex with a plane specified by a point p
-and normal n is returned. For a plex-2 Formex (lines), the returned
-Formex will be of plexitude 1 (points). For a plex-3 Formex
-(triangles) the returned Fomrex has plexitude 2 (lines).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1049,6 +1103,29 @@ the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.divide">
+<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide a plex-2 Formex at the values in div.</p>
+<p>Replaces each member of the Formex by a sequence of members obtained
+by dividing the Formex at the relative values specified in div.
+The values should normally range from 0.0 to 1.0.</p>
+<p>As a convenience, if an integer is specified for div, it is taken as a
+number of divisions for the interval [0..1].</p>
+<p>This function only works on plex-2 Formices (line segments).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.intersectionWithPlane">
+<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of a Formex with the plane (p,n).</p>
+<p>Currently this only works for plex-2 and plex-3 Formices.</p>
+<p>The intersection of the Formex with a plane specified by a point p
+and normal n is returned. For a plex-2 Formex (lines), the returned
+Formex will be of plexitude 1 (points). For a plex-3 Formex
+(triangles) the returned Fomrex has plexitude 2 (lines).</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.cutWithPlane">
 <tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cut a Formex with the plane(s) (p,n).</p>
@@ -1146,36 +1223,6 @@ does not contain the expected number of values.</li>
 <dd><p>Return the number of points in the formex.</p>
 <p>This is the product of the number of elements in the formex
 with the number of nodes per element.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rep">
-<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.rep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Formex with n replications in direction dir with step.</p>
-<p>The original Formex is the first of the n replicas.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.ros">
-<tt class="descname">ros</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#formex.Formex.ros" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Formex with n rotational replications with angular
-step angle around an axis parallel with one of the coordinate axes
-going through the given point. axis is the number of the axis (0,1,2).
-point must be given as a list (or array) of three coordinates.
-The original Formex is the first of the n replicas.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.unique">
-<tt class="descname">unique</tt><big>(</big><em>permutations=True</em>, <em>rtol=0.0001</em>, <em>atol=1e-06</em><big>)</big><a class="headerlink" href="#formex.Formex.unique" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Formex which holds only the unique elements.</p>
-<p>Two elements are considered equal when all its points are (nearly)
-coincident. By default any permutation of point order is also allowed.</p>
-<p>Two coordinate value are considered equal if they are both small
-compared to atol or if their difference divided by the second value
-is small compared to rtol.</p>
-<p>If permutations is set False, two elements are not considered equal
-if one&#8217;s points are a permutation of the other&#8217;s.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1375,7 +1422,7 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1383,7 +1430,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

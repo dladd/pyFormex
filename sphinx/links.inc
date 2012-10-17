@@ -52,6 +52,7 @@
 .. _`latest`: http://download.savannah.gnu.org/releases/pyformex/pyformex-latest.tar.gz
 
 .. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
+.. _`local package repository`: http://bumps.ugent.be/repos
 .. _`latest BuMPix image`: ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img
 .. _`BuMPix Live GNU/Linux`: ftp://bumps.ugent.be/pub/bumpix
 .. _`Calpy`: ftp://bumps.ugent.be/pub/calpy

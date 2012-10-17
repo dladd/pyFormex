@@ -756,25 +756,33 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 #
 
 class Formex(Geometry):
-    """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
-    A scalar element represents a coordinate (F:uniple).
+    """A structured collection of points in 3D space.
 
-    A row along the axis 2 is a set of coordinates and represents a point
-    (node, vertex, F: signet).
+    A Formex is a collection of points in the 3D space, that are structured
+    into a set of elements all having the same number of points (e.g. a
+    collection of line segments or a collection of triangles.)
+
+    The Formex basically contains (in its `coords` attribute) a :class:`Coords`
+    object, which is a Float type array with 3 axes (numbered 0,1,2).
+    A scalar element of this array represents a coordinate.
+
+    A row along the last axis (2) is a set of coordinates and represents
+    a point (aka. node, vertex).
     For simplicity's sake, the current implementation only deals with points
     in a 3-dimensional space. This means that the length of axis 2 is always 3.
-    The user can create formices (plural of Formex) in a 2-D space, but
+    The user can create Formices (plural of Formex) in a 2-D space, but
     internally these will be stored with 3 coordinates, by adding a third
     value 0. All operations work with 3-D coordinate sets. However, a method
     exists to extract only a limited set of coordinates from the results,
     permitting to return to a 2-D environment
 
-    A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
+    A plane along the axes 2 and 1 is a set of points or element. This can be
     thought of as a geometrical shape (2 points form a line segment, 3 points
-    make a triangle, ...) or as an element in FE terms. But it really is up to
-    the user as to how this set of points is to be interpreted.
+    make a triangle, ...) or as an element in Finite Element terms.
+    But it really is up to the user as to how this set of points is to be
+    interpreted.
 
-    Finally, the whole Formex represents a set of such elements.
+    Finally, the whole Formex represents a collection of such elements.
 
     Additionally, a Formex may have a property set, which is an 1-D array of
     integers. The length of the array is equal to the length of axis 0 of the
@@ -789,6 +797,50 @@ class Formex(Geometry):
     copied in an operation are those that exist at the time of performing
     the operation.   
 
+    The Formex data can be initialized by another Formex,
+    by a 2D or 3D coordinate list, or by a string to be used in one of the
+    pattern functions to create a coordinate list.
+    If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
+    Internally, Formices always work with 3D coordinates.
+    Thus::
+
+      F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+
+    creates a Formex with two elements, each having 2 points in the global
+    z-plane. The innermost level of brackets group the coordinates of a
+    point, the next level groups the points in an element, and the outermost
+    brackets group all the elements of the Formex.
+    Because the coordinates are stored in an array with 3 axes,
+    all the elements in a Formex must contain the same number of points.
+    This number is called the plexitude of the Formex.
+    
+    A Formex may be initialized with a string instead of the numerical
+    coordinate data. The string has the format `#:data` where `#` is a
+    leader specifying the plexitude of the elements to be created.
+    The `data` part of the string is passed to the :func:`coords.pattern`
+    function to generate a list of points on a regular grid of unit distances.
+    Then the generated points are grouped in elements. If `#` is a number
+    it just specifies the plexitude::
+
+      F = Formex('3:012034')
+
+    This creates six points, grouped by 3, thus leading to two elements
+    (triangles). The leader can als be the character `l`. In that case
+    each generated point is turned into a 2-point (line) element, by
+    connecting it to the previous point. The following are two equivalent
+    definitions of (the circumference of) a triangle::
+
+      F = Formex('2:010207')
+      G = Formex('l:127')
+
+    The Formex constructor takes two optional arguments: prop and eltype.
+    If a prop argument is specified, the setProp() function will be
+    called to assign the specified properties. eltype can be used to
+    specify a non-default element type. The default element type is
+    derived from the plexitude as follows: 1 = point, 2 = line segment,
+    3 = triangle, 4 or more is a polygon. Specifying ``eltype = 'tet4'``
+    will e.g. interprete 4 point elements as a tetraeder.
+    
     Because the :class:`Formex` class is derived from :class:`Geometry`,
     the following :class:`Formex` methods exist and return the value of the
     same method applied on the :attr:`coords` attribute:
@@ -853,19 +905,7 @@ class Formex(Geometry):
 #
 
     def __init__(self,data=[],prop=None,eltype=None):
-        """Create a new Formex.
-
-        The Formex data can be initialized by another Formex,
-        by a 2D or 3D coordinate list, or by a string to be used in one of the
-        pattern functions to create a coordinate list.
-        If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
-        Internally, Formices always work with 3D coordinates.
-        Thus: ``F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])`` creates a
-        Formex with two elements, each having 2 points in the global z-plane.
-
-        If a prop argument is specified, the setProp() function will be
-        called to assign the properties.
-        """
+        """Create a new Formex."""
         if isinstance(data,Formex):
             if prop is None:
                 prop = data.prop

@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="27. camera — OpenGL camera handling" href="camera.html" />
     <link rel="prev" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -176,13 +176,16 @@ implements a dynamic array of multiple canvases.</p>
 
 <dl class="class">
 <dt id="viewport.QtCanvas">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">QtCanvas</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">QtCanvas</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>A canvas for OpenGL rendering.</p>
 <p>This class provides interactive functionality for the OpenGL canvas
-provided by the canvas.Canvas class.</p>
+provided by the <a class="reference internal" href="canvas.html#canvas.Canvas" title="canvas.Canvas"><tt class="xref py py-class docutils literal"><span class="pre">canvas.Canvas</span></tt></a> class.</p>
 <p>Interactivity is highly dependent on Qt4. Putting the interactive
 functions in a separate class makes it esier to use the Canvas class
 in non-interactive situations or combining it with other GUI toolsets.</p>
+<p>The QtCanvas constructor may have positional and keyword arguments. The
+positional arguments are passed to the QtOpenGL.QGLWidget constructor,
+while the keyword arguments are passed to the canvas.Canvas constructor.</p>
 <dl class="method">
 <dt id="viewport.QtCanvas.resetOptions">
 <tt class="descname">resetOptions</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.resetOptions" title="Permalink to this definition">¶</a></dt>
@@ -691,21 +694,6 @@ removed. The default (None) toggles between on and off.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.QtCanvas.glinit">
-<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glinit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the rendering machine.</p>
-<p>The rendering machine is initialized according to:
-- self.rendermode: one of
-- self.lighting</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="viewport.QtCanvas.glupdate">
-<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glupdate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="viewport.QtCanvas.clear">
 <tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the canvas to the background color.</p>
@@ -715,6 +703,21 @@ removed. The default (None) toggles between on and off.</p>
 <dt id="viewport.QtCanvas.setDefaults">
 <tt class="descname">setDefaults</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setDefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.glinit">
+<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to self.settings:
+- self.rendermode: one of
+- self.lighting</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.glupdate">
+<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glupdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
 </dd></dl>
 
 <dl class="method">
@@ -834,15 +837,29 @@ If None is specified, all items from all lists will be removed.</p>
 <dt id="viewport.QtCanvas.setCamera">
 <tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the camera looking under angles at bbox.</p>
-<p>This function sets the camera angles and adjusts the zooming.
-The camera distance remains unchanged.</p>
-<p>If a bbox is specified, the camera will be zoomed to make the whole
-bbox visible.
-If no bbox is specified, the current scene bbox will be used.
-If no current bbox has been set, it will be calculated as the
-bbox of the whole scene.</p>
-<p>If no camera angles are given, the camera orientation is kept.
-angles can be a set of 3 angles, or a string</p>
+<p>This function sets the camera parameters to view the specified
+bbox volume from the specified viewing direction.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>bbox</cite>: the bbox of the volume looked at</li>
+<li><cite>angles</cite>: the camera angles specifying the viewing direction.
+It can also be a string, the key of one of the predefined
+camera directions</li>
+</ul>
+<p>If no angles are specified, the viewing direction remains constant.
+The scene center (camera focus point), camera distance, fovy and
+clipping planes are adjusted to make the whole bbox viewed from the
+specified direction fit into the screen.</p>
+<p>If no bbox is specified, the following remain constant:
+the center of the scene, the camera distance, the lens opening
+and aspect ratio, the clipping planes. In other words the camera
+is moving on a spherical surface and keeps focusing on the same
+point.</p>
+<p>If both are specified, then first the scene center is set,
+then the camera angles, and finally the camera distance.</p>
+<p>In the current implementation, the lens fovy and aspect are not
+changed by this function. Zoom adjusting is performed solely by
+changing the camera distance.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1037,6 +1054,12 @@ display lists and textures.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="viewport.MultiCanvas.viewIndex">
+<tt class="descname">viewIndex</tt><big>(</big><em>view</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.viewIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of the specified view</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="viewport.MultiCanvas.showWidget">
 <tt class="descname">showWidget</tt><big>(</big><em>w</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.showWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the view w.</p>
@@ -1133,7 +1156,7 @@ The default OpenGL format can be changed by command line options:</p>
         <li class="right" >
           <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1141,7 +1164,7 @@ The default OpenGL format can be changed by command line options:</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

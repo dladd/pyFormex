@@ -3,17 +3,16 @@
 
 A short introduction to some aspects of the Python programming language
 """
-from __future__ import print_function
 
 for light in [ 'green','yellow','red','black',None]:
     if light == 'red':
-        print('stop')
+        print 'stop'
     elif light == 'yellow':
-        print('brake')
+        print 'brake'
     elif light == 'green':
-        print('drive')
+        print 'drive'
     else:
-        print('THE LIGHT IS BROKEN!')
+        print 'THE LIGHT IS BROKEN!'
 
 appreciation = {
     0: 'not driving',
@@ -25,6 +24,6 @@ appreciation = {
 
 for i in range(5):
     speed = 30*i
-    print("%s. Driving at speed %s is %s" % (i,speed,appreciation[speed]))
+    print "%s. Driving at speed %s is %s" % (i,speed,appreciation[speed])
 
 # End

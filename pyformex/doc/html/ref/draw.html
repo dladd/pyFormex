@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -164,7 +164,7 @@ open with the same name, all these dialogs are closed.</p>
 
 <dl class="function">
 <dt id="draw.showMessage">
-<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, **kargs</em><big>)</big><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, align='00', **kargs</em><big>)</big><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a short message widget and wait for user acknowledgement.</p>
 <p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
 They differ only in the icon that is shown next to the test.
@@ -518,6 +518,12 @@ keyword arguments.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.reset">
+<tt class="descclassname">draw.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset the canvas</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.drawVectors">
 <tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>nolight=True</em>, <em>**drawOptions</em><big>)</big><a class="headerlink" href="#draw.drawVectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a set of vectors.</p>
@@ -546,7 +552,7 @@ The string representation of the marks are drawn at the corresponding
 
 <dl class="function">
 <dt id="draw.drawNumbers">
-<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>numbers=None</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>numbers=None</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=None</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw numbers on all elements of F.</p>
 <p>numbers is an array with F.nelems() integer numbers.
 If no numbers are given, the range from 0 to nelems()-1 is used.
@@ -1111,6 +1117,16 @@ are presented in a combobox.</p>
 might also be set by the user.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="draw.resetGUI">
+<tt class="descclassname">draw.</tt><tt class="descname">resetGUI</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.resetGUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the GUI to its default operating mode.</p>
+<p>When an exception is raised during the execution of a script, the GUI
+may be left in a non-consistent state.
+This function may be called to reset most of the GUI components
+to their default operating mode.</p>
+</dd></dl>
+
 </div>
 
 
@@ -1134,7 +1150,7 @@ might also be set by the user.</p>
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1142,7 +1158,7 @@ might also be set by the user.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

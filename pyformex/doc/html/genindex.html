@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>Index &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="index.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -71,7 +71,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -157,6 +157,7 @@
       <dt><a href="ref/menu.html#menu.Menu.actionList">(menu.Menu method)</a></dt>
       <dt><a href="ref/menu.html#menu.MenuBar.actionList">(menu.MenuBar method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/canvas.html#canvas.CanvasSettings.activate">activate() (canvas.CanvasSettings method)</a></dt>
     <dt><a href="ref/actors.html#actors.Actor">Actor (class in actors)</a></dt>
     <dt><a href="ref/nurbs.html#nurbs.Coords4.actor">actor() (nurbs.Coords4 method)</a></dt>
     <dd><dl>
@@ -270,6 +271,8 @@
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.adjacency">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/connectivity.html#connectivity.adjacencyArrays">adjacencyArrays() (in module connectivity)</a></dt>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/coords.html#coords.BoundVectors.affine">affine() (coords.BoundVectors method)</a></dt>
     <dd><dl>
       <dt><a href="ref/coords.html#coords.CoordinateSystem.affine">(coords.CoordinateSystem method)</a></dt>
@@ -292,8 +295,6 @@
       <dt><a href="ref/polygon.html#polygon.Polygon.affine">(polygon.Polygon method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.affine">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/coords.html#coords.BoundVectors.align">align() (coords.BoundVectors method)</a></dt>
     <dd><dl>
       <dt><a href="ref/coords.html#coords.CoordinateSystem.align">(coords.CoordinateSystem method)</a></dt>
@@ -1109,9 +1110,9 @@
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.elType">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_cancel">emit_cancel() (viewport.QtCanvas method)</a></dt>
+    <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_done">emit_done() (viewport.QtCanvas method)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
-    <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_done">emit_done() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.end_2D_drawing">end_2D_drawing() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.end_2D_drawing">(viewport.QtCanvas method)</a></dt>
@@ -1152,6 +1153,7 @@
   </dl></dd>
     <dt><a href="ref/section2d.html#section2d.extendedSectionChar">extendedSectionChar() (in module section2d)</a></dt>
     <dt><a href="ref/polygon.html#polygon.Polygon.externalAngles">externalAngles() (polygon.Polygon method)</a></dt>
+    <dt><a href="ref/canvas.html#canvas.extractCanvasSettings">extractCanvasSettings() (in module canvas)</a></dt>
     <dt><a href="ref/scriptMenu.html#scriptMenu.extractKeyword">extractKeyword() (in module scriptMenu)</a></dt>
     <dt><a href="ref/fileread.html#fileread.extractMeshes">extractMeshes() (in module fileread)</a></dt>
     <dt><a href="ref/formex.html#formex.Formex.extrude">extrude() (formex.Formex method)</a></dt>
@@ -1385,6 +1387,7 @@
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.getCoords">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/camera.html#camera.Camera.getDist">getDist() (camera.Camera method)</a></dt>
+    <dt><a href="ref/scriptMenu.html#scriptMenu.getDocString">getDocString() (in module scriptMenu)</a></dt>
     <dt><a href="ref/elements.html#elements.ElementType.getDrawFaces">getDrawFaces() (elements.ElementType class method)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh.getEdges">getEdges() (mesh.Mesh method)</a></dt>
     <dd><dl>
@@ -1449,13 +1452,13 @@
       <dt><a href="ref/properties.html#properties.PropertyDB.getProp">(properties.PropertyDB method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.getProp">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/widgets.html#widgets.InputDialog.getResult">getResult() (widgets.InputDialog method)</a></dt>
     <dd><dl>
       <dt><a href="ref/widgets.html#widgets.ListSelection.getResult">(widgets.ListSelection method)</a></dt>
       <dt><a href="ref/widgets.html#widgets.MessageBox.getResult">(widgets.MessageBox method)</a></dt>
   </dl></dd>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/widgets.html#widgets.InputDialog.getResults">getResults() (widgets.InputDialog method)</a></dt>
     <dd><dl>
       <dt><a href="ref/widgets.html#widgets.ListSelection.getResults">(widgets.ListSelection method)</a></dt>
@@ -1533,6 +1536,7 @@
     <dt><a href="ref/draw.html#draw.highlightPoints">highlightPoints() (in module draw)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.histogram2">histogram2() (in module arraytools)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.horner">horner() (in module arraytools)</a></dt>
+    <dt><a href="ref/utils.html#utils.hsorted">hsorted() (in module utils)</a></dt>
     <dt><a href="ref/curve.html#curve.Arc.hyperCylindrical">hyperCylindrical() (curve.Arc method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.Arc3.hyperCylindrical">(curve.Arc3 method)</a></dt>
@@ -2087,12 +2091,12 @@
   </dl></dd>
     <dt><a href="ref/arraytools.html#arraytools.niceLogSize">niceLogSize() (in module arraytools)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.niceNumber">niceNumber() (in module arraytools)</a></dt>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/mesh.html#mesh.Mesh.nNodeAdjacent">nNodeAdjacent() (mesh.Mesh method)</a></dt>
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.nNodeAdjacent">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/mesh.html#mesh.Mesh.nNodeConnected">nNodeConnected() (mesh.Mesh method)</a></dt>
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.nNodeConnected">(trisurface.TriSurface method)</a></dt>
@@ -2153,6 +2157,7 @@
       <dt><a href="ref/polygon.html#polygon.Polygon.npoints">(polygon.Polygon method)</a></dt>
   </dl></dd>
     <dt><a href="ref/fe_abq.html#fe_abq.nsetName">nsetName() (in module fe_abq)</a></dt>
+    <dt><a href="ref/utils.html#utils.numsplit">numsplit() (in module utils)</a></dt>
     <dt><a href="ref/nurbs.html#module-nurbs">nurbs (module)</a></dt>
     <dt><a href="ref/nurbs.html#nurbs.NurbsCurve">NurbsCurve (class in nurbs)</a></dt>
     <dt><a href="ref/nurbs.html#nurbs.NurbsSurface">NurbsSurface (class in nurbs)</a></dt>
@@ -2179,9 +2184,13 @@
   </dl></dd>
     <dt><a href="ref/trisurface.html#trisurface.off_to_tet">off_to_tet() (in module trisurface)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.offset">offset() (trisurface.TriSurface method)</a></dt>
-    <dt><a href="ref/olist.html#module-olist">olist (module)</a></dt>
+    <dt><a href="ref/trisurface.html#trisurface.TriSurface.OLDedgeFront">OLDedgeFront() (trisurface.TriSurface method)</a></dt>
+    <dt><a href="ref/trisurface.html#trisurface.TriSurface.OLDpartitionByAngle">OLDpartitionByAngle() (trisurface.TriSurface method)</a></dt>
+    <dt><a href="ref/trisurface.html#trisurface.TriSurface.OLDpartitionByEdgeFront">OLDpartitionByEdgeFront() (trisurface.TriSurface method)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
+    <dt><a href="ref/trisurface.html#trisurface.TriSurface.OLDwalkEdgeFront">OLDwalkEdgeFront() (trisurface.TriSurface method)</a></dt>
+    <dt><a href="ref/olist.html#module-olist">olist (module)</a></dt>
     <dt><a href="ref/canvas.html#canvas.onOff">onOff() (in module canvas)</a></dt>
     <dt><a href="ref/curve.html#curve.Line.open">open() (curve.Line method)</a></dt>
     <dd><dl>
@@ -2628,9 +2637,9 @@
       <dt><a href="ref/mesh.html#mesh.Mesh.removeDuplicate">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.removeDuplicate">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/utils.html#utils.removeFile">removeFile() (in module utils)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
+    <dt><a href="ref/utils.html#utils.removeFile">removeFile() (in module utils)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.removeHighlight">removeHighlight() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/draw.html#draw.removeHighlight">(in module draw)</a></dt>
@@ -2714,6 +2723,7 @@
     <dt><a href="ref/script.html#script.requireRevision">requireRevision() (in module script)</a></dt>
     <dt><a href="ref/canvas.html#canvas.CanvasSettings.reset">reset() (canvas.CanvasSettings method)</a></dt>
     <dd><dl>
+      <dt><a href="ref/draw.html#draw.reset">(in module draw)</a></dt>
       <dt><a href="ref/turtle.html#turtle.reset">(in module turtle)</a></dt>
       <dt><a href="ref/timer.html#timer.Timer.reset">(timer.Timer method)</a></dt>
   </dl></dd>
@@ -2722,7 +2732,7 @@
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.resetDefaults">(viewport.QtCanvas method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/menu.html#menu.resetGUI">resetGUI() (in module menu)</a></dt>
+    <dt><a href="ref/draw.html#draw.resetGUI">resetGUI() (in module draw)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.resetLighting">resetLighting() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.resetLighting">(viewport.QtCanvas method)</a></dt>
@@ -2775,7 +2785,11 @@
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.rings">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/turtle.html#turtle.ro">ro() (in module turtle)</a></dt>
-    <dt><a href="ref/olist.html#olist.roll">roll() (in module olist)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.roll">roll() (curve.Line method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/curve.html#curve.PolyLine.roll">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/olist.html#olist.roll">(in module olist)</a></dt>
+  </dl></dd>
     <dt><a href="ref/coords.html#coords.BoundVectors.rollAxes">rollAxes() (coords.BoundVectors method)</a></dt>
     <dd><dl>
       <dt><a href="ref/coords.html#coords.CoordinateSystem.rollAxes">(coords.CoordinateSystem method)</a></dt>
@@ -2852,8 +2866,10 @@
     <dt><a href="ref/arraytools.html#arraytools.rotmat">rotmat() (in module arraytools)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.rotMatrix">rotMatrix() (in module arraytools)</a></dt>
     <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.run">run() (scriptMenu.ScriptMenu method)</a></dt>
-    <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.runAll">runAll() (scriptMenu.ScriptMenu method)</a></dt>
-    <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.runAllFiles">runAllFiles() (scriptMenu.ScriptMenu method)</a></dt>
+    <dt><a href="ref/script.html#script.runAll">runAll() (in module script)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.runAll">(scriptMenu.ScriptMenu method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.runAllNext">runAllNext() (scriptMenu.ScriptMenu method)</a></dt>
     <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.runAllRandom">runAllRandom() (scriptMenu.ScriptMenu method)</a></dt>
     <dt><a href="ref/script.html#script.runAny">runAny() (in module script)</a></dt>
@@ -3023,7 +3039,6 @@
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.setCursorShapeFromFunc">(viewport.QtCanvas method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/canvas.html#canvas.CanvasSettings.setDefault">setDefault() (canvas.CanvasSettings method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.CanvasSettings.setdefault">setdefault() (canvas.CanvasSettings method)</a></dt>
     <dd><dl>
       <dt><a href="ref/config.html#config.Config.setdefault">(config.Config method)</a></dt>
@@ -3377,11 +3392,11 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.splitDegenerate">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/utils.html#utils.splitDigits">splitDigits() (in module utils)</a></dt>
     <dt><a href="ref/fe.html#fe.FEModel.splitElems">splitElems() (fe.FEModel method)</a></dt>
     <dd><dl>
       <dt><a href="ref/fe.html#fe.Model.splitElems">(fe.Model method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/utils.html#utils.splitEndDigits">splitEndDigits() (in module utils)</a></dt>
     <dt><a href="ref/datareader.html#datareader.splitFloat">splitFloat() (in module datareader)</a></dt>
     <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.splitKeyValue">splitKeyValue() (flatkeydb.FlatDB method)</a></dt>
     <dd><dl>
@@ -3396,7 +3411,6 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.splitRandom">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/utils.html#utils.splitStartDigits">splitStartDigits() (in module utils)</a></dt>
     <dt><a href="ref/turtle.html#turtle.st">st() (in module turtle)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.stack">stack() (in module arraytools)</a></dt>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.start_draw">start_draw() (viewport.QtCanvas method)</a></dt>
@@ -3873,14 +3887,14 @@
     <dt><a href="ref/arraytools.html#arraytools.vectorPairCosAngle">vectorPairCosAngle() (in module arraytools)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.vectorPairNormals">vectorPairNormals() (in module arraytools)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.vectorRotation">vectorRotation() (in module arraytools)</a></dt>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/coords.html#coords.BoundVectors.vectors">vectors() (coords.BoundVectors method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.Line.vectors">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.vectors">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/polygon.html#polygon.Polygon.vectors">(polygon.Polygon method)</a></dt>
   </dl></dd>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/arraytools.html#arraytools.vectorTripleProduct">vectorTripleProduct() (in module arraytools)</a></dt>
     <dt><a href="ref/geomtools.html#geomtools.vertexDistance">vertexDistance() (in module geomtools)</a></dt>
     <dt><a href="ref/actors.html#actors.GeomActor.vertices">vertices() (actors.GeomActor method)</a></dt>
@@ -3893,6 +3907,7 @@
       <dt><a href="ref/draw.html#draw.view">(in module draw)</a></dt>
   </dl></dd>
     <dt><a href="ref/camera.html#camera.ViewAngles">ViewAngles (class in camera)</a></dt>
+    <dt><a href="ref/viewport.html#viewport.MultiCanvas.viewIndex">viewIndex() (viewport.MultiCanvas method)</a></dt>
     <dt><a href="ref/viewport.html#module-viewport">viewport (module)</a></dt>
     <dt><a href="ref/draw.html#draw.viewport">viewport() (in module draw)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh.volume">volume() (mesh.Mesh method)</a></dt>
@@ -4065,14 +4080,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

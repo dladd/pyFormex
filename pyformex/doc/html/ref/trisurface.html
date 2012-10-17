@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a2 documentation</title>
+    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a6 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a2',
+        VERSION:     '0.8.7-a6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a2 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="59. turtle — Turtle graphics for pyFormex" href="turtle.html" />
     <link rel="prev" title="57. tools — tools.py" href="tools.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -510,8 +510,60 @@ constructs a Mesh with the feature edges of a surface S:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.OLDedgeFront">
+<tt class="descname">OLDedgeFront</tt><big>(</big><em>startat=0</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDedgeFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator function returning the frontal elements.</p>
+<p>startat is an element number or list of numbers of the starting front.
+On first call, this function returns the starting front.
+Each next() call returns the next front.
+front_increment determines how the property increases at each
+frontal step. There is an extra increment +1 at each start of
+a new part. Thus, the start of a new part can always be detected
+by a front not having the property of the previous plus front_increment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.OLDwalkEdgeFront">
+<tt class="descname">OLDwalkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDwalkEdgeFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grow a selection using a frontal method.</p>
+<p>Starting from element <cite>startat</cite>, grow a selection <cite>nsteps</cite> times
+following the common edges of the triangles.</p>
+<p>The property of each new front is augmented by <cite>front_increment</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.OLDpartitionByEdgeFront">
+<tt class="descname">OLDpartitionByEdgeFront</tt><big>(</big><em>okedges</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDpartitionByEdgeFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect different parts of the surface using a frontal method.</p>
+<p>okedges flags the edges where the two adjacent triangles are to be
+in the same part of the surface.
+startat is a list of elements that are in the first part. 
+The partitioning is returned as a property type array having a value
+corresponding to the part number. The lowest property number will be
+firstprop.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.OLDpartitionByAngle">
+<tt class="descname">OLDpartitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDpartitionByAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition the surface by splitting it at sharp edges.</p>
+<p>The surface is partitioned in parts in which all elements can be
+reach without ever crossing a sharp edge angle. More precisely,
+any two elements that can be connected by a line not crossing an
+edge between two elements having their normals differ more than
+angle (in degrees), will belong to the same part.</p>
+<p>The partitioning is returned as a property type array having a value
+corresponding to the part number. The lowest property number will be
+firstprop.</p>
+<p>By default the parts are assigned property numbers in decreasing
+order of the number of triangles in the part. Setting the sort
+argument to &#8216;area&#8217; will sort the parts according to decreasing
+area. Any other value will return the parts unsorted.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.partitionByAngle">
-<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em>, <em>alt=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the surface by splitting it at sharp edges.</p>
 <p>The surface is partitioned in parts in which all elements can be
 reach without ever crossing a sharp edge angle. More precisely,
@@ -2438,7 +2490,7 @@ Each face of the cube is represented by two triangles.</p>
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a2 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -2446,7 +2498,7 @@ Each face of the cube is represented by two triangles.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Sep 21, 2012.
+      Last updated on Oct 16, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

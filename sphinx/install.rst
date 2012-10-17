@@ -60,7 +60,7 @@ this document, and advice you on which method might be the best in your case.
 Let's first give you an overview of the most important pros and cons of the 
 different install methods. 
 
-:ref:`sec:official-release`:
+:ref:`sec:debian-packages`:
 
 .. The following fixes problems with generating the PDF docs
 .. tabularcolumns:: |p{5cm}|p{5cm}|
@@ -68,9 +68,26 @@ different install methods.
 +-------------------------------+-------------------------------------------+
 | PROS                          |   CONS                                    |
 +===============================+===========================================+
+|  - Stable                     |  - Debian GNU/Linux required              |
+|  - Well supported             |  - Root access required                   |
+|  - Easy install procedure     |  - May be missing latest features         |
+|  - Automatic installation of  |                                           |
+|    all dependencies           |                                           |
+|  - Easy update procecure      |                                           |
+|  - Easy removal procecure     |                                           |
+|  - Site-wide install          |                                           |
++-------------------------------+-------------------------------------------+
+
+:ref:`sec:official-release`:
+
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
++-------------------------------+-------------------------------------------+
+| PROS                          |   CONS                                    |
++===============================+===========================================+
 |  - Stable                     |  - GNU/Linux required                     |
 |  - Well supported             |  - Root access required                   |
-|  - Easy install procedure     |  - Installation of prerequisites required |
+|  - Easy install procedure     |  - Installation of dependencies required  |
 |  - Site-wide install          |  - May be missing latest features         |
 +-------------------------------+-------------------------------------------+
 
@@ -83,7 +100,7 @@ different install methods.
 +==============================+============================================+
 |  - Easy install              |  - GNU/Linux required                      |
 |    procedure                 |  - Root access required                    |
-|  - Site-wide                 |  - Installation of prerequisites required  |
+|  - Site-wide                 |  - Installation of dependencies required   |
 |    install                   |  - Latests features                        |
 +------------------------------+--------------------------------------------+
 
@@ -96,9 +113,9 @@ different install methods.
 | PROS                |   CONS                                     |
 +=====================+============================================+
 | - Latest features   | - GNU/Linux required                       |
-| - No                | - No install procedure                     |
-|   root              | - (Usually) single user install            |
-|   access            | - Manual installation of prerequisites     |
+| - No root           | - Requires development tools               |
+|   access required   | - (Usually) single user install            |
+| - No installation   | - Manual installation of dependencies      |
 |   required          |   (and root access) may be required        |
 |                     | - Less stable                              |
 +---------------------+--------------------------------------------+
@@ -112,10 +129,12 @@ different install methods.
 | PROS                                |                            CONS  |
 +=====================================+==================================+
 | - No GNU/Linux required             | - Missing latest features        |
-| - No root access required           | - Difficult to upgrade           |
-| - No installation required          | - Somewhat slower loading        |
+| - No root access required           | - Somewhat slower loading        |
+| - No installation required          |                                  |
 | - Stable version                    |                                  |
 | - Easily portable                   |                                  |
+| - Upgradeable by installing         |                                  |
+|   development version               |                                  |
 +-------------------------------------+----------------------------------+
 
 
@@ -123,24 +142,55 @@ To sum it up:
 
 - Unless you want to help with the development, or you absolutely
   need some of the latest features or bugfixes, or you just can not
-  meet the requirements, the latest :ref:`sec:official-release` is
-  what you want to go for. It gives you the highest degree of
-  stability and support and comes packed in an archive, with an install
-  procedure included.
+  meet the requirements, the latest :ref:`sec:debian-packages` or 
+  :ref:`sec:official-release` source tarballs are
+  what you want to go for. They give you the highest degree of
+  stability and support and come packed in an archive, with an easy install
+  procedure provided by your distributions package manager or included in
+  the source tarball.
 
 - If you need some recent feature of pyFormex that is not yet in an official
-  release, you may be lucky to find it in the latest :ref:`sec:alpha-release`.
+  release, you may be lucky to find it in some :ref:`sec:alpha-release`.
 
 - If the install procedures do not work for you, or you need the
   absolutely latest development code, you can run pyFormex directly
   from the anonymously checked out :ref:`sec:development-version`.
 
-- Finally, if you do not have enough permissions to install the prerequisites,
-  or if you do not have a GNU/Linux system in the first place, or if you just want
-  to try out pyFormex without having to install anything,
+- Finally, if you do not have enough permissions to install the dependencies,
+  or if you do not have a GNU/Linux system in the first place, or if you just
+  want  to try out pyFormex without having to install anything,
   or if you want a portable system that can you take
   with you and run anywhere, choose for the :ref:`sec:bumpix-live-linux` on
   USB stick.
+
+.. _sec:debian-packages:
+
+Debian packages
+===============
+
+If you are running Debian GNU/Linux, or have the opportunity to install
+it, then (by far) the most easy install method is to use the packages
+in the official Debian repositories. Currently pyFormex packages are available for Debian sid and wheezy releases. Be sure to also install the precompiled acceleration libraries::
+
+  apt-get install pyformex-lib
+
+This single command will install pyFormex and all its dependencies. Some extra
+functionalities may be installable from a separate package::
+
+  apt-get install pyformex-extra
+
+If you need a more recent version of pyFormex then the one available in the official repositories, you may try your luck with our `local package repository`_.
+It contains debian format packages of intermediate releases and test packages for the official releases. 
+To access our package repository from your normal package manager, add the following lines to your `/etc/apt/sources.list`::
+
+   deb http://bumps.ugent.be/repos/debian/ sid main
+   deb-src http://bumps.ugent.be/repos/debian/ sid main
+
+and then do ``apt-get update``. The public key used to sign the packages is
+available from http://bumps.ugent.be/repos/pyformex-pubkey.gpg.
+
+
+
 
 .. _sec:official-release:
 
@@ -151,44 +201,32 @@ pyFormex is software under development, and many users run it directly from
 the latest development sources. This holds a certain risk however, because the development version may at times become unstable or incompatible with previous versions and thus break your applications.
 At regular times we therefore create official releases, which provide a more stable and better documented and supported version, together with an easy install procedure. 
 
-If you can meet the requirements for using an officially packed release, this is the recommended way to install pyFormex. All the software packages needed to run pyFormex can be obtained for free.
+If you can meet the requirements for using an officially packed release, and you can not use the :ref:`sec:debian-packages`, this is the recommended way to install pyFormex. All the software packages needed to compile and run pyFormex can be obtained for free.
 
-To install an official pyFormex release, you need a working GNU/Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system. 
+To install an official pyFormex release, you need a working GNU/Linux system, root (administrator) privileges to the system, and you need to make sure that the dependencies listed below are installed first on the system. Furthermore, you need the usual GNU development tools (gcc, make).
 
-If you need to install a new GNU/Linux system from scratch, and have the choice to
-pick any distribution, we highly recommend `Debian GNU/Linux`_ or derivatives.
+If you need to install a new GNU/Linux system from scratch, and have the choice to pick any distribution, we highly recommend `Debian GNU/Linux`_ or derivatives.
 This is because most of the pyFormex development is done on Debian systems, 
 and we will give you `precise install instructions`_ for this system.
-Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. 
-
-.. note:: If you are running Debian Sid (unstable), you are lucky: pyFormex is 
-  now in the Debian repositories, and you can install it with the normal 
-  installation procedures (aptitude/apt-get/synaptic). Be sure to install the 
-  pyformex-lib package as well. It contains the acceleration libraries for 
-  enhanced performance. The advantage of using your ditribution's packaging 
-  system is that all dependencies will be installed automatically. So go ahead 
-  and just do::
-
-    apt-get install pyformex-lib
+Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. Furthermore, as of pyFormex version 0.8.6, we provide official :ref:`sec:debian-packages`, making installation really a no-brainer.
 
 Most popular GNU/Linux distributions provide appropriately packed recent versions
-of these prerequisites, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
+of the dependencies, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
 you can find the source packages.
 
  
-.. _sec:prerequisites:
+.. _sec:dependencies:
 
-Prerequisites
+Dependencies
 -------------
 
 In order to install an official release package of pyFormex, you need to have the following installed (and working) on your computer:
 
 **Python** (http://www.python.org)
-   Version 2.4 or higher (2.5 is recommended). Nearly all GNU/Linux distributions
-   come with Python installed, so this should not be no major obstacle. 
+   Version 2.5 or higher (2.6 or 2.7 is recommended). Nearly all GNU/Linux distributions come with Python installed, so this should be no major obstacle. 
 
 **NumPy** (http://www.numpy.org)
-   Version 1.0-rc1 or higher. NumPy is the package used for efficient
+   Version 1.0 or higher. NumPy is the package used for efficient
    numerical array operations in Python and is essential for pyFormex.
 
 **Qt4** (http://www.trolltech.com/products/qt)
@@ -209,16 +247,17 @@ install by hand.
 Currently we recommend to install the whole package including the GUI.
 Most probably you will want to visualize your structures and for that you need the GUI anyway.
 
-Additionally, we recommend you to also install the GNU C-compiler and the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted
-for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures . 
+Additionally, we recommend you to also install the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures . 
 
 
 .. _`precise install instructions`:
 
-Installing prerequisites on `Debian GNU/Linux`
+Installing dependencies on `Debian GNU/Linux`
 ..............................................
-Debian users should just have to install the packages ``python-numpy`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` and ``python-qt4-gl`` as dependencies. Also, for compiling the acceleration library, you should install 
-``python-dev``, ``python-qt4-dev`` and ``libglu1-mesa-dev``.
+Debian users should just have to install the packages ``python-numpy``, ``python-opengl`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` as dependency. Also, for compiling the acceleration library, you should install 
+``python-dev`` and ``libglu1-mesa-dev``. This command will do it all::
+
+  apt-get install python-numpy python-opengl python-qt4-gl python-dev libglu1-mesa-dev
 
 Other optional packages that might be useful are ``admesh``, ``python-scipy``,
 ``python-numpy-ext``, ``units``.
@@ -264,7 +303,7 @@ directory, and creates a symlink to the executable in
 
 to find out where pyFormex is installed.
 
-Finally, a pyFormex installation can usually be removed by giving the command ::
+Finally, a pyFormex tarball installation can usually be removed by giving the command ::
 
    pyformex --remove 
 
@@ -305,10 +344,9 @@ install procedure for the following packages:
    powerful functions for operating on triangulated surface models.
    It also delivers some example programs built with the library.
    The pyFormex ``surface`` plugin uses these for many of its
-   functions. Because the examples programs are usually not installed
-   from distribution specific binary packages, and pyFormex uses
-   customized names for them, we advise you to use our install
-   procedure.
+   functions. Debian users should install the packages ``libgts-0.7.5``,
+   ``libgts-bin`` and ``libgts-dev`` as dependencies.
+
 
 **tetgen**
    This package provides a high quality tetrahedral mesher. pyFormex
@@ -330,12 +368,20 @@ directory where you unpacked the pyFormex distribution:
 ``cd pyformex-version``. Then go to the ``pyformex/external``
 subdirectory, where you will find a subdirectory for each of the
 above packages. Go into the directory of the package you wish to
-install and execute the following command (with root privileges):
-``./install.sh all``
+install and execute the following commands (install may require 
+root privileges)::
+
+  make 
+  make install
+
+In some case there is no ``Makefile`` provided but an install script instead.
+Then you can just do::
+
+  ./install.sh all
 
 All these procedures will install under ``/usr/local``. If you wish to
-change this, you will have to change the install procedure. 
-The install procedures can also be sued to perform only part of the
+change this, you will have to change the ``Makefile`` or install procedure. 
+The install procedures can also be used to perform only part of the
 installation process. Thus, ``./install.sh get unpack`` will
 only download and unpack that package. See the README files and the
 install procedures themselves for more info.
@@ -347,7 +393,7 @@ install procedures themselves for more info.
 Alpha release
 =============
 
-Official release are only created a couple of times per year, because
+Official releases are only created a couple of times per year, because
 they require a lot of testing.  pyFormex is however developing fast,
 and as soon as an official release has been made, new features are
 already being included in the source repository. Sometimes, you may be
@@ -361,8 +407,10 @@ These alpha releases can be downloaded from the developer `FTP site`_
 or from our `local FTP server`_. The latter may be slower, but
 you may find there some old releases or release candidates that are not
 available on the official server.
-
 They install just like the :ref:`sec:official-release`. 
+
+Again, as a Debian user, you may be extra lucky: we usually create Debian
+:ref:`sec:debian-packages` from these alpha releases and make them available on our `local package repository`_.
 
 
 .. _sec:development-version:
@@ -378,7 +426,7 @@ several normal users who prefer this, because it allows for easy
 updating to the latest version.
 
 To run pyFormex from the development sources you need to have the same
-prerequisites installed as for the
+dependencies installed as for the
 :ref:`sec:official-release`. Furthermore, you need the
 `Subversion`_ revision control system. You can check whether you have it
 by trying the command ``svn help``. If you do not have the command,

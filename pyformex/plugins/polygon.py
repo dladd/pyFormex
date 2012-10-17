@@ -140,7 +140,7 @@ class Polygon(Geometry):
         """
         print("AREA(self) %s" % self.area())
         # creating elems array at once (more efficient than appending)
-        #from gui.draw import draw,pause,undraw
+        from gui.draw import draw,pause,undraw
         from geomtools import insideTriangle
         x = self.coords
         n = x.shape[0]
@@ -151,13 +151,15 @@ class Polygon(Geometry):
         # loop in order of smallest angles
         itri = 0
         while n > 3:
-            #print "ANGLES",c
+            #print("ANGLES",c)
             # try minimal angle
             srt = c.argsort()
             for j in srt:
-                #print "ANGLE: %s" % c[j]
+                #print("ANGLE: %s" % c[j])
                 if c[j] > 180.:
-                    print("OOPS, I GOT STUCK")
+                    print("OOPS, I GOT STUCK!\nMaybe the curve is self-intersecting?")
+                    #print("Remaining points: %s" % e)
+                    #raise
                     #
                     # We could return here also the remaining part
                     #
@@ -180,7 +182,7 @@ class Polygon(Geometry):
                 if not check.any():
                     # Triangle is ok
                     break
-            #draw(TriSurface(x,newtri),bbox='last')
+            #draw(TriSurface(x,newtri),bbox='last',color='red')
             # accept new triangle
             tri[itri] = newtri
             c = roll(concatenate([cnew,roll(c,1-j)[3:]]),j-1)
@@ -199,63 +201,72 @@ class Polygon(Geometry):
         return PlaneSection(Formex(self.coords)).sectionChar()['A']   
 
 
-
 if __name__ == 'draw':
 
 
-    layout(2)
-    for i in range(2):
-        viewport(i)
+    def randomPL(n=5,r=0.7,noise=0.0):
+        x = randomNoise((n),r*3.,3.)
+        y = randomNoise((n),0.,360.)
+        y.sort()    # sort
+        #y = y[::-1] # reverse
+        z = zeros(n)
+        X = Coords(column_stack([x,y,z])).cylindrical().addNoise(noise)
+        return PolyLine(X,closed=True)
+
+    def readPL(n=5,r=0.7,noise=0.0):
+        fn = askFilename()
+        if not fn:
+            return None
+        G = readGeomFile(fn)
+        return G.values()[0]
+
+
+    def run():
+        from plugins.trisurface import fillBorder
         clear()
-        smoothwire()
 
-    n = 5
-    r = 0.7
-    noise = 0.0
-    x = randomNoise((n),r*3.,3.)
-    y = randomNoise((n),0.,360.)
-    y.sort()    # sort
-    #y = y[::-1] # reverse
-    z = zeros(n)
-    X = Coords(column_stack([x,y,z])).cylindrical().addNoise(noise)
-    draw(X)
-    drawNumbers(X)
-    PG = Polygon(X)
-    PL = PolyLine(X,closed=True)
-    draw(PL)
+        ## layout(3,2)
+        ## for i in range(2):
+        ##     viewport(i)
+        ##     clear()
+        ##     smoothwire()
 
-    v = normalize(PG.vectors())
-    drawVectors(PG.coords,v,color=red,linewidth=2)
-    
-    a = PG.angles()
-    ae = PG.externalAngles()
-    ai = PG.internalAngles()
+        ans = ask("Read curve or create random?",["Read","Random","Cancel"])
 
-    print("Direction angles:", a)
-    print("External angles:", ae)
-    print("Internal angles:", ai)
+        PL = None
+        if ans == "Random":
+            PL = randomPL(n=5,r=0.7,noise=0.0)
+        elif ans == "Read":
+            PL = readPL()
 
-    print("Sum of external angles: ",ae.sum())
-    print("The polygon is convex: %s" % PG.isConvex())
+        if PL is None:
+            return
 
-    # choose one of these
-    #B = PL.coords
-    B = PL.toMesh()
-    #B = PL
+        PG = Polygon(PL.coords).reverse()
+        X = PG.coords
+        #drawNumbers(X)
+        draw(PL,color=cyan,linewidth=3)
 
-    viewport(0)
-    clear()
-    S = fillBorder(B,method='border')
-    draw(S)
-    drawNumbers(S)
-    drawText(S.check(),100,20)
+        v = normalize(PG.vectors())
+        #drawVectors(PG.coords,v,color=red,linewidth=2)
 
-    
-    viewport(1)
-    clear()
-    S1 = fillBorder(B,method='radial')
-    draw(S1,color=red)
-    drawNumbers(S1)
-    drawText(S1.check(),100,20)
+        a = PG.angles()
+        ae = PG.externalAngles()
+        ai = PG.internalAngles()
+
+        print("Direction angles:", a)
+        print("External angles:", ae)
+        print("Internal angles:", ai)
+
+        print("Sum of external angles: ",ae.sum())
+        print("The polygon is convex: %s" % PG.isConvex())
+
+        ## viewport(2)
+        S = PG.fill()
+        draw(S,color=red)
+        #drawNumbers(S)
+        drawText(S.check(),100,20)
+
+    run()
     
 # End

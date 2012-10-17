@@ -529,7 +529,14 @@ class PolyLine(Curve):
         else:
             return d
        
-        
+
+    def roll(self,n):
+        """Roll the points of a closed PolyLine."""
+        if self.closed:
+            return PolyLine(roll(self.coords,n,axis=0),closed=True)
+        else:
+            raise ValueError,"""Can only roll a closed PolyLine"""
+            
 
     def lengths(self):
         """Return the length of the parts of the curve."""

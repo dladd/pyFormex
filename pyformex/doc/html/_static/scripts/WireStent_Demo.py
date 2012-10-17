@@ -35,7 +35,6 @@ from formex import *
 
 class DoubleHelixStent:
     """Constructs a double helix wire stent.
-from __future__ import print_function
 
     A stent is a tubular shape such as used for opening obstructed
     blood vessels. This stent is made frome sets of wires spiraling
