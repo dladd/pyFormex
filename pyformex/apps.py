@@ -159,6 +159,7 @@ def load(appname,refresh=False):
     """
     global _traceback
     pf.debug("Loading %s with refresh=%s" % (appname,refresh),pf.DEBUG.APPS)
+    print("Loading application %s " % appname)
     try:
         _traceback = ''
         __import__(appname)

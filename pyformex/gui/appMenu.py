@@ -38,7 +38,7 @@ import menu
 import os,random
 from gettext import gettext as _
     
-catname = 'apps.cat'
+catname = '.apps.cat'
 
 
 def sortSets(d):
@@ -51,30 +51,40 @@ def sortSets(d):
     """
     for k in d:
         if type(d[k]) == set:
-            d[k] = list(d[k])
-            d[k].sort()
- 
+            d[k] = sorted(d[k])
 
-def classify(appdir,pkg):
-    """Classify the files in submenus according to keywords."""
+
+def classify(appdir,pkg,nmax=0):
+    """Classify the files in submenus according to keywords.
+
+    """
+    class failed(object):
+        """A class to allow failing examples in the catalog"""
+        _status = 'failed'
+
+    all_apps = sorted(apps.detect(appdir))
     kat = ['status','level','topics','techniques','all']
     cat = dict([ (k,set()) for k in kat])
     cat['status'] = [ 'failed', 'checked', 'unchecked' ]
     cat['level'] = [ 'beginner', 'normal', 'advanced' ]
-    col = {'all':set()}
+    col = {}
 
-    class failed(object):
-        _status = 'failed'
-
-    
-    for appname in apps.detect(appdir):
+    if nmax > 9: # Do not exagerate!
+        # split the full collection in alphabetical groups of length nmax
+        lbl,grp = splitAlpha(all_apps,nmax)
+        cat['all'] = lbl
+        for l,g in zip(lbl,grp):
+            col['all/'+l] = g
+                            
+    for i,appname in enumerate(all_apps):
         
-        col['all'].update([appname])
+        #col['all'].update([appname])
         try:
             app = apps.load(pkg+'.'+appname)
         except:
             app = failed
-            pf.debug("Failed to load app '%s'" % (pkg+'.'+appname),pf.DEBUG.APPS)
+            print("Failed to load app '%s'" % (pkg+'.'+appname))
+            
         for k in kat:
             if hasattr(app,'_'+k):
                 v = getattr(app,'_'+k)
@@ -95,7 +105,7 @@ def classify(appdir,pkg):
     sortSets(cat)
     sortSets(col)
 
-    return kat,cat,col
+    return all_apps,kat,cat,col
 
 
 def splitAlpha(strings,n):
@@ -120,10 +130,7 @@ def splitAlpha(strings,n):
     """
     from arraytools import multiplicity
     strings = sorted(strings)
-    #print(strings)
     mult,bins = multiplicity([ord(f[0]) for f in strings ])
-    #print(mult)
-    #print([chr(b) for b in bins])
     count = dict(zip(bins,mult))
     cat = []
     grp = []
@@ -154,9 +161,6 @@ def splitAlpha(strings,n):
                 mtot += mj
 
     accept(i,j,mtot)
-    
-    #print(cat,grp)
-    #print([len(g) for g in grp])
     return cat,grp
 
 
@@ -299,27 +303,12 @@ class AppMenu(QtGui.QMenu):
 
 
     def loadCatalog(self):
-        n = 20
+        #n = 20
         catfile = os.path.join(self.dir,catname)
         if os.path.exists(catfile):
             pf.execFile(catfile,globals())
             for k in kat:
-                if k == 'all':
-                    files = col[k]
-                    if len(files) > n:
-                        # Create submenus per character class
-                        lbl,grp = splitAlpha(files,n)
-                        cat[k] = lbl
-                        for l,g in zip(lbl,grp):
-                            col['all/'+l] = g
-                        #print(col)
-                        files = []
-                    else:
-                        # Keep all in same menu
-                        pass
-                else:
-                    files = []
-                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
+                mk = AppMenu(k.capitalize(),dir=self.dir,files=[],recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     if '-' in i:
                         # alpha label like A-B
@@ -481,15 +470,15 @@ class AppMenu(QtGui.QMenu):
             a.setText(f)
 
 
-    def _classify(self):
+    def _classify(self,nmax=20):
         """Classify, symlink and reload the scripts"""
         pf.debug("Classifying scripts",pf.DEBUG.APPS)
         if self.dir:
             f = os.path.join(self.dir,catname)
-            kat,cat,col = classify(self.dir,self.pkg)
-            s = "kat = %r\ncat = %r\ncol = %r\n" % (kat,cat,col)
-            pf.debug("Writing catalog %s" % s,pf.DEBUG.APPS)
+            all_apps,kat,cat,col = classify(self.dir,self.pkg,nmax)
+            s = "all_apps = %r\nkat = %r\ncat = %r\ncol = %r\n" % (all_apps,kat,cat,col)
             open(f,'w').writelines(s)
+            print("Created catalog %s" % f)
             self.reload()
 
 

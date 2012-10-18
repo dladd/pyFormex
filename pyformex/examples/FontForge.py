@@ -47,17 +47,10 @@ import os,sys
 
 try:
     import fontforge
+    
 except ImportError:
     warning("You do not have fontforge and its Python bindings.\nPlease install python-fontforge and then try again.")
     exit()
-
-
-# Define some extra font files
-extra_fonts = odict.ODict([
-    ('blippo',"/mnt/work/local/share/fonts/blippok.ttf"),
-    ('blimpo',"/home/bene/tmp/Blimpo-Regular.ttf"),
-    ('verdana',"/var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType/Verdana.ttf"),
-    ])
 
 
 def glyphCurve(c):
@@ -198,23 +191,30 @@ def show(fontname,character,fill=False):
 
 # Initialization
 
-chdir (__file__)
+# Define some extra font files
+extra_fonts = odict.ODict([
+    ('blippo',"/mnt/work/local/share/fonts/blippok.ttf"),
+    ('blimpo',"/home/bene/tmp/Blimpo-Regular.ttf"),
+    ('verdana',"/var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType/Verdana.ttf"),
+    ])
 
-print(dir(fontforge))
 
-fonts = utils.listFontFiles() + [ f for f in extra_fonts if os.path.exists(f) ]
-print("Number of available fonts: %s" % len(fonts))
-
-fontname = None
-character = 'S'
-connect = False
-fill = True
-
+fonts = []
 
 def run():
+    if not fonts:
+        fonts = utils.listFontFiles() + [
+            f for f in extra_fonts if os.path.exists(f) ]
+    
+    fontname = None
+    character = 'S'
+    connect = False
+    fill = True
+    print(dir(fontforge))
+    print("Number of available fonts: %s" % len(fonts))
     res = askItems([
-        _I('fontname',fontname1,choices=fonts),
-        _I('character',character1,max=1),
+        _I('fontname',fontname,choices=fonts),
+        _I('character',character,max=1),
         _I('fill',fill),
         ],enablers=[
 #        ('connect',True,'fontname2','character2')

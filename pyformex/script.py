@@ -329,7 +329,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 if pye:
                     if type(scr) is file:
                          scr = scr.read() + '\n'
-                    n = len(scr) // 2
+                    n = (len(scr)+1) // 2
                     scr = utils.mergeme(scr[:n],scr[n:])
                 exec scr in g
 

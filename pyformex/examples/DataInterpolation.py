@@ -56,6 +56,7 @@ from gui.draw import *
 from plugins import calpy_itf
 
 def run():
+
     # Now, let's create a grid of 'quad8' elements
     # size of the grid
     nx,ny = 4,3

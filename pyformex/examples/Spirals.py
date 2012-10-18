@@ -24,7 +24,7 @@
 ##
 """Spirals
 
-This exampoe shjows how to create a spiral curve and how to spread points
+This exampoe shows how to create a spiral curve and how to spread points
 evenly along a curve.
 
 See also the Sweep example for a more sophisticated application of spirals.
@@ -50,7 +50,7 @@ F = F.scale(s)
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
     theta = X[...,dir[0]]
-    print(theta)
+    #print(theta)
     r = rfunc(theta) + X[...,dir[1]]
     x = r * cos(theta)
     y = r * sin(theta)
