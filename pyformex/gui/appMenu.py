@@ -98,6 +98,68 @@ def classify(appdir,pkg):
     return kat,cat,col
 
 
+def splitAlpha(strings,n):
+    """Split a series of strings in alphabetic collections.
+
+    The strings are split over a series of bins in alphabetical order.
+    Each bin can contain strings starting with multiple successive
+    characters, but not more than n items. Items starting with the same
+    character are always in the same bin. If any starting character
+    occurs more than n times, the maximum will be exceeded. 
+
+    - `files`: a list of strings start with an upper case letter ('A'-'Z')
+    - `n`: the desired maximum number of items in a bin.
+
+    Returns: a tuple of
+
+    - `labels`: a list of strings specifying the range of start characters
+      (or the single start character) for the bins
+    - `groups`: a list with the contents of the bins. Each item is a list
+      of sorted strings starting with one of the characters in the
+      corresponding label 
+    """
+    from arraytools import multiplicity
+    strings = sorted(strings)
+    #print(strings)
+    mult,bins = multiplicity([ord(f[0]) for f in strings ])
+    #print(mult)
+    #print([chr(b) for b in bins])
+    count = dict(zip(bins,mult))
+    cat = []
+    grp = []
+
+    def accept(i,j,mtot):
+        if i == j:
+            cat.append(chr(i))
+        else:
+            cat.append('%c-%c' % (chr(i),chr(j)))
+        grp.append(strings[:mtot])
+        del strings[:mtot]
+            
+    j = i = ord('A')
+    mtot = count.get(i,0)
+    while j < ord('Z'):
+        if mtot > n:
+            accept(i,j,mtot)
+            j = i = i+1
+            mtot = count.get(i,0)
+        else:
+            mj = count.get(j+1,0)
+            if mtot+mj > n:
+                accept(i,j,mtot)
+                j = i = j+1
+                mtot = mj
+            else:
+                j += 1
+                mtot += mj
+
+    accept(i,j,mtot)
+    
+    #print(cat,grp)
+    #print([len(g) for g in grp])
+    return cat,grp
+
+
 class AppMenu(QtGui.QMenu):
     """A menu of pyFormex applications in a directory or list.
 
@@ -237,18 +299,36 @@ class AppMenu(QtGui.QMenu):
 
 
     def loadCatalog(self):
+        n = 20
         catfile = os.path.join(self.dir,catname)
         if os.path.exists(catfile):
             pf.execFile(catfile,globals())
             for k in kat:
                 if k == 'all':
                     files = col[k]
+                    if len(files) > n:
+                        # Create submenus per character class
+                        lbl,grp = splitAlpha(files,n)
+                        cat[k] = lbl
+                        for l,g in zip(lbl,grp):
+                            col['all/'+l] = g
+                        #print(col)
+                        files = []
+                    else:
+                        # Keep all in same menu
+                        pass
                 else:
                     files = []
                 mk = AppMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
+                    if '-' in i:
+                        # alpha label like A-B
+                        lbl = i
+                    else:
+                        # string from catalog file
+                        lbl = i.capitalize()
                     ki = '%s/%s' % (k,i)
-                    mi = AppMenu(i.capitalize(),dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)
