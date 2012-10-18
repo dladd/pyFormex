@@ -912,16 +912,19 @@ def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     return M
         
 
-def drawAxes(CS,*args,**kargs):
+def drawAxes(CS=None,*args,**kargs):
     """Draw the axes of a CoordinateSystem.
 
-    CS is a CoordinateSystem. Other arguments can be added just like in the
+    CS is a CoordinateSystem. If not specified, the global coordinate system
+    is used. Other arguments can be added just like in the
     :class:`AxesActor` class.
 
     While you can draw a CoordinateSystem using the :func:`draw` function,
     this function gives a better result because it has specialized color
     and annotation settings and provides reasonable deafults.
     """
+    if CS is None:
+        CS = CoordinateSystem()
     A = actors.AxesActor(CS,*args,**kargs)
     drawActor(A)
     return A

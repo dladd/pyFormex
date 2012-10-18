@@ -131,6 +131,7 @@ def splitAlpha(strings,n):
     from arraytools import multiplicity
     strings = sorted(strings)
     mult,bins = multiplicity([ord(f[0]) for f in strings ])
+    print(bins)
     count = dict(zip(bins,mult))
     cat = []
     grp = []
@@ -142,25 +143,29 @@ def splitAlpha(strings,n):
             cat.append('%c-%c' % (chr(i),chr(j)))
         grp.append(strings[:mtot])
         del strings[:mtot]
-            
-    j = i = ord('A')
-    mtot = count.get(i,0)
-    while j < ord('Z'):
-        if mtot > n:
-            accept(i,j,mtot)
-            j = i = i+1
-            mtot = count.get(i,0)
-        else:
-            mj = count.get(j+1,0)
-            if mtot+mj > n:
-                accept(i,j,mtot)
-                j = i = j+1
-                mtot = mj
-            else:
-                j += 1
-                mtot += mj
 
-    accept(i,j,mtot)
+    def group(fromchar,tochar):
+        j = i = ord(fromchar)
+        mtot = count.get(i,0)
+        while j < ord(tochar):
+            if mtot > n:
+                accept(i,j,mtot)
+                j = i = i+1
+                mtot = count.get(i,0)
+            else:
+                mj = count.get(j+1,0)
+                if mtot+mj > n:
+                    accept(i,j,mtot)
+                    j = i = j+1
+                    mtot = mj
+                else:
+                    j += 1
+                    mtot += mj
+        accept(i,j,mtot)
+
+    group('A','Z')
+    group('a','z')
+    
     return cat,grp
 
 
