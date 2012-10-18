@@ -845,29 +845,29 @@ def is_script(appname):
 def is_app(appname):
     return not is_script(appname)
 
+is_pyFormex = is_script
+## def is_pyFormex(filename):
+##     """Checks whether a file is a pyFormex script.
 
-def is_pyFormex(filename):
-    """Checks whether a file is a pyFormex script.
+##     A file is considered to be a pyFormex script if its name ends in '.py'
+##     and the first line of the file contains the substring 'pyformex'.
+##     Typically, a pyFormex script starts with a line::
 
-    A file is considered to be a pyFormex script if its name ends in '.py'
-    and the first line of the file contains the substring 'pyformex'.
-    Typically, a pyFormex script starts with a line::
+##        # *** pyformex ***
+##     """
+##     filename = str(filename) # force it into a string
+##     if filename.endswith(".pye"):
+##         return True
 
-       # *** pyformex ***
-    """
-    filename = str(filename) # force it into a string
-    if filename.endswith(".pye"):
-        return True
-
-    ok = filename.endswith(".py")
-    if ok:
-        try:
-            f = open(filename,'r')
-            ok = f.readline().find('pyformex') >= 0
-            f.close()
-        except IOError:
-            ok = False
-    return ok
+##     ok = filename.endswith(".py")
+##     if ok:
+##         try:
+##             f = open(filename,'r')
+##             ok = f.readline().find('pyformex') >= 0
+##             f.close()
+##         except IOError:
+##             ok = False
+##     return ok
     
 
 tempFile = tempfile.NamedTemporaryFile

@@ -41,6 +41,7 @@ import odict
 from plugins.curve import BezierSpline,PolyLine
 from simple import connectCurves
 from plugins.trisurface import fillBorder
+from geomtools import closestPoint
 import utils
 import os,sys
 
@@ -98,8 +99,14 @@ def glyphCurve(c):
     
     return Coords(points),Coords(control)
 
+    
+            
+def contourCurve(c):
+    """Convert a fontforge contour to a pyFormex curve""" 
+    points,control = glyphCurve(c)
+    return BezierSpline(coords=points[:-1],control=control,degree=2,closed=True)
 
-def charContour(fontfile,character):
+def charContours(fontfile,character):
     font = fontforge.open(fontfile,5)
     print("FONT INFO FOR %s" % font)
     print(dir(font))
@@ -112,29 +119,37 @@ def charContour(fontfile,character):
 
 
     l = g.layers[1]
-    print(len(l))
-    c = l[0]
-    print(c)
-    print(dir(c))
-    print(c.closed)
-    print(c.is_quadratic)
-    print(c.isClockwise())
-    print(len(c))
-    print(c.reverseDirection())
+    print("Number of curves: %s" % len(l))
+    ## c = l[0]
+    ## print(c)
+    ## #print(dir(c))
+    ## print(c.closed)
+    ## print(c.is_quadratic)
+    ## print(c.isClockwise())
+    ## print(len(c))
+    ## #print(c.reverseDirection())
 
-    if c.isClockwise():
-        c = c.reverseDirection()
+    ## #if c.isClockwise():
+    ## #    c = c.reverseDirection()
 
-    return c
+    return l
+
+
+def connect2curves(c0,c1):
+    x0 = c0.coords
+    x1 = c1.coords
+    i,j,d = closestPoint(x0,x1)
+    x = concatenate([roll(x0,-i,axis=0),roll(x1,-j,axis=0)])
+    return BezierSpline(control=x,degree=2,closed=True)
+    
     
             
-def charCurve(fontfile,character):
-    c = charContour(fontfile,character)
-    points,control = glyphCurve(c)
-    curve =  BezierSpline(coords=points[:-1],control=control,degree=2,closed=True)
+def charCurves(fontfile,character):
+    l = charContours(fontfile,character)
+    c = [ contourCurve(li) for li in l ]
     fontname = utils.projectName(fontfile)
-    export({'%s-%s'%(fontname,character):curve})
-    return curve
+    export({'%s-%s'%(fontname,character):c})
+    return c
 
 
 def drawCurve(curve,color,fill=False,with_border=True,with_points=True):
@@ -153,30 +168,32 @@ def drawCurve(curve,color,fill=False,with_border=True,with_points=True):
         drawNumbers(curve.pointsOff(),color=red)
 
 
-def show(fontname1,character1,fontname2=None,character2=None,connect=False,fill=False):
+def drawCurve2(curve,color,fill=False,with_border=True,with_points=True):
+    if fill:
+        curve = connect2curves(*curve)
+        drawCurve(curve,blue,fill)
+    else:
+        drawCurve(curve[0],color,fill=False,with_border=with_border,with_points=with_points)
+        drawCurve(curve[1],color,fill=False,with_border=with_border,with_points=with_points)
 
-    curve1 = charCurve(fontname1,character1)
-    size = curve1.pointsOn().bbox().dsize()
+
+def show(fontname,character,fill=False):
+
+    curve = charCurves(fontname,character)
+    size = curve[0].pointsOn().bbox().dsize()
     clear()
 
-    drawCurve(curve1,blue,fill)
+    if not fill:
+        for c in curve:
+            drawCurve(c,blue,fill=False)
+
+    else:
+        if len(curve) == 1:
+            drawCurve(curve[0],blue,fill=True)
+        elif len(curve) == 2:
+            drawCurve2(curve,blue,fill=True)
     
     return
-
-    if connect:
-        curve2 = charCurve(fontname2,character2)
-        curve2.coords = curve2.coords.trl([0.,0.,size])
-        drawCurve(curve2,red,fill)
-    return
-
-    print(curve1.nparts)
-    print(curve2.nparts)
-
-    F0 = curve1.toFormex()
-    F1 = curve2.toFormex()
-
-    F = connectCurves(F0,F1,4)
-    draw(F,color=black)
 
 
 # Initialization
@@ -188,23 +205,17 @@ print(dir(fontforge))
 fonts = utils.listFontFiles() + [ f for f in extra_fonts if os.path.exists(f) ]
 print("Number of available fonts: %s" % len(fonts))
 
-fontname1 = None
-fontname2 = None
-character1 = 'S'
-character2 = 'p'
+fontname = None
+character = 'S'
 connect = False
 fill = True
 
 
 def run():
     res = askItems([
-        _I('fontname1',fontname1,choices=fonts),
-        _I('character1',character1,max=1),
+        _I('fontname',fontname1,choices=fonts),
+        _I('character',character1,max=1),
         _I('fill',fill),
-# TODO: CONNECT NOT YET WORKING
-#        _I('connect',connect),
-#        _I('fontname2',fontname2,choices=fonts),
-#        _I('character2',character2,max=1),
         ],enablers=[
 #        ('connect',True,'fontname2','character2')
         ])

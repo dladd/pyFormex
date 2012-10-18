@@ -171,13 +171,13 @@ def showfields():
 
 
 def tblIndex():
-    print(tbl.table.currentIndex())
+    #print(tbl.table.currentIndex())
     r = tbl.table.currentIndex().row()
     c = tbl.table.currentIndex().column()
-    print("(%s,%s)" % (r,c))
+    #print("(%s,%s)" % (r,c))
     m = tbl.table.model()
     p = m.data(m.index(r,c))
-    print(p,p.toString(),p.toBool())
+    #print(p,p.toString(),p.toBool())
 
 def showattr(name=None,dic=None):
     """Show the table of field acronyms."""
@@ -186,7 +186,7 @@ def showattr(name=None,dic=None):
         dic = globals()
     k = dic.keys()
     sort(k)
-    print(k)
+    #print(k)
     if name is None:
         name = 'dia_full'
     tbl = AttributeTable(name,dic,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
@@ -337,7 +337,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         if val is None:
             F = [ draw(df,color='blue',view=None,bbox='last',wait=False) for df in deformed ]
         else:
-            print([ df.report() + "\nCOLORS %s" % str(cval[el].shape)  for df,el in zip(deformed,elems) ])
+            #print([ df.report() + "\nCOLORS %s" % str(cval[el].shape)  for df,el in zip(deformed,elems) ])
             F = [ draw(df,color=cval[el],view=None,bbox='last',wait=False) for df,el in zip(deformed,elems) ]
         T = drawText('Deformation scale = %s' % dsc,200,10)
 
@@ -795,6 +795,7 @@ def open_dialog():
 
     def set_inc_choices(step):
         print("Setting incs for step %s" % step)
+        print("  Incs for step %s: %s" % (step,DB.getIncs(int(step))))
         dialog['inc'].setChoices(DB.getIncs(int(step)))
 
 
@@ -856,7 +857,7 @@ def open_dialog():
         newdata['elgroup'] = ['--ALL--',] + DB.elems.keys()
     dialog.updateData(newdata)
     dialog['step'].setChoices(DB.getSteps())
-    dialog['inc'].setChoices(DB.getIncs(1))
+    dialog['inc'].setChoices(DB.getIncs(DB.getSteps()[0]))
     dialog.show()
     #pf.PF['__PostProcMenu_dialog__'] = dialog
 
