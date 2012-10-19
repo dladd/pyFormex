@@ -285,17 +285,20 @@ class Curve(Geometry):
           equidistantly over the curve. If False, the points are spread
           equally over the parameter space.
         - `npre`: only used when `equidistant` is True: number of segments
-          per part of the curve used in the pre-approximation. This is
-          pre-approximation is currently required to compute curve lengths.
+          per part of the curve used in the pre-approximation. This pre-
+          approximation is currently required to compute curve lengths.
 
         .. note:: This is an alternative for Curve.approx, and may replace it
            completely in future.
         """
         if equidistant:
             S = self.approximate(npre,equidistant=False)
+            at = S.atLength(nseg)
         else:
             S = self
-        at = arange(nseg+1) * float(S.nparts) / nseg
+            at = arange(nseg+1) * float(S.nparts) / nseg
+        if self.closed:
+            at = at[:-1]
         X = S.pointsAt(at)
         PL = PolyLine(X,closed=S.closed)
         return PL.setProp(self.prop)
