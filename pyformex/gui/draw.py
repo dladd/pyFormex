@@ -161,7 +161,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
         font = "DejaVu Sans Mono"
     else:
         font = None
-    w = Dialog(
+    w = Dialog(size=(0.75,0.75),
         items=[_I('text',text,itemtype=itemtype,text='',font=font,size=(-1,-1))],
         modal=modal,
         actions=actions,
@@ -737,16 +737,6 @@ def setDrawOptions(kargs0={},**kargs):
 def showDrawOptions():
     pf.message("Current Drawing Options: %s" % pf.canvas.options)
     pf.message("Current Viewport Options: %s" % pf.canvas.settings)
-
-
-def askDrawOptions(d={}):
-    """Interactively ask the Drawing options from the user.
-    
-    A dictionary may be specified to override the current defaults.
-    """
-    setDrawOptions(d)
-    res = askItems(pf.canvas.options.items())
-    setDrawOptions(res)
 
 
 def reset():

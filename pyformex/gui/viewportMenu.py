@@ -213,7 +213,7 @@ def canvasSettings():
             _I('linestipple',),
             _I('fgcolor',itemtype='color'),
             _I('slcolor',itemtype='color'),
-            _I('shading'),
+#            _I('shading'),
             _I('lighting'),
             _I('culling'),
             _I('alphablend'),
@@ -230,6 +230,99 @@ def canvasSettings():
             ],
         )
     #dia.resize(800,400)
+    dia.show()
+
+
+def setRendering():
+    import canvas
+
+    vp = pf.GUI.viewports.current
+    dia = None
+
+    def enableLightParams(mode):
+        if dia is None:
+            return
+        mode = str(mode)
+        on = mode.startswith('smooth')
+        for f in ['ambient','material']:
+            dia['render/'+f].setEnabled(on)
+        dia['material'].setEnabled(on)
+
+    def updateLightParams(matname):
+        matname=str(matname)
+        mat = pf.GUI.materials[matname]
+        val = utils.prefixDict(mat.dict(),'material/')
+        print("UPDATE",val)
+        dia.updateData(val)
+    
+    def close():
+        dia.close()
+        
+    def accept(save=False):
+        dia.acceptData()
+        print("RESULTS",dia.results)
+        if dia.results['render/mode'].startswith('smooth'):
+            res = utils.subDict(dia.results,'render/',strip=False)
+            matname = dia.results['render/material']
+            matdata = utils.subDict(dia.results,'material/')
+            # Currently, set both in cfg and Material db
+            pf.cfg['material/%s' % matname] = matdata
+            pf.GUI.materials[matname] = canvas.Material(matname,**matdata)
+        else:
+            res = utils.selectDict(dia.results,['render/mode','render/lighting'])
+        res['_save_'] = save
+        print("RES",res)
+        updateSettings(res)
+        print(pf.cfg)
+        vp = pf.GUI.viewports.current
+        vp.resetLighting()
+        #if pf.cfg['render/mode'] != vp.rendermode:
+        print("SETMODE %s %s" % (pf.cfg['render/mode'],pf.cfg['render/lighting']))
+        vp.setRenderMode(pf.cfg['render/mode'],pf.cfg['render/lighting'])
+        print(vp.rendermode,vp.lighting)
+        vp.update()
+        toolbar.updateLightButton()
+        
+
+    def acceptAndSave():
+        accept(save=True)
+        
+    def createDialog():  
+        matnames = pf.GUI.materials.keys()
+        mat = vp.material
+        mat_items = [
+            _I(a,text=a,value=getattr(mat,a),itemtype='slider',min=0,max=100,scale=0.01,func=set_mat_value) for a in [ 'ambient', 'diffuse', 'specular', 'emission']
+            ] + [
+            _I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
+            ]
+        items = [
+            _I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes),#,onselect=enableLightParams),
+            _I('render/lighting',vp.lighting,text='Use Lighting'),
+            _I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
+            _I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
+            _G('material',text='Material Parameters',items=mat_items),
+            ]
+
+        enablers = [
+            ('render/lighting',True,'render/ambient','render/material','material'),
+            ]
+        dia = widgets.InputDialog(
+            caption='pyFormex Settings',
+            enablers = enablers,
+            #store=pf.cfg,
+            items=items,
+            #prefix='render/',
+            autoprefix=True,
+            actions=[
+                ('Close',close),
+                ('Apply and Save',acceptAndSave),
+                ('Apply',accept),
+                ]
+            )
+        enableLightParams(vp.rendermode)
+        return dia
+
+    dia = createDialog()
     dia.show()
        
 
@@ -260,6 +353,16 @@ def viewportLayout():
 #        if res['Store these settings as defaults']:
 #            pf.cfg.update()
 
+
+
+def drawOptions(d={}):
+    """Set the Drawing options.
+    
+    A dictionary may be specified to override the current defaults.
+    """
+    draw.setDrawOptions(d)
+    res = draw.askItems(pf.canvas.options.items())
+    draw.setDrawOptions(res)
 
 
 def cameraSettings():
@@ -320,7 +423,7 @@ MenuData = [
         (_('Line&Width'),setLineWidth), 
         (_('&Canvas Size'),setCanvasSize), 
         (_('&Canvas Settings'),canvasSettings),
-        (_('&Global Draw Options'),draw.askDrawOptions),
+        (_('&Global Draw Options'),drawOptions),
         (_('&Camera Settings'),cameraSettings),
         (_('&OpenGL Settings'),openglSettings),
         ## ('&OpenGL Settings',

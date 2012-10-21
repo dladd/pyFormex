@@ -582,10 +582,14 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         else:
             return newp
     
-    from geomtools import intersectionTimesSWP,intersectionPointsSWP
+    from geomtools import intersectionSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
-    t = column_stack([intersectionTimesSWP(Ci.coords,p,n,mode='pair') for Ci in C])
-    P = stack([intersectionPointsSWP(Ci.coords,p,n,mode='pair',return_all=True) for Ci in C],axis=1)    
+    errh = seterr(divide='ignore',invalid='ignore')
+    res = [intersectionSWP(Ci.coords,p,n,mode='pair',return_all=True) for Ci in C]
+    seterr(**errh)
+    t = column_stack([r[0] for r in res])
+    P = stack([r[1] for r in res],axis=1)
+    del res
     T = (t >= 0.)*(t <= 1.)
     d = F.coords.distanceFromPlane(p,n)
     U = abs(d) < atol
@@ -1904,11 +1908,11 @@ maxprop  = %s
         The intersection of the Formex with a plane specified by a point p
         and normal n is returned. For a plex-2 Formex (lines), the returned
         Formex will be of plexitude 1 (points). For a plex-3 Formex
-        (triangles) the returned Fomrex has plexitude 2 (lines).
+        (triangles) the returned Formex has plexitude 2 (lines).
         """
         if self.nplex() == 2:
-            from geomtools import intersectionPointsSWP
-            return intersectionPointsSWP(self.coords,p,n,mode='pair')[0]
+            from geomtools import intersectionSWP
+            return intersectionSWP(self.coords,p,n,mode='pair')[1]
         elif self.nplex() == 3:
             return Formex(intersectionLinesWithPlane(self,p,n))
         else:

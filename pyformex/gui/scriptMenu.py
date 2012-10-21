@@ -37,7 +37,7 @@ import menu
 import os,random
 from gettext import gettext as _
     
-catname = 'scripts.cat'
+catname = '.apps.cat'
 
 def extractKeyword(s):
     """Extract a ``keyword = value`` pair from a string.
@@ -314,7 +314,7 @@ class ScriptMenu(QtGui.QMenu):
         if os.path.exists(catfile):
             pf.execFile(catfile,globals())
             for k in kat:
-                if k == 'all':
+                if k == 'all_apps':
                     files = col[k]
                 else:
                     files = []

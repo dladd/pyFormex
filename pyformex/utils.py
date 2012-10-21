@@ -51,6 +51,7 @@ known_modules = {
     'pyopengl': (''),
     'pyqt4': (''),
     'pyqt4gl': (''),
+    'docutils': (''),
     'calpy': (''),
     'gnuplot': ("Gnuplot"),
     'matplotlib': ("matplotlib"),
@@ -172,6 +173,9 @@ def checkModule(name=None,quiet=False):
             import PyQt4.QtOpenGL
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
+        elif name == 'docutils':
+            import docutils
+            version =  docutils.__version__
         elif name == 'calpy':
             import calpy
             version = calpy.__version__
@@ -460,11 +464,14 @@ def strNorm(s):
    
 ###################### ReST conversion ###################
 
-try:
+#try:
+# be quiet, because the import is done early
+if checkModule('docutils',quiet=True):
     from docutils.core import publish_string
     def rst2html(text,writer='html'):
         return publish_string(text,writer_name=writer)
-except ImportError:
+#except ImportError:
+else:
     def rst2html(text,writer='html'):
         return text
     

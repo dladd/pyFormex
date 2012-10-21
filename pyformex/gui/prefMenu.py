@@ -73,7 +73,6 @@ def updateSettings(res,save=None):
             
         # if not saved, set in cfg
         print("Setting %s = %s" % (k,res[k]))
-        #print pf.cfg.keys()
         if pf.cfg[k] != res[k]:
             pf.cfg[k] = res[k]
             changed = True
@@ -86,7 +85,6 @@ def updateSettings(res,save=None):
     # We test for pf.GUI in case we want to call updateSettings before
     # the GUI is created
     if pf.GUI:
-        #print todo
         for f in todo:
             f()
 
@@ -114,7 +112,6 @@ def settings():
         dia.acceptData()
         res = dia.results
         res['_save_'] = save
-        #pf.debug(res,pf.DEBUG.CONFIG)
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
         res['gui/actionbuttons'] = [ t for t in _actionbuttons if res['_gui/%sbutton'%t ] ]
@@ -164,7 +161,6 @@ def settings():
     viewer = widgets.ImageView(cur,maxheight=200)
 
     def changeSplash(fn):
-        #print "CURRENT %s" % fn
         fn = draw.askImageFile(fn)
         if fn:
             viewer.showImage(fn)
@@ -207,12 +203,14 @@ def settings():
                 viewer,
                 ]),
             _T('Canvas',[
-                _I('_not_active_','The canvas background settings can be set from the Viewport Menu',itemtype='info',label=''),
-               # _I('canvas/bgcolor',pf.cfg['canvas/bgcolor'],itemtype='color'),
+                _I('_not_active_','The canvas settings can be set from the Viewport Menu',itemtype='info',text=''),
                 ],
               ),
             _T('Drawing',[
-                _I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
+                _I('draw/wait',pf.cfg['draw/wait']),
+                _I('draw/picksize',pf.cfg['draw/picksize']),
+                _I('render/avgnormaltreshold',pf.cfg['render/avgnormaltreshold']),
+                _I('_info_00_',itemtype='info',text='Changes to the options below will only become effective after restarting pyFormex!'),
                 _I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
                 _I('draw/quadsurf',text='Draw as quadratic surfaces',itemtype='list',check=True,choices=elementTypes(2)+elementTypes(3),tooltip='Surface and volume elements checked here will be drawn as quadratic surfaces whenever possible.'),
                 ]
@@ -260,28 +258,6 @@ def askConfigPreferences(items,prefix=None,store=None):
     if res and store==pf.cfg:
         updateSettings(res)
     return res
-
- 
-def setDrawWait():
-    askConfigPreferences(['draw/wait'])
-    pf.GUI.drawwait = pf.cfg['draw/wait']
-
-def setLinewidth():
-    askConfigPreferences(['draw/linewidth'])
-
-
-def setAvgNormalTreshold():
-    askConfigPreferences(['render/avgnormaltreshold'])
-def setAvgNormalSize():
-    askConfigPreferences(['draw/avgnormalsize'])
-
-def setSize():
-    pf.GUI.resize(800,600)
-
-def setPickSize():
-    w,h = pf.cfg['pick/size']
-    res = draw.askItems([['w',w],['h',h]])
-    pf.prefcfg['pick/size'] = (int(res['w']),int(res['h']))
             
 
 def set_mat_value(field):
@@ -307,8 +283,6 @@ def createLightDialogItems(light=0,enabled=True):
     val = pf.cfg[tgt]
     print("LIGHT %s" % light)
     print("CFG %s " % val)
-    #print "DICT %s" % pf.canvas.lights.lights[light].__dict__
-    #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
     items = [
         _I('enabled',enabled),
@@ -417,7 +391,6 @@ def setDirs(dircfg):
     """dircfg is a config variable that is a list of directories."""
     dia = createDirsDialog(dircfg)
     dia.exec_()
-    
 
     
 def createDirsDialog(dircfg):
@@ -552,11 +525,13 @@ def updateToolbars():
     pf.GUI.updateToolBars()
 
 def updateBackground():
-    #pf.canvas.setBgColor(pf.cfg['canvas/bgcolor'],pf.cfg['canvas/bgcolor2'],pf.cfg['canvas/bgmode'])
     pf.canvas.update()
 
 def updateAppdirs():
     pf.GUI.updateAppdirs()
+
+def updateDrawWait():
+    pf.GUI.drawwait = pf.cfg['draw/wait']
 
     
 # This sets the functions that should be called when a setting has changed
@@ -573,6 +548,7 @@ _activate_settings = {
     'canvas/bgcolor':updateBackground,
     'canvas/bgcolor2':updateBackground,
     'appdirs':updateAppdirs,
+    'draw/wait':updateDrawWait,
     }
    
 
@@ -581,15 +557,6 @@ MenuData = [
         (_('&Settings Dialog'),settings), 
         (_('&Options'),setOptions),
         (_('&Debug'),setDebug),
-        ('---',None),
-        (_('&Draw Wait Time'),setDrawWait), 
-        (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
-        (_('Avg&Normal Size'),setAvgNormalSize), 
-        (_('&Pick Size'),setPickSize), 
-        (_('&Rendering'),setRendering),
-        #(_('&Set Material Type'),setMaterial),
-        #(_('&Change Material Parameters'),changeMaterial),
-        ## (_('&Show Lighting'),showLighting),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),

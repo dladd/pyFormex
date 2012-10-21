@@ -57,16 +57,10 @@ localprefs = '.pyformex/pyformexrc'
 scripttemplate = os.path.join(pyformexdir,'template.py')
 curfile = ''
 curproj = ''
-loadcurproj = False
 
-# scriptdirs is a list of (title,dir) tuples
-# for 'examples', the directory will be filled in automagically
-scriptdirs = [ ('Examples','') ]
-appdirs = [ ('Examples','') ]
 
 # extra paths to append tot sys.path
 syspath = []
-
 
 # commands
 ### THESE MAY BE CHANGED BY THE INSTALLATION PROCEDURE
@@ -75,10 +69,15 @@ viewer = 'firefox'   # html viewer
 browser = 'firefox'  # web browser
 fortune = 'fortune -s' # command to generate a fortune cookie
 
+# scriptdirs is a list of (title,dir) tuples
+# for 'examples', the directory will be filled in automagically
+scriptdirs = [ ('Examples','') ]
+appdirs = [ ('Examples','') ]
+
 autoglobals = True
-uselib = True
 showapploaderrors = False
 openlastproj = False
+uselib = True
 
 # prefered system for creating 2d plots
 plot2d = 'gnuplot'
@@ -112,6 +111,7 @@ fullscreen = False
 icontype = '.xpm'
 exitconfirm = 'smart' # other options: 'never', 'always'
 dooze = 0.0
+rst2html = True      # rst text is converted to html for nice display
 
 prefsmenu = True     # add settings menu menu
 viewportmenu = True  # add viewport menu
@@ -192,9 +192,7 @@ localaxes = True     # by default, buttons rotate/pan in local axes
 quadline = [] # 'line3' ]
 quadsurf = [] # [ 'quad8', 'quad9', 'hex20' ]
 avgnormalsize = '_auto_'
-
-[pick]
-size=(12,12) # size of the pick window
+picksize=(12,12) # size of the pick window
 
 
 [material]

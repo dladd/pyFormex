@@ -930,7 +930,7 @@ def exitDialog():
     res = draw.askItems(
         [ draw._I('info',itemtype='label',value="You have unsaved global variables. What shall I do?"),
           draw._I('save',itemtype='vradio',choices=save_opts,text='Save the current globals'),
-          draw._I('reopen',pf.cfg['loadcurproj'],text="Reopen the project on next startup"),
+          draw._I('reopen',pf.cfg['openlastproj'],text="Reopen the project on next startup"),
           ],
         caption='pyFormex exit dialog')
         
@@ -1371,7 +1371,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # load last project
     #
     #  TODO
-    if pf.cfg['loadcurproj']:
+    if pf.cfg['openlastproj']:
         fn = pf.cfg['curproj']
         if fn:
             try:

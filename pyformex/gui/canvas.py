@@ -1335,7 +1335,7 @@ class Canvas(object):
         """draw the cursor"""
         if self.cursor:
             self.removeDecoration(self.cursor)
-        w,h = pf.cfg.get('pick/size',(20,20))
+        w,h = pf.cfg.get('draw/picksize',(20,20))
         col = pf.cfg.get('pick/color','yellow')
         self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color=col,linewidth=1)
         self.addDecoration(self.cursor)

@@ -1504,7 +1504,7 @@ class InputDialog(QtGui.QDialog):
       combo or group. Also, any input field should only have one enabler!
          
     """
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[],scroll=False):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[],scroll=False,size=None):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
@@ -1518,6 +1518,16 @@ class InputDialog(QtGui.QDialog):
         self.setWindowTitle(caption)
         if modal is not None:
             self.setModal(modal)
+
+        try:
+            w,h = size
+            if type(w) is float:
+                w = int(w*pf.maxsize[0])
+            if type(h) is float:
+                h = int(h*pf.maxsize[1])
+            self.resize(w,h)
+        except:
+            pass
 
         self.fields = []
         self.groups = {}
@@ -2566,7 +2576,8 @@ def updateText(widget,text,format=''):
             format = 'rest'
 
     # conversion
-    if format == 'rest' and pf.options.rst2html:
+    html = utils.rst2html(text)
+    if format == 'rest' and pf.cfg['gui/rst2html']:
         html = utils.rst2html(text)
         if html[:10] == text[:10]:
             #print "CONVERSION TO HTML FAILED"

@@ -531,11 +531,15 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
 
     Returns a (nq,np) shaped (`mode=all`) array of parameter values t,
     such that the intersection points are given by q+t*m.
+
+    Notice that the result will contain an INF value for lines that are
+    parallel to the plane. 
     """
     if mode == 'all':
-        return (dotpr(p,n) - inner(q,n)) / inner(m,n)
+        res = (dotpr(p,n) - inner(q,n)) / inner(m,n)
     elif mode == 'pair':
-        return dotpr(n, (p-q)) / dotpr(m,n)
+        res = dotpr(n, (p-q)) / dotpr(m,n)
+    return res
 
 
 def intersectionPointsLWP(q,m,p,n,mode='all'):
@@ -577,7 +581,7 @@ def intersectionTimesSWP(S,p,n,mode='all'):
     return intersectionTimesLWP(q0,q1-q0,p,n,mode)
 
 
-def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
+def intersectionSWP(S,p,n,mode='all',return_all=False):
     """Return the intersection points of line segments S with planes (p,n).
 
     Parameters:
@@ -592,31 +596,58 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
       segments are returned. Default is to return only the points that lie
       on the segments.
 
-    Returns: 
-
-      If `return_all==True`, a (nS,np,3) shaped (`mode=all`) array of
-      intersection points, else, a tuple of intersection points with shape (n,3)
-      and line and plane indices with shape (n), where n <= nS*np.
+    Return values if `return_all==True`:
+    
+    - `t`: (nS,NP) parametric values of the intersection points along the line
+      segments. 
+    - `x`: the intersection points themselves (nS,nP,3).
+    
+    Return values if `return_all==False`:
+    
+    - `t`: (n,) parametric values of the intersection points along the line
+      segments (n <= nS*nP) 
+    - `x`: the intersection points themselves (n,3).
+    - `wl`: (n,) line indices corresponding with the returned intersections.
+    - `wp`: (n,) plane indices corresponding with the returned intersections
     """
     S = asanyarray(S).reshape(-1,2,3)
     p = asanyarray(p).reshape(-1,3)
     n = asanyarray(n).reshape(-1,3)
+    # Find intersection parameters
     t = intersectionTimesSWP(S,p,n,mode)
-    if mode == 'all':
-        S = S[:,newaxis]
-    x = pointsAtSegments(S,t)
-    if x.ndim == 1:
-        x = x.reshape(1,3)
-        t = t.reshape(1)
+        
     if not return_all:
         # Find points inside segments
         ok = (t >= 0.0) * (t <= 1.0)
+        t = t[ok]
         if mode == 'all':
             wl,wt = where(ok)
         elif mode == 'pair':
             wl = wt = where(ok)[0]
-        return x[ok],wl,wt
-    return x
+
+    if mode == 'all':
+        S = S[:,newaxis]
+    x = pointsAtSegments(S,t)
+    
+    if x.ndim == 1:
+        x = x.reshape(1,3)
+        t = t.reshape(1)
+
+    if return_all:
+        return t,x
+    else:
+        return t,x,wl,wt
+
+
+def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
+    """Return the intersection points of line segments S with planes (p,n).
+
+    This is like :func:`intersectionSWP` but does not return the parameter
+    values. It is equivalent to::
+
+    intersectionSWP(S,p,n,mode,return_all)[1:]
+    """
+    return intersectionSWP(S,p,n,mode,return_all)[1:]
 
 
 def intersectionTimesLWT(q,m,F,mode='all'):

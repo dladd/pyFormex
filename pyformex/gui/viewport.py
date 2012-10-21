@@ -1032,7 +1032,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             x,y = (x+self.statex)/2., (y+self.statey)/2.
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
-               w,h = pf.cfg.get('pick/size',(20,20))
+               w,h = pf.cfg.get('draw/picksize',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             self.pick_window = (x,y,w,h,vp)
             self.selection_busy = False
