@@ -647,8 +647,11 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
 
     intersectionSWP(S,p,n,mode,return_all)[1:]
     """
-    return intersectionSWP(S,p,n,mode,return_all)[1:]
-
+    res = intersectionSWP(S,p,n,mode,return_all)
+    if return_all:
+        return res[1]
+    else:
+        return res[1:]
 
 def intersectionTimesLWT(q,m,F,mode='all'):
     """Return the intersection of lines (q,m) with triangles F.

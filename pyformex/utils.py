@@ -67,7 +67,7 @@ known_externals = {
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
     'units': ('units --version','GNU Units version (\S+)'),
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\S+)'),
-    'gts': ('gtsset -h','Usage(:) set'),
+    'gts': ('gtsset -h','Usage(:) '),
     'calix': ('calix --version','CALIX-(\S+)'),
     'dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
     'postabq': ('pyformex-postabq -V','postabq (\S+).*'),
