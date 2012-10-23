@@ -400,7 +400,7 @@ def createDirsDialog(dircfg):
     where path is a valid directory pathname and text is a short name
     to display in the menus.
 
-    Examples of dircfg are 'scriptsdirs' and 'appdirs'.
+    Examples of dircfg are 'scriptdirs' and 'appdirs'.
     """
     
     _dia=None
@@ -446,14 +446,15 @@ def createDirsDialog(dircfg):
         pf.prefcfg[dircfg] = pf.cfg[dircfg]
 
 
-    if dircfg == 'scriptdirs':
-        title='Script paths'
-        import scriptMenu
-        reloadMenu = scriptMenu.reloadMenu
+    mode = dircfg[:-4]
+    if mode == 'app':
+        title = 'Application paths'
     else:
-        title='Application paths'
+        title='Script paths'
+
+    def reloadMenu():
         import appMenu
-        reloadMenu = appMenu.reloadMenu
+        appMenu.reloadMenu(mode=mode)
 
     _dia = widgets.TableDialog(
         data = pf.cfg[dircfg],

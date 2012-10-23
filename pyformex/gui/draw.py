@@ -209,7 +209,7 @@ def showDoc(obj=None,rst=True,modal=False):
         obj = pf.prefcfg['curfile']
         if utils.is_script(obj):
             #print "obj is a script"
-            from scriptMenu import getDocString
+            from utils import getDocString
             text = getDocString(obj)
             obj = None
         else:

@@ -39,7 +39,6 @@ import fileMenu
 import cameraMenu
 import prefMenu
 import viewportMenu
-import scriptMenu
 import toolbar
 import helpMenu
 import image

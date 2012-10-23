@@ -875,6 +875,23 @@ is_pyFormex = is_script
 ##         except IOError:
 ##             ok = False
 ##     return ok
+
+def getDocString(scriptfile):
+    """Return the docstring from a script file.
+
+    This actually returns the first multiline string (delimited by
+    triple double quote characters) from the file.
+    It does relies on the script file being structured properly and
+    indeed including a doctring at the beginning of the file.
+    """
+    fil = open(scriptfile,'r')
+    s = fil.read()
+    i = s.find('"""')
+    if i >= 0:
+        j = s.find('"""',i+1)
+        if j >= i+3:
+            return s[i+3:j]
+    return ''
     
 
 tempFile = tempfile.NamedTemporaryFile

@@ -45,7 +45,6 @@ from PyQt4 import QtCore, QtGui
 import menu
 import cameraMenu
 import fileMenu
-import scriptMenu
 import appMenu
 import prefMenu
 import toolbar
@@ -1305,7 +1304,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Create additional menus (put them in a list to save)
     
     # History Menu
-    pf.GUI.history = scriptMenu.ScriptMenu('History',files=pf.cfg['gui/history'],max=pf.cfg['gui/history_max'])
+    pf.GUI.history = appMenu.AppMenu('History',files=pf.cfg['gui/history'],mode='script',max=pf.cfg['gui/history_max'])
 
     if pf.cfg.get('gui/history_in_main_menu',False):
         before = pf.GUI.menu.item('help')
@@ -1316,12 +1315,10 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         filemenu.insertMenu(before,pf.GUI.history)
 
     # Scripts menu
-    pf.GUI.scriptmenu = scriptMenu.createScriptMenu(pf.GUI.menu,before='help')
+    pf.GUI.scriptmenu = appMenu.createMenu(pf.GUI.menu,mode='script',before='help')
 
     # App menu
     pf.GUI.appmenu = appMenu.createMenu(pf.GUI.menu,before='help')
-        
-   
 
     # Create databases
     createDatabases()
