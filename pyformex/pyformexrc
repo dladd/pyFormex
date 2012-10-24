@@ -148,7 +148,7 @@ wheelzoomfactor = 0.25  # enlargement factor for the wheelzoom
 dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'lens' or 'none')
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
-easter_egg = ("i f_rvso_[4 ='50:  bclrclrwieiaegtf(dtdr)'20.n'\n", "fp._eiin_:]= 20'\n  goo(oo=ht,mg=ecg'aai'+/50pg)")
+easter_egg = ()
 
 layout = 1
 showfocus = True

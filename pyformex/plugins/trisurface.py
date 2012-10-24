@@ -39,7 +39,7 @@ import mesh_ext  # load the extended Mesh functions
 
 import geomtools
 import inertia
-import filewrite
+import fileread,filewrite
 import utils
 from gui.drawable import interpolateNormals
 
@@ -155,21 +155,6 @@ def read_stl(fn,intermediate=None):
         return read_gts(ofn)
     elif ofn.endswith('.off'):
         return read_off(ofn)
-
-
-def read_gambit_neutral(fn):
-    """Read a triangular surface mesh in Gambit neutral format.
-
-    The .neu file nodes are numbered from 1!
-    Returns a nodes,elems tuple.
-    """
-    scr = os.path.join(pf.cfg['bindir'],'gambit-neu ')
-    utils.runCommand("%s '%s'" % (scr,fn))
-    nodesf = utils.changeExt(fn,'.nodes')
-    elemsf = utils.changeExt(fn,'.elems')
-    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
-    elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
-    return nodes, elems-1
 
 
 def read_gts_intersectioncurve(fn):
@@ -662,7 +647,7 @@ class TriSurface(Mesh):
         elif ftype == 'stl':
             surf = TriSurface(*read_stl(fn))
         elif ftype == 'neu':
-            surf = TriSurface(*read_gambit_neutral(fn))
+            surf = TriSurface(*fileread.read_gambit_neutral(fn))
         elif ftype == 'smesh':
             surf = TriSurface(*tetgen.readSurface(fn))
         else:

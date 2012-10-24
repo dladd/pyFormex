@@ -126,5 +126,36 @@ def convertInp(fn):
     sta, out = utils.runCommand(cmd)
     
 
+def read_gambit_neutral(fn):
+    """Read a triangular surface mesh in Gambit neutral format.
+
+    The .neu file nodes are numbered from 1!
+    Returns a nodes,elems tuple.
+    """
+    scr = os.path.join(pf.cfg['bindir'],'gambit-neu ')
+    utils.runCommand("%s '%s'" % (scr,fn))
+    nodesf = utils.changeExt(fn,'.nodes')
+    elemsf = utils.changeExt(fn,'.elems')
+    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
+    elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
+    return nodes, elems-1
+
+
+def read_gambit_neutral_hex(fn):
+    """Read an hexahedral mesh in Gambit neutral format.
+
+    The .neu file nodes are numbered from 1!
+    Returns a nodes,elems tuple.
+    """
+    scr = os.path.join(pf.cfg['bindir'],'gambit-neu-hex ')
+    print("%s '%s'" % (scr,fn))
+    utils.runCommand("%s '%s'" % (scr,fn))
+    nodesf = utils.changeExt(fn,'.nodes')
+    elemsf = utils.changeExt(fn,'.elems')
+    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
+    elems = fromfile(fn_e,sep=' ',dtype=int32).reshape((-1,8))
+    elems = elems[:,(0,1,3,2,4,5,7,6)]
+    return nodes, elems-1
+
 # End
 
