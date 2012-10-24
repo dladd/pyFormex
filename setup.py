@@ -90,130 +90,6 @@ class sdist(_sdist):
         self.filelist.remove_duplicates()
         self.write_manifest()
 
-    
-## class install(_install):
-##     def run(self):
-
-##         # Obviously have to build before we can run pre-install
-##         if not self.skip_build:
-##             self.run_command('build')
-##             # If we built for any other platform, we can't install.
-##             build_plat = self.distribution.get_command_obj('build').plat_name
-##             # check warn_dir - it is a clue that the 'install' is happening
-##             # internally, and not to sys.path, so we don't check the platform
-##             # matches what we are running.
-##             if self.warn_dir and build_plat != get_platform():
-##                 raise DistutilsPlatformError("Can't install when "
-##                                              "cross-compiling")
-##         #os.system("./pre-install %s %s" % (self.build_base,self.install_lib))
-##         _install.run(self)
-##         #os.system("./post-install %s" % self.install_lib)
-
-
-## class install(_install):
-##     def run(self):
-##         global srcdir,globaldocs
-##         _install.run(self)
-##         if globaldocs:
-##             print dir(self)
-##             localdir = os.path.join(self.install_lib,'pyformex/doc/html')
-##             globaldir = os.path.join(self.install_data,'share/doc/pyformex/html')
-##             print "html doc is in ",localdir
-##             print "html doc should be in ",globaldir
-##             import shutil
-##             if os.path.exists(globaldir):
-##                 shutil.rmtree(globaldir)
-##             shutil.move(localdir,globaldir)
-##             os.symlink(globaldir,localdir)
-
-
-## class install_data(_install_data):
-##     def run(self):
-##         global srcdir
-##         srcdir = os.path.join(self.install_dir,'share/doc/pyformex/html')
-##         _install_data.run(self)
-
-
-## class build_ext(_build_ext):
-##     """Specialized Python Extension builder.
-
-##     This overrides the normal Python distutils Extension builder.
-##     Our own builder runs a configuration procedure first, and if
-##     the configuration does not succeed, the Extension is not built.
-##     This forms no problem for installing pyFormex, because the
-##     extensions are optional, and are replaced with pure Python functions
-##     if the Extensions are not installed.
-##     """
-
-##     def configure(self):
-##         """Detect the required header files"""
-##         print("NOT Configuring the pyFormex acceleration library")
-##         #cmd = "cd pyformex/lib;./configure >/dev/null && grep '^SUCCESS=' config.log"
-##         #sta,out = commands.getstatusoutput(cmd)
-##         #print(out)
-##         #exec(out)
-##         #return SUCCESS=='1'
-##         return True
-    
-
-##     def run (self):
-##         """Configure the extensions and if successful, build them."""
-##         ## The current building process will probably not work on
-##         ## non-posix systems.
-##         ## If anybody knows how to do it, please go ahead and remove this.
-##         if os.name != 'posix':
-##             print("!! The acceleration library is not available for your platform.\n!! You should consider switching to Linux (or some other Posix) Platform.")
-##             return
-
-##         if self.configure():
-##             print("Compiling the pyFormex acceleration library")
-##             _build_ext.run(self)
-##             # Should we compile postabq even if configure failed?
-##             #print("Compiling the pyFormex postabq converter")
-##             #cmd = "cd pyformex/lib;make postabq"
-##             #sta,out = commands.getstatusoutput(cmd)
-##             #print(out)
-
-##         else:
-##             print("""
-## Some files required to compile the accelerator library were not found
-## on your system. Installation will be continued, and pyFormex will run
-## without the library, but some operations on large data sets may run slowly.
-## See the manual or the website for information onhow to install the missing
-## files.
-## """)
-
-## class build(_build):
-
-##     sub_commands = [('config_cc',     lambda *args: True),
-##                     ('config_fc',     lambda *args: True),
-##                     ('build_src',     _build.has_ext_modules),
-##                     ] + _build.sub_commands
-
-##     user_options = _build.user_options + [
-##         ('fcompiler=', None,
-##          "specify the Fortran compiler type"),
-##         ]
-
-##     help_options = _build.help_options + [
-##         ('help-fcompiler',None, "list available Fortran compilers",
-##          show_fortran_compilers),
-##         ]
-
-##     def initialize_options(self):
-##         _build.initialize_options(self)
-##         self.fcompiler = None
-
-##     def finalize_options(self):
-##         build_scripts = self.build_scripts
-##         _build.finalize_options(self)
-##         plat_specifier = ".%s-%s" % (get_platform(), sys.version[0:3])
-##         if build_scripts is None:
-##             self.build_scripts = os.path.join(self.build_base,
-##                                               'scripts' + plat_specifier)
-
-##     def run(self):
-##         _build.run(self)
 
  
 def run_setup(with_cext):
@@ -230,6 +106,7 @@ def run_setup(with_cext):
         'icons/pyformex*.png',
         'examples/scripts.cat',
         'examples/Demos/*',
+        'bin/*',
         'data/*',
         ## 'extra/*/*',
         ]
@@ -251,7 +128,7 @@ def run_setup(with_cext):
         'sdist':sdist
         },
           name='pyformex',
-          version='0.8.7-a7',
+          version='0.8.7-a8',
           description='Program to generate and transform 3D geometries from scripts.',
           long_description="""
     pyFormex is a tool to generate, transform and manipulate large and complex
@@ -304,14 +181,6 @@ try:
 except ValueError:
     accel = True
 
-## # Detect the --globaldocs option
-## globaldocs = False
-## try:
-##     i = sys.argv.index('--globaldocs')
-##     del(sys.argv[i])
-##     globaldocs = True
-## except ValueError:
-##     pass
 
 
 if pypy or jython or py3k:

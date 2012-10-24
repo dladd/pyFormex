@@ -3,6 +3,7 @@ usr/share/pixmaps
 usr/share/applications
 usr/lib/python2*/dist-packages/pyformex/pyformexrc
 usr/lib/python2*/dist-packages/pyformex/*.py
+usr/lib/python2*/dist-packages/pyformex/bin
 usr/lib/python2*/dist-packages/pyformex/data
 usr/lib/python2*/dist-packages/pyformex/examples
 usr/lib/python2*/dist-packages/pyformex/gui

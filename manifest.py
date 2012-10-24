@@ -142,6 +142,7 @@ DATA_FILES = listTree(
         ],
     )
 
+
 # scripts to install extra programs
 EXTRA_FILES = listTree(
     'pyformex/extra',listdirs=True,sorted=True,
@@ -215,6 +216,10 @@ DIST_FILES = [
              excludedirs=['.svn'],
              includefiles=['.*\.c$','.*\.py$']
              ) + \
+    listTree('pyformex/bin',listdirs=False,sorted=True,
+             excludedirs=['.svn'],
+             excludefiles=['.*~$'],
+             ) + \
     listTree('pyformex/examples',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              excludefiles=['.*\.pyc','.*~$',
@@ -226,12 +231,6 @@ DIST_FILES = [
     DATA_FILES + \
     DOC_FILES + \
     EXTRA_FILES
-
-
-    ## listTree('pyformex/bin',listdirs=False,sorted=True,
-    ##          excludedirs=['.svn'],
-    ##          excludefiles=['.*~$'],
-    ##          )
 
 
 for i in OTHER_DATA:
