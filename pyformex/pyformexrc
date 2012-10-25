@@ -78,6 +78,7 @@ autoglobals = True
 showapploaderrors = False
 openlastproj = False
 uselib = True
+check_print = True
 
 # prefered system for creating 2d plots
 plot2d = 'gnuplot'

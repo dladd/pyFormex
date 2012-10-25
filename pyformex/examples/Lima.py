@@ -37,6 +37,7 @@ The turtle plugin allows the creation of line drawings through Turtle
 graphics.
 """
 from __future__ import print_function
+
 _status = 'checked'
 _level = 'normal'
 _topics = ['illustration']

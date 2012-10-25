@@ -29,11 +29,11 @@ To install pyFormex: python setup.py install --prefix=/usr/local
 To uninstall pyFormex: pyformex --remove
 """
 
-from distutils.command.install import install as _install
-from distutils.command.install_data import install_data as _install_data
-from distutils.command.install_scripts import install_scripts as _install_scripts
-from distutils.command.build_ext import build_ext as _build_ext
-from distutils.command.build import build as _build
+#from distutils.command.install import install as _install
+#from distutils.command.install_data import install_data as _install_data
+#from distutils.command.install_scripts import install_scripts as _install_scripts
+#from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.build_py import build_py as _build_py
 from distutils.command.sdist import sdist as _sdist
 from distutils.core import setup, Extension
 from distutils import filelist
@@ -45,8 +45,8 @@ import os,sys,commands
 pypy = hasattr(sys, 'pypy_version_info')
 jython = sys.platform.startswith('java')
 py3k = False
-if sys.version_info < (2, 4):
-    raise Exception("pyFormex requires Python 2.4 or higher.")
+if sys.version_info < (2, 5):
+    raise Exception("pyFormex requires Python 2.5 or higher.")
 elif sys.version_info >= (3, 0):
     py3k = True
 
@@ -74,12 +74,37 @@ def status_msgs(*msgs):
     for msg in msgs:
         print(msg)
     print('*' * 75)
+
       
+class build_py(_build_py):
+     
+    def build_package_data (self):
+        """Copy data files into build directory
+
+        The default Python distutils do not preserve the file mode
+        when copying the Python package.
+        This version will preserve the file mode for files in the
+        packages `bin` subdirectory. Thus executable scripts there
+        will remain executable.
+        """
+        lastdir = None
+        for package, src_dir, build_dir, filenames in self.data_files:
+            #print(package, src_dir, build_dir, filenames)
+            for filename in filenames:
+                target = os.path.join(build_dir, filename)
+                self.mkpath(os.path.dirname(target))
+                self.copy_file(os.path.join(src_dir, filename), target,
+                               preserve_mode=filename.startswith('bin/'))
+
+
+
 class sdist(_sdist):
 
     def get_file_list(self):
-        """Figure out the list of files to include in the source
-        distribution, and put it in 'self.filelist'.  This might involve
+        """Create list of files to include in the source distribution
+
+        Create the list of files to include in the source distribution,
+        and put it in 'self.filelist'.  This might involve
         reading the manifest template (and writing the manifest), or just
         reading the manifest, or just using the default file set -- it all
         depends on the user's options.
@@ -110,21 +135,10 @@ def run_setup(with_cext):
         'data/*',
         ## 'extra/*/*',
         ]
-    ## if globaldocs:
-    ##     # Install in the global doc path
-    ##     OTHER_DATA.append(('share/doc/pyformex/html',['pyformex/doc/html/*']))
-    ## else:
-    ##     # Install docs in package path
-    ##     PKG_DATA += [ i[9:] for i in DOC_FILES ]
-    ## print OTHER_DATA
     
     PKG_DATA += [ i[9:] for i in DOC_FILES ]
     setup(cmdclass={
-        ## 'install_scripts': install_scripts,
-        ## 'build_ext': build_ext,
-        ## 'build': build,
-        ## 'install':install,
-        ## 'install_data':install_data,
+        'build_py': build_py,
         'sdist':sdist
         },
           name='pyformex',
@@ -147,7 +161,7 @@ def run_setup(with_cext):
               'pyformex.examples'
               ],
           package_data={ 'pyformex': PKG_DATA },
-          scripts=['pyformex/pyformex'],#,'pyformex/pyformex-search'],#'pyformex-viewer'],
+          scripts=['pyformex/pyformex'],
           data_files=OTHER_DATA,
           classifiers=[
               'Development Status :: 4 - Beta',

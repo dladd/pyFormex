@@ -250,7 +250,7 @@ exitrequested = False
 stepmode = False
 starttime = 0.0
 
-scriptInit = None  # can be set to execute something before each script
+scriptInit = None # can be set to execute something before each script
 
 # BV: do we need this??
 #pye = False
@@ -262,12 +262,7 @@ def scriptLock(id):
 def scriptRelease(id):
     pf.debug("Releasing script lock %s" %id,pf.DEBUG.SCRIPT)
     pf.scriptlock -= set([id])
-    
 
-def executeScript(scr,glob):
-    """Execute a Python script in specified globals."""
-    exec scr in glob
-    
  
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -420,6 +415,66 @@ def stopatbreakpt():
     """Set the exitrequested flag."""
     global exitrequested
     exitrequested = True
+    
+
+def convertPrintSyntax(filename):
+    """Convert a script to using the print function"""
+    sta,out = utils.runCommand("2to3 -f print -wn %s" % filename)
+    if sta:
+        # Conversion error: show what is going on
+        print(out)
+    return sta == 0
+    
+
+def checkPrintSyntax(filename):
+    """Check whether the script in the given files uses print function syntax.
+
+    Returns the compiled object if no error was found during compiling.
+    Returns the filename if an error was found and correction has been
+    attempted.
+    Raises an exception if an error is found and no correction attempted.
+    """
+    with open(filename,'r') as f:
+        try:
+            script = f.read()
+            scr = compile(script,filename,'exec')
+            return scr
+        except SyntaxError as err:
+            if re.compile('.*print +[^ (]').match(err.text):
+                ans = pf.warning("""..
+
+Syntax error in line %s of %s::
+
+  %s
+
+It looks like your are using a print statement instead of the print function.
+In order to prepare you for the future (Python3), pyFormex already enforces
+the use of the print function.
+This means that you have to change any print statement from::
+
+    print something
+
+into a print function call::
+
+    print(something)
+
+You can try an automatic conversion with the command::
+
+    2to3 -f print -%s
+    
+If you want, I can run this command for you now. Beware though!
+This will overwrite the contents of file %s.
+
+Also, the automatic conversion is not guaranteed to work, because
+there may be other errors.
+""" % (err.lineno,err.filename,err.text,filename,filename),actions=['Not this time','Convert now'],)
+                if ans == 'Convert now':
+                    print(ans)
+                    if convertPrintSyntax(filename):
+                        message("Script properly converted, now running the converted script")
+                        return filename
+                raise
+
 
 
 def runScript(fn,argv=[]):
@@ -437,6 +492,13 @@ def runScript(fn,argv=[]):
     message("Running script (%s)" % fn)
     pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
+    if pf.GUI and getcfg('check_print'):
+        pf.debug("Testing script for use of print function",pf.DEBUG.SCRIPT)
+        scr = checkPrintSyntax(fn)
+        #
+        # TODO: if scr is a compiled object, we could just execute it
+        #
+
     res = playScript(file(fn,'r'),fn,fn,argv,pye)
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
