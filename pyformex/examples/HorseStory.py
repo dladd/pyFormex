@@ -1,4 +1,4 @@
-# $Id$ *** pyformex ***
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -24,70 +24,78 @@
 ##
 """Horse
 
-level = 'normal'
-topics = ['surface']
-techniques = ['animation','colors'] 
-
 This script reads horse.pgf, transforms it into a surface,
 loads the surface plugin and cuts the horse in a number of surfaces.
 """
 from __future__ import print_function
+_status = 'checked'
+_level = 'normal'
+_topics = ['surface']
+_techniques = ['animation','colors'] 
 
+from gui.draw import *
 from plugins.trisurface import TriSurface
 
-reset()
-wireframe()
 
-x = 20
-y = pf.canvas.height()-20
-
-def say(text):
+def run():
     global y
-    drawText(text,x,y)
-    y -=20
+    reset()
+    wireframe()
 
-pf.message('Click Step to continue')
+    x = 20
+    y = pf.canvas.height()-20
 
-say('A Horse Story...')
-y -= 10
-F = Formex.read(getcfg('datadir')+'/horse.pgf')
-A = draw(F)
-pause()
+    def say(text):
+        global y
+        drawText(text,x,y)
+        y -=20
 
-say('It\'s rather sad, but')
-smooth()
-pause()
+    pf.message('Click Step to continue')
 
+    say('A Horse Story...')
+    y -= 10
+    F = Formex.read(getcfg('datadir')+'/horse.pgf')
+    A = draw(F)
+    pause()
 
-say('the horse was badly cut;')
-T = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],'+')
-undraw(A)
-A = draw(T)
-pause()
-
-
-say('to keep it stable,')
-undraw(A)
-A = draw(T.rotate(-80))
-pause()
+    say('It\'s rather sad, but')
+    smooth()
+    pause()
 
 
-say('the doctors were able')
-undraw(A)
-A = draw(T)
-pause()
-
-
-say('to add a mirrored clone:')
-T += T.reflect(0)
-undraw(A)
-A = draw(T)
-pause()
-
-say('A method as yet unknown!')
-colors = 0.1 * random.random((10,3))
-for color in colors:
-    B = draw(T,color=color)
+    say('the horse was badly cut;')
+    T = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],'+')
     undraw(A)
-    A = B
-    sleep(0.5)
+    A = draw(T)
+    pause()
+
+
+    say('to keep it stable,')
+    undraw(A)
+    A = draw(T.rotate(-80))
+    pause()
+
+
+    say('the doctors were able')
+    undraw(A)
+    A = draw(T)
+    pause()
+
+
+    say('to add a mirrored clone:')
+    T += T.reflect(0)
+    undraw(A)
+    A = draw(T)
+    pause()
+
+    say('A method as yet unknown!')
+    colors = 0.1 * random.random((10,3))
+    for color in colors:
+        B = draw(T,color=color)
+        undraw(A)
+        A = B
+        pause(0.5)
+
+if __name__ == 'draw':
+    run()
+# End

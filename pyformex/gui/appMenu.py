@@ -38,7 +38,7 @@ import menu
 import os,random
 from gettext import gettext as _
     
-catname = '.apps.cat'
+catname = 'apps.cat'
 
 
 def sortSets(d):
@@ -361,14 +361,17 @@ class AppMenu(QtGui.QMenu):
             
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
-        
+
+# BV: Removed the runall options, since these were only introduced
+#     for testing, and should not be in release 1.0
+#
         if self.dir:
             self.addSeparator()
-            self.addAction('Run next app',self.runNext)
-            self.addAction('Run all following apps',self.runAllNext)
-            self.addAction('Run all apps',self.runAll)
-            self.addAction('Run a random app',self.runRandom)
-            self.addAction('Run all in random order',self.runAllRandom)
+#            self.addAction('Run next app',self.runNext)
+#            self.addAction('Run all following apps',self.runAllNext)
+#            self.addAction('Run all apps',self.runAll)
+#            self.addAction('Run a random app',self.runRandom)
+#            self.addAction('Run all in random order',self.runAllRandom)
         self.current = ""
 
 
@@ -470,9 +473,10 @@ class AppMenu(QtGui.QMenu):
 
         The sequence is specified as a list of indices in the self.fiels list.
         """
-        from gui.draw import layout
+        from gui.draw import layout,reset
         for i in seq:
             layout(1)
+            reset()
             self.runApp(self.files[i])
        
 
@@ -489,6 +493,17 @@ class AppMenu(QtGui.QMenu):
         """Run a random script."""
         i = random.randint(0,len(self.files)-1)
         self.runMany([i])
+
+
+    def runAllAtOnce(self,recursive=True):
+        """Run all examples in the appmenu
+
+        If recursive is True (default), alsot the apps in the
+        submenus are executed.
+        """
+        self.runAll()
+        for m in self.menus:
+            m.runAllAtOnce(recursive=recursive)
 
 
     def runAll(self,first=0,last=None):
@@ -701,6 +716,7 @@ def reloadMenu(mode='app'):
             import apps
             apps.setAppDirs()
         newmenu = createMenu(pf.GUI.menu,before,mode=mode)
- 
-    
+
+
+
 # End

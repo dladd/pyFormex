@@ -487,9 +487,12 @@ def runScript(fn,argv=[]):
     """
     from timer import Timer
     t = Timer()
+    msg = "Running script (%s)" % fn
     if pf.GUI:
         pf.GUI.history.add(fn)
-    message("Running script (%s)" % fn)
+        pf.board.write(msg,color='red')
+    else:
+        message(msg)
     pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
     if pf.GUI and getcfg('check_print'):
@@ -501,7 +504,11 @@ def runScript(fn,argv=[]):
 
     res = playScript(file(fn,'r'),fn,fn,argv,pye)
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
-    message("Finished script %s in %s seconds" % (fn,t.seconds()))
+    msg = "Finished script %s in %s seconds" % (fn,t.seconds())
+    if pf.GUI:
+        pf.board.write(msg,color='red')
+    else:
+        message(msg)
     return res
 
 
@@ -543,12 +550,15 @@ def runApp(appname,argv=[],refresh=False):
     if hasattr(app,'_status') and app._status == 'unchecked':
         pf.warning("This looks like an Example script that has been automatically converted to the pyFormex Application model, but has not been checked yet as to whether it is working correctly in App mode.\nYou can help here by running and rerunning the example, checking that it works correctly, and where needed fixing it (or reporting the failure to us). If the example runs well, you can change its status to 'checked'")
 
-    
     scriptLock('__auto__')
+    msg = "Running application '%s' from %s" % (appname,app.__file__)
+    pf.scriptName = appname
     if pf.GUI:
         pf.GUI.startRun()
         pf.GUI.apphistory.add(appname)
-    message("Running application '%s' from %s" % (appname,app.__file__))
+        pf.board.write(msg,color='green')
+    else:
+        message(msg)
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
@@ -570,7 +580,11 @@ def runApp(appname,argv=[],refresh=False):
             pf.GUI.stopRun()
 
     pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
-    message("Finished %s in %s seconds" % (appname,t.seconds()))
+    msg = "Finished %s in %s seconds" % (appname,t.seconds())
+    if pf.GUI:
+        pf.board.write(msg,color='green')
+    else:
+        message(msg)
     pf.debug("Memory: %s" % vmSize(),pf.DEBUG.MEM)
 
 

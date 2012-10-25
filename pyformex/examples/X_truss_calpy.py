@@ -137,7 +137,7 @@ def run():
     stdout_saved = sys.stdout
     sys.stdout = outfile
     print("# File created by pyFormex on %s" % time.ctime())
-    print("# Script name: %s" % pf.scriptName)
+    print("# App/script: %s" % __file__)
     displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
     print("# Analysis finished on %s" % time.ctime())
     sys.stdout = stdout_saved

@@ -97,11 +97,10 @@ def run():
     setDrawOptions({'bbox':None})
 
     cmap = colormap() * 2
-    print(cmap)
-    n = min(len(C.coords),cmap)
+    n = min(len(C.coords),len(cmap))
     dmax = 7 # maximum Nurbs degree we can draw in OpenGL
     for d in range(1,n):
-        print(d)
+        print("Degree %s" % d)
         c = cmap[ (d-1) % len(cmap) ] # wrap around if color map is too short
         N = NurbsCurve(C.coords,degree=d)
         if d <= dmax:

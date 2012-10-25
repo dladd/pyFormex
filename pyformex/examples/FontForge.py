@@ -28,7 +28,6 @@ able to run it, you need to have the FontForge library and its Python bindings
 installed. On Debian GNU/Linux you can achieve this by installing the package
 'python-fontforge'.
 
-
 """
 from __future__ import print_function
 _status = 'checked'
@@ -202,6 +201,7 @@ extra_fonts = odict.ODict([
 fonts = []
 
 def run():
+    global fonts
     if not fonts:
         fonts = utils.listFontFiles() + [
             f for f in extra_fonts if os.path.exists(f) ]

@@ -122,7 +122,7 @@ class BaseMenu(object):
     def item(self,text):
         """Return the item with specified text.
 
-        For a normal action or a separator, an qction is returned.
+        For a normal action or a separator, an action is returned.
         For a menu action, a menu is returned.
         """
         i = self.index(text)
@@ -135,7 +135,6 @@ class BaseMenu(object):
                 return a
         else:
             return self.separators.get(utils.strNorm(text),None)
-        
 
 
     def nextitem(self,text):
@@ -155,15 +154,12 @@ class BaseMenu(object):
 
     def removeItem(self,item):
         """Remove an item from this menu."""
-        #print self.actionList()
         action = self.action(item)
         if action:
-            #print "INDEED REMOVING %s = %s" % (item,action)
             self.removeAction(action)
             if isinstance(action,QtGui.QMenu):
                 action.close()
                 del action
-        #print self.actionList()
     
     # The need for the following functions demonstrates how much more
     # powerful a dynamically typed language as Python is as compared to
@@ -187,7 +183,6 @@ class BaseMenu(object):
         if before:
             return self.insertAction(before,action)
         else:
-            #print ("ADDING SAVED ACTION %s" % action)
             self._actions_.append(action)
             return self.addAction(action)
 
@@ -258,7 +253,6 @@ class BaseMenu(object):
                 else:
                     if before is not None:
                         raise RuntimeError,"I can not insert a QAction menu item before an existing one."
-                    #print ("CREATE %s,%s,%s" % (txt,val,before))
                     a = self.create_insert_action(txt,val,before)
                 for k,v in options.items():                        
                     if k == 'icon':
@@ -510,10 +504,23 @@ def unloadCurrentApp():
     import apps
     apps.unload(appname)
     
+    
 def printSysPath():
     import sys
     print(sys.path)
+
+
+def runAllExamples():
+    print(type(pf.GUI.appmenu))
+    m = pf.GUI.appmenu.item('Examples')
+    res =draw.askItems([('Toggle timeout?',True)])
+    if not res:
+        return
+    from toolbar import timeout
+    timeout(res['Toggle timeout?'])
+    m.runAllAtOnce(recursive=True)
     
+
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""
 
@@ -523,8 +530,10 @@ def createMenuData():
         (_('&Step'),draw.step),
         (_('&Continue'),draw.fforward), 
         (_('&Stop'),draw.raiseExit),
+        ("---",None),
         # (_('&Edit',fileMenu.editApp),   # is in file menu
         (_('&App Info'),draw.showDoc),
+        (_('&Run All Examples'),runAllExamples),
         ("---",None),
         ## (_('&Reset Picking Mode'),resetPick),
         (_('&Reset GUI'),draw.resetGUI),

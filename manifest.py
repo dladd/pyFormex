@@ -221,12 +221,12 @@ DIST_FILES = [
              excludefiles=['.*~$'],
              ) + \
     listTree('pyformex/examples',listdirs=False,sorted=True,
-             excludedirs=['.svn'],
+             excludedirs=['.svn','Demos'],
              excludefiles=['.*\.pyc','.*~$',
-                           'NurbsCircle.py',  # missing nurbs
-                           'NurbsSurface.py',     # idem                         
+#                           'NurbsCircle.py',  # missing nurbs
+#                           'NurbsSurface.py',     # idem
                            ],
-             includefiles=['[_A-Z].*\.py$','scripts.cat','README']
+             includefiles=['[_A-Z].*\.py$','apps.cat','README']
              ) + \
     DATA_FILES + \
     DOC_FILES + \
