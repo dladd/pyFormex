@@ -513,12 +513,16 @@ def printSysPath():
 def runAllExamples():
     print(type(pf.GUI.appmenu))
     m = pf.GUI.appmenu.item('Examples')
-    res =draw.askItems([('Toggle timeout?',True)])
+    res =draw.askItems([
+        ('Toggle timeout',True),
+        ('Random order',True),
+        ('Maximum count',-1),
+        ])
     if not res:
         return
     from toolbar import timeout
-    timeout(res['Toggle timeout?'])
-    m.runAllAtOnce(recursive=True)
+    timeout(res['Toggle timeout'])
+    m.runAll(recursive=True,random=res['Random order'])
     
 
 def createMenuData():

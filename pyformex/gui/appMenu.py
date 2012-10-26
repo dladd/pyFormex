@@ -466,74 +466,61 @@ class AppMenu(QtGui.QMenu):
                 appname = self.fileName(app)
             pf.debug("Running application %s" % appname,pf.DEBUG.APPS|pf.DEBUG.MENU)
             script.runAny(appname)
-        
 
-    def runMany(self,seq):
-        """Run a sequence of apps.
 
-        The sequence is specified as a list of indices in the self.fiels list.
+    def runAll(self,first=0,last=None,random=True,count=-1,recursive=True):
+        """Run all apps in the range [first,last].
+
+        Runs the apps in the range first:last.
+        If last is None, the length of the file list is used.
+        If count is positive, at most count scripts per submenu are executed.
+        Notice that the range is Python style.
+        If rand is True, the files are shuffled before running.
+        If recursive is True, also the files in submenu are played.
+        The first and last arguments do not apply to the submenus.
+     
         """
         from gui.draw import layout,reset
-        for i in seq:
+        if last is None:
+            last = len(self.files)
+        if count > 0:
+            last = min(last,first+count)
+        files = self.files[first:last]
+        if random:
+            import random as r
+            r.shuffle(files)
+        for f in files:
             layout(1)
             reset()
-            self.runApp(self.files[i])
-       
+            self.runApp(f)
+        if recursive:
+            for m in self.menus:
+                m.runAll(recursive=recursive,random=random)
+      
 
-    def runNext(self):
-        """Run the next app, or the first if none was played yet."""
+    def runNext(self,count=-1):
+        """Run the current app and the following ones.
+
+        If a positive count is specified, at most count scripts
+        will be run.
+        """
         try:
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
-        self.runMany([i])
+        self.runAll(first=i,count=count)
+        
 
+    def runCurrent(self):
+        """Run the current app, or the first if none was played yet."""
+        self.runNext(1)
+         
 
     def runRandom(self):
         """Run a random script."""
         i = random.randint(0,len(self.files)-1)
         self.runMany([i])
 
-
-    def runAllAtOnce(self,recursive=True):
-        """Run all examples in the appmenu
-
-        If recursive is True (default), alsot the apps in the
-        submenus are executed.
-        """
-        self.runAll()
-        for m in self.menus:
-            m.runAllAtOnce(recursive=recursive)
-
-
-    def runAll(self,first=0,last=None):
-        """Run all apps in the range [first,last].
-
-        If last is None, the length of the file list is used.
-        Notice that the range is Python style.
-        """
-        if last is None:
-            last = len(self.files)
-        self.runMany(range(first,last))
-
-
-    def runAllNext(self):
-        """Run all the next apps, starting with the current one.
-
-        If there is no current, start  from the first.
-        """
-        try:
-            i = self.files.index(self.current)
-        except ValueError:
-            i = 0
-        self.runMany(range(i,len(self.files)))
-
-
-    def runAllRandom(self):
-        """Run all scripts in a random order."""
-        order = range(len(self.files))
-        random.shuffle(order)
-        self.runMany(order)
 
 
     def reload(self):

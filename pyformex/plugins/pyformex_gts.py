@@ -32,7 +32,6 @@ import pyformex as pf
 from coords import *
 import utils
 import os
-import tempfile
 from plugins.trisurface import TriSurface,read_gts_intersectioncurve
 
 utils.hasExternal('gts')
@@ -109,9 +108,9 @@ def gtsset(self,surf,op,filt='',ext='.tmp',curve=False,check=False,verbose=False
         options += ' -s'
     if not verbose:
         options += ' -v'
-    tmp = tempfile.mktemp('.gts')
-    tmp1 = tempfile.mktemp('.gts')
-    tmp2 = tempfile.mktemp(ext)
+    tmp = utils.tempFile(suffix='.gts').name
+    tmp1 = utils.tempFile(suffix='.gts').name
+    tmp2 = utils.tempFile(suffix=ext).name
     pf.message("Writing temp file %s" % tmp)
     self.write(tmp,'gts')
     pf.message("Writing temp file %s" % tmp1)
@@ -141,11 +140,13 @@ def gtsinside(self,pts,dir=0):
     Returns a list of point numbers that are inside.
     This is not intended to be used directly. Use inside instead
     """
+    import os
+    print(os.environ)
     S = self.rollAxes(dir)
     P = pts.rollAxes(dir)
-    tmp = tempfile.mktemp('.gts')
-    tmp1 = tempfile.mktemp('.dta')
-    tmp2 = tempfile.mktemp('.out')
+    tmp = utils.tempFile(suffix='.gts').name
+    tmp1 = utils.tempFile(suffix='.dta').name
+    tmp2 = utils.tempFile(suffix='.out').name
     pf.message("Writing temp file %s" % tmp)
     S.write(tmp,'gts')
     pf.message("Writing temp file %s" % tmp1)
