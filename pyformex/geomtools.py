@@ -615,7 +615,7 @@ def intersectionSWP(S,p,n,mode='all',return_all=False):
     n = asanyarray(n).reshape(-1,3)
     # Find intersection parameters
     t = intersectionTimesSWP(S,p,n,mode)
-        
+
     if not return_all:
         # Find points inside segments
         ok = (t >= 0.0) * (t <= 1.0)
@@ -625,13 +625,17 @@ def intersectionSWP(S,p,n,mode='all',return_all=False):
         elif mode == 'pair':
             wl = wt = where(ok)[0]
 
-    if mode == 'all':
-        S = S[:,newaxis]
-    x = pointsAtSegments(S,t)
-    
-    if x.ndim == 1:
-        x = x.reshape(1,3)
-        t = t.reshape(1)
+    if len(t) > 0:
+        if mode == 'all':
+            S = S[:,newaxis]
+        x = pointsAtSegments(S,t)
+        if x.ndim == 1:
+            x = x.reshape(1,3)
+        if not return_all:
+            x = x[ok]
+    else:
+        # No intersection: return empty Coords
+        x = Coords()
 
     if return_all:
         return t,x
@@ -652,6 +656,7 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
         return res[1]
     else:
         return res[1:]
+
 
 def intersectionTimesLWT(q,m,F,mode='all'):
     """Return the intersection of lines (q,m) with triangles F.

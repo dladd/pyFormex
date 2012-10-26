@@ -1496,7 +1496,7 @@ class Coords(ndarray):
         cuts = olist.select(cuts,cutid)
                 
         # cut the cuts with second set of planes
-        cuts = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x[cutid]) ]
+        cuts = [ c.toFormex().intersectionWithPlane(xi,v2).coords for c,xi in zip(cuts,x[cutid]) ]
         npts = [ p.shape[0] for p in cuts ]
         okid = [ i for i,n in enumerate(npts) if n > 0 ]
         # remove the empty intersections

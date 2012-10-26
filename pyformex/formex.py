@@ -1900,6 +1900,7 @@ maxprop  = %s
         return connect([A,B])
 
 
+    # TODO: returned Formex could inherit properties of parent
     def intersectionWithPlane(self,p,n):
         """Return the intersection of a Formex with the plane (p,n).
 
@@ -1912,7 +1913,7 @@ maxprop  = %s
         """
         if self.nplex() == 2:
             from geomtools import intersectionSWP
-            return intersectionSWP(self.coords,p,n,mode='pair')[1]
+            return Formex(intersectionSWP(self.coords,p,n,mode='pair')[1])
         elif self.nplex() == 3:
             return Formex(intersectionLinesWithPlane(self,p,n))
         else:
@@ -1920,7 +1921,7 @@ maxprop  = %s
             raise ValueError,"Formex should be plex-2 or plex-3"
     
 
-    # Removed in 0.9
+    # Removed in 0.8.7
     
     ## @deprecation("\nUse Formex.intersectionWithPlane() instead.")
     ## def intersectionPointsWithPlane(self,p,n):
@@ -2132,7 +2133,7 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     return Formex(f)
 
 
-def interpolate(F,G,div,swap=False):
+def interpolate(F,G,div,swap=False,concat=True):
     """Create interpolations between two formices.
 
     F and G are two Formices with the same shape.
