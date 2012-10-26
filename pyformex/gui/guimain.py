@@ -244,6 +244,7 @@ class Gui(QtGui.QMainWindow):
         pf.debug('Creating ToolBar',pf.DEBUG.GUI)
         self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
+        
         # Create a box for the central widget
         self.box = QtGui.QWidget()
         self.setCentralWidget(self.box)
@@ -257,7 +258,8 @@ class Gui(QtGui.QMainWindow):
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
 
-        # self.central is the complete central widget of the main window
+        # self.central is the central widget of the main window
+        # self.viewports is its layout, containing multiple viewports 
         pf.debug('Creating Central Widget',pf.DEBUG.GUI)
         self.central = QtGui.QWidget()
         self.central.autoFillBackground()
@@ -570,14 +572,16 @@ class Gui(QtGui.QMainWindow):
         for vp in self.viewports.all:
             vp.trackfunc = func
         self.coordsbox.setVisible(onoff)
-         
-    
-    def resizeCanvas(self,wd,ht):
-        """Resize the canvas."""
-        self.central.resize(wd,ht)
-        self.box.resize(wd,ht+self.board.height())
-        self.adjustSize()
-        print("RESIZED",Pos(self))
+
+
+    def maxCanvasSize(self):
+        """Return the maximum canvas size.
+
+        The maximum canvas size is the size of the central space in the
+        main window, occupied by the OpenGL viewports.
+        """
+        return Size(pf.GUI.central)
+
     
     def showEditor(self):
         """Start the editor."""

@@ -103,6 +103,7 @@ Release 0.9
   :sta: Partially implemented via the stepScript() function
   :rem: Only works for simple scripts where each part between draw() 
     instructions can be executed separately.
+    **DEPRECATED* Use pause/delay instead
       
 **Display camera settings**
   :rem:  This could be made part of a generalized 'Camera handling'
@@ -143,12 +144,10 @@ Release 0.9
 **Complete the Coords.fromfile and Formex.fromfile arguments**
 
 **Add DEBUG LEVEL to all debug statements**
-  :sta: PARTIAL
+  :sta: DONE
       
 Release 0.9.1
 -------------
-
-**Remove the old InputDialog**
 
 **Finish the tutorial and user guide**
 

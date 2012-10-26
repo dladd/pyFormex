@@ -32,11 +32,11 @@ _topics = ['geometry']
 _techniques = ['dialog', 'animation', 'color', 'import', 'connect', 'interpolate']
 
 from gui.draw import *
+import simple
 
 roof = None
 
 def createRoof():
-    import simple
     global roof
     
     dx = 180 # Modular size (cm)
@@ -100,7 +100,7 @@ def run():
         # create a bottom plate
         B = simple.rectangle(1,1).swapAxes(1,2).centered().scale(F.sizes()[0]*1.5)
         smooth()
-        draw(B)
+        draw(B,color='slategrey')
         # Fly at reasonable height
         bb[0,1] = bb[1,1] = 170.
         ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.6])

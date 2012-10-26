@@ -329,6 +329,33 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.resetOptions()
 
 
+    def getSize(self):
+        """Return the size of this canvas"""
+        from guimain import Size
+        return Size(self)
+
+
+    # TODO: negative sizes should probably resize all viewports
+    # OR we need to implement frames
+    def changeSize(self,width,height):
+        """Resize the canvas to (width x height).
+
+        If a negative value is given for either width or height,
+        the corresponding size is set equal to the maximum visible size
+        (the size of the central widget of the main window).
+
+        Note that this may not have the expected result when multiple
+        viewports are used. 
+        """
+        if width < 0 or height < 0:
+            w,h = pf.GUI.maxCanvasSize()
+            if width < 0:
+                width = w
+            if height < 0:
+                height = h
+        self.resize(width,height)        
+
+
     def getPickModes(self):
         return self.pick_func.keys()
 
@@ -849,9 +876,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def	paintGL(self):
         if not self.mode2D:
             self.display()
-
-    def getSize(self):
-        return int(self.width()),int(self.height())
 
 ####### MOUSE EVENT HANDLERS ############################
 
@@ -1498,6 +1522,7 @@ class FramedGridLayout(QtGui.QGridLayout):
     def __init__(self,parent=None):
         """Initialize the multicanvas."""
         QtGui.QGridLayout.__init__(self)
+        self.setContentsMargins(0,0,0,0)
  #       self.frames = []
 
 

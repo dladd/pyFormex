@@ -271,32 +271,25 @@ def askItems(items,caption=None,timeout=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
-    'items' is a list of input items (basically [key,value] pairs).
+    The items are specified as a list of dictionaries. Each dictionary
+    contains the input arguments for a widgets.InputItem. It is often
+    convenient to use one of the _I, _G, ot _T functions to create these
+    dictionaries. These will respectively create the input for a
+    simpleInputItem, a groupInputItem or a tabInputItem.
+
+    For convenience, simple items can also be specified as a tuple.
+    A tuple (key,value) will be transformed to a dict
+    {'key':key, 'value':value}.
+    
     See the widgets.InputDialog class for complete description of the
     available input items.
 
-    Two InputDialog classes are defined in gui.widgets.
-    The OldInputDialog class is deprecated in favor of InputDialog, which
-    has become the default as of pyFormex 0.8.3.
-    The two classes differ in how the input is specified.
-    In the new format, each input item is either a simpleInputItem, a
-    groupInputItem or a tabInputItem.
-    
-    You can specify 'legacy=False' to indicate that you are using the new
-    format, or 'legacy=True' if your data are in the old format.
-    The default ('legacy = None'), will make this function try to detect
-    the format and convert the input items to the proper new format.
-    This conversion will work on most, but not all legacy formats that
-    have been used in the past by pyFormex.
-    Since the legacy format is scheduled to be withdrawn in future, users
-    are encouraged to change their input to the new format.
-
     The remaining arguments are keyword arguments that are passed to the
-    InputDialog.getResult method.
+    widgets.InputDialog.getResult method.
     A timeout (in seconds) can be specified to have the input dialog
     interrupted automatically.
 
-    Return a dictionary with the results: for each input item there is a
+    Returns a dictionary with the results: for each input item there is a
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     """
@@ -741,10 +734,12 @@ def showDrawOptions():
 
 def reset():
     """reset the canvas"""
+    clear()
     pf.canvas.resetDefaults()
     pf.canvas.resetOptions()
     pf.GUI.drawwait = pf.cfg['draw/wait']
-    clear()
+    if len(pf.GUI.viewports) == 1:
+        canvasSize(-1,-1)
     view('front')
 
 
@@ -1279,8 +1274,16 @@ def pointsize(siz):
 
 
 def canvasSize(width,height):
-    """Resize the canvas to (width x height)."""
-    pf.canvas.resize(width,height)
+    """Resize the canvas to (width x height).
+
+    If a negative value is given for either width or height,
+    the corresponding size is set equal to the maximum visible size
+    (the size of the central widget of the main window).
+
+    Note that changing the canvas size when multiple viewports are
+    active is not approved.
+    """
+    pf.canvas.changeSize(width,height)
 
 
 def clear_canvas():

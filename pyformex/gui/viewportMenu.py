@@ -140,12 +140,13 @@ def setLineWidth():
     
 def setCanvasSize():
     """Save the current viewport size"""
-    res = draw.askItems(
-        [_I('w',pf.canvas.width()),_I('h',pf.canvas.height())],
-        'Set Canvas Size'
+    res = draw.askItems([
+        _I('w',pf.canvas.width()),
+        _I('h',pf.canvas.height())
+        ],'Set Canvas Size'
         )
     if res:
-        pf.canvas.resize(int(res['w']),int(res['h']))
+        draw.canvasSize(res['w'],res['h'])
 
 
 def canvasSettings():

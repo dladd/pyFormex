@@ -611,10 +611,6 @@ class Canvas(object):
         pf.debug("Canvas Setting:\n%s"% self.settings,pf.DEBUG.DRAW)
 
 
-    def getSize(self):
-        return self.width(),self.height()
-
-
     def enable_lighting(self,state):
         """Toggle lights on/off."""
         if state:
@@ -781,7 +777,7 @@ class Canvas(object):
                 image = image2numpy(self.settings.bgimage,indexed=False)
             except:
                 pass
-            
+        print("BACKGROUN %s,%s"%(x2,y2))
         self.background = decors.Rectangle(x1,y1,x2,y2,color=color,texture=image)
         
 
