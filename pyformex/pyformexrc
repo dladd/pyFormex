@@ -99,6 +99,7 @@ filters = [('.*return_index.*','numpy')]
 fortune = False  # show a fortune cookie on startup
 redirect = True
 history = []
+scripthistory = []
 apphistory = []
 history_max = 20
 

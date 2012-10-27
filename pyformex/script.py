@@ -476,7 +476,6 @@ there may be other errors.
                 raise
 
 
-
 def runScript(fn,argv=[]):
     """Play a formex script from file fn.
 
@@ -489,7 +488,7 @@ def runScript(fn,argv=[]):
     t = Timer()
     msg = "Running script (%s)" % fn
     if pf.GUI:
-        pf.GUI.history.add(fn)
+        pf.GUI.scripthistory.add(fn)
         pf.board.write(msg,color='red')
     else:
         message(msg)

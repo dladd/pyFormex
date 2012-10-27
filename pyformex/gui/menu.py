@@ -194,7 +194,6 @@ class BaseMenu(object):
         if before:
             return self.insertAction(before,action)
         else:
-            #self._actions_.append(action)
             return self.addAction(action)
 
     def create_insert_action(self,str,val,before=None):
@@ -270,6 +269,9 @@ class BaseMenu(object):
                     a = DAction(txt,data = options['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
+                    # We need to store the DActions, or else they are
+                    # destroyed. QActions are stroed by Qt
+                    self._actions_.append(a)
                 else:
                     if debug:
                         print("INSERTING QAction %s" % txt)

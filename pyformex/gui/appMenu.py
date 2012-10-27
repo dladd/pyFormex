@@ -606,14 +606,7 @@ class AppMenu(menu.Menu):
 from prefMenu import setDirs
 
  
-def createMenu(parent=None,before=None,mode='app'):
-    if mode == 'app':
-        return createAppMenu(parent,before)
-    else:
-        return createScriptMenu(parent,before)
-
- 
-def createAppMenu(parent=None,before=None):
+def createAppMenu(mode='app',parent=None,before=None):
     """Create the menu(s) with pyFormex apps
 
     This creates a menu with all examples distributed with pyFormex.
@@ -628,68 +621,50 @@ def createAppMenu(parent=None,before=None):
     If a menu item named 'Examples' or 'Apps' already exists, it is
     replaced.
     """
-    import sys
-    from odict import ODict
-    appmenu = menu.Menu('&Apps',parent=parent,before=before)
-    
-    # Go ahead and load the apps
-    for d in pf.appdirs:
-        pf.debug("Loading %s" % d,pf.DEBUG.MENU)
-        m = AppMenu(d.name,dir=d.path,autoplay=True,parent=appmenu)
- 
-    pf.GUI.apphistory = AppMenu('Last Run',files=pf.cfg['gui/apphistory'],max=pf.cfg['gui/history_max'],parent=appmenu)
-    
-    appmenu.insertItems([
-        ('---',None),
-        (_('&Configure App Paths'),setDirs,{'data':'appdirs'}),
-        (_('&List loaded Apps'),script.printLoadedApps),
-        (_('&Unload Current App'),menu.unloadCurrentApp),
-        (_('&Reload App Menu'),reloadMenu,{'data':'app'}),
-        ])
-    
-    return appmenu
+    #print("LOADING %s MENU"% mode) 
+    appmenu = menu.Menu('&%s'%mode.capitalize(),parent=parent,before=before)
 
-
-def createScriptMenu(parent=None,before=None):
-    """Create the menu(s) with pyFormex scripts
-
-    This creates a menu with all examples distributed with pyFormex.
-    By default, this menu is put in the top menu bar with menu label 'Examples'.
-
-    The user can add his own script directories through the configuration
-    settings. In that case the 'Examples' menu and menus for all the
-    configured script paths will be gathered in a top level popup menu labeled
-    'Scripts'.
-
-    The menu will be placed in the top menu bar before the specified item.
-    If a menu item named 'Examples' or 'Scripts' already exists, it is
-    replaced.
-    """
-    from odict import ODict
-    appmenu = menu.Menu('&Scripts',parent=parent,before=before)
-    # Create a copy to leave the cfg unchanged!
-    scriptdirs = [] + pf.cfg['scriptdirs']
+    if mode == 'apps':
+        appdirs = [ (d.name,d.path) for s in pf.appdirs ]
+    else:
+        appdirs = pf.cfg['scriptdirs']
+        
     # Fill in missing default locations : this enables the user
     # to keep the pyFormex installed examples in his config
-    knownscriptdirs = { 'examples': pf.cfg['examplesdir'] }
-    for i,item in enumerate(scriptdirs):
-        if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
-            scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
+    guessName = lambda n,s: s if len(s) > 0 else pf.cfg['%sdir' % n.lower()]
+    #print(pf.cfg['examplesdir'])
+    #print("GUESS %s %s" % ('examples',guessName('Examples','')))
+    #print("LOADING APPDIRS",appdirs) 
+    appdirs = [ (d[0],guessName(*d)) for d in appdirs ]
+    #print("LOADING APPDIRS",appdirs) 
+    appdirs = [ d for d in appdirs if d[1] is not None and len(d[1]) > 0 ] # may be removed?
+    #print("LOADING APPDIRS",appdirs) 
+    appdirs = [ d for d in appdirs if os.path.exists(d[1]) ]
+    #print("LOADING APPDIRS",appdirs) 
+    for name,path in appdirs:
+        pf.debug("Loading menu %s from %s" % (name,path),pf.DEBUG.MENU)
+        m = AppMenu(name,path,mode=mode,autoplay=True,parent=appmenu)
+ 
+    history = AppMenu('History',files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],parent=appmenu)
+    
+    setattr(pf.GUI,'%shistory'%mode,history)
 
-    for txt,dirname in scriptdirs:
-        pf.debug("Loading script dir %s" % dirname,pf.DEBUG.SCRIPT)
-        if os.path.exists(dirname):
-            m = AppMenu(txt,dir=dirname,mode='script',autoplay=True,parent=appmenu)
     #print("BEFORE")
     #appmenu.print_report()
+    Mode = mode.capitalize()
     appmenu.insertItems([
         ('---',None),
-        (_('&Configure Script Paths'),setDirs,{'data':'scriptdirs'}),
-        (_('&Reload Script Menu'),reloadMenu,{'data':'script'}),
-        ])#,debug=True)
+        (_('&Configure %s Paths'%Mode),setDirs,{'data':'%sdirs'%mode}),
+        (_('&Reload %s Menu'%Mode),reloadMenu,{'data':mode}),
+        ])
     #print("AFTER")
     #appmenu.print_report()
-
+    if mode == 'app':
+        appmenu.insertItems([
+            (_('&List loaded Apps'),script.printLoadedApps),
+            (_('&Unload Current App'),menu.unloadCurrentApp),
+            ])
+    
     return appmenu
 
 

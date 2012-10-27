@@ -387,7 +387,7 @@ def openScript(fn=None,exist=True,create=False):
                 shutil.copyfile(template,fn)
         updateSettings({'workdir':os.path.dirname(fn)},save=True)
         pf.GUI.setcurfile(fn)
-        pf.GUI.history.add(fn)
+        pf.GUI.scripthistory.add(fn)
         if create:
             draw.editFile(fn)
     return fn

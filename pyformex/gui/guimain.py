@@ -724,7 +724,7 @@ class Gui(QtGui.QMainWindow):
         self.move(*self.XPos())
 
         # store the history and main window size/pos
-        pf.prefcfg['gui/history'] = pf.GUI.history.files
+        pf.prefcfg['gui/scripthistory'] = pf.GUI.scripthistory.files
         pf.prefcfg['gui/apphistory'] = pf.GUI.apphistory.files
 
         pf.prefcfg.update({'size':Size(pf.GUI),
@@ -1319,13 +1319,13 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # History Menu
     parent = pf.GUI.menu.item('file')
     before = parent.item('---1')
-    pf.GUI.history = appMenu.AppMenu('History',files=pf.cfg['gui/history'],mode='script',max=pf.cfg['gui/history_max'],parent=parent,before=before)
+    #pf.GUI.scripthistory = appMenu.AppMenu('History',files=pf.cfg['gui/scripthistory'],mode='script',max=pf.cfg['gui/history_max'],parent=parent,before=before)
 
     # Scripts menu
-    pf.GUI.scriptmenu = appMenu.createMenu(pf.GUI.menu,mode='script',before='help')
+    pf.GUI.scriptmenu = appMenu.createAppMenu(mode='script',parent=pf.GUI.menu,before='help')
 
     # App menu
-    pf.GUI.appmenu = appMenu.createMenu(pf.GUI.menu,before='help')
+    pf.GUI.appmenu = appMenu.createAppMenu(parent=pf.GUI.menu,before='help')
 
     # Create databases
     createDatabases()
