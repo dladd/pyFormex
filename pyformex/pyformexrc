@@ -120,6 +120,7 @@ cameramenu = True    # add camera menu
 modemenu = True      # add rendermode menu
 viewmenu = True      # add views menu
 examplesmenu = True  # add examples menu
+runalloption = False # add a menu option to run all scripts
 
 camerabar = 'top'     # add camera toolbar to top toolbar space
 modebar = 'top'       # add rendemode toolbar to top toolbar space

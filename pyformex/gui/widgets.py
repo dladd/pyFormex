@@ -442,12 +442,12 @@ class InputText(InputItem):
             except:
                 pass
         if 'size' in kargs:
-            self.size = kargs['size']
+            self._size = kargs['size']
 
 
     def sizeHint(self):
-        if hasattr(self,'size'):
-            width,height = self.size
+        if hasattr(self,'_size'):
+            width,height = self._size
             docsize = self.input.document().size().toSize()
             #print "docsize = %s" % docsize
             font = self.input.font()

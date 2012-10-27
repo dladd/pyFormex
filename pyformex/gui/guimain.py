@@ -1316,18 +1316,10 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.toggleCoordsTracker(pf.cfg.get('gui/coordsbox',False))
     pf.debug("Using window name %s" % pf.GUI.windowTitle(),pf.DEBUG.GUI)
     
-    # Create additional menus (put them in a list to save)
-    
     # History Menu
-    pf.GUI.history = appMenu.AppMenu('History',files=pf.cfg['gui/history'],mode='script',max=pf.cfg['gui/history_max'])
-
-    if pf.cfg.get('gui/history_in_main_menu',False):
-        before = pf.GUI.menu.item('help')
-        pf.GUI.menu.insertMenu(before,pf.GUI.history)
-    else:
-        filemenu = pf.GUI.menu.item('file')
-        before = filemenu.item('---1')
-        filemenu.insertMenu(before,pf.GUI.history)
+    parent = pf.GUI.menu.item('file')
+    before = parent.item('---1')
+    pf.GUI.history = appMenu.AppMenu('History',files=pf.cfg['gui/history'],mode='script',max=pf.cfg['gui/history_max'],parent=parent,before=before)
 
     # Scripts menu
     pf.GUI.scriptmenu = appMenu.createMenu(pf.GUI.menu,mode='script',before='help')

@@ -659,7 +659,10 @@ class PolyLine(Curve):
         X = PL.coords
         if fuse:
             x = Coords.concatenate([self.coords[-1],X[0]])
+            print("NR points:%s" % len(x))
+            print(x)
             x,e = x.fuse(ppb=3) # !!! YES ! > 2 !!!
+            print(x,e)
             if e[0] == e[1]:
                 X = X[1:]
         return PolyLine(Coords.concatenate([self.coords,X]))

@@ -30,7 +30,7 @@ from __future__ import print_function
 import pyformex as pf
 import apps
 
-from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import SIGNAL
 
 import utils,olist
 import script,draw
@@ -83,7 +83,7 @@ def classify(appdir,pkg,nmax=0):
             app = apps.load(pkg+'.'+appname)
         except:
             app = failed
-            print("Failed to load app '%s'" % (pkg+'.'+appname))
+            print("Failed to load app '%s'" % (str(pkg)+'.'+appname))
             
         for k in kat:
             if hasattr(app,'_'+k):
@@ -169,7 +169,7 @@ def splitAlpha(strings,n):
     return cat,grp
 
 
-class AppMenu(QtGui.QMenu):
+class AppMenu(menu.Menu):
     """A menu of pyFormex applications in a directory or list.
 
     This class creates a menu of pyFormex applications or scripts
@@ -227,7 +227,8 @@ class AppMenu(QtGui.QMenu):
 
     ::
 
-      AppMenu('History',files=["/my/script1.py","/some/other/script.pye"],mode='script',recursive=False)
+      AppMenu('History',files=["/my/script1.py","/some/other/script.pye"],\
+          mode='script',recursive=False)
 
     is typically used to create a history menu of previously visited script
     files.
@@ -266,9 +267,9 @@ class AppMenu(QtGui.QMenu):
     when you created a new script file.
     """
     
-    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True):
+    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True,parent=None,before=None):
         """Create a menu with pyFormex apps/scripts to play."""
-        QtGui.QMenu.__init__(self,title)
+        menu.Menu.__init__(self,title,parent=parent,before=before)
         self.dir = dir
         self.files = files
         if self.dir is None and self.files is None:
@@ -286,12 +287,36 @@ class AppMenu(QtGui.QMenu):
         self.toplevel = toplevel
         self.max = max
         self.autoplay = autoplay
-        self.menus = []
         if self.dir and self.mode == 'app':
             self.pkg = os.path.basename(self.dir)
         else:
             self.pkg = None
         self.load()
+
+
+    def loadCatalog(self):
+        catfile = os.path.join(self.dir,catname)
+        if os.path.exists(catfile):
+            pf.execFile(catfile,globals())
+            for k in kat:
+                if k == 'all_apps' and self.mode != 'app':
+                    files = col[k]
+                else:
+                    files = []
+                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=self)
+                for i in cat[k]:
+                    if '-' in i:
+                        # alpha label like A-B
+                        lbl = i
+                    else:
+                        # string from catalog file
+                        lbl = i.capitalize()
+                    ki = '%s/%s' % (k,i)
+                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk)
+
+            self.files = []
+            return True
+        return False
 
 
     def loadSubmenus(self,dirs=[]):
@@ -303,9 +328,7 @@ class AppMenu(QtGui.QMenu):
         dirs = filter(filtr,dirs)
         dirs.sort()
         for d in dirs:
-            m = AppMenu(d,os.path.join(self.dir,d),mode=self.mode,ext=self.ext,autoplay=self.autoplay,recursive=self.recursive)
-            self.addMenu(m)
-            self.menus.append(m)
+            m = AppMenu(d,os.path.join(self.dir,d),mode=self.mode,ext=self.ext,autoplay=self.autoplay,recursive=self.recursive,parent=self)
             
 
     def getFiles(self):
@@ -320,12 +343,6 @@ class AppMenu(QtGui.QMenu):
             files = [ f[:-n] for f in files ]
 
         files = self.filterFiles(files)
-        ## filtr = lambda s:utils.is_pyFormex(self.fileName(s))
-        ## files = filter(filtr,files)
-
-        ## if self.max > 0 and len(files) > self.max:
-        ##     files = files[:self.max]
-
         files.sort()
         return files
 
@@ -359,48 +376,15 @@ class AppMenu(QtGui.QMenu):
 
         pf.debug("Found %ss in %s\n%s" % (self.mode.capitalize(),self.dir,self.files),pf.DEBUG.INFO)
             
-        self.actions = [ self.addAction(f) for f in self.files ]           
-        self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
+        self.my_actions = [ self.addAction(f) for f in self.files ]           
+        self.connect(self,SIGNAL("triggered(QAction*)"),self.run)
 
-# BV: Removed the runall options, since these were only introduced
-#     for testing, and should not be in release 1.0
-#
-        if self.dir:
+        if self.dir and pf.cfg['gui/runalloption']:
             self.addSeparator()
-#            self.addAction('Run next app',self.runNext)
-#            self.addAction('Run all following apps',self.runAllNext)
-#            self.addAction('Run all apps',self.runAll)
-#            self.addAction('Run a random app',self.runRandom)
-#            self.addAction('Run all in random order',self.runAllRandom)
+            self.addAction('Run all',self.runAll)
+            self.addAction('Run all next',self.runNext)
+            self.addAction('Run a random app',self.runRandom)
         self.current = ""
-
-
-    def loadCatalog(self):
-        catfile = os.path.join(self.dir,catname)
-        if os.path.exists(catfile):
-            pf.execFile(catfile,globals())
-            for k in kat:
-                if k == 'all_apps' and self.mode != 'app':
-                    files = col[k]
-                else:
-                    files = []
-                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay)
-                for i in cat[k]:
-                    if '-' in i:
-                        # alpha label like A-B
-                        lbl = i
-                    else:
-                        # string from catalog file
-                        lbl = i.capitalize()
-                    ki = '%s/%s' % (k,i)
-                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
-                    mk.addMenu(mi)
-                    mk.menus.append(mi)
-                self.addMenu(mk)
-                self.menus.append(mk)
-            self.files = []
-            return True
-        return False
 
 
     def load(self):
@@ -418,6 +402,7 @@ class AppMenu(QtGui.QMenu):
                 self.loadFiles(self.files)
 
             if self.toplevel:
+                self.addSeparator()
                 self.addAction('Classify apps',self._classify)
                 self.addAction('Remove catalog',self._unclassify)
                 self.addAction('Reload apps',self.reload)
@@ -480,7 +465,9 @@ class AppMenu(QtGui.QMenu):
         The first and last arguments do not apply to the submenus.
      
         """
-        from gui.draw import layout,reset
+        from gui.draw import layout,reset,pause
+        from script import exitrequested
+        ## pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if last is None:
             last = len(self.files)
         if count > 0:
@@ -488,15 +475,32 @@ class AppMenu(QtGui.QMenu):
         files = self.files[first:last]
         if random:
             import random as r
+            r.seed()
             r.shuffle(files)
+        print("Running %s examples" % len(files))
+        print(files)
         for f in files:
+            while pf.scriptlock:
+                print("WAITING BECAUSE OF SCRIPT LOCK")
+                pause(5)
             layout(1)
             reset()
-            self.runApp(f)
-        if recursive:
-            for m in self.menus:
-                m.runAll(recursive=recursive,random=random)
-      
+            print("RUNNING %s" %f)
+            #self.runApp(f)
+            ## if exitrequested:
+            ##     break
+        tcount = len(files)
+        if recursive and tcount < count:
+            for m in self._submenus_:
+                n = m.runAll(recursive=recursive,random=random,count=count-tcount)
+                tcount += n
+                if count > 0 and tcount >= count:
+                    print("Ran %s examples; getting out" % tcount)     
+                    break
+                else:
+                    print("Still want %s more examples" % (count-tcount))
+        ## pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+        return tcount
 
     def runNext(self,count=-1):
         """Run the current app and the following ones.
@@ -519,7 +523,21 @@ class AppMenu(QtGui.QMenu):
     def runRandom(self):
         """Run a random script."""
         i = random.randint(0,len(self.files)-1)
-        self.runMany([i])
+        self.runAll(first=i,count=1)
+
+
+    def runAllApps(self):
+        res =draw.askItems([
+            ('Toggle timeout',True),
+            ('Random order',True),
+            ('Maximum count',-1),
+            ])
+        if not res:
+            return
+        from toolbar import timeout
+        timeout(res['Toggle timeout'])
+        self.runAll(recursive=True,random=res['Random order'],count=res['Maximum count'])
+        timeout(False)
 
 
 
@@ -532,7 +550,7 @@ class AppMenu(QtGui.QMenu):
         pf.debug("Reloading this menu",pf.DEBUG.APPS)
         if self.dir:
             self.clear()
-            self.menus = []
+            self._submenus_ = []
             self.files = None
             self.load()
 
@@ -556,9 +574,9 @@ class AppMenu(QtGui.QMenu):
         olist.toFront(files,name)
         if self.max > 0 and len(files) > self.max:
             files = files[:self.max]
-        while len(self.actions) < len(files):
-            self.actions.append(self.addAction(name))
-        for a,f in zip(self.actions,self.files):
+        while len(self.my_actions) < len(files):
+            self.my_actions.append(self.addAction(name))
+        for a,f in zip(self.my_actions,self.files):
             a.setText(f)
 
 
@@ -613,25 +631,13 @@ def createAppMenu(parent=None,before=None):
     import sys
     from odict import ODict
     appmenu = menu.Menu('&Apps',parent=parent,before=before)
-    appmenu.menuitems = ODict()
-
     
     # Go ahead and load the apps
     for d in pf.appdirs:
         pf.debug("Loading %s" % d,pf.DEBUG.MENU)
-        m = AppMenu(d.name,dir=d.path,autoplay=True)
-        appmenu.insert_menu(m)
-        appmenu.menuitems[utils.strNorm(d.name)] = m
-
-    if pf.cfg.get('gui/history_in_main_menu',False):
-        before = pf.GUI.menu.item('help')
-        pf.GUI.menu.insertMenu(before,pf.GUI.history)
-    else:
-        filemenu = pf.GUI.menu.item('file')
-        before = filemenu.item('---1')
-        filemenu.insertMenu(before,pf.GUI.history)
+        m = AppMenu(d.name,dir=d.path,autoplay=True,parent=appmenu)
  
-    hist = AppMenu('Last Run',files=pf.cfg['gui/apphistory'],max=pf.cfg['gui/history_max'])
+    pf.GUI.apphistory = AppMenu('Last Run',files=pf.cfg['gui/apphistory'],max=pf.cfg['gui/history_max'],parent=appmenu)
     
     appmenu.insertItems([
         ('---',None),
@@ -640,9 +646,6 @@ def createAppMenu(parent=None,before=None):
         (_('&Unload Current App'),menu.unloadCurrentApp),
         (_('&Reload App Menu'),reloadMenu,{'data':'app'}),
         ])
-
-    appmenu.insertMenu(appmenu.item('---'),hist)
-    pf.GUI.apphistory = hist
     
     return appmenu
 
@@ -664,7 +667,6 @@ def createScriptMenu(parent=None,before=None):
     """
     from odict import ODict
     appmenu = menu.Menu('&Scripts',parent=parent,before=before)
-    appmenu.menuitems = ODict()
     # Create a copy to leave the cfg unchanged!
     scriptdirs = [] + pf.cfg['scriptdirs']
     # Fill in missing default locations : this enables the user
@@ -677,17 +679,17 @@ def createScriptMenu(parent=None,before=None):
     for txt,dirname in scriptdirs:
         pf.debug("Loading script dir %s" % dirname,pf.DEBUG.SCRIPT)
         if os.path.exists(dirname):
-            m = AppMenu(txt,dir=dirname,mode='script',autoplay=True)
-            appmenu.insert_menu(m)
-            txt = utils.strNorm(txt)
-            appmenu.menuitems[txt] = m
-
+            m = AppMenu(txt,dir=dirname,mode='script',autoplay=True,parent=appmenu)
+    #print("BEFORE")
+    #appmenu.print_report()
     appmenu.insertItems([
         ('---',None),
         (_('&Configure Script Paths'),setDirs,{'data':'scriptdirs'}),
         (_('&Reload Script Menu'),reloadMenu,{'data':'script'}),
-        ])
-    
+        ])#,debug=True)
+    #print("AFTER")
+    #appmenu.print_report()
+
     return appmenu
 
 

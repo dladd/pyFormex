@@ -68,11 +68,8 @@ def run():
 
     while True:
         res = askItems([
-            dict(name='u',
-                 text='New knot values',
-                 value='0.2,',
-                 )
-            ])
+            _I('u',0.2,text='New knot values'),
+            ], default='Cancel')
         if not res:
             break;
 
@@ -88,7 +85,9 @@ def run():
     ##     u = 0.5
     ##     print N.removeKnots(u,1,0.001)
 
-
+        # Break from endless loop if an input timeout is active !
+        if widgets.input_timeout >= 0:
+            break
 
 
     if ack("Decompose curve?"):

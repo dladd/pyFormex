@@ -57,6 +57,17 @@ def projected(X,N):
     return X,C,A,a
 
 
+def delaunay(X):
+    """Return a Delaunay triangulation of the specified Coords.
+
+    While the Coords are 3d, only the first 2 components are used.
+
+    Returns a TriSurface with the Delaunay trinagulation in the x-y plane.
+    """
+    from voronoi import voronoi
+    return TriSurface(X,voronoi(X[:,:2]).triangles)
+    
+
 class Polygon(Geometry):
     """A Polygon is a flat surface bounded by a closed PolyLine.
 
@@ -199,6 +210,14 @@ class Polygon(Geometry):
         """
         from plugins.section2d import PlaneSection
         return PlaneSection(Formex(self.coords)).sectionChar()['A']   
+
+
+    def toMesh(self):
+        from mesh import Mesh
+        a = arange(self.coords.shape[0])
+        e = column_stack([a,roll(a,-1)])
+        return Mesh(self.coords,e)
+        
 
 
 if __name__ == 'draw':

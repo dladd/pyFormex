@@ -79,6 +79,7 @@ class BaseMenu(object):
         self.parent = parent
         self.separators = odict.ODict()
         self._actions_ = []
+        self._submenus_ = []
         if items:
             self.insertItems(items)
         if parent and isinstance(parent,BaseMenu):
@@ -88,8 +89,16 @@ class BaseMenu(object):
 
     def actionList(self):
         """Return a list with the current actions."""
-        return [ utils.strNorm(str(c.text())) for c in self.actions() ]
-    
+        return [ utils.strNorm(str(a.text())) for a in self.actions() ]
+
+
+    def actionsLike(self,clas):
+        """Return a list with the current actions of given class."""
+        return [ a for a in self.actions() if isinstance(a,clas) ]
+
+    def subMenus(self):
+        """Return a list with the submenus"""
+        return self.actionsLike(BaseMenu)
 
     def index(self,text):
         """Return the index of the specified item in the actionlist.
@@ -173,6 +182,8 @@ class BaseMenu(object):
 
     def insert_menu(self,menu,before=None):
         """Insert an existing menu."""
+        self._submenus_.append(menu)
+        #print("---insert submenu %s to %s ---" % (menu.title(),self.title()))
         if before:
             return self.insertMenu(before,menu)
         else:
@@ -183,7 +194,7 @@ class BaseMenu(object):
         if before:
             return self.insertAction(before,action)
         else:
-            self._actions_.append(action)
+            #self._actions_.append(action)
             return self.addAction(action)
 
     def create_insert_action(self,str,val,before=None):
@@ -195,7 +206,7 @@ class BaseMenu(object):
             return self.addAction(str,val)
     
 
-    def insertItems(self,items,before=None):
+    def insertItems(self,items,before=None,debug=False):
         """Insert a list of items in the menu.
 
         Parameters:
@@ -229,9 +240,13 @@ class BaseMenu(object):
           of the items in the Menu (not the items list!): the new list of
           items will be inserted before the specified item.
         """
+        if debug:
+            print("Inserting %s items in menu %s" % (len(items),self.title()))
         before = self.action(before)
         for item in items:
             txt,val = item[:2]
+            if debug:
+                print("INSERTING %s: %s" % (txt,val))
             if len(item) > 2:
                 options = item[2]
             else:
@@ -242,15 +257,22 @@ class BaseMenu(object):
             elif isinstance(val, list):
                 a = Menu(txt,parent=self,before=before)
                 a.insertItems(val)
+            elif isinstance(val, BaseMenu):
+                #print("INSERTING MENU %s"%txt)
+                self.insert_menu(val,before=before)
             else:
                 if type(val) == str:
                     val = eval(val)
                 if 'data' in options:
                     # DActions should be saved to keep them alive !!!
+                    if debug:
+                        print("INSERTING DAction %s" % txt)
                     a = DAction(txt,data = options['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
+                    if debug:
+                        print("INSERTING QAction %s" % txt)
                     if before is not None:
                         raise RuntimeError,"I can not insert a QAction menu item before an existing one."
                     a = self.create_insert_action(txt,val,before)
@@ -269,6 +291,18 @@ class BaseMenu(object):
                     elif k == 'disabled':
                         a.setDisabled(True)
                 
+
+    def print_report(self,recursive=False):
+        print("=========== MENU: %s =============" % self.title())
+        print("ALL ACTIONS: %s" % self.actionList())
+        print("ITEMS: %s" % [self.item(a) for a in self.actionList()])
+        print("SUBMENUS: %s" % [ a.title() for a in self._submenus_])
+        print("SUBMENUS: %s" % [ str(a.title()) for a in self.subMenus()])
+        if recursive:
+            for a in self._submenus_:
+                if isinstance(a,BaseMenu):
+                    a.print_report()
+            
 
 class Menu(BaseMenu,QtGui.QMenu):
     """A popup/pulldown menu."""
@@ -510,19 +544,6 @@ def printSysPath():
     print(sys.path)
 
 
-def runAllExamples():
-    print(type(pf.GUI.appmenu))
-    m = pf.GUI.appmenu.item('Examples')
-    res =draw.askItems([
-        ('Toggle timeout',True),
-        ('Random order',True),
-        ('Maximum count',-1),
-        ])
-    if not res:
-        return
-    from toolbar import timeout
-    timeout(res['Toggle timeout'])
-    m.runAll(recursive=True,random=res['Random order'])
     
 
 def createMenuData():
@@ -537,7 +558,7 @@ def createMenuData():
         ("---",None),
         # (_('&Edit',fileMenu.editApp),   # is in file menu
         (_('&App Info'),draw.showDoc),
-        (_('&Run All Examples'),runAllExamples),
+        ## (_('&Run All Examples'),runAllExamples),
         ("---",None),
         ## (_('&Reset Picking Mode'),resetPick),
         (_('&Reset GUI'),draw.resetGUI),

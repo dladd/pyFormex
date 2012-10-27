@@ -622,7 +622,7 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
 
 def runAll(applist,refresh=False):
     """Run all the scripts/apps in given list."""
-    #pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
+    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
     for f in applist:
         while pf.scriptlock:
             print("WAITING BECAUSE OF SCRIPT LOCK")
@@ -630,7 +630,7 @@ def runAll(applist,refresh=False):
         runAny(f,refresh=refresh)
         if exitrequested:
             break
-    #pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
 
 
 def exit(all=False):

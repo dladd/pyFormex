@@ -114,6 +114,7 @@ _developers = [
     'Benedict Verhegghe',
     'Zhou Wenxuan',
     ]
+random.shuffle(_developers)
 
 def developers():
     """Display the list of developers."""

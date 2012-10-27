@@ -196,6 +196,7 @@ def settings():
                 _G('Components',toolbars+actionbuttons+[
                     _I('gui/coordsbox'),
                     _I('gui/showfocus',pf.cfg['gui/showfocus']),
+                    _I('gui/runalloption',pf.cfg['gui/runalloption']),
                     _I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
                     _I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
                     ],

@@ -40,7 +40,8 @@ import odict
 from plugins.curve import BezierSpline,PolyLine
 from simple import connectCurves
 from plugins.trisurface import fillBorder
-from geomtools import closestPoint
+from plugins.polygon import Polygon,delaunay
+from geomtools import closestPoint,intersectionSWP
 import utils
 import os,sys
 
@@ -50,6 +51,35 @@ try:
 except ImportError:
     warning("You do not have fontforge and its Python bindings.\nPlease install python-fontforge and then try again.")
     exit()
+
+
+def intersection(self,other):
+    """Find the intersection points of two plane curves"""
+    X = stack([self.coords,roll(self.coords,-1,axis=0)],axis=1)
+    print(X.shape)
+    F = self.toMesh().toFormex()
+    # create planes // z
+    P = other.coords
+    N = other.vectors().rotate(90)
+    return intersectionSWP(F,P,N)
+
+
+def partitionByContour(self,contour):
+    """Partition the surface by splitting it at a contour on the surface.
+
+    """
+    self.getElemEdges()
+    edg = self.edges
+    
+    feat = self.featureEdges(angle=angle)
+    p = self.maskedEdgeFrontWalk(mask=~feat,frontinc=0)
+
+    if sort == 'number':
+        p = sortSubsets(p)
+    elif sort == 'area':
+        p = sortSubsets(p,self.areaNormals()[0])
+
+    return p
 
 
 def glyphCurve(c):
@@ -144,13 +174,26 @@ def charCurves(fontfile,character):
     return c
 
 
-def drawCurve(curve,color,fill=False,with_border=True,with_points=True):
-    if fill:
+def drawCurve(curve,color,fill=None,with_border=True,with_points=True):
+    if fill is not None:
         border = curve.approx(24)
         if with_border:
             draw(border,color=red)
-        #drawNumbers(border.coords,color=red)
-        surface = fillBorder(border,'planar')
+        drawNumbers(border.coords,color=red)
+        P = Polygon(border.coords)
+        M = P.toMesh()
+        clear()
+        draw(M)
+        t,x,wl,wt = intersection(P,P)
+        print(x.shape)
+        draw(Formex(x),color=red)
+        return
+        if fill == 'polygonfill':
+            print("POLYGON")
+            surface = fillBorder(border,'planar')
+        else:
+            print("DELAUNAY")
+            surface = delaunay(border.coords)
         draw(surface,color=color)
         #drawNumbers(surface)
     else:
@@ -160,30 +203,29 @@ def drawCurve(curve,color,fill=False,with_border=True,with_points=True):
         drawNumbers(curve.pointsOff(),color=red)
 
 
-def drawCurve2(curve,color,fill=False,with_border=True,with_points=True):
+def drawCurve2(curve,color,fill=None,with_border=True,with_points=True):
     if fill:
         curve = connect2curves(*curve)
         drawCurve(curve,blue,fill)
     else:
-        drawCurve(curve[0],color,fill=False,with_border=with_border,with_points=with_points)
-        drawCurve(curve[1],color,fill=False,with_border=with_border,with_points=with_points)
+        drawCurve(curve[0],color,with_border=with_border,with_points=with_points)
+        drawCurve(curve[1],color,with_border=with_border,with_points=with_points)
 
 
-def show(fontname,character,fill=False):
+def show(fontname,character,fill=None):
 
     curve = charCurves(fontname,character)
     size = curve[0].pointsOn().bbox().dsize()
     clear()
 
-    if not fill:
-        for c in curve:
-            drawCurve(c,blue,fill=False)
-
-    else:
+    if fill:
         if len(curve) == 1:
-            drawCurve(curve[0],blue,fill=True)
+            drawCurve(curve[0],blue,fill=fill)
         elif len(curve) == 2:
-            drawCurve2(curve,blue,fill=True)
+            drawCurve2(curve,blue,fill=fill)
+    else:
+        for c in curve:
+            drawCurve(c,blue)
     
     return
 
@@ -209,13 +251,13 @@ def run():
     fontname = None
     character = 'S'
     connect = False
-    fill = True
+    fill = 'None'
     print(dir(fontforge))
     print("Number of available fonts: %s" % len(fonts))
     res = askItems([
         _I('fontname',fontname,choices=fonts),
         _I('character',character,max=1),
-        _I('fill',fill),
+        _I('fill',itemtype='radio',choices=['None','polygonfill','delaunay']),
         ],enablers=[
 #        ('connect',True,'fontname2','character2')
         ])
@@ -223,7 +265,8 @@ def run():
     if not res:
         return
 
-    globals().update(res)
+    if res['fill'] == 'None':
+        del res['fill']
     
     show(**res)
     
