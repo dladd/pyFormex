@@ -1652,7 +1652,8 @@ Quality: %s .. %s
         """Extrude a nearly-planar patch of a surface.
         
         - `self` is a surface with propery numbers
-        - `p` is the property number of the patch to extrude
+        - `p` is the property number of the patch to extrude. It can also be 
+          a list of property numbers.
         - `div` is the number of elements along the extrusion. If None, 
           the triangle size is taken from the patch's border
         - `step` is the length of the extrusion. If step is a string (e.g. '2.'), 
@@ -1688,6 +1689,15 @@ Quality: %s .. %s
             exit()
         
         """
+        if type(p)==list:
+            for i in p:
+                self= self.patchextension(i,step,dir,makecircular,div)
+            return self
+        
+        if type(p)!=int:
+            raise ValueError,"Expected one single integer as property number, got %s"%p
+ 
+
         s1 = self.withProp(p)
         a1, n1 = s1.areaNormals()
         n1 = normalize(n1.sum(axis=0))
