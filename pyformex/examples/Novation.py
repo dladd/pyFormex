@@ -75,10 +75,9 @@ def run():
     # create the bumps
     for p in a:
         e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
-    if shrink:
-        e = e.shrink(0.8)
 
     renderMode(rendermode)
+    setDrawOptions({'shrink':shrink})
     if transp:
         transparent(True)
     if bottom:

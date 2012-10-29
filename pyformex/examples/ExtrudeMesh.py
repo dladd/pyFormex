@@ -116,6 +116,7 @@ def run():
     d.prop[a] = 1
     clear()
     draw(d)
+    export({'ExtrudeMesh':d})
      
 if __name__ == 'draw':
     run()

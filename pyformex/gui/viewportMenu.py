@@ -362,7 +362,20 @@ def drawOptions(d={}):
     A dictionary may be specified to override the current defaults.
     """
     draw.setDrawOptions(d)
-    res = draw.askItems(pf.canvas.options.items())
+    print(pf.canvas.options)
+    res = draw.askItems(store=pf.canvas.options,items=[
+        _I('view',choices=['None']+pf.canvas.view_angles.keys(),tooltip="Camera viewing direction"),
+        _I('bbox',choices=['auto','last'],tooltip="Automatically focus/zoom on the last drawn object(s)"),
+        _I('clear',tooltip="Clear the canvas on each drawing action"),
+        _I('shrink',tooltip="Shrink all elements to make their borders better visible"),
+        _I('shrink_factor'),
+        _I('marksize'),
+        ],enablers=[('shrink',True,'shrink_factor')]
+    )
+    if not res:
+        return
+    if res['view'] == 'None':
+        res['view'] = None
     draw.setDrawOptions(res)
 
 

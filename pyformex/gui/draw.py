@@ -602,8 +602,8 @@ def draw(F,shrink=None,
         marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
     # Shrink the objects if requested
-    if shrink is not None:
-        FL = [ _shrink(F,shrink) for F in FL ]
+    if shrink:
+        FL = [ _shrink(F,pf.canvas.options.get('shrink_factor',0.8)) for F in FL ]
 
     # Execute the drawlock wait before doing first canvas change
     pf.GUI.drawlock.wait()
@@ -750,8 +750,14 @@ def resetAll():
     wireframe()
 
 
-def shrink(v):
-    setDrawOptions({'shrink':v})
+def shrink(onoff,factor=None):
+    """Set shrinking on or off, and optionally set shrink factor"""
+    data = {'shrink':bool(onoff)}
+    try:
+        data['shrink_factor'] = float(factor)
+    except:
+        pass
+    setDrawOptions(data)
 
 
 def _shrink(F,factor):

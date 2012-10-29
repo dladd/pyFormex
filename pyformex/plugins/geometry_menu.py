@@ -770,6 +770,23 @@ def compactMesh():
     selection.draw()
     
 
+def peelOffMesh():
+    """Peel the Mesh"""
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    meshes = [ m.peel() for m in meshes ]
+    export2(selection.names,meshes)
+    clear()
+    selection.draw()
+    
+
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
     if not selection.check():
@@ -1086,7 +1103,8 @@ def create_menu():
                 ("In random order",renumberMeshRandom),
                 ("In frontal order",renumberMeshFront),
                 ]),
-            ("&Get Border Mesh",getBorderMesh),
+            ("&Get border mesh",getBorderMesh),
+            ("&Peel off border",peelOffMesh),
             ]),
         ("---",None),
         ("&Reload menu",reload_menu),
