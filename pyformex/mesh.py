@@ -1792,7 +1792,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         print("Extrusion over %s steps of length %s" % (n,step))
         x = [ self.coords.trl(dir,i*n*step/degree) for i in range(1,degree+1) ]
-        print(bbox(x))
+        #print(bbox(x))
         return self.connect([self.coords] + x,n*degree,degree=degree,eltype=eltype)
         #return self.connect(self.trl(dir,n*step),n*degree,degree=degree,eltype=eltype)
 

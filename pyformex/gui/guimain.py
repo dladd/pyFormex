@@ -859,9 +859,6 @@ class Gui(QtGui.QMainWindow):
         should not be available when no script is being executed.
         It is called by the application executor when an application stops.
         """
-        ## TODO: STEPMODE SHOULD BE REMOVED COMPLETELY
-        global stepmode
-        stepmode = False
         self.drawlock.release()
         pf.canvas.update()
         self.enableButtons(self.actions,['Play','ReRun'],True)

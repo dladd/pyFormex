@@ -1644,10 +1644,7 @@ Quality: %s .. %s
         return [ self.intersectionWithPlane(p,dir) for p in P ]
 
 
-    # BV: Is this generic enough?
-    # BV: Need an Example !
-    # BV: The use of p here is not consistent with other pyFormex concept
-    # GDS: p will usually be the result of partitionByAngle. Thus, it might be easier to define patches using a prop number rather than using elem list.
+    @deprecation("depr_patchextension")
     def patchextension(self,p,step,dir=None,makecircular=False,div=1.):
         """Extrude a nearly-planar patch of a surface.
         
@@ -1666,27 +1663,6 @@ Quality: %s .. %s
         such as arteries.
         
         
-        Example
-        
-            import simple
-            smooth()
-            s=simple.sphere().cutWithPlane([0.6, 0., 0.], [1., 0., 0.], side='-')
-            s=s.cutWithPlane([-0.6, -0.6, 0.], [1., 1., 0.], side='+')
-            s=s.cutWithPlane([-0.6, 0.6, 0.], [-1., 1., 0.], side='-')
-            s=s.close(method='planar').setProp(0).rotate(20., 1)
-            p=s.partitionByAngle(20.)
-            s=s.setProp(p).fixNormals()
-            drawNumbers(Coords([s.withProp(p).compact().center() for p in s.propSet()]))
-            draw(s)
-            ext1=s.patchextension(1, '2.',  makecircular=False, div=None)
-            draw(ext1.trl([3., 0., 0.]))
-            ext2=s.patchextension(2, '2.',  makecircular=False, div=None)
-            draw(ext2.trl([3., -3., 0.]))
-            ext3=s.patchextension(3, '2.',  makecircular=False, div=3)
-            draw(ext3.trl([3., 3., 0.]))
-            transparent(True)
-            zoomAll()
-            exit()
         
         """
         if type(p)==list:

@@ -247,7 +247,6 @@ sleep = time.sleep
 
 scriptThread = None
 exitrequested = False
-stepmode = False
 starttime = 0.0
 
 scriptInit = None # can be set to execute something before each script
@@ -273,13 +272,9 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     If a name is specified, set the global variable pyformex.scriptName to it
     when the script is started.
     If a filename is specified, set the global variable __file__ to it.
-    
-    If step==True, an indefinite pause will be started after each line of
-    the script that starts with 'draw'. Also (in this case), each line
-    (including comments) is echoed to the message board.
     """
     utils.warn('print_function')
-    global stepmode,exportNames,starttime
+    global exportNames,starttime
     global exitrequested
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
@@ -318,15 +313,12 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     #starttime = time.clock()
     try:
         try:
-            if pf.GUI and stepmode:
-                step_script(scr,g,True)
-            else:
-                if pye:
-                    if type(scr) is file:
-                         scr = scr.read() + '\n'
-                    n = (len(scr)+1) // 2
-                    scr = utils.mergeme(scr[:n],scr[n:])
-                exec scr in g
+            if pye:
+                if type(scr) is file:
+                     scr = scr.read() + '\n'
+                n = (len(scr)+1) // 2
+                scr = utils.mergeme(scr[:n],scr[n:])
+            exec scr in g
 
         except _Exit:
             #print "EXIT FROM SCRIPT"
@@ -359,29 +351,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 
 def force_finish():
-    global stepmode
     pf.scriptlock = set() # release all script locks (in case of an error)
-    stepmode = False
-
-
-def step_script(s,glob,paus=True):
-    buf = ''
-    for line in s:
-        if buf.endswith('\\'):
-            buf[-1:] = line
-            break
-        else:
-            buf += line
-        if paus and (line.strip().startswith('draw') or
-                     line.find('draw(') >= 0  or
-                     line.strip().startswith('view') or
-                     line.find('view(') >= 0 ):
-            pf.GUI.drawlock.block()
-            message(buf)
-            exec(buf) in glob
-            buf = ''
-
-    showInfo("Finished stepping through script!")
 
 
 def breakpt(msg=None):
@@ -512,6 +482,7 @@ def runScript(fn,argv=[]):
 
 
 def runApp(appname,argv=[],refresh=False):
+    global exitrequested
     if len(pf.scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
         return
@@ -565,6 +536,8 @@ def runApp(appname,argv=[],refresh=False):
             res = app.run()
         except _Exit:
             pass
+        except _ExitSeq:
+            exitrequested = True
         except:
             raise
     finally:
@@ -596,7 +569,6 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
     the script is executed in step mode. The 'refresh' parameter will reload
     the app.
     """
-    global stepmode
     if appname is None:
         appname = pf.cfg['curfile']
     if not appname:
@@ -612,7 +584,6 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
        
     if utils.is_script(appname):
         #print "RUNNING SCRIPT %s" % appname
-        stepmode = step
         return runScript(appname,argv)
     else:
         #print "RUNNING APP %s" % appname

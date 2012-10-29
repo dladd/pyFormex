@@ -217,6 +217,12 @@ class Polygon(Geometry):
         a = arange(self.coords.shape[0])
         e = column_stack([a,roll(a,-1)])
         return Mesh(self.coords,e)
+
+
+    def toFormex(self):
+        from formex import Formex
+        x = stack([self.coords,roll(self.coords,-1,axis=0)],axis=1)
+        return Formex(x)
         
 
 

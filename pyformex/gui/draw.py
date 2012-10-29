@@ -482,6 +482,8 @@ def drawable(objects):
             return i
         elif hasattr(i,'toFormex'):
             return i.toFormex()
+        elif hasattr(i,'toMesh'):
+            return i.toMesh()
         else:
             return None
     r = [ fltr(i) for i in objects ]
@@ -1171,7 +1173,23 @@ def colormap(color=None):
     return pf.canvas.settings.colormap
 
 
+def renderModes():
+    """Return a list of predefined render profiles."""
+    return canvas.CanvasSettings.RenderProfiles.keys()
+
+
 def renderMode(mode,avg=False,light=None):
+    """Change the rendering profile to a predefined mode.
+
+    Currently the following modes are defined:
+
+    - wireframe
+    - smooth
+    - smoothwire
+    - flat
+    - flatwire
+    - smooth_avg
+    """
     #print "DRAW.RENDERMODE"
     #print "CANVAS %s" % pf.canvas
     #print "MODE %s" % pf.canvas.rendermode
@@ -1350,7 +1368,7 @@ def wait(relock=True):
 
 # Functions corresponding with control buttons
 
-def play(step=False,refresh=False):
+def play(refresh=False):
     """Start the current script or if already running, continue it.
     
     """
@@ -1361,7 +1379,7 @@ def play(step=False,refresh=False):
 
     else:
         # Start current application
-        runAny(step=step,refresh=refresh)
+        runAny(refresh=refresh)
 
 
 def replay():
@@ -1386,35 +1404,6 @@ def fforward():
     be set again and your script will execute till the end.
     """
     pf.GUI.drawlock.free()
-
-
-def step():
-    """Start the current script in step mode.
-
-    The use of step mode is strongly discouraged. Please use other
-    techniques (like the 'drawwait' time setting or inserting
-    wait or pause commands, or using a debugger.
-
-    This function starts the current script in step mode. If a script
-    is already running, it continues the script with the next step.
-    This is equivalent with the behavior of the play function.
-    """
-    if len(pf.scriptlock) > 0:
-        play()
-        
-    elif ack("""..
-        
-STEP MODE
-=========
-Step mode is *deprecated*.
-It will only work with specially designed scripts,
-very well behaving scripts.
-Unless you are a specialist who knows well how to use it,
-you should cancel the operation now.
-
-Are you REALLY SURE you want to run this script in step mode?
-"""):
-        run(step=True)
  
 
 #

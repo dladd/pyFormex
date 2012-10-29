@@ -83,7 +83,7 @@ def geometry():
     globals().update(res)
     F = simple.line([0.,0.,0.],[0.,1.,0.],n)
     M = F.toMesh()
-    draw(M)
+    return M
     
     
 def compute():
@@ -218,10 +218,11 @@ def run():
         showText(_sorry)
         return
 
-    geometry()
-    compute()
-    layout(nshow,ncols=4)
-    showResults(hscale = 0.5)
+    M = geometry()
+    if M:
+        compute()
+        layout(nshow,ncols=4)
+        showResults(hscale = 0.5)
 
 if __name__ == 'draw':
     run()

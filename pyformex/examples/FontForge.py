@@ -184,10 +184,10 @@ def drawCurve(curve,color,fill=None,with_border=True,with_points=True):
         M = P.toMesh()
         clear()
         draw(M)
-        t,x,wl,wt = intersection(P,P)
-        print(x.shape)
-        draw(Formex(x),color=red)
-        return
+        #t,x,wl,wt = intersection(P,P)
+        #print(x.shape)
+        #draw(Formex(x),color=red)
+        #return
         if fill == 'polygonfill':
             print("POLYGON")
             surface = fillBorder(border,'planar')
@@ -247,24 +247,28 @@ def run():
     if not fonts:
         fonts = utils.listFontFiles() + [
             f for f in extra_fonts if os.path.exists(f) ]
-    
-    fontname = None
-    character = 'S'
-    connect = False
-    fill = 'None'
+
+    data = dict(
+        fontname = None,
+        character = 'S',
+        fill = 'None',
+        )
+    try:
+        data.update(pf.PF['_FontForge_data_'])
+    except:
+        pass
     print(dir(fontforge))
     print("Number of available fonts: %s" % len(fonts))
-    res = askItems([
-        _I('fontname',fontname,choices=fonts),
-        _I('character',character,max=1),
+    res = askItems(store=data,items=[
+        _I('fontname',choices=fonts),
+        _I('character',max=1),
         _I('fill',itemtype='radio',choices=['None','polygonfill','delaunay']),
-        ],enablers=[
-#        ('connect',True,'fontname2','character2')
         ])
 
     if not res:
         return
 
+    pf.PF['_FontForge_data_'] = res
     if res['fill'] == 'None':
         del res['fill']
     

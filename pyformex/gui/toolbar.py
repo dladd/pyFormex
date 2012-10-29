@@ -45,7 +45,7 @@ def addActionButtons(toolbar):
     avail_buttons = [
         ( "Play", "next", draw.play, False ),
         ( "ReRun", "rerun", draw.replay, False ),
-        ( "Step", "nextstop", draw.step, False ),
+        ## ( "Step", "nextstop", draw.step, False ),
         ( "Continue", "ff", draw.fforward, False ),
         ( "Stop", "stop", draw.raiseExit, False ),
         ( "Edit", "pencil", fileMenu.editApp, False ),

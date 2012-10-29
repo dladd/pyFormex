@@ -297,7 +297,7 @@ def setRendering():
             _I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
             ]
         items = [
-            _I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes),#,onselect=enableLightParams),
+            _I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=draw.renderModes()),#,onselect=enableLightParams),
             _I('render/lighting',vp.lighting,text='Use Lighting'),
             _I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
             _I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),

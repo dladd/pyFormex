@@ -492,9 +492,6 @@ class CanvasSettings(Dict):
                     v = str(v).lower()
                     if not v in clas.edge_options:
                         raise
-                ## elif k == 'rendermode':
-                ##     if not v in clas.rendermodes:
-                ##         raise
                 elif k == 'marktype':
                     pass
                 else:

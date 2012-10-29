@@ -37,7 +37,7 @@ def run():
     reset()
 
     basechoices = ['Triangles','Quadrilaterals']
-    renderchoices = pf.canvas.rendermodes[:5]
+    renderchoices = renderModes()
     res = askItems([
         _I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
         _I('nbumps',3,text='Number of bumps'),

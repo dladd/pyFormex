@@ -108,7 +108,7 @@ def classify(appdir,pkg,nmax=0):
     return all_apps,kat,cat,col
 
 
-def splitAlpha(strings,n):
+def splitAlpha(strings,n,ignorecase=True):
     """Split a series of strings in alphabetic collections.
 
     The strings are split over a series of bins in alphabetical order.
@@ -129,42 +129,60 @@ def splitAlpha(strings,n):
       corresponding label 
     """
     from arraytools import multiplicity
-    strings = sorted(strings)
-    mult,bins = multiplicity([ord(f[0]) for f in strings ])
+    if ignorecase:
+        key = key=str.upper
+    else:
+        key = str
+    strings = sorted(strings,key=key)
+    mult,bins = multiplicity([ord(key(f[0])) for f in strings ])
+    print(ord('A'))
     print(bins)
+    print(mult)
     count = dict(zip(bins,mult))
+    print(count)
     cat = []
     grp = []
 
-    def accept(i,j,mtot):
-        if i == j:
-            cat.append(chr(i))
-        else:
-            cat.append('%c-%c' % (chr(i),chr(j)))
-        grp.append(strings[:mtot])
+    def accept(i,j,mtot,skip):
+        if not skip:
+            if i == j:
+                cat.append(chr(i))
+            else:
+                cat.append('%c-%c' % (chr(i),chr(j)))
+            grp.append(strings[:mtot])
         del strings[:mtot]
 
-    def group(fromchar,tochar):
+    def group(fromchar,tochar,skip=False):
+        """Take the group from fromchar to tochar, inclusive
+
+        fromchar and tochar are characters
+        """
         j = i = ord(fromchar)
         mtot = count.get(i,0)
         while j < ord(tochar):
             if mtot > n:
-                accept(i,j,mtot)
+                accept(i,j,mtot,skip)
                 j = i = i+1
                 mtot = count.get(i,0)
             else:
                 mj = count.get(j+1,0)
                 if mtot+mj > n:
-                    accept(i,j,mtot)
+                    accept(i,j,mtot,skip)
                     j = i = j+1
                     mtot = mj
                 else:
                     j += 1
                     mtot += mj
-        accept(i,j,mtot)
+        if mtot > 0:
+            accept(i,j,mtot,skip)
 
+    # The grouping has to start from char(0) and loop over all values!
+    group(chr(0),chr(31),skip=True)  
+    group(' ','@')  
     group('A','Z')
-    group('a','z')
+    if not ignorecase:
+        # we should skip the group between 
+        group('a','z')
     
     return cat,grp
 
@@ -313,6 +331,7 @@ class AppMenu(menu.Menu):
                         lbl = i.capitalize()
                     ki = '%s/%s' % (k,i)
                     mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk)
+                mk.addRunAllMenu()
 
             self.files = []
             return True
@@ -379,12 +398,17 @@ class AppMenu(menu.Menu):
         self.my_actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,SIGNAL("triggered(QAction*)"),self.run)
 
-        if self.dir and pf.cfg['gui/runalloption']:
-            self.addSeparator()
-            self.addAction('Run all',self.runAll)
-            self.addAction('Run all next',self.runNext)
-            self.addAction('Run a random app',self.runRandom)
+        self.addRunAllMenu()
         self.current = ""
+
+
+    def addRunAllMenu(self):
+        if pf.cfg['gui/runalloption']:
+            self.addSeparator()
+            self.addAction('Run all apps',self.runAllApps)
+            ## self.addAction('Run all',self.runAll)
+            ## self.addAction('Run all next',self.runNext)
+            ## self.addAction('Run a random app',self.runRandom)
 
 
     def load(self):
@@ -466,8 +490,7 @@ class AppMenu(menu.Menu):
      
         """
         from gui.draw import layout,reset,pause
-        from script import exitrequested
-        ## pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if last is None:
             last = len(self.files)
         if count > 0:
@@ -481,14 +504,15 @@ class AppMenu(menu.Menu):
         print(files)
         for f in files:
             while pf.scriptlock:
-                print("WAITING BECAUSE OF SCRIPT LOCK")
-                pause(5)
+                pause(5,msg="WAITING BECAUSE OF SCRIPT LOCK")
             layout(1)
             reset()
-            print("RUNNING %s" %f)
-            #self.runApp(f)
-            ## if exitrequested:
-            ##     break
+            #print("RUNNING %s" %f)
+            self.runApp(f)
+            script.breakpt(msg="Breakpoint from runall")
+            pause(1)#,msg="EXITREQUESTED: %s" % script.exitrequested)
+            if script.exitrequested:
+                break
         tcount = len(files)
         if recursive and tcount < count:
             for m in self._submenus_:
@@ -499,8 +523,9 @@ class AppMenu(menu.Menu):
                     break
                 else:
                     print("Still want %s more examples" % (count-tcount))
-        ## pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+        pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
         return tcount
+
 
     def runNext(self,count=-1):
         """Run the current app and the following ones.

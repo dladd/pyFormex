@@ -554,7 +554,7 @@ def createMenuData():
     ActionMenuData = [
         (_('&Play'),draw.play),
         (_('&Rerun'),draw.replay),
-        (_('&Step'),draw.step),
+        ## (_('&Step'),draw.step),
         (_('&Continue'),draw.fforward), 
         (_('&Stop'),draw.raiseExit),
         ("---",None),

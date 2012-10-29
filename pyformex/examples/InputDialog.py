@@ -128,7 +128,6 @@ def timeOut():
     Most users can simply ignore this.
     """
     show()
-    wait()
     close()
 
 
