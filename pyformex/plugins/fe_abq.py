@@ -569,75 +569,65 @@ def fmtSpring(el,setname):
 
     return out
     
+
+#
+# BV: removed composite, if anyone uses it: create a fmtCompositeSection
+#
+def fmtSolidSection(el,setname,matname):
+    """Format the *SOLID SECTION keyword.
     
-#~ FI need more documentation and examples
-# this sholud be extended to all the element types that has the property SOLID SECTION. now it is only for 3dsolid
+    Required:
+
+    - setname
+    - matname
+
+    Optional:
     
-def fmtSolidSection(el,setname):
-    """_ THis docstring is very badly structured!
-    
-    REQUIRED
-    
-    - material/composite (mutually exclusive)
-    - elset
-    - refnode (REQUIRED only for plane stress elements and acoustic infinite elements)
-    - orientation (REQUIRED only for anisotropic materials, OPTIONAL otherwise)
-    
-    el.seccontrol is a Dict
-    REQUIRED
-        el.seccontrol.name = name of the section control
-    OPTIONAL
-        el.seccontrol.data = list or array of optional line for hourglass control and bulk viscosity
-        
-        All other  keys  have name equal to the ABAQUS keywords and value equal to parameter setting
-        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
-        
-    el.material see fmtMaterial documentation
+    - orientation
+    - controls
+
+    `controls` is a dict with name, options and data keys. Options is
+    a string which is added as is to the command. Data are added below
+    the command. All other items besides name, options and data are formatted
+    as extra command options.
     
     Example:
 
-      control=Dict({'name':'StentControl','hourglass':'enhanced',})
-      P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,seccontrol=control))
+    >>> P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,controls=dict(name='StentControl',hourglass='enhanced'))
     """
-    
-    out = ''
-    if el.sectiontype.upper() == '3DSOLID':
-        
-        if mat is not None:
-            out += "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,el.material.name) 
-        
-        if el.seccontrol is not None:
-            out += ", CONTROLS=%s" %el.seccontrol.name
-        
-        if el.orientation is not None:
-            out += ", ORIENTATION=%s" % (el.orientation.name)
+    out = "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,matname) 
+    if el.orientation is not None:
+        out += ", ORIENTATION=%s" % el.orientation.name
+    if el.controls is not None:
+        out += ", CONTROLS=%s" % el.controls.name
+    out += '\n'
+
+    if el.thickness is not None:
+        out += '%s\n'%float(el.thickness)
+
+    if el.controls is not None:
+        out += "*SECTION CONTROLS, NAME=%s" % el.controls.name
+        if el.controls.options is not None:
+            out += ", "+str(el.controls.options)
+        out += fmtOptions(removeDict(el.controls,['name','options','data']))
         out += '\n'
-        
-        if el.thickness is not None:
-            out += '%s\n'%float(el.thickness)
-        
-        if el.seccontrol is not None:
-            if el.seccontrol.name is not None:
-                # add the only required parameter
-                out += "*SECTION CONTROLS, NAME=%s" %el.seccontrol.name
-                out += fmtOptions(removeDict(el.seccontrol,['name','data']))
-                out += '\n'           
-                # add  data line for 
-                if el.seccontrol.data is not None:
-                   out += fmtData(el.seccontrol.data)
-            else:
-                raise ValueError,"A section control name need to be specified"
+
+        if el.controls.data is not None:
+           out += fmtData(el.controls.data)
         
     return out
 
+
 def fmtShellSection(el,setname,matname):
-    """Format the shell definition.
+    """Format the shell *SHELL SECTION keyword.
     
     Required:
+    
     - setname
     - matname
     
     Optional:
+    
     - transverseshearstiffness
     - offset (for contact surface SPOS or 0.5, SNEG or -0.5)
     """
@@ -1086,12 +1076,16 @@ solid3d_elems = [
     'C3D10H','C3D10M','C3D10MH',
     'C3D15','C3D15H',
     'C3D20','C3D20H','C3D20R','C3D20RH',]
+rigid_elems = [
+    'R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4',
+    ]
 
 def writeSection(fil,prop):
     """Write an element section.
 
     prop is a an element property record with a section and eltype attribute
     """
+    print("WRITE SECTION %s" % prop)
     out = ""
     setname = esetName(prop)
     el = prop.section
@@ -1157,29 +1151,25 @@ def writeSection(fil,prop):
     ############
     ## 3DSOLID elements
     ##########################
-    #Section controls: add enhanced hourglassing
-    #first elementset: set control=' '
-    #other elementsets: set control=True (or something else)
     elif eltype in solid3d_elems:
-        if el.sectiontype.upper() == '3DSOLID':
-            fil.write(fmtSolidSection(el,setname))
+        if el.sectiontype.upper() == 'SOLID':
+            if mat is not None:
+                fil.write(fmtSolidSection(el,setname,mat.name))
+            
     ############
     ## 2D SOLID elements
     ##########################
     elif eltype in solid2d_elems:
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
-                fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (setname,mat.name,float(el.thickness)))
+                fil.write(fmtSolidSection(el,setname,mat.name))
             
     ############
     ## RIGID elements
     ##########################
-    elif eltype in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
+    elif eltype in rigid_elements:
         if el.sectiontype.upper() == 'RIGID':
             fil.write("*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n" % (el.nodeset,el.density,setname))
-
-
 
     ############
     ## UNSUPPORTED elements

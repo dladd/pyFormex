@@ -46,7 +46,7 @@ class Model(Geometry):
     
     _set_coords = Geometry._set_coords_inplace
     
-    def __init__(self,coords,elems):
+    def __init__(self,coords=None,elems=None,meshes=None):
         """Create new model data.
 
         coords is an array with nodal coordinates
@@ -62,16 +62,27 @@ class Model(Geometry):
 
         The model can have node and element property numbers.
         """
-        if not type(elems) == list:
-            elems = [ elems ]
-        self.coords = Coords(coords)
-        self.elems = [ Connectivity(e) for e in elems ]
+        if meshes is not None:
+            if coords is not None or elems is not None:
+                raise ValueError,"You can not use nodes/elems together with meshes"
+            for M in meshes:
+                if M.prop is None:
+                    M.setProp(0)
+            self.coords,self.elems = mergeMeshes(meshes)
+            self.prop = concatenate([M.prop for M in meshes])
+        else:
+            if not type(elems) == list:
+                elems = [ elems ]
+            self.coords = Coords(coords)
+            self.elems = [ Connectivity(e) for e in elems ]
+            self.prop = None
         self.meshes = [ Mesh(self.coords,e) for e in self.elems ]
         nnodes = [ m.nnodes() for m in self.meshes ]
         nelems = [ m.nelems() for m in self.meshes ]
         nplex = [ m.nplex() for m in self.meshes ]
         self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
+        pf.message("Finite Element Model")
         pf.message("Number of nodes: %s" % self.coords.shape[0])
         pf.message("Number of elements: %s" % self.celems[-1])
         pf.message("Number of element groups: %s" % len(nelems))
@@ -219,6 +230,7 @@ class FEModel(Geometry):
         nplex = [ m.nplex() for m in self.meshes ]
         self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
+        pf.message("Finite Element Model")
         pf.message("Number of nodes: %s" % self.coords.shape[0])
         pf.message("Number of elements: %s" % self.celems[-1])
         pf.message("Number of element groups: %s" % len(nelems))
