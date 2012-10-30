@@ -108,7 +108,7 @@ class Model(Geometry):
         return max([e.nplex() for e in self.elems])
 
 
-    def splitElems(self,set):
+    def splitElems(self,elems):
         """Splits a set of element numbers over the element groups.
 
         Returns two lists of element sets, the first in global numbering,
@@ -116,20 +116,22 @@ class Model(Geometry):
         Each item contains the element numbers from the given set that
         belong to the corresponding group.
         """
-        set = unique(set)
+        elems = unique(elems)
         split = []
         n = 0
         for e in self.celems[1:]:
-            i = set.searchsorted(e)
-            split.append(set[n:i])
+            i = elems.searchsorted(e)
+            split.append(elems[n:i])
             n = i
 
         return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
 
 
-    def elemNrs(group,set):
+    def elemNrs(self,group,elems=None):
         """Return the global element numbers for elements set in group"""
-        return self.celems[group] + set
+        if elems is None:
+            elems = range(len(self.elems[group]))
+        return self.celems[group] + elems
 
  
     def getElems(self,sets):
@@ -237,108 +239,6 @@ class FEModel(Geometry):
         #pf.message("Number of nodes per group: %s" % nnodes)
         pf.message("Number of elements per group: %s" % nelems)
         pf.message("Plexitude of each group: %s" % nplex)
-
-
-    def nnodes(self):
-        """Return the number of nodes in the model."""
-        return self.coords.shape[0]
-
-    def nelems(self):
-        """Return the number of elements in the model."""
-        return self.celems[-1]
-
-    def ngroups(self):
-        """Return the number of element groups in the model."""
-        return len(self.elems)
-
-    def mplex(self):
-        """Return the maximum plexitude of the model."""
-        return max([e.nplex() for e in self.elems])
-
-
-    def splitElems(self,set):
-        """Splits a set of element numbers over the element groups.
-
-        Returns two lists of element sets, the first in global numbering,
-        the second in group numbering.
-        Each item contains the element numbers from the given set that
-        belong to the corresponding group.
-        """
-        set = unique(set)
-        split = []
-        n = 0
-        for e in self.celems[1:]:
-            i = set.searchsorted(e)
-            split.append(set[n:i])
-            n = i
-
-        return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
-
-
-    def elemNrs(group,set):
-        """Return the global element numbers for elements set in group"""
-        return self.celems[group] + set
-
- 
-    def getElems(self,sets):
-        """Return the definitions of the elements in sets.
-
-        sets should be a list of element sets with length equal to the
-        number of element groups. Each set contains element numbers local
-        to that group.
-        
-        As the elements can be grouped according to plexitude,
-        this function returns a list of element arrays matching
-        the element groups in self.elems. Some of these arrays may
-        be empty.
-
-        It also provide the global and group element numbers, since they
-        had to be calculated anyway.
-        """
-        return [ e[s] for e,s in zip(self.elems,sets) ]
-        
- 
-    def renumber(self,old=None,new=None):
-        """Renumber a set of nodes.
-
-        old and new are equally sized lists with unique node numbers, each
-        smaller that the number of nodes in the model.
-        The old numbers will be renumbered to the new numbers.
-        If one of the lists is None, a range with the length of the
-        other is used.
-        If the lists are shorter than the number of nodes, the remaining
-        nodes will be numbered in an unspecified order.
-        If both lists are None, the nodes are renumbered randomly.
-
-        This function returns a tuple (old,new) with the full renumbering
-        vectors used. The first gives the old node numbers of the current
-        numbers, the second gives the new numbers cooresponding with the
-        old ones.
-        """
-        nnodes = self.nnodes()
-        if old is None and new is None:
-            old = unique(random.randint(0,nnodes-1,nnodes))
-            new = unique(random.randint(0,nnodes-1,nnodes))
-            nn = max(old.size,new.size)
-            old = old[:nn]
-            new = new[:nn]
-        elif old is None:
-            new = asarray(new).reshape(-1)
-            checkUniqueNumbers(new,0,nnodes)
-            old = arange(new.size)
-        elif new is None:
-            old = asarray(old).reshape(-1)
-            checkUniqueNumbers(old,0,nnodes)
-            new = arange(old.size)
-
-        all = arange(nnodes)
-        old = concatenate([old,setdiff1d(all,old)])
-        new = concatenate([new,setdiff1d(all,new)])
-        oldnew = old[new]
-        newold = argsort(oldnew)
-        self.coords = self.coords[oldnew]
-        self.elems = [ Connectivity(newold[e]) for e in self.elems ]
-        return oldnew,newold
 
         
 def mergedModel(meshes,**kargs):

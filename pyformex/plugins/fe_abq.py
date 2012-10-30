@@ -1167,7 +1167,7 @@ def writeSection(fil,prop):
     ############
     ## RIGID elements
     ##########################
-    elif eltype in rigid_elements:
+    elif eltype in rigid_elems:
         if el.sectiontype.upper() == 'RIGID':
             fil.write("*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n" % (el.nodeset,el.density,setname))
 
