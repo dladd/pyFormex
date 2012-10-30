@@ -540,6 +540,7 @@ class GeomActor(Actor):
                 canvas = kargs.get('canvas',pf.canvas)
                 mode = canvas.rendermode
         
+        #print("DRAW MODE %s" % mode)
         if mode.endswith('wire'):
             #print("WIRE MODE")
             try:
@@ -602,10 +603,9 @@ class GeomActor(Actor):
         if mode is None:
             mode = canvas.rendermode
 
-        from mydict import CDict
-        settings = CDict(canvas.settings.RenderProfiles[mode])
-        #canvas.settings.glOverride(settings,canvas.settings) 
-        settings.defaults = canvas.settings
+        if mode != canvas.rendermode:
+            canvas.overrideMode(mode)
+
 
         ############# set drawing attributes #########
         avgnormals = self.avgnormals
@@ -653,8 +653,6 @@ class GeomActor(Actor):
         if self.linestipple is not None:
             glLineStipple(*self.linestipple)
 
-        #print("DRAWGL mode %s" % mode)
-
         if mode.startswith('smooth'):
             if hasattr(self,'specular'):
                 fill_mode = GL.GL_FRONT
@@ -687,7 +685,7 @@ class GeomActor(Actor):
             
         # beware: some Formex eltypes are strings and may not
         # represent a valid Mesh elementType
-        # THis is only here for Formex type.
+        # This is only here for Formex type.
         # We can probably remove it if we avoid eltype 'curve'
         elif nplex == 3 and self.eltype in ['curve','line3']:
             drawQuadraticCurves(self.coords,self.elems,color)

@@ -383,7 +383,7 @@ class CanvasSettings(Dict):
     """
 
     # A collection of default rendering profiles.
-    # These contain the values diffrent from the overall defaults
+    # These contain the values different from the overall defaults
     RenderProfiles = {
         'wireframe': Dict({
             'smooth': False,
@@ -843,11 +843,18 @@ class Canvas(object):
 
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
+        #print("ACTIVATE DEFAULT SETTINGS %s"%self.rendermode)
         self.settings.activate()
         #pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
         self.enable_lighting(self.settings.lighting)
         GL.glDepthFunc(GL.GL_LESS)
 
+
+    def overrideMode(mode):
+        """Override some settings"""
+        settings = canvas.settings.RenderProfiles[mode]
+        CanvasSettings.glOverride(settings,self.settings)
+        
 
     def glinit(self):
         """Initialize the rendering machine.
