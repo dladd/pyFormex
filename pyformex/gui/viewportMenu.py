@@ -33,8 +33,9 @@ import canvas
 import widgets
 import draw
 from gettext import gettext as _
-
+import prefMenu
 from widgets import simpleInputItem as _I
+import utils
 
 
 def setTriade():
@@ -182,10 +183,10 @@ def canvasSettings():
         pf.canvas.redrawAll()
         pf.canvas.update()
         if save:
-            # "SHOULD ADD canvas/
+            res = utils.prefixDict(res,'canvas/')
+            print(res)
             res['_save_'] = save
-            #prefMenu.updateSettings(res)
-            #pf.cfg.update(pf.canvas.settings.__dict__,name='canvas')
+            prefMenu.updateSettings(res)
 
     def acceptAndSave():
         accept(save=True)
@@ -214,7 +215,8 @@ def canvasSettings():
             _I('linestipple',),
             _I('fgcolor',itemtype='color'),
             _I('slcolor',itemtype='color'),
-#            _I('shading'),
+            _I('smooth'),
+            _I('fill'),
             _I('lighting'),
             _I('culling'),
             _I('alphablend'),

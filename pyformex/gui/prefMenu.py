@@ -37,6 +37,7 @@ import widgets
 from widgets import simpleInputItem as _I, groupInputItem as _G, tabInputItem as _T
 import toolbar
 import draw
+import canvas
 
 
 def updateSettings(res,save=None):
@@ -209,6 +210,7 @@ def settings():
                 ],
               ),
             _T('Drawing',[
+                _I('draw/rendermode',pf.cfg['draw/rendermode'],choices=canvas.CanvasSettings.RenderProfiles),
                 _I('draw/wait',pf.cfg['draw/wait']),
                 _I('draw/picksize',pf.cfg['draw/picksize']),
                 _I('render/avgnormaltreshold',pf.cfg['render/avgnormaltreshold']),
