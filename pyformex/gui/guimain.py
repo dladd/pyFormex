@@ -902,8 +902,9 @@ class Gui(QtGui.QMainWindow):
         if exitDialog():
             self.drawlock.free()
             dooze = pf.cfg['gui/dooze']
-            print("Exiting in %s seconds" % dooze)
-            draw.sleep(dooze)
+            if dooze > 0:
+                print("Exiting in %s seconds" % dooze)
+                draw.pause(dooze)
             # force reset redirect
             sys.stderr.flush()
             sys.stdout.flush()

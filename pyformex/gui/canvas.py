@@ -850,9 +850,9 @@ class Canvas(object):
         GL.glDepthFunc(GL.GL_LESS)
 
 
-    def overrideMode(mode):
+    def overrideMode(self,mode):
         """Override some settings"""
-        settings = canvas.settings.RenderProfiles[mode]
+        settings = CanvasSettings.RenderProfiles[mode]
         CanvasSettings.glOverride(settings,self.settings)
         
 
