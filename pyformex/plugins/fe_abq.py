@@ -1169,7 +1169,16 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in rigid_elems:
         if el.sectiontype.upper() == 'RIGID':
-            fil.write("*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n" % (el.nodeset,el.density,setname))
+            # refnode can be setname or number
+            # do not test for int type, because it might be np.intx
+            if not type(el.refnode) is str:
+                el.refnode += 1
+            out = "*RIGID BODY, ELSET=%s, REFNODE=%s" % (setname,el.refnode)
+            if el.density is not None:
+                out += ", DENSITY=%s" % el.density
+            out += '\n'
+            fil.write(out)
+
 
     ############
     ## UNSUPPORTED elements

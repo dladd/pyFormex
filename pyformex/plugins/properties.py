@@ -110,28 +110,31 @@ class ElemSection(CDict):
       section database. The required data in the dict depend on the
       sectiontype. Currently the following keys are used by fe_abq.py:
 
-      sectiontype
+    sectiontype
         the type of section: should be one of following:
 
-        - 'solid': a solid 2D or 3D section,
-        - 'circ' : a plain circular section,
-        - 'rect' : a plain rectangular section,
-        - 'pipe' : a hollow circular section,
-        - 'box'  : a hollow rectangular section,
-        - 'I'    : an I-beam,
+        - 'solid'   : a solid 2D or 3D section,
+        - 'circ'    : a plain circular section,
+        - 'rect'    : a plain rectangular section,
+        - 'pipe'    : a hollow circular section,
+        - 'box'     : a hollow rectangular section,
+        - 'I'       : an I-beam,
         - 'general' : anything else (automatically set if not specified).
+        - 'rigid'   : a rigid body
 
-        !! Currently only 'solid' and 'general' are allowed.
-        
-      - the cross section characteristics :
-        cross_section, moment_inertia_11, moment_inertia_12,
-        moment_inertia_22, torsional_constant
+        .. note: Currently only 'solid', 'general' and 'rigid' are allowed.
+
+      - for sectiontype 'solid' : thickness
+      - the sectiontype 'general': cross_section, moment_inertia_11,
+        moment_inertia_12, moment_inertia_22, torsional_constant
       - for sectiontype 'circ': radius
+      - for sectiontype 'rigid': refnode, density, thickness
 
     material
       the element material. This can be a dict or a string.
       Currently known keys to fe_abq.py are: young_modulus,
       shear_modulus, density, poisson_ratio . (see fmtMaterial in fe_abq)
+      It should not be specified for rigid sections.
       
     orientation
       - a Dict, or
