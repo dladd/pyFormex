@@ -606,14 +606,12 @@ class GeomActor(Actor):
         if mode != canvas.rendermode:
             canvas.overrideMode(mode)
 
-
         ############# set drawing attributes #########
         avgnormals = self.avgnormals
         if avgnormals is None:
             avgnormals = canvas.settings.avgnormals
 
         lighting = canvas.settings.lighting
-        #print("ACTORS.drawgl lighting = %s" % lighting)
 
         alpha = self.alpha
         if alpha is None:

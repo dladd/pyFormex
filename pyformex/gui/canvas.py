@@ -454,6 +454,7 @@ class CanvasSettings(Dict):
         An optional dictionary may be specified to override (some of) these defaults.
         """
         self.update(pf.refcfg['canvas'])
+        self.update(self.RenderProfiles[pf.prefcfg['draw/rendermode']])
         self.update(pf.prefcfg['canvas'])
         self.update(pf.cfg['canvas'])
         if d:
@@ -519,18 +520,12 @@ class CanvasSettings(Dict):
     def activate(self):
         """Activate the default canvas settings in the GL machine."""
         self.glOverride(self,self)
-        ## glSmooth(self.smooth)
-        ## glFill(self.fill)
-        ## glLighting(self.lighting)
-        ## glColor(self.fgcolor,self.transparency)
-        ## glLineStipple(*self.linestipple)
-        ## glPointSize(self.pointsize)
 
 
     @staticmethod
     def glOverride(settings,default):
         #if settings != default:
-            #print("OVERRIDE CANVAS SETINGS %s" % settings)
+        #print("OVERRIDE CANVAS SETINGS %s" % settings['fill'])
         for k in settings:
             if k in ['fgcolor','transparency']:
                 c = settings.get('fgcolor',default.fgcolor)
@@ -545,6 +540,7 @@ class CanvasSettings(Dict):
             ##     print("CAN NOT SET %s" % k)
 
 
+### OLD: to be rmoved
 def glSettings(settings):
     pf.debug("GL SETTINGS: %s" % settings,pf.DEBUG.DRAW)
     glShadeModel(settings.get('Shading',None))
@@ -601,8 +597,8 @@ class Canvas(object):
         self.resetLighting()
         self.mode2D = False
         self.rendermode = pf.cfg['draw/rendermode']
-        #print(self.rendermode)
         self.setRenderMode(pf.cfg['draw/rendermode'])
+        print("INIT: %s, %s" %(self.rendermode,self.settings.fill))
         self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None
@@ -664,7 +660,7 @@ class Canvas(object):
         is set, the canvas is re-initialized according to the newly set mode,
         and everything is redrawn with the new mode.
         """
-        print("Setting rendermode to %s" % mode)
+        #print("Setting rendermode to %s" % mode)
         if mode not in CanvasSettings.RenderProfiles:
             raise ValueError,"Invalid render mode %s" % mode
 
@@ -777,7 +773,7 @@ class Canvas(object):
                 image = image2numpy(self.settings.bgimage,indexed=False)
             except:
                 pass
-        print("BACKGROUN %s,%s"%(x2,y2))
+        #print("BACKGROUN %s,%s"%(x2,y2))
         self.background = decors.Rectangle(x1,y1,x2,y2,color=color,texture=image)
         
 
@@ -836,16 +832,14 @@ class Canvas(object):
 
 
     def drawit(self,a):
-        """_Perform the draawing of a single item"""
+        """_Perform the drawing of a single item"""
         self.setDefaults()
         a.draw(self)
 
 
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
-        #print("ACTIVATE DEFAULT SETTINGS %s"%self.rendermode)
         self.settings.activate()
-        #pf.debug("Lighting: %s"%self.settings.lighting,pf.DEBUG.CANVAS)
         self.enable_lighting(self.settings.lighting)
         GL.glDepthFunc(GL.GL_LESS)
 
@@ -889,7 +883,6 @@ class Canvas(object):
         or after changing  camera position/orientation or lens.
         """
         #pf.debugt("UPDATING CURRENT OPENGL CANVAS",pf.DEBUG.DRAW)
-        #print "DISPLAY"
         self.makeCurrent()
         self.clear()
         
