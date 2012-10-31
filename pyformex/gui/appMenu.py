@@ -646,8 +646,9 @@ def createAppMenu(mode='app',parent=None,before=None):
     If a menu item named 'Examples' or 'Apps' already exists, it is
     replaced.
     """
+    Mode = mode.capitalize()
     #print("LOADING %s MENU"% mode) 
-    appmenu = menu.Menu('&%s'%mode.capitalize(),parent=parent,before=before)
+    appmenu = menu.Menu('&%s'%Mode,parent=parent,before=before)
     appmenu.mode = mode
     if mode == 'apps':
         appdirs = [ (d.name,d.path) for s in pf.appdirs ]
@@ -670,13 +671,12 @@ def createAppMenu(mode='app',parent=None,before=None):
         pf.debug("Loading menu %s from %s" % (name,path),pf.DEBUG.MENU)
         m = AppMenu(name,path,mode=mode,autoplay=True,parent=appmenu)
  
-    history = AppMenu('%s History'%mode,files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],mode=mode,parent=appmenu)
+    history = AppMenu('%s History'%Mode,files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],mode=mode,parent=appmenu)
     
     setattr(pf.GUI,'%shistory'%mode,history)
 
     #print("BEFORE")
     #appmenu.print_report()
-    Mode = mode.capitalize()
     appmenu.insertItems([
         ('---',None),
         (_('&Configure %s Paths'%Mode),setDirs,{'data':'%sdirs'%mode}),

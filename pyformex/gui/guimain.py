@@ -1334,7 +1334,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Plugin menus
     import plugins
     filemenu = pf.GUI.menu.item('file')
-    pf.gui.plugin_menu = plugins.create_plugin_menu(filemenu,before='History')
+    pf.gui.plugin_menu = plugins.create_plugin_menu(filemenu,before='---1')
     # Load configured plugins, ignore if not found
     plugins.loadConfiguredPlugins()
 
