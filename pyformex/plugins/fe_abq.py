@@ -1682,8 +1682,9 @@ class Step(Dict):
     analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
-    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',subheading=None,\
-                tags=None,name=None,out=None,res=None,stepOptions=None,analysisOptions=None,extra=None):
+    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
+                 subheading=None,tags=None,name=None,out=None,res=None,
+                 stepOptions=None,analysisOptions=None,extra=None):
         """Create a new analysis step."""
         
         
@@ -1905,6 +1906,7 @@ class Result(Dict):
         Dict.__init__(self,{'keys':keys,'kind':kind,'set':set,'output':output,
                             'freq':freq})
         self.update(dict(**kargs))
+
 
 class Interaction(Dict):
     """A Dict for setting surface interactions

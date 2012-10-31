@@ -76,10 +76,10 @@ class Model(Geometry):
             self.coords = Coords(coords)
             self.elems = [ Connectivity(e) for e in elems ]
             self.prop = None
-        self.meshes = [ Mesh(self.coords,e) for e in self.elems ]
-        nnodes = [ m.nnodes() for m in self.meshes ]
-        nelems = [ m.nelems() for m in self.meshes ]
-        nplex = [ m.nplex() for m in self.meshes ]
+            meshes = self.meshes()
+        nnodes = [ m.nnodes() for m in meshes ]
+        nelems = [ m.nelems() for m in meshes ]
+        nplex = [ m.nplex() for m in meshes ]
         self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
         pf.message("Finite Element Model")
@@ -90,6 +90,10 @@ class Model(Geometry):
         pf.message("Number of elements per group: %s" % nelems)
         pf.message("Plexitude of each group: %s" % nplex)
 
+
+    def meshes(self):
+        """Return the parts as a list of meshes"""
+        return [ Mesh(self.coords,e) for e in self.elems ]
 
     def nnodes(self):
         """Return the number of nodes in the model."""
@@ -226,10 +230,10 @@ class FEModel(Geometry):
             if not isinstance(m,Mesh):
                 raise ValueError,"Expected a Mesh or a list thereof."
 
+        nnodes = [ m.nnodes() for m in meshes ]
+        nelems = [ m.nelems() for m in meshes ]
+        nplex = [ m.nplex() for m in meshes ]
         self.meshes = meshes
-        nnodes = [ m.nnodes() for m in self.meshes ]
-        nelems = [ m.nelems() for m in self.meshes ]
-        nplex = [ m.nplex() for m in self.meshes ]
         self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
         pf.message("Finite Element Model")
