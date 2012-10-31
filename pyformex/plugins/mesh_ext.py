@@ -42,15 +42,30 @@ from utils import deprecation
 ##############################################################################
 
 
-def rings(self, sources, nrings):
+def rings(self, sources=0, nrings=-1):
     """
-    It finds the rings of elems connected to sources by node.
+    It finds rings of elements connected to sources by a node.
     
-    Sources is a list of elem indices.
-    A list of rings is returned, from zero (equal to sources) to step.
-    If step is -1, all rings are returned.
+    Sources can be a single element index (integer) or a list of element indices.
+    A list of rings is returned, from zero (ie. the sources) to nrings.
+    If nrings is negative (default), all rings are returned.
+    
+    Example:
+    
+    S=Sphere(2)
+    smooth()
+    draw(S, mode='wireframe')
+    drawNumbers(S, ontop=True, color='white')
+    r=S.rings(sources=[2, 6], nrings=2)
+    print(r)
+    for i, ri in enumerate(r):
+        draw(S.select(ri).setProp(i), mode='smooth')
+    
+    
     """
-    r=self.frontWalk(startat=sources,maxval=nrings, frontinc=1)
+    if nrings == 0:
+        return [array(sources)]
+    r=self.frontWalk(startat=sources,maxval=nrings-1, frontinc=1)
     ar, rr= arange(len(r)), range(r.max()+1)
     return [ar[r==i] for i in rr ]
 
