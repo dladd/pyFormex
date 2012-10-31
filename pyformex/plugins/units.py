@@ -35,10 +35,10 @@ include it in this distribution.
 """
 from __future__ import print_function
 
-#from pyformex import utils
+from pyformex import utils
 #utils.hasExternal('units')
 
-import commands,string
+import string
     
 def convertUnits(From,To):
     """Converts between conformable units.
@@ -50,7 +50,7 @@ def convertUnits(From,To):
     This function is merely a wrapper around the GNU 'units' command, which
     should be installed for this function to work.
     """
-    status,output = commands.getstatusoutput('units \"%s\" \"%s\"' % (From,To))
+    status,output = utils.system('units \"%s\" \"%s\"' % (From,To))
     if status:
         raise RuntimeError, 'Could not convert units from \"%s\" to \"%s\"' % (From,To) 
     return string.split(output)[1]

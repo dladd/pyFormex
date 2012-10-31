@@ -465,6 +465,18 @@ class PropertyDB(Dict):
         if isinstance(aDict,SectionDB):
             self.sect = aDict
             ElemSection.secDB = aDict
+
+    def print(self):
+        """Print the property database"""
+        print("General properties")
+        for p in self.getProp(''):
+            print(p)
+        print("Node properties")
+        for p in self.getProp('n'):
+            print(p)
+        print("Element properties")
+        for p in self.getProp('e'):
+            print(p)
         
 
     def Prop(self,kind='',tag=None,set=None,name=None,**kargs):

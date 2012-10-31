@@ -30,7 +30,7 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['persistence', 'dialog', 'color'] 
+_techniques = ['properties', 'export']
 
 from gui.draw import *
 

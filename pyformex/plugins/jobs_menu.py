@@ -268,21 +268,33 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
         print(jobname_input)
         res = askItems(jobname_input + [
             _I('target dir',targetdir,itemtype='button',func=changeTargetDir),
+            _I('create subdir',False,tooltip="Create subdir (with same name as remote) in target dir"),
             ('.fil',True),
             ('.post',True),
-            ('_post.py',False),
+            ('.odb',False),
+            _I('other',[],tooltip="A list of '.ext' strings"),
             ])
         if res:
             host = res.get('host',the_host)
             userdir = res.get('userdir',the_userdir)
             jobname = res['jobname']
             targetdir = res['target dir']
-            ext = [ e for e in ['.fil','.post','_post.py'] if res[e] ]
+            if res['create subdir']:
+                targetdir = os.path.join(targetdir,os.path.basename(userdir))
+                print("TARGETDIR:%s" % targetdir)
+                try:
+                    os.mkdir(targetdir)
+                except:
+                    False
+            ext = [ e for e in ['.fil','.post','.odb'] if res[e] ]
+            res += [ e for e in res['other'] if e.startswith('.') ]
     if jobname and ext:
         files = [ '%s%s' % (jobname,e) for e in ext ]
         userdir = "%s/%s" % (userdir,jobname)
+        pf.GUI.setBusy(True)
         if getFiles(host,userdir,files,targetdir):
             the_jobname = jobname
+        pf.GUI.setBusy(False)
 
         
 

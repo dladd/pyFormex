@@ -231,7 +231,7 @@ def checkExternal(name=None,command=None,answer=None,quiet=False):
         if answer is None:
             answer = ans
 
-    out = system1(command)[1]
+    out = system(command)[1]
     m = re.match(answer,out)
     if m:
         version = m.group(1)
@@ -754,21 +754,19 @@ def countLines(fn):
 
 ### execute a system command ###
 def system(cmd):
-    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
     import subprocess
-    P = subprocess.Popen(cmd,shell=True,bufsize=-1,stdout=subprocess.PIPE, stderr=subprocess.PIPE) # or .STDOUT to redirect 
+    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
+    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     sta = P.wait() # wait for the process to finish
     out = P.communicate()[0] # get the stdout
     return sta,out
 
-#
-#
-# TODO: replace commands with subprocess module
-#
+
+# DEPRECATED, KEPT FOR EMERGENCIES
 ### execute a system command ###
-def system1(cmd):
-    import commands
-    return commands.getstatusoutput(cmd)
+## def system1(cmd):
+##     import commands
+##     return commands.getstatusoutput(cmd)
 
 def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error.
@@ -780,7 +778,7 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     """
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    sta,out = system1(cmd)
+    sta,out = system(cmd)
     if sta != 0:
         if not quiet:
             pf.message(out)

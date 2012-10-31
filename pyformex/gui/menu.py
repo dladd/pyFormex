@@ -334,8 +334,9 @@ class Menu(BaseMenu,QtGui.QMenu):
             self.setWindowTitle(title)
         else:
             if tearoff:
-                print("TEAR OFF menus currently not implemented")
-                tearoff = False
+                print("TEAR OFF menus are experimental")
+                #print("TEAR OFF menus currently not implemented")
+                #tearoff = False
             self.setTearOffEnabled(tearoff)
         self.done = False
             
