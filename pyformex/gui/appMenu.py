@@ -135,11 +135,11 @@ def splitAlpha(strings,n,ignorecase=True):
         key = str
     strings = sorted(strings,key=key)
     mult,bins = multiplicity([ord(key(f[0])) for f in strings ])
-    print(ord('A'))
-    print(bins)
-    print(mult)
+    #print(ord('A'))
+    #print(bins)
+    #print(mult)
     count = dict(zip(bins,mult))
-    print(count)
+    #print(count)
     cat = []
     grp = []
 
@@ -330,7 +330,7 @@ class AppMenu(menu.Menu):
                         # string from catalog file
                         lbl = i.capitalize()
                     ki = '%s/%s' % (k,i)
-                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk)
+                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk)
                 mk.addRunAllMenu()
 
             self.files = []
@@ -466,8 +466,8 @@ class AppMenu(menu.Menu):
         and run it if play==True.
         """
         self.current = app
-        if self.mode != 'app':
-            pf.GUI.setcurfile(app)
+        #if self.mode != 'app':
+        pf.GUI.setcurfile(app)
         if play:
             if self.mode == 'app':
                 appname = self.fullAppName(app)
@@ -648,7 +648,7 @@ def createAppMenu(mode='app',parent=None,before=None):
     """
     #print("LOADING %s MENU"% mode) 
     appmenu = menu.Menu('&%s'%mode.capitalize(),parent=parent,before=before)
-
+    appmenu.mode = mode
     if mode == 'apps':
         appdirs = [ (d.name,d.path) for s in pf.appdirs ]
     else:
@@ -670,7 +670,7 @@ def createAppMenu(mode='app',parent=None,before=None):
         pf.debug("Loading menu %s from %s" % (name,path),pf.DEBUG.MENU)
         m = AppMenu(name,path,mode=mode,autoplay=True,parent=appmenu)
  
-    history = AppMenu('History',files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],parent=appmenu)
+    history = AppMenu('%s History'%mode,files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],mode=mode,parent=appmenu)
     
     setattr(pf.GUI,'%shistory'%mode,history)
 

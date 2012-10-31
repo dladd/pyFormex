@@ -598,7 +598,7 @@ class Canvas(object):
         self.mode2D = False
         self.rendermode = pf.cfg['draw/rendermode']
         self.setRenderMode(pf.cfg['draw/rendermode'])
-        print("INIT: %s, %s" %(self.rendermode,self.settings.fill))
+        #print("INIT: %s, %s" %(self.rendermode,self.settings.fill))
         self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None

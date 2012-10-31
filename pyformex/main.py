@@ -269,7 +269,8 @@ def apply_config_changes(cfg):
 
     # Rename settings
     for old,new in [
-        ('history','gui/history'),
+        ('history','gui/scripthistory'),
+        ('gui/history','gui/scripthistory'),
         ('raiseapploadexc','showapploaderrors'),
         ]:
         if old in cfg.keys():

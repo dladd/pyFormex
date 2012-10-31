@@ -57,6 +57,7 @@ from colors import *
 from signals import *
 from formex import *
 from mesh import Mesh
+from plugins.trisurface import TriSurface
         
 #################### Interacting with the user ###############################
 
