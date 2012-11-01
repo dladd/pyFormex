@@ -2267,6 +2267,56 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     coords,index = mergeNodes(coords,fuse,**kargs)
     return coords,[Connectivity(i[e],eltype=e.eltype) for i,e in zip(index,elems)]
 
+
+def unitAttractor(x,e0=0.,e1=0.):
+    """Moves values in the range 0..1 closer to or away from the limits.
+
+    - `x`: a list or array with values in the range 0.0 to 1.0.
+    - `e0`, `e1`: attractor parameters for the start, resp. the end of the
+      range. A value larger than zero will attract the points closer to the
+      corresponding endpoint, while a negative value will repulse them.
+      If two positive values are given, the middle part of the interval
+      will become sparsely populated.
+
+    .. note: This function is usually called from the :func:`seed` function,
+       passing an initially uniformly distributed set of points. 
+
+    Example:
+
+    >>> print(unitAttractor([0.,0.25,0.5,0.75,1.0],2.))
+    [ 0.          0.00390625  0.0625      0.31640625  1.        ]
+    """
+    x = asarray(x)
+    e0 = 2**e0
+    e1 = 2**e1
+    at0 = lambda x,e: x**e
+    at1 = lambda x,e: 1.-(1.-x)**e
+    return 0.5 * (at1(at0(x,e0),e1) + at0(at1(x,e1),e0))
+
+
+def seed(n,e0=0.,e1=0.):
+    """Create one-dimensional element seeds in a unit interval
+
+    Returns parametric values along the unit interval in order to
+    divide it in n elements, possibly of unequal length.
+
+    Parameters:
+
+    - `n`: number of elements (yielding n+1 parameter values).
+    - `e0`, `e1`: attractor parameters for the start, resp. the end of the
+      range. A value larger than zero will attract the points closer to the
+      corresponding endpoint, while a negative value will repulse them.
+      If two positive values are given, the middle part of the interval
+      will become sparsely populated.
+
+    Example:
+
+    >>> print(seed(5,2.,2.))
+    [ 0.          0.0639436   0.33624323  0.66375677  0.9360564   1.        ]
+    """
+    x = arange(n+1) * 1. / n
+    return unitAttractor(x,e0,e1)
+
 # 
 # Local utilities: move these to elements.py ??
 #
@@ -2288,6 +2338,7 @@ def tri3_els(ndiv):
     
     return elems
 
+# TODO: can be removed, this is equivalent to gridpoints(seed(nx),seed(ny))
 def quad4_wts(nx,ny):
     x1 = arange(nx+1)
     y1 = arange(ny+1)
@@ -2296,10 +2347,45 @@ def quad4_wts(nx,ny):
     pts = dstack([outer(y0,x0),outer(y0,x1),outer(y1,x1),outer(y1,x0)]).reshape(-1,4)
     return pts / float(nx*ny)
 
+def gridpoints(seed0,seed1=None,seed2=None):
+    if seed1 is None:
+        pts = seed0
+    elif seed2 is None:
+        x1 = seed0
+        y1 = seed1
+        x0 = 1.-x1
+        y0 = 1.-y1
+        pts = dstack([outer(y0,x0),outer(y0,x1),outer(y1,x1),outer(y1,x0)]).reshape(-1,4)
+    return pts
+
 def quad4_els(nx,ny):
     n = nx+1
     els = [ row_stack([ array([0,1,n+1,n]) + i for i in range(nx) ]) + j * n for j in range(ny) ]
     return row_stack(els)
+
+
+def quadgrid(seed0,seed1):
+    """Create a quadrilateral mesh of unit size with the specified seeds.
+
+    The seeds are a monotuoudsly increasing series of parametric values
+    in the range 0..1. They define the positions of the nodes in the
+    parametric directions 0, resp. 1.
+    Normally, the first and last values of the seeds are 0., resp. 1.,
+    leading to a unit square grid.
+
+    The seeds are usually generated with the seed() function.
+    """
+    from elements import Quad4
+    wts = gridpoints(seed0,seed1)
+    n0 = len(seed0)-1
+    n1 = len(seed1)-1
+    E = Quad4.toMesh()
+    X = E.coords.reshape(-1,4,3)
+    U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
+    els = quad4_els(n0,n1)
+    e = concatenate([els+i*wts.shape[0] for i in range(E.nelems())])
+    M = Mesh(U,e,eltype=E.elType())
+    return M.fuse()
  
 
 
@@ -2328,16 +2414,16 @@ def correctHexMeshOrientation(hm):
     return hm
 
 
-# deprecated in 0.8.5
-def connectMeshSequence(ML,loop=False,**kargs):
-    utils.deprec("connectMeshSequence is deprecated: use Mesh.connect instead")
-    MR = ML[1:]
-    if loop:
-        MR.append(ML[0])
-    else:
-        ML = ML[:-1]
-    HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-    return Mesh.concatenate(HM)
+# removed in 0.8.7
+## def connectMeshSequence(ML,loop=False,**kargs):
+##     utils.deprec("connectMeshSequence is deprecated: use Mesh.connect instead")
+##     MR = ML[1:]
+##     if loop:
+##         MR.append(ML[0])
+##     else:
+##         ML = ML[:-1]
+##     HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
+##     return Mesh.concatenate(HM)
 
 
 # End

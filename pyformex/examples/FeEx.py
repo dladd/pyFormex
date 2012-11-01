@@ -29,7 +29,7 @@ from __future__ import print_function
 _status = 'unchecked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['menu', 'dialog', 'persistence', 'color'] 
+_techniques = ['menu', 'dialog', 'persistence', 'color', 'isopar'] 
 
 from gui.draw import *
 from pyformex import GUI,PF

@@ -34,7 +34,7 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']
-_techniques = ['transform','projection','dialog','image']
+_techniques = ['transform','projection','dialog','image','isopar']
 
 from gui.draw import *
 from plugins.trisurface import TriSurface

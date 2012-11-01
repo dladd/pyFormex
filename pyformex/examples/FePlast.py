@@ -59,10 +59,45 @@ def sortElemsByLoadedFace(ind):
         d[e] = ind[where(ind[:,1]==e)[0],0]
     return d
 
-        
+
+def rectangle_with_hole(L,W,r,nl,nb,e0=0.0,eltype='quad4'):
+    """Create a quarter of rectangle with a central circular hole.
+
+    Parameters:
+
+    - L,W: length,width of the (quarter) rectangle
+    - r: radius of the hole
+    - nl,nb: number of elements over length,width
+
+    Returns a Mesh 
+    """
+    L = W
+    import elements
+    base = elements.Quad9.vertices.scale([L,W,1.])
+    F0 = Formex([[[r,0.,0.]]]).rosette(5,90./4)
+    F2 = Formex([[[L,0.]],[[L,W/2]],[[L,W]],[[L/2,W]],[[0,W]]])
+    F1 = interpolate(F0,F2,div=[0.5])
+    FL = [F0,F1,F2]
+    X0,X1,X2 = [ F.coords.reshape(-1,3) for F in FL ]
+    trf0 = Coords([X0[0],X2[0],X2[2],X0[2],X1[0],X2[1],X1[2],X0[1],X1[1]])
+    trf1 = Coords([X0[2],X2[2],X2[4],X0[4],X1[2],X2[3],X1[4],X0[3],X1[3]])
+
+    seed0 = seed(nb,e0)
+    seed1 = seed(nl)
+    grid = quadgrid(seed0,seed1).resized([L,W,1.0])
+
+    grid0 = grid.isopar('quad9',trf0,base)
+    grid1 = grid.isopar('quad9',trf1,base)
+    return (grid0+grid1).fuse()
+
+
+from mesh import *
+
 def run():
     reset()
     clear()
+
+    processor = 'abq'   # set to 'ccx' for calculix
 
     # Create a thin rectangular plate.
     # Because it is thin, we use a 2D model (in the xy plane.
@@ -72,9 +107,18 @@ def run():
     B = 100. # width of the plate (mm)
     th = 10. # thickness of the plate (mm)
     L2,B2 = L/2, B/2  # dimensions of the quarter plate
-    nl,nb = 40,10     # number of elements along length, width
-    plate = simple.rectangle(nl,nb).toMesh() # Create the plate
-    plate = plate.scale([L2/nl,B2/nb,1.])    # Give it the correct size
+    nl,nb = 10,16     # number of elements along length, width
+    D = 20.
+    r = D/2
+    e0 = 0.3
+
+    # Create the plate
+    if ask('Choose plate:',['Rectangle','Square with hole']) == 'Rectangle':
+        plate = simple.rectangle(nl,nb,L2,B2).toMesh()
+    else:
+        plate = rectangle_with_hole(L2,B2,r,nl,nb,e0)
+
+
     draw(plate)
 
     # model is completely shown, keep camera bbox fixed 
@@ -136,9 +180,15 @@ def run():
     nxz = where(nxz)[0]
     draw(FEM.coords[nyz],color=cyan)
     draw(FEM.coords[nxz],color=green)
+    
     # Define the boundary conditions
-    P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound='XSYMM')
-    P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound='YSYMM')
+    # For Abaqus, we could define it like follows
+    #P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound='XSYMM')
+    #P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound='YSYMM')
+    # But as Calculix does not have the XSYMM/YSYMM possibilities
+    # we define the conditions explicitely
+    P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound=[1,0,1,1,1,1])
+    P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound=[0,1,1,1,1,1])
 
     # The plate is loaded by a uniform tensile stress in the x-direction
     # First we detect the border
@@ -152,9 +202,17 @@ def run():
     draw(BRD.select(loaded),color=blue,linewidth=4)
     sortedelems = sortElemsByLoadedFace(ind[loaded])
     # Define the load
-    load = 10.0   # tensile load in MPa
+    # Apply 4 load steps:
+    # 1: small load (10 MPa)
+    # 2: higher load, but still elastic (100 MPa)
+    # 3: slightly exceeding yield stress (320 MPa)
+    # 4: high plastic deformation (400MPa)
+    loads = [10.,100.,320.,400.]  # tensile load in MPa
+    steps = ['step%s'%(i+1) for i in range(len(loads)) ]   # step names
     for face in sortedelems:
-        P.elemProp(tag='step1',set=sortedelems[face],name='Loaded-%s'%face,dload=ElemLoad('P%s'%face,-load))
+        abqface = face+1 # BEWARE: Abaqus numbers start with 1
+        for step,load in zip(steps,loads):
+            P.elemProp(tag=step,set=sortedelems[face],name='Loaded-%s'%face,dload=ElemLoad('P%s'%(abqface),-load))
 
     # Print the property database
     P.print()
@@ -171,10 +229,11 @@ def run():
             Result(kind='ELEMENT',keys=['SP','SINV'],set='Plate'),
             ]
 
-    # Define a loading step
-    step1 = Step('STATIC',time=[1., 1., 0.01, 1.],tags=['step1'])
+    # Define the simulation steps
+    # The tags refer to the property database
+    simsteps = [ Step('STATIC',time=[1., 1., 0.01, 1.],tags=[step]) for step in steps ]
 
-    data = AbqData(FEM,prop=P,steps=[step1],res=res,bound=['init'])
+    data = AbqData(FEM,prop=P,steps=simsteps,res=res,bound=['init'])
 
     if ack('Export this model in ABAQUS input format?',default='No'):
         fn = askNewFilename(filter='*.inp')

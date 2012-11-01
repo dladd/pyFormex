@@ -103,7 +103,7 @@ def configure():
     dia.show()
 
 
-def getSubdirs(host,userdir):
+def getRemoteDirs(host,userdir):
     """Get a list of all subdirs in userdir on host.
 
     The host should be a machine where the user has ssh access.
@@ -118,7 +118,22 @@ def getSubdirs(host,userdir):
     return dirs
 
 
-def getFiles(host,userdir,files,targetdir):
+## def getRemoteFiles(host,userdir):
+##     """Get a list of all files in userdir on host.
+
+##     The host should be a machine where the user has ssh access.
+##     The userdir is relative to the user's home dir.
+##     """
+##     cmd = "ssh %s 'cd %s;ls -F'" % (host,userdir)
+##     sta,out = utils.runCommand(cmd,False)
+##     if sta:
+##         out = ''
+##     dirs = out.split('\n')
+##     dirs = [ j.strip('/') for j in dirs ]
+##     return dirs
+
+
+def transferFiles(host,userdir,files,targetdir):
     """Copy files from userdir on host to targetdir.
 
     files is a list of file names.
@@ -154,6 +169,36 @@ def remoteCommand(host=None,command=None):
         cmd = "ssh %s '%s'" % (host,command)
         sta,out = utils.runCommand(cmd)
         message(out)
+        
+
+def runLocalProcessor(filename=None):
+    """Run a black box job locally.
+
+    The black box job is a command run on an input file.
+    """
+    if not filename:
+        filename = askFilename(pf.cfg['workdir'],filter="Abaqus input files (*.inp)",exist=True)
+    if filename:
+        if not filename.endswith('.inp'):
+            filename += '.inp'
+        jobname = os.path.basename(filename)[:-4]
+        res = askItems([
+            _I('ncpus',4,text='Number of cpus',min=1,max=1024),
+            _I('abqver','6.10',text='Abaqus Version',choices=['6.8','6.9','6.9ef','6.10','6.11','6.12']),
+            _I('postabq',True,text='Run postabq on the results?'),
+            ])
+        if res:
+            reqtxt = 'cpus=%s\n' % res['ncpus']
+            reqtxt += 'abqver=%s\n' % res['abqver']
+            if res['postabq']:
+                reqtxt += 'postproc=postabq\n'
+            host = pf.cfg.get('jobs/host','bumpfs')
+            reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
+            cmd = "scp %s %s:%s" % (filename,host,reqdir)
+            ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
+            print(ret)
+            ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
+            print(ret)
         
 
 def submitToCluster(filename=None):
@@ -230,7 +275,7 @@ def checkResultsOnServer(host=None,userdir=None):
         else:
             userdir = res['userdir']
         
-    jobnames = getSubdirs(host,userdir)
+    jobnames = getRemoteDirs(host,userdir)
     if jobnames:
         the_host = host
         the_userdir = userdir
@@ -269,8 +314,8 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
         res = askItems(jobname_input + [
             _I('target dir',targetdir,itemtype='button',func=changeTargetDir),
             _I('create subdir',False,tooltip="Create subdir (with same name as remote) in target dir"),
-            ('.fil',True),
             ('.post',True),
+            ('.fil',False),
             ('.odb',False),
             _I('other',[],tooltip="A list of '.ext' strings"),
             ])
@@ -280,8 +325,8 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
             jobname = res['jobname']
             targetdir = res['target dir']
             if res['create subdir']:
-                targetdir = os.path.join(targetdir,os.path.basename(userdir))
-                print("TARGETDIR:%s" % targetdir)
+                targetdir = os.path.join(targetdir,jobname)
+                print("Create targetdir %s" % targetdir)
                 try:
                     os.mkdir(targetdir)
                 except:
@@ -292,8 +337,9 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
         files = [ '%s%s' % (jobname,e) for e in ext ]
         userdir = "%s/%s" % (userdir,jobname)
         pf.GUI.setBusy(True)
-        if getFiles(host,userdir,files,targetdir):
+        if transferFiles(host,userdir,files,targetdir):
             the_jobname = jobname
+            pf.message("Files succesfully transfered")
         pf.GUI.setBusy(False)
 
         

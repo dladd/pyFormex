@@ -145,6 +145,13 @@ Release 0.9
 
 **Add DEBUG LEVEL to all debug statements**
   :sta: DONE
+
+**Syntax cleanup**
+  :sta: TODO
+  :rem: Some constructions to change:
+    
+    - type(a) == int  should become:   isinstance(a,int)
+
       
 Release 0.9.1
 -------------
