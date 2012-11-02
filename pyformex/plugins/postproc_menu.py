@@ -216,6 +216,11 @@ def named_item(items,name):
 
 
 def showModel(nodes=True,elems=True):
+    clear()
+    smoothwire()
+    lights(False)
+    transparent(True)
+    clear()
     print('Elements in model:')
     for k,v in DB.elems.iteritems():
         print("%s: %s" % (k,len(v)))
@@ -224,9 +229,6 @@ def showModel(nodes=True,elems=True):
         draw([m.coords for m in M],nolight=True)
     if elems:
         draw(M)
-    smoothwire()
-    lights(False)
-    transparent(True)
     zoomAll()
 
 
@@ -669,7 +671,6 @@ def checkDB():
     If no results database was already selected, asks the user to do so.
     Returns True if a databases is selected.
     """
-    print(DB)
     if not isinstance(DB,FeResult):
         selectDB()
     return isinstance(DB,FeResult)
@@ -794,15 +795,14 @@ def open_dialog():
     close_dialog()
 
     def set_inc_choices(step):
-        print("Setting incs for step %s" % step)
-        print("  Incs for step %s: %s" % (step,DB.getIncs(int(step))))
-        dialog['inc'].setChoices(DB.getIncs(int(step)))
-
+        if step: # to avoid an error when called before data set
+            print("  Incs for step %s: %s" % (step,DB.getIncs(int(step))))
+            dialog['inc'].setChoices(DB.getIncs(int(step)))
 
     input_items = [
         _T('Result',[
             _I('feresult',text='FE Result DB',value='',itemtype='info'),
-            _I('step',text='Step',choices=[1],onselect=set_inc_choices),
+            _I('step',text='Step',choices=DB.getSteps(),onselect=set_inc_choices),
             _I('inc',text='Increment',choices=[1]),
             _I('elgroup',text='Element Group',choices=['--ALL--',]),
             _I('restype',text='Type of result',choices=result_types.values()),
@@ -839,7 +839,7 @@ def open_dialog():
         # ('Show Fields',showfields),
         # ('Show Attr',showattr),
         ]
-    dialog = widgets.InputDialog(
+    dialog = Dialog(
         input_items,
         enablers = enablers,
         caption='Results Dialog',
@@ -857,6 +857,7 @@ def open_dialog():
     if DB:
         newdata['elgroup'] = ['--ALL--',] + DB.elems.keys()
     dialog.updateData(newdata)
+
     dialog['step'].setChoices(DB.getSteps())
     dialog['inc'].setChoices(DB.getIncs(DB.getSteps()[0]))
     dialog.show()
