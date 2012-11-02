@@ -2077,12 +2077,12 @@ Script: %s
 
         pf.message("Writing global model properties")
         
-        prop = self.prop.getProp('',  attr=['mass'])
+        prop = self.prop.getProp('',attr=['mass'])
         if prop:
             pf.message("Writing masses")
             fil.write(fmtMass(prop))
         
-        prop = self.prop.getProp('',  attr=['inertia'])
+        prop = self.prop.getProp('',attr=['inertia'])
         if prop:
             pf.message("Writing rotary inertia")
             fil.write(fmtInertia(prop))

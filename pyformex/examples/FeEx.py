@@ -398,6 +398,9 @@ def createAbaqusInput():
     if not fn:
         return
 
+    if not fn.endswith('.inp'):
+        fn += '.inp'
+
     out = [ Output(type='history'),
             Output(type='field'),
             ]

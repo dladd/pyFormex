@@ -2574,9 +2574,10 @@ def updateText(widget,text,format=''):
     if format not in ['plain','html','rest']:
         if type(text) is str and text.startswith('..'):
             format = 'rest'
-
+        ## else:
+        ##     format = 'plain'
+            
     # conversion
-    html = utils.rst2html(text)
     if format == 'rest' and pf.cfg['gui/rst2html']:
         html = utils.rst2html(text)
         if html[:10] == text[:10]:
