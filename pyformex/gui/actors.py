@@ -469,6 +469,12 @@ class GeomActor(Actor):
         self.avgnormals = avgnormals
 
 
+    def level(self):
+        try:
+            return self.object.level()
+        except:
+            return 0
+
     def getType(self):
         return self.object.__class__
 
@@ -544,7 +550,7 @@ class GeomActor(Actor):
         if mode.endswith('wire'):
             #print("WIRE MODE")
             try:
-                if self.object.level() > 1:
+                if self.level() > 1:
 
                     if not hasattr(self,'wire'):
                         import copy

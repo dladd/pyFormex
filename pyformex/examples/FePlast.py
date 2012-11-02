@@ -187,8 +187,8 @@ def run():
     #P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound='YSYMM')
     # But as Calculix does not have the XSYMM/YSYMM possibilities
     # we define the conditions explicitely
-    P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound=[1,0,1,1,1,1])
-    P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound=[0,1,1,1,1,1])
+    P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound=[1,0,0,0,0,0])
+    P.nodeProp(tag='init',set=nxz,name='XZ_plane',bound=[0,1,0,0,0,0])
 
     # The plate is loaded by a uniform tensile stress in the x-direction
     # First we detect the border

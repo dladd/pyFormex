@@ -1592,6 +1592,7 @@ def writeStepExtra(fil,extra):
 #         if res and self.analysis == 'EXPLICIT':
 #            writeFileOutput(fil,resfreq,timemarks)
 # should be removed and change also the OUTPUT class (see comments)
+
 class Step(Dict):
     """_Badly structured docstring
 
@@ -1618,10 +1619,9 @@ class Step(Dict):
       - for RIKS: a list of 8 values
       In most cases, only the step time should be specified.
       
-    - `nlgeom`: 'YES' ot 'NO' (default)
-      If 'YES', the analysis will be geometrically non-linear. For Analysis type
-      'RIKS'  set `nlgeom` to 'YES', 'BUCKLE' set it to 'NO',
-      'PERTURBATION' ignores `nlgeom`.
+    - `nlgeom`: True or False (default). If True, the analysis will be
+      geometrically non-linear. For Analysis type 'RIKS', `nlgeom` is set
+      True, for 'BUCKLE' it is set False, 'PERTURBATION' ignores `nlgeom`.
     - `tags`: a list of property tags to include in this step.
       If specified, only the property records having one of the listed values
       as their `tag` attribute will be included in this step.
@@ -1682,21 +1682,29 @@ class Step(Dict):
     analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
-    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
+    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom=False,
                  subheading=None,tags=None,name=None,out=None,res=None,
                  stepOptions=None,analysisOptions=None,extra=None):
         """Create a new analysis step."""
         
         
         self.analysis = analysis.upper()
+
         self.name = name
         if not self.analysis in Step.analysis_types:
             raise ValueError,'analysis should be one of %s' % analysis_types
         if type(time) == float:
             time = [ 0., time, 0., 0. ]
-        
         self.time = time
+
+        if analysis == 'RIKS':
+            nlgeom = True
+        elif analysis in ['BUCKLE','PERTURBATION']:
+            nlgeom = False
+        if nlgeom == 'NO':
+            nlgeom = False
         self.nlgeom = nlgeom
+        
         self.tags = tags
         self.out = out
         self.res = res
@@ -1722,8 +1730,9 @@ class Step(Dict):
             cmd += ',NAME = %s' % self.name
         if self.analysis == 'PERTURBATION':
             cmd += ', PERTURBATION'
-        
-        cmd += ', NLGEOM=%s' % self.nlgeom
+
+        if self.nlgeom:
+            cmd += ', NLGEOM'
         
         if self.stepOptions is not None:
             cmd+=fmtOptions(self.stepOptions)

@@ -26,7 +26,7 @@
 
 """
 from __future__ import print_function
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
 _techniques = ['menu', 'dialog', 'persistence', 'color', 'isopar'] 
@@ -34,7 +34,6 @@ _techniques = ['menu', 'dialog', 'persistence', 'color', 'isopar']
 from gui.draw import *
 from pyformex import GUI,PF
 from gui import menu
-from gui.widgets import simpleInputItem as I
 
 from simple import rectangle
 from plugins.fe import *
@@ -55,7 +54,7 @@ PDB = None
 
 # check for existing results
 feresult_base = 'FeResult'
-feresults = [ k for k in pf.PF.keys() if k.startswith(feresult_base)]
+feresults = [ k for k in pf.PF.keys() if k.startswith(feresult_base) ]
 if feresults:
     name = utils.hsorted(feresults)[-1]
 else:
@@ -110,11 +109,11 @@ def createRectPart(res=None):
             return
     if res is None:
         res = askItems([
-            I('x0',x0,tooltip='The x-value of one of the corners'),
-            I('y0',y0),
-            I('x2',x2),I('y2',y2),
-            I('nx',nx),I('ny',ny),
-            I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
+            _I('x0',x0,tooltip='The x-value of one of the corners'),
+            _I('y0',y0),
+            _I('x2',x2),_I('y2',y2),
+            _I('nx',nx),_I('ny',ny),
+            _I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
             ])
     if res:
         globals().update(res)
@@ -137,13 +136,13 @@ def createQuadPart(res=None):
             return
     if res is None:
         res = askItems([
-            I('Vertex 0',(x0,y0)),
-            I('Vertex 1',(x1,y1)),
-            I('Vertex 2',(x2,y2)),
-            I('Vertex 3',(x3,y3)),
-            I('nx',nx),
-            I('ny',ny),
-            I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
+            _I('Vertex 0',(x0,y0)),
+            _I('Vertex 1',(x1,y1)),
+            _I('Vertex 2',(x2,y2)),
+            _I('Vertex 3',(x3,y3)),
+            _I('nx',nx),
+            _I('ny',ny),
+            _I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
             ])
     if res:
         x0,y0 = res['Vertex 0']
@@ -395,14 +394,9 @@ def createAbaqusInput():
     """Write the Abaqus input file."""
     
     # ask job name from user
-    res = askItems([('JobName',feresult_name.next())])
-    if not res:
+    fn = askNewFilename(filter='*.inp')
+    if not fn:
         return
-
-    jobname = res['JobName']
-    if not jobname:
-        print("No Job Name: writing to sys.stdout")
-        jobname = None
 
     out = [ Output(type='history'),
             Output(type='field'),
@@ -414,10 +408,15 @@ def createAbaqusInput():
             Result(kind='ELEMENT',keys=['SF'],pos='AVERAGED AT NODES'),
             ]
 
-    step1 = Step(time=[1.,1.,0.01,1.],nlgeom='no',tags=[1])
-    step2 = Step(time=[1.,1.,0.01,1.],nlgeom='no',tags=[2])
+    step1 = Step(time=[1.,1.,0.01,1.],tags=[1])
+    step2 = Step(time=[1.,1.,0.01,1.],tags=[2])
 
-    AbqData(model,PDB,[step1,step2],out=out,res=res).write(jobname)
+    data = AbqData(model,prop=PDB,steps=[step1,step2],out=out,res=res)
+    data.write(jobname=fn,group_by_group=True)
+
+    if ack("Load the Abaqus input file %s in the editor?"% fn):
+        editFile(fn)
+
 
 ############################# Calix ##############################
 def createCalixInput():
@@ -431,9 +430,9 @@ def createCalixInput():
     
     # ask job name from user
     res = askItems([
-        I('jobname',feresult_name.next(),text='Job Name'),
-        I('header','A Calix example',text='Header Text'),
-        I('zem','3',text='ZEM control',itemtype='radio',choices=['0','3','6'],),
+        _I('jobname',feresult_name.next(),text='Job Name'),
+        _I('header','A Calix example',text='Header Text'),
+        _I('zem','3',text='ZEM control',itemtype='radio',choices=['0','3','6'],),
         ])
     if not res:
         return
@@ -1080,7 +1079,7 @@ def create_menu():
         ("&Delete all edge loads",deleteAllELoads),
         ("&Print property database",printDB),
         ("---",None),
-        ("&Create Abaqus input file",createAbaqusInput),
+        ("&Create Abaqus/Calculix input file",createAbaqusInput),
         ("&Create Calix input file",createCalixInput),
         ("&Run Calpy analysis",runCalpyAnalysis),
         ("---",None),

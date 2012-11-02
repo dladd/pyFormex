@@ -231,7 +231,7 @@ def showModel(nodes=True,elems=True):
 
 
 def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
-                count=1,sleeptime=-1.):
+                count=1,sleeptime=-1.,symmetric_scale=False):
     """Display a constant or linear field on triangular elements.
 
     nodes is an array with nodal coordinates
@@ -280,7 +280,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     if val is not None:
         # create a colorscale and draw the colorlegend
         vmin,vmax = val.min(),val.max()
-        if vmin*vmax < 0.0:
+        if vmin*vmax < 0.0 and not symmetric_scale:
             vmid = 0.0
         else:
             vmid = 0.5*(vmin+vmax)
@@ -750,7 +750,7 @@ def show_results(data):
                 val = norm2(val)
     if val is not None:
         txt += result_types.values()[resindex]
-    showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
+    showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime,symmetric_scale)
     return val
 
 
@@ -808,6 +808,7 @@ def open_dialog():
             _I('restype',text='Type of result',choices=result_types.values()),
             _I('autoscale',text='Autocalculate deformation scale',value=True),
             _I('dscale',text='Deformation scale',value=100.),
+            _I('symmetric_scale',text='Deformation scale',value=100.),
             _I('showref',text='Show undeformed configuration',value=True),
             ]),
         _T('Animation',[

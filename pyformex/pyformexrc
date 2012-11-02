@@ -266,6 +266,8 @@ hosts = ['localhost']
 host = 'localhost'
 inputdir = '~'
 outputdir = '~'
+cmd_abaqus = 'abaqus job=$F cpus=$C'
+cmd_calculix = 'ccx -i $F'
 
 #End
 

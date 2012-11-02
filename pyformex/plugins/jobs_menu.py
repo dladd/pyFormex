@@ -169,37 +169,34 @@ def remoteCommand(host=None,command=None):
         cmd = "ssh %s '%s'" % (host,command)
         sta,out = utils.runCommand(cmd)
         message(out)
-        
 
-def runLocalProcessor(filename=None):
+
+def runLocalProcessor(filename='',processor='abaqus'):
     """Run a black box job locally.
 
     The black box job is a command run on an input file.
     """
     if not filename:
         filename = askFilename(pf.cfg['workdir'],filter="Abaqus input files (*.inp)",exist=True)
+    cpus = '4'
     if filename:
-        if not filename.endswith('.inp'):
-            filename += '.inp'
         jobname = os.path.basename(filename)[:-4]
-        res = askItems([
-            _I('ncpus',4,text='Number of cpus',min=1,max=1024),
-            _I('abqver','6.10',text='Abaqus Version',choices=['6.8','6.9','6.9ef','6.10','6.11','6.12']),
-            _I('postabq',True,text='Run postabq on the results?'),
-            ])
-        if res:
-            reqtxt = 'cpus=%s\n' % res['ncpus']
-            reqtxt += 'abqver=%s\n' % res['abqver']
-            if res['postabq']:
-                reqtxt += 'postproc=postabq\n'
-            host = pf.cfg.get('jobs/host','bumpfs')
-            reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
-            cmd = "scp %s %s:%s" % (filename,host,reqdir)
-            ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
-            print(ret)
-            ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
-            print(ret)
+        dirname = os.path.dirname(filename)
+        cmd = pf.cfg['jobs/cmd_%s' % processor]
+        cmd = cmd.replace('$F',jobname)
+        cmd = cmd.replace('$C',cpus)
+        cmd = "cd %s;%s" % (dirname,cmd)
+        print(cmd)
+        sta,out = utils.runCommand(cmd)
+        print(out)
         
+        
+def runLocalAbaqus(filename=''):
+    runLocalProcessor(filename,processor='abaqus')
+        
+def runLocalCalculix(filename=''):
+    runLocalProcessor(filename,processor='calculix')
+
 
 def submitToCluster(filename=None):
     """Submit an Abaqus job to the cluster."""
@@ -354,6 +351,8 @@ def create_menu():
     MenuData = [
         ("&About",about),
         ("&Configure Job Plugin",configure),
+        ("&Run local Abaqus job",runLocalAbaqus),
+        ("&Run local Calculix job",runLocalCalculix),
         ("&Submit Abaqus Job",submitToCluster),
         ("&Kill Cluster Job",killClusterJob),
         ("&List available results on server",checkResultsOnServer),
