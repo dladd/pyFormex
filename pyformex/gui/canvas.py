@@ -787,7 +787,6 @@ class Canvas(object):
         self.settings.slcolor = colors.GLColor(color)
 
 
-
     def setTriade(self,on=None,pos='lb',siz=100):
         """Toggle the display of the global axes on or off.
 

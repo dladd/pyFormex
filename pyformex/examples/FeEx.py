@@ -251,39 +251,61 @@ def printModel():
 
 ################# Add properties ######################
 
+# Plane stress element types for Abaqus
+abq_eltype = {
+    'quad4': 'CPS4',
+    'quad8': 'CPS8',
+    'quad9': 'CPS9',
+    }
 
 def warn():
    warning("You should first merge the parts!")
 
-
-section = {
-    'name':'thin plate',
-    'sectiontype': 'solid',
-    'young_modulus': 207000,
-    'poisson_ratio': 0.3,
-    'thickness': 1.0,
-    }
+material = ODict([
+    ('name','steel'),
+    ('young_modulus',207000),
+    ('poisson_ratio',0.3),
+    ('density',7.85e-9),
+    ])
+section = ODict([
+    ('name','thin steel plate'),
+    ('sectiontype','solid'),
+    ('thickness',1.0),
+    ('material','steel'),
+    ])
 
 
 def setMaterial():
     """Set the material"""
-    global section
+    global section,material
     if model is None:
         warn()
         return
     removeHighlight()
-    keys = ['name','sectiontype','young_modulus','poisson_ratio','thickness']
-    items = [ (k,section[k]) for k in keys ]
-    res = askItems(items)
+    hicolor('purple')
+    res = askItems(autoprefix=True,items=[
+        _G('Material',[ _I(k,material[k]) for k in [
+            'name','young_modulus','poisson_ratio','density']]),
+        _G('Section',[ _I(k,section[k]) for k in [
+            'name','sectiontype','thickness']]),
+        _I('reduced_integration',False),
+        ])
+
+    material = utils.subDict(res,'Material/')
+    section = utils.subDict(res,'Section/')
+    section['material'] = material['name']
+    
     if res:
-        section.update(res)
         K = pickElements()
         if K:
             for k in range(len(parts)):
                 e = getPickedElems(K,k) + model.celems[k]
+                eltype = abq_eltype[model.elems[k].eltype.name()]
+                if res['reduced_integration']:
+                    eltype += 'R'
                 print(k,e)
                 if len(e) > 0:
-                    PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
+                    PDB.elemProp(set=e,eltype=eltype,section=ElemSection(section=section,material=material))
 
 def deleteAllMats():
     PDB.delProp(kind='e',attr=['eltype'])
@@ -321,29 +343,30 @@ def deleteAllBcons():
 
 xload = 0.0
 yload = 0.0
-nloads = 1
-lc = 0
+nsteps = 1
+step = 1
 
 def setCLoad():
     """Pick the points with load condition."""
-    global xload,yload,nloads
+    global xload,yload,nsteps,step
     if model is None:
         warn()
         return
     removeHighlight()
     res = askItems([
-        #('load-case',lc),
-        ('x-load',xload),('y-load',yload)])
+        ('step',step),
+        ('x-load',xload),
+        ('y-load',yload)])
     if res:
-        #lc = res['load-case']
+        step = res['step']
         xload = res['x-load']
         yload = res['y-load']
         nodeset = pickNodes()
         if len(nodeset) > 0:
             print(nodeset)
             print("SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.])
-            PDB.nodeProp(set=nodeset,tag="Load-%s"%lc,cload=[xload,yload,0.,0.,0.,0.])
-            nloads = max(nloads,lc+1)
+            PDB.nodeProp(set=nodeset,tag="Step-%s"%step,cload=[xload,yload,0.,0.,0.,0.])
+            nsteps = max(nsteps,step)
 
 
 def deleteAllCLoads():
@@ -362,6 +385,7 @@ def setELoad():
         return
     removeHighlight()
     edge_load = askItems([
+        ('step',step),
         ('x',edge_load['x'],{'text':'x-load'}),
         ('y',edge_load['y'],{'text':'y-load'}),
         ])
@@ -374,7 +398,8 @@ def setELoad():
             for el,edg in zip(elems,edges):
                 for label in 'xy':
                     if edge_load[label] != 0.:
-                        PDB.elemProp(set=el,group=k,eload=EdgeLoad(edge=edg,label=label,value=edge_load[label]))
+                        PDB.elemProp(set=el,group=k,tag="Step-%s"%step,eload=EdgeLoad(edge=edg,label=label,value=edge_load[label]))
+            nsteps = max(nsteps,step)
 
 def deleteAllELoads():
     PDB.delProp(kind='e',attr=['eload'])
@@ -401,20 +426,26 @@ def createAbaqusInput():
     if not fn.endswith('.inp'):
         fn += '.inp'
 
-    out = [ Output(type='history'),
-            Output(type='field'),
-            ]
+    print(nsteps)
+    steps = [ Step(time=[1.,1.,0.01,1.],tags=['Step-%s'%i]) for i in range(1,nsteps+1) ]
 
-    res = [ Result(kind='NODE',keys=['U','COORD']),
-            Result(kind='ELEMENT',keys=['S'],pos='AVERAGED AT NODES'),
-            Result(kind='ELEMENT',keys=['SINV'],pos='AVERAGED AT NODES'),
-            Result(kind='ELEMENT',keys=['SF'],pos='AVERAGED AT NODES'),
-            ]
+    print(steps)
 
-    step1 = Step(time=[1.,1.,0.01,1.],tags=[1])
-    step2 = Step(time=[1.,1.,0.01,1.],tags=[2])
+    proc = ask('Intended FEA processor:',['Abaqus','Calculix'])
+    if proc == 'Abaqus':
+        res = [ Result(kind='NODE',keys=['U','COORD']),
+                Result(kind='ELEMENT',keys=['S'],pos='AVERAGED AT NODES'),
+                Result(kind='ELEMENT',keys=['SINV'],pos='AVERAGED AT NODES'),
+                Result(kind='ELEMENT',keys=['SF'],pos='AVERAGED AT NODES'),
+                ]
+    else:
+        res = [ Result(kind='NODE',keys=['U','COORD']),
+                Result(kind='ELEMENT',keys=['S']),
+                Result(kind='ELEMENT',keys=['SINV']),
+                Result(kind='ELEMENT',keys=['SF']),
+                ]
 
-    data = AbqData(model,prop=PDB,steps=[step1,step2],out=out,res=res)
+    data = AbqData(model,prop=PDB,steps=steps,res=res)
     data.write(jobname=fn,group_by_group=True)
 
     if ack("Load the Abaqus input file %s in the editor?"% fn):

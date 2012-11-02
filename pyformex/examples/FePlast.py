@@ -130,7 +130,7 @@ def run():
     # Create an empty property database
     P = PropertyDB()
 
-    # Define the material data: here we use an elsto-plastic model
+    # Define the material data: here we use an elasto-plastic model
     # for the steel
     steel = {
         'name': 'steel',

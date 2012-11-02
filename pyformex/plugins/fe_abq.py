@@ -242,7 +242,7 @@ def fmtMaterial(mat):
     
     ## ============================
     ## Additional parametrer
-    ## plastic: list([yield stress, yield strain])
+    ## plastic: list([yield stress, eq. plastic strain])
     ## """
     if mat.name is None or mat.name in materialswritten:
         return ""
@@ -1042,7 +1042,7 @@ plane_stress_elems = [
     'CPS3',
     'CPS4','CPS4I','CPS4R',
     'CPS6','CPS6M',
-    'CPS8','CPS8M']
+    'CPS8','CPS8R','CPS8M']
 plane_strain_elems = [
     'CPE3','CPE3H',
     'CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH',

@@ -1174,6 +1174,10 @@ def fgcolor(color):
     """Set the default foreground color."""
     pf.canvas.setFgColor(color)
 
+def hicolor(color):
+    """Set the highlight color."""
+    pf.canvas.setSlColor(color)
+
 
 def colormap(color=None):
     """Gets/Sets the current canvas color map"""

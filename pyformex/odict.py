@@ -29,6 +29,14 @@
 """
 from __future__ import print_function
 
+import utils
+have_version = utils.hasModule('python')
+if utils.SaneVersion(have_version) < utils.SaneVersion('2.7'):
+    from backports import OrderedDict
+else:
+    from collections import OrderedDict
+
+    
 import olist
 
 
@@ -43,11 +51,11 @@ class ODict(dict):
     The default order is the insertion order. The current order can be
     changed at any time.
 
-    The :class:`ODict` can be initialized with a Python dict or another
-    :class:`ODict` object. If a plain Python dict is used, the resulting
+    The :class:`ODict` can be initialized with a Python dict, a list of
+    (key,value) tuples, or another     :class:`ODict` object. If a plain Python dict is used, the resulting
     order is undefined.
     """
-    def __init__(self,data={}):
+    def __init__(self,data={},):
         """Create a new ODict instance."""
         dict.__init__(self,data)
 
@@ -205,7 +213,6 @@ class KeyedList(ODict):
         """Return the key+value lists in order of the keys."""
         return [(k,)+self[k] for k in self._order]
 
-    
 
 if __name__ == "__main__":
 
