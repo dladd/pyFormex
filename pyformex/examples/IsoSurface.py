@@ -77,7 +77,7 @@ def run():
     elif ans == "Generated from function":
         # data space: create a grid to visualize
         nx,ny,nz = 10,8,6
-        F = elements.Hex8.toFormex().rep([nx,ny,nz],[0,1,2],[1.0]*3).setProp(1)
+        F = elements.Hex8.toFormex().rep([nx,ny,nz]).setProp(1)
         draw(F,mode='wireframe')
 
         # function to generate data: the distance from the origin

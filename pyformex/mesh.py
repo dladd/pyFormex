@@ -450,9 +450,6 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.elType().getEntities(level)
 
 
-
-    # BV: This should probably be removed,
-    # If needed, add a unique=False to Connectivity.insertLEvel 
     def getLowerEntities(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 

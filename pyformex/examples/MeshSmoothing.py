@@ -27,55 +27,71 @@
 
 This example illustrates the use of the mesh smoothing algorithm.
 
-The smoothing is applied to a hexahedral, tetrahedral, quadrilateral,
-and triangular mesh.
+Three versions of a mesh are shown: the original regular mesh (in black),
+the mesh after some noise has been added (in red), the noised mesh after
+smoothing (in blue).
+
+The user can choose the element type (quadrilateral, triangular, hexahedral
+or tetrahedral), the number of elements in the regular grid, the amount of
+noise to be added, and the number of smoothing iterations
 """
 from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
-_topics = ['geometry', 'mesh','illustration']
-_techniques = ['dialog','smooth']
+_topics = ['geometry','mesh']
+_techniques = ['dialog','smooth','noise','convert']
 
 from gui.draw import *
-from simple import cuboid
+
+eltype = 'quad4'
+n = 6            # Number of elements in each direction (should be even)
+noise = 0.05     # Amount of noise added to the coordinates
+nit = 5          # Number of smoothing iterations 
 
 
+def createMesh(eltype,n):
+    """Create a mesh of the given type with n cells in each direction.
+
+    eltype should be one of 'quad4','tri3','hex8','tet4'.
+    """
+    if eltype == 'tet4':   # Tet conversions produces many elements, reduce n
+        n /= 2
+    M = Formex('4:0123').rep([n,n]).toMesh()
+    if eltype == 'tri3':
+        M = M.convert('tri3')
+    elif eltype in ['hex8','tet4']:
+        M = M.extrude(n,dir=2).convert(eltype)
+    return M
+
+
+def noiseSmooth(M,noise,niter):
+    """Draw 3 versions of a mesh: original, with noise, smoothed noise
+
+    M is any mesh. A version with added noise is created. Then that version
+    is smoothed. The three versions are displayed.
+    """
+    draw(M)
+    M1 = M.addNoise(noise).trl(0,M.dsize()).setProp(1)
+    draw(M1)
+    M2 = M1.smooth(niter).trl(0,M.dsize()).setProp(3)
+    draw([M,M1,M2])
+
+    
 def run():
     clear()
-    n = 12      #   Number of elements in each direction
-    tol = 4     #   Amount of noise added to the coordinates
-    iter = 10   #   Number of smoothing iterations 
 
     res = askItems(items=[
-        _I('n', n, text='Number of elements', itemtype='slider', min=2, max=24),
-        _I('tol', tol, text='Noise', itemtype='slider', min=0, max=10),
-        _I('iter', iter, text='Smoothing iterations', itemtype='slider', min=1, max=20),  
+        _I('eltype',eltype,text='Element type',itemtype='radio',choices=['quad4','tri3','hex8','tet4']),
+        _I('n',n,text='Grid size',itemtype='slider',min=2,max=24),
+        _I('noise',noise,text='Noise',itemtype='fslider',min=0,max=100,scale=0.01),
+        _I('nit',iter,text='Smoothing iterations',itemtype='slider',min=1,max=20),
     ])
 
-    if not res:
-        return
-    
-    globals().update(res)
+    if res:
+        globals().update(res)
+        M = createMesh(eltype,n)
+        noiseSmooth(M,noise,nit)
 
-    tol /= 10.
-    cube = cuboid().replic2(n, n, 1., 1.).rep(n, 1., 2).toMesh()
-    cubeTet = cuboid().toMesh().convert('tet4')
-    cubeTet += cubeTet.reflect()            #Reflecting is needed to align the edges of adjacent tetrahedrons
-    cubeTet += cubeTet.reflect(dir=1)
-    cubeTet += cubeTet.reflect(dir=2)
-    cubeTet = cubeTet.trl([1., 1., 1.])
-    cubeTet = cubeTet.toFormex().replic2(n/2, n/2, 2., 2.).rep(n/2., 2., 2).toMesh().convert('tet4').trl(1, -2.*n)
-    surf = Formex(xpattern('0123', nplex=4)).replic2(2*n, 2*n, 1., 1.).scale(0.5).bump(2, [n/2., n/2., 1.], lambda x: 1.-x**2/n).toMesh().trl(1, -4.*n)
-    surfTri = surf.convert('tri3').trl(1, -2.*n)
-
-    for part in [cube, cubeTet, surf, surfTri]:
-        noise = tol * random.random(part.coords.shape) - tol/2.
-        noisy = Mesh(part.coords + noise, part.elems, 1).trl(0, 2.*n)
-        smoothed = noisy.smooth(iterations=iter).trl(0, 2.*n)
-        smoothed.setProp(2)
-        draw([part, noisy, smoothed])
-
-    zoomAll()
 
 if __name__ == 'draw':
     run()

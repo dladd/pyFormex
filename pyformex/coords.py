@@ -1580,13 +1580,13 @@ class Coords(ndarray):
         return self.isopar('tet4',currentCS,initialCS)
 
 
-    def addNoise(self,rsize=0.1,asize=0.0):
+    def addNoise(self,rsize=0.05,asize=0.0):
         """Add random noise to a Coords.
 
         A random amount is added to eacho individual coordinate in the Coords.
         The difference of any coordinate from its original value will
         not be r than ``asize+rsize*self.sizes().max()``. The default
-        is to set it to 0.1 times the geometrical size of the structure.
+        is to set it to 0.05 times the geometrical size of the structure.
         """
         max = asize + rsize * self.sizes().max()
         return self + randomNoise(self.shape,-max,+max)

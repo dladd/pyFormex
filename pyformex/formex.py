@@ -1783,9 +1783,17 @@ maxprop  = %s
         return Formex(f,self.prop,self.eltype)
 
 
-    def rep(self,n,dir=0,step=1.0):
-        """Like replicate, but allow repeated replication"""
+    def rep(self,n,dir=None,step=None):
+        """Like replicate, but allow repeated replication
+
+        n, dir and step are lists. Default values for dir are [0,1,2]
+        and [1.0,1.0,1.0], cutoff at the length of the specified n.
+        """
         F = self
+        if dir is None:
+            dir = range(len(n))
+        if step is None:
+            step = [1.]*len(n)
         for ni,diri,stepi in zip(n,dir,step):
             F = F.replicate(ni,diri,stepi)
         return F

@@ -514,7 +514,7 @@ class AppMenu(menu.Menu):
             if script.exitrequested:
                 break
         tcount = len(files)
-        if recursive and tcount < count:
+        if recursive and (count < 0 or tcount < count):
             for m in self._submenus_:
                 n = m.runAll(recursive=recursive,random=random,count=count-tcount)
                 tcount += n
@@ -553,15 +553,17 @@ class AppMenu(menu.Menu):
 
     def runAllApps(self):
         res =draw.askItems([
-            ('Toggle timeout',True),
-            ('Random order',True),
-            ('Maximum count',-1),
+            ('timeout',True),
+            ('random',True),
+            ('recursive',True),
+            ('count',-1),
             ])
         if not res:
             return
         from toolbar import timeout
-        timeout(res['Toggle timeout'])
-        self.runAll(recursive=True,random=res['Random order'],count=res['Maximum count'])
+        timeout(res['timeout'])
+        del res['timeout']
+        self.runAll(**res)
         timeout(False)
 
 

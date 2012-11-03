@@ -327,7 +327,6 @@ def fmtTransform(setname,csys):
 
     - `setname` is the name of a node set
     - `csys` is a CoordSystem.
-    
     """
     out = "*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys)
     out += fmtData(csys.data.reshape(-1))
@@ -574,7 +573,7 @@ def fmtSpring(el,setname):
 # BV: removed composite, if anyone uses it: create a fmtCompositeSection
 #
 def fmtSolidSection(el,setname,matname):
-    """Format the *SOLID SECTION keyword.
+    """Format the SOLID SECTION keyword.
     
     Required:
 
@@ -591,9 +590,9 @@ def fmtSolidSection(el,setname,matname):
     the command. All other items besides name, options and data are formatted
     as extra command options.
     
-    Example:
+    Example::
 
-    >>> P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,controls=dict(name='StentControl',hourglass='enhanced'))
+     P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,controls=dict(name='StentControl',hourglass='enhanced'))
     """
     out = "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,matname) 
     if el.orientation is not None:
@@ -619,7 +618,7 @@ def fmtSolidSection(el,setname,matname):
 
 
 def fmtShellSection(el,setname,matname):
-    """Format the shell *SHELL SECTION keyword.
+    """Format the shell SHELL SECTION keyword.
     
     Required:
     

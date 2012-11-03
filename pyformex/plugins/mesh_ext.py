@@ -43,7 +43,7 @@ from utils import deprecation
 
 
 def rings(self, sources=0, nrings=-1):
-    """
+    """_
     It finds rings of elements connected to sources by a node.
     
     Sources can be a single element index (integer) or a list of element indices.
