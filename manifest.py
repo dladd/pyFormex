@@ -206,7 +206,7 @@ DIST_FILES = [
              excludedirs=['.svn'],
              includedirs=['gui','plugins'],
              includefiles=['.*\.py$','pyformex(rc)?$'],
-             excludefiles=['core.py','curvetools.py'],
+             excludefiles=['core.py','curvetools.py','backports.py'],
              ) + \
     listTree('pyformex/icons',listdirs=False,sorted=True,
              excludedirs=['.svn'],

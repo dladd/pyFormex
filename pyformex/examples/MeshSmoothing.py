@@ -46,7 +46,7 @@ from gui.draw import *
 eltype = 'quad4'
 n = 6            # Number of elements in each direction (should be even)
 noise = 0.05     # Amount of noise added to the coordinates
-nit = 5          # Number of smoothing iterations 
+niter = 5        # Number of smoothing iterations 
 
 
 def createMesh(eltype,n):
@@ -84,13 +84,13 @@ def run():
         _I('eltype',eltype,text='Element type',itemtype='radio',choices=['quad4','tri3','hex8','tet4']),
         _I('n',n,text='Grid size',itemtype='slider',min=2,max=24),
         _I('noise',noise,text='Noise',itemtype='fslider',min=0,max=100,scale=0.01),
-        _I('nit',iter,text='Smoothing iterations',itemtype='slider',min=1,max=20),
+        _I('niter',niter,text='Smoothing iterations',itemtype='slider',min=1,max=20),
     ])
 
     if res:
         globals().update(res)
         M = createMesh(eltype,n)
-        noiseSmooth(M,noise,nit)
+        noiseSmooth(M,noise,niter)
 
 
 if __name__ == 'draw':
