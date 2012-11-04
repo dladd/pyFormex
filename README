@@ -1,12 +1,12 @@
 .. $Id$    -*- rst -*-
   
 ..
-  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
+  This file is part of pyFormex 0.8.8  (Sun Nov  4 17:22:49 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
   Project page:  http://savannah.nongnu.org/projects/pyformex/
-  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
+  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
   
   
@@ -57,6 +57,7 @@ We detail here only the installation on Linux platforms.
 Prerequisites
 ------------- 
 Essential:
+
 - python: http://www.python.org  (version 2.4 or higher; 2.5 recommended)
 - numpy: /http://numpy.scipy.org/ (version 1.0 or higher; 1.1 recommended)
 - Qt4: http://www.trolltech.com/products/qt
@@ -67,6 +68,7 @@ To compile the acceleration library (highly recommended!), you will also
 need the appropriate header Python and OpenGL header files.
 
 Further, we recommend to install the following for extended functionality:
+
 - python-gnuplot
 - python-doc
 - python-scipy
@@ -76,6 +78,7 @@ Further, we recommend to install the following for extended functionality:
 
 For the following extensions, which are not easily packaged format,
 an install script is provided in this distribution.
+
 - calpy
 - pygl2ps
 - gts
@@ -85,14 +88,17 @@ an install script is provided in this distribution.
 Easy way to install prerequisites on Debian GNU/Linux or Ubuntu
 ---------------------------------------------------------------
 On Debian (lenny) systems (and Debian-derivatives like Ubuntu) you can install
-all basic prerequisites and their dependencies with the command:
-``apt-get install python-qt4-gl python-numpy``
+all basic prerequisites and their dependencies with the command::
 
-If you want to compile the acceleration library (which is highly recommended) you also need the header files:
-``apt-get install python-dev libgl1-mesa-dev``
+  apt-get install python-qt4-gl python-numpy
 
-Install the extras:
-``apt-get install python-gnuplot python-doc python-scipy units imagemagick admesh``
+If you want to compile the acceleration library (which is highly recommended) you also need the header files::
+
+  apt-get install python-dev libgl1-mesa-dev
+
+Install the extras::
+
+  apt-get install python-gnuplot python-doc python-scipy units imagemagick admesh
 
 Howto install pyFormex:
 -----------------------
@@ -103,12 +109,18 @@ See further (Howto uninstall pyFormex)
 We suppose you have installed all the prerequisites and downloaded the
 pyformex source tarball: pyformex-VERSION.tar.gz
 
-Unpack the pyFormex source tarball:
-``tar xvzf pyformex-VERSION.tar.gz``
-Go to the created pyformex directory:
-``cd pyformex-VERSION``
-Do (with root privileges)
-``python setup.py install --prefix=/usr/local``
+Unpack the pyFormex source tarball::
+
+  tar xvzf pyformex-VERSION.tar.gz
+
+Go to the created pyformex directory::
+
+  cd pyformex-VERSION
+
+Do (with root privileges) ::
+  
+  python setup.py install --prefix=/usr/local
+
 This will install pyFormex under /usr/local/. You can change the prefix
 to install in some other place.
 
@@ -125,8 +137,10 @@ install a menu and desktop starter for pyFormex.
 
 Howto uninstall pyFormex:
 -------------------------
-A pyFormex installation of version 0.5 or later can be removed with the command
-``pyformex --remove``
+A pyFormex installation of version 0.5 or later can be removed with the command ::
+
+  pyformex --remove
+
 and then answering 'yes' to the question.
 
 
@@ -142,17 +156,28 @@ the existing packages do not work together well with pyFormex.
 For these components, the pyFormex distribution contains an adhoc install
 procedure to help our users with the installation. The procedures are located
 in dedicated subdirectories of the pyformex-VERSION/pyformex/extra directory
-of the unpacked release tree. Each subdirectory contains a install script 
-`install.sh`. To install the corresponding package, execute the script from
-within the subdirectory, with root privileges and with a single parameter 'all':
-  ``(sudo) ./install.sh all``
+of the unpacked release tree. Each subdirectory contains a ``README`` file
+with installation instructions. It the directory contains a ``Makefile``, this
+usually boils down to the usual::
 
+  make
+  make install
+
+Else, an install script ``install.sh`` is included and installation can be done
+with by executing it from within the subdirectory, with root privileges and with a single parameter 'all'::
+ 
+  (sudo) ./install.sh all
+
+- gts: Installs some programs to do operations on triangulated surfaces. You need to have the ``libgts`` and its header files installed. On Debian::
+
+    apt-get install libgts-dev
+
+- dxfparser: Installs the command ``pyformex-dxfparser``, to preprocesses AutoCAD .DXF
+  files for import into pyFormex. 
+- postabq: Installs the command ``pyformex-postabq``, to preprocess Abaqus output files (.fil) for import into pyFormex. 
 - gl2ps: Image output to in vector formats (PS, EPS, PDF and SVG). Requires
   a Python interface, provided by our install procedure. 
-- gts: Operations on triangulated surfaces. The available standard packages do
-  not install all required files. Our install procedure will also fix some bugs.
-- tetgen: Create quality tetraeder meshes. 
-- calpy: Simple finite element simulation framework. Needed for the *_calpy 
+- calpy: Simple finite element simulation framework. Needed for the ``*_calpy`` 
   examples. Has to be installed from source, because is has to be compiled
   against the same numpy version as pyFormex itself.
 
@@ -164,13 +189,25 @@ you can try installing pyFormex from the Subversion sources. Besides the basic
 prerequisites (see above), you will also need to have 'Subversion' installed.
 
 The `SVN repository`_ on the developer site is accessible by anonymous SVN.
-The command ``svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR`` will checkout the source to a local directory ``MYDIR``. Provided you have all the prerequisites installed, pyFormex can then be run directly from the checked out source with the command: ``MYDIR/pyformex/pyformex``. 
+The command ::
+
+  svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR
+
+will checkout the source to a local directory ``MYDIR``. Provided you have all the prerequisites installed, pyFormex can then be run directly from the checked out source with the command::
+
+  MYDIR/pyformex/pyformex
+ 
 If you want to use the compiled accelerator library however, you will have to
-create it first: ``cd MYDIR/pyformex/lib; ./configure; make`` should do it.
+create it first::
+
+  cd MYDIR
+  make lib
 
 Once you have a checked-out source tree, you can easily sync it to the latest
-repository version by just issuing the command ``svn up`` from your checkout
-directory. 
+repository version by just issuing the following command from your checkout
+directory::
+
+  svn up
 
 Documentation
 =============

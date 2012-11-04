@@ -1,11 +1,11 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 17:22:49 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -133,7 +133,7 @@ def run_setup(with_cext):
 #        'examples/Demos/*',
         'bin/*',
         'data/*',
-        ## 'extra/*/*',
+        'extra/*/*',
         ]
     
     PKG_DATA += [ i[9:] for i in DOC_FILES ]
@@ -142,12 +142,20 @@ def run_setup(with_cext):
         'sdist':sdist
         },
           name='pyformex',
-          version='0.8.8-a1',
-          description='Program to generate and transform 3D geometries from scripts.',
+          version='0.8.8',
+          description='program to create 3D geometry from Python scripts.',
           long_description="""
-    pyFormex is a tool to generate, transform and manipulate large and complex
-    geometrical models of 3D structures by sequences of mathematical
-    operations in a Python script.
+    pyFormex can be used to generate, transform and manipulate large
+    geometrical models of 3D structures by sequences of mathematical operations.
+    Unlike traditional CAD systems, pyFormex provides a powerful (Python based)
+    scripting language as the basic user input, making it very well suited 
+    for automated and repeated (parametric) design procedures. 
+    It provides a wide range of operations on meshes, like STL type triangulated
+    surfaces and FEA or CFD grids. Nurbs curves and surfaces are under
+    development.
+    pyFormex is often used to create models from medical scan images, or as a
+    pre- and post-processor for Finite Element analysis programs. But it could
+    just as well be used to just create some nice 3D renderings.
     """,
           author='Benedict Verhegghe',
           author_email='benedict.verhegghe@ugent.be',
