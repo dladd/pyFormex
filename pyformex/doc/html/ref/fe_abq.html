@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>40. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="41. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
     <link rel="prev" title="39. fe — Finite Element Models in pyFormex." href="fe.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="fe.html" title="39. fe — Finite Element Models in pyFormex."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -587,15 +587,52 @@ component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))<
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtSpring">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSpring</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSpring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a spring of type spring.</p>
+<p>Optional data:</p>
+<ul class="simple">
+<li><cite>springstiffness</cite> : spring stiffness (force per relative displacement)</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtSolidSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSolidSection</tt><big>(</big><em>el</em>, <em>setname</em>, <em>matname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSolidSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the SOLID SECTION keyword.</p>
+<p>Required:</p>
+<ul class="simple">
+<li>setname</li>
+<li>matname</li>
+</ul>
+<p>Optional:</p>
+<ul class="simple">
+<li>orientation</li>
+<li>controls</li>
+</ul>
+<p><cite>controls</cite> is a dict with name, options and data keys. Options is
+a string which is added as is to the command. Data are added below
+the command. All other items besides name, options and data are formatted
+as extra command options.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre>P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,controls=dict(name='StentControl',hourglass='enhanced'))</pre>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtShellSection">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtShellSection</tt><big>(</big><em>el</em>, <em>setname</em>, <em>matname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtShellSection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format the shell definition.</p>
-<p>Required:
-- setname
-- matname</p>
-<p>Optional:
-- transverseshearstiffness
-- offset (for contact surface SPOS or 0.5, SNEG or -0.5)</p>
+<dd><p>Format the shell SHELL SECTION keyword.</p>
+<p>Required:</p>
+<ul class="simple">
+<li>setname</li>
+<li>matname</li>
+</ul>
+<p>Optional:</p>
+<ul class="simple">
+<li>transverseshearstiffness</li>
+<li>offset (for contact surface SPOS or 0.5, SNEG or -0.5)</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -617,7 +654,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 <div class="highlight-python"><pre>*SURFACE, NAME=mysurf, TYPE=element
 1, S1
 2, S2,
-1, S1
+3, S1
 7, S3 </pre>
 </div>
 </dd></dl>
@@ -1005,7 +1042,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
         <li class="right" >
           <a href="fe.html" title="39. fe — Finite Element Models in pyFormex."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1013,7 +1050,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

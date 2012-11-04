@@ -1,6 +1,6 @@
 # $Id$ *** pyformex ***
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -69,13 +69,15 @@ def geometry():
     n = 16
     nshow = 4
     bcons = ['cantilever','simply supported']
+    keep = False
     verbose = False
 
     res = askItems([
-        ('n',n,{'text':'number of elements along beam'}),
-        ('nshow',nshow,{'text':'number of natural modes to show'}),
-        ('bcon',bcons[0],{'text':'beam boundary conditions','choices':bcons}),
-        ('verbose',verbose,{'text':'show intermediate information'}),
+        _I('n',n,text='number of elements along beam'),
+        _I('nshow',nshow,text='number of natural modes to show'),
+        _I('bcon',bcons[0],text='beam boundary conditions',choices=bcons),
+        _I('keep',keep,text='keep data and result files'),
+        _I('verbose',verbose,text='show intermediate information'),
         ])
     if not res:
         return
@@ -141,11 +143,17 @@ user printf '(5g13.4)' DISPL $17
 file close $17
 stop
 """
+    import os
+    savedir = os.getcwd()
+    #    tmpdir = None
+    #    if not checkWorkdir():
+    tmpdir = utils.tempDir()
+    chdir(tmpdir)
+    print("Using a temporary directory: %s" % tmpdir)
 
     fil = open('temp.dta','w')
     fil.write(s)
     fil.close()
-    
     
     if verbose:
         # show calix input data
@@ -179,6 +187,11 @@ stop
     # print a.shape
     # remove the extra node
     a = a[:,:-1,:]
+
+    chdir(savedir)
+    if not keep:
+        print("Removing temporary directory: %s" % tmpdir)
+        utils.removeTree(tmpdir)
 
 
 def drawDeformed(M,u,r):

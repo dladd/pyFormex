@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -36,7 +36,7 @@ PYFORMEXDIR= pyformex
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
 BINDIR= ${PYFORMEXDIR}/bin
-EXTDIR= ${PYFORMEXDIR}/external
+EXTDIR= ${PYFORMEXDIR}/extra
 SPHINXDIR= sphinx
 
 SOURCE= ${PYFORMEXDIR}/pyformex \
@@ -55,6 +55,8 @@ BINSOURCE= \
 
 EXTSOURCE= \
 	$(wildcard ${EXTDIR}/*/README*) \
+	$(wildcard ${EXTDIR}/*/Makefile) \
+	$(wildcard ${EXTDIR}/*/*.rst) \
 	$(wildcard ${EXTDIR}/*/install.sh) \
 	$(wildcard ${EXTDIR}/*/*.h) \
 	$(wildcard ${EXTDIR}/*/*.c) \
@@ -86,13 +88,13 @@ OTHERSTAMPABLE= README Makefile ReleaseNotes \
 	manifest.py setup.py \
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
-	${addprefix ${DOCDIR}/, STYLE TODO} \
 	$(wildcard ${DOCDIR}/*.rst)
 
 NONSTAMPABLE= COPYING 
 
-STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) ${EXECUTABLE} \
-	${CSOURCE} ${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} ${EXTSOURCE} \
+STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
+	${EXECUTABLE} ${CSOURCE} ${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} \
+	$(filter-out ${EXTDIR}/pygl2ps/gl2ps_wrap.c,${EXTSOURCE}) \
 	${OTHERSTAMPABLE}
 
 STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \

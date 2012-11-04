@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -752,8 +752,8 @@ def countLines(fn):
 ## Running external commands ##
 ###############################
 
-### execute a system command ###
 def system(cmd):
+    """Execute an external command."""
     import subprocess
     pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
     P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -763,10 +763,12 @@ def system(cmd):
 
 
 # DEPRECATED, KEPT FOR EMERGENCIES
-### execute a system command ###
-## def system1(cmd):
-##     import commands
-##     return commands.getstatusoutput(cmd)
+# currently activated by --commands option
+def system1(cmd):
+    """Execute an external command."""
+    import commands
+    return commands.getstatusoutput(cmd)
+
 
 def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error.
@@ -778,7 +780,10 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     """
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    sta,out = system(cmd)
+    if pf.options and pf.options.commands:
+        sta,out = system1(cmd)
+    else:
+        sta,out = system(cmd)
     if sta != 0:
         if not quiet:
             pf.message(out)

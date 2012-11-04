@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="5. draw — Create 3D graphical representations." href="draw.html" />
     <link rel="prev" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="arraytools.html" title="3. arraytools — A collection of numerical array utilities."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -254,12 +254,6 @@ If result == &#8216;both&#8217;, a tuple of status and output is returned.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.executeScript">
-<tt class="descclassname">script.</tt><tt class="descname">executeScript</tt><big>(</big><em>scr</em>, <em>glob</em><big>)</big><a class="headerlink" href="#script.executeScript" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a Python script in specified globals.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="script.playScript">
 <tt class="descclassname">script.</tt><tt class="descname">playScript</tt><big>(</big><em>scr</em>, <em>name=None</em>, <em>filename=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>pye=False</em><big>)</big><a class="headerlink" href="#script.playScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play a pyformex script scr. scr should be a valid Python text.</p>
@@ -269,9 +263,6 @@ recurrent.
 If a name is specified, set the global variable pyformex.scriptName to it
 when the script is started.
 If a filename is specified, set the global variable __file__ to it.</p>
-<p>If step==True, an indefinite pause will be started after each line of
-the script that starts with &#8216;draw&#8217;. Also (in this case), each line
-(including comments) is echoed to the message board.</p>
 </dd></dl>
 
 <dl class="function">
@@ -286,6 +277,22 @@ the script that starts with &#8216;draw&#8217;. Also (in this case), each line
 <dt id="script.stopatbreakpt">
 <tt class="descclassname">script.</tt><tt class="descname">stopatbreakpt</tt><big>(</big><big>)</big><a class="headerlink" href="#script.stopatbreakpt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the exitrequested flag.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="script.convertPrintSyntax">
+<tt class="descclassname">script.</tt><tt class="descname">convertPrintSyntax</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#script.convertPrintSyntax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a script to using the print function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="script.checkPrintSyntax">
+<tt class="descclassname">script.</tt><tt class="descname">checkPrintSyntax</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#script.checkPrintSyntax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the script in the given files uses print function syntax.</p>
+<p>Returns the compiled object if no error was found during compiling.
+Returns the filename if an error was found and correction has been
+attempted.
+Raises an exception if an error is found and no correction attempted.</p>
 </dd></dl>
 
 <dl class="function">
@@ -473,7 +480,7 @@ Else, default names will be provided.</p>
         <li class="right" >
           <a href="arraytools.html" title="3. arraytools — A collection of numerical array utilities."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -481,7 +488,7 @@ Else, default names will be provided.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

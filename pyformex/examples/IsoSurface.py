@@ -1,6 +1,6 @@
 # $Id$ *** pyformex ***
 ##
-##  This file is part of pyFormex
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -60,7 +60,7 @@ def run():
     clear()
     smooth()
 
-    ans = ask("This IsoSurface example can either reconstruct a surface from a series of 2D images, or it can use data generated from a function. Use which data?",["Cancel","Generated from function","Image files"])
+    ans = ask("This IsoSurface example can either reconstruct a surface from a series of 2D images, or it can use data generated from a function. Use which data?",["Cancel","Image files","Generated from function"])
     if ans == "Image files":
         fp = askDirname()
         if not fp:

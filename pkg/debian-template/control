@@ -2,16 +2,16 @@ Source: pyformex
 Section: science
 Priority: optional
 Maintainer: Benedict Verhegghe <benedict.verhegghe@ugent.be>
-Build-Depends: debhelper (>= 8.0.0),
-	       hardening-wrapper,
+Build-Depends: debhelper (>= 9.0.0),
+	       dpkg-dev (>= 1.16.1~),
 	       python-all-dev (>= 2.6.6-3~), 
 	       python-numpy (>=1.0), 
 	       libglu1-mesa-dev,
-	       libdxflib-dev,
 	       libgts-dev,
+	       libdxflib-dev,
 	       libglib2.0-dev
 Build-Depends-Indep: libjs-jquery, libjs-underscore
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://pyformex.org
 Vcs-Svn: svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex
 Vcs-Browser: http://svn.savannah.nongnu.org/viewvc/trunk/pyformex/?root=pyformex
@@ -53,7 +53,11 @@ Description: program to create 3D geometry from Python scripts.
 
 Package: pyformex-lib
 Architecture: any
-Depends: pyformex(=${source:Version}), ${misc:Depends}, ${shlibs:Depends}
+Depends: pyformex(=${source:Version}), 
+	 ${misc:Depends}, 
+	 ${shlibs:Depends},
+	 python-numpy(>=1.0),
+	 python-numpy-abi9
 Description: program to create 3D geometry from Python scripts.
  pyFormex can be used to generate, transform and manipulate large
  geometrical models of 3D structures by sequences of mathematical operations.
@@ -73,10 +77,9 @@ Description: program to create 3D geometry from Python scripts.
 
 Package: pyformex-extra
 Architecture: any
-Depends: pyformex(=${source:Version}), 
-	 ${misc:Depends}, 
+Depends: ${misc:Depends}, 
 	 ${shlibs:Depends},
-	 libgts-bin,
+	 libgts-dev,
 	 libglib2.0-0
 Description: program to create 3D geometry from Python scripts.
  pyFormex can be used to generate, transform and manipulate large

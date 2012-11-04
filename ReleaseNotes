@@ -1,7 +1,7 @@
 .. $Id$    -*- rst -*-
   
 ..
-  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
@@ -32,8 +32,9 @@ pyFormex 0.8.7  Releasenotes
 This is a collection of the most prominent changes in pyFormex 0.8.7
 compared to the previous release 0.8.6. There are a lot of new features,
 code reorganizations and bug fixes. The most important new features are:
-- a new model for user applications. Besides the classical `pyFormex script`, 
-  there is now also a `pyFormex app`, which can be loaded and used like
+
+- a new model for user applications. Besides the classical pyFormex *script*, 
+  there is now also a pyFormex *app*, which can be loaded and used like
   a Python module. See below (Scripting) for details.
 - Gianluca De Santis donated his vascular sweeping mesher, allowing the 
   creation of hexahedral meshes in bifuracted arteries.
@@ -63,18 +64,11 @@ Gui
 ---
 - Script/Apps menus have alphabetical classification in multiple groups
 
-Documentation
--------------
-
 
 Command line
 ------------
 - two options (debug, debulevel) to support the debug level setting. See
   man page or `pyformex --help`.
-
-
-Configuration
--------------
 
 
 Core
@@ -107,10 +101,6 @@ Core
 Gui 
 ---
 - Application menu, containing all examples.
-
-
-Widgets
--------
 
 
 Drawing
@@ -171,6 +161,7 @@ Extra
 -----
 The installation procedure for (some of) the extra software has been changed.
 A Makefile is used and `make all` should perform the installation.
+
 - gts: now makes used of standard installed GTS library. It only creates some
   external commands that make use of the library.
 - dxfparser: now also reads Circle objects from a .DXF file. 
@@ -178,8 +169,9 @@ A Makefile is used and `make all` should perform the installation.
 
 Examples
 --------
-New examples: Nurbs, FontForge, Icosahedron, Texture, NonManifold, Boolean,
-NurbsDecompose, Icons, Inside, Manantiales, Isosurface, Voxelize
+New examples: Nurbs, FeBol, FePlast, FontForge, Icosahedron, Texture, 
+NonManifold, Boolean, NurbsDecompose, Icons, Inside, Manantiales, 
+Isosurface, Voxelize
 
 Many of the examples have been adapted to the new app style. Others need
 further work
@@ -187,6 +179,7 @@ further work
 
 Data
 ----
-The data directory contains a modified teapot model.
+The data directory contains a modified teapot model and a model of an arterial
+bifurcation.
 
 .. End

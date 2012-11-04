@@ -1,6 +1,6 @@
 /* $Id$        -*- C -*-  */
 //
-//  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+//  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 //  pyFormex is a tool for generating, manipulating and transforming 3D
 //  geometrical models by sequences of mathematical operations.
 //  Home page: http://pyformex.org

@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -375,6 +375,10 @@ def run(argv=[]):
         MO("--nouselib",
            action="store_false", dest="uselib", default=None,
            help="Do not use the pyFormex C-lib.",
+           ),
+        MO("--commands",
+           action="store_true", dest="commands", default=False,
+           help="Use the commands module to execute external commands. Default is to use the subprocess module.",
            ),
         MO("--config",
            action="store", dest="config", default=None,

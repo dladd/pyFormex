@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -53,7 +53,7 @@ BINDIR:= $(DESTDIR)$(bindir)
 LIBDIR:= $(DESTDIR)$(libdir)
 DOCDIR:= $(DESTDIR)$(docdir)
 
-CC:= gcc
+CC:= gcc $(CPPFLAGS) $(CFLAGS) $(LDFLAGS)
 INSTALL:= $(SU) install
 INSTALLDIR:= $(INSTALL) -d
 INSTALLBIN:= $(INSTALL) -m 0755
@@ -66,7 +66,9 @@ MAN= $(addsuffix .1, $(PRG))
 # This avoids warnings during creation of Debian packages, but may
 # not work on other systems
 #FLAGS= `PKG_CONFIG_PATH=. pkg-config --cflags --libs glib-2.0 gts`
-FLAGS= `pkg-config --cflags --libs glib-2.0 gts`
+#FLAGS= `pkg-config --cflags --libs glib-2.0 gts`
+
+FLAGS= -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -Wl,--export-dynamic -lgts -lm -lgmodule-2.0 -lrt -lglib-2.0
 
 .PHONY: all build install clean
 

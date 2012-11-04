@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -649,7 +649,7 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
     This is like :func:`intersectionSWP` but does not return the parameter
     values. It is equivalent to::
 
-    intersectionSWP(S,p,n,mode,return_all)[1:]
+      intersectionSWP(S,p,n,mode,return_all)[1:]
     """
     res = intersectionSWP(S,p,n,mode,return_all)
     if return_all:

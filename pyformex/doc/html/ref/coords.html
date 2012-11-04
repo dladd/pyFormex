@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -281,7 +281,7 @@ minimal coordinates, the second has the maximal ones.</p>
 <dt id="coords.Coords.apt">
 <tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.Coords.apt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alignment point of a Coords.</p>
-<p>Align point are points whose coordinates are either the minimal
+<p>Alignment point are points whose coordinates are either the minimal
 value, the maximal value or the middle value for the Coords.
 Combining the three values with the three dimensions, a Coords
 has in 27 (3**3) alignment points. The corner points of the
@@ -1075,12 +1075,12 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 
 <dl class="method">
 <dt id="coords.Coords.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.1</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.addNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.05</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.addNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
-is to set it to 0.1 times the geometrical size of the structure.</p>
+not be r than <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
+is to set it to 0.05 times the geometrical size of the structure.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1494,7 +1494,7 @@ minimal coordinates, the second has the maximal ones.</p>
 <dt id="coords.BoundVectors.apt">
 <tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.apt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alignment point of a Coords.</p>
-<p>Align point are points whose coordinates are either the minimal
+<p>Alignment point are points whose coordinates are either the minimal
 value, the maximal value or the middle value for the Coords.
 Combining the three values with the three dimensions, a Coords
 has in 27 (3**3) alignment points. The corner points of the
@@ -2337,12 +2337,12 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 
 <dl class="method">
 <dt id="coords.BoundVectors.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.1</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.addNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.05</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.addNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
-is to set it to 0.1 times the geometrical size of the structure.</p>
+not be r than <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
+is to set it to 0.05 times the geometrical size of the structure.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2703,7 +2703,7 @@ minimal coordinates, the second has the maximal ones.</p>
 <dt id="coords.CoordinateSystem.apt">
 <tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.apt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alignment point of a Coords.</p>
-<p>Align point are points whose coordinates are either the minimal
+<p>Alignment point are points whose coordinates are either the minimal
 value, the maximal value or the middle value for the Coords.
 Combining the three values with the three dimensions, a Coords
 has in 27 (3**3) alignment points. The corner points of the
@@ -3546,12 +3546,12 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.1</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.addNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.05</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.addNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
-is to set it to 0.1 times the geometrical size of the structure.</p>
+not be r than <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
+is to set it to 0.05 times the geometrical size of the structure.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3937,7 +3937,7 @@ an error is raised.</p>
 
 <dl class="function">
 <dt id="coords.align">
-<tt class="descclassname">coords.</tt><tt class="descname">align</tt><big>(</big><em>L</em>, <em>align</em><big>)</big><a class="headerlink" href="#coords.align" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">align</tt><big>(</big><em>L, align, offset=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.align" title="Permalink to this definition">¶</a></dt>
 <dd><p>Align a list of geometrical objects.</p>
 <p>L is a list of geometrical objects (Coords or Geometry or subclasses
 thereof) and thus having an appropriate <tt class="docutils literal"><span class="pre">align</span></tt> method.
@@ -3951,6 +3951,9 @@ defining how the subsequent objects have to be aligned in that direction:</p>
 </ul>
 <p>E.g., the string <tt class="docutils literal"><span class="pre">'|--'</span></tt> will juxtapose the objects in the x-direction,
 while aligning them on their minimal coordinates in the y- and z- direction.</p>
+<p>An offset may be specified to create a space between the object, instead
+of juxtaposing them.</p>
+<p>Returns: a list with the aligned objects.</p>
 </dd></dl>
 
 <dl class="function">
@@ -3999,7 +4002,7 @@ the curve.</p>
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -4007,7 +4010,7 @@ the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

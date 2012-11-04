@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -236,7 +236,7 @@ displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
 be a changed text.</td>
 </tr>
 <tr class="field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
-<tr><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
+<tr class="field"><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
 </tr>
 </tbody>
 </table>
@@ -289,28 +289,21 @@ to load the files in a running copy of Emacs.</p>
 <tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the value of some items to the user.</p>
 <p>Create an interactive widget to let the user set the value of some items.
-&#8216;items&#8217; is a list of input items (basically [key,value] pairs).
-See the widgets.InputDialog class for complete description of the
+The items are specified as a list of dictionaries. Each dictionary
+contains the input arguments for a widgets.InputItem. It is often
+convenient to use one of the _I, _G, ot _T functions to create these
+dictionaries. These will respectively create the input for a
+simpleInputItem, a groupInputItem or a tabInputItem.</p>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
+<p>See the widgets.InputDialog class for complete description of the
 available input items.</p>
-<p>Two InputDialog classes are defined in gui.widgets.
-The OldInputDialog class is deprecated in favor of InputDialog, which
-has become the default as of pyFormex 0.8.3.
-The two classes differ in how the input is specified.
-In the new format, each input item is either a simpleInputItem, a
-groupInputItem or a tabInputItem.</p>
-<p>You can specify &#8216;legacy=False&#8217; to indicate that you are using the new
-format, or &#8216;legacy=True&#8217; if your data are in the old format.
-The default (&#8216;legacy = None&#8217;), will make this function try to detect
-the format and convert the input items to the proper new format.
-This conversion will work on most, but not all legacy formats that
-have been used in the past by pyFormex.
-Since the legacy format is scheduled to be withdrawn in future, users
-are encouraged to change their input to the new format.</p>
 <p>The remaining arguments are keyword arguments that are passed to the
-InputDialog.getResult method.
+widgets.InputDialog.getResult method.
 A timeout (in seconds) can be specified to have the input dialog
 interrupted automatically.</p>
-<p>Return a dictionary with the results: for each input item there is a
+<p>Returns a dictionary with the results: for each input item there is a
 (key,value) pair. Returns an empty dictionary if the dialog was canceled.
 Sets the dialog timeout and accepted status in global variables.</p>
 </dd></dl>
@@ -511,16 +504,15 @@ keyword arguments.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.askDrawOptions">
-<tt class="descclassname">draw.</tt><tt class="descname">askDrawOptions</tt><big>(</big><em>d={}</em><big>)</big><a class="headerlink" href="#draw.askDrawOptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interactively ask the Drawing options from the user.</p>
-<p>A dictionary may be specified to override the current defaults.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="draw.reset">
 <tt class="descclassname">draw.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>reset the canvas</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.shrink">
+<tt class="descclassname">draw.</tt><tt class="descname">shrink</tt><big>(</big><em>onoff</em>, <em>factor=None</em><big>)</big><a class="headerlink" href="#draw.shrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set shrinking on or off, and optionally set shrink factor</p>
 </dd></dl>
 
 <dl class="function">
@@ -607,9 +599,10 @@ of F. It should have the same length as <cite>F.coords</cite>.</p>
 
 <dl class="function">
 <dt id="draw.drawAxes">
-<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>CS</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>CS=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the axes of a CoordinateSystem.</p>
-<p>CS is a CoordinateSystem. Other arguments can be added just like in the
+<p>CS is a CoordinateSystem. If not specified, the global coordinate system
+is used. Other arguments can be added just like in the
 <tt class="xref py py-class docutils literal"><span class="pre">AxesActor</span></tt> class.</p>
 <p>While you can draw a CoordinateSystem using the <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> function,
 this function gives a better result because it has specialized color
@@ -775,9 +768,36 @@ color to sea the image unaltered.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.hicolor">
+<tt class="descclassname">draw.</tt><tt class="descname">hicolor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#draw.hicolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.colormap">
 <tt class="descclassname">draw.</tt><tt class="descname">colormap</tt><big>(</big><em>color=None</em><big>)</big><a class="headerlink" href="#draw.colormap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets/Sets the current canvas color map</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.renderModes">
+<tt class="descclassname">draw.</tt><tt class="descname">renderModes</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.renderModes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of predefined render profiles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.renderMode">
+<tt class="descclassname">draw.</tt><tt class="descname">renderMode</tt><big>(</big><em>mode</em>, <em>avg=False</em>, <em>light=None</em><big>)</big><a class="headerlink" href="#draw.renderMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the rendering profile to a predefined mode.</p>
+<p>Currently the following modes are defined:</p>
+<ul class="simple">
+<li>wireframe</li>
+<li>smooth</li>
+<li>smoothwire</li>
+<li>flat</li>
+<li>flatwire</li>
+<li>smooth_avg</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -822,6 +842,11 @@ val is a value between 0.0 and 1.0</p>
 <dt id="draw.canvasSize">
 <tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big><a class="headerlink" href="#draw.canvasSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resize the canvas to (width x height).</p>
+<p>If a negative value is given for either width or height,
+the corresponding size is set equal to the maximum visible size
+(the size of the central widget of the main window).</p>
+<p>Note that changing the canvas size when multiple viewports are
+active is not approved.</p>
 </dd></dl>
 
 <dl class="function">
@@ -868,7 +893,7 @@ screen.</p>
 
 <dl class="function">
 <dt id="draw.play">
-<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>step=False</em>, <em>refresh=False</em><big>)</big><a class="headerlink" href="#draw.play" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>refresh=False</em><big>)</big><a class="headerlink" href="#draw.play" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the current script or if already running, continue it.</p>
 </dd></dl>
 
@@ -890,18 +915,6 @@ play().</p>
 <dd><p>Releases the drawing lock mechanism indefinely.</p>
 <p>Releasing the drawing lock indefinely means that the lock will not
 be set again and your script will execute till the end.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="draw.step">
-<tt class="descclassname">draw.</tt><tt class="descname">step</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start the current script in step mode.</p>
-<p>The use of step mode is strongly discouraged. Please use other
-techniques (like the &#8216;drawwait&#8217; time setting or inserting
-wait or pause commands, or using a debugger.</p>
-<p>This function starts the current script in step mode. If a script
-is already running, it continues the script with the next step.
-This is equivalent with the behavior of the play function.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1150,7 +1163,7 @@ to their default operating mode.</p>
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1158,7 +1171,7 @@ to their default operating mode.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

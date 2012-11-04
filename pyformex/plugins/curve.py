@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -1495,11 +1495,6 @@ class Arc(Curve):
 
 
     def _set_coords(self,coords):
-        """Replace the current coords with new ones.
-
-        Returns a Mesh or subclass exactly like the current except
-        for the position of the coordinates.
-        """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
             return self.__class__(coords)
         else:

@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -505,8 +505,10 @@ class AppMenu(menu.Menu):
         for f in files:
             while pf.scriptlock:
                 pause(5,msg="WAITING BECAUSE OF SCRIPT LOCK")
+                pf.app.processEvents()
             layout(1)
             reset()
+            pf.PF.clear()
             #print("RUNNING %s" %f)
             self.runApp(f)
             script.breakpt(msg="Breakpoint from runall")
@@ -550,6 +552,12 @@ class AppMenu(menu.Menu):
         i = random.randint(0,len(self.files)-1)
         self.runAll(first=i,count=1)
 
+#
+# TODO: the following examples currently pause indefinitely
+#       when running with the timeout feature:
+#       ColorScale, Curves, NurbsCurve, OpticalIllusions, Rubik
+#       SuperShape, Sweep, TestDraw
+#       This is likely related to the scriptlock feature
 
     def runAllApps(self):
         res =draw.askItems([
@@ -565,6 +573,7 @@ class AppMenu(menu.Menu):
         del res['timeout']
         self.runAll(**res)
         timeout(False)
+        print("Finished running all examples")
 
 
 

@@ -5,24 +5,32 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 export DH_OPTIONS
-export DEB_BUILD_HARDENING=1
+
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+
 
 %:
 	@echo "BV: USING DEFAULT RULE $@"
 	dh $@ --with python2
 
-
-
 build:
 	@echo "BV: BUILD"
 	dh_auto_build
 	@echo "Building extras"
-	DEB_BUILD_HARDENING=1 make -C $(CURDIR)/pyformex/extra
+	make -C $(CURDIR)/pyformex/extra
 
 binary:
 	dh binary --with=python2
 	@echo "Installing extras"
 	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra prefix=/usr install
+
+
+binary-arch:
+	dh_numpy
+	dh binary-arch --with=python2
+
+
 
 override_dh_auto_install:
 	dh_auto_install

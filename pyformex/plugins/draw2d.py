@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -32,17 +32,18 @@ has 3D coordinates in the global cartesian coordinate system.
 """
 from __future__ import print_function
 
-from simple import circle
 from odict import ODict
 from geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.nurbs import *
+from simple import circle
 from plugins import objects
 from plugins.geometry_menu import autoname,autoName,geomList
 from gui.draw import *
 
 draw_mode_2d = ['point','polyline','curve','nurbs','circle']
 autoname['point'] = autoName('coords')
+autoname['polyline'] = autoName('polyline')
 autoname['curve'] = autoName('bezierspline')
 autoname['nurbs'] = autoName('nurbscurve')
 autoname['circle'] = autoName('circle')
@@ -96,6 +97,9 @@ def drawnObject(points,mode='point'):
     if mode == 'point':
         return points
     elif mode == 'polyline':
+        if points.ncoords() < 2:
+            return None
+        closed = obj_params.get('closed',None)
         return PolyLine(points,closed=closed)
     elif mode == 'curve' and points.ncoords() > 1:
         curl = obj_params.get('curl',None)
@@ -206,6 +210,8 @@ def draw_object(mode,npoints=-1):
 def draw_points(npoints=-1):
     return draw_object('point',npoints=npoints)
 def draw_polyline():
+    res = askItems([('closed',False)])
+    obj_params.update(res)
     return draw_object('polyline')
 def draw_curve():
     global obj_params

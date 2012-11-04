@@ -82,6 +82,14 @@ distclean() {
     rm -rf $PYFDIR
 }
 
+## This is not recommended, we use -alpha dists in between
+# Best:
+#   _do unpack
+#   remove the added 'alpha' entries from changelog 
+#   dch -i
+#   copy the new changelog to debian-template
+#
+
 bump() {
     OLDPKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
     ARCHDIR=uploaded/${OLDPKGVER}

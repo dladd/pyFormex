@@ -1,7 +1,7 @@
 .. $Id$
   
 ..
-  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
@@ -764,8 +764,8 @@ The following script yields the same result as the above one::
 
 Here we used the default separator, which is a space.
 
-.. note :: Make sure to use :meth:`Formex.fromfile`, to distinguish it from
-           :meth:`Coords.fromfile` and :meth:`numpy.fromfile`.
+.. note:: Make sure to use :meth:`Formex.fromfile`, to distinguish it
+   from :meth:`Coords.fromfile` and :meth:`numpy.fromfile`.
 
 
 .. _sec:concatenation_and _lists:

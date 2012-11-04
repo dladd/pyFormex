@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -775,8 +775,10 @@ method. The first of the copies is equal to the original.</p>
 
 <dl class="method">
 <dt id="formex.Formex.rep">
-<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=1.0</em><big>)</big><a class="headerlink" href="#formex.Formex.rep" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>dir=None</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#formex.Formex.rep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like replicate, but allow repeated replication</p>
+<p>n, dir and step are lists. Default values for dir are [0,1,2]
+and [1.0,1.0,1.0], cutoff at the length of the specified n.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1122,7 +1124,7 @@ number of divisions for the interval [0..1].</p>
 <p>The intersection of the Formex with a plane specified by a point p
 and normal n is returned. For a plex-2 Formex (lines), the returned
 Formex will be of plexitude 1 (points). For a plex-3 Formex
-(triangles) the returned Fomrex has plexitude 2 (lines).</p>
+(triangles) the returned Formex has plexitude 2 (lines).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1378,7 +1380,7 @@ encountered, and the order of the result is the maximum order in Flist.</p>
 
 <dl class="function">
 <dt id="formex.interpolate">
-<tt class="descclassname">formex.</tt><tt class="descname">interpolate</tt><big>(</big><em>F</em>, <em>G</em>, <em>div</em>, <em>swap=False</em><big>)</big><a class="headerlink" href="#formex.interpolate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">interpolate</tt><big>(</big><em>F</em>, <em>G</em>, <em>div</em>, <em>swap=False</em>, <em>concat=True</em><big>)</big><a class="headerlink" href="#formex.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two formices.</p>
 <p>F and G are two Formices with the same shape.
 div is a list of floating point values.
@@ -1422,7 +1424,7 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1430,7 +1432,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

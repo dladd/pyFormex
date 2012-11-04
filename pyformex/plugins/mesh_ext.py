@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -41,6 +41,9 @@ from utils import deprecation
 
 ##############################################################################
 
+#
+# What is a ring
+# What is returned?
 
 def rings(self, sources=0, nrings=-1):
     """_
@@ -49,20 +52,21 @@ def rings(self, sources=0, nrings=-1):
     Sources can be a single element index (integer) or a list of element indices.
     A list of rings is returned, from zero (ie. the sources) to nrings.
     If nrings is negative (default), all rings are returned.
-    
-    Example:
-    
-    S=Sphere(2)
-    smooth()
-    draw(S, mode='wireframe')
-    drawNumbers(S, ontop=True, color='white')
-    r=S.rings(sources=[2, 6], nrings=2)
-    print(r)
-    for i, ri in enumerate(r):
-        draw(S.select(ri).setProp(i), mode='smooth')
-    
-    
     """
+#
+# TODO: this should be made an example
+#
+    ## Example:
+    
+    ## S=Sphere(2)
+    ## smooth()
+    ## draw(S, mode='wireframe')
+    ## drawNumbers(S, ontop=True, color='white')
+    ## r=S.rings(sources=[2, 6], nrings=2)
+    ## print(r)
+    ## for i, ri in enumerate(r):
+    ##     draw(S.select(ri).setProp(i), mode='smooth')
+    
     if nrings == 0:
         return [array(sources)]
     r=self.frontWalk(startat=sources,maxval=nrings-1, frontinc=1)

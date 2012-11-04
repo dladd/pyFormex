@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>52. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>52. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="53. pyformex_gts — Operations on triangulated surfaces using GTS functions." href="pyformex_gts.html" />
     <link rel="prev" title="51. postproc — Postprocessing functions" href="postproc.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="postproc.html" title="51. postproc — Postprocessing functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -266,36 +266,37 @@ default value if get found a KeyError.</p>
 <p>An element section property can hold the following sub-properties:</p>
 <dl class="docutils">
 <dt>section</dt>
-<dd><p class="first">the geometric properties of the section. This can be a dict
+<dd>the geometric properties of the section. This can be a dict
 or a string. If it is a string, its value is looked up in the global
 section database. The required data in the dict depend on the
-sectiontype. Currently the following keys are used by fe_abq.py:</p>
-<dl class="docutils">
+sectiontype. Currently the following keys are used by fe_abq.py:</dd>
 <dt>sectiontype</dt>
-<dd><p class="first">the type of section: should be one of following:</p>
+<dd><blockquote class="first">
+<div><p>the type of section: should be one of following:</p>
 <ul class="simple">
-<li>&#8216;solid&#8217;: a solid 2D or 3D section,</li>
-<li>&#8216;circ&#8217; : a plain circular section,</li>
-<li>&#8216;rect&#8217; : a plain rectangular section,</li>
-<li>&#8216;pipe&#8217; : a hollow circular section,</li>
-<li>&#8216;box&#8217;  : a hollow rectangular section,</li>
-<li>&#8216;I&#8217;    : an I-beam,</li>
+<li>&#8216;solid&#8217;   : a solid 2D or 3D section,</li>
+<li>&#8216;circ&#8217;    : a plain circular section,</li>
+<li>&#8216;rect&#8217;    : a plain rectangular section,</li>
+<li>&#8216;pipe&#8217;    : a hollow circular section,</li>
+<li>&#8216;box&#8217;     : a hollow rectangular section,</li>
+<li>&#8216;I&#8217;       : an I-beam,</li>
 <li>&#8216;general&#8217; : anything else (automatically set if not specified).</li>
+<li>&#8216;rigid&#8217;   : a rigid body</li>
 </ul>
-<p class="last">!! Currently only &#8216;solid&#8217; and &#8216;general&#8217; are allowed.</p>
-</dd>
-</dl>
+</div></blockquote>
 <ul class="last simple">
-<li>the cross section characteristics :
-cross_section, moment_inertia_11, moment_inertia_12,
-moment_inertia_22, torsional_constant</li>
+<li>for sectiontype &#8216;solid&#8217; : thickness</li>
+<li>the sectiontype &#8216;general&#8217;: cross_section, moment_inertia_11,
+moment_inertia_12, moment_inertia_22, torsional_constant</li>
 <li>for sectiontype &#8216;circ&#8217;: radius</li>
+<li>for sectiontype &#8216;rigid&#8217;: refnode, density, thickness</li>
 </ul>
 </dd>
 <dt>material</dt>
 <dd>the element material. This can be a dict or a string.
 Currently known keys to fe_abq.py are: young_modulus,
-shear_modulus, density, poisson_ratio . (see fmtMaterial in fe_abq)</dd>
+shear_modulus, density, poisson_ratio . (see fmtMaterial in fe_abq)
+It should not be specified for rigid sections.</dd>
 <dt>orientation</dt>
 <dd><ul class="first last simple">
 <li>a Dict, or</li>
@@ -321,15 +322,6 @@ search in &#8216;self.secDB&#8217;.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="properties.ElemSection.addMaterial">
-<tt class="descname">addMaterial</tt><big>(</big><em>material</em><big>)</big><a class="headerlink" href="#properties.ElemSection.addMaterial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create or replace the material properties of the element.</p>
-<p>If the argument is a dict, it will be added to &#8216;self.matDB&#8217;.
-If the argument is a string, this string will be used as a key to
-search in &#8216;self.matDB&#8217;.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="properties.ElemSection.update">
 <tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.ElemSection.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a dictionary to the Dict object.</p>
@@ -343,6 +335,15 @@ search in &#8216;self.matDB&#8217;.</p>
 <p>This is the equivalent of the dict get method, except that it
 returns only the default value if the key was not found in self,
 and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.ElemSection.addMaterial">
+<tt class="descname">addMaterial</tt><big>(</big><em>material</em><big>)</big><a class="headerlink" href="#properties.ElemSection.addMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or replace the material properties of the element.</p>
+<p>If the argument is a dict, it will be added to &#8216;self.matDB&#8217;.
+If the argument is a string, this string will be used as a key to
+search in &#8216;self.matDB&#8217;.</p>
 </dd></dl>
 
 <dl class="method">
@@ -452,6 +453,30 @@ geometrical model.</p>
 <li>model properties (current unused: use unnamed properties)</li>
 </ul>
 <dl class="method">
+<dt id="properties.PropertyDB.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="properties.PropertyDB.setMaterialDB">
 <tt class="descname">setMaterialDB</tt><big>(</big><em>aDict</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setMaterialDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the materials database to an external source</p>
@@ -461,6 +486,12 @@ geometrical model.</p>
 <dt id="properties.PropertyDB.setSectionDB">
 <tt class="descname">setSectionDB</tt><big>(</big><em>aDict</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setSectionDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the sections database to an external source</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.print">
+<tt class="descname">print</tt><big>(</big><big>)</big><a class="headerlink" href="#properties.PropertyDB.print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the property database</p>
 </dd></dl>
 
 <dl class="method">
@@ -557,30 +588,6 @@ in the Model.</li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="properties.PropertyDB.update">
-<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a dictionary to the Dict object.</p>
-<p>The data can be a dict or Dict type object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="properties.PropertyDB.get">
-<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value for key or a default.</p>
-<p>This is the equivalent of the dict get method, except that it
-returns only the default value if the key was not found in self,
-and there is no _default_ method or it raised a KeyError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="properties.PropertyDB.setdefault">
-<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setdefault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replaces the setdefault function of a normal dictionary.</p>
-<p>This is the same as the get method, except that it also sets the
-default value if get found a KeyError.</p>
-</dd></dl>
-
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">properties</span></tt></p>
@@ -658,7 +665,7 @@ such as ndarrays.</p>
         <li class="right" >
           <a href="postproc.html" title="51. postproc — Postprocessing functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -666,7 +673,7 @@ such as ndarrays.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

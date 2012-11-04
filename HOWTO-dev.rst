@@ -963,7 +963,6 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Create updated documentation ::
 
-   cd sphinx
    make html
    make latexpdf
    make svndoc

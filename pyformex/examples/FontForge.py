@@ -1,10 +1,11 @@
 # $Id$    *** pyformex ***
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Home page: http://pyformex.org
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """FontForge
 
@@ -50,7 +51,7 @@ try:
     
 except ImportError:
     warning("You do not have fontforge and its Python bindings.\nPlease install python-fontforge and then try again.")
-    exit()
+
 
 
 def intersection(self,other):
@@ -243,6 +244,9 @@ extra_fonts = odict.ODict([
 fonts = []
 
 def run():
+    # disabled this example
+    return
+
     global fonts
     if not fonts:
         fonts = utils.listFontFiles() + [
@@ -273,8 +277,6 @@ def run():
         del res['fill']
     
     show(**res)
-    
-
     
 
 if __name__ == 'draw':

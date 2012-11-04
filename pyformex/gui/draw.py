@@ -1,6 +1,6 @@
 ## $Id$
 ##
-##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
+##  This file is part of pyFormex 0.8.8  (Sun Nov  4 15:24:17 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -231,11 +231,20 @@ def showDoc(obj=None,rst=True,modal=False):
             actions = [('Close',pf.GUI.close_doc_dialog)]
         pf.GUI.doc_dialog = showText(text,actions=actions,modal=modal)
     else:
-        pf.GUI.doc_dialog.updateData({'text':text})
-        #pf.GUI.doc_dialog.show()
-        pf.GUI.doc_dialog.raise_()
-        pf.GUI.doc_dialog.update()
-        pf.app.processEvents()
+        #
+        # TODO: check why needed: without sometimes fails
+        # RuntimeError: wrapped C/C++ object of %S has been deleted
+        # probably when runall?
+        #
+        try:
+            pf.GUI.doc_dialog.updateData({'text':text})
+            # pf.GUI.doc_dialog.show()
+            pf.GUI.doc_dialog.raise_()
+            pf.GUI.doc_dialog.update()
+            pf.app.processEvents()
+        except:
+            pass
+
 
 
 def editFile(fn,exist=False):

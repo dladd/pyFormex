@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a6 documentation</title>
+    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.8-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.7-a6',
+        VERSION:     '0.8.8-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.7-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.8-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="59. turtle — Turtle graphics for pyFormex" href="turtle.html" />
     <link rel="prev" title="57. tools — tools.py" href="tools.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -474,6 +474,26 @@ the closest (foot)points matching X.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.degenerate">
+<tt class="descname">degenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.degenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the degenerate faces according to area and normals.</p>
+<p>A face is degenerate if its surface is less or equal to zero or the
+normal has a nan.</p>
+<p>Returns the list of degenerate element numbers in a sorted array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.removeDegenerate">
+<tt class="descname">removeDegenerate</tt><big>(</big><em>compact=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.removeDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the degenerate elements from a TriSurface.</p>
+<p>Returns a TriSurface with all degenerate elements removed.
+By default, the coords set is unaltered and will still contain
+all points, even ones that are no longer connected to any element.
+To reduce the coordinate set, set the compact argument to True
+or use the <a class="reference internal" href="#trisurface.TriSurface.compact" title="trisurface.TriSurface.compact"><tt class="xref py py-meth docutils literal"><span class="pre">compact()</span></tt></a> method afterwards.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.offset">
 <tt class="descname">offset</tt><big>(</big><em>distance=1.0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Offset a surface with a certain distance.</p>
@@ -510,60 +530,8 @@ constructs a Mesh with the feature edges of a surface S:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.OLDedgeFront">
-<tt class="descname">OLDedgeFront</tt><big>(</big><em>startat=0</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDedgeFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator function returning the frontal elements.</p>
-<p>startat is an element number or list of numbers of the starting front.
-On first call, this function returns the starting front.
-Each next() call returns the next front.
-front_increment determines how the property increases at each
-frontal step. There is an extra increment +1 at each start of
-a new part. Thus, the start of a new part can always be detected
-by a front not having the property of the previous plus front_increment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.OLDwalkEdgeFront">
-<tt class="descname">OLDwalkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDwalkEdgeFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grow a selection using a frontal method.</p>
-<p>Starting from element <cite>startat</cite>, grow a selection <cite>nsteps</cite> times
-following the common edges of the triangles.</p>
-<p>The property of each new front is augmented by <cite>front_increment</cite>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.OLDpartitionByEdgeFront">
-<tt class="descname">OLDpartitionByEdgeFront</tt><big>(</big><em>okedges</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDpartitionByEdgeFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect different parts of the surface using a frontal method.</p>
-<p>okedges flags the edges where the two adjacent triangles are to be
-in the same part of the surface.
-startat is a list of elements that are in the first part. 
-The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.OLDpartitionByAngle">
-<tt class="descname">OLDpartitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.OLDpartitionByAngle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition the surface by splitting it at sharp edges.</p>
-<p>The surface is partitioned in parts in which all elements can be
-reach without ever crossing a sharp edge angle. More precisely,
-any two elements that can be connected by a line not crossing an
-edge between two elements having their normals differ more than
-angle (in degrees), will belong to the same part.</p>
-<p>The partitioning is returned as a property type array having a value
-corresponding to the part number. The lowest property number will be
-firstprop.</p>
-<p>By default the parts are assigned property numbers in decreasing
-order of the number of triangles in the part. Setting the sort
-argument to &#8216;area&#8217; will sort the parts according to decreasing
-area. Any other value will return the parts unsorted.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.partitionByAngle">
-<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em>, <em>alt=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>sort='number'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the surface by splitting it at sharp edges.</p>
 <p>The surface is partitioned in parts in which all elements can be
 reach without ever crossing a sharp edge angle. More precisely,
@@ -576,6 +544,9 @@ number for eacht triangle.</p>
 order of the number of triangles in the part. Setting the sort
 argument to &#8216;area&#8217; will sort the parts according to decreasing
 area. Any other value will return the parts unsorted.</p>
+<p>Beware that the existence of degenerate elements may cause
+unexpected results. If unsure, use the <a class="reference internal" href="#trisurface.TriSurface.removeDegenerate" title="trisurface.TriSurface.removeDegenerate"><tt class="xref py py-meth docutils literal"><span class="pre">removeDegenerate()</span></tt></a>
+method first to remove those elements.</p>
 </dd></dl>
 
 <dl class="method">
@@ -648,25 +619,6 @@ at equal distances spread over the bbox of the surface.</p>
 values, i.e. a list of Meshes, one for every cutting plane.
 In each Mesh the simply connected parts are identified by
 property number.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.patchextension">
-<tt class="descname">patchextension</tt><big>(</big><em>p</em>, <em>step</em>, <em>dir=None</em>, <em>makecircular=False</em>, <em>div=1.0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.patchextension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extrude a nearly-planar patch of a surface.</p>
-<ul class="simple">
-<li><cite>self</cite> is a surface with propery numbers</li>
-<li><cite>p</cite> is the property number of the patch to extrude</li>
-<li><cite>div</cite> is the number of elements along the extrusion. If None, 
-the triangle size is taken from the patch&#8217;s border</li>
-<li><cite>step</cite> is the length of the extrusion. If step is a string (e.g. &#8216;2.&#8217;), 
-the length is given as number of average &#8216;diameters&#8217;</li>
-<li><cite>dir</cite> is the axis of the extrusion. if dir is None, dir is 
-the average normal of patch p</li>
-<li><cite>makecircular</cite> if True makes the circular the extended section.</li>
-</ul>
-<p>This is a convenient function to elongate tubular structures
-such as arteries.</p>
 </dd></dl>
 
 <dl class="method">
@@ -849,15 +801,6 @@ Use the <a class="reference internal" href="#trisurface.TriSurface.check" title=
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.rings">
-<tt class="descname">rings</tt><big>(</big><em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rings" title="Permalink to this definition">¶</a></dt>
-<dd><p>It finds the rings of elems connected to sources by node.</p>
-<p>Sources is a list of elem indices.
-A list of rings is returned, from zero (equal to sources) to step.
-If step is -1, all rings are returned.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.boolean">
 <tt class="descname">boolean</tt><big>(</big><em>surf</em>, <em>op</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a boolean operation with another surface.</p>
@@ -880,18 +823,6 @@ if one of them is, the set of self-intersecting faces is written
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.correctNegativeVolumes">
-<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify the connectivity of negative-volume elements to make
-positive-volume elements.</p>
-<p>Negative-volume elements (hex or tet with inconsistent face orientation)
-may appear by error during geometrical trnasformations
-(e.g. reflect, sweep, extrude, revolve).
-This function fixes those elements.
-Currently it only works with linear tet and hex.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.intersection">
 <tt class="descname">intersection</tt><big>(</big><em>surf</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.intersection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection curve of two surfaces.</p>
@@ -908,6 +839,18 @@ if one of them is, the set of self-intersecting faces is written
 <li><cite>verbose</cite>: boolean: print statistics about the surface</li>
 </ul>
 <p>Returns: a list of intersection curves.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.correctNegativeVolumes">
+<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the connectivity of negative-volume elements to make
+positive-volume elements.</p>
+<p>Negative-volume elements (hex or tet with inconsistent face orientation)
+may appear by error during geometrical trnasformations
+(e.g. reflect, sweep, extrude, revolve).
+This function fixes those elements.
+Currently it only works with linear tet and hex.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1980,13 +1923,6 @@ degenerate elements.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.removeDegenerate">
-<tt class="descname">removeDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.removeDegenerate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the degenerate elements from a Mesh.</p>
-<p>Returns a Mesh with all degenerate elements removed.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.removeDuplicate">
 <tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.removeDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the duplicate elements from a Mesh.</p>
@@ -2290,14 +2226,6 @@ intermediate format.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="trisurface.read_gambit_neutral">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_gambit_neutral</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#trisurface.read_gambit_neutral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a triangular surface mesh in Gambit neutral format.</p>
-<p>The .neu file nodes are numbered from 1!
-Returns a nodes,elems tuple.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="trisurface.write_stla">
 <tt class="descclassname">trisurface.</tt><tt class="descname">write_stla</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="headerlink" href="#trisurface.write_stla" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export an x[n,3,3] float array as an ascii .stl file.</p>
@@ -2370,17 +2298,20 @@ object.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="trisurface.read_error">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_error</tt><big>(</big><em>cnt</em>, <em>line</em><big>)</big><a class="headerlink" href="#trisurface.read_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raise an error on reading the stl file.</p>
+<dt id="trisurface.degenerate">
+<tt class="descclassname">trisurface.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>normals</em><big>)</big><a class="headerlink" href="#trisurface.degenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the degenerate faces according to area and normals.</p>
+<p>area,normals are equal sized arrays with the areas and normals of a
+list of faces.
+A face is degenerate if its area is less or equal to zero or the
+normal has a nan (not-a-number) value.</p>
+<p>Returns a list of the degenerate element numbers as a sorted array.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="trisurface.degenerate">
-<tt class="descclassname">trisurface.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>norm</em><big>)</big><a class="headerlink" href="#trisurface.degenerate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the degenerate faces according to area and normals.</p>
-<p>A face is degenerate if its surface is less or equal to zero or the
-normal has a nan.</p>
+<dt id="trisurface.read_error">
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_error</tt><big>(</big><em>cnt</em>, <em>line</em><big>)</big><a class="headerlink" href="#trisurface.read_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise an error on reading the stl file.</p>
 </dd></dl>
 
 <dl class="function">
@@ -2490,7 +2421,7 @@ Each face of the cube is represented by two triangles.</p>
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.7-a6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.8-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -2498,7 +2429,7 @@ Each face of the cube is represented by two triangles.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Oct 16, 2012.
+      Last updated on Nov 04, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
