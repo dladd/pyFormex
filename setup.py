@@ -93,8 +93,13 @@ class build_py(_build_py):
             for filename in filenames:
                 target = os.path.join(build_dir, filename)
                 self.mkpath(os.path.dirname(target))
-                self.copy_file(os.path.join(src_dir, filename), target,
-                               preserve_mode=filename.startswith('bin/'))
+                self.copy_file(
+                    os.path.join(src_dir, filename), target,
+                    preserve_mode = (
+                        filename.startswith('bin/') or
+                        filename.startswith('extra/')
+                        )
+                    )
 
 
 

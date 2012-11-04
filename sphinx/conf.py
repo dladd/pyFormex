@@ -77,7 +77,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyFormex'
-copyright = u'2004-2011, Benedict Verhegghe'
+copyright = u'2004-2012, Benedict Verhegghe'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

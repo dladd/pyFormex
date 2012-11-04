@@ -125,7 +125,7 @@ FTPLOCAL= bumps:/var/ftp/pub/pyformex
 # ftp server on Savannah
 FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
-.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
+.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs sign
 
 ##############################
 
@@ -239,10 +239,12 @@ manpages:
 publocal: ${PKGDIR}/${LATEST}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
-sign: ${PUBDIR}/${PKGVER}.sig
 
-${PUBDIR}/${PKGVER}.sig:
+${PUBDIR}/${PKGVER}.sig: sign
+
+sign: ${PUBDIR}/${PKGVER}
 	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PUBDIR}
+	ln -s pyformex/${LATEST} ${PKGDIR}
 	cd ${PUBDIR}; gpg -b --use-agent ${PKGVER}
 
 pubn: ${PUBDIR}/${PKGVER}.sig
