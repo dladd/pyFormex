@@ -48,13 +48,13 @@ override_dh_python2:
 	set -e; if [ -d "debian/pyformex" ]; then \
 		for FILENAME in arraytools.html.gz draw2d.html formian.html imagecolor.html track.html wrl.html; do \
 		find $(CURDIR)/debian/pyformex -name $$FILENAME -exec rm -f {} \; \
-		done; fi
+		; done; fi
 	# Replace embedded Javascript libraries with symlinks
 	set -e; if [ -d "debian/pyformex" ]; then \
 		for FILENAME in jquery underscore; do \
 		find $(CURDIR)/debian/pyformex -name $$FILENAME.js -print \
                 -exec ln -sf /usr/share/javascript/$$FILENAME/$$FILENAME.js {} \; \
-		done; fi
+		; done; fi
 	# Link documentation 
 	set -e; if [ -d "debian/pyformex" ]; then \
 		mkdir $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc; \
