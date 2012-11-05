@@ -24,6 +24,19 @@ release
   size=1426285
 
 release
+  sh=177
+  python=41745
+  dollars=1625980
+  rev=2543
+  manyears=12.04
+  years=1.38
+  tag=0.8.8
+  sloc=49515
+  date=2012-11-04
+  ansic=7274
+  size=3146271	
+
+release
   sh=290
   python=36450
   dollars=1415162
@@ -225,14 +238,14 @@ release
   size=275463
 
 release
-  sh=44
-  python=4727
-  dollars=139374
+  sh=36
+  python=6432
+  dollars=191845
   rev=136
-  manyears=1.03
-  years=0.54
+  manyears=1.42
+  years=0.61
   tag=0.3.1
-  sloc=4771
+  sloc=6468
   date=2006-09-20
   size=535373
 

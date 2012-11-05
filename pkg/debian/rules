@@ -11,25 +11,24 @@ include /usr/share/dpkg/buildflags.mk
 
 
 %:
-	@echo "BV: USING DEFAULT RULE $@"
 	dh $@ --with python2
 
 build:
-	@echo "BV: BUILD"
+	@echo "=== Building ==="
 	dh_auto_build
-	@echo "Building extras"
+	@echo "=== Building extra ==="
 	make -C $(CURDIR)/pyformex/extra
 
 binary:
+	@echo "=== Installing ==="
 	dh binary --with=python2
-	@echo "Installing extras"
+	@echo "=== Installing extra ==="
 	DESTDIR=$(CURDIR)/debian/tmp make -C $(CURDIR)/pyformex/extra prefix=/usr install
 
 
 binary-arch:
 	dh_numpy
-	dh binary-arch --with=python2
-
+	dh binary-arch -a --with=python2
 
 
 override_dh_auto_install:
@@ -45,12 +44,17 @@ override_dh_install:
 override_dh_python2:
 	dh_numpy
 	dh_python2
+	# Remove some extraneous files
+	set -e; if [ -d "debian/pyformex" ]; then \
+		for FILENAME in arraytools.html.gz draw2d.html formian.html imagecolor.html track.html wrl.html; do \
+		find $(CURDIR)/debian/pyformex -name $$FILENAME -exec rm -f {} \; \
+		done; fi
 	# Replace embedded Javascript libraries with symlinks
 	set -e; if [ -d "debian/pyformex" ]; then \
 		for FILENAME in jquery underscore; do \
 		find $(CURDIR)/debian/pyformex -name $$FILENAME.js -print \
                 -exec ln -sf /usr/share/javascript/$$FILENAME/$$FILENAME.js {} \; \
-		; done; fi
+		done; fi
 	# Link documentation 
 	set -e; if [ -d "debian/pyformex" ]; then \
 		mkdir $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc; \

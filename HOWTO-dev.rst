@@ -1011,7 +1011,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Add the release data to the database ::
    
-   edt pyformex-releases.fdb
+   edt stats/pyformex-releases.fdb
 
 - Create statistics ::
    
@@ -1041,6 +1041,8 @@ They will need to be tuned for the release.
   as declared in the variables `Build-Depends` and `Build-Depends-Indep` in
   the file `control`.
 
+- Other packages: lintian, libfile-fcntllock-perl
+
 - Go to the `pkg` directory. The `_do` procedure should always be executed
   from here.
 - Unpack latest release::
@@ -1062,9 +1064,9 @@ They will need to be tuned for the release.
    files in `debian-template` instead of those in `pyformex-VERSION/debian`.
    Then do a `_do clean unpack`.
 
-- Build the packages:: 
+- Build the packages::
 
-  _do build`
+    _do build | tee log
 
   This will build the python modules, 
   the compiled libraries and the extra binaries under a path 
@@ -1076,11 +1078,15 @@ They will need to be tuned for the release.
 
 - Test installing and running of the packages::
 
-  _do install
+    _do install
 
+- If OK, build final (signed)::
 
-- If OK, build final (signed): _do final
-- upload: dput mentors PYFVER.changes
+    _do clean unpack final | tee log
+
+- upload::
+   
+     dput mentors PYFVER.changes
 
 Uploading to the local debian repository
 ----------------------------------------

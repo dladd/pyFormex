@@ -72,7 +72,7 @@ def sloccount(rel):
     if os.path.exists(slocfile):
         print "  %s exists: skipping" % slocfile
         return
-        
+
     if not os.path.exists(workdir):
         cmd = "svn co svn://svn.savannah.nongnu.org/pyformex/trunk -r%s %s" % (rev,tmpdir)
         runCmd(cmd)
@@ -93,8 +93,10 @@ def sloccount(rel):
 for release in keys:
     sloccount(DB[release])
     if os.path.exists(workdir):
-        removeTree(workdir)
-    
+        try:
+            removeTree(workdir)
+        except:
+            print("Could not remove workdir")
 
 # Now, create some statistics
 

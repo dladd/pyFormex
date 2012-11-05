@@ -125,7 +125,7 @@ FTPLOCAL= bumps:/var/ftp/pub/pyformex
 # ftp server on Savannah
 FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
-.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs sign
+.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
 
 ##############################
 
@@ -240,7 +240,7 @@ publocal: ${PKGDIR}/${LATEST}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
 
-${PUBDIR}/${PKGVER}.sig: sign
+#${PUBDIR}/${PKGVER}.sig: sign
 
 sign: ${PUBDIR}/${PKGVER}
 	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PUBDIR}
@@ -267,8 +267,7 @@ tag:
 
 # Creates statistics
 stats:
-	./create_revision_graph
-	./sloc.py
+	make -C stats
 
 # Create the Sphinx documentation
 html:

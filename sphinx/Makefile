@@ -209,8 +209,9 @@ pubpdf: ${PUBDIR}/${PDF}.sig
 ${PUBDIR}/${PDF}.sig: ${PUBDIR}/${PDF}
 	cd ${PUBDIR}; gpg -b --use-agent ${PDF}
 
-${PUBDIR}/${PDF}:
+${PUBDIR}/${PDF}: ${THE_PDF}
 	cp ${THE_PDF} ${PUBDIR}
+
 
 cvswww: 
 

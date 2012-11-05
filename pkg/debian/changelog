@@ -1,3 +1,13 @@
+pyformex (0.8.8-2) unstable; urgency=low
+
+  * Removed some duplicate and unnecessary files
+
+  * Fixed short package descriptions
+
+  * Updated copyright format 
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Mon, 05 Nov 2012 12:34:35 +0100
+
 pyformex (0.8.8-1) unstable; urgency=low
 
   * New upstream release

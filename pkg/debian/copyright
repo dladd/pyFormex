@@ -1,16 +1,17 @@
-Format: http://dep.debian.net/deps/dep5
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: pyformex
+Upstream-Contact: Benedict Verhegghe <benedict.verhegghe@ugent.be>
 Source: http://savannah.nongnu.org/projects/pyformex/
 
 Files: *
-Copyright: 2004-2012 Benedict Verhegghe <benedict.verhegghe@ugent.be>
-License: GPL-3.0+
+Copyright: 2004-2012 Benedict Verhegghe
+License: GPL-3+
 
 Files: debian/*
-Copyright: 2011,2012 Benedict Verhegghe <benedict.verhegghe@ugent.be>
-License: GPL-3.0+
+Copyright: 2011,2012 Benedict Verhegghe
+License: GPL-3+
 
-License: GPL-3.0+
+License: GPL-3+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or

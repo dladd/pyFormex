@@ -25,6 +25,7 @@
 #
 # Create a pyFormex revision graph
 #
+REVLIST=pyformex-rev.list
 URL=$(svn info | grep 'URL:' | sed 's|.*//||;s|.*@||')
 
 [ "$URL" = "svn.savannah.nongnu.org/pyformex/trunk/stats" ] || {
@@ -34,12 +35,12 @@ URL=$(svn info | grep 'URL:' | sed 's|.*//||;s|.*@||')
 }
 
 REV=$(svn info | gawk '/Revision:/{print $2}')
-RECREV=$(head -n 1 pyformex.revisions | sed 's| .*||')
+RECREV=$(head -n 1 $REVLIST | sed 's| .*||')
 
 [ "$RECREV" = "$REV" ] || {
   echo "Creating new revision list: this may take some time"
   pushd ..
-  svn log | gawk '/^r[0-9]+/{ sub("r","",$1); print $1, $5}' > pyformex-rev.list
+  svn log | gawk '/^r[0-9]+/{ sub("r","",$1); print $1, $5}' > stats/$REVLIST
   popd
 }
 
