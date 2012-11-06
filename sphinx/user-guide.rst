@@ -52,6 +52,7 @@ pyFormex user guide
 
    running
    gui
+   scripting
    geometry
    drawing
    imaging

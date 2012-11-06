@@ -43,7 +43,7 @@ class AppDir(object):
     When creatig an AppDir, its path is added to sys.path
     """
     known_dirs = {
-        'examples': pf.cfg['examplesdir'],
+        'examples': pf.cfg.get('examplesdir',{}),
         }
 
     def __init__(self,path,name=None,create=True):

@@ -180,7 +180,7 @@ doctest:
 prereq: ref pyformex.help
 
 ref:
-	make -C ref
+	make -s -C ref
 
 pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@

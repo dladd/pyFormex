@@ -142,7 +142,7 @@ These modules are located under pyformex/gui.
    ref/image
    ref/imagearray
    ref/imageViewer
-   ref/scriptMenu
+   ref/appMenu
    ref/toolbar
 
 

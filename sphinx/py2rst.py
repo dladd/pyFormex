@@ -38,7 +38,6 @@ discussion of the operation of this code.
 
 Usage:  py2tex.py PYTHONFILE [> outputfile.tex]
 """
-
 import os,sys
 
 # set path to the pyformex modules

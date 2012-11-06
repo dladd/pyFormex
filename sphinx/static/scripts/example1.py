@@ -1,4 +1,4 @@
-# $Id$   *** pyformex ***
+# example1.py
 
 """Example 1"""
 

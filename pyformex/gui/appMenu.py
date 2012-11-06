@@ -208,7 +208,7 @@ class AppMenu(menu.Menu):
     - `title`: the top level label for the menu
     - `dir`: an optional directory path. If specified, and no `files` argument
       is specified, all Python files in `dir` that do not start with either
-      '.' or '_'*, will be considered for inclusion in the menu.
+      '.' or '_', will be considered for inclusion in the menu.
       If mode=='app', they will only be included if
       they can be loaded as a module. If mode=='script', they will only be
       included if they are considered a pyFormex script by utils.is_pyFormex.

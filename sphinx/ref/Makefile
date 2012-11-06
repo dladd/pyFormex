@@ -38,7 +38,7 @@ COREMODULES= adjacency arraytools collection config connectivity coords \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
   image imageViewer imagearray marks menu\
-  scriptMenu toolbar viewport widgets 
+  appMenu toolbar viewport widgets 
 PLUGINMODULES= calpy_itf cameratools curve datareader dxf export \
   fe fe_abq fe_post flavia \
   inertia isopar lima mesh_ext nurbs objects plot2d polygon \
@@ -55,6 +55,8 @@ PY2RST=../py2rst.py
 
 .PHONY: ref
 
+.SILENT:
+
 # where to search for source files
 PYFORMEXDIR=../pyformex
 vpath %.py $(addprefix ../../pyformex, / /gui/ /plugins/)
@@ -66,7 +68,7 @@ clean:
 	rm -f ${AUTOSRC}
 
 %.rst: %.py
-	${PY2RST} $< > $@
+	@${PY2RST} $< >> $@
 
 
 # End

@@ -119,9 +119,10 @@ Getting started
   terminal.
 
 * Create a new pyFormex script using the
-  :menuselection:`File-->Create new script` option, and enter a filename
-  with extension ``.py``. This will open up your favorite editor with
-  a pyFormex script template like the one below.
+  :menuselection:`File-->Create new script` option. This will open a file 
+  dialog: enter a filename ``example0.py`` (be sure to be in a directory
+  where you have write permissions). Pressing the ``Save`` button will open
+  up your favorite editor with a pyFormex script template like the one below.
 
   .. literalinclude:: static/scripts/template.py
      :linenos:
@@ -134,13 +135,15 @@ Getting started
 
 * The template script shows the typical layout of a pyFormex script:
 
-  - The script starts with a line ``#!/usr/bin/env pyformex``, followed by a 
-    number of comments lines (all lines starting with a '#'). For the sake of
-    this tutorial, you can just disregard the comments. 
+  - The script starts with some comment lines (all lines starting with a '#').
+    For the sake of this tutorial, you can just disregard the comments. But
+    this section typical displays a file identification, the copyright notice
+    and the license conditions. 
   - Then comes a multiline documentation string, contained between two ``"""`` 
-    delimiters. Read it: it repeats this instructions on how a legal
-    pyFormex script should be structured.
-  - Next are the pyFormex instructions: in this case there's only one line.
+    delimiters. By preference, this docstring is composed of a short first 
+    line, then a blank line and finally one or more lines explaining the
+    intention of the script. 
+  - Next are the pyFormex instructions.
   - The script ends with a comment line ``# End``. We recommend you to do this
     also. It serves as a warning for inadvertent truncation of your file.
 
@@ -149,15 +152,33 @@ Getting started
   you that the script has been recognized by the system as a
   pyFormex script, and is ready to run.
 
-* Execute the script by selecting the :menuselection:`File --> Play`
-  menu option, or by just pushing the |button-play| button in the
-  toolbar. In the message area just above the status bar, a line is
-  printed announcing the start and end of execution. Any output created
-  by the script during execution will be displayed in between this two
-  lines. As expected, the template script just prints the text from line 16
-  of the script.
+* Read the docstring of the template script: it gives some basic information
+  on the two application models in pyFormex. For this tutorial we will however
+  stick to the simpler *script* model. Therefore, replace the whole code section  between
+  the ``from __future__`` line and ``# End`` with just this single line::
+     
+     print("This is a pyFormex script")
 
-* Now change the text of the string in line 33, but do not save your changes.
+.. note:: The ``from __future__ import print_function`` line makes Python
+   import a feature from the future Python3 language, turning the ``print``
+   statement into a function. This means that you have to write 
+   ``print(something)`` instead of ``print something``. If you are 
+   acquainted with Python and it hinders you, remove that line (but 
+   remember that you will have to learn the newer syntax sooner or later).
+   If you are a starting Python user, leave it there and learn to use
+   the future syntax right from the start.
+
+* Save your changes to the script (in your editor), and execute it in 
+  pyFormex by selecting the :menuselection:`File --> Play` menu option,
+  or by just pushing the |button-play| button in the
+  toolbar. In the message area (just above the bottom status bar), a line is
+  printed announcing the start and end of execution. Any output created
+  by the script during execution is displayed in between this two
+  lines. As expected, the template script just prints the text from the
+  print statement.
+
+* Now change the text of the string in the print statement, but do not save
+  your changes yet.
   Execute the script again, and notice that the printed text has not changed!
   This is because the editor is an external program to pyFormex, and *the 
   executed script is always the text as read from file*, not necessarily equal
@@ -170,14 +191,14 @@ Getting started
   programs, and saving the script does not change the name of the current
   script in pyFormex.
 
+  .. literalinclude:: static/scripts/example1.py
+     :linenos:
+
   Selecting an existing script file for execution in pyFormex is done with
   the :menuselection:`File --> Open` option. Open the ``example1.py`` file
   you just saved and check that its name is indeed displayed in the status bar.
   You can now execute the script if you want, but it will not produce anything
   visible. We'll learn you how to visualize geometry later on.
-
-  .. literalinclude:: static/scripts/example1.py
-     :linenos:
 
 * Exit |pyFormex| (using the :menuselection:`File --> Exit`) and then restart
   it. You should again see the ``example1.py`` displayed as the current script.

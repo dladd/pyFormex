@@ -33,7 +33,7 @@
 .. _sec:running:
 
 Running pyFormex
-==================
+================
 
 To run pyFormex, simply enter the command ``pyformex`` in a terminal
 window. This will start the Graphical User Interface (GUI), from where
