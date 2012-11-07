@@ -301,18 +301,18 @@ Here is a small example Python script.
   using a name relative to that module::
 
    import mymodule
-   print mymodule.some_variable
+   print(mymodule.some_variable)
 
   or you can import specific names from a module::
 
    from mymodule import some_variable
-   print some_variable
+   print(some_variable)
 
   or you can import everything from a module (not recommended, because
   you can easily clutter your name space)::
 
    from mymodule import *
-   print some_variable
+   print(some_variable)
 
 
 .. _sec:intro-numpy:
@@ -430,7 +430,7 @@ The most straightforward way to create a Formex is by directly
 specifying the coordinates of the points of all its elements in a way
 compatible to creating a 3D :class:`ndarray`::
 
-   F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
+    F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
 
 The data form a nested list of three levels deep. Each innermost level list
 holds the coordinates of a single point. There are four of them: [0.,0.], [1.,0.], [1.,1.] and [0.,1.]. Remark that we left out the third (z) coordinate and it will be set equal to zero. Also, though the values are integer, we added a dot
@@ -467,8 +467,8 @@ Plexitude      Geometrical interpretation
 We will see later how to override this default. For now, let's draw Formices
 with the default. Go back to the ``example1.py`` script in your editor, containing the line above, and add the ``draw(F)`` instruction to make it look like::
 
-   F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
-   draw(F)
+    F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
+    draw(F)
 
 Save the script and execute it in pyFormex. You will see the following picture
 appear in the canvas.
@@ -520,11 +520,11 @@ lines of the square, and not the surface inside that
 border. Obviously, you need a 4 element 2-plex Formex, using data
 structured like this::
 
-   F = Formex([[[0.,0.],[0.,1.]], 
-               [[0.,1.],[1.,1.]],
-               [[1.,1.],[1.,0.]],
-               [[1.,0.],[0.,0.]]])
-   draw(F,color=blue,clear=True)
+    F = Formex([[[0.,0.],[0.,1.]], 
+                [[0.,1.],[1.,1.]],
+                [[1.,1.],[1.,0.]],
+                [[1.,0.],[0.,0.]]])
+    draw(F,color=blue,clear=True)
 
 Try it, and you will see an image identical to the earlier figure
 :ref:`fig:square`. 
@@ -544,16 +544,16 @@ Changing the rendering mode, the perspective and the viewpoint can
 often help you to find out what the image is really representing.
 But interrogating the Formex data itself is the definite way to make sure::
 
-   F = Formex([[[0.,0.],[1.,0.],[1.,1.],[0.,1.]]])
-   print F.shape()
-   F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
-   print F.shape()
+    F = Formex([[[0.,0.],[1.,0.],[1.,1.],[0.,1.]]])
+    print(F.shape())
+    F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
+    print(F.shape())
 
 This will print the length of the three axes of the coordinate array. In
 the first case you get ``(1, 4, 3)`` (1 element of plexitude 4),
 while the second one gives ``(2, 2, 3)`` (2 elements of plexitude 2).
 
-You can also print the whole Formex, using ``print F``, giving you the
+You can also print the whole Formex, using ``print(F)``, giving you the
 coordinate data in a more readable fashion than the list input. The
 last example above will yield:
 ``{[0.0,0.0,0.0; 1.0,0.0,0.0], [1.0,1.0,0.0; 0.0,1.0,0.0]}``.
@@ -566,8 +566,8 @@ Until now we have only dealt with plane structures, but 3D structures
 are as easy to create from the coordinate data. The following Formex
 represents a pyramid defined by four points (a tetrahedron)::
 
-   F = Formex([[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]],eltype='tet4')
-   draw(F)
+    F = Formex([[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]],eltype='tet4')
+    draw(F)
 
 Depending on your current rendering mode, this will produce an image
 like one of the following:
@@ -612,56 +612,109 @@ as a quadrilateral (though in this case a non-planar one).
 
 .. _subsec:using_patterns:
 
-Using the :func:`pattern` or :func:`mpattern` functions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using the :func:`pattern` function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 In the previous examples the Formices were created by directly
 specifying the coordinate data. That is fine for small structures, but
 quickly becomes cumbersome when the structures get larger.
-The :func:`pattern` and :func:`mpattern` functions reduce the amount of
+The :func:`pattern` function can reduce the amount of
 input needed to create a Formex from scratch.
+   
+This function creates a series of points that lie on a regular grid
+with unit step. These points can then be used to create some
+geometry. Do not worry about the regularity of the grid: pyFormex has
+many ways to transform it afterwards. 
 
-Both functions create a series of points from a simple
-string. Each character of the string is interpreted either as a unit
-step in one of the coordinate directions, or as some other simple
-action. These functions are thus very valuable in creating geometry
-where the points lie on a regular grid.
+The points are created from a string input, interpreting each character
+as a code specifying how to move from the previous point to the new point. 
+The start position on entry is the origin [0.,0.,0.].
 
-The first point of the list is [0,0,0]. Each character from the input
-string is interpreted as a code specifying how to move to the next
-point.  Currently defined are the following codes: 0 = goto origin
-[0,0,0], 1..8 move in the x,y plane, 9 remains at the same place.
-When looking at the plane with the x-axis to the right and the y-axis
-up, 1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW,
-8 = SE.
-Adding 16 to the ordinal of the character causes an extra move of +1 in the
-z-direction. Adding 48 causes an extra move of -1. This means that
-'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an
-extra z = +/- 1. This gives the following schema::
+Currently the following codes are defined:
 
-                 z+=1             z unchanged            z -= 1
-            
-             F    B    E          6    2    5         f    b    e 
-                  |                    |                   |     
-                  |                    |                   |     
-             C----I----A          3----9----1         c----i----a  
-                  |                    |                   |     
-                  |                    |                   |     
-             G    D    H          7    4    8         g    d    h
-             
+- 0: goto origin (0.,0.,0.)
+- 1..8: move in the x,y plane, as specified below
+- 9 or .: remain at the same place (i.e. duplicate the last point)
+- A..I: same as 1..9 plus step +1. in z-direction
+- a..i: same as 1..9 plus step -1. in z-direction
+- /: do not insert the next point
+    
+When looking at the x,y-plane with the x-axis to the right and the
+y-axis up, we have the following basic moves:
+1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
+    
+Adding 16 to the ordinal of the character causes an extra move of +1. in
+the z-direction. Adding 48 causes an extra move of -1. This means that
+'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
+z +/-= 1. This gives the following schema::
+      
+             z+=1             z unchanged            z -= 1
+        
+         F    B    E          6    2    5         f    b    e 
+              |                    |                   |     
+              |                    |                   |     
+         C----I----A          3----9----1         c----i----a  
+              |                    |                   |     
+              |                    |                   |     
+         G    D    H          7    4    8         g    d    h
+
 The special character '/' can be put before any character to make the
-move without making a connection.  The effect of any other character
-is undefined.
+move without inserting the new point. You need to start
+the string with a '0' or '9' to include the origin in the output.    
 
-The :func:`pattern` function creates a straight line segment between
-each pair of subsequent points, and thus results in a 2-plex Formex.
+For example, the string '0123' will result in the following four points,
+on the corners of a unit square::
+
+    [[ 0.  0.  0.]
+     [ 1.  0.  0.]
+     [ 1.  1.  0.]
+     [ 0.  1.  0.]]
+     
+
+Run the following simple script to check it::
+
+    P = pattern('0123')
+    print(P)
+
+Now you can use these points to initialize a Formex ::
+
+    F = Formex(pattern('0123'))
+    draw(F)
+
+This draws the four points. But the Formex class allows a lot more.
+You can directly initialize a Formex with the pattern input string, 
+preceded by a modifier field. The modifier specifies how the list
+of points should be grouped into multipoint elements. It normally consists 
+of a number specifying the plexitude of the elements, followed by a ':'
+character. Thus, after the following definitions::
+
+    F = Formex('1:0123')
+    G = Formex('2:0123')
+    H = Formex('4:0123')
+
+F will be a set of 4 points (plexitude 1), G will be 2 line segments 
+(plexitude 2) and H will a single square (plexitude 4).
+
+Furthermore, the special modifier 'l:' can be used to create line elements
+between each point and the previous one. Note that this in effect doubles
+the number of points in the Formex and always results in a 2-plex Formex.
 Here's an example::
 
-   F = Formex(pattern('1234'))
-   draw(F)
+    F = Formex('l:1234')
+    draw(F)
 
 It creates the same circumference of a unit square as above (see
 figure :ref:`fig:square`), but is much simpler than the explicit 
-specification of the coordinates we used before.
+specification of the coordinates we used before. Notice that we have
+used here '1234' instead of '0123' to get the four corners of the unit
+square. Check what happens if you use '0123', and try to explain why.
+
+.. note:: Because the creation
+   of line segments between subsequent points is such a common task, 
+   the Formex class even allows you to drop the 'l:' modifier. If a
+   Formex is initialized by a string without modifier field, the 'l:'
+   is silently added.
+
+
 Figure :ref:`fig:patterns` shows some more examples. 
 
 .. _`fig:patterns`:
@@ -671,18 +724,7 @@ Figure :ref:`fig:patterns` shows some more examples.
    :alt: Images generated from patterns
 
    Images generated from the patterns '127', '11722' and '22584433553388'
-
-The :func:`mpattern` function is more general than :func:`pattern` in that it allows the
-creation of Formices of any plexitude. Each subsequent point is added
-to the same element, until a '-' character or the end of the string is
-found. The following example creates a square::
-
-   F = Formex(mpattern('123'))
-   draw(F)
-
-If it comes as a surprise that there are only 3 characters for a
-square, remember that the origin is always added as first point.
-
+ 
 
 Some simple wireframe patterns are defined in :mod:`simple.py` and are
 ready for use.  These pattern strings are stacked in a dictionary called
@@ -690,11 +732,10 @@ ready for use.  These pattern strings are stacked in a dictionary called
 ``Pattern['cube']``. They still need to be processed by the
 :func:`pattern` function to produce coordinates::
 
-   #!/usr/bin/env pyformex
-   from simple import Pattern
-   F = Formex(pattern(Pattern['cube']))
-   print F.shape()
-   draw(F,color=blue,view='iso')
+    from simple import Pattern
+    F = Formex(Pattern['cube'])
+    print(F.shape())
+    draw(F,color=blue,view='iso')
 
 .. _`fig:cube`:
 
@@ -738,16 +779,15 @@ scripting language provides all the necessary tools to read them back.
 As an example, create (in the same folder where you store your
 scripts) the text file ``square.txt`` with the following contents::
 
-   0, 0, 0,  0, 1, 0,  1, 1, 0,  1, 0, 0,
-   1, 1, 0,  2, 1, 0,  2, 2, 0,
-   1, 2, 0
+    0, 0, 0,  0, 1, 0,  1, 1, 0,  1, 0, 0,
+    1, 1, 0,  2, 1, 0,  2, 2, 0,
+    1, 2, 0
 
 Then create and execute the following script. ::
 
-   #!/usr/bin/env pyformex
-   chdir(__file__)
-   F = Formex.fromfile('square.txt',sep=',',nplex=4)
-   draw(F)
+    chdir(__file__)
+    F = Formex.fromfile('square.txt',sep=',',nplex=4)
+    draw(F)
 
 It will generate two squares, as shown in the figure :ref:`fig:twosquares`. 
 
@@ -776,12 +816,11 @@ If you have a lot of coordinates to specify, this may be far more easy
 than using the list formatting. 
 The following script yields the same result as the above one::
 
-   #!/usr/bin/env pyformex
-   F = Formex.fromstring("""
-   0 0 0  0 1 0  1 1 0  1 0 0
-   1 1 0  2 1 0  2 2 0  1 2 0
-   """,nplex=4)
-   draw(F)
+    F = Formex.fromstring("""
+    0 0 0  0 1 0  1 1 0  1 0 0
+    1 1 0  2 1 0  2 2 0  1 2 0
+    """,nplex=4)
+    draw(F)
 
 Here we used the default separator, which is a space.
 
@@ -800,15 +839,15 @@ are many ways to do this, but the simplest is to use the '+' or
 changing any of the arguments, but the ``+=`` operator adds the second
 argument to the first, changing its definition::
 
-   F = Formex(pattern('1234'))
-   G = Formex(pattern('5'))
-   H = F + G
-   draw(H)
+    F = Formex('1234')
+    G = Formex('5')
+    H = F + G
+    draw(H)
 
 displays the same Formex as::
 
-   F += G
-   draw(F)
+    F += G
+    draw(F)
 
 but in the latter case, the original definition of ``F`` is lost.
 
@@ -822,10 +861,10 @@ the same :attr:`eltype`. If you want to handle structures with
 elements of different plexitude as a single object, you have to group
 them in a list::
 
-   F = Formex(pattern('1234'))
-   G = Formex([0.5,0.5,0.])
-   H = [F,G]
-   draw(H,color=red)
+    F = Formex('1234')
+    G = Formex([0.5,0.5,0.])
+    H = [F,G]
+    draw(H,color=red)
 
 This draws the circumference of a unit square (F: plexitude 2) and the
 center point of the square (G: plexitude 1), both in red.
@@ -875,20 +914,20 @@ match the number of elements in the Formex.
 The following script creates four triangles, the first and third get
 property number 1, the second and fourth get property 3.::
 
-   F = Formex(mpattern('12-34-14-32'))
-   F.setProp([1,3])
-   print F.prop   # --> [1 3 1 3]
+    F = Formex(mpattern('12-34-14-32'))
+    F.setProp([1,3])
+    print(F.prop)   # --> [1 3 1 3]
 
 As a convenience, you can also specify the property numbers as a
 second argument to the Formex constructor.
 Once the properties have been created, you can safely change
 individual values by directly accessing the :attr:`prop` attribute::
 
-   F = Formex(mpattern('12-34-14-32'),[1,3])
-   F.prop[3] = 4
-   print(F.prop)   # --> [1 3 1 4]
-   draw(F)
-   drawNumbers(F)
+    F = Formex(mpattern('12-34-14-32'),[1,3])
+    F.prop[3] = 4
+    print(F.prop)   # --> [1 3 1 4]
+    draw(F)
+    drawNumbers(F)
 
 When you draw a Formex with property numbers using the default draw
 options (i.e. no color specified), pyFormex will use the property
@@ -977,8 +1016,8 @@ vector formats, such as ``eps`` or ``svg``.
 But you can also create the images from inside your script. Just
 import the ``image`` module and call the ``image.save()`` function::
    
-   import gui.image
-   image.save("my_image.png")
+    import gui.image
+    image.save("my_image.png")
 
 Often you will want to change some settings, like rendering mode or
 background color, to get a better looking picture.
@@ -990,26 +1029,26 @@ figure :ref:`fig:props` above.
 
 ::
 
-   import gui.image
-   chdir(__file__)
-   reset()
-   bgcolor(white)
-   linewidth(2)
-   canvasSize(200,300)
-   F = Formex(mpattern('12-34-14-32'),[1,3])
-   F.prop[3] = 4
-   clear()
-   draw(F)
-   drawNumbers(F)
-   wireframe()
-   image.save('props-000.png')
-   flat()
-   transparent(False)
-   image.save('props-001.png')
-   transparent(True)
-   image.save('props-002.png')
-   flatwire()
-   image.save('props-003.png')
+    import gui.image
+    chdir(__file__)
+    reset()
+    bgcolor(white)
+    linewidth(2)
+    canvasSize(200,300)
+    F = Formex(mpattern('12-34-14-32'),[1,3])
+    F.prop[3] = 4
+    clear()
+    draw(F)
+    drawNumbers(F)
+    wireframe()
+    image.save('props-000.png')
+    flat()
+    transparent(False)
+    image.save('props-001.png')
+    transparent(True)
+    image.save('props-002.png')
+    flatwire()
+    image.save('props-003.png')
 
 The following table lists the interactive menu
 option and the correspondant programmable function to be used to
@@ -1097,7 +1136,7 @@ Setting the ``clear=True`` option in line 29 makes sure the subsequent drawing i
 
 In line 30 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
 
-   F = Formex(pattern("l:164"),[1,2,3]) 
+    F = Formex(pattern("l:164"),[1,2,3]) 
 
 .. _`fig:helix-000`:
 
@@ -1110,7 +1149,7 @@ In line 30 we create the basic geometrical entity for this structure: a triangle
 This basic Formex is copied ``m`` times with a translation step 1.0 (this is precisely the length
 of the horizontal edge of the triangle) in the 0 direction::
 
-   F = F.replic(m,1.,0)
+    F = F.replic(m,1.,0)
 
 .. _`fig:helix-001`:
 
@@ -1123,7 +1162,7 @@ of the horizontal edge of the triangle) in the 0 direction::
 Then, the new  Formex
 is copied ``n`` times  with the same step size in the direction 1. ::
 
-   F = F.replic(n,1.,1)
+    F = F.replic(n,1.,1)
 
 .. _`fig:helix-002`:
 
@@ -1138,7 +1177,7 @@ translation step of '1'. This necessary for the transformation into a cylinder.
 The result of all previous steps is a rectangular pattern with the desired
 dimensions, in a plane z=1.  ::
 
-   F = F.translate(2,1); drawit(F,'iso')
+    F = F.translate(2,1); drawit(F,'iso')
 
 This pattern is rolled up into a cylinder around the 2-axis.
 
@@ -1157,7 +1196,7 @@ This pattern is rolled up into a cylinder around the 2-axis.
 
 ::
 
-   F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
+    F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
 
 This cylinder is copied 5 times in the 2-direction with a translation step of
 'm' (the lenght of the cylinder).
@@ -1177,12 +1216,12 @@ This cylinder is copied 5 times in the 2-direction with a translation step of
 
 ::
 
-   F = F.replic(5,m,2); drawit(F,'iso')
+    F = F.replic(5,m,2); drawit(F,'iso')
 
 The next step is to rotate this cylinder -10 degrees around the 0-axis.  This
 will determine the pitch angle of the spiral.  ::
 
-   F = F.rotate(-10,0); drawit(F,'iso')
+    F = F.rotate(-10,0); drawit(F,'iso')
 
 This last Formex is now translated in direction '0' with a translation step of
 '5'.
@@ -1202,15 +1241,15 @@ This last Formex is now translated in direction '0' with a translation step of
 
 ::
 
-   F = F.translate(0,5); drawit(F,'iso')
+    F = F.translate(0,5); drawit(F,'iso')
 
 Finally, the Formex is rolled up, but around a different axis then before.  Due
 to the pitch angle, a spiral is created. If the pitch angle would be 0  (no
 rotation of -10 degrees around the 0-axis), the resulting Formex  would be a
 torus.   ::
 
-   F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
-   drawit(F,'right')
+    F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
+    drawit(F,'right')
 
 .. % \begin{figure}[ht]
 .. % \centering
@@ -1253,48 +1292,48 @@ two import array attributes 'coords' and 'elems':
 
 ::
 
-   from simple import *
-   F = Formex(pattern(Pattern['cube']))
-   draw(F)
-   M = F.toMesh()
-   print 'Coords',M.coords
-   print 'Elements',M.elems
+    from simple import *
+    F = Formex(Pattern['cube'])
+    draw(F)
+    M = F.toMesh()
+    print('Coords',M.coords)
+    print('Elements',M.elems)
 
 The output of this script are the coordinates of the unique nodes of
 the Mesh, and the connectivity of the elements. The connectivity is an
 integer array with the same shape as the first two dimensions of the
 Formex: (F.nelems(),F.nplex())::
 
-   Nodes
-   [[ 0.  0.  0.]
-    [ 1.  0.  0.]
-    [ 0.  1.  0.]
-    [ 1.  1.  0.]
-    [ 0.  0.  1.]
-    [ 1.  0.  1.]
-    [ 0.  1.  1.]
-    [ 1.  1.  1.]]
-   Elements
-   [[0 1]
-    [1 3]
-    [3 2]
-    [2 0]
-    [0 4]
-    [1 5]
-    [3 7]
-    [2 6]
-    [4 5]
-    [5 7]
-    [7 6]
-    [6 4]]
+    Nodes
+    [[ 0.  0.  0.]
+     [ 1.  0.  0.]
+     [ 0.  1.  0.]
+     [ 1.  1.  0.]
+     [ 0.  0.  1.]
+     [ 1.  0.  1.]
+     [ 0.  1.  1.]
+     [ 1.  1.  1.]]
+    Elements
+    [[0 1]
+     [1 3]
+     [3 2]
+     [2 0]
+     [0 4]
+     [1 5]
+     [3 7]
+     [2 6]
+     [4 5]
+     [5 7]
+     [7 6]
+     [6 4]]
 
 The inverse operation of transforming a Mesh model back into a Formex
 is also quite simple: ``Formex(nodes[elems])`` will indeed be identical to the
 original F (within the tolerance used in merging of the nodes). ::
 
-   >>> G = Formex(nodes[elems])
-   >>> print allclose(F.f,G.f)
-   True
+    >>> G = Formex(nodes[elems])
+    >>> print(allclose(F.f,G.f))
+    True
 
 The ``allclose`` funcion in the second line tests that all coordinates in both
 arrays are the same, within a small tolerance.
