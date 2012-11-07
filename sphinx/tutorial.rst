@@ -729,8 +729,7 @@ Figure :ref:`fig:patterns` shows some more examples.
 Some simple wireframe patterns are defined in :mod:`simple.py` and are
 ready for use.  These pattern strings are stacked in a dictionary called
 'Pattern'. Items of this dictionary can be accessed like
-``Pattern['cube']``. They still need to be processed by the
-:func:`pattern` function to produce coordinates::
+``Pattern['cube']``.
 
     from simple import Pattern
     F = Formex(Pattern['cube'])
@@ -756,7 +755,7 @@ predefined viewing directions and can also be set from the
 :menuselection:`Views` menu or using the |button-iso| button.
 
 
-While the :func:`pattern` and :func:`mpattern` functions can
+While the :func:`pattern` function can
 only generate points lying on a regular cartesian grid, pyFormex provides
 a wealth of transformation functions to move the points to other
 locations after they were created. 
@@ -834,7 +833,7 @@ Concatenation and lists of Formices
 ===================================
 
 Multiple Formices can be concatenated to form one new Formex. There
-are many ways to do this, but the simplest is to use the '+' or
+are many ways to do this, but the simplest is to use the ``+`` or
 ``+=`` operator. Notice the diffference: the ``+`` operator does not
 changing any of the arguments, but the ``+=`` operator adds the second
 argument to the first, changing its definition::
@@ -912,18 +911,18 @@ To add properties to a Formex, use the
 the correct type and shape. If needed, the supplied values are repeated to
 match the number of elements in the Formex. 
 The following script creates four triangles, the first and third get
-property number 1, the second and fourth get property 3.::
+property number 1, the second and fourth get property 3. ::
 
-    F = Formex(mpattern('12-34-14-32'))
+    F = Formex('3:.12.34.14.32')
     F.setProp([1,3])
     print(F.prop)   # --> [1 3 1 3]
 
 As a convenience, you can also specify the property numbers as a
 second argument to the Formex constructor.
 Once the properties have been created, you can safely change
-individual values by directly accessing the :attr:`prop` attribute::
+individual values by directly accessing the :attr:`prop` attribute. ::
 
-    F = Formex(mpattern('12-34-14-32'),[1,3])
+    F = Formex('3:.12.34.14.32',[1,3])
     F.prop[3] = 4
     print(F.prop)   # --> [1 3 1 4]
     draw(F)
@@ -997,6 +996,43 @@ The following table lists the most interesting ones.
 +--------------------+----------------------------------------------+
  
 
+.. _sec:saving_geometry:
+
+Saving geometry
+===============
+
+Sometimes you want to save the created geometry to a file, e.g. to reread
+it in a next session without having to create it again, or to pass it to
+someone else. While pyFormex can export geometry in a large number of 
+formats, the best and easiest way is to use the :func:`writeGeomFile` 
+function. This ensures a fast and problem free saving and read back of 
+the geometry. The geometry is saved in pyFormex's own file format, in a 
+file with extension '.pgf'. This format is well documented (see
+:doc:`file_format`) and thus accessible
+for other programs. ::
+
+    A = Formex('3:012/1416').setProp(1)
+    B = Formex('4:0123').translate([1.,1.,0.])
+    draw(B)
+    writeGeomFile('saved.pgf',[A,B])
+
+When reading back such a file, the objects end up in a dictionary. 
+Quit pyFormex, restart it and read back the just saved file. ::
+
+    D = readGeomFile('saved.pgf')
+    print(D)
+    print(D.keys())
+    draw(D.values())
+
+In this case the keys were auto-generated. We could however specified the
+keys when creating the file, by specifying a dictionary instead of a list
+of the objects to save. ::
+
+    writeGeomFile('saved.pgf',{'two_triangles':A,'a_square':B})
+    D = readGeomFile('saved.pgf')
+    print(D.keys())
+    
+
 .. _sec:saving_images:
 
 Saving images
@@ -1035,7 +1071,7 @@ figure :ref:`fig:props` above.
     bgcolor(white)
     linewidth(2)
     canvasSize(200,300)
-    F = Formex(mpattern('12-34-14-32'),[1,3])
+    F = Formex('3:.12.34.14.32',[1,3])
     F.prop[3] = 4
     clear()
     draw(F)
@@ -1136,7 +1172,7 @@ Setting the ``clear=True`` option in line 29 makes sure the subsequent drawing i
 
 In line 30 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
 
-    F = Formex(pattern("l:164"),[1,2,3]) 
+    F = Formex('l:164',[1,2,3]) 
 
 .. _`fig:helix-000`:
 

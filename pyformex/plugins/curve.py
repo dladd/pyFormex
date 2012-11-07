@@ -390,7 +390,7 @@ class PolyLine(Curve):
         """
         if not self.closed:
             self.closed = True
-            self.parts += 1
+            self.nparts += 1
 
 
     def open(self):
@@ -406,7 +406,7 @@ class PolyLine(Curve):
         """
         if self.closed:
             self.closed = False
-            self.parts -= 1
+            self.nparts -= 1
 
 
     def nelems(self):

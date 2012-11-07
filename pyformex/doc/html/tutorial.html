@@ -105,13 +105,14 @@
 <li><a class="reference internal" href="#the-formex-data-model">The Formex data model</a></li>
 <li><a class="reference internal" href="#creating-a-formex">Creating a Formex</a><ul>
 <li><a class="reference internal" href="#direct-input-of-structured-coordinate-data">Direct input of structured coordinate data</a></li>
-<li><a class="reference internal" href="#using-the-pattern-or-mpattern-functions">Using the <tt class="docutils literal"><span class="pre">pattern()</span></tt> or <tt class="docutils literal"><span class="pre">mpattern()</span></tt> functions</a></li>
+<li><a class="reference internal" href="#using-the-pattern-function">Using the <tt class="docutils literal"><span class="pre">pattern()</span></tt> function</a></li>
 <li><a class="reference internal" href="#reading-coordinates-from-a-file-or-a-string">Reading coordinates from a file or a string</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#concatenation-and-lists-of-formices">Concatenation and lists of Formices</a></li>
 <li><a class="reference internal" href="#formex-property-numbers">Formex property numbers</a></li>
 <li><a class="reference internal" href="#getting-information-about-a-formex">Getting information about a Formex</a></li>
+<li><a class="reference internal" href="#saving-geometry">Saving geometry</a></li>
 <li><a class="reference internal" href="#saving-images">Saving images</a></li>
 <li><a class="reference internal" href="#transforming-a-formex">Transforming a Formex</a></li>
 <li><a class="reference internal" href="#converting-a-formex-to-a-mesh-model">Converting a Formex to a Mesh model</a></li>
@@ -233,9 +234,10 @@ suppress some of the error messages that normally are sent to the
 terminal.</p>
 </li>
 <li><p class="first">Create a new pyFormex script using the
-<em class="menuselection">File‣Create new script</em> option, and enter a filename
-with extension <tt class="docutils literal"><span class="pre">.py</span></tt>. This will open up your favorite editor with
-a pyFormex script template like the one below.</p>
+<em class="menuselection">File‣Create new script</em> option. This will open a file
+dialog: enter a filename <tt class="docutils literal"><span class="pre">example0.py</span></tt> (be sure to be in a directory
+where you have write permissions). Pressing the <tt class="docutils literal"><span class="pre">Save</span></tt> button will open
+up your favorite editor with a pyFormex script template like the one below.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -287,7 +289,21 @@ a pyFormex script template like the one below.</p>
 49
 50
 51
-52</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#        *** pyformex ***</span>
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># pyformex script/app template</span>
+<span class="c">#</span>
 <span class="c">##</span>
 <span class="c">##  Copyright (C) 2011 John Doe (j.doe@somewhere.org) </span>
 <span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
@@ -311,30 +327,42 @@ a pyFormex script template like the one below.</p>
 <span class="sd">This is a template file to show the general layout of a pyFormex</span>
 <span class="sd">script or app.</span>
 
-<span class="sd">In the current version, a pyFormex script should obey the following rules:</span>
-
-<span class="sd">- file name extension is &#39;.py&#39;</span>
-<span class="sd">- first (comment) line contains &#39;pyformex&#39;</span>
+<span class="sd">A pyFormex script is just any simple Python source code file with</span>
+<span class="sd">extension &#39;.py&#39; and is fully read and execution at once.</span>
 
 <span class="sd">A pyFormex app can be a &#39;.py&#39; of &#39;.pyc&#39; file, and should define a function</span>
-<span class="sd">&#39;run()&#39; to be executed by pyFormex. Also, the app should import anythin that</span>
+<span class="sd">&#39;run()&#39; to be executed by pyFormex. Also, the app should import anything that</span>
 <span class="sd">it needs.</span>
 
 <span class="sd">This template is a common structure that allows the file to be used both as</span>
-<span class="sd">a script or as an app.</span>
+<span class="sd">a script or as an app, with almost identical behavior.</span>
+
+<span class="sd">For more details, see the user guide under the `Scripting` section.</span>
 
 <span class="sd">The script starts by preference with a docstring (like this),</span>
 <span class="sd">composed of a short first line, then a blank line and</span>
 <span class="sd">one or more lines explaining the intention of the script.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">gui.draw</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">gui.draw</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c"># for an app we need to import explicitely</span>
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Main function.</span>
+
+<span class="sd">    This is executed on each run.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;This is the pyFormex template script/app&quot;</span><span class="p">)</span>
 
-<span class="c"># The following is to make it work as a script</span>
+
+<span class="c"># Initialization code</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;This is the initialization code of the pyFormex template script/app&quot;</span><span class="p">)</span>
+
+
+<span class="c"># The following is to make script and app behavior alike</span>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;draw&#39;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Running as a script&quot;</span><span class="p">)</span>
     <span class="n">run</span><span class="p">()</span>
 
 
@@ -353,13 +381,15 @@ editors will give you syntax highlighting and help with indentation.</p>
 <ul>
 <li><p class="first">The template script shows the typical layout of a pyFormex script:</p>
 <ul class="simple">
-<li>The script starts with a line <tt class="docutils literal"><span class="pre">#!/usr/bin/env</span> <span class="pre">pyformex</span></tt>, followed by a
-number of comments lines (all lines starting with a &#8216;#&#8217;). For the sake of
-this tutorial, you can just disregard the comments.</li>
+<li>The script starts with some comment lines (all lines starting with a &#8216;#&#8217;).
+For the sake of this tutorial, you can just disregard the comments. But
+this section typical displays a file identification, the copyright notice
+and the license conditions.</li>
 <li>Then comes a multiline documentation string, contained between two <tt class="docutils literal"><span class="pre">&quot;&quot;&quot;</span></tt>
-delimiters. Read it: it repeats this instructions on how a legal
-pyFormex script should be structured.</li>
-<li>Next are the pyFormex instructions: in this case there&#8217;s only one line.</li>
+delimiters. By preference, this docstring is composed of a short first
+line, then a blank line and finally one or more lines explaining the
+intention of the script.</li>
+<li>Next are the pyFormex instructions.</li>
 <li>The script ends with a comment line <tt class="docutils literal"><span class="pre">#</span> <span class="pre">End</span></tt>. We recommend you to do this
 also. It serves as a warning for inadvertent truncation of your file.</li>
 </ul>
@@ -369,15 +399,38 @@ see the name of the script, together with a green dot. This tells
 you that the script has been recognized by the system as a
 pyFormex script, and is ready to run.</p>
 </li>
-<li><p class="first">Execute the script by selecting the <em class="menuselection">File ‣ Play</em>
-menu option, or by just pushing the <img alt="button-play" src="_images/next.png" /> button in the
-toolbar. In the message area just above the status bar, a line is
-printed announcing the start and end of execution. Any output created
-by the script during execution will be displayed in between this two
-lines. As expected, the template script just prints the text from line 16
-of the script.</p>
+<li><p class="first">Read the docstring of the template script: it gives some basic information
+on the two application models in pyFormex. For this tutorial we will however
+stick to the simpler <em>script</em> model. Therefore, replace the whole code section  between
+the <tt class="docutils literal"><span class="pre">from</span> <span class="pre">__future__</span></tt> line and <tt class="docutils literal"><span class="pre">#</span> <span class="pre">End</span></tt> with just this single line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;This is a pyFormex script&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </li>
-<li><p class="first">Now change the text of the string in line 33, but do not save your changes.
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <tt class="docutils literal"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">print_function</span></tt> line makes Python
+import a feature from the future Python3 language, turning the <tt class="docutils literal"><span class="pre">print</span></tt>
+statement into a function. This means that you have to write
+<tt class="docutils literal"><span class="pre">print(something)</span></tt> instead of <tt class="docutils literal"><span class="pre">print</span> <span class="pre">something</span></tt>. If you are
+acquainted with Python and it hinders you, remove that line (but
+remember that you will have to learn the newer syntax sooner or later).
+If you are a starting Python user, leave it there and learn to use
+the future syntax right from the start.</p>
+</div>
+<ul>
+<li><p class="first">Save your changes to the script (in your editor), and execute it in
+pyFormex by selecting the <em class="menuselection">File ‣ Play</em> menu option,
+or by just pushing the <img alt="button-play" src="_images/next.png" /> button in the
+toolbar. In the message area (just above the bottom status bar), a line is
+printed announcing the start and end of execution. Any output created
+by the script during execution is displayed in between this two
+lines. As expected, the template script just prints the text from the
+print statement.</p>
+</li>
+<li><p class="first">Now change the text of the string in the print statement, but do not save
+your changes yet.
 Execute the script again, and notice that the printed text has not changed!
 This is because the editor is an external program to pyFormex, and <em>the
 executed script is always the text as read from file</em>, not necessarily equal
@@ -388,18 +441,13 @@ to what is displayed in your editor.</p>
 <tt class="docutils literal"><span class="pre">example1.py</span></tt>. Again, note that the editor and pyFormex are separate
 programs, and saving the script does not change the name of the current
 script in pyFormex.</p>
-<p>Selecting an existing script file for execution in pyFormex is done with
-the <em class="menuselection">File ‣ Open</em> option. Open the <tt class="docutils literal"><span class="pre">example1.py</span></tt> file
-you just saved and check that its name is indeed displayed in the status bar.
-You can now execute the script if you want, but it will not produce anything
-visible. We&#8217;ll learn you how to visualize geometry later on.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
 6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># $Id: example1.py 2146 2012-01-09 08:57:52Z bverheg $   *** pyformex ***</span>
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># example1.py</span>
 
 <span class="sd">&quot;&quot;&quot;Example 1&quot;&quot;&quot;</span>
 
@@ -408,6 +456,11 @@ visible. We&#8217;ll learn you how to visualize geometry later on.</p>
 <span class="c"># End</span>
 </pre></div>
 </td></tr></table></div>
+<p>Selecting an existing script file for execution in pyFormex is done with
+the <em class="menuselection">File ‣ Open</em> option. Open the <tt class="docutils literal"><span class="pre">example1.py</span></tt> file
+you just saved and check that its name is indeed displayed in the status bar.
+You can now execute the script if you want, but it will not produce anything
+visible. We&#8217;ll learn you how to visualize geometry later on.</p>
 </li>
 <li><p class="first">Exit pyFormex (using the <em class="menuselection">File ‣ Exit</em>) and then restart
 it. You should again see the <tt class="docutils literal"><span class="pre">example1.py</span></tt> displayed as the current script.
@@ -554,18 +607,18 @@ The order in which keyword arguments are specified is not important.</p>
 those first. This can be done by importing the whole module and then
 using a name relative to that module:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">mymodule</span>
-<span class="k">print</span> <span class="n">mymodule</span><span class="o">.</span><span class="n">some_variable</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mymodule</span><span class="o">.</span><span class="n">some_variable</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or you can import specific names from a module:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mymodule</span> <span class="kn">import</span> <span class="n">some_variable</span>
-<span class="k">print</span> <span class="n">some_variable</span>
+<span class="k">print</span><span class="p">(</span><span class="n">some_variable</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or you can import everything from a module (not recommended, because
 you can easily clutter your name space):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mymodule</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="k">print</span> <span class="n">some_variable</span>
+<span class="k">print</span><span class="p">(</span><span class="n">some_variable</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -764,15 +817,15 @@ drawn. You can make the <tt class="docutils literal"><span class="pre">clear=Tru
 often help you to find out what the image is really representing.
 But interrogating the Formex data itself is the definite way to make sure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]]])</span>
-<span class="k">print</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">())</span>
 <span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],[[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]]])</span>
-<span class="k">print</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>This will print the length of the three axes of the coordinate array. In
 the first case you get <tt class="docutils literal"><span class="pre">(1,</span> <span class="pre">4,</span> <span class="pre">3)</span></tt> (1 element of plexitude 4),
 while the second one gives <tt class="docutils literal"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">3)</span></tt> (2 elements of plexitude 2).</p>
-<p>You can also print the whole Formex, using <tt class="docutils literal"><span class="pre">print</span> <span class="pre">F</span></tt>, giving you the
+<p>You can also print the whole Formex, using <tt class="docutils literal"><span class="pre">print(F)</span></tt>, giving you the
 coordinate data in a more readable fashion than the list input. The
 last example above will yield:
 <tt class="docutils literal"><span class="pre">{[0.0,0.0,0.0;</span> <span class="pre">1.0,0.0,0.0],</span> <span class="pre">[1.0,1.0,0.0;</span> <span class="pre">0.0,1.0,0.0]}</span></tt>.
@@ -817,29 +870,36 @@ upward.</p>
 pyramid. Without it, pyFormex would have interpreted the 4-plex Formex
 as a quadrilateral (though in this case a non-planar one).</p>
 </div>
-<div class="section" id="using-the-pattern-or-mpattern-functions">
-<span id="subsec-using-patterns"></span><h3>Using the <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> or <tt class="xref py py-func docutils literal"><span class="pre">mpattern()</span></tt> functions<a class="headerlink" href="#using-the-pattern-or-mpattern-functions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-the-pattern-function">
+<span id="subsec-using-patterns"></span><h3>Using the <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> function<a class="headerlink" href="#using-the-pattern-function" title="Permalink to this headline">¶</a></h3>
 <p>In the previous examples the Formices were created by directly
 specifying the coordinate data. That is fine for small structures, but
 quickly becomes cumbersome when the structures get larger.
-The <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">mpattern()</span></tt> functions reduce the amount of
+The <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> function can reduce the amount of
 input needed to create a Formex from scratch.</p>
-<p>Both functions create a series of points from a simple
-string. Each character of the string is interpreted either as a unit
-step in one of the coordinate directions, or as some other simple
-action. These functions are thus very valuable in creating geometry
-where the points lie on a regular grid.</p>
-<p>The first point of the list is [0,0,0]. Each character from the input
-string is interpreted as a code specifying how to move to the next
-point.  Currently defined are the following codes: 0 = goto origin
-[0,0,0], 1..8 move in the x,y plane, 9 remains at the same place.
-When looking at the plane with the x-axis to the right and the y-axis
-up, 1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW,
-8 = SE.
-Adding 16 to the ordinal of the character causes an extra move of +1 in the
-z-direction. Adding 48 causes an extra move of -1. This means that
-&#8216;ABCDEFGHI&#8217;, resp. &#8216;abcdefghi&#8217;, correspond with &#8216;123456789&#8217; with an
-extra z = +/- 1. This gives the following schema:</p>
+<p>This function creates a series of points that lie on a regular grid
+with unit step. These points can then be used to create some
+geometry. Do not worry about the regularity of the grid: pyFormex has
+many ways to transform it afterwards.</p>
+<p>The points are created from a string input, interpreting each character
+as a code specifying how to move from the previous point to the new point.
+The start position on entry is the origin [0.,0.,0.].</p>
+<p>Currently the following codes are defined:</p>
+<ul class="simple">
+<li>0: goto origin (0.,0.,0.)</li>
+<li>1..8: move in the x,y plane, as specified below</li>
+<li>9 or .: remain at the same place (i.e. duplicate the last point)</li>
+<li>A..I: same as 1..9 plus step +1. in z-direction</li>
+<li>a..i: same as 1..9 plus step -1. in z-direction</li>
+<li>/: do not insert the next point</li>
+</ul>
+<p>When looking at the x,y-plane with the x-axis to the right and the
+y-axis up, we have the following basic moves:
+1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.</p>
+<p>Adding 16 to the ordinal of the character causes an extra move of +1. in
+the z-direction. Adding 48 causes an extra move of -1. This means that
+&#8216;ABCDEFGHI&#8217;, resp. &#8216;abcdefghi&#8217;, correspond with &#8216;123456789&#8217; with an extra
+z +/-= 1. This gives the following schema:</p>
 <div class="highlight-python"><pre>    z+=1             z unchanged            z -= 1
 
 F    B    E          6    2    5         f    b    e
@@ -851,45 +911,73 @@ C----I----A          3----9----1         c----i----a
 G    D    H          7    4    8         g    d    h</pre>
 </div>
 <p>The special character &#8216;/&#8217; can be put before any character to make the
-move without making a connection.  The effect of any other character
-is undefined.</p>
-<p>The <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> function creates a straight line segment between
-each pair of subsequent points, and thus results in a 2-plex Formex.
+move without inserting the new point. You need to start
+the string with a &#8216;0&#8217; or &#8216;9&#8217; to include the origin in the output.</p>
+<p>For example, the string &#8216;0123&#8217; will result in the following four points,
+on the corners of a unit square:</p>
+<div class="highlight-python"><pre>[[ 0.  0.  0.]
+ [ 1.  0.  0.]
+ [ 1.  1.  0.]
+ [ 0.  1.  0.]]</pre>
+</div>
+<p>Run the following simple script to check it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">(</span><span class="s">&#39;0123&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you can use these points to initialize a Formex</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;0123&#39;</span><span class="p">))</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This draws the four points. But the Formex class allows a lot more.
+You can directly initialize a Formex with the pattern input string,
+preceded by a modifier field. The modifier specifies how the list
+of points should be grouped into multipoint elements. It normally consists
+of a number specifying the plexitude of the elements, followed by a &#8216;:&#8217;
+character. Thus, after the following definitions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;1:0123&#39;</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;2:0123&#39;</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;4:0123&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>F will be a set of 4 points (plexitude 1), G will be 2 line segments
+(plexitude 2) and H will a single square (plexitude 4).</p>
+<p>Furthermore, the special modifier &#8216;l:&#8217; can be used to create line elements
+between each point and the previous one. Note that this in effect doubles
+the number of points in the Formex and always results in a 2-plex Formex.
 Here&#8217;s an example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1234&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;l:1234&#39;</span><span class="p">)</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>It creates the same circumference of a unit square as above (see
 figure <a class="reference internal" href="#fig-square"><em>A square.</em></a>), but is much simpler than the explicit
-specification of the coordinates we used before.
-Figure <a class="reference internal" href="#fig-patterns"><em>Images generated from the patterns &#8216;127&#8217;, &#8216;11722&#8217; and &#8216;22584433553388&#8217;</em></a> shows some more examples.</p>
+specification of the coordinates we used before. Notice that we have
+used here &#8216;1234&#8217; instead of &#8216;0123&#8217; to get the four corners of the unit
+square. Check what happens if you use &#8216;0123&#8217;, and try to explain why.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Because the creation
+of line segments between subsequent points is such a common task,
+the Formex class even allows you to drop the &#8216;l:&#8217; modifier. If a
+Formex is initialized by a string without modifier field, the &#8216;l:&#8217;
+is silently added.</p>
+</div>
+<p>Figure <a class="reference internal" href="#fig-patterns"><em>Images generated from the patterns &#8216;127&#8217;, &#8216;11722&#8217; and &#8216;22584433553388&#8217;</em></a> shows some more examples.</p>
 <div class="figure align-center" id="fig-patterns">
 <img alt="Images generated from patterns" src="_images/patterns.png" />
 <p class="caption">Images generated from the patterns &#8216;127&#8217;, &#8216;11722&#8217; and &#8216;22584433553388&#8217;</p>
 </div>
-<p>The <tt class="xref py py-func docutils literal"><span class="pre">mpattern()</span></tt> function is more general than <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> in that it allows the
-creation of Formices of any plexitude. Each subsequent point is added
-to the same element, until a &#8216;-&#8216; character or the end of the string is
-found. The following example creates a square:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">mpattern</span><span class="p">(</span><span class="s">&#39;123&#39;</span><span class="p">))</span>
-<span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If it comes as a surprise that there are only 3 characters for a
-square, remember that the origin is always added as first point.</p>
 <p>Some simple wireframe patterns are defined in <tt class="xref py py-mod docutils literal"><span class="pre">simple.py</span></tt> and are
 ready for use.  These pattern strings are stacked in a dictionary called
 &#8216;Pattern&#8217;. Items of this dictionary can be accessed like
-<tt class="docutils literal"><span class="pre">Pattern['cube']</span></tt>. They still need to be processed by the
-<tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> function to produce coordinates:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex</span>
-<span class="kn">from</span> <span class="nn">simple</span> <span class="kn">import</span> <span class="n">Pattern</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="n">Pattern</span><span class="p">[</span><span class="s">&#39;cube&#39;</span><span class="p">]))</span>
-<span class="k">print</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
-<span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span><span class="n">view</span><span class="o">=</span><span class="s">&#39;iso&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
+<tt class="docutils literal"><span class="pre">Pattern['cube']</span></tt>.</p>
+<blockquote>
+<div>from simple import Pattern
+F = Formex(Pattern[&#8216;cube&#8217;])
+print(F.shape())
+draw(F,color=blue,view=&#8217;iso&#8217;)</div></blockquote>
 <div class="figure align-center" id="fig-cube">
 <img alt="A wireframe cube" src="_images/cube.png" />
 <p class="caption">A wireframe cube</p>
@@ -902,7 +990,7 @@ of a cube.</p>
 that it looks in the [-1,-1,-1] direction. This is one of the
 predefined viewing directions and can also be set from the
 <em class="menuselection">Views</em> menu or using the <img alt="button-iso" src="_images/iso.png" /> button.</p>
-<p>While the <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">mpattern()</span></tt> functions can
+<p>While the <tt class="xref py py-func docutils literal"><span class="pre">pattern()</span></tt> function can
 only generate points lying on a regular cartesian grid, pyFormex provides
 a wealth of transformation functions to move the points to other
 locations after they were created.
@@ -926,8 +1014,7 @@ scripts) the text file <tt class="docutils literal"><span class="pre">square.txt
 </pre></div>
 </div>
 <p>Then create and execute the following script.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex</span>
-<span class="n">chdir</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">chdir</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
 <span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s">&#39;square.txt&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 </pre></div>
@@ -952,8 +1039,7 @@ coordinates directly from a string in the script.
 If you have a lot of coordinates to specify, this may be far more easy
 than using the list formatting.
 The following script yields the same result as the above one:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">0 0 0  0 1 0  1 1 0  1 0 0</span>
 <span class="s">1 1 0  2 1 0  2 2 0  1 2 0</span>
 <span class="s">&quot;&quot;&quot;</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -971,12 +1057,12 @@ from <tt class="xref py py-meth docutils literal"><span class="pre">Coords.fromf
 <div class="section" id="concatenation-and-lists-of-formices">
 <span id="sec-concatenation-and-lists"></span><h2>Concatenation and lists of Formices<a class="headerlink" href="#concatenation-and-lists-of-formices" title="Permalink to this headline">¶</a></h2>
 <p>Multiple Formices can be concatenated to form one new Formex. There
-are many ways to do this, but the simplest is to use the &#8216;+&#8217; or
+are many ways to do this, but the simplest is to use the <tt class="docutils literal"><span class="pre">+</span></tt> or
 <tt class="docutils literal"><span class="pre">+=</span></tt> operator. Notice the diffference: the <tt class="docutils literal"><span class="pre">+</span></tt> operator does not
 changing any of the arguments, but the <tt class="docutils literal"><span class="pre">+=</span></tt> operator adds the second
 argument to the first, changing its definition:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1234&#39;</span><span class="p">))</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;5&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;1234&#39;</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;5&#39;</span><span class="p">)</span>
 <span class="n">H</span> <span class="o">=</span> <span class="n">F</span> <span class="o">+</span> <span class="n">G</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
 </pre></div>
@@ -995,7 +1081,7 @@ concatenation is restricted to Formices of the same plexitude and with
 the same <tt class="xref py py-attr docutils literal"><span class="pre">eltype</span></tt>. If you want to handle structures with
 elements of different plexitude as a single object, you have to group
 them in a list:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1234&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;1234&#39;</span><span class="p">)</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">,</span><span class="n">G</span><span class="p">]</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">red</span><span class="p">)</span>
@@ -1036,17 +1122,17 @@ number of the Formex element it was generated from.</p>
 the correct type and shape. If needed, the supplied values are repeated to
 match the number of elements in the Formex.
 The following script creates four triangles, the first and third get
-property number 1, the second and fourth get property 3.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">mpattern</span><span class="p">(</span><span class="s">&#39;12-34-14-32&#39;</span><span class="p">))</span>
+property number 1, the second and fourth get property 3.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:.12.34.14.32&#39;</span><span class="p">)</span>
 <span class="n">F</span><span class="o">.</span><span class="n">setProp</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="k">print</span> <span class="n">F</span><span class="o">.</span><span class="n">prop</span>   <span class="c"># --&gt; [1 3 1 3]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">prop</span><span class="p">)</span>   <span class="c"># --&gt; [1 3 1 3]</span>
 </pre></div>
 </div>
 <p>As a convenience, you can also specify the property numbers as a
 second argument to the Formex constructor.
 Once the properties have been created, you can safely change
-individual values by directly accessing the <tt class="xref py py-attr docutils literal"><span class="pre">prop</span></tt> attribute:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">mpattern</span><span class="p">(</span><span class="s">&#39;12-34-14-32&#39;</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+individual values by directly accessing the <tt class="xref py py-attr docutils literal"><span class="pre">prop</span></tt> attribute.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:.12.34.14.32&#39;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">F</span><span class="o">.</span><span class="n">prop</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">prop</span><span class="p">)</span>   <span class="c"># --&gt; [1 3 1 4]</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
@@ -1123,6 +1209,40 @@ of points in each element of the Formex)</td>
 </tbody>
 </table>
 </div>
+<div class="section" id="saving-geometry">
+<span id="sec-saving-geometry"></span><h2>Saving geometry<a class="headerlink" href="#saving-geometry" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes you want to save the created geometry to a file, e.g. to reread
+it in a next session without having to create it again, or to pass it to
+someone else. While pyFormex can export geometry in a large number of
+formats, the best and easiest way is to use the <tt class="xref py py-func docutils literal"><span class="pre">writeGeomFile()</span></tt>
+function. This ensures a fast and problem free saving and read back of
+the geometry. The geometry is saved in pyFormex&#8217;s own file format, in a
+file with extension &#8216;.pgf&#8217;. This format is well documented (see
+<a class="reference internal" href="file_format.html"><em>pyFormex file formats</em></a>) and thus accessible
+for other programs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:012/1416&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;4:0123&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">writeGeomFile</span><span class="p">(</span><span class="s">&#39;saved.pgf&#39;</span><span class="p">,[</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>When reading back such a file, the objects end up in a dictionary.
+Quit pyFormex, restart it and read back the just saved file.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">D</span> <span class="o">=</span> <span class="n">readGeomFile</span><span class="p">(</span><span class="s">&#39;saved.pgf&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>In this case the keys were auto-generated. We could however specified the
+keys when creating the file, by specifying a dictionary instead of a list
+of the objects to save.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">writeGeomFile</span><span class="p">(</span><span class="s">&#39;saved.pgf&#39;</span><span class="p">,{</span><span class="s">&#39;two_triangles&#39;</span><span class="p">:</span><span class="n">A</span><span class="p">,</span><span class="s">&#39;a_square&#39;</span><span class="p">:</span><span class="n">B</span><span class="p">})</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">readGeomFile</span><span class="p">(</span><span class="s">&#39;saved.pgf&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="saving-images">
 <span id="sec-saving-images"></span><h2>Saving images<a class="headerlink" href="#saving-images" title="Permalink to this headline">¶</a></h2>
 <p>Often you will want to save an image of the created geometry to a
@@ -1155,7 +1275,7 @@ wireframe, flat, flat (transparent), flatwire (transparent).</em></a> above.</p>
 <span class="n">bgcolor</span><span class="p">(</span><span class="n">white</span><span class="p">)</span>
 <span class="n">linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">canvasSize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">mpattern</span><span class="p">(</span><span class="s">&#39;12-34-14-32&#39;</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:.12.34.14.32&#39;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">F</span><span class="o">.</span><span class="n">prop</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">clear</span><span class="p">()</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
@@ -1337,7 +1457,7 @@ structure:
 <p>Lines 28 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script that was run previously.
 Setting the <tt class="docutils literal"><span class="pre">clear=True</span></tt> option in line 29 makes sure the subsequent drawing instructions will remove the previous step from the canvas.</p>
 <p>In line 30 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&quot;l:164&quot;</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;l:164&#39;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="figure align-center" id="fig-helix-000">
@@ -1416,11 +1536,11 @@ the coords array to find the coordinates of the node.
 The elements and their nodes are in the same order as in F.</li>
 </ul>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">simple</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="n">Pattern</span><span class="p">[</span><span class="s">&#39;cube&#39;</span><span class="p">]))</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">Pattern</span><span class="p">[</span><span class="s">&#39;cube&#39;</span><span class="p">])</span>
 <span class="n">draw</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 <span class="n">M</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">toMesh</span><span class="p">()</span>
-<span class="k">print</span> <span class="s">&#39;Coords&#39;</span><span class="p">,</span><span class="n">M</span><span class="o">.</span><span class="n">coords</span>
-<span class="k">print</span> <span class="s">&#39;Elements&#39;</span><span class="p">,</span><span class="n">M</span><span class="o">.</span><span class="n">elems</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Coords&#39;</span><span class="p">,</span><span class="n">M</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Elements&#39;</span><span class="p">,</span><span class="n">M</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The output of this script are the coordinates of the unique nodes of
@@ -1454,7 +1574,7 @@ Elements
 is also quite simple: <tt class="docutils literal"><span class="pre">Formex(nodes[elems])</span></tt> will indeed be identical to the
 original F (within the tolerance used in merging of the nodes).</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">elems</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">allclose</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">f</span><span class="p">,</span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">allclose</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">f</span><span class="p">,</span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -1491,7 +1611,7 @@ arrays are the same, within a small tolerance.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 05, 2012.
+      Last updated on Nov 07, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
