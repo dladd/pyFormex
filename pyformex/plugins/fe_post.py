@@ -138,6 +138,14 @@ class FeResult(object):
         self.inc = None
  
     def Increment(self,step,inc,**kargs):
+        """Add a new step/increment to the database.
+
+        This method can be used to add a new increment to an existing step,
+        or to add a new step and set the initial increment, or to just select
+        an existing step/inc combination.
+        If the step/inc combination is new, a new empty result record is created.
+        The result record of the specified step/inc becomes the current result.
+        """
         if not self.modeldone:
             self.Finalize()
         if step != self.step:
@@ -305,7 +313,11 @@ class FeResult(object):
             for i,step in self.res.iteritems():
                 for j,inc in step.iteritems():
                     for k,v in inc.iteritems():
-                        print("Step %s, Inc %s, Res %s (%s)" % (i,j,k,str(v.shape)))
+                        if isinstance(v,ndarray):
+                            data = "%s %s" % (v.dtype.kind,str(v.shape))
+                        else:
+                            data = str(v)
+                        print("Step %s, Inc %s, Res %s (%s)" % (i,j,k,data))
 
 
 #End

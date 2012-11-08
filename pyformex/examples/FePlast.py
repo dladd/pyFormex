@@ -41,6 +41,8 @@ from gui.draw import *
 from plugins.fe import *
 from plugins.properties import *
 from plugins.fe_abq import Step,Output,Result,AbqData
+from plugins import ccxdat
+from plugins import postproc_menu
 
 import simple
 
@@ -112,8 +114,19 @@ def run():
     r = D/2
     e0 = 0.3
 
-    # Create the plate
-    if ask('Choose plate:',['Rectangle','Square with hole']) == 'Rectangle':
+    # User input
+    res = askItems([
+        _I('geometry',choices=['Rectangle','Square with hole'],text='Plate geometry'),
+        _I('material',choices=['Elastic','Plastic'],text='Material model'),
+        _I('interpolation',choices=['Linear','Quadratic'],text='Degree of interpolation'),
+        _I('format',choices=['Calculix','Abaqus','None'],text='FEA input format'),
+        ])
+
+    if not res:
+        return
+
+    # Create geometry
+    if res['geometry'] == 'Rectangle':
         plate = simple.rectangle(nl,nb,L2,B2).toMesh()
     else:
         plate = rectangle_with_hole(L2,B2,r,nl,nb,e0)
@@ -137,25 +150,30 @@ def run():
         'young_modulus': 207000,
         'poisson_ratio': 0.3,
         'density': 7.85e-9,
-        'plastic' : [
-            (305.45,       0.),
-            (306.52, 0.003507),
-            (308.05, 0.008462),
-            (310.96,  0.01784),
-            (316.2, 0.018275),
-            (367.5, 0.047015),
-            (412.5, 0.093317),
-            (448.11, 0.154839),
-            (459.6, 0.180101),
-            (494., 0.259978),
-            (506.25, 0.297659),
-            (497., 0.334071),
-            (482.8, 0.348325),
-            (422.5, 0.366015),
-            (399.58,   0.3717),
-            (1.,  0.37363),
-            ],
         }
+
+    if res['material'] == 'Plastic':
+        steel.update(
+            {'plastic': [
+                (305.45,       0.),
+                (306.52, 0.003507),
+                (308.05, 0.008462),
+                (310.96,  0.01784),
+                (316.2, 0.018275),
+                (367.5, 0.047015),
+                (412.5, 0.093317),
+                (448.11, 0.154839),
+                (459.6, 0.180101),
+                (494., 0.259978),
+                (506.25, 0.297659),
+                (497., 0.334071),
+                (482.8, 0.348325),
+                (422.5, 0.366015),
+                (399.58,   0.3717),
+                (1.,  0.37363),
+                ]
+             })
+
     # Define the thin steel plate section
     steel_plate = { 
         'name': 'steel_plate',
@@ -223,24 +241,52 @@ def run():
     # - the stresses averaged at the nodes
     # - the principal stresses and stress invariants in the elements of part B.
     # (add output='PRINT' to get the results printed in the .dat file)
-    res = [ Result(kind='NODE',keys=['U']),
+    if res['format'] == 'Abaqus':
+        result = [
+            Result(kind='NODE',keys=['U']),
             Result(kind='ELEMENT',keys=['S'],set='Plate'),
             Result(kind='ELEMENT',keys=['S'],pos='AVERAGED AT NODES',set='Plate'),
             Result(kind='ELEMENT',keys=['SP','SINV'],set='Plate'),
             ]
+    else:
+        result = [
+            Result(kind='NODE',keys=['U'],output='PRINT'),
+            Result(kind='ELEMENT',keys=['S'],output='PRINT'),
+            ]
+        
 
     # Define the simulation steps
     # The tags refer to the property database
     simsteps = [ Step('STATIC',time=[1., 1., 0.01, 1.],tags=[step]) for step in steps ]
 
-    data = AbqData(FEM,prop=P,steps=simsteps,res=res,bound=['init'])
+    data = AbqData(FEM,prop=P,steps=simsteps,res=result,bound=['init'])
 
-    if ack('Export this model in ABAQUS input format?',default='No'):
-        fn = askNewFilename(filter='*.inp')
-        if fn:
-            data.write(jobname=fn,group_by_group=True)
+    fn = askNewFilename(filter='*.inp')
+    if fn:
+        data.write(jobname=fn,group_by_group=True)
 
+        if ack('Run ccx on the created file?'):
+            job = os.path.basename(fn)[:-4]
+            sta,out = utils.runCommand("ccx -i %s" % job)
+            print(out)
 
+            if ack('Create the result database?'):
+                from plugins.ccxdat import createResultDB
+                DB = createResultDB(FEM)
+                ngp = 8
+                fn = utils.changeExt(fn,'.dat')
+                ccxdat.readResults(fn,DB,DB.nnodes,DB.nelems,ngp)
+                DB.printSteps()
+                name = 'FeResult-%s'%job
+                export({name:DB})
+                postproc_menu.setDB(DB)
+                if showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name,actions=['Cancel','OK']) == 'OK':
+                    postproc_menu.selection.set(name)
+                    postproc_menu.selectDB(DB)
+                    postproc_menu.open_dialog()
+                
+
+                
 if __name__ == 'draw':
     run()
     

@@ -276,7 +276,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     multiplier = 0
     if val is not None:
         if val.shape != (nodes.shape[0],):
-            warning("The values do not match the mesh: there are %s nodes in the mesh, and I got values with shape. I will continue without showing values." % (nodes.shape[0],val.shape))
+            warning("The values do not match the mesh: there are %s nodes in the mesh, and I got values with shape %s. I will continue without showing values." % (nodes.shape[0],val.shape))
             val = None
             
     if val is not None:
@@ -808,7 +808,7 @@ def open_dialog():
             _I('restype',text='Type of result',choices=result_types.values()),
             _I('autoscale',text='Autocalculate deformation scale',value=True),
             _I('dscale',text='Deformation scale',value=100.),
-            _I('symmetric_scale',text='Deformation scale',value=100.),
+            _I('symmetric_scale',text='Symmetric scale',value=False),
             _I('showref',text='Show undeformed configuration',value=True),
             ]),
         _T('Animation',[
