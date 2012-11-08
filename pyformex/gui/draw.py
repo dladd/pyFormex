@@ -753,7 +753,7 @@ def reset():
         if len(pf.GUI.viewports) == 1:
             canvasSize(-1,-1)
     except:
-        print "Warning: Resetting canvas before initialization?"
+        print("Warning: Resetting canvas before initialization?")
     clear()
     view('front')
 
