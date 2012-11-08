@@ -749,8 +749,11 @@ def reset():
     pf.canvas.resetDefaults()
     pf.canvas.resetOptions()
     pf.GUI.drawwait = pf.cfg['draw/wait']
-    if len(pf.GUI.viewports) == 1:
-        canvasSize(-1,-1)
+    try:
+        if len(pf.GUI.viewports) == 1:
+            canvasSize(-1,-1)
+    except:
+        print "Warning: Resetting canvas before initialization?"
     clear()
     view('front')
 
