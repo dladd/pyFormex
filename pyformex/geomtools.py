@@ -50,18 +50,30 @@ def areaNormals(x):
     return area,normals
 
 
-def smallestDirection(x,method='inertia'):
-    """Return the direction of the smallest dimension of a Coords"""
+def smallestDirection(x,method='inertia',return_size=False):
+    """Return the direction of the smallest dimension of a Coords
+
+    - `x`: a Coords-like array
+    - `method`: one of 'inertia' or 'random'
+    - return_size: if True and `method` is 'inertia', a tuple of a direction
+      vector and the size  along that direction and the cross directions;
+      else, only return the direction vector.
+    """
     x = x.reshape(-1,3)
     if method == 'inertia':
         # The idea is to take the smallest dimension in a coordinate
         # system aligned with the global axes.
         C,r,Ip,I = x.inertia()
         X = x.trl(-C).rot(r)
-        i =  X.sizes().argmin()
+        sizes = X.sizes()
+        i = sizes.argmin()
         # r gives the directions as column vectors!
         # TODO: maybe we should change that
-        return r[:,i]
+        N = r[:,i]
+        if return_size:
+            return N,sizes[i]
+        else:
+            return N
     elif method == 'random':
         # Take the mean of the normals on randomly created triangles
         from plugins.trisurface import TriSurface

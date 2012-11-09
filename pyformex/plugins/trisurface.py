@@ -821,7 +821,12 @@ class TriSurface(Mesh):
 
 
     def checkBorder(self):
-        """Return the border of TriSurface as a set of segments."""
+        """Return the border of TriSurface.
+
+        Returns a list of connectivity tables. Each table holds the
+        subsequent line segments of one continuous contour of the border
+        of the surface.
+        """
         border = self.getEdges()[self.borderEdges()]
         if len(border) > 0:
             return connectedLineElems(border)
@@ -829,17 +834,23 @@ class TriSurface(Mesh):
             return []
         
 
-    def border(self,):
+    def border(self,compact=True):
         """Return the border(s) of TriSurface.
 
         The complete border of the surface is returned as a list
         of plex-2 Meshes. Each Mesh constitutes a continuous part
-        of the border.
+        of the border. By default, the Meshes are compacted.
+        Setting compact=False will return all Meshes with the full
+        surface coordinate sets. This is usefull for filling the
+        border and adding to the surface.
         """
-        return [ Mesh(self.coords,e) for e in self.checkBorder() ]
+        ML = [ Mesh(self.coords,e) for e in self.checkBorder() ]
+        if compact:
+            ML = [ M.compact() for M in ML ]
+        return ML
 
 
-    def fillBorder(self,method='radial',dir=None):
+    def fillBorder(self,method='radial',dir=None,compact=True):
         """Fill the border areas of a surface to make it closed.
 
         Returns a list of surfaces, each of which fills a singly connected
@@ -848,18 +859,18 @@ class TriSurface(Mesh):
         property values set above those used in the parent surface.
         If the surface is already closed, an empty list is returned.
 
-        There are two methods, 'radial' and 'border' corresponding with
-        the methods of the surfaceInsideBorder.
+        There are three methods: 'radial', 'planar' and 'border',
+        corresponding to the methods of the surfaceInsideBorder function.
         """
         if self.prop is None:
             mprop = 1
         else:
             mprop = self.prop.max()+1
-        return [ fillBorder(b,method,dir).setProp(mprop+i) for i,b in enumerate(self.border()) ]
+        return [ fillBorder(b,method,dir).setProp(mprop+i) for i,b in enumerate(self.border(compact=compact)) ]
 
 
     def close(self,method='radial',dir=None):
-        border = self.fillBorder(method,dir)
+        border = self.fillBorder(method,dir,compact=method=='radial')
         if method == 'radial':
             return self.concatenate([self]+border)
         else:
