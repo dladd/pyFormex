@@ -125,7 +125,7 @@ FTPLOCAL= bumps:/var/ftp/pub/pyformex
 # ftp server on Savannah
 FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
-.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
+.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs pubrelease
 
 ##############################
 
@@ -228,7 +228,7 @@ dist: manpages ${PKGDIR}/${LATEST}
 ${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: revision version
+${PKGDIR}/${PKGVER}: RELEASE
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
 	python manifest_check.py
@@ -245,11 +245,13 @@ publocal: ${PKGDIR}/${LATEST}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
 
-#${PUBDIR}/${PKGVER}.sig: sign
-
-sign: ${PUBDIR}/${PKGVER}
+# Move the create tar.gz to the public directory
+pubrelease: ${PKGDIR}/${PKGVER}
 	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PUBDIR}
 	ln -s pyformex/${LATEST} ${PKGDIR}
+
+# and sign the packages
+sign: ${PUBDIR}/${PKGVER}
 	cd ${PUBDIR}; gpg -b --use-agent ${PKGVER}
 
 pubn: ${PUBDIR}/${PKGVER}.sig
@@ -269,6 +271,8 @@ upload:
 # THIS WILL ONLY WORK IF YOU HAVE YOUR USER NAME CONFIGURED IN .ssh/config
 tag:
 	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svn.savannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+
+
 
 # Creates statistics
 stats:

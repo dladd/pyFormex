@@ -46,7 +46,7 @@ class Model(Geometry):
     
     _set_coords = Geometry._set_coords_inplace
     
-    def __init__(self,coords=None,elems=None,meshes=None):
+    def __init__(self,coords=None,elems=None,meshes=None,fuse=True):
         """Create new model data.
 
         coords is an array with nodal coordinates
@@ -68,7 +68,7 @@ class Model(Geometry):
             for M in meshes:
                 if M.prop is None:
                     M.setProp(0)
-            self.coords,self.elems = mergeMeshes(meshes)
+            self.coords,self.elems = mergeMeshes(meshes,fuse=fuse)
             self.prop = concatenate([M.prop for M in meshes])
         else:
             if not type(elems) == list:

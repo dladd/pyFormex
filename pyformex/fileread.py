@@ -124,6 +124,25 @@ def convertInp(fn):
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
     sta, out = utils.runCommand(cmd)
+
+
+def readInpFile(filename):
+    """Read the geometry from an Abaqus/Calculix .inp file
+
+    This is a replacement for the convertInp/readMeshFile combination.
+    It uses the ccxinp plugin to provide a direct import of the Finite
+    Element meshes from an Abaqus or Calculix input file.
+    Currently still experimental and limited in functionality (aimed
+    primarily at Calculix). But also many simple meshes from Abaqus can
+    already be read.
+
+    Returns an fe.Model instance.
+    """
+    from plugins import ccxinp,fe
+    ccxinp.readInput(filename)
+    coords = Coords(ccxinp.model['coords'])
+    elems = [ Connectivity(e,eltype=t) for (t,e) in ccxinp.model['elems'] ]
+    return fe.Model(coords,elems)
     
 
 def read_gambit_neutral(fn):

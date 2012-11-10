@@ -130,6 +130,7 @@ def shrink():
 
 ##################### read and write ##########################
 
+
 def readGeometry(filename,filetype=None):
     """Read geometry from a stored file.
 
@@ -165,6 +166,10 @@ def readGeometry(filename,filetype=None):
         name = autoName(TriSurface).next()
         res = {name:surf}
 
+    elif filetype == 'inp':
+        model = fileread.readInpFile(filename)
+        res = dict([("PART-0-%s" % i,m) for i,m in enumerate(model.meshes())])
+
     elif filetype in tetgen.filetypes:
         res = tetgen.readTetgen(filename)
 
@@ -182,7 +187,7 @@ def importGeometry(select=True,draw=True,ftype=None):
     If select and draw are True (default), the selection is drawn.
     """
     if ftype is None:
-        ftype = ['pgf','pyf','surface','off','stl','gts','smesh','neu','all']
+        ftype = ['pgf','pyf','surface','off','stl','gts','smesh','neu','inp','all']
     elif type(ftype) is list:
         pass
     else:
@@ -212,6 +217,9 @@ def importPgf():
 
 def importSurface():
     importGeometry(ftype=['surface','pgf','all'])
+
+def importInp():
+    importGeometry(ftype='inp')
 
 def importTetgen():
     importGeometry(ftype='tetgen')
@@ -999,6 +1007,7 @@ def create_menu():
             (utils.fileDescription('pgf'),importPgf),
             (utils.fileDescription('surface'),importSurface),
             (utils.fileDescription('tetgen'),importTetgen),
+            ("Abaqus/Calculix FE model (*.inp)",importInp),
             ("All known geometry formats",importAny),
             ("Abaqus .inp",[
                 ("&Convert Abaqus .inp file",readInp),

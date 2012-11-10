@@ -982,6 +982,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Put the release files on Savannah::
 
+   make pubrelease
    make sign
    make pubpdf
    make pubn
@@ -1045,9 +1046,14 @@ They will need to be tuned for the release.
 
 - Go to the `pkg` directory. The `_do` procedure should always be executed
   from here.
+
+- Set new version::
+  
+    dch -i
+
 - Unpack latest release::
 
-  _do unpack
+    _do unpack
 
   This unpacks the latest source
   distribution (from the `dist/` or `dist/pyformex/` subdirectory) in
@@ -1086,7 +1092,12 @@ They will need to be tuned for the release.
 
 - upload::
    
-     dput mentors PYFVER.changes
+    dput mentors PYFVER.changes
+
+- copy to bumper::
+    
+    rsync *VERSION[.-]* bumper:prj/pyformex/pkg -av
+
 
 Uploading to the local debian repository
 ----------------------------------------

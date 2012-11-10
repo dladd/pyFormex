@@ -33,7 +33,7 @@ from __future__ import print_function
 # It is loaded even before main.
 
 __version__ = "0.8.9"
-__revision__ = '2552'
+__revision__ = '2557M'
 Version = 'pyFormex %s' % __version__
 FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!
 Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'

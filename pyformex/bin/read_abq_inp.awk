@@ -25,19 +25,22 @@
 ##
 
 #
-# (c) 2009 Benedict Verhegghe
-# This is an embryonal awk script to extract information from an Abaqus
-# input file and write it in a format that can be loaded easily into
-# pyFormex.
+# (c) 2009-2012 Benedict Verhegghe
+# This is an embryonal awk script to extract information from an Abaqus(tm)
+# format input file (.inp) and write it in a format that can be loaded
+# easily into pyFormex. Note that the .inp format is also used by Calculix. 
 #
-# Usage: awk -f read_abq.awk ABAQUS_INPUT_FILE
+# Usage: awk -f read_abq.awk INPUT_FILE
 #
 # In most cases however, the user will call this command from the pyFormex
 # GUI, using the Mesh plugin menu ("Convert Abaqus .inp file"), after which
 # the model can be imported with the "Import converted model" menu item.
 #
-# Currently it reads nodes, elements and elsets and stores them in files
-# partname.nodes, partname.elems and partname.esets
+# Currently it reads nodes, elements and elsets and stores them in a series
+# of files:
+#   partname.nodes: contrains the nodal coordinates
+#   partname.elems: contains the element connectivity
+#   partname.esets: contains element sets
 # There may be multiple nodes and elems files.
 # An index file partname.mesh keeps record of the created files.
 # nodes/elems defined before the first part get a default part name.
@@ -76,9 +79,16 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 }
 
 # start an elset block
-/^\*Elset, elset=.*, generate/ { 
+/^\*Elset, *elset=.*, *generate/ { 
     start_mode(3)
     sub(".*elset=","");sub(",.*",""); setname=$0;
+    getline; gsub(","," ");
+}
+
+# start an nset block
+/^\*Nset, *nset=.*, *generate/ { 
+    start_mode(4)
+    sub(".*nset=","");sub(",.*",""); setname=$0;
     getline; gsub(","," ");
 }
 
@@ -144,7 +154,10 @@ function start_mode(mod) {
 	elemsblk = start_blocked_file("elems",elemsblk)
     }
     else if (mode==3) {
-	esetsblk = start_unique_file("esets",esetsblk)
+	esetsblk = start_unique_file("eset",esetsblk)
+    }
+    else if (mode==4) {
+	esetsblk = start_unique_file("nsets",esetsblk)
     }
     print "Starting mode "mode" to file "outfile 
     count = 0
@@ -180,7 +193,6 @@ function end_mode() {
 
 # print a node
 function print_node() {
-    print "NODE",$2," ",$3," ",$4
     gsub(",",""); print $2," ",$3," ",$4 >> outfile;
     count += 1;
 }
