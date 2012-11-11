@@ -199,7 +199,7 @@ print_catalog()
 
 
 
-model = { 'coords':None, 'elems':[] }
+model = {}
 
 def readCommand(line):
     """Read a command line, return the command and a dict with options"""
@@ -228,16 +228,18 @@ def do_HEADING(opts,data):
 
 def do_NODE(opts,data):
     """Read the nodal data"""
+    if 'coords' in model:
+        raise ValueError,"(Currently) Only one NODE block allowed!"
     nnodes = len(data)
-    coords = np.zeros((nnodes,3),dtype=float)
-    for line in data:
-        s = line.split(',')
-        if len(s) != 4:
-             raise ValueError,"Invalid data: %s" % data
-        n = int(s[0]) - 1   # Translate to numpy numbering
-        x = map(float,s[1:])
-        coords[n] = x
+    ndata = 4
+    data = ','.join(data)
+    x = np.fromstring(data,dtype=np.float32,count=ndata*nnodes,sep=',').reshape(-1,ndata)
+    nodid = x[:,0].astype(np.int32)
+    ## nodid -= 1     # Translation to numpy numbering no longer needed
+    coords = x[:,1:]
+    model['nodid'] = nodid
     model['coords'] = coords
+    model['elems'] = []
 
 
 def do_ELEMENT(opts,data):
@@ -246,20 +248,22 @@ def do_ELEMENT(opts,data):
     nplex = int(d['nplex'])
     eltype = d['pyf']
     print "Plexitude %s, eltype %s" % (nplex,eltype)
-    nelems = len([d for d in data if d[-1] != ','])
+    #nelems = len([d for d in data if d[-1] != ','])
+    nelems = len(data)
     print "Nelems %s" % nelems 
     elems = np.zeros((nelems,nplex),dtype=int)
-    idata = iter(data)
-    for line in idata:
-        if line.endswith(','):
-            line += idata.next()
+    ## idata = iter(data)
+    ## for line in idata:
+    ##     if line.endswith(','):
+    ##         line += idata.next()
+    for line in data:
         s = line.split(',')
         if len(s) != nplex+1:
              raise ValueError,"Invalid data: %s" % data
         n = int(s[0]) - 1   # Translate to numpy numbering
         e = map(int,s[1:])
         elems[n] = e
-    elems -= 1   # Translate to numpy numbering
+    # elems -= 1   # Translate to numpy numbering
     model['elems'].append((eltype,elems))
 
 
@@ -274,9 +278,8 @@ def endCommand(cmd,opts,data):
 
 def readInput(fn):
     """Read an input file (.inp)"""
-    global line
-    model['coords'] = None
-    model['elems'] = []
+    global line,model
+    model = {}
     cmd = ''
     with open(fn) as fil:
         for line in fil:
@@ -291,7 +294,12 @@ def readInput(fn):
                     cmd,opts = readCommand(line[1:])
                     print("Keyword %s; Options %s" % (cmd,opts))
             else:
+                line = line.strip()
+                while line.endswith(','):
+                    line += fil.next().strip()
                 data.append(line.strip())
+                
+    return model
 
 
 if __name__ == "__main__":

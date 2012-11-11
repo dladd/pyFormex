@@ -139,9 +139,18 @@ def readInpFile(filename):
     Returns an fe.Model instance.
     """
     from plugins import ccxinp,fe
-    ccxinp.readInput(filename)
-    coords = Coords(ccxinp.model['coords'])
-    elems = [ Connectivity(e,eltype=t) for (t,e) in ccxinp.model['elems'] ]
+    model = ccxinp.readInput(filename)
+    coords = Coords(model['coords'])
+    nodid = model['nodid']
+    nodpos = inverseUniqueIndex(nodid)
+    print("nnodes = %s" % coords.shape[0])
+    print("nodid: %s" % nodid)
+    print("nodpos: %s" % nodpos)
+    for e in model['elems']:
+        print("Orig els %s" % e[1])
+        print("Trl els %s" % nodpos[e[1]])
+    elems = [ Connectivity(nodpos[e],eltype=t) for (t,e) in model['elems'] ]
+
     return fe.Model(coords,elems)
     
 
