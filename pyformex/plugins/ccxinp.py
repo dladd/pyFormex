@@ -29,6 +29,7 @@ Interface with Calculix FE input files (.inp).
 
 
 """
+from __future__ import print_function
 
 #
 # DEVS: Try to do this without importing from pyformex
@@ -70,6 +71,7 @@ abq_elems = [
     'CPEG4','CPEG4H','CPEG4I','CPEG4IH','CPEG4R','CPEG4RH',
     'CPEG6','CPEG6H','CPEG6M','CPEG6MH',
     'CPEG8','CPEG8H','CPEG8R','CPEG8RH',
+    'CAX6','CAX8','CAX8R',
     'S3','S3R', 'S3RS',
     'S4','S4R', 'S4RS','S4RSW','S4R5',
     'S8R','S8R5',
@@ -121,11 +123,13 @@ def abq_eltype(eltype):
                     nplex = 2
             elif d['type'] == 'FRAME':
                 nplex = 2
-            else:
+            elif d['type'] == 'SPRINGA':
                 nplex = 1
+            else:
+                nplex = 0
         d['nplex'] = nplex
         if 'ndim' not in d or d['ndim'] is None:
-            if d['type'].startswith('CP'):
+            if d['type'][:2] in ['CP','CA'] :
                 d['ndim'] = '2'
         try:
             ndim = int(d['ndim'][0])
@@ -150,7 +154,7 @@ known_eltypes = {
          'tet4':  [ 'C', 'R', ] },
     6: { '':  [ 'M', 'CPS', 'CPE', 'CPEG', 'SFM', ],
          'wedge6':[ 'C', ] },
-    8: { 'quad8': [ 'M', 'CPS', 'CPE', 'CPEG', 'S', 'SFM', ],
+    8: { 'quad8': [ 'M', 'CPS', 'CPE', 'CPEG', 'CAX', 'S', 'SFM', ],
          'hex8':  [ 'C', ] },
     9: { 'quad9': [ 'M', 'S' ] },
     10:{ 'tet10': [ 'C', ] },
@@ -200,6 +204,7 @@ print_catalog()
 
 
 model = {}
+skip_unknown_eltype = False
 
 def readCommand(line):
     """Read a command line, return the command and a dict with options"""
@@ -231,40 +236,37 @@ def do_NODE(opts,data):
     if 'coords' in model:
         raise ValueError,"(Currently) Only one NODE block allowed!"
     nnodes = len(data)
+    print("Read %s nodes" % nnodes)
     ndata = 4
     data = ','.join(data)
     x = np.fromstring(data,dtype=np.float32,count=ndata*nnodes,sep=',').reshape(-1,ndata)
     nodid = x[:,0].astype(np.int32)
-    ## nodid -= 1     # Translation to numpy numbering no longer needed
     coords = x[:,1:]
     model['nodid'] = nodid
     model['coords'] = coords
     model['elems'] = []
+    model['elid'] = []
 
 
 def do_ELEMENT(opts,data):
     """Read element data"""
     d = abq_eltype(opts['TYPE'])
-    nplex = int(d['nplex'])
     eltype = d['pyf']
-    print "Plexitude %s, eltype %s" % (nplex,eltype)
-    #nelems = len([d for d in data if d[-1] != ','])
+    if not eltype:
+        if skip_unknown_eltype:
+            return
+        else:
+            raise ValueError,"Element type '%s' can not yet be imported" % opts['TYPE']
+    nplex = d['nplex']
     nelems = len(data)
-    print "Nelems %s" % nelems 
-    elems = np.zeros((nelems,nplex),dtype=int)
-    ## idata = iter(data)
-    ## for line in idata:
-    ##     if line.endswith(','):
-    ##         line += idata.next()
-    for line in data:
-        s = line.split(',')
-        if len(s) != nplex+1:
-             raise ValueError,"Invalid data: %s" % data
-        n = int(s[0]) - 1   # Translate to numpy numbering
-        e = map(int,s[1:])
-        elems[n] = e
-    # elems -= 1   # Translate to numpy numbering
+    print("Read %s elements of type %s, plexitude %s" % (nelems,eltype,nplex))
+    ndata = nplex+1
+    data = ','.join(data)
+    e = np.fromstring(data,dtype=np.int32,count=ndata*nelems,sep=',').reshape(-1,ndata)
+    elid = e[:,0]
+    elems = e[:,1:]
     model['elems'].append((eltype,elems))
+    model['elid'].append(elid)
 
 
 def endCommand(cmd,opts,data):

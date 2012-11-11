@@ -139,6 +139,7 @@ def readInpFile(filename):
     Returns an fe.Model instance.
     """
     from plugins import ccxinp,fe
+    ccxinp.skip_unknown_eltype = True
     model = ccxinp.readInput(filename)
     coords = Coords(model['coords'])
     nodid = model['nodid']
