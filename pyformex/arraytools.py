@@ -34,10 +34,10 @@ everything from this module::
 from __future__ import print_function
 
 from numpy import *
-import utils
 
-
-if utils.checkVersion('python','2.6') >= 0:
+import sys
+if sys.hexversion >= 0x02060000:
+    # We have combinations and permutations built in
     from itertools import combinations,permutations
 else:
     # Provide our own implementation of combinations,permutations
@@ -96,7 +96,8 @@ except TypeError:
    
 if unique([1],True)[0][0] == 0:
     # We have the old numy version
-    utils.warn("BEWARE: OLD VERSION OF NUMPY!!!! We advise you to upgrade NumPy!")
+    import warnings
+    warnings.warn("BEWARE: OLD VERSION OF NUMPY!!!! We advise you to upgrade NumPy!")
     def unique(a,return_indices=False):
         """Replacement for numpy's unique1d"""
         import numpy
@@ -499,10 +500,11 @@ def rotmat(x):
 
     x is an array of 3 points.
     After applying the resulting rotation matrix to the global axes,
-    the 0 axis becomes // to the vecors x0-x1,
+    the 0 axis becomes // to the vectors x0-x1,
     the 1 axis lies in the plane x0,x1,x2 and is orthogonal to x0-x1,
     and the 3 axis is orthogonal to the plane x0,x1,x2.
     """
+    x = asanyarray(x)
     u = normalize(x[1]-x[0])
     v = normalize(x[2]-x[0])
     v = normalize(orthog(v,u))
@@ -528,14 +530,14 @@ def trfMatrix(x,y):
     point x0. The full transformation of a Coords object is thus obtained
     by::
 
-      (coords-x0)*rot+trl+x0=coords*rot+(trl+x0-x0*rot)
+      (coords-x0)*rot+trl+x0 = coords*rot+(trl+x0-x0*rot)
     """
     # rotation matrices for both systems
     r1 = rotmat(x)
     r2 = rotmat(y)
-    # combined rtoation matrix
+    # combined rotation matrix
     r = dot(r1.transpose(),r2)
-    # translation vector (in a roate first operation
+    # translation vector (in a rotate first operation
     t = y[0] - dot(x[0],r)
     return r,t
 

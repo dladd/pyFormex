@@ -152,6 +152,7 @@ def readGeometry(filename,filetype=None):
         'stl', 'gts', 'off',
     'stl': 
     """
+    pf.GUI.setBusy(True)
     res = {}
     if filetype is None:
         filetype = utils.fileTypeFromExt(filename)
@@ -168,14 +169,15 @@ def readGeometry(filename,filetype=None):
 
     elif filetype == 'inp':
         model = fileread.readInpFile(filename)
-        res = dict([("PART-0-%s" % i,m) for i,m in enumerate(model.meshes())])
+        res = dict([("PART-0-%s" % i,m.setProp(i)) for i,m in enumerate(model.meshes())])
 
     elif filetype in tetgen.filetypes:
         res = tetgen.readTetgen(filename)
 
     else:
         error("Can not import from file %s of type %s" % (filename,filetype))
-        
+    pf.GUI.setBusy(False)
+       
     return res
 
 

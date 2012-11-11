@@ -37,6 +37,7 @@ from __future__ import print_function
 
 import re
 import numpy as np
+from pyformex.arraytools import *
 
 re_eltypeB = re.compile("^(?P<type>B)(?P<ndim>[23])(?P<degree>\d)?(?P<mod>(OS)?H*)$")
 re_eltype = re.compile("^(?P<type>.*?)(?P<ndim>[23]D)?(?P<nplex>\d+)?(?P<mod>[HIMRSW]*)$")
@@ -204,7 +205,9 @@ print_catalog()
 
 
 model = {}
+system = None
 skip_unknown_eltype = False
+
 
 def readCommand(line):
     """Read a command line, return the command and a dict with options"""
@@ -231,10 +234,34 @@ def do_HEADING(opts,data):
     model['heading'] = '\n'.join(data)
 
 
+def do_SYSTEM(opts,data):
+    """Read the system data"""
+    global system
+    if len(data) == 0:
+        system = None
+        return
+    
+    s = data[0].split(',')
+    A = map(float,s[:3])
+    try:
+        B = map(float,s[3:])
+    except:
+        B,C = None,None
+    if len(data) > 1:
+        C = map(float,data[1].split(''))
+    else:
+        B[2] = 0.
+        C = [ -B[1], B[0], 0. ]
+    t = array(A)
+    if B is None:
+        r = None
+    else:
+        r = rotmat(array([A,B,C]))
+    system = (t,r)
+    
+
 def do_NODE(opts,data):
     """Read the nodal data"""
-    if 'coords' in model:
-        raise ValueError,"(Currently) Only one NODE block allowed!"
     nnodes = len(data)
     print("Read %s nodes" % nnodes)
     ndata = 4
@@ -242,10 +269,19 @@ def do_NODE(opts,data):
     x = np.fromstring(data,dtype=np.float32,count=ndata*nnodes,sep=',').reshape(-1,ndata)
     nodid = x[:,0].astype(np.int32)
     coords = x[:,1:]
-    model['nodid'] = nodid
-    model['coords'] = coords
-    model['elems'] = []
-    model['elid'] = []
+
+    if system:
+        t,r = system
+        if r is not None:
+            coords = dot(coords,r)
+        coords += t
+
+    if 'coords' in model:
+        model['nodid'] = concatenate([model['nodid'],nodid])
+        model['coords'] = concatenate([model['coords'],coords],axis=0)
+    else:
+        model['nodid'] = nodid
+        model['coords'] = coords
 
 
 def do_ELEMENT(opts,data):
@@ -265,6 +301,10 @@ def do_ELEMENT(opts,data):
     e = np.fromstring(data,dtype=np.int32,count=ndata*nelems,sep=',').reshape(-1,ndata)
     elid = e[:,0]
     elems = e[:,1:]
+    if not 'elems' in model:
+        model['elems'] = []
+    if not 'elid' in model:
+        model['elid'] = []
     model['elems'].append((eltype,elems))
     model['elid'].append(elid)
 
@@ -274,7 +314,7 @@ def endCommand(cmd,opts,data):
     if func in globals():
         globals()[func](opts,data)
     else:
-        print("Data %s" % data)
+        #print("Data %s" % data)
         print("Don't know how to handle keyword '%s'" % cmd)
 
 
@@ -295,11 +335,14 @@ def readInput(fn):
                     data = []
                     cmd,opts = readCommand(line[1:])
                     print("Keyword %s; Options %s" % (cmd,opts))
+                    data_cont = False
             else:
                 line = line.strip()
-                while line.endswith(','):
-                    line += fil.next().strip()
-                data.append(line.strip())
+                if data_cont:
+                    data[-1] += line
+                else:
+                    data.append(line)
+                data_cont = line.endswith(',')
                 
     return model
 
