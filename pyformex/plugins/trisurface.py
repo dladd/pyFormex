@@ -2363,4 +2363,6 @@ import tetgen
 tetgen.install_more_trisurface_methods()
 
 
+import vmtk_itf
+
 # End

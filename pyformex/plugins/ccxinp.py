@@ -226,7 +226,7 @@ def readCommand(line):
         else:
             v = True
         opts[k] = v
-    return cmd,opts
+    return cmd.lower(),opts
 
 
 def do_HEADING(opts,data):
