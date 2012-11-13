@@ -203,7 +203,7 @@ print_catalog()
 #
 
 class InpModel(object):
-    parts = [ ]
+    pass
 
 model = None
 system = None
@@ -343,6 +343,7 @@ def readInput(fn):
     """Read an input file (.inp)"""
     global line,part,log,model
     model = InpModel()
+    model.parts = []
     startPart('DEFAULT')
     cmd = ''
     logname = fn.replace('.inp','ccxinp.log')
@@ -367,7 +368,8 @@ def readInput(fn):
                 else:
                     data.append(line)
                 data_cont = line.endswith(',')
-                
+
+    print("Number of parts in model: %s" % len(model.parts))
     return model
 
 

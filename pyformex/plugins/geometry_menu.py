@@ -170,9 +170,14 @@ def readGeometry(filename,filetype=None):
     elif filetype == 'inp':
         parts = fileread.readInpFile(filename)
         res = {}
+        color_by_part = len(parts.keys()) > 1
+        j = 0
         for name,part in parts.items():
-            meshes = dict([("%s-%s" % (name,i),m.setProp(i)) for i,m in enumerate(part.meshes())])
-            res.update(meshes)
+            for i,mesh in enumerate(part.meshes()):
+                p = j if color_by_part else i
+                print("Color %s" % p)
+                res["%s-%s" % (name,i)] = mesh.setProp(p)
+            j += 1
 
     elif filetype in tetgen.filetypes:
         res = tetgen.readTetgen(filename)
