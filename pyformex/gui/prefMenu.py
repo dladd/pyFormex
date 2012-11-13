@@ -190,6 +190,7 @@ def settings():
                 _I('loadcurproj',text="Reload last project on startup"),
                 _I('check_print',text="Check scripts for the use of the print statement"),
                 _I('plot2d',text="Prefered 2D plot library",choices=['gnuplot','matplotlib']),
+                _I('commands',text='Use commands module instead of subprocess',tooltip="If checked, pyFormex will use the Python 'commands' module for the execution of external commands. The default (unchecked) is to use the 'subprocess' module. If you notice a lot of command failures, or even hangups, you may want to switch."),
                 ],
              ),
             _T('GUI',[

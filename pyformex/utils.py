@@ -780,7 +780,8 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     """
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    if pf.options and pf.options.commands:
+    #    if pf.options and pf.options.commands:
+    if pf.cfg['commands']:
         sta,out = system1(cmd)
     else:
         sta,out = system(cmd)

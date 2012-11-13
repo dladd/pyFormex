@@ -79,6 +79,8 @@ showapploaderrors = False
 openlastproj = False
 uselib = True
 check_print = True
+# use commands module for external commands (default is subprocess)
+commands = False
 
 # prefered system for creating 2d plots
 plot2d = 'gnuplot'

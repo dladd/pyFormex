@@ -35,54 +35,52 @@ import pyformex as pf
 import utils
 import os
 
-## from plugins.trisurface import *
-## from utils import runCommand
-## chdir(__file__)
+
+def readVmtkCenterlineDat(fn):
+   """Read a .dat file containing the centerlines generated with vmtk.
+
+   The first line may contain a header.
+   All other lines ('nlines') contain  'nf' floats.
+   All data are seperated by blanks.
+   
+   The return value is a tuple of
+   
+   - a float array (nlines,nf) with the data
+   - a list with the identifiers from the first line
+   """
+   fil = file(fn,'r')
+   line = fil.readline()
+   s = line.strip('\n').split()
+   data = fromfile(fil,sep=' ',dtype=float32)
+   data = data.reshape(-1,len(s))
+   return data, s
 
 
-## clear()
+def centerline(self):
+    """Compute the centerline of a surface.
 
+    The centerline is computed using VMTK. This is very well suited for
+    computing the centerlines in vascular models.
 
-## examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
-## print(examplefile)
-## s= TriSurface.read(examplefile)
-
-## draw(s)
-
-## dir=''
-## fnin = dir+'tempi.stl'
-
-###################################################################
-#############centerline example####################################
-#def readVmtkCenterlineDat(fn):
-#    """Read a file .dat containing the centerlines generated with vmtk.
-#
-#    The first line may contain a header.
-#    All other lines ('nlines') contain  'nf' floats.
-#    All data are seperated by blanks.
-#    
-#    The return value is a tuple of
-#    - a float array (nlines,nf) with the data
-#    - a list with the identifiers from the first line
-#    """
-#    fil = file(fn,'r')
-#    line = fil.readline()
-#    s = line.strip('\n').split()
-#    data = fromfile(fil,sep=' ',dtype=float32)
-#    data = data.reshape((-1,len(s)))
-#    return data, s
-#
-#fnout = dir+'cl.dat'
-#cmd = 'vmtk vmtkcenterlines -ifile %s -ofile %s'%(fnin, fnout)
-#sta,out=runCommand(cmd)
-#print((sta,out))
-#data, header = readVmtkCenterlineDat(fnout)
-#clp = data[:, :3]
-#print (header)
-#draw(Coords(clp))
-#exit()
-###################################################################
-###################################################################
+    Return a Coords with the points defining the centerline.
+    """
+    tmp = utils.tempFile(suffix='.stl').name
+    tmp1 = utils.tempFile(suffix='.dat').name
+    pf.message("Writing temp file %s" % tmp)
+    self.write(tmp,'stl')
+    pf.message("Computing centerline using VMTK")
+    cmd = 'vmtk vmtkcenterlines -ifile %s -ofile %s'%(tmp,tmp1)
+    sta,out = utils.runCommand(cmd)
+    os.remove(tmp)
+    if sta:
+        pf.message("An error occurred during the remeshing.")
+        pf.message(out)
+        return None
+    data, header = readVmtkCenterlineDat(tmp1)
+    print(header)
+    cl = Coords(data[:,:3])
+    os.remove(tmp1)
+    return cl
 
 
 def remesh(self,edgelen):
@@ -111,8 +109,8 @@ def install_trisurface_methods():
     """Install extra TriSurface methods
 
     """
-    from plugins.trisurface import TriSurface
-    print("INSTALLING VMTK METHODS:1")
+    #from plugins.trisurface import TriSurface
+    TriSurface.centerline = centerline
     TriSurface.remesh = remesh
 
 install_trisurface_methods()

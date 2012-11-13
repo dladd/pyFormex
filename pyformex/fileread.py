@@ -79,7 +79,7 @@ def readMeshFile(fn):
 
     Returns a dict:
 
-    - `node`: a Coords with all nodes
+    - `coords`: a Coords with all nodes
     - `elems`: a list of Connectivities
     - `esets`: a list of element sets
     """
@@ -124,6 +124,7 @@ def convertInp(fn):
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
     sta, out = utils.runCommand(cmd)
+    print(out)
 
 
 def readInpFile(filename):
