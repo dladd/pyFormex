@@ -231,7 +231,7 @@ def checkExternal(name=None,command=None,answer=None,quiet=False):
         if answer is None:
             answer = ans
 
-    out = system(command)[1]
+    out = system2(command)[1]
     m = re.match(answer,out)
     if m:
         version = m.group(1)
@@ -753,10 +753,23 @@ def countLines(fn):
 ###############################
 
 def system(cmd):
+    """Execute an external command.
+
+    This version will write the subprocess stdout and stderr to pyFormex
+    """
+    import subprocess
+    pf.message("Running command: %s" % cmd)
+    P = subprocess.Popen(cmd,shell=True)
+    sta = P.wait() # wait for the process to finish
+    pf.message("Command finished with status: %s" % sta)
+    return sta
+
+
+def system2(cmd):
     """Execute an external command."""
     import subprocess
     pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
-    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     sta = P.wait() # wait for the process to finish
     out = P.communicate()[0] # get the stdout
     return sta,out
@@ -784,7 +797,7 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     if pf.cfg['commands']:
         sta,out = system1(cmd)
     else:
-        sta,out = system(cmd)
+        sta,out = system2(cmd)
     if sta != 0:
         if not quiet:
             pf.message(out)

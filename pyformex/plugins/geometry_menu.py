@@ -168,8 +168,11 @@ def readGeometry(filename,filetype=None):
         res = {name:surf}
 
     elif filetype == 'inp':
-        model = fileread.readInpFile(filename)
-        res = dict([("PART-0-%s" % i,m.setProp(i)) for i,m in enumerate(model.meshes())])
+        parts = fileread.readInpFile(filename)
+        res = {}
+        for name,part in parts.items():
+            meshes = dict([("%s-%s" % (name,i),m.setProp(i)) for i,m in enumerate(part.meshes())])
+            res.update(meshes)
 
     elif filetype in tetgen.filetypes:
         res = tetgen.readTetgen(filename)

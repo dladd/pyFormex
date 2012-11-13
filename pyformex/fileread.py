@@ -123,8 +123,7 @@ def convertInp(fn):
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
-    sta, out = utils.runCommand(cmd)
-    print(out)
+    sta,out = utils.runCommand(cmd)
 
 
 def readInpFile(filename):
@@ -142,18 +141,24 @@ def readInpFile(filename):
     from plugins import ccxinp,fe
     ccxinp.skip_unknown_eltype = True
     model = ccxinp.readInput(filename)
-    coords = Coords(model['coords'])
-    nodid = model['nodid']
-    nodpos = inverseUniqueIndex(nodid)
-    print("nnodes = %s" % coords.shape[0])
-    print("nodid: %s" % nodid)
-    print("nodpos: %s" % nodpos)
-    for e in model['elems']:
-        print("Orig els %s" % e[1])
-        print("Trl els %s" % nodpos[e[1]])
-    elems = [ Connectivity(nodpos[e],eltype=t) for (t,e) in model['elems'] ]
-
-    return fe.Model(coords,elems)
+    print("Number of parts: %s" % len(model.parts))
+    fem = {}
+    for part in model.parts:
+        try:
+            coords = Coords(part['coords'])
+            nodid = part['nodid']
+            nodpos = inverseUniqueIndex(nodid)
+            print("nnodes = %s" % coords.shape[0])
+            print("nodid: %s" % nodid)
+            print("nodpos: %s" % nodpos)
+            for e in part['elems']:
+                print("Orig els %s" % e[1])
+                print("Trl els %s" % nodpos[e[1]])
+            elems = [ Connectivity(nodpos[e],eltype=t) for (t,e) in part['elems'] ]
+            fem[part['name']] = fe.Model(coords,elems)
+        except:
+            print("Skipping part %s" % part['name'])
+    return fem
     
 
 def read_gambit_neutral(fn):

@@ -202,18 +202,28 @@ print_catalog()
 #  TODO: S... and RAX elements are still scanned wrongly
 #
 
+class InpModel(object):
+    parts = [ ]
 
-
-model = {}
+model = None
 system = None
 skip_unknown_eltype = False
+log = None
+part = None
+
+
+def startPart(name):
+    """Start a new part."""
+    global part
+    print("Start part %s" % name)
+    model.parts.append({'name':name})
+    part = model.parts[-1]
 
 
 def readCommand(line):
     """Read a command line, return the command and a dict with options"""
     if line[0] == '*':
         line = line[1:]
-    line = line.upper()
     s = line.split(',')
     s = [si.strip() for si in s]
     cmd = s[0]
@@ -226,13 +236,18 @@ def readCommand(line):
         else:
             v = True
         opts[k] = v
-    return cmd.lower(),opts
+    return cmd,opts
 
 
 def do_HEADING(opts,data):
     """Read the nodal data"""
-    model['heading'] = '\n'.join(data)
+    model.heading = '\n'.join(data)
 
+
+def do_PART(opts,data):
+    """Set the part name"""
+    startPart(opts['NAME'])
+    
 
 def do_SYSTEM(opts,data):
     """Read the system data"""
@@ -266,6 +281,9 @@ def do_NODE(opts,data):
     print("Read %s nodes" % nnodes)
     ndata = 4
     data = ','.join(data)
+    with open('%s-NODE.data'%part['name'],'w') as f:
+        f.write(data)
+
     x = np.fromstring(data,dtype=np.float32,count=ndata*nnodes,sep=',').reshape(-1,ndata)
     nodid = x[:,0].astype(np.int32)
     coords = x[:,1:]
@@ -276,12 +294,12 @@ def do_NODE(opts,data):
             coords = dot(coords,r)
         coords += t
 
-    if 'coords' in model:
-        model['nodid'] = concatenate([model['nodid'],nodid])
-        model['coords'] = concatenate([model['coords'],coords],axis=0)
+    if 'coords' in part:
+        part['nodid'] = concatenate([part['nodid'],nodid])
+        part['coords'] = concatenate([part['coords'],coords],axis=0)
     else:
-        model['nodid'] = nodid
-        model['coords'] = coords
+        part['nodid'] = nodid
+        part['coords'] = coords
 
 
 def do_ELEMENT(opts,data):
@@ -298,35 +316,41 @@ def do_ELEMENT(opts,data):
     print("Read %s elements of type %s, plexitude %s" % (nelems,eltype,nplex))
     ndata = nplex+1
     data = ','.join(data)
+    with open('%s-ELEMENT.data'%part['name'],'w') as f:
+        f.write(data)
     e = np.fromstring(data,dtype=np.int32,count=ndata*nelems,sep=',').reshape(-1,ndata)
     elid = e[:,0]
     elems = e[:,1:]
-    if not 'elems' in model:
-        model['elems'] = []
-    if not 'elid' in model:
-        model['elid'] = []
-    model['elems'].append((eltype,elems))
-    model['elid'].append(elid)
+    if not 'elems' in part:
+        part['elems'] = []
+    if not 'elid' in part:
+        part['elid'] = []
+    part['elems'].append((eltype,elems))
+    part['elid'].append(elid)
 
 
 def endCommand(cmd,opts,data):
+    global log
     func = 'do_%s' % cmd
     if func in globals():
         globals()[func](opts,data)
     else:
         #print("Data %s" % data)
-        print("Don't know how to handle keyword '%s'" % cmd)
+        log.write("Don't know how to handle keyword '%s'\n" % cmd)
 
 
 def readInput(fn):
     """Read an input file (.inp)"""
-    global line,model
-    model = {}
+    global line,part,log,model
+    model = InpModel()
+    startPart('DEFAULT')
     cmd = ''
-    with open(fn) as fil:
+    logname = fn.replace('.inp','ccxinp.log')
+    with open(logname,'w') as log, open(fn) as fil:
         for line in fil:
             if len(line) == 0:
                 break
+            line = line.upper()
             if line.startswith('*'):
                 if cmd:
                     endCommand(cmd,opts,data)
@@ -334,7 +358,7 @@ def readInput(fn):
                 if line[1] != '*':
                     data = []
                     cmd,opts = readCommand(line[1:])
-                    print("Keyword %s; Options %s" % (cmd,opts))
+                    log.write("Keyword %s; Options %s\n" % (cmd,opts))
                     data_cont = False
             else:
                 line = line.strip()
