@@ -1201,7 +1201,7 @@ def renderModes():
     return canvas.CanvasSettings.RenderProfiles.keys()
 
 
-def renderMode(mode,avg=False,light=None):
+def renderMode(mode,light=None):
     """Change the rendering profile to a predefined mode.
 
     Currently the following modes are defined:
@@ -1242,7 +1242,7 @@ def flatwire():
     renderMode("flatwire")
     
 def smooth_avg():
-    renderMode("smooth",True)
+    renderMode("smooth_avg")
 
 ## def opacity(alpha):
 ##     """Set the viewports transparency."""
