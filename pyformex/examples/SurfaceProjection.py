@@ -183,7 +183,7 @@ def run():
         dg1 = draw(mH1,mode='wireframe')
         d1 = drawImage(mH1,base,patch)
 
-        x = connect([mH0.points(), mH1.points()])
+        x = connect([mH0.asPoints(),mH1.asPoints()])
         dx = draw(x)
         print("Creating intersection with surface")
         pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)

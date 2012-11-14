@@ -491,7 +491,7 @@ class GeomActor(Actor):
             return self.elems.shape
 
     def npoints(self):
-        return self.vertices().shape[0]
+        return self.points().shape[0]
 
     def nedges(self):
         # This is needed to be able to pick edges!!
@@ -503,9 +503,9 @@ class GeomActor(Actor):
             except:
                 return 0
 
-    def vertices(self):
-        """Return the vertives as a 2-dim array."""
-        return self.coords.reshape(-1,3)
+    def points(self):
+        """Return the vertices as a 2-dim array."""
+        return self.coords.points()
 
  
     def setColor(self,color,colormap=None):

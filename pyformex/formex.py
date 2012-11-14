@@ -1461,7 +1461,7 @@ maxprop  = %s
         return Formex(self.coords[:,idx,:],self.prop,self.eltype)
 
 
-    def points(self):
+    def asPoints(self):
         """Return a Formex containing only the points.
 
         This is obviously a Formex with plexitude 1. It holds the same data
@@ -1471,20 +1471,16 @@ maxprop  = %s
         The properties are not copied over, since they will usually not make
         any sense.
         
-        The vertices() method returns the same data, but as a Coords object.
+        The points() method returns the same data, but as a Coords object
+        with a simple list of points.
         """
         return Formex(self.coords.reshape((-1,1,3)))
 
 
+    # retained for compatibility, deprecated
+    @deprecation('depr_vertices')
     def vertices(self):
-        """Return the points of a Formex as a 2dim Coords object.
-
-        The return value holds the same coordinate data as the input Formex,
-        but in another shape: (npoints,3).
-        
-        The points() method returns the same data, but as a Formex.
-        """
-        return self.coords.reshape((-1,3))
+        return self.points()
 
 
     def remove(self,F):
@@ -2216,7 +2212,7 @@ if __name__ == "__main__":
         print("elbbox:",G.elbbox())
         print("met prop 1:",G.withProp(1))
         print("unique:",G.unique())
-        print("vertices:",G.vertices())
+        print("asPoints:",G.asPoints())
         print("points:",G.points())
         print("unique points:",G.points().unique())
         print("diagonal size:",G.dsize())

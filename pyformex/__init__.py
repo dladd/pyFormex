@@ -32,7 +32,7 @@ from __future__ import print_function
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.9r2"
+__version__ = "0.8.9r3"
 __revision__ = '2557M'
 Version = 'pyFormex %s' % __version__
 FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!

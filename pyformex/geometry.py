@@ -185,6 +185,10 @@ class Geometry(object):
         to define the geometry.
         """
         return self.coords
+
+
+    def points(self):
+        return self.coords.points()  
     def x(self):
         return self.coords.x()
     def y(self):

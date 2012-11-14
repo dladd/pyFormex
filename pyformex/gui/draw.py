@@ -1804,7 +1804,7 @@ def highlightPoints(K):
     for i in K.keys():
         pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
-        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color=pf.canvas.settings.slcolor,marksize=10)
+        FA = actors.GeomActor(Formex(actor.points()[K[i]]),color=pf.canvas.settings.slcolor,marksize=10)
         pf.canvas.addHighlight(FA)
     pf.canvas.update()
 

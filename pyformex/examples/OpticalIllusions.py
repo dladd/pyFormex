@@ -79,15 +79,13 @@ def RotatingCircle():
     sc = ask['Zoom']
     box=[[-sc,-sc,-sc],[sc,sc,sc]]
     draw(shape('plus'),bbox=box)
-    C = circle(a1=20).scale([r,r,0]).points()
-    O = [0,0,0]
-    F = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]).translate([R,0,0]).rosette(N-1,360./N)
+    F = sector(r,360.,1,16).trl(0,R).rosette(N-1,360./N)
+    delay(sl)
     for i in range(n*N):
         F = F.rotate(-360./N)
         dr = draw(F,color=col,bbox=box)
         if i>0: undraw(DR)
         DR=dr
-        sleep(sl)
 
 
 def SquaresAndCircles():
@@ -103,9 +101,7 @@ def SquaresAndCircles():
     B,H = 16,16
     F = Formex('4:0123').replic2(B,H,1.2,1.2)
     R = 0.2/sqrt(2.)
-    C = circle(a1=20).scale(R).points()
-    O = [0,0,0]
-    G = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]).translate([1.1,1.1,0]).replic2(B-1,H-1,1.2,1.2)
+    G = sector(R,360.,1,16).translate([1.1,1.1,0]).replic2(B-1,H-1,1.2,1.2)
     G.setProp(7)
     draw(F,color=random.rand(3)/2)
     draw(G)
@@ -125,7 +121,7 @@ def ShadesOfGrey():
     back += back.translate([-8,0,0])
     back.setProp([0,7])
     C = circle(a1=11.25).rotate(-90,2).points()
-    F = Formex([[C[i,0],C[i+1,0],2*C[i+1,0],2*C[i,0]] for i in range(0,32,2)]).translate([2,4,0])
+    F = Formex([[C[i],C[i+1],2*C[i+1],2*C[i]] for i in range(0,32,2)]).translate([2,4,0])
     n = 40
     for i in range(n):
         F = F.translate([-2./n,0,0])
@@ -154,9 +150,9 @@ def RunningInCircles():
     R = 10
     C = circle(a1=360./N).points()
     O =[0,0,0]
-    F = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,2*N,2)]).scale([R,R,0])
+    F = Formex([[C[i],C[i+1],O] for i in arange(0,2*N,2)]).scale([R,R,0])
     F.setProp([0,7])
-    p = circle(a1=360./N).vertices()
+    p = circle(a1=360./N).points()
     centre = Formex([add(p[0:len(p):2],p[-1])]).translate([-1,0,0])
     centre.setProp(1)
     draw(centre,bbox=box)
@@ -233,8 +229,8 @@ def ParallelLinesOverWheel():
     Some zooming can help to optimize the effect.
     """
     resetview()
-    C,O = circle(a1=20).scale(2).points(),[0,0,0]
-    draw(Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]))
+    C = sector(2,360.,1,16)
+    draw(C)
     line = Formex([[[-20,0,0],[20,0,0]]])
     lines = line
     hor = line.translate([0,-4,0]) + line.translate([0,4,0])
@@ -351,7 +347,7 @@ def Crater():
     resetview()
     deg,rot,col = 5,3,random.rand(2,3)
     r1,r2,r3,r4,r5,r6,r7,r8 = 1,1.9,2.9,4,5.1,6.1,7,7.8
-    p = circle(a1=5).vertices()
+    p = circle(a1=5).points()
     C = Formex([p[0:len(p):2]])
     C1 = C.scale(r1).translate([0,r1,0])
     C2 = C.scale(r2).translate([0,r2,0])
@@ -415,7 +411,7 @@ def CrazyCircles():
     resetview()
     n = 5*6
     col = [[1.,1.,1.],[0.12,0.556,1.],[0.,0.,1.],[0.,0.,0.],[0.7,0.9,0.2],[1.,1.,0.]]
-    p = circle(a1=10).rotate(5).vertices()
+    p = circle(a1=10).rotate(5).points()
     f = Formex([p[0:len(p):2]])
     F = f.copy()
     for i in range(1,n):

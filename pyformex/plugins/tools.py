@@ -134,7 +134,7 @@ def reportPoints(K):
         v = K[k]
         A = pf.canvas.actors[k]
         s += "Actor %s (type %s); Points %s\n" % (k,A.getType(),v)
-        x = A.vertices()
+        x = A.points()
         for p in v:
             s += "  Point %s: %s\n" % (p,x[p]) 
     return s
@@ -211,8 +211,8 @@ def getObjectItems(obj,items,mode):
         if hasattr(obj,'object') and hasattr(obj.object,'select'):
             return obj.object.select(items)        
     elif mode == 'point':
-        if hasattr(obj,'vertices'):
-            return obj.vertices()[items]
+        if hasattr(obj,'points'):
+            return obj.points()[items]
     return None
 
 
