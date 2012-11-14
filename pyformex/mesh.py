@@ -44,9 +44,9 @@ from coords import *
 from formex import Formex
 from connectivity import Connectivity
 from elements import elementType
-from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
+import utils
    
 
 ##############################################################
@@ -451,7 +451,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     ## Entity selection and mesh traversal ##
 
 
-    @deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
+    @utils.deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
     def getLowerEntitiesSelector(self,level=-1):
         """Get the entities of a lower dimensionality.
 

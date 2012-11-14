@@ -176,10 +176,10 @@ bumpversion:
 # This increases the tail only: minor number or alpha number
 bumprelease:
 	@echo "bumprelease currently inactive" 
-	@OLD=$$(expr "${RELEASE}" : '.*-r\([0-9])*\)$$'); \
+	@OLD=$$(expr "${RELEASE}" : '.*r\([0-9])*\)$$'); \
 	 if [ -z "$$OLD" ]; then NEW=1; else NEW=$$(expr $$OLD + 1); fi; \
-	 sed -i "/^RELEASE=/s|}.*|}-r$$NEW|" RELEASE
-	#make version
+	 sed -i "/^RELEASE=/s|}.*|}r$$NEW|" RELEASE
+	make version
 
 revision:
 	sed -i "s|__revision__ = .*|__revision__ = '$$(svnversion)'|" ${PYFORMEXDIR}/__init__.py
