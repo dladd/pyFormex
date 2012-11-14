@@ -236,14 +236,21 @@ class ElemSection(CDict):
 class ElemLoad(CDict):
     """Distributed loading on an element."""
 
-    def __init__(self,label=None,value=None):
+    def __init__(self,label=None,value=None,dir=None):
         """Create a new element load. Empty by default.
         
         An element load can hold the following sub-properties:
-        - label: the distributed load type label.
-        - value: the magnitude of the distibuted load.
-        """          
-        Dict.__init__(self,{'label':label,'value':value})
+
+        - label: the distributed load type label
+        - value: the magnitude of the distibuted load
+        - dir: vector specifying the direction of the load
+        """
+        if label == 'GRAV':
+            if dir is None:
+                dir = [0, 0 ,-1]
+            if value is None:
+                value = 9.81
+        Dict.__init__(self,{'label':label,'value':value,'dir':dir})
 
 
 class EdgeLoad(CDict):

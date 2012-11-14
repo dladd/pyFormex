@@ -1320,12 +1320,11 @@ def writeDloads(fil,prop,op='NEW'):
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
-        writeCommaList(fil,setname,p.dload['label'],p.dload['value'])
-        fil.write("\n")
-#        if p.dload.label == 'GRAV':
-#            fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
-#        else:
-#            fil.write("%s, %s, %s\n" % (setname,p.dload.label,p.dload.value))
+        data = [setname,p.dload.label,p.dload.value]
+        if p.dload.dir is not None:
+            data += p.dload.dir
+        writeCommaList(fil,*data)
+        fil.write('\n')
               
 
 def writeDsloads(fil,prop,op='NEW'):
