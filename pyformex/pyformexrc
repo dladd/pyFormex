@@ -198,7 +198,7 @@ quadline = [] # 'line3' ]
 quadsurf = [] # [ 'quad8', 'quad9', 'hex20' ]
 avgnormalsize = '_auto_'
 picksize=(12,12) # size of the pick window
-
+disable_depth_test = True
 
 [material]
 matte = dict(ambient=0.8,diffuse=0.8,specular=0.2)

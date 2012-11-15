@@ -214,6 +214,7 @@ def settings():
                 _I('draw/rendermode',pf.cfg['draw/rendermode'],choices=canvas.CanvasSettings.RenderProfiles),
                 _I('draw/wait',pf.cfg['draw/wait']),
                 _I('draw/picksize',pf.cfg['draw/picksize']),
+                _I('draw/disable_depth_test',pf.cfg['draw/disable_depth_test'],text='Disable depth testing for transparent actors'),
                 _I('render/avgnormaltreshold',pf.cfg['render/avgnormaltreshold']),
                 _I('_info_00_',itemtype='info',text='Changes to the options below will only become effective after restarting pyFormex!'),
                 _I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
@@ -345,7 +346,7 @@ def setRendering():
         #if pf.cfg['render/mode'] != vp.rendermode:
         print("SETMODE %s %s" % (pf.cfg['render/mode'],pf.cfg['render/lighting']))
         vp.setRenderMode(pf.cfg['render/mode'],pf.cfg['render/lighting'])
-        print(vp.rendermode,vp.lighting)
+        print(vp.rendermode,vp.settings.lighting)
         vp.update()
         toolbar.updateLightButton()
         
@@ -363,7 +364,7 @@ def setRendering():
             ]
         items = [
             _I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=draw.renderModes()),#,onselect=enableLightParams),
-            _I('render/lighting',vp.lighting,text='Use Lighting'),
+            _I('render/lighting',vp.settings.lighting,text='Use Lighting'),
             _I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
             _I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
             _G('material',text='Material Parameters',items=mat_items),
@@ -563,6 +564,7 @@ MenuData = [
         (_('&Settings Dialog'),settings), 
         (_('&Options'),setOptions),
         (_('&Debug'),setDebug),
+        (_('&Rendering Params'),setRendering),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),

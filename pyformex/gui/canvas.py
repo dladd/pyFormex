@@ -928,13 +928,13 @@ class Canvas(object):
         if self.settings.alphablend:
             opaque = [ a for a in sorted_actors if a.opak ]
             transp = [ a for a in sorted_actors if not a.opak ]
-            
             for actor in opaque:
                 self.setDefaults()
                 actor.draw(canvas=self)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
-            GL.glDisable(GL.GL_DEPTH_TEST)
+            if pf.cfg['draw/disable_depth_test']:
+                GL.glDisable(GL.GL_DEPTH_TEST)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
                 self.setDefaults()
