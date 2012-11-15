@@ -1218,9 +1218,9 @@ def renderMode(mode,light=None):
     #print "MODE %s" % pf.canvas.rendermode
     # ERROR The following redraws twice !!!
     pf.canvas.setRenderMode(mode,light)
-    #print "NEW MODE %s" % pf.canvas.rendermode
     pf.canvas.update()
     toolbar.updateNormalsButton()
+    toolbar.updateTransparencyButton()
     toolbar.updateLightButton()
     pf.GUI.processEvents()
     #print "DONE DRAW>RENDERMODE"
