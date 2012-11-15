@@ -242,6 +242,7 @@ manpages:
 # Publish the distribution to our ftp server
 
 publocal: ${PKGDIR}/${LATEST}
+	cd ${PKGDIR}; gpg -b --use-agent ${PKGVER}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
 

@@ -347,27 +347,28 @@ def readInput(fn):
     startPart('DEFAULT')
     cmd = ''
     logname = fn.replace('.inp','ccxinp.log')
-    with open(logname,'w') as log, open(fn) as fil:
-        for line in fil:
-            if len(line) == 0:
-                break
-            line = line.upper()
-            if line.startswith('*'):
-                if cmd:
-                    endCommand(cmd,opts,data)
-                    cmd = ''
-                if line[1] != '*':
-                    data = []
-                    cmd,opts = readCommand(line[1:])
-                    log.write("Keyword %s; Options %s\n" % (cmd,opts))
-                    data_cont = False
-            else:
-                line = line.strip()
-                if data_cont:
-                    data[-1] += line
+    with open(logname,'w') as log:
+        with open(fn) as fil:
+            for line in fil:
+                if len(line) == 0:
+                    break
+                line = line.upper()
+                if line.startswith('*'):
+                    if cmd:
+                        endCommand(cmd,opts,data)
+                        cmd = ''
+                    if line[1] != '*':
+                        data = []
+                        cmd,opts = readCommand(line[1:])
+                        log.write("Keyword %s; Options %s\n" % (cmd,opts))
+                        data_cont = False
                 else:
-                    data.append(line)
-                data_cont = line.endswith(',')
+                    line = line.strip()
+                    if data_cont:
+                        data[-1] += line
+                    else:
+                        data.append(line)
+                    data_cont = line.endswith(',')
 
     print("Number of parts in model: %s" % len(model.parts))
     return model
