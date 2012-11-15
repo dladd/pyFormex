@@ -589,17 +589,17 @@ class Canvas(object):
         self.highlights = ActorList(self)
         self.annotations = ActorList(self)
         self.decorations = ActorList(self)
+        self.camera = None
         self.triade = None
         self.background = None
         self.bbox = None
         self.setBbox()
         self.settings = CanvasSettings(**settings)
-        self.resetLighting()
         self.mode2D = False
         self.rendermode = pf.cfg['draw/rendermode']
         self.setRenderMode(pf.cfg['draw/rendermode'])
+        self.resetLighting()
         #print("INIT: %s, %s" %(self.rendermode,self.settings.fill))
-        self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None
         self.focus = False
@@ -669,8 +669,9 @@ class Canvas(object):
         if lighting is None:
             lighting = self.settings.lighting
             
-        if mode != self.rendermode or lighting != self.settings.lighting:
-            #print("SWITCHING MODE")
+        #if mode != self.rendermode or lighting != self.settings.lighting:
+        #print("SWITCHING MODE")
+        if self.camera:
             self.rendermode = mode
             self.settings.lighting = lighting
             self.glinit()
