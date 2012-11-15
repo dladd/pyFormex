@@ -182,7 +182,6 @@ class ViewportToggleButton(object):
 
         This does not update the button state.
         """
-        print ("TOGGLE")
         vp = pf.GUI.viewports.current
         vp.setToggle(attr,state)
         vp.update()
@@ -267,7 +266,6 @@ def addNormalsButton(toolbar):
                                toggle=True,checked=False)    
 
 def toggleNormals(state=None):
-    print("TOGGLE NORMALS")
     toggleButton('avgnormals',state)
 
 def updateNormalsButton(state=True):
