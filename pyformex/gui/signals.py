@@ -39,9 +39,11 @@ REDRAW = SIGNAL("Redraw")   # redraw a preview state
 WAKEUP = SIGNAL("Wakeup")   # wake up from a sleep state
 TIMEOUT = SIGNAL("Timeout") # terminate what was going on
 SAVE = SIGNAL("Save")       # 
+FULLSCREEN = SIGNAL("Fullscreen")    # 
 
 keypress_signal = {
     Qt.Key_F2: SAVE,
+    Qt.Key_F5: FULLSCREEN,
     }
 
 

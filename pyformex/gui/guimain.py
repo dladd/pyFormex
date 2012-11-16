@@ -217,6 +217,7 @@ class Gui(QtGui.QMainWindow):
         pf.debug('Creating Main Window',pf.DEBUG.GUI)
         self.on_exit = [] 
         QtGui.QMainWindow.__init__(self)
+        self.fullscreen = False
         self.setWindowTitle(windowname)
         # add widgets to the main window
 
@@ -249,6 +250,7 @@ class Gui(QtGui.QMainWindow):
         self.box = QtGui.QWidget()
         self.setCentralWidget(self.box)
         self.boxlayout = QtGui.QVBoxLayout()
+        self.boxlayout.setContentsMargins(*pf.cfg['gui/boxmargins'])
         self.box.setLayout(self.boxlayout)
         #self.box.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
         #self.box.setLineWidth(2)
@@ -919,6 +921,36 @@ class Gui(QtGui.QMainWindow):
         else:
             event.ignore()
 
+
+    def fullScreen(self):
+        """Toggle the canvas full screen mode.
+
+        Fullscreen mode hides all the components of the main window, except
+        for the central canvas, maximizes the main window, and removes the
+        window decorations, thus leaving only the OpenGL canvas on the full
+        screen. (Currently there is also still a small border remaining.)
+        
+        This mode is activated by pressing the F5 key. A second F5 press
+        will revert to normal display mode.
+        """
+        hide = [self.board,self.statusbar,self.toolbar,self.menu] + self.toolbars
+        if self.fullscreen:
+            # already fullscreen: go back to normal mode
+            for w in hide:
+                w.show()
+            self.boxlayout.setContentsMargins(*pf.cfg['gui/boxmargins'])
+            self.showNormal()
+        else:
+            # goto fullscreen
+            for w in hide:
+                w.hide()
+            self.boxlayout.setContentsMargins(0,0,0,0)
+            self.showFullScreen()
+        self.update()
+        self.fullscreen = not self.fullscreen
+        pf.app.processEvents()
+                            
+
     
 def exitDialog():
     """Show the exit dialog to the user.
@@ -961,13 +993,9 @@ def exitDialog():
 
     return True
 
-# BV: Not used anymore
-## def quitGUI():
-##     """Quit the GUI"""
-##     pf.GUI.close()
-##     if pf.app:
-##         pf.app.exit()
-##         pf.app = None
+
+def fullscreen():
+    pf.GUI.fullScreen()
 
 
 def xwininfo(windowid=None,name=None):
@@ -1361,6 +1389,10 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # TODO: this should disappear when we have buffered stdout
     # and moved this up into GUI init
     pf.GUI.board.redirect(pf.cfg['gui/redirect'])
+
+
+    # Activate F5 as fullscreen switcher
+    signals.onSignal(signals.FULLSCREEN,fullscreen)
 
     pf.GUI.update()
 

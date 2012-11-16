@@ -233,6 +233,9 @@ ${PKGDIR}/${PKGVER}: RELEASE
 	python setup.py sdist --no-defaults | tee makedist.log
 	python manifest_check.py
 
+${PKGDIR}/${PKGVER}.sig: ${PKGDIR}/${PKGVER}
+	cd ${PKGDIR}; gpg -b --use-agent ${PKGVER}
+
 # Create all our manpages
 manpages:
 	make -C pyformex/doc manpages
@@ -241,9 +244,8 @@ manpages:
 
 # Publish the distribution to our ftp server
 
-publocal: ${PKGDIR}/${LATEST}
-	cd ${PKGDIR}; gpg -b --use-agent ${PKGVER}
-	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
+publocal: ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig
+	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig ${FTPLOCAL}
 
 
 # Move the create tar.gz to the public directory
