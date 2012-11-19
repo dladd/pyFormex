@@ -764,14 +764,51 @@ def system(cmd):
     pf.message("Command finished with status: %s" % sta)
     return sta
 
+def timedWait(proc, timeout, waitToKill = 1.):
+    """It is an implementation of the wait() but with a timeout check.
+    
+    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
+    - `waitToKill` is the delay between proc.terminate() and proc.kill().
+    """
+    import timer
+    t = timer.Timer(0)    
+    while proc.poll() is None and t.seconds(rounded=False) < timeout:#check if proc is completed or timed out
+        pass
+    if proc.poll() is not None:
+        sta = proc.poll() # returncode
+        out = proc.communicate()[0] # get the stdout
+    elif t.seconds(rounded=False) > timeout:
+        proc.terminate()
+        try:
+            out = proc.stdout.read()
+        except:#the stdout was not yet generated
+            out = ''
+        try:
+            import time
+            time.sleep(waitToKill)            
+            #proc.kill()
+            killProcesses([proc.pid+1],signal=15)#VMTK use pid+1, is it general?
+        except:
+            pass
+        sta = -20#time out code (to be decided)
+    else:
+        raise ValueError,"This really should not happen!"
+    return sta, out
 
-def system2(cmd):
-    """Execute an external command."""
+def system2(cmd, timeout=None):
+    """Execute an external command with timeout.
+    
+    If timeout is given:
+    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
+    """
     import subprocess
     pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
     P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    sta = P.wait() # wait for the process to finish
-    out = P.communicate()[0] # get the stdout
+    if timeout == None:
+        sta = P.wait() # wait for the process to finish
+        out = P.communicate()[0] # get the stdout
+    else:
+        sta, out = timedWait(P, timeout)  
     return sta,out
 
 
@@ -783,13 +820,22 @@ def system1(cmd):
     return commands.getstatusoutput(cmd)
 
 
-def runCommand(cmd,RaiseError=True,quiet=False):
+def runCommand(cmd,RaiseError=True,quiet=False, timeout=None):
     """Run a command and raise error if exited with error.
 
     cmd is a string with the command to be run. The command is run
     in the background, waiting for the result. If no error occurs,
     the exit status and stdout are returned.
     Else an error is raised by default.
+
+    If timeout is given:
+    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
+    
+    Example:
+    cmd = 'sleep 2'
+    sta,out=runCommand3(cmd, RaiseError=False,quiet=False, timeout=5.)
+    print (sta,out)
+    
     """
     if not quiet:
         pf.message("Running command: %s" % cmd)
@@ -797,13 +843,20 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     if pf.cfg['commands']:
         sta,out = system1(cmd)
     else:
-        sta,out = system2(cmd)
+        sta,out = system2(cmd, timeout)
     if sta != 0:
         if not quiet:
             pf.message(out)
-            pf.message("Command exited with an error (exitcode %s)" % sta)
+            if sta != -20:
+                pf.message("Command exited with an error (exitcode %s)" % sta)
+            else:
+                pf.message("Command exited because timed out")
         if RaiseError:
-            raise RuntimeError, "Error while executing command:\n  %s" % cmd
+            
+            if sta != -20:
+                raise RuntimeError, "Error while executing command:\n  %s" % cmd
+            else:
+                raise RuntimeError, "Command exited because timed out"
     return sta,out.rstrip('\n')
 
 
