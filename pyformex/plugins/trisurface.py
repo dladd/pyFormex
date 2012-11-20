@@ -1851,6 +1851,24 @@ Quality: %s .. %s
         os.remove(tmp)
         os.remove(tmp1)    
         return S.setProp(self.prop)
+    
+    
+    def fixOutwardNormals(self):
+        """Fix normals and turns them outward in a closed manifold surface.
+        
+        If surface is not a closed manifold an error is raised.
+        In general the fixNormals() already fix the normals outward,
+        except in case of (even small) self intersections (it can be
+        checked with the check(). In this case some normals can point inward.
+        The fixOutwardNormals() ensures that the normals point 
+        outward for most of the surface. 
+        """
+        if ~self.isClosedManifold():
+            raise ValueError,"The surface is not a closed manifold"
+        self=self.fixNormals()
+        if self.volume()<0.:
+            return self.reverse()
+        return self
 
 
     def check(self,matched=True):
