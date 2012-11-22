@@ -132,6 +132,8 @@ def abq_eltype(eltype):
         if 'ndim' not in d or d['ndim'] is None:
             if d['type'][:2] in ['CP','CA'] :
                 d['ndim'] = '2'
+        if d['type'] in ['R'] and d['nplex']==4:
+            d['ndim'] = '2'
         try:
             ndim = int(d['ndim'][0])
         except:
@@ -148,11 +150,11 @@ def abq_eltype(eltype):
 
 known_eltypes = {
     1: { 'point': [ 'SPRINGA', ] },
-    2: { 'line2': [ 'CONN', 'FRAME', 'T', 'B', 'RB', 'RAX', ] },
+    2: { 'line2': [ 'CONN', 'FRAME', 'T', 'B', 'RB', 'RAX',] },
     3: { 'line3': [ 'B', ],
          'tri3':  [ 'M', 'CPS', 'CPE', 'CPEG', 'S', 'SFM', 'R', ] },
-    4: { 'quad4': [ 'M', 'CPS', 'CPE', 'CPEG', 'S', 'SFM', ],
-         'tet4':  [ 'C', 'R', ] },
+    4: { 'quad4': [ 'M', 'CPS', 'CPE', 'CPEG', 'S', 'SFM', 'R', ],
+         'tet4':  [ 'C', ] },
     6: { '':  [ 'M', 'CPS', 'CPE', 'CPEG', 'SFM', ],
          'wedge6':[ 'C', ] },
     8: { 'quad8': [ 'M', 'CPS', 'CPE', 'CPEG', 'CAX', 'S', 'SFM', ],
