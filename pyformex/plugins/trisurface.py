@@ -1821,7 +1821,7 @@ Quality: %s .. %s
 ##############################
  
  
-    def fixNormals(self):
+    def fixNormals(self, outward=False):
         """Fix the orientation of the normals.
 
         Some surface operations may result in improperly oriented normals.
@@ -1835,40 +1835,40 @@ Quality: %s .. %s
         If the surface was a (possibly non-orientable) manifold, the result
         will be an orientable manifold. This is a necessary condition
         for the `gts` methods to be applicable.
-        """
-        if self.nelems() == 0:
-            # Protect against impossible file handling for empty surfaces
-            return self
-        tmp = tempfile.mktemp('.stl')
-        pf.message("Writing temp file %s" % tmp)
-        self.write(tmp,'stl')
-        tmp1 = tempfile.mktemp('.off')
-        cmd = "admesh -d --write-off='%s' '%s'" % (tmp1,tmp)
-        pf.message("Fixing surface normals with command\n %s" % cmd)
-        sta,out = utils.runCommand(cmd)
-        pf.message("Reading result from %s" % tmp1)
-        S = TriSurface.read(tmp1)   
-        os.remove(tmp)
-        os.remove(tmp1)    
-        return S.setProp(self.prop)
-    
-    
-    def fixOutwardNormals(self):
-        """Fix normals and turns them outward in a closed manifold surface.
         
-        If surface is not a closed manifold an error is raised.
-        In general the fixNormals() already fix the normals outward,
-        except in case of (even small) self intersections (it can be
-        checked with the check(). In this case some normals can point inward.
-        The fixOutwardNormals() ensures that the normals point 
-        outward for most of the surface. 
+        Parameters:
+        
+        - `outward`: boolean: if True and the surface a closed manifold,
+        it fix normals and turns them outward: in general the fixNormals(outward=False) 
+        already fix the normals outward, except in case of (even small) self intersections 
+        (it can be checked with the check()). In this case some normals can point inward.
+        The fixNormals(outward=True)  ensures that the normals point 
+        outward for most of the surface. If outward is True and the surface 
+        is not a closed manifold an error is raised.
         """
-        if ~self.isClosedManifold():
-            raise ValueError,"The surface is not a closed manifold"
-        self=self.fixNormals()
-        if self.volume()<0.:
-            return self.reverse()
-        return self
+        if outward:
+            if ~self.isClosedManifold():
+                raise ValueError,"The surface is not a closed manifold"
+            self=self.fixNormals(outward=False)
+            if self.volume()<0.:
+                return self.reverse()
+            return self
+        else:
+            if self.nelems() == 0:
+                # Protect against impossible file handling for empty surfaces
+                return self
+            tmp = tempfile.mktemp('.stl')
+            pf.message("Writing temp file %s" % tmp)
+            self.write(tmp,'stl')
+            tmp1 = tempfile.mktemp('.off')
+            cmd = "admesh -d --write-off='%s' '%s'" % (tmp1,tmp)
+            pf.message("Fixing surface normals with command\n %s" % cmd)
+            sta,out = utils.runCommand(cmd)
+            pf.message("Reading result from %s" % tmp1)
+            S = TriSurface.read(tmp1)   
+            os.remove(tmp)
+            os.remove(tmp1)    
+            return S.setProp(self.prop)
 
 
     def check(self,matched=True):
