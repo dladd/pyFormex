@@ -56,7 +56,23 @@ _surface = None
 
 
 def importGeometry():
-    gm.importSurface()
+    #gm.importSurface()
+    from gui.widgets import FileSelection
+    f=FileSelection()
+    f.show()
+    fn=f.getFilename()
+    fext = fn[-4:]
+    if fext=='.pgf':    
+        surface=readGeomFile(fn).values()[0]
+    elif (fext=='.stl') or (fext=='.off') or (fext=='.gts'):
+        surface=TriSurface.read(fn)
+    else:
+        Error('wrong file extension')
+    export({'surface':surface})
+    drawSurface()
+    view('front')
+    zoomAll()
+    perspective(False)
 
 
 def positionGeometry():
