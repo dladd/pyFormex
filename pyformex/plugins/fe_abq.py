@@ -1730,7 +1730,7 @@ class Step(Dict):
             cmd += ', PERTURBATION'
 
         if self.nlgeom:
-            cmd += ', NLGEOM'
+            cmd += ', NLGEOM=%s' % self.nlgeom
         
         if self.stepOptions is not None:
             cmd+=fmtOptions(self.stepOptions)
