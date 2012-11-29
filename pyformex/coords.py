@@ -260,9 +260,9 @@ class Coords(ndarray):
         its first ndim-1 axes.
         This is equivalent with ::
         
-          self[...,0]
+          asarray(self[...,0])
         """
-        return self[...,0]
+        return asarray(self[...,0])
     
     def y(self):
         """Return the Y-coordinates of all points.
@@ -272,9 +272,9 @@ class Coords(ndarray):
         its first ndim-1 axes.
         This is equivalent with ::
         
-          self[...,1]
+          asarray(self[...,1])
         """
-        return self[...,1]
+        return asarray(self[...,1])
     
     def z(self):
         """Returns the Z-coordinates of all points.
@@ -284,9 +284,9 @@ class Coords(ndarray):
         its first ndim-1 axes.
         This is equivalent with ::
         
-          self[...,0]
+          asarray(self[...,2])
         """
-        return self[...,2]
+        return asarray(self[...,2])
 
 
     # Size, Bounds
