@@ -1677,31 +1677,34 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Parameters:
 
-        - `coordslist`: either a list of Coords instances, all having the same
-          shape as self.coords, or a single Mesh instance whose `coords`
-          attribute has the same shape.
+        - `coordslist`: either a list of Coords objects, or a list of
+          Mesh objects or a single Mesh object.
 
-          If it is a list of Coords, consider a
-          list of Meshes obtained by combining each Coords object with the
-          connectivity table, element type and property numbers of the current
-          Mesh. The return value then is the hypermesh obtained by connecting
+          If Mesh objects are given, they should (all) have the same element
+          type as `self`. Their connectivity tables will not be used though.
+          They will only serve to construct a list of Coords objects by
+          taking the `coords` attribute of each of the Meshes. If only a single
+          Mesh was specified, `self.coords` will be added as the first Coords
+          object in the list.
+
+          All Coords objects in the coordslist (either specified or
+          constructed from the Mesh objects), should have the exact same
+          shape as `self.coords`. The number of Coords items in the list should
+          be a multiple of `degree`, plus 1.
+
+          Each of the Coords in the final coordslist is combined with the
+          connectivity table, element type and property numbers of `self` to
+          produce a list of toplogically congruent meshes.
+          The return value is the hypermesh obtained by connecting
           each consecutive slice of (degree+1) of these meshes. The hypermesh
           has a dimensionality that is one higher than the original Mesh (i.e.
           points become lines, lines become surfaces, surfaces become volumes).
           The resulting elements will be of the given `degree` in the
-          direction of the connection. Notice that the coords of the current
-          Mesh are not used, unless these coords are explicitely included into
-          the specified `coordslist`. In many cases `self.coords` will be the
-          first item in `coordslist`, but it could occur anywhere in the list
-          or even not at all. The number of Coords items in the list should
-          be a multiple of `degree` plus 1.
+          direction of the connection.
 
-          Specifying a single Mesh instead of a list of Coords is
-          just a convenience for the often occurring situation of connecting
-          a Mesh (self) with another one (mesh) having the same connectivity:
-          in this case the list of Coords will automatically be set to
-          ``[ self.coords, mesh.coords ]``. The `degree` should be 1 in this
-          case.
+          Notice that unless a single Mesh was specified as coordslist, the
+          coords of `self` are not used. In many cases however `self` or
+          `self.coords` will be one of the items in the specified `coordslist`.
 
         - `degree`: degree of the connection. Currently only degree 1 and 2
           are supported.
@@ -1716,16 +1719,18 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             even for higher order elements where the intermediate planes
             contain less nodes.
 
+            Currently, degree=2 is not allowed when `coordslist` is specified
+            as a single Mesh.
+
         - `loop`: if True, the connections with loop around the list and
           connect back to the first. This is accomplished by adding the first
           Coords item back at the end of the list.
 
         - `div`: Either an integer, or a sequence of float numbers (usually
-          in the range ]0.0..1.0]). This should only
-          be used for degree==1.
+          in the range ]0.0..1.0]). This should only be used for degree==1.
 
-          With this parameter the generated elements
-          can be further subdivided along the connection direction.
+          With this parameter the generated elements  can be further
+          subdivided along the connection direction.
           If an int is given, the connected elements will be divided
           into this number of elements along the connection direction. If a
           sequence of float numbers is given, the numbers specify the relative
@@ -1739,20 +1744,23 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           a final conversion to the requested element type is attempted.
         """
         if type(coordslist) is list:
-            clist = coordslist
+            if type(coordslist[0]) == Mesh:
+                if sum([c.elType() != self.elType() for c in coordslist]):                          raise ValueError,"All Meshes in the list should have same element type"
+                clist = [ c.coords for c in coordslist ]
+            else:
+                clist = coordslist
         elif isinstance(coordslist,Mesh):
-            # Removed warning in 0.8.7
-            # utils.warn("warn_mesh_connect")
             clist = [ self.coords, coordslist.coords ]
             if degree == 2:
                 raise ValueError,"This only works for linear connection"
+            ## BV: Any reason why this would not work??
             ##     xm = 0.5 * (clist[0]+clist[1])
             ##     clist.insert(1, xm) 
         else:
             raise ValueError,"Invalid coordslist argument"
 
         if sum([c.shape != self.coords.shape for c in clist]):
-            raise ValueError,"Incompatible coordinate sets"
+            raise ValueError,"Incompatible shape  in coordslist"
 
         # implement loop parameter
         if loop:
@@ -1798,9 +1806,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         print("Extrusion over %s steps of length %s" % (n,step))
         x = [ self.coords.trl(dir,i*n*step/degree) for i in range(1,degree+1) ]
-        #print(bbox(x))
         return self.connect([self.coords] + x,n*degree,degree=degree,eltype=eltype)
-        #return self.connect(self.trl(dir,n*step),n*degree,degree=degree,eltype=eltype)
 
 
     def revolve(self,n,axis=0,angle=360.,around=None,loop=False,eltype=None):

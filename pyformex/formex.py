@@ -2091,7 +2091,7 @@ maxprop  = %s
 #
         
 def connect(Flist,nodid=None,bias=None,loop=False):
-    """Return a Formex which connects the formices in list.
+    """Return a Formex which connects the Formices in list.
 
     Flist is a list of formices, nodid is an optional list of nod ids and
     bias is an optional list of element bias values. All lists should have
