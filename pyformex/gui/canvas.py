@@ -769,7 +769,7 @@ class Canvas(object):
         #print color.shape,color
         image = None
         if self.settings.bgimage:
-            from gui.imagearray import image2numpy
+            from plugins.imagearray import image2numpy
             try:
                 image = image2numpy(self.settings.bgimage,indexed=False)
             except:

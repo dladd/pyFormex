@@ -44,7 +44,7 @@ _techniques = ['dialog','persistence']
 from gui.draw import *
 from simple import rectangle
 from utils import NameSequence
-from gui.imagearray import *
+from plugins.imagearray import *
 
 dialog = None
 savefile = None

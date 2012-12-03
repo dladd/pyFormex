@@ -35,7 +35,7 @@ _topics = ['surface']
 _techniques = ['voxelize','image']
 
 from gui.draw import *
-from gui.imagearray import *
+from plugins.imagearray import *
 from plugins.trisurface import TriSurface
 import simple
 

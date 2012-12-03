@@ -40,7 +40,7 @@ from gui.draw import *
 from plugins.trisurface import TriSurface
 import elements
 from gui.widgets import ImageView
-from gui.imagearray import *
+from plugins.imagearray import *
 
 
 def selectImage(fn):

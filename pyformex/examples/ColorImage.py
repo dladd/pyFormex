@@ -42,7 +42,7 @@ _techniques = ['color','image']
 
 from gui.draw import *
 from gui.widgets import ImageView
-from gui.imagearray import *
+from plugins.imagearray import *
 from odict import ODict
 
 resetAll()

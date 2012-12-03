@@ -41,7 +41,7 @@ _topics = ['image']
 _techniques = ['color','filename']
 
 from gui.draw import *
-from gui.imagearray import *
+from plugins.imagearray import *
 
 def run():
     clear()

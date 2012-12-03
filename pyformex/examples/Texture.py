@@ -34,7 +34,7 @@ _topics = ['Image','Geometry']
 _techniques = ['texture']
 
 from gui.draw import *
-from gui.imagearray import image2numpy
+from plugins.imagearray import image2numpy
 
 def run():
     clear()

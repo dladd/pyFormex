@@ -246,7 +246,7 @@ def image2glcolor(image,resize=(0,0)):
     return c, None
      
 
-# Image to data using PIL
+# Import images using PIL
 
 def imagefile2string(filename):
     import Image
@@ -257,5 +257,56 @@ def imagefile2string(filename):
     except SystemError:
         data = im.tostring("raw","RGBX",0,-1)
     return nx,ny,data
+
+
+
+# Import images using dicom
+
+_dicom_spacing = None
+
+def readDicom(filename):
+    """Read a DICOM image file.
+
+    Parameters:
+
+    - `file`: the name of a DICOM image file
+
+    Returns a 3D array with the pixel data of all the images. The first
+      axis is the `z` value, the last the `x`.
+
+    As a side effect, this function sets the global variable `_dicom_spacing`
+    to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).
+    """
+    import dicom
+    global _dicom_spacing
+    _dicom_spacing = None
+    dcm = dicom.read_file(filename)
+    pix = dcm.pixel_array
+    _dicom_spacing = np.array(dcm.PixelSpacing + [dcm.SliceThickness])
+    return pix
+
+
+def dicom2numpy(files):
+    """Read a set of DICOM image files.
+
+    Parameters:
+
+    - `files`: a list of file names of dicom images of the same size,
+      or a directory containing such images. In the latter case, all the
+      DICOM images in the directory will be read.
+
+    Returns a tuple of:
+
+    - `pixar`: a 3D array with the pixel data of all the images. The first
+      axis is the `z` value, the last the `x`.
+    - `scale`: a (3,) array with the scaling factors, in order (x,y,z).
+    """
+    if type(files) is str:
+        files = utils.listTree(fp,listdirs=False,includefiles="*.dcm")
+    # read and stack the images
+    pixar = np.dstack([ readDicom(f) for f in files ])
+    scale = _dicom_spacing
+    return pixar,scale
+
 
 # End

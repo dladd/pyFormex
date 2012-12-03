@@ -489,7 +489,7 @@ def selectImage(extra_items=[]):
     """
     global image
     from gui.widgets import ImageView
-    from gui.imagearray import resizeImage
+    from plugins.imagearray import resizeImage
     
     # some default values
     filename = getcfg('datadir')+'/butterfly.png'

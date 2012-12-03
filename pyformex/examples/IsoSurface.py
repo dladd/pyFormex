@@ -37,12 +37,12 @@ _techniques = ['isosurface']
 from gui.draw import *
 from plugins import isosurface as sf
 import elements
-from gui.imagearray import image2numpy
+import plugins.imagearray as ia
 
     
 def loadImage(file,grey=True):
     """Load a grey image into a numpy array"""
-    im = image2numpy(file,order='RGB',indexed=False)
+    im = ia.image2numpy(file,order='RGB',indexed=False)
     if grey:
         # Do type conversion because auto conversion produces float64
         im = im.sum(axis=-1).astype(Float) / 3.
@@ -60,21 +60,39 @@ def run():
     clear()
     smooth()
 
-    ans = ask("This IsoSurface example can either reconstruct a surface from a series of 2D images, or it can use data generated from a function. Use which data?",["Cancel","Image files","Generated from function"])
-    if ans == "Image files":
+    options = ["Cancel","Image files","DICOM files","Generated from function"]
+    ans = ask("This IsoSurface example can either reconstruct a surface from a series of 2D images, or it can use data generated from a function. Use which data?",options)
+    ans = options.index(ans)
+
+    if ans == 0:
+        return
+
+    elif ans in [1,2]:
         fp = askDirname()
+        print(fp)
+        fp = askDirname(byfile=True)
+        print(fp)
+        return
         if not fp:
             return
 
         files = utils.listTree(fp,listdirs=False)
         print(files)
 
-        data = loadImages(files)
+        if ans == 1:
+            data = loadImages(files)
+            scale = ones(3)
+        else:
+            data,scale = ia.dicom2numpy(files)
+            print("Spacing: %s" % scale)
+            # normalize
+            dmin,dmax = data.min(),data.max()
+            data = (data-dmin).astype(float32)/(dmax-dmin) 
 
         # level at which the isosurface is computed
         isolevel = data.mean()
 
-    elif ans == "Generated from function":
+    else:
         # data space: create a grid to visualize
         nx,ny,nz = 10,8,6
         F = elements.Hex8.toFormex().rep([nx,ny,nz]).setProp(1)
@@ -86,11 +104,9 @@ def run():
 
         # level at which the isosurface is computed
         isolevel = 9
-        
-    else:
-        return
 
     print("IMAGE DATA: %s, %s" % (data.shape,data.dtype))
+    print("levels: min = %s, max = %s" % (data.min(),data.max()))
     print("isolevel: %s" % isolevel)
     
     # Compute the isosurface    

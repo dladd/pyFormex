@@ -1962,10 +1962,15 @@ class FileSelection(QtGui.QFileDialog):
     Default mode is to accept any filename. You can specify exist=True
     to accept only existing files. Or set exist=True and multi=True to
     accept multiple files.
-    If dir==True, a single existing directory is asked.
-    """
     
-    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False):
+    If dir==True, a single existing directory is asked. If dir is True, only
+    directories can be selected, else a single filename can be selected and
+    the directory it is in will be returned.
+    """
+
+    timeout = "accept()"
+    
+    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False,button=None):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
         if os.path.isfile(path):
@@ -1977,9 +1982,18 @@ class FileSelection(QtGui.QFileDialog):
             self.setFilter(pattern)
         else: # should be a list of patterns
             self.setFilters(pattern)
+        mode = QtGui.QFileDialog.AnyFile
         if dir:
-            mode = QtGui.QFileDialog.Directory
             caption = "Select a directory"
+            if dir is True:
+                mode = QtGui.QFileDialog.Directory
+            else:
+                mode = QtGui.QFileDialog.ExistingFile
+                self.setOption(QtGui.QFileDialog.DontUseNativeDialog,True)
+                self.l = self.findChild(QtGui.QListView,'listView')
+                self.l.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+                self.c = self.findChild(QtGui.QTreeView)
+                self.c.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         elif exist:
             if multi:
                 mode = QtGui.QFileDialog.ExistingFiles
@@ -1988,14 +2002,18 @@ class FileSelection(QtGui.QFileDialog):
                 mode = QtGui.QFileDialog.ExistingFile
                 caption = "Open existing file"
         else:
-            mode = QtGui.QFileDialog.AnyFile
             caption = "Save file as"
         self.setFileMode(mode)
         self.setWindowTitle(caption)
-        if exist:
-            self.setLabelText(QtGui.QFileDialog.Accept,'Open')
-        else:
-            self.setLabelText(QtGui.QFileDialog.Accept,'Save')
+        self.return_dir = bool(dir) and dir is not True
+        if button is None:
+            if self.fileMode() == QtGui.QFileDialog.Directory:
+                button = 'Select'
+            elif exist:
+                button = 'Open'
+            else:
+                button = 'Save'
+        self.setLabelText(QtGui.QFileDialog.Accept,button)
 ##         if self.sidebar:
 ##             urls = self.sidebarUrls()
 ##             for f in self.sidebar:
@@ -2004,12 +2022,12 @@ class FileSelection(QtGui.QFileDialog):
 ##         for p in self.sidebarUrls():
 ##             pf.message(p.toString())
 
-    timeout = "accept()"
 
     def show(self,timeout=None,timeoutfunc=None,modal=False):
         self.setModal(modal)
         QtGui.QFileDialog.show(self)
         addTimeOut(self,timeout,timeoutfunc)
+
         
     def getFilename(self,timeout=None):
         """Ask for a filename by user interaction.
@@ -2019,14 +2037,18 @@ class FileSelection(QtGui.QFileDialog):
         """
         self.show(timeout,modal=True)
         self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            files = map(str,self.selectedFiles())
-            if self.fileMode() == QtGui.QFileDialog.ExistingFiles:
-                return files
-            else:
-                return files[0]
-        else:
+        if self.result() != QtGui.QDialog.Accepted:
+            # user canceled
             return None
+        
+        ret = map(str,self.selectedFiles())
+        if self.fileMode() != QtGui.QFileDialog.ExistingFiles:
+            # not multiple selection
+            ret = ret[0]
+#            if self.return_dir:
+#                # requested directory but have file
+#                ret = os.path.dirname(ret)
+        return ret 
 
 
 class ProjectSelection(FileSelection):

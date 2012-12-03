@@ -381,7 +381,7 @@ def askNewFilename(cur=None,filter="All files (*.*)"):
     return askFilename(cur=cur,filter=filter,exist=False,multi=False)
 
 
-def askDirname(path=None,change=True):
+def askDirname(path=None,change=True,byfile=False):
     """Interactively select a directory and change the current workdir.
 
     The user is asked to select a directory through the standard file
@@ -395,7 +395,11 @@ def askDirname(path=None,change=True):
         path = pf.cfg['workdir']
     if not os.path.isdir(path):
         path = os.path.dirname(path)
-    fn = widgets.FileSelection(path,'*',dir=True).getFilename()
+    if byfile:
+        dirmode = 'auto'
+    else:
+        dirmode = True
+    fn = widgets.FileSelection(path,'*',dir=dirmode).getFilename()
     if fn and change:
         chdir(fn)
     pf.GUI.update()
@@ -962,7 +966,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     See also :func:`drawImage`.
     """
     pf.GUI.setBusy()
-    from gui.imagearray import image2glcolor,resizeImage
+    from plugins.imagearray import image2glcolor,resizeImage
     
     # Create the colors
     image = resizeImage(image,nx,ny)
@@ -1012,7 +1016,7 @@ def drawImage(image,w=0,h=0,x=-1,y=-1,color=white,ontop=False):
     fills the background. 
     """
     utils.warn("warn_drawImage_changed")
-    from gui.imagearray import image2numpy
+    from plugins.imagearray import image2numpy
     from gui.decors import Rectangle
     
     image = image2numpy(image,resize=(w,h),indexed=False)
