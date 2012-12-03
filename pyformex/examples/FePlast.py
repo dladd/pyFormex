@@ -110,6 +110,7 @@ def run():
     th = 10. # thickness of the plate (mm)
     L2,B2 = L/2, B/2  # dimensions of the quarter plate
     nl,nb = 10,16     # number of elements along length, width
+    nl,nb = 2,2     # number of elements along length, width
     D = 20.
     r = D/2
     e0 = 0.3
@@ -118,6 +119,7 @@ def run():
     res = askItems([
         _I('geometry',choices=['Rectangle','Square with hole'],text='Plate geometry'),
         _I('material',choices=['Elastic','Plastic'],text='Material model'),
+        _I('eltype',choices=['quad4','quad8','hex8','hex20'],text='Element type'),
         _I('interpolation',choices=['Linear','Quadratic'],text='Degree of interpolation'),
         _I('format',choices=['Calculix','Abaqus','None'],text='FEA input format'),
         ])
@@ -131,6 +133,11 @@ def run():
     else:
         plate = rectangle_with_hole(L2,B2,r,nl,nb,e0)
 
+
+    if res['eltype'].startswith('hex'):
+        plate = plate.extrude(1,step=1.0,dir=2)
+
+    plate = plate.convert(res['eltype'])
 
     draw(plate)
 
@@ -147,7 +154,7 @@ def run():
     # for the steel
     steel = {
         'name': 'steel',
-        'young_modulus': 207000,
+        'young_modulus': 207000e-6,
         'poisson_ratio': 0.3,
         'density': 7.85e-9,
         }
@@ -266,13 +273,13 @@ def run():
         data.write(jobname=fn,group_by_group=True)
 
         if ack('Run ccx on the created file?'):
+            chdir(fn)
             job = os.path.basename(fn)[:-4]
             sta,out = utils.runCommand("ccx -i %s" % job)
             print(out)
 
             if ack('Create the result database?'):
-                from plugins.ccxdat import createResultDB
-                DB = createResultDB(FEM)
+                DB = ccxdat.createResultDB(FEM)
                 ngp = 8
                 fn = utils.changeExt(fn,'.dat')
                 ccxdat.readResults(fn,DB,DB.nnodes,DB.nelems,ngp)

@@ -379,7 +379,7 @@ edge_load = {'x':0., 'y':0.}
 
 def setELoad():
     """Pick the edges with load condition."""
-    global edge_load
+    global edge_load,nsteps,step
     if model is None:
         warn()
         return

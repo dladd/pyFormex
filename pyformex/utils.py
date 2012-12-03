@@ -597,6 +597,7 @@ def all_image_extensions():
 
 file_description = {
     'all': 'All files (*)',
+    'ccx': 'CalCuliX files (*.dat *.inp)',
     'dxf': 'AutoCAD .dxf files (*.dxf)',
     'dxfall': 'AutoCAD .dxf or converted(*.dxf *.dxftext)',
     'dxftext': 'Converted AutoCAD files (*.dxftext)',
@@ -604,7 +605,7 @@ file_description = {
     'gts': 'GTS files (*.gts)',
     'icon': 'Icons (*.xpm)',
     'img': 'Images (*.png *.jpg *.eps *.gif *.bmp)',
-    'inp': 'Abaqus input files (*.inp)',
+    'inp': 'Abaqus or CalCuliX input files (*.inp)',
     'neu': 'Gambit Neutral files (*.neu)',
     'off': 'OFF files (*.off)',
     'pgf': 'pyFormex geometry files (*.pgf)',

@@ -138,9 +138,10 @@ def scaledJacobian(self, scaled=True):
 
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
-
+## it does not work (anymore) in many cases
+## it makes more sense to just convert to TriSurface and take area
 def areas(self):
-    """area of elements
+    """_area of elements
 
     For surface element the faces' area is returned.
     For volume elements the sum of the faces'areas is returned.
@@ -173,7 +174,7 @@ def areas(self):
 
 
 def area(self):
-    """Return the total area of the Mesh.
+    """_Return the total area of the Mesh.
 
     For a Mesh with dimensionality 2, the total area of the Mesh is returned.
     For a Mesh with dimensionality 3, the total area of all the element faces

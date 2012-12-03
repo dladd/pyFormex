@@ -68,7 +68,7 @@ class DoubleHelixStent(object):
         D = De - 2*d - ds
         r = 0.5*D
         dz = 0.5*(ds+d)
-        p = math.pi*D*tand(be)
+        p = pi*D*tand(be)
         nx = int(nx)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         # a single bumped strut, oriented along the x-axis

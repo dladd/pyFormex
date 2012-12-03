@@ -175,6 +175,8 @@ def runLocalProcessor(filename='',processor='abaqus'):
     """Run a black box job locally.
 
     The black box job is a command run on an input file.
+    If a filename is specified and is not an absolute path name,
+    it is relative to the current directory.
     """
     if not filename:
         filename = askFilename(pf.cfg['workdir'],filter="Abaqus input files (*.inp)",exist=True)
@@ -182,6 +184,8 @@ def runLocalProcessor(filename='',processor='abaqus'):
     if filename:
         jobname = os.path.basename(filename)[:-4]
         dirname = os.path.dirname(filename)
+        if dirname == '':
+            dirname = '.'
         cmd = pf.cfg['jobs/cmd_%s' % processor]
         cmd = cmd.replace('$F',jobname)
         cmd = cmd.replace('$C',cpus)

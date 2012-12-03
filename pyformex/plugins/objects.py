@@ -392,6 +392,25 @@ class DrawableObjects(Objects):
             del self._annotations[f]
 
 
+    def editAnnotations(self,ontop=None):
+        """Edit the annotation properties
+
+        Currently only changes the ontop attribute for all drawn
+        annotations. Values: True, False or '' (toggle).
+        Other values have no effect.
+        
+        """
+        for f in self._annotations.values():
+            if ontop in [ True, False, '' ]:
+                if not isinstance(f,list):
+                   f = [f] 
+                for a in f:
+                    if ontop == '':
+                        ontop = not a.ontop
+                    print(a,ontop)
+                    a.ontop = ontop
+
+
     def hasAnnotation(self,f):
         """Return the status of annotation f"""
         return f in self.annotations
@@ -420,7 +439,7 @@ class DrawableObjects(Objects):
         self.toggleAnnotation(draw_nodes,onoff)
     def toggleBbox(self,onoff=None):
         self.toggleAnnotation(draw_bbox,onoff)
-
+        
 
     def setProp(self,prop=None):
         """Set the property of the current selection.
@@ -458,6 +477,8 @@ class DrawableObjects(Objects):
                     o.prop=None
             self.draw()
 
+
+    
 
 if __name__ == "draw":
     # If executed as a pyformex script

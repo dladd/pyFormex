@@ -117,7 +117,10 @@ def createResultDB(model):
     
 
 def addFeResult(DB,step,time,result):
-    """Add an FeResult for a time step to the result DB"""
+    """Add an FeResult for a time step to the result DB
+
+    This is currently 2D only
+    """
     print("Storing result for step %s, time %s" % (step,time))
     DB.Increment(step,0)
     DB.R['TIME'] = time
@@ -125,16 +128,19 @@ def addFeResult(DB,step,time,result):
         DB.datasize['U'] = result['displ'].shape[1]
         DB.R['U'] = result['displ']
     if 'stres' in result:
-        stress = result['stres']
-        # CALCULIX HAS NO 2D: keep only half og GP's
-        ngp = stress.shape[1]/2
-        stress = stress[:,:ngp,:]
-        print("Reduced stresses: %s" % str(stress.shape))
-        mesh = Mesh(DB.nodes,DB.elems[0],eltype='quad4')
-        gprule = [2,2]
-        stress = computeAveragedNodalStresses(mesh,stress,gprule)
-        DB.datasize['S'] = result['stres'].shape[1]
-        DB.R['S'] = stress
+        try:
+            stress = result['stres']
+            # CALCULIX HAS NO 2D: keep only half of GP's
+            ngp = stress.shape[1]/2
+            stress = stress[:,:ngp,:]
+            print("Reduced stresses: %s" % str(stress.shape))
+            mesh = Mesh(DB.nodes,DB.elems[0],eltype='quad4')
+            gprule = [2,2]
+            stress = computeAveragedNodalStresses(mesh,stress,gprule)
+            DB.datasize['S'] = result['stres'].shape[1]
+            DB.R['S'] = stress
+        except:
+            print("Error importing stresses")
     return DB
 
 

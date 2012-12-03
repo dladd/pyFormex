@@ -136,7 +136,7 @@ def readInpFile(filename):
     primarily at Calculix). But also many simple meshes from Abaqus can
     already be read.
 
-    Returns an fe.Model instance.
+    Returns an dict.
     """
     from plugins import ccxinp,fe
     ccxinp.skip_unknown_eltype = True
@@ -155,6 +155,7 @@ def readInpFile(filename):
                 print("Orig els %s" % e[1])
                 print("Trl els %s" % nodpos[e[1]])
             elems = [ Connectivity(nodpos[e],eltype=t) for (t,e) in part['elems'] ]
+            print('ELEM TYPES: %s' % [e.eltype for e in elems])
             fem[part['name']] = fe.Model(coords,elems)
         except:
             print("Skipping part %s" % part['name'])

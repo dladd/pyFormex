@@ -587,6 +587,49 @@ def selectDB(db=None):
     return db
 
     
+def importCalculix(fn=None):
+    """Import a CalculiX results file and select it as the current results.
+
+    CalculiX result files are the .dat files resulting from a run of the
+    ccx program with an .inp file as input. This function will need both
+    files and supposes that the names are the same except for the extension.
+    
+    If no file name is specified, the user is asked to select one (either the
+    .inp or .dat file), will then read both the mesh and corresponding results
+    files, and store the results in a FeResult instance, which will be set as
+    the current results database for the postprocessing menu.
+    """
+    from plugins import ccxdat
+    from fileread import readInpFile
+    #from plugins.fe import Model
+    if fn is None:
+        types = [ utils.fileDescription('ccx') ]
+        fn = askFilename(pf.cfg['workdir'],types)
+    if fn:
+        chdir(fn)
+        if fn.endswith('.inp'):
+            meshfile = fn
+            resfile = utils.changeExt(fn,'dat')
+        else:
+            resfile = fn
+            meshfile = utils.changeExt(fn,'inp')
+
+        parts = readInpFile(meshfile)
+        print(type(parts))
+        print(parts.keys())
+        meshes = parts.values()[0]
+        print(type(meshes))
+        #fem = Model(meshes=meshes,fuse=False)
+        DB = ccxdat.createResultDB(meshes)
+        ngp = 8
+        ccxdat.readResults(resfile,DB,DB.nnodes,DB.nelems,ngp)
+        DB.printSteps()
+        name = 'FeResult-%s' % meshfile[:-4]
+        export({name:DB})
+        selection.set([name])
+        selectDB(DB)
+
+    
 def importFlavia(fn=None):
     """Import a flavia file and select it as the current results.
 
@@ -751,6 +794,7 @@ def show_results(data):
                 val = norm2(val)
     if val is not None:
         txt += result_types.values()[resindex]
+    print("RESULT ELTYPE: %s" % [e.eltype for e in elems])
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime,symmetric_scale)
     return val
 
@@ -893,6 +937,7 @@ def create_menu():
     MenuData = [
 #        ("&Translate Abaqus .fil to FeResult database",P.postABQ),
         ("&Read FeResult Database",importDB),
+        ("&Read CalculiX results",importCalculix),
         ("&Read Flavia Database",importFlavia),
         ("&Select FeResult Data",selectDB),
 #        ("&Forget FeResult Data",P.selection.forget),

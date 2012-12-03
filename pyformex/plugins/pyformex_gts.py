@@ -182,7 +182,8 @@ def inside(self,pts):
     from formex import Formex
     if not isinstance(pts,Formex):
         pts = Formex(pts)
-    pts = Formex(pts).points()
+    pts = Formex(pts)#.asPoints()
+    print(type(pts))
 
     # determine bbox of common space of surface and points
     bb = bboxIntersection(self,pts)

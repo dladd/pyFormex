@@ -149,8 +149,9 @@ def readGeometry(filename,filetype=None):
         file format. It can store multiple parts of different type, together
         with their name.
     'surface': a global filetype for any of the following surface formats:
-        'stl', 'gts', 'off',
-    'stl': 
+        'stl', 'gts', 'off', 'neu'
+    'inp': Abaqus and CalculiX input format
+    'tetgen':
     """
     pf.GUI.setBusy(True)
     res = {}
@@ -1008,6 +1009,11 @@ _menu = 'Geometry'
 def loadDxfMenu():
     pass
 
+
+def toggleNumbersOntop():
+    selection.editAnnotations(ontop='')
+    
+
 def create_menu():
     """Create the plugin menu."""
     from dxf_menu import importDxf
@@ -1058,6 +1064,7 @@ def create_menu():
             ("&Node Marks",selection.toggleNodes,dict(checkable=True,checked=selection.hasNodeMarks())),
             ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
             ('&Toggle Shrink Mode',shrink,dict(checkable=True)),
+            ("&Toggle Numbers On Top",toggleNumbersOntop),
             ]),
         ("---",None),
         ("&Convert",[
