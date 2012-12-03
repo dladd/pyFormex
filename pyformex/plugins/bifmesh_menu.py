@@ -35,13 +35,17 @@ from gui.draw import *
 import pyformex as pf
 import plugins.vascularsweepingmesher as vsm
 import plugins.geometry_menu as gm
+import plugins.surface_menu as sm
+import plugins.draw2d as d2
 
 from plugins.fe import mergedModel
 from connectivity import connectedLineElems
 from plugins.trisurface import fillBorder
-from plugins.draw2d import *
+from plugins.curve import *
 from gui import menu
 from utils import runCommand
+import olist
+
 
 import sys
 
@@ -56,23 +60,9 @@ _surface = None
 
 
 def importGeometry():
-    #gm.importSurface()
-    from gui.widgets import FileSelection
-    f=FileSelection()
-    f.show()
-    fn=f.getFilename()
-    fext = fn[-4:]
-    if fext=='.pgf':    
-        surface=readGeomFile(fn).values()[0]
-    elif (fext=='.stl') or (fext=='.off') or (fext=='.gts'):
-        surface=TriSurface.read(fn)
-    else:
-        Error('wrong file extension')
-    export({'surface':surface})
-    drawSurface()
-    view('front')
-    zoomAll()
-    perspective(False)
+    gm.importSurface()
+    if len(gm.selection.names) > 0:
+        export({'surface':named(gm.selection.names[0])})
 
 
 def positionGeometry():
@@ -82,9 +72,11 @@ def positionGeometry():
 def inputCentralPoint():
     clear()
     view('front')
+    smooth()
+    #transparent()
+    perspective(False)
     drawSurface()
-    transparent()
-    obj = drawObject2D('point',npoints=1,zvalue=0.)
+    obj = d2.drawObject2D('point',npoints=1,zvalue=0.)
     obj.specular = 0.
     if obj is not None:
         export({'central_point':obj})
@@ -830,27 +822,20 @@ def inputControlLines():
     BA = []
     perspective(False)
     for i in range(6):
-        pf.message("""..
-
-** Input Branch %s **
-""" % i)
+        pf.message("Input Branch %s" % i)
         if i % 2 == 0:
             coords = None
         else:
             coords = branch[i-1].coords[-1:]
 
-        # draw curve
-        obj_params.update([('curl',0.),('closed',False)])
-        points = drawPoints2D('curve',npoints=-1,coords=coords,zvalue=0.)
-        obj = PolyLine(points)
-        
-        ###why this line does not work anymore?
-        #obj = drawObject2D(mode='polyline',npoints=-1,coords=coords,zvalue=0.)
+        obj = d2.drawObject2D(mode='polyline',npoints=-1,coords=coords,zvalue=0.)
 
         obj.specular = 0.
-        #pf.canvas.removeHighlights()
+        pf.canvas.removeHighlight()
+        ## WHY is bbox='last' or zoomAll needed here
         if obj is not None:
             BA.append(draw(obj,color='blue',flat=True))
+            zoomAll()
             branch.append(obj)
         else:
             break
@@ -858,6 +843,7 @@ def inputControlLines():
     if len(branch) == 6:
         undraw(BA)
         createBranches(branch)
+        zoomAll()
     else:
         warning("Incorrect definition of helper lines")
 
@@ -883,7 +869,7 @@ def drawControlLines():
 def drawCentralPoint():
     cp = named('central_point')
     print("Central Point = %s" % cp)
-    draw(cp,bbox='last',color='black', marksize=8,flat=True, alpha=1)
+    draw(cp,bbox='last',color='black', marksize=8,flat=True, alpha=1, ontop=True)
 
 def drawCenterLines():
     cl = named('center_lines')
@@ -1061,7 +1047,7 @@ def resetData():
     pass
 
 
-def reset():
+def resetDraw():
     clear()
     smooth()
     transparent(False)
@@ -1069,10 +1055,6 @@ def reset():
     setDrawOptions({'bbox':'last'})
     linewidth(2)
 
-
-def deleteAll():
-    resetData()
-    reset()
 
 _menu_ = 'BifMesh'
 
@@ -1143,7 +1125,7 @@ def reload_menu():
 def run():
     resetGUI()
     resetData()
-    reset()
+    resetDraw()
     reload_menu()
 
 if __name__ == "draw":
