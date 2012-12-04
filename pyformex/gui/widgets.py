@@ -1963,13 +1963,16 @@ class FileSelection(QtGui.QFileDialog):
     to accept only existing files. Or set exist=True and multi=True to
     accept multiple files.
     
-    If dir==True, a single existing directory is asked. If dir is True, only
-    directories can be selected, else a single filename can be selected and
-    the directory it is in will be returned.
+    If dir is True, only directories can be selected. If dir evaluates to
+    True, but is not the value True, either a directory or a filename can be
+    selected.
     """
 
     timeout = "accept()"
-    
+
+    def accept_any(self):
+        self.done(QtGui.QDialog.Accepted)
+        
     def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False,button=None):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
@@ -1982,7 +1985,6 @@ class FileSelection(QtGui.QFileDialog):
             self.setFilter(pattern)
         else: # should be a list of patterns
             self.setFilters(pattern)
-        mode = QtGui.QFileDialog.AnyFile
         if dir:
             caption = "Select a directory"
             if dir is True:
@@ -1990,10 +1992,13 @@ class FileSelection(QtGui.QFileDialog):
             else:
                 mode = QtGui.QFileDialog.ExistingFile
                 self.setOption(QtGui.QFileDialog.DontUseNativeDialog,True)
-                self.l = self.findChild(QtGui.QListView,'listView')
-                self.l.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
-                self.c = self.findChild(QtGui.QTreeView)
-                self.c.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+                l = self.findChild(QtGui.QListView,'listView')
+                l.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+                c = self.findChild(QtGui.QTreeView)
+                c.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+                b = self.findChild(QtGui.QPushButton)
+                b.clicked.disconnect()
+                b.connect(b,QtCore.SIGNAL("clicked()"),self.accept_any)
         elif exist:
             if multi:
                 mode = QtGui.QFileDialog.ExistingFiles
@@ -2005,16 +2010,16 @@ class FileSelection(QtGui.QFileDialog):
             caption = "Save file as"
         self.setFileMode(mode)
         self.setWindowTitle(caption)
-        self.return_dir = bool(dir) and dir is not True
+        #self.return_dir = bool(dir) and dir is not True
         if button is None:
-            if self.fileMode() == QtGui.QFileDialog.Directory:
-                button = 'Select'
+            if dir:
+                button = '&Select'
             elif exist:
-                button = 'Open'
+                button = '&Open'
             else:
-                button = 'Save'
+                button = '&Save'
         self.setLabelText(QtGui.QFileDialog.Accept,button)
-##         if self.sidebar:
+#         if self.sidebar:
 ##             urls = self.sidebarUrls()
 ##             for f in self.sidebar:
 ##                 urls.append(QtCore.QUrl.fromLocalFile(f))
@@ -2045,9 +2050,9 @@ class FileSelection(QtGui.QFileDialog):
         if self.fileMode() != QtGui.QFileDialog.ExistingFiles:
             # not multiple selection
             ret = ret[0]
-#            if self.return_dir:
-#                # requested directory but have file
-#                ret = os.path.dirname(ret)
+            ## if self.return_dir:
+            ##     # requested directory but have file
+            ##     ret = os.path.dirname(ret)
         return ret 
 
 

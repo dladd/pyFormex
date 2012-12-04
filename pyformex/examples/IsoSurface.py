@@ -68,11 +68,7 @@ def run():
         return
 
     elif ans in [1,2]:
-        fp = askDirname()
-        print(fp)
         fp = askDirname(byfile=True)
-        print(fp)
-        return
         if not fp:
             return
 

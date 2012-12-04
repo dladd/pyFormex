@@ -400,10 +400,12 @@ def askDirname(path=None,change=True,byfile=False):
     else:
         dirmode = True
     fn = widgets.FileSelection(path,'*',dir=dirmode).getFilename()
-    if fn and change:
-        chdir(fn)
+    if fn:
+        if not os.path.isdir(fn):
+            fn = os.path.dirname(fn)
+        if change:
+            chdir(fn)
     pf.GUI.update()
-    #pf.canvas.update()
     pf.app.processEvents()
     return fn
 
