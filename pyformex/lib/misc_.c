@@ -601,6 +601,70 @@ static PyObject * averageDirectionIndexed(PyObject *dummy, PyObject *args)
 }
 
 
+/**************************************************** isosurface ****/
+/* Create an isosurface through data at given level */
+/* args: data, level
+   data  : (nx,ny,nz) shaped array of data values at points with
+           coordinates equal to their indices. This defines a 3D volume
+           [0,nx-1], [0,ny-1], [0,nz-1]
+   level : data value at which the isosurface is to be constructed
+
+   Returns an (ntr,3,3) array defining the triangles of the isosurface.
+   The result may be empty (if level is outside the data range).
+*/
+
+int create_isosurface(float *data, float level)
+{
+  int i, itri=0;
+  for (i=0; i<9; ++i)
+    data[i] = 0.0;
+  itri++;
+  return itri;
+}
+
+
+static PyObject * isosurface(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL;
+  PyObject *arr1=NULL;
+  float *data;
+  float level;
+  if (!PyArg_ParseTuple(args, "Of", &arg1, &level)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_INOUT_ARRAY);
+  if (arr1 == NULL) return NULL;
+
+  npy_intp * dims;
+  int nx,ny,nz;
+  dims = PyArray_DIMS(arg1);
+  nx = dims[0];
+  ny = dims[1];
+  nz = dims[2];
+  data = (float *)PyArray_DATA(arr1);
+ 
+  /* allocate memory for triangles (nitial guess of size) */
+
+  int ntri = 2*nx*ny*nz;
+  float *triangles = (float*) malloc(ntri*3*3*sizeof(float));
+
+  /* create triangles */
+
+  ntri = create_isosurface(data,level);
+
+  /* create return array */
+  npy_intp dim[3];
+  dim[0] = ntri;
+  dim[1] = 3;
+  dim[2] = 3;
+  PyObject *ret = PyArray_SimpleNew(3,dim, NPY_FLOAT);
+  float *out = (float *)PyArray_DATA(ret);
+  memcpy(out,triangles,ntri*3*3*sizeof(float));
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  return ret;
+}
+
+
 /********************************************************/
 /* The methods defined in this module */
 static PyMethodDef _methods_[] = {
@@ -608,6 +672,7 @@ static PyMethodDef _methods_[] = {
     {"nodalSum", nodalSum, METH_VARARGS, "Nodal sum."},
     {"averageDirection", averageDirection, METH_VARARGS, "Average directions."},
     {"averageDirectionIndexed", averageDirectionIndexed, METH_VARARGS, "Average directions."},
+    {"isosurface", isosurface, METH_VARARGS, "Marching cubes."},
     {"tofile_float32", tofile_float32, METH_VARARGS, "Write float32 array to file."},
     {"tofile_int32", tofile_int32, METH_VARARGS, "Write int32 array to file."},
     {"tofile_ifloat32", tofile_ifloat32, METH_VARARGS, "Write indexed float32 array to file."},

@@ -379,7 +379,7 @@ tritable = (
     )
 
 def polygoniseCube(pos,val,iso):
-    """Polygonise a singl cube
+    """Polygonise a single cube
 
     """
     pos = pos.astype(float32)
@@ -471,7 +471,7 @@ def isosurface(data,level):
     - `data`: (nx,ny,nz) shaped array of data values at points with
       coordinates equal to their indices. This defines a 3D volume
       [0,nx-1], [0,ny-1], [0,nz-1]
-    - `level`: data value at which the isosurface is top be constructed
+    - `level`: data value at which the isosurface is to be constructed
 
     Returns an (ntr,3,3) array defining the triangles of the isosurface.
     The result may be empty (if level is outside the data range).

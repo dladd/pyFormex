@@ -86,7 +86,12 @@ def run():
             data = (data-dmin).astype(float32)/(dmax-dmin) 
 
         # level at which the isosurface is computed
-        isolevel = data.mean()
+        res = askItems([('isolevel',0.5)])
+        if not res:
+            return
+        isolevel = res['isolevel']
+        if isolevel <= 0.0 or isolevel >= 1.0:
+            isolevel = data.mean()
 
     else:
         # data space: create a grid to visualize
