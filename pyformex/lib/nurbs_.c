@@ -275,7 +275,8 @@ static int find_last_occurrence(double *U, double u)
 /* Find multiplicity of u in U, where r is the last occurrence of u in U*/
 static int find_multiplicity(double *U, double u, int r)
 {
-  int i = r;
+  int i;
+  i = r;
   while (U[i] == u) --i;
   return r-i;
 }
@@ -669,7 +670,13 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
   /* First bezier segment */
   for (i = 0; i < (p+1)*nd; i++) newP[i] = P[i];
 
-  // Loop through knot vector */
+  // Loop through knot vector
+
+  // INITIALIZE r in case it would not happen below.
+  // To AVOID COMPILER WARNING
+  // we should check THIS WITH THE nURBS BOOK 
+  r = 0;
+
   while (b < m) {
     i = b;
     while (b < m && U[b] == U[b+1]) b++;
@@ -703,6 +710,7 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
 	  }
       }
     }
+    /* NOTE: if mult >= p, r is not initialized */
     /* Bezier segment completed */
     nb += p;
     if (b < m) {

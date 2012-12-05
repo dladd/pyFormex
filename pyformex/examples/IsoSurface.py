@@ -101,27 +101,28 @@ def run():
 
         # function to generate data: the distance from the origin
         dist = lambda x,y,z: sqrt(x*x+y*y+z*z)
-        data = fromfunction(dist,(nx+1,ny+1,nz+1))
+        data = fromfunction(dist,(nz+1,ny+1,nx+1))
+        scale = ones(3)
 
         # level at which the isosurface is computed
-        isolevel = 9
+        isolevel = 0.5*data.max()
 
     print("IMAGE DATA: %s, %s" % (data.shape,data.dtype))
     print("levels: min = %s, max = %s" % (data.min(),data.max()))
     print("isolevel: %s" % isolevel)
+
+    fast = True
     
     # Compute the isosurface    
+    from timer import Timer
     pf.GUI.setBusy()
     tri = sf.isosurface(data,isolevel)
-    pf.GUI.setBusy(False)
-
+    print("Got %s triangles" % len(tri))
     if len(tri) > 0:
-        S = TriSurface(tri)
+        S = TriSurface(tri).scale(scale)
         draw(S)
         export({'isosurf':S})
-
-    else:
-        print("No surface found")
+    pf.GUI.setBusy(False)
 
 
 # The following is to make it work as a script

@@ -51,7 +51,7 @@ class Plane(object):
             P = pts.centroid()
             n = cross(pts[1]-pts[0],pts[2]-pts[0])
         else:
-            raise ValueError,"point(s) does not have correct shape"
+            raise ValueError,"points has incorrect shape (%s)" % str(pts.shape)
         size = asarray(size)
         s = Coords([insert(size[0],0,0.,-1),insert(size[1],0,0.,-1)])
         self.P = P
