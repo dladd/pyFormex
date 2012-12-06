@@ -2007,8 +2007,10 @@ class FileSelection(QtGui.QFileDialog):
                 mode = QtGui.QFileDialog.ExistingFile
                 caption = "Open existing file"
         else:
+            mode = QtGui.QFileDialog.AnyFile
             caption = "Save file as"
-        self.setFileMode(mode)
+        if mode:
+            self.setFileMode(mode)
         self.setWindowTitle(caption)
         #self.return_dir = bool(dir) and dir is not True
         if button is None:
