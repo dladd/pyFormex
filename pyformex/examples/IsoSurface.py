@@ -56,6 +56,44 @@ def loadImages(files,glmode=True):
     return images
 
 
+def worker(input, output):
+    for func, args in iter(input.get, 'STOP'):
+        result = func(*args)
+        output.put(result)
+
+
+def multi_iso(data,level):
+    """Perform parallel isosurface"""
+    from multiprocessing import Process, Queue, cpu_count
+    nproc = cpu_count()
+    ndata = (data.shape[0]+(nproc-1)) // nproc
+    datablocks = [ data[i*ndata:min((i+1)*ndata+1,data.shape[0])] for i in range(nproc) ]
+    tasks = [(sf.isosurface,(d,level)) for d in datablocks]
+
+    # Create queues
+    task_queue = Queue()
+    done_queue = Queue()
+
+    # Submit tasks
+    for task in tasks:
+        task_queue.put(task)
+
+    # Start worker processes
+    for i in range(nproc):
+        Process(target=worker, args=(task_queue, done_queue)).start()
+
+    # Get results
+    res = [ done_queue.get() for i in range(len(tasks)) ]
+    # Tell child processes to stop
+    for i in range(nproc):
+        task_queue.put('STOP')
+
+    # Return result
+    tri = concatenate(res,axis=0)
+    return tri
+
+
+
 def run():
     clear()
     smooth()
@@ -80,6 +118,7 @@ def run():
             scale = ones(3)
         else:
             data,scale = ia.dicom2numpy(files)
+            scale = scale[-1:0:-1]
             print("Spacing: %s" % scale)
             # normalize
             dmin,dmax = data.min(),data.max()
@@ -89,15 +128,18 @@ def run():
         res = askItems([('isolevel',0.5)])
         if not res:
             return
-        isolevel = res['isolevel']
-        if isolevel <= 0.0 or isolevel >= 1.0:
-            isolevel = data.mean()
+        level = res['isolevel']
+        if level <= 0.0 or level >= 1.0:
+            level = data.mean()
 
     else:
         # data space: create a grid to visualize
-        nx,ny,nz = 10,8,6
-        F = elements.Hex8.toFormex().rep([nx,ny,nz]).setProp(1)
-        draw(F,mode='wireframe')
+        if ack("Large model (takes some time)?"):
+            nx,ny,nz = 100,150,200 # for time testing
+        else:
+            nx,ny,nz = 6,8,10
+        F = elements.Hex8.toFormex().rep([nz,ny,nx]).setProp(1)
+        #draw(F,mode='wireframe')
 
         # function to generate data: the distance from the origin
         dist = lambda x,y,z: sqrt(x*x+y*y+z*z)
@@ -105,25 +147,34 @@ def run():
         scale = ones(3)
 
         # level at which the isosurface is computed
-        isolevel = 0.5*data.max()
+        level = 0.5*data.max()
 
     print("IMAGE DATA: %s, %s" % (data.shape,data.dtype))
     print("levels: min = %s, max = %s" % (data.min(),data.max()))
-    print("isolevel: %s" % isolevel)
+    print("isolevel: %s" % level)
 
     fast = True
     
     # Compute the isosurface    
     from timer import Timer
     pf.GUI.setBusy()
-    tri = sf.isosurface(data,isolevel)
-    print("Got %s triangles" % len(tri))
+    timer = Timer()
+    tri = sf.isosurface(data,level)
+    sec = timer.seconds()
+    print("Single process got %s triangles in %s seconds" % (len(tri),sec))
     if len(tri) > 0:
-        S = TriSurface(tri).scale(scale)
+        S = TriSurface(tri).swapAxes(0,2).scale(scale)
         draw(S)
         export({'isosurf':S})
     pf.GUI.setBusy(False)
 
+    timer = Timer()
+    multi_iso(data,level)
+    sec = timer.seconds()
+    print("Multi process got %s triangles in %s seconds" % (len(tri),sec))
+    if len(tri) > 0:
+        S1 = TriSurface(tri).swapAxes(0,2).scale(scale)
+        draw(S1,mode='wireframe',color=blue,ontop=True)
 
 # The following is to make it work as a script
 if __name__ == 'draw':
