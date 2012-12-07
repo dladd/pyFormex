@@ -56,44 +56,6 @@ def loadImages(files,glmode=True):
     return images
 
 
-def worker(input, output):
-    for func, args in iter(input.get, 'STOP'):
-        result = func(*args)
-        output.put(result)
-
-
-def multi_iso(data,level):
-    """Perform parallel isosurface"""
-    from multiprocessing import Process, Queue, cpu_count
-    nproc = cpu_count()
-    ndata = (data.shape[0]+(nproc-1)) // nproc
-    datablocks = [ data[i*ndata:min((i+1)*ndata+1,data.shape[0])] for i in range(nproc) ]
-    tasks = [(sf.isosurface,(d,level)) for d in datablocks]
-
-    # Create queues
-    task_queue = Queue()
-    done_queue = Queue()
-
-    # Submit tasks
-    for task in tasks:
-        task_queue.put(task)
-
-    # Start worker processes
-    for i in range(nproc):
-        Process(target=worker, args=(task_queue, done_queue)).start()
-
-    # Get results
-    res = [ done_queue.get() for i in range(len(tasks)) ]
-    # Tell child processes to stop
-    for i in range(nproc):
-        task_queue.put('STOP')
-
-    # Return result
-    tri = concatenate(res,axis=0)
-    return tri
-
-
-
 def run():
     clear()
     smooth()
@@ -118,7 +80,6 @@ def run():
             scale = ones(3)
         else:
             data,scale = ia.dicom2numpy(files)
-            scale = scale[-1:0:-1]
             print("Spacing: %s" % scale)
             # normalize
             dmin,dmax = data.min(),data.max()
@@ -161,20 +122,13 @@ def run():
     timer = Timer()
     tri = sf.isosurface(data,level)
     sec = timer.seconds()
-    print("Single process got %s triangles in %s seconds" % (len(tri),sec))
+    print("Got %s triangles in %s seconds" % (len(tri),sec))
     if len(tri) > 0:
-        S = TriSurface(tri).swapAxes(0,2).scale(scale)
+        S = TriSurface(tri).scale(scale[::-1])
         draw(S)
         export({'isosurf':S})
     pf.GUI.setBusy(False)
 
-    timer = Timer()
-    multi_iso(data,level)
-    sec = timer.seconds()
-    print("Multi process got %s triangles in %s seconds" % (len(tri),sec))
-    if len(tri) > 0:
-        S1 = TriSurface(tri).swapAxes(0,2).scale(scale)
-        draw(S1,mode='wireframe',color=blue,ontop=True)
 
 # The following is to make it work as a script
 if __name__ == 'draw':

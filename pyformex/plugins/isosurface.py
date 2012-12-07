@@ -32,23 +32,52 @@ http://paulbourke.net/geometry/polygonise/
    
 """
 from __future__ import print_function
-from numpy import float32
 
-def isosurface(data,level):
+import numpy as np
+from multi import multitask,cpu_count
+
+
+def isosurface(data,level,nproc=-1):
     """Create an isosurface through data at given level.
 
     - `data`: (nx,ny,nz) shaped array of data values at points with
       coordinates equal to their indices. This defines a 3D volume
       [0,nx-1], [0,ny-1], [0,nz-1]
     - `level`: data value at which the isosurface is to be constructed
+    - `nproc`: number of parallel processes to use. On multiprocessor machines
+      this may be used to speed up the processing. If <= 0 , the number of
+      processes will be set equal to the number of processors, to achieve
+      a maximal speedup.
 
     Returns an (ntr,3,3) array defining the triangles of the isosurface.
     The result may be empty (if level is outside the data range).
     """
-    from lib import misc
-    data = data.astype(float32)
-    level = float32(level)
-    return misc.isosurface(data,level)
+    if nproc < 1:
+        nproc = cpu_count()
+
+    if nproc == 1:
+        # Perform single process isosurface (accelerated)
+        from lib import misc
+        data = data.astype(np.float32)
+        level = np.float32(level)
+        tri = misc.isosurface(data,level)
+
+    else:
+        # Perform parallel isosurface
+        # 1. Split in blocks
+        ndata = (data.shape[0]+(nproc-1)) // nproc
+        datablocks = [ data[i*ndata:min((i+1)*ndata+1,data.shape[0])] for i in range(nproc) ]
+        # 2. Solve blocks independently
+        tasks = [(isosurface,(d,level,1)) for d in datablocks]
+        tri = multitask(tasks,nproc)
+        # 3. Shift and merge blocks
+        for i,t in enumerate(tri):
+            if i > 0:
+                t[:,:,2] += i*ndata
+        tri = np.concatenate(tri,axis=0)
+
+    return tri
+
 
 
 # End
