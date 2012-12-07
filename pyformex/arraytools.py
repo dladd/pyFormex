@@ -135,7 +135,7 @@ def sind(arg,angle_spec=Deg):
     For convenience, this can also be used with an angle in radians,
     by specifying `angle_spec=Rad`.
 
-    >>> print sind(30), sind(pi/6,Rad)
+    >>> print(sind(30), sind(pi/6,Rad))
     0.5 0.5
     """
     return sin(arg*angle_spec)
@@ -147,7 +147,7 @@ def cosd(arg,angle_spec=Deg):
     For convenience, this can also be used with an angle in radians,
     by specifying ``angle_spec=Rad``.
 
-    >>> print cosd(60), cosd(pi/3,Rad)
+    >>> print(cosd(60), cosd(pi/3,Rad))
     0.5 0.5
     """
     return cos(arg*angle_spec)
@@ -168,7 +168,7 @@ def arcsind(arg,angle_spec=Deg):
     By default, the angle is returned in Degrees.
     Specifying `angle_spec=Rad` will return the angle in radians.
 
-    >>> print arcsind(0.5), arcsind(1.0,Rad)
+    >>> print(arcsind(0.5), arcsind(1.0,Rad))
     30.0 1.57079632679
     """
     return arcsin(arg)/angle_spec
@@ -180,7 +180,7 @@ def arccosd(arg,angle_spec=Deg):
     By default, the angle is returned in Degrees.
     Specifying `angle_spec=Rad` will return the angle in radians.
 
-    >>> print arccosd(0.5), arccosd(-1.0,Rad)
+    >>> print(arccosd(0.5), arccosd(-1.0,Rad))
     60.0 3.14159265359
     """
     return arccos(arg)/angle_spec
@@ -192,7 +192,7 @@ def arctand(arg,angle_spec=Deg):
     By default, the angle is returned in Degrees.
     Specifying `angle_spec=Rad` will return the angle in radians.
 
-    >>> print arctand(1.0), arctand(-1.0,Rad)
+    >>> print(arctand(1.0), arctand(-1.0,Rad))
     45.0 -0.785398163397
     """
     return arctan(arg)/angle_spec
@@ -205,7 +205,7 @@ def arctand2(sin,cos,angle_spec=Deg):
     Specifying `angle_spec=Rad` will return the angle in radians.
     This returns an angle in the range ]-180,180].
 
-    >>> print arctand2(0.0,-1.0), arctand2(-sqrt(0.5),-sqrt(0.5),Rad)
+    >>> print(arctand2(0.0,-1.0), arctand2(-sqrt(0.5),-sqrt(0.5),Rad))
     180.0 -2.35619449019
     """
     return arctan2(sin,cos)/angle_spec
@@ -216,7 +216,7 @@ def niceLogSize(f):
 
     This returns the number of digits before the decimal point.
 
-    >>> print [ niceLogSize(a) for a in [1.3, 35679.23, 0.4, 0.00045676] ]
+    >>> print([ niceLogSize(a) for a in [1.3, 35679.23, 0.4, 0.00045676] ])
     [1, 5, 0, -3]
   
     """
@@ -260,7 +260,7 @@ def dotpr (A,B,axis=-1):
 
     >>> A = array( [[1.0, 1.0], [1.0,-1.0], [0.0, 5.0]] )
     >>> B = array( [[5.0, 3.0], [2.0, 3.0], [1.33,2.0]] )
-    >>> print dotpr(A,B)
+    >>> print(dotpr(A,B))
     [  8.  -1.  10.]
 
     """
@@ -347,7 +347,7 @@ def horner(a,u):
 
     Returns float(nu,nd), nd-dimensional values of the polynom.
 
-    >>> print horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0])
+    >>> print(horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0]))
     [[ 1.5  2.   2.5]
      [ 2.   3.   4. ]]
 
@@ -721,7 +721,7 @@ def reverseAxis(a,axis=-1):
     an indexing operation::
 
       >>> A = array([[1,2,3],[4,5,6]])
-      >>> print A[:,::-1]
+      >>> print(A[:,::-1])
       [[3 2 1]
        [6 5 4]]
       
@@ -757,7 +757,55 @@ def concat(al,axis=0):
         return concatenate([a for a in al if a.size > 0],axis=axis)
     else:
         return []
+
+
+def splitrange(n,nblk):
+    """Split the range of integers 0..n in nblk almost equal sized slices.
+
+    This divides the range of integer numbers 0..n in nblk slices of (almost)
+    equal size. Returns nblk+1 integers in the range 0..n.
+
+    Example:
     
+    >>> splitrange(7,3)
+    array([0, 2, 5, 7])
+    """
+    ndata = (arange(nblk+1) * n * 1.0 / nblk).round().astype(int)
+    return ndata
+
+
+def splitar(ar,nblk,close=False):
+    """Split an array in nblk subarrays along axis 0.
+
+    Splits the array ar along its first axis in nblk blocks of (almost)
+    equal size.
+
+    Returns a list of nblk arrays, unless the size of the array is smaller
+    than nblk, in which case a list with the original array is returned.
+
+    If close==True, the elements where the array is split occur in both
+    blocks delimited by the element.
+
+    Example:
+    
+    >>> splitar(arange(7),3)
+    [array([0, 1]), array([2, 3, 4]), array([5, 6])]
+    >>> splitar(arange(7),3,close=True)
+    [array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]
+    """
+    ar = asanyarray(ar)
+    na = ar.shape[0]
+    if close:
+        na -= 1
+    if nblk > na:
+        return [ar]
+
+    ndata = splitrange(na,3)
+    if close:
+        return [ ar[i:j+1] for i,j in zip(ndata[:-1],ndata[1:]) ]
+    else: 
+        return [ ar[i:j] for i,j in zip(ndata[:-1],ndata[1:]) ]
+     
 
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
@@ -1035,18 +1083,18 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     
       >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
       >>> uniq,ind,inv = unique(a,True,True)
-      >>> print uniq
+      >>> print(uniq)
       [1 2 3 4 5 6 7 8]
-      >>> print ind
+      >>> print(ind)
       [7 0 1 2 3 4 5 6]
-      >>> print inv
+      >>> print(inv)
       [1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]
       >>> uniq,ind,inv = uniqueOrdered(a,True,True)
-      >>> print uniq
+      >>> print(uniq)
       [1 2 3 4 5 6 7 8]
-      >>> print ind
+      >>> print(ind)
       [7 0 1 2 3 4 5 6]
-      >>> print inv
+      >>> print(inv)
       [1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]
 
     Notice the difference in the fourth element of the `ind` array.
@@ -1150,11 +1198,11 @@ def complement(index,n=-1):
       
     Example:
     
-      >>> print complement([0,5,2,6])
+      >>> print(complement([0,5,2,6]))
       [1 3 4]
-      >>> print complement([0,5,2,6],10)
+      >>> print(complement([0,5,2,6],10))
       [1 3 4 7 8 9]
-      >>> print complement([False,True,True,True],6)
+      >>> print(complement([False,True,True,True],6))
       [ True False False False  True  True]
     """
     index = asarray(index)
@@ -1488,7 +1536,7 @@ def groupArgmin(val,gid):
 
     >>> val = array([ 0.0, 1.0, 2.0, 3.0, 4.0, -5.0 ])
     >>> gid = array([ 2, 1, 1, 6, 6, 1 ])
-    >>> print groupArgmin(val,gid)
+    >>> print(groupArgmin(val,gid))
     (array([1, 2, 6]), array([5, 0, 3]))
     """
     ugid = unique(gid)
@@ -1661,14 +1709,14 @@ def histogram2(a,bins,range=None):
     Example:
 
     >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
-    >>> print hist
+    >>> print(hist)
     [2 2 2 1]
-    >>> for i in ind: print i
+    >>> for i in ind: print(i)
     [0 6]
     [1 4]
     [2 5]
     [3]
-    >>> print xbins
+    >>> print(xbins)
     [1 2 3 4 5]
 
     """
@@ -1701,13 +1749,13 @@ def movingView(a, size):
     Examples:
     
     >>> x=arange(10).reshape((5,2))
-    >>> print x
+    >>> print(x)
     [[0 1]
      [2 3]
      [4 5]
      [6 7]
      [8 9]]
-    >>> print movingView(x, 3)
+    >>> print(movingView(x, 3))
     [[[0 1]
       [2 3]
       [4 5]]
@@ -1722,7 +1770,7 @@ def movingView(a, size):
 
     Calculate rolling sum of first axis:
     
-    >>> print movingView(x, 3).sum(axis=0)
+    >>> print(movingView(x, 3).sum(axis=0))
     [[ 6  9]
      [12 15]
      [18 21]]
@@ -1765,11 +1813,11 @@ def movingAverage(a,n,m0=None,m1=None):
     Examples:
     
     >>> x=arange(10).reshape((5,2))
-    >>> print movingAverage(x,3)
+    >>> print(movingAverage(x,3))
     [[ 2.  3.]
      [ 4.  5.]
      [ 6.  7.]]
-    >>> print movingAverage(x,3,2)
+    >>> print(movingAverage(x,3,2))
     [[ 0.          1.        ]
      [ 0.66666667  1.66666667]
      [ 2.          3.        ]
