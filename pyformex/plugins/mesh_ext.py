@@ -136,41 +136,42 @@ def scaledJacobian(self, scaled=True):
         Jscaled = J/normvol
         return Jscaled.min(axis=1)
 
+# REMOVED in 0.9.0
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
 ## it does not work (anymore) in many cases
 ## it makes more sense to just convert to TriSurface and take area
-def areas(self):
-    """_area of elements
+## def areas(self):
+##     """_area of elements
 
-    For surface element the faces' area is returned.
-    For volume elements the sum of the faces'areas is returned.
+##     For surface element the faces' area is returned.
+##     For volume elements the sum of the faces'areas is returned.
 
-    """
+##     """
 
-    #In case of quadratic faces, the face's area should be 
-    #the area inside the polygon of face vertices or 
-    #the area of the equivalent linear face?
+##     #In case of quadratic faces, the face's area should be 
+##     #the area inside the polygon of face vertices or 
+##     #the area of the equivalent linear face?
 
-    ##this function would require some changes (here proposed inside the function as starting):
-    ##create a _default_surfacetype to create quad8 instead of hex8 ?maybe also a _default_volumetype to create tet4 instead of quad4 ?
+##     ##this function would require some changes (here proposed inside the function as starting):
+##     ##create a _default_surfacetype to create quad8 instead of hex8 ?maybe also a _default_volumetype to create tet4 instead of quad4 ?
 
-    def defaultSurfacetype(nplex):
-        """Default face type for a surface mesh with given plexitude.
+##     def defaultSurfacetype(nplex):
+##         """Default face type for a surface mesh with given plexitude.
 
-        For the most common cases of plexitudes, we define a default face
-        type. The full list of default types can be found in
-        mesh._default_facetype.
-        """
-        return _default_surfacetype.get(nplex,None)
+##         For the most common cases of plexitudes, we define a default face
+##         type. The full list of default types can be found in
+##         mesh._default_facetype.
+##         """
+##         return _default_surfacetype.get(nplex,None)
 
-    import geomtools
-    nfacperel= len(self.eltype.faces[1])#nfaces per elem
-    mf=Mesh(self.coords, self.getFaces())#mesh of all faces
-    mf.eltype = elementType(defaultSurfacetype(mf.nplex()))
-    ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face
-    elfacarea = geomtools.areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
-    return elfacarea.sum(axis=1)#elems'areas
+##     import geomtools
+##     nfacperel= len(self.eltype.faces[1])#nfaces per elem
+##     mf=Mesh(self.coords, self.getFaces())#mesh of all faces
+##     mf.eltype = elementType(defaultSurfacetype(mf.nplex()))
+##     ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face
+##     elfacarea = geomtools.areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
+##     return elfacarea.sum(axis=1)#elems'areas
 
 
 def area(self):
@@ -228,7 +229,7 @@ def _auto_initialize():
     installed here will always be available as Mesh methods just by
     importing the mesh_ext module.
     """
-    Mesh.areas = areas
+#    Mesh.areas = areas
     Mesh.area = area
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes

@@ -34,7 +34,7 @@ http://paulbourke.net/geometry/polygonise/
 from __future__ import print_function
 
 import numpy as np
-from multi import multitask,cpu_count
+from multi import multitask,cpu_count,splitar
 
 
 def isosurface(data,level,nproc=-1):
@@ -64,16 +64,15 @@ def isosurface(data,level,nproc=-1):
 
     else:
         # Perform parallel isosurface
-        # 1. Split in blocks
-        ndata = (data.shape[0]+(nproc-1)) // nproc
-        datablocks = [ data[i*ndata:min((i+1)*ndata+1,data.shape[0])] for i in range(nproc) ]
+        # 1. Split in blocks (and remember shift)
+        datablocks = splitar(data,nproc,close=True)
+        shift = (np.array([d.shape[0] for d in datablocks]) - 1).cumsum()
         # 2. Solve blocks independently
         tasks = [(isosurface,(d,level,1)) for d in datablocks]
         tri = multitask(tasks,nproc)
         # 3. Shift and merge blocks
-        for i,t in enumerate(tri):
-            if i > 0:
-                t[:,:,2] += i*ndata
+        for t,s in zip(tri[1:],shift[:-1]):
+            t[:,:,2] += s
         tri = np.concatenate(tri,axis=0)
 
     return tri

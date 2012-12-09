@@ -31,6 +31,7 @@ pyFormex in a unified way.
 """
 from __future__ import print_function
 
+from arraytools import splitar
 from multiprocessing import Pool,cpu_count
 
 

@@ -39,15 +39,42 @@ class Plane(object):
 def areaNormals(x):
     """Compute the area and normal vectors of a collection of triangles.
 
-    x is an (ntri,3,3) array of coordinates.
+    x is an (ntri,3,3) array with the coordinates of the vertices of ntri
+    triangles.
 
-    Returns a tuple of areas,normals.
-    The normal vectors are normalized.
-    The area is always positive.
+    Returns a tuple (areas,normals) with the areas and the normals of the
+    triangles. The area is always positive. The normal vectors are normalized.
     """
     area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
     area *= 0.5
     return area,normals
+
+
+def levelVolumes(x):
+    """Compute the level volumes of a collection of elements.
+    
+    x is an (nelems,nplex,3) array with the coordinates of the nplex vertices
+    of nelems elements, with nplex equal to 2, 3 or 4.
+
+    If nplex == 2, returns the lengths of the straight line segments.
+    If nplex == 3, returns the areas of the triangle elements.
+    If nplex == 4, returns the signed volumes of the tetraeder elements.
+    Positive values result if vertex 3 is at the positive side of the plane
+    defined by the vertices (0,1,2). Negative volumes are reported for
+    tetraeders having reversed vertex order.
+
+    For any other value of nplex, raises an error.
+    If succesful, returns an (nelems,) shaped float array.
+    """
+    nplex = x.shape[1]
+    if nplex == 2:
+        return length(x[:,1]-x[:,0])
+    elif nplex == 3:
+        return vectorPairArea(x[:,1]-x[:,0], x[:,2]-x[:,1]) / 2
+    elif nplex == 4:
+        return vectorTripleProduct(x[:,1]-x[:,0], x[:,2]-x[:,1], x[:,3]-x[:,0]) / 6
+    else:
+        raise ValueError,"Plexitude should be one of 2, 3 or 4; got %s" % nplex
 
 
 def smallestDirection(x,method='inertia',return_size=False):

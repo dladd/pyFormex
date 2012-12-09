@@ -1996,6 +1996,41 @@ maxprop  = %s
             return [ Formex(self.coords[n*i:n*(i+1)],self.prop[n*i:n*(i+1)],self.eltype) for i in range(m) ]
 
 
+    def lengths(self):
+        """Compute the length of all elements of a 2-plex Formex.
+
+        The length of an element is the distance between its two points.
+        """
+        if self.nplex() != 2:
+            raise ValueError,"Expected a 2-plex Formex, got %s" % self.nplex()
+        from geomtools import levelVolumes
+        return levelVolumes(self.coords)
+
+
+    def areas(self):
+        """Compute the areas of all elements of a 3-plex Formex.
+
+        The area of an element is the aread of the triangle formed by its
+        three points.
+        """
+        if self.nplex() != 3:
+            raise ValueError,"Expected a 3-plex Formex, got %s" % self.nplex()
+        from geomtools import levelVolumes
+        return levelVolumes(self.coords)
+
+
+    def volumes(self):
+        """Compute the volume of all elements of a 4-plex Formex.
+
+        The volume of an element is the volume of the tetraeder formed
+        by its points.
+        """
+        if self.nplex() != 4:
+            raise ValueError,"Expected a 4-plex Formex, got %s" % self.nplex()
+        from geomtools import levelVolumes
+        return levelVolumes(self.coords)
+
+
 #################### Read/Write Formex File ##################################
 
     

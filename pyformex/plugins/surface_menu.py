@@ -1345,6 +1345,23 @@ def intersection():
         export({'__intersection_curve__':SC})
         draw(SC,color=red,linewidth=3)
 
+
+def remesh():
+    S = selection.check(single=True)
+    if S:
+        selection.remember()
+        S = S.remesh()
+        selection.changeValues([S])
+        selection.drawChanges()
+
+
+def centerline():
+    S = selection.check(single=True)
+    if S:
+        CL = S.centerline()
+        export({'centerline':CL})
+        draw(CL,color=red,ontop=True,nolight=True)
+
     
 ################### menu #################
 
@@ -1436,6 +1453,10 @@ def create_menu():
           ## ("&Smooth surface",smooth),
           ("&Boolean operation on two surfaces",boolean),
           ("&Intersection curve of two surfaces",intersection),
+          ]),
+        ('&VMTK functions',
+         [('&Quality remesh surface',remesh),
+          ("&Compute centerline",centerline),
           ]),
 #        ("&Show volume model",show_volume),
         # ("&Print Nodal Coordinates",show_nodes),

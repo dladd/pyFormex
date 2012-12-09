@@ -2074,6 +2074,93 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
 
 
+    def levelVolumes(self):
+        """Return the level volumes of all elements in a Mesh.
+
+        The level volume of an element is defined as:
+
+        - the length of the element if the Mesh is of level 1,
+        - the area of the element if the Mesh is of level 2,
+        - the (signed) volume of the element if the Mesh is of level 3.
+        
+        The level volumes can be computed directly for Meshes of eltypes
+        'line2', 'tri3' and 'tet4' and will produce accurate results.
+        All other Mesh types are converted to one of these before computing
+        the level volumes. Conversion may result in approximation of the
+        results. If conversion can not be performed, None is returned.
+
+        If succesful, returns an (nelems,) float array with the level
+        volumes of the elements.
+        Returns None if the Mesh level is 0, or the conversion to the
+        level's base element was unsuccesful.
+
+        Note that for level-3 Meshes, negative volumes will be returned
+        for elements having a reversed node ordering.
+        """
+        from geomtools import levelVolumes
+
+        base_elem = {
+            1:'line2',
+            2:'tri3',
+            3:'tet4'
+            }
+
+        try:
+            base = base_elem[self.level()]
+        except:
+            return None
+        
+        if self.elName() == base:
+             M = self
+        else:
+            try:
+                print("CONVERT TO %s" % base)
+                M = self.copy().setProp(arange(self.nelems())).convert(base)
+            except:
+                return None
+        
+        V = levelVolumes(M.coords[M.elems])
+        if V is not None and M != self:
+            V = array([ V[where(M.prop==i)[0]].sum() for i in arange(self.nelems()) ])
+            
+        return V
+
+    def lengths(self):
+        """Return the length of all elements in a level-1 Mesh.
+
+        For a Mesh with eltype 'line2', the lengths are exact. For other
+        eltypes, a conversion to 'line2' is done before computing the lengths.
+        This may produce an exact result, an approximated result or no result
+        (if the conversion fails).
+
+        If succesful, returns an (nelems,) float array with the lengths.
+        Returns None if the Mesh level is not 1, or the conversion to 'line2'
+        does not succeed.
+        """
+        if self.level() == 1:
+            return self.levelVolumes()
+        else:
+            return None
+
+
+    def areas(self):
+        """Return the area of all elements in a level-2 Mesh.
+
+        For a Mesh with eltype 'tri3', the areas are exact. For other
+        eltypes, a conversion to 'tri3' is done before computing the areas.
+        This may produce an exact result, an approximated result or no result
+        (if the conversion fails).
+
+        If succesful, returns an (nelems,) float array with the areas.
+        Returns None if the Mesh level is not 2, or the conversion to 'tri3'
+        does not succeed.
+        """
+        if self.level() == 2:
+            return self.levelVolumes()
+        else:
+            return None
+
+
     def volumes(self):
         """Return the signed volume of all the mesh elements
 
@@ -2088,27 +2175,45 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         If the Mesh conversion to tetraeder does not succeed, the return
         value is None.
         """
-        try:
-            M = self.convert('tet4')
-            mult = M.nelems() // self.nelems()
-            if mult*self.nelems() !=  M.nelems():
-                raise ValueError,"Conversion to tet4 Mesh produces nonunique split paterns"
-            f = M.coords[M.elems]
-            vol = 1./6. * vectorTripleProduct(f[:, 1]-f[:, 0], f[:, 2]-f[:, 1], f[:, 3]-f[:, 0])
-            if mult > 1:
-                vol = vol.reshape(-1,mult).sum(axis=1)
-            return vol
-        
-        except:
+        if self.level() == 3:
+            return self.levelVolumes()
+        else:
             return None
+
+
+    def length(self):
+        """Return the total length of a Mesh.
+
+        Returns the sum of self.lengths(), or 0.0 if the self.lengths()
+        returned None.
+        """
+        try:
+            return self.lengths().sum()
+        except:
+            return 0.0
+
+
+    def area(self):
+        """Return the total volume of a Mesh.
+
+        Returns the sum of self.areas(), or 0.0 if the self.areas()
+        returned None.
+        """
+        try:
+            return self.areas().sum()
+        except:
+            return 0.0
 
 
     def volume(self):
         """Return the total volume of a Mesh.
 
-        Computes the volume of Mesh of dimensionality 3 by converting it
-        first to a 'tet4' type Mesh. If the Mesh dimensionality is less than 3
-        or the Mesh can not be converted to type 'tet4', 0.0 is returned.
+        Returns the sum of self.volumes(), or 0.0 if the self.volumes()
+        returned None.
+
+        Note that even if self.volumes() is computed, a value 0.0 may be
+        returned, and even negative values are possible, if the
+        node numbering of the elements is reversed.
         """
         try:
             return self.volumes().sum()

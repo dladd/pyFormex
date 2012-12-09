@@ -114,6 +114,26 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     drawgl.draw_polygons(x,None,color,None,alpha,-1)
     
 
+def multi_draw_polygons(x,n,color,t,alpha,objtype,nproc=-1):
+    from multi import multitask,cpu_count
+    if nproc < 1:
+        nproc = cpu_count()
+
+    print("MULTIDRAW %s" % nproc)
+
+    if nproc == 1:
+        drawgl.draw_polygons(x,n,color,t,alpha,objtype)
+
+    else:
+        xblocks = splitar(x,nproc)
+        n = t = color = None
+        print([xb.shape for xb in xblocks])
+        #[ drawgl.draw_polygons(xb,n,color,t,alpha,objtype) for xb in xblocks]
+        
+        tasks = [(drawgl.draw_polygons,(xb,n,color,t,alpha,objtype)) for xb in xblocks]
+        multitask(tasks,nproc)
+        
+
 def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,lighting=False,avgnormals=False,objtype=-1):
     """Draw a collection of polygons.
 
@@ -187,6 +207,7 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
     # Call library function
     if e is None:
         drawgl.draw_polygons(x,n,color,t,alpha,objtype)
+        #multi_draw_polygons(x,n,color,t,alpha,objtype)
     else:
         drawgl.draw_polygon_elems(x,e,n,color,t,alpha,objtype)
 

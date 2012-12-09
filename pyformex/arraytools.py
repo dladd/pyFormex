@@ -763,14 +763,18 @@ def splitrange(n,nblk):
     """Split the range of integers 0..n in nblk almost equal sized slices.
 
     This divides the range of integer numbers 0..n in nblk slices of (almost)
-    equal size. Returns nblk+1 integers in the range 0..n.
+    equal size. If n > nblk, returns nblk+1 integers in the range 0..n.
+    If n <= nblk, returns range(n+1). 
 
     Example:
     
     >>> splitrange(7,3)
     array([0, 2, 5, 7])
     """
-    ndata = (arange(nblk+1) * n * 1.0 / nblk).round().astype(int)
+    if n > nblk:
+        ndata = (arange(nblk+1) * n * 1.0 / nblk).round().astype(int)
+    else:
+        ndata = range(n+1)
     return ndata
 
 
@@ -1605,7 +1609,8 @@ def vectorPairArea(vec1,vec2):
     The result is an (n) shaped array with the area of the parallellograms
     formed by each pair of vectors (vec1,vec2).
     """
-    return vectorPairAreaNormals(vec1,vec2)[0]
+    normal = cross(vec1.reshape(-1,3),vec2.reshape(-1,3))
+    return length(normal)
 
 
 def vectorPairNormals(vec1,vec2):

@@ -120,7 +120,7 @@ def run():
     from timer import Timer
     pf.GUI.setBusy()
     timer = Timer()
-    tri = sf.isosurface(data,level)
+    tri = sf.isosurface(data,level,nproc=4)
     sec = timer.seconds()
     print("Got %s triangles in %s seconds" % (len(tri),sec))
     if len(tri) > 0:
