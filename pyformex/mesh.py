@@ -75,13 +75,13 @@ class Mesh(Geometry):
 
     The Mesh data model has at least the following attributes:
     
-    - coords: (ncoords,3) shaped Coords object, holding the coordinates of
+    - `coords`: (ncoords,3) shaped Coords object, holding the coordinates of
       all points in the Mesh;
-    - elems: (nelems,nplex) shaped Connectivity object, defining the elements
+    - `elems`: (nelems,nplex) shaped Connectivity object, defining the elements
       by indices into the Coords array. All values in elems should be in the
       range 0 <= value < ncoords.
-    - prop: an array of element property numbers, default None.
-    - eltype: an element type (a subclass of :class:`Element`) or the name
+    - `prop`: an array of element property numbers, default None.
+    - `eltype`: an element type (a subclass of :class:`Element`) or the name
       of an Element type, or None (default).
       If eltype is None, the eltype of the elems Connectivity table is used,
       and if that is missing, a default eltype is derived from the plexitude,
@@ -209,6 +209,8 @@ class Mesh(Geometry):
         if eltype is None and hasattr(self.elems,'eltype'):
             eltype = self.elems.eltype
         self.eltype = self.elems.eltype = elementType(eltype,self.nplex())
+        if self.elems.eltype is None:
+            raise ValueError,"No element type set for Mesh/Connectivity"
         return self
 
 
@@ -216,10 +218,7 @@ class Mesh(Geometry):
         """Return the element type of the Mesh.
 
         """
-        if self.elems.eltype is not None:
-            return self.elems.eltype
-        else:
-            return self.eltype
+        return self.elems.eltype
 
 
     def elName(self):

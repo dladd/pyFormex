@@ -30,8 +30,10 @@ and http://www.vmtk.org/VmtkScripts/vmtkscripts/
 """
 from __future__ import print_function
 
-from plugins.trisurface import TriSurface
 import pyformex as pf
+from coords import *
+from mesh import Mesh
+from plugins.trisurface import TriSurface
 import utils
 import os
 
@@ -83,11 +85,15 @@ def centerline(self):
     return cl
 
 
-def remesh(self,edgelen):
+def remesh(self,edgelen=None):
     """Remesh a TriSurface.
 
     edgelen is the suggested edge length
     """
+    if edgelen is None:
+       self.getElemEdges()
+       E = Mesh(self.coords,self.edges,eltype='line2')
+       edgelen =  E.lengths().mean()
     tmp = utils.tempFile(suffix='.stl').name
     tmp1 = utils.tempFile(suffix='.stl').name
     pf.message("Writing temp file %s" % tmp)

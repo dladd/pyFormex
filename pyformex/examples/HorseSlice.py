@@ -22,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""HorseTorse
+"""Horseslice
 
 This example illustrates working with triangulated surfaces in pyFormex.
 A triangulated surface (TriSurface) is read from the file 'horse.off'
@@ -68,11 +68,13 @@ def run():
     slices = S.slice(dir=d,nplanes=n)
     linewidth(2)
     draw(slices,color=c,view=None,bbox='last',nolight=True,ontop=res['ontop'])
-
+    export({'_HorseSlice_slices':slices})
+    
     if res['remove surface']:
         undraw(SA)
         
     zoomAll()
+    
 
 if __name__ == 'draw':
     run()

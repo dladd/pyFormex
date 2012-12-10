@@ -1550,7 +1550,7 @@ Quality: %s .. %s
 
         # If there is no intersection, we're done
         if S.nelems() == 0:
-            return Mesh(Coords(),[])
+            return Mesh(Coords(),Connectivity(nplex=2,eltype='line2'))
         
         Mparts = []
         coords = S.coords
@@ -1621,7 +1621,7 @@ Quality: %s .. %s
         # Done with getting the segments
         if len(Mparts) ==  0:
             # No intersection: return empty mesh
-            return Mesh(Coords(),[])
+            return Mesh(Coords(),Connectivity(nplex=2,eltype='line2'))
         else:
             M = Mesh.concatenate(Mparts)
 
@@ -1632,7 +1632,7 @@ Quality: %s .. %s
             parts = connectedLineElems(M.elems)
             prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
             elems = concatenate(parts,axis=0)
-    
+
             return Mesh(M.coords,elems,prop=prop)
 
 

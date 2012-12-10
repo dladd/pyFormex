@@ -86,7 +86,13 @@ class Connectivity(ndarray):
     - `nplex`: can be specified to force a check on the plexitude of the
       data, or to set the plexitude for an empty Connectivity.
       An error will be raised if the specified data do not match the
-      specified plexitude.
+      specified plexitude. If an `eltype` is specified, the plexitude of
+      the element type will override this value.
+    - `eltype`: an Element type (a subclass of :class:`Element`) or the name
+      of an Element type, or None (default). If the Connectivity will be used
+      to create a Mesh, the proper element type or name should be set: either
+      here or at Mesh creation time. If the Connectivity will be used for other
+      purposes, the element type may be not important.
 
     Example:
 
@@ -102,8 +108,13 @@ class Connectivity(ndarray):
     # Because we have a __new__ constructor here and no __init__,
     # we have to list the arguments explicitely in the docstring above.
     #
-    def __new__(self,data=[],dtyp=None,copy=False,nplex=0,allow_negative=False,eltype=None):
+    def __new__(self,data=[],dtyp=None,copy=False,nplex=0,eltype=None,allow_negative=False):
         """Create a new Connectivity object."""
+        if isinstance(data,Connectivity):
+            if nplex == 0:
+                nplex = data.nplex()
+            if eltype is None:
+                eltype = data.eltype
 
         if eltype is None:
             try:
@@ -143,7 +154,6 @@ class Connectivity(ndarray):
         ## # Other data 
         ar.eltype = eltype  # ! this may be a string!!!!!!!!!!!
         ar.inv = None   # inverse index
-
         return ar
 
 
