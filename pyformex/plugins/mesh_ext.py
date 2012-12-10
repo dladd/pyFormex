@@ -36,7 +36,7 @@ from __future__ import print_function
 from mesh import Mesh
 from elements import elementType,_default_facetype
 from formex import *
-from utils import deprecation
+from utils import deprecation, warn
 
 
 ##############################################################################
@@ -211,7 +211,7 @@ def partitionByAngle(self,**arg):
     if self.eltype.name() == 'quad4':
         p = p.reshape(-1,2)
         if not (p[:,0] == p[:,1]).all():
-            pf.warning("The partitioning may be incorrect due to nonplanar 'quad4' elements")
+            warn("The partitioning may be incorrect due to nonplanar 'quad4' elements")
         return p[:,0]
 
 
