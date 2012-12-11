@@ -1120,6 +1120,13 @@ class NameSequence(object):
         i = self.name.find('%')
         j = self.name.find('d',i)
         return self.name[:i]+'*'+self.name[j+1:]
+
+    def list(self):
+        """Return a list of files matching the name pattern.
+
+        """
+        import glob
+        return glob.glob(self.glob())
     
 
 def prefixDict(d,prefix=''):
