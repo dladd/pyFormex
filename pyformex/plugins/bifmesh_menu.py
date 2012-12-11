@@ -144,7 +144,7 @@ def cutPart(M,x0,x1):
     """Cut part of section at plane thru x0 and return part between x0 and x1"""
     M = M.clipAtPlane(x1,x0-x1, nodes='all')
 
-    meshlist = M.splitProp().values()
+    meshlist = M.splitProp()
 
     meshlist = [ meshToPolyLine2(m) for m in meshlist ]
     #meshlist = [ p.cutWithPlane(x0,x1-x0,side='+') for p in meshlist ]

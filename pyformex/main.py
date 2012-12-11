@@ -448,7 +448,6 @@ def run(argv=[]):
     pf.options, args = parser.parse_args(argv)
     pf.print_help = parser.print_help
 
-
     # Set debug level
     if pf.options.debug and not pf.options.debuglevel:
         pf.options.debuglevel = pf.debugLevel(pf.options.debug.split(','))
@@ -586,6 +585,7 @@ def run(argv=[]):
 
     #  If we run from an SVN version, we should set the proper revision
     #  number and run the svnclean procedure.
+
     if pf.installtype=='S':
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
@@ -640,6 +640,8 @@ pyFormex Warning
     if pf.cfg['warnings/nice']:
         import warnings
         warnings.formatwarning = _format_warning
+
+    utils.checkModule('numpy',fatal=True)
 
     # Make sure pf.PF is a Project
     from project import Project

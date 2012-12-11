@@ -2107,6 +2107,33 @@ Quality: %s .. %s
         return S
 
 
+    def inside(self,pts,method='gts',tol=0.):
+        """Test which of the points pts are inside the surface.
+
+        Parameters:
+
+        - `pts`: a Coords or compatible.
+        - `method`: string: method to be used for the detection. Depending on
+          the software you have installed the following are possible:
+    
+          - 'gts': provided by pyformex-extra
+          - 'vtk': provided by python-vtk
+
+        - `tol`: only available for method 'vtk'
+        
+        Returns an integer array with the indices of the points that are
+        inside the surface. The indices refer to the onedimensional list
+        of points as obtained from pts.points().
+        """
+        pts = Coords(pts)
+        if method == 'gts':
+            from pyformex_gts import inside
+            return inside(self,pts)
+        elif method == 'vtk':
+            from vtk_itf import vtkPointInsideObject
+            return vtkPointInsideObject(self,pts,tol)
+ 
+
 ##########################################################################
 ################# Non-member and obsolete functions ######################
 

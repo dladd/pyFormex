@@ -36,7 +36,7 @@ _techniques = ['inside']
 from gui.draw import *
 import simple
 import timer
-from plugins.vtk_itf import *
+
 
 filename = os.path.join(getcfg('datadir'),'horse.off')
 
@@ -61,7 +61,7 @@ def getData():
               _I('scale',[1.,1.,1.],itemptype='point'),
               _I('trl',[0.,0.,0.],itemptype='point'),
               ]),
-            _I('Mode',choices=['gts','vtk']),
+            _I('method',choices=['gts','vtk']),
           ],
         enablers = [
             ( 'surface','file','filename', ),
@@ -109,25 +109,8 @@ def create():
 
     return S,P
 
-def vtkPointInsideObject(P,S,tol=0):
-    """vtk function to test which of the points P are inside surface S"""
     
-    vpp = convert2VPD(P)
-    vps =convert2VPD(S,clean=False)
-    
-    enclosed_pts = vtkSelectEnclosedPoints()
-    enclosed_pts.SetInput(vpp)
-    enclosed_pts.SetTolerance(tol)
-    enclosed_pts.SetSurface(vps)
-    enclosed_pts.SetCheckSurface(1)
-    enclosed_pts.Update()
-    inside_arr = enclosed_pts.GetOutput().GetPointData().GetArray('SelectedPoints')
-    enclosed_pts.ReleaseDataFlagOn()
-    enclosed_pts.Complete()
-    del enclosed_pts
-    return asarray(v2n(inside_arr),'bool')
-    
-def testInside(S,P):
+def testInside(S,P,method):
     """Test which of the points P are inside surface S"""
 
     print("Testing %s points against %s faces" % (P.nelems(),S.nelems()))
@@ -136,12 +119,14 @@ def testInside(S,P):
     drawBbox(bb,color=array(red),linewidth=2)
 
     t = timer.Timer()
-    if Mode == 'gts':
-        ind = S.inside(P)
-    else:
-        ind = vtkPointInsideObject(P.coords.reshape(-1,3),S)
+
+    if method == 'vtk' and not utils.hasModule('vtk'):
+        warn("You need to install python-vtk!")
+        return
+    
+    ind = S.inside(P,method=method)
         
-    print("gtsinside: %s points / %s faces: found %s inside points in %s seconds" % (P.nelems(),S.nelems(),len(ind),t.seconds()))
+    print("%sinside: %s points / %s faces: found %s inside points in %s seconds" % (method,P.nelems(),S.nelems(),len(ind),t.seconds()))
 
     if len(ind) > 0:
         draw(P[ind],color=green,marksize=3,ontop=True,nolight=True,bbox='last')
@@ -157,7 +142,7 @@ def run():
     if getData():
         S,P = create()
         if S:
-            testInside(S,P)
+            testInside(S,P,method)
     
 
 if __name__ == 'draw':

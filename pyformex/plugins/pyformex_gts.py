@@ -220,7 +220,7 @@ def install_more_trisurface_methods():
     TriSurface.boolean = boolean
     TriSurface.intersection = intersection
     TriSurface.gtsset = gtsset
-    TriSurface.inside = inside
+#    TriSurface.inside = inside
 
 
 ## try:

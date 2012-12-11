@@ -96,7 +96,7 @@ class Connectivity(ndarray):
 
     Example:
 
-    >>> print Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])
+    >>> print(Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]]))
     [[0 1 2]
      [0 1 3]
      [0 3 2]
@@ -329,7 +329,7 @@ class Connectivity(ndarray):
         Example:
         
         >>> C = Connectivity([[0,1,2],[0,1,1],[0,3,2]],eltype='line3')
-        >>> print C.reduceDegenerate()
+        >>> print(C.reduceDegenerate())
         [Connectivity([[0, 1]]), Connectivity([[0, 1, 2],
                [0, 3, 2]])]
         
@@ -402,9 +402,20 @@ class Connectivity(ndarray):
           and False for those of the duplicates.
 
         Example:
-        
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).testDuplicate()
-          (array([0, 1, 2]), Connectivity([ True, False,  True], dtype=bool))
+
+          >>> conn = Connectivity([[0,1,3],[2,3,0],[0,2,3],[0,1,2],[0,2,1],[0,3,2]])
+          >>> print(conn)
+          [[0 1 3]
+           [2 3 0]
+           [0 2 3]
+           [0 1 2]
+           [0 2 1]
+           [0 3 2]]
+          >>> ind,ok = conn.testDuplicate()
+          >>> print(ind,ok)
+          [3 4 0 1 2 5] [ True False  True  True False False]
+          >>> print(ok.cumsum())
+          [1 1 2 3 3 3]
           
         """
         if permutations:
@@ -1218,40 +1229,40 @@ def findConnectedLineElems(elems):
     Example:
 
       >>> con,inv = findConnectedLineElems([[0,1],[1,2],[0,4],[4,2]])
-      >>> print con
+      >>> print(con)
       [[0 1]
        [1 2]
        [2 4]
        [4 0]]
-      >>> print inv
+      >>> print(inv)
       [[ 0  1]
        [ 1  1]
        [ 3 -1]
        [ 2 -1]]
              
       >>> con,inv = findConnectedLineElems([[0,1],[1,2],[0,4]])
-      >>> print con
+      >>> print(con)
       [[2 1]
        [1 0]
        [0 4]]
-      >>> print inv
+      >>> print(inv)
       [[ 1 -1]
        [ 0 -1]
        [ 2  1]]
              
       >>> C = Connectivity([[0,1],[0,2],[0,3],[4,5]])
       >>> con,inv = findConnectedLineElems(C)
-      >>> print con
+      >>> print(con)
       [[ 1  0]
        [ 0  2]
        [-1 -1]
        [-1 -1]]
-      >>> print inv
+      >>> print(inv)
       [[ 0 -1]
        [ 1  1]
        [-1  0]
        [-1  0]]
-      >>> print C
+      >>> print(C)
       [[-1 -1]
        [-1 -1]
        [ 0  3]
@@ -1300,11 +1311,11 @@ def findConnectedLineElems(elems):
 
         # Look for the next connected element (only thru first or last node!)
         w = where(elems[:,[0,-1]] == j)
-        #print w
+        #print(w)
         if w[0].size == 0:
             # Try reversing
             w = where(elems[:,[0,-1]] == k)
-            #print w
+            #print(w)
             if w[0].size == 0:
                 break
             else:

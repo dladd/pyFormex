@@ -833,7 +833,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         p = self.partitionByConnection(level=level,startat=startat,sort=sort)
         split = self.setProp(p).splitProp()
         if split:
-            return split.values()
+            return split
         else:
             return [ self ]
 
@@ -1274,19 +1274,22 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         contain any of the specified nodes.
         """
         return self.select(self.elems.notConnectedTo(nod))
-
+          
 
     def splitProp(self):
-        """Partition a Mesh according to its property values.
+        """Partition a Mesh according to its prop values.
 
-        Returns a dict with the property values as keys and the
-        corresponding partitions as values. Each value is a Mesh instance.
-        It the Mesh has no props, an empty dict is returned.
+        Returns a list of Meshes. Each Mesh contains all the elements with
+        property number equal to one of the unique values in the property set.
+        The Meshes in the list are given in order of ascending property
+        number. Each Mesh has this value set as property number for all its
+        elements
+        It the Mesh has no props, an empty list is returned.
         """
         if self.prop is None:
-            return {}
+            return []
         else:
-            return dict([(p,self.withProp(p)) for p in self.propSet()])
+            return [ self.withProp(p) for p in self.propSet() ]
 
 
     def splitRandom(self,n,compact=True):

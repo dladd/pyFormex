@@ -83,7 +83,7 @@ def opengl():
 
 def detected():
     """Display the detected software components."""
-    utils.checkModule()
+    utils.checkAllModules()
     utils.checkExternal()
     draw.showText(utils.reportDetected())
 

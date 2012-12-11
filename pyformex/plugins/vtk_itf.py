@@ -202,4 +202,26 @@ def convertFromVPD(vpd):
         
     return pts, polys, lines, verts
 
+
+def vtkPointInsideObject(S,P,tol=0.):
+    """vtk function to test which of the points P are inside surface S"""
+    
+    vpp = convert2VPD(P)
+    vps =convert2VPD(S,clean=False)
+    
+    enclosed_pts = vtkSelectEnclosedPoints()
+    enclosed_pts.SetInput(vpp)
+    enclosed_pts.SetTolerance(tol)
+    enclosed_pts.SetSurface(vps)
+    enclosed_pts.SetCheckSurface(1)
+    enclosed_pts.Update()
+    inside_arr = enclosed_pts.GetOutput().GetPointData().GetArray('SelectedPoints')
+    enclosed_pts.ReleaseDataFlagOn()
+    enclosed_pts.Complete()
+    del enclosed_pts
+    return asarray(v2n(inside_arr),'bool')
+
+
+
+
 # End

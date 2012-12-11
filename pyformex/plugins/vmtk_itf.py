@@ -98,7 +98,7 @@ def remesh(self,edgelen=None):
     tmp1 = utils.tempFile(suffix='.stl').name
     pf.message("Writing temp file %s" % tmp)
     self.write(tmp,'stl')
-    pf.message("Remeshing using VMTK")
+    pf.message("Remeshing using VMTK (edge length = %s)" % edgelen)
     cmd = "vmtk vmtksurfaceremeshing -ifile %s -ofile %s -edgelength %s" % (tmp,tmp1,edgelen)
     sta,out = utils.runCommand(cmd)
     os.remove(tmp)

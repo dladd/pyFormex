@@ -44,21 +44,6 @@ the_version = {
 # versions of detected external commands
 the_external = {}
 
-# Do not include pyformex or python here: they are predefined
-# and could be erased by the detection 
-known_modules = {
-    'numpy': (''),
-    'pyopengl': (''),
-    'pyqt4': (''),
-    'pyqt4gl': (''),
-    'docutils': (''),
-    'calpy': (''),
-    'gnuplot': ("Gnuplot"),
-    'matplotlib': ("matplotlib"),
-    'gl2ps': (''),
-    'pygts': ("You should install 'pygts' (http://pygts.sourceforge.net/)"),
-    }
-
 known_externals = {
     'Python': ('python --version','Python (\\S+)'),
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
@@ -71,6 +56,7 @@ known_externals = {
     'calix': ('calix --version','CALIX-(\S+)'),
     'dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
     'postabq': ('pyformex-postabq -V','postabq (\S+).*'),
+    'vmtk': ('vmtk --help','Usage: 	vmtk(\S+).*'),
     'recordmydesktop': ('recordmydesktop --version','recordMyDesktop v(\S+)'),
     }
 
@@ -141,63 +127,84 @@ def requireModule(name):
         if errmsg:
             pf.error(errmsg)
         
+        
+
+# Python modules we know how to use
+# Do not include pyformex or python here: they are predefined
+# and could be erased by the detection
+# The value is a chain of attributes to get the version
+# If empty, the attribute is supposed to be '__version__'
+known_modules = {
+    'numpy'     : (),
+    'pyopengl'  : ('OpenGL',),
+    'docutils'  : (),
+    'calpy'     : (),
+    'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
+    'pyqt4gl'   : ('PyQt4','','QtOpenGL'),
+    'matplotlib': (),
+    'gnuplot'   : ('Gnuplot'),
+    'gl2ps'     : ('','','GL2PS_VERSION'),
+    'vtk'       : ('','','VTK_VERSION'),
+     }
     
 
-def checkModule(name=None,quiet=False):
+def checkAllModules():
+    """Check the existing of all known modules.
+
+    """
+    [ checkModule(n,quiet=True) for n in known_modules ]
+    return 
+    
+
+def checkModule(name,ver=(),fatal=False,quiet=False):
     """Check if the named Python module is available, and record its version.
 
-    The version string is returned, empty if the module could not be loaded.
+    ver is a tuple of:
+
+    - modname: name of the module to test import
+    - vername: name of the module holding the version string
+    - more fields are consecutive attributes leading to the version string
+
+    The obtained version string is returned, empty if the module could not
+    be loaded.
     The (name,version) pair is also inserted into the the_version dict.
+
+    If fatal=True, pyFormex will abort if the module can not be loaded.
     """
-    if name is None:
-        [ checkModule(n,quiet=True) for n in known_modules ]
-        return
-    
-    version = ''
-    fatal = False
+    if len(ver) == 0 and name in known_modules:
+        ver = known_modules[name]
+
+    modname = name
+    if len(ver) > 0  and len(ver[0]) > 0:
+        modname = ver[0]
+
     try:
-        if name == 'numpy':
-            fatal = True
-            import numpy
-            version =  numpy.__version__
-        elif name == 'pyopengl':
-            fatal = pf.options.gui
-            import OpenGL
-            version =  OpenGL.__version__
-        elif name == 'pyqt4':
-            fatal = pf.options.gui
-            import PyQt4.QtCore
-            version = PyQt4.QtCore.QT_VERSION_STR
-        elif name == 'pyqt4gl':
-            fatal = pf.options.gui
-            import PyQt4.QtOpenGL
-            import PyQt4.QtCore
-            version = PyQt4.QtCore.QT_VERSION_STR
-        elif name == 'docutils':
-            import docutils
-            version =  docutils.__version__
-        elif name == 'calpy':
-            import calpy
-            version = calpy.__version__
-        elif name == 'gnuplot':
-            import Gnuplot
-            version = Gnuplot.__version__
-        elif name == 'matplotlib':
-            import matplotlib
-            version = matplotlib.__version__
-        elif name == 'gl2ps':
-            import gl2ps
-            version = str(gl2ps.GL2PS_VERSION)
+        #print(modname)
+        m = __import__(modname)
+        #print(m)
+        if len(ver) > 1 and len(ver[1]) > 0:
+            modname = ver[1]
+            m = __import__(modname)
+            #print(m)
+        ver = ver[2:]
+        if len(ver) == 0:
+            ver = ('__version__',)
+        for a in ver:
+            m = getattr(m,a)
+            #print(m)
+
     except:
-        # unregistered modules
-        return ''
+        # failure: unexisting or unregistered modules
+        m = ''
+
+    #print("Module %s: Version %s" % (name,m))
    
     # make sure version is a string (e.g. gl2ps uses a float!)
-    version = str(version)
-    _congratulations(name,version,'module',fatal,quiet=quiet)
+    m = str(m)
+    _congratulations(name,m,'module',fatal,quiet=quiet)
     #if version:
-    the_version[name] = version
-    return version
+    the_version[name] = m
+    return m
 
 
 def checkExternal(name=None,command=None,answer=None,quiet=False):
@@ -753,17 +760,17 @@ def countLines(fn):
 ## Running external commands ##
 ###############################
 
-def system(cmd):
-    """Execute an external command.
+## def system(cmd):
+##     """Execute an external command.
 
-    This version will write the subprocess stdout and stderr to pyFormex
-    """
-    import subprocess
-    pf.message("Running command: %s" % cmd)
-    P = subprocess.Popen(cmd,shell=True)
-    sta = P.wait() # wait for the process to finish
-    pf.message("Command finished with status: %s" % sta)
-    return sta
+##     This version will write the subprocess stdout and stderr to pyFormex
+##     """
+##     import subprocess
+##     pf.message("Running command: %s" % cmd)
+##     P = subprocess.Popen(cmd,shell=True)
+##     sta = P.wait() # wait for the process to finish
+##     pf.message("Command finished with status: %s" % sta)
+##     return sta
 
 def timedWait(proc, timeout, waitToKill = 1.):
     """It is an implementation of the wait() but with a timeout check.
@@ -796,6 +803,7 @@ def timedWait(proc, timeout, waitToKill = 1.):
         raise ValueError,"This really should not happen!"
     return sta, out
 
+
 def system2(cmd, timeout=None):
     """Execute an external command with timeout.
     
@@ -821,7 +829,7 @@ def system1(cmd):
     return commands.getstatusoutput(cmd)
 
 
-def runCommand(cmd,RaiseError=True,quiet=False, timeout=None):
+def runCommand(cmd,RaiseError=True,quiet=False,timeout=None):
     """Run a command and raise error if exited with error.
 
     cmd is a string with the command to be run. The command is run

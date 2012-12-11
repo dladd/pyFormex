@@ -1021,7 +1021,7 @@ def spliner():
         slices = S.slice(dir=axis,nplanes=nslices)
         pf.GUI.setBusy(False)
         print([ s.nelems() for s in slices ])
-        split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
+        split = [ s.splitProp() for s in slices if s.nelems() > 0 ]
         split = olist.flatten(split)
         hasnan = [ isnan(s.coords).any() for s in split ]
         print(hasnan)

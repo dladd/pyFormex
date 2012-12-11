@@ -33,10 +33,9 @@ import pyformex as pf
 from pyformex.gui import signals
 
 import sys,utils
-if not ( utils.hasModule('numpy') and
-         utils.hasModule('pyopengl') and
-         utils.hasModule('pyqt4') ):
-    sys.exit()
+
+utils.checkModule('pyqt4',fatal=True)
+utils.checkModule('pyopengl',fatal=True)
 
 import os.path
 

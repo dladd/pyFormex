@@ -1546,14 +1546,17 @@ maxprop  = %s
     def splitProp(self):
         """Partition a Formex according to its prop values.
 
-        Returns a dict with the prop values as keys and the corresponding
-        partitions as values. Each value is a Formex instance.
-        It the Formex has no props, an empty dict is returned.
+        Returns a list of Formices. Each Formex contains all the elements with
+        property number equal to one of the unique values in the property set.
+        The Formices in the list are given in order of ascending property
+        number. Each Formex has this value set as property number for all its
+        elements
+        It the Formex has no props, an empty list is returned.
         """
         if self.prop is None:
-            return {}
+            return []
         else:
-            return dict([(p,self.withProp(p)) for p in self.propSet()])
+            return [ self.withProp(p) for p in self.propSet() ]
 
 
     def elbbox(self):
