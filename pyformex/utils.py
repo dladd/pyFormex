@@ -1121,12 +1121,19 @@ class NameSequence(object):
         j = self.name.find('d',i)
         return self.name[:i]+'*'+self.name[j+1:]
 
-    def list(self):
-        """Return a list of files matching the name pattern.
+    def files(self,sort=hsorted):
+        """Return a (sorted) list of files matching the name pattern.
 
+        A function may be specified to sort/filter the list of file names.
+        The function should take a list of filenames as input. The output
+        of the function is returned. The default sort function will sort
+        the filenames in a human order.
         """
         import glob
-        return glob.glob(self.glob())
+        files = glob.glob(self.glob())
+        if callable(sort):
+            files = sort(files)
+        return files
     
 
 def prefixDict(d,prefix=''):

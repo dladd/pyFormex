@@ -68,13 +68,22 @@ def run():
         return
 
     elif ans in [1,2]:
-        fp = askDirname(byfile=True)
-        if not fp:
+        ## fp = askDirname(byfile=True)
+        ## if not fp:
+        ##     return
+
+        ## files = utils.listTree(fp,listdirs=False)
+
+        fn = askFilename(multi=True)
+        if not fn:
             return
 
-        files = utils.listTree(fp,listdirs=False)
-        print(files)
+        if len(fn) == 1:
+            files = utils.NameSequence(fn[0]).files()
 
+        print(files)
+        return
+    
         if ans == 1:
             data = loadImages(files)
             scale = ones(3)
