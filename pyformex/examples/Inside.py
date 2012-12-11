@@ -30,12 +30,13 @@ This example shows how to find out if points are inside a closed surface.
 from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
-_topics = ['surface']
+_topics = ['surface','vtk']
 _techniques = ['inside']
 
 from gui.draw import *
 import simple
 import timer
+from plugins.vtk_itf import *
 
 filename = os.path.join(getcfg('datadir'),'horse.off')
 
@@ -60,6 +61,7 @@ def getData():
               _I('scale',[1.,1.,1.],itemptype='point'),
               _I('trl',[0.,0.,0.],itemptype='point'),
               ]),
+            _I('Mode',choices=['gts','vtk']),
           ],
         enablers = [
             ( 'surface','file','filename', ),
@@ -107,6 +109,23 @@ def create():
 
     return S,P
 
+def vtkPointInsideObject(P,S,tol=0):
+    """vtk function to test which of the points P are inside surface S"""
+    
+    vpp = convert2VPD(P)
+    vps =convert2VPD(S,clean=False)
+    
+    enclosed_pts = vtkSelectEnclosedPoints()
+    enclosed_pts.SetInput(vpp)
+    enclosed_pts.SetTolerance(tol)
+    enclosed_pts.SetSurface(vps)
+    enclosed_pts.SetCheckSurface(1)
+    enclosed_pts.Update()
+    inside_arr = enclosed_pts.GetOutput().GetPointData().GetArray('SelectedPoints')
+    enclosed_pts.ReleaseDataFlagOn()
+    enclosed_pts.Complete()
+    del enclosed_pts
+    return asarray(v2n(inside_arr),'bool')
     
 def testInside(S,P):
     """Test which of the points P are inside surface S"""
@@ -117,7 +136,11 @@ def testInside(S,P):
     drawBbox(bb,color=array(red),linewidth=2)
 
     t = timer.Timer()
-    ind = S.inside(P)
+    if Mode == 'gts':
+        ind = S.inside(P)
+    else:
+        ind = vtkPointInsideObject(P.coords.reshape(-1,3),S)
+        
     print("gtsinside: %s points / %s faces: found %s inside points in %s seconds" % (P.nelems(),S.nelems(),len(ind),t.seconds()))
 
     if len(ind) > 0:
