@@ -188,14 +188,14 @@ def convertFromVPD(vpd):
         
     # getting Lines
     if  vpd.GetLines().GetData().GetNumberOfTuples():
-        ntype=gnat(vpd.GetLines().GetDataType())
+        ntype=gnat(vpd.GetLines().GetData().GetDataType())
         Nplex = vpd.GetLines().GetMaxCellSize()
         lines = asarray(v2n(vpd.GetLines().GetData()),dtype=ntype).reshape(-1,Nplex+1)[:,1:]
         print('Saved lines connectivity array')
         
     # getting Vertices
     if  vpd.GetVerts().GetData().GetNumberOfTuples():
-        ntype=gnat(vpd.GetVerts().GetDataType())
+        ntype=gnat(vpd.GetVerts().GetData().GetDataType())
         Nplex = vpd.GetVerts().GetMaxCellSize()
         verts = asarray(v2n(vpd.GetVerts().GetData()),dtype=ntype).reshape(-1,Nplex+1)[:,1:]
         print('Saved verts connectivity array')
