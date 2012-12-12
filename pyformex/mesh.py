@@ -865,6 +865,32 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return where(p>=0)[0]  
 
 
+    def partitionByAngle(self,**arg):
+        """Partition a surface Mesh by the angle between adjacent elements.
+
+        The Mesh is partitioned in parts bounded by the sharp edges in the
+        surface. The arguments and return value are the same as in
+        :meth:`TriSurface.partitionByAngle`.
+
+        Currently this only works for 'tri3' and 'quad4' type Meshes.
+        Also, the 'quad4' partitioning method currently only works correctly
+        if the quads are nearly planar.
+        """
+        from plugins.trisurface import TriSurface
+        if self.elName() not in [ 'tri3', 'quad4' ]:
+            raise ValueError, "partitionByAngle currently only works for 'tri3' and 'quad4' type Meshes."
+
+        S = TriSurface(self.convert('tri3'))
+        p = S.partitionByAngle(**arg)
+        if self.elName() == 'tri3':
+            return p
+        if self.elName() == 'quad4':
+            p = p.reshape(-1,2)
+            if not (p[:,0] == p[:,1]).all():
+                warn("The partitioning may be incorrect due to nonplanar 'quad4' elements")
+            return p[:,0]
+
+
 ###########################################################################
 
     #
@@ -1309,25 +1335,39 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 ###########################################################################
     ## simple mesh transformations ##
 
-    def reverse(self):
-        """Return a Mesh where all elements have been reversed.
+    def reverse(self,sel=None):
+        """Return a Mesh where the elements have been reversed.
 
         Reversing an element has the following meaning:
 
         - for 1D elements: reverse the traversal direction,
         - for 2D elements: reverse the direction of the positive normal,
         - for 3D elements: reverse inside and outside directions of the
-          element's border surface
+          element's border surface. This also changes the sign of the
+          elementt's volume.
 
         The :meth:`reflect` method by default calls this method to undo
         the element reversal caused by the reflection operation. 
+
+        Parameters:
+
+        -`sel`: a selector (index or True/False array) 
         """
         utils.warn('warn_mesh_reverse')
-
-        if hasattr(self.elType(),'reversed'):
-            elems = self.elems[:,self.elType().reversed]
+        # TODO: These can be merged
+        if sel is None:
+            if hasattr(self.elType(),'reversed'):
+                elems = self.elems[:,self.elType().reversed]
+            else:
+                elems = self.elems[:,::-1]
         else:
-            elems = self.elems[:,::-1]
+            elems = self.elems.copy()
+            elsel = elems[sel]
+            if hasattr(self.elType(),'reversed'):
+                elsel = elsel[:,self.elType().reversed]
+            else:
+                elsel = elsel[:,::-1]
+            elems[sel] = elsel
         return self.__class__(self.coords,elems,prop=self.prop,eltype=self.elType())
 
             
@@ -2221,6 +2261,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             return self.volumes().sum()
         except:
             return 0.0
+
+
+    def fixVolumes(self):
+        """Reverse the elements with negative volume.
+
+        Elements with negative volume may result from incorrect
+        local node numbering. This method will reverse all elements
+        in a Mesh of dimensionality 3, provide the volumes of these
+        elements can be computed.
+        """
+        return self.reverse(self.volumes() < 0.)
     
 
     def actor(self,**kargs):

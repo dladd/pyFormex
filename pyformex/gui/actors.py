@@ -446,7 +446,7 @@ class GeomActor(Actor):
         elif isinstance(data,Mesh):
             self.coords = data.coords
             self.elems = data.elems
-            self.eltype = data.elType()
+            self.eltype = data.elName()
             
         elif isinstance(data,Formex):
             self.coords = data.coords

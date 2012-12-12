@@ -794,7 +794,7 @@ def show_results(data):
                 val = norm2(val)
     if val is not None:
         txt += result_types.values()[resindex]
-    print("RESULT ELTYPE: %s" % [e.eltype for e in elems])
+    print("RESULT ELTYPE: %s" % [e.elName() for e in elems])
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime,symmetric_scale)
     return val
 

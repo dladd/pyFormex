@@ -1,4 +1,4 @@
-# $Id$ *** pyformex ***
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -69,7 +69,7 @@ def run():
     ML = [ m for m in ML if m.nelems() > 0 ]
     print("After splitting: %s meshes:" % len(ML))
     for m in ML:
-        print("  %s elements of type %s" % (m.nelems(),m.eltype))
+        print("  %s elements of type %s" % (m.nelems(),m.elName()))
     ML = [ Mi.setProp(i+4) for i,Mi in enumerate(ML) ]
     draw(ML)
 

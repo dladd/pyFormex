@@ -858,7 +858,7 @@ def subdivideMesh():
         return
 
     meshes = [ named(n) for n in selection.names ]
-    eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
+    eltypes = set([ m.elName() for m in meshes])
     print("eltypes in selected meshes: %s" % eltypes)
     if len(eltypes) > 1:
         warning("I can only subdivide meshes with the same element type\nPlease narrow your selection before trying conversion.")
@@ -901,7 +901,7 @@ def convertMesh():
         return
 
     meshes = [ named(n) for n in selection.names ]
-    eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
+    eltypes = set([ m.elName() for m in meshes])
     print("eltypes in selected meshes: %s" % eltypes)
     if len(eltypes) > 1:
         warning("I can only convert meshes with the same element type\nPlease narrow your selection before trying conversion.")
@@ -926,11 +926,11 @@ def convertMesh():
             if _merge == 'Each':
                 meshes = [ m.fuse() for m in meshes ]
             elif  _merge == 'All':
-                print(_merge)
+                #print(_merge)
                 coords,elems = mergeMeshes(meshes)
-                print(elems)
+                #print(elems)
                 ## names = [ "_merged_mesh_%s" % e.nplex() for e in elems ]
-                ## meshes = [ Mesh(coords,e,eltype=meshes[0].eltype) for e in elems ]
+                ## meshes = [ Mesh(coords,e,eltype=meshes[0].elType()) for e in elems ]
                 ## print meshes[0].elems
                 meshes = [ Mesh(coords,e,m.prop,m.eltype) for e,m in zip(elems,meshes) ]
             if _compact:

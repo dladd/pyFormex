@@ -429,7 +429,7 @@ def editApp(appname=None):
 
 ##################### other functions ##########################
 
-    
+
 def saveImage(multi=False):
     """Save an image to file.
 
@@ -444,6 +444,8 @@ def saveImage(multi=False):
     opt = dia.getResult()
     if opt:
         if opt.fm == 'From Extension':
+            if utils.fileTypeFromExt(opt.fn) == '':
+                opt.fn += '.png'
             opt.fm = None
         if opt.qu < 0:
             opt.qu = -1
@@ -459,6 +461,8 @@ def saveImage(multi=False):
                    border=opt.bo,
                    rootcrop=opt.rc
                    )
+
+        
 def saveIcon():
     """Save an image as icon.
 

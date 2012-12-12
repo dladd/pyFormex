@@ -73,8 +73,10 @@ def rings(self, sources=0, nrings=-1):
     ar, rr= arange(len(r)), range(r.max()+1)
     return [ar[r==i] for i in rr ]
 
+
+@utils.deprecation("depr_correctNegativeVolumes")
 def correctNegativeVolumes(self):
-    """Modify the connectivity of negative-volume elements to make
+    """_Modify the connectivity of negative-volume elements to make
     positive-volume elements.
 
     Negative-volume elements (hex or tet with inconsistent face orientation)
@@ -84,11 +86,12 @@ def correctNegativeVolumes(self):
     Currently it only works with linear tet and hex.
     """
     vol=self.volumes()<0.
-    if self.eltype.name()=='tet4':
+    if self.elName()=='tet4':
         self.elems[vol]=self.elems[vol][:,  [0, 2, 1, 3]]
-    if self.eltype.name()=='hex8':
+    if self.elName()=='hex8':
         self.elems[vol]=self.elems[vol][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
     return self
+
 
 def scaledJacobian(self, scaled=True):
     """
@@ -106,18 +109,18 @@ def scaledJacobian(self, scaled=True):
     volumes and can be fixed with the  correctNegativeVolumes.
     """
     ne = self.nelems()
-    if self.eltype.name()=='hex20':
+    if self.elName()=='hex20':
         self = self.convert('hex8')
-    if self.eltype.name()=='tet10':
+    if self.elName()=='tet10':
         self = self.convert('tet4')      
-    if self.eltype.name()=='tet4':
+    if self.elName()=='tet4':
         iacre=array([
         [[0, 1], [1, 2],[2, 0],[3, 2]],
         [[0, 2], [1, 0],[2, 1],[3, 1]],
         [[0, 3], [1, 3],[2, 3],[3, 0]],
         ], dtype=int)
         nc = 4
-    if self.eltype.name()=='hex8':
+    if self.elName()=='hex8':
         iacre=array([
         [[0, 4], [1, 5],[2, 6],[3, 7], [4, 7], [5, 4],[6, 5],[7, 6]],
         [[0, 1], [1, 2],[2, 3],[3, 0], [4, 5], [5, 6],[6, 7],[7, 4]],
@@ -136,84 +139,6 @@ def scaledJacobian(self, scaled=True):
         Jscaled = J/normvol
         return Jscaled.min(axis=1)
 
-# REMOVED in 0.9.0
-## THIS NEEDS WORK ###
-## surfacetype is also eltype ??
-## it does not work (anymore) in many cases
-## it makes more sense to just convert to TriSurface and take area
-## def areas(self):
-##     """_area of elements
-
-##     For surface element the faces' area is returned.
-##     For volume elements the sum of the faces'areas is returned.
-
-##     """
-
-##     #In case of quadratic faces, the face's area should be 
-##     #the area inside the polygon of face vertices or 
-##     #the area of the equivalent linear face?
-
-##     ##this function would require some changes (here proposed inside the function as starting):
-##     ##create a _default_surfacetype to create quad8 instead of hex8 ?maybe also a _default_volumetype to create tet4 instead of quad4 ?
-
-##     def defaultSurfacetype(nplex):
-##         """Default face type for a surface mesh with given plexitude.
-
-##         For the most common cases of plexitudes, we define a default face
-##         type. The full list of default types can be found in
-##         mesh._default_facetype.
-##         """
-##         return _default_surfacetype.get(nplex,None)
-
-##     import geomtools
-##     nfacperel= len(self.eltype.faces[1])#nfaces per elem
-##     mf=Mesh(self.coords, self.getFaces())#mesh of all faces
-##     mf.eltype = elementType(defaultSurfacetype(mf.nplex()))
-##     ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face
-##     elfacarea = geomtools.areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
-##     return elfacarea.sum(axis=1)#elems'areas
-
-
-def area(self):
-    """_Return the total area of the Mesh.
-
-    For a Mesh with dimensionality 2, the total area of the Mesh is returned.
-    For a Mesh with dimensionality 3, the total area of all the element faces
-    is returned. Use Mesh.getBorderMesh().area() if you only want the total
-    area of the border faces.
-    For a Mesh with dimensionality < 2, 0 is returned.
-    """
-    try:
-        return self.areas().sum()
-    except:
-        return 0.0
-
-
-def partitionByAngle(self,**arg):
-    """Partition a surface Mesh by the angle between adjacent elements.
-
-    The Mesh is partitioned in parts bounded by the sharp edges in the
-    surface. The arguments and return value are the same as in
-    :meth:`TriSurface.partitionByAngle`.
-
-    Currently this only works for 'tri3' and 'quad4' type Meshes.
-    Also, the 'quad4' partitioning method currently only works correctly
-    if the quads are nearly planar.
-    """
-    from plugins.trisurface import TriSurface
-    if self.eltype.name() not in [ 'tri3', 'quad4' ]:
-        raise ValueError, "partitionByAngle currently only works for 'tri3' and 'quad4' type Meshes."
-
-    S = TriSurface(self.convert('tri3'))
-    p = S.partitionByAngle(**arg)
-    if self.eltype.name() == 'tri3':
-        return p
-    if self.eltype.name() == 'quad4':
-        p = p.reshape(-1,2)
-        if not (p[:,0] == p[:,1]).all():
-            warn("The partitioning may be incorrect due to nonplanar 'quad4' elements")
-        return p[:,0]
-
 
 ##############################################################################
 #
@@ -229,12 +154,9 @@ def _auto_initialize():
     installed here will always be available as Mesh methods just by
     importing the mesh_ext module.
     """
-#    Mesh.areas = areas
-    Mesh.area = area
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
-    Mesh.partitionByAngle = partitionByAngle
     
 _auto_initialize()
 

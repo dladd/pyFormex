@@ -276,7 +276,7 @@ def fromMesh(suffix=''):
         names = [ n + suffix for n in names ]
 
     t = timer.Timer()
-    surfaces =  dict([ (n,TriSurface(M)) for n,M in zip(names,meshes) if M.eltype == 'tri3'])
+    surfaces =  dict([ (n,TriSurface(M)) for n,M in zip(names,meshes) if M.elName() == 'tri3'])
     print("Converted in %s seconds" % t.seconds())
     print(surfaces.keys())
     export(surfaces)
