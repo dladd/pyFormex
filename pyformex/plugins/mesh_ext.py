@@ -34,9 +34,8 @@ Mesh object, but are also available as Mesh methods.
 from __future__ import print_function
 
 from mesh import Mesh
-from elements import elementType,_default_facetype
 from formex import *
-from utils import deprecation, warn
+import utils
 
 
 ##############################################################################
