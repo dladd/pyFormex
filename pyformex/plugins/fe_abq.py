@@ -558,13 +558,29 @@ def fmtSpring(el,setname):
 
     Optional data:
     
-    - `springstiffness` : spring stiffness (force per relative displacement)
+    - `springstiffness` : spring stiffness (force (S11) per relative displacement (E11))
     """
     out = ""
     #if el.sectiontype.upper() != 'GENERAL':
     out += '*SPRING, ELSET=%s\n' % setname
     if el.springstiffness:
         out += '\n%s\n' % float(el.springstiffness)
+
+    return out
+
+
+def fmtDashpot(el,setname):
+    """Write a dashpot.
+
+    Optional data:
+    
+    - `dashpotcoefficient` : dashpot coefficient (force (S11) per relative velocity (ER11, only produced in Standard))
+    """
+    out = ""
+    #if el.sectiontype.upper() != 'GENERAL':
+    out += '*DASHPOT, ELSET=%s\n' % setname
+    if el.dashpotcoefficient:
+        out += '\n%s\n' % float(el.dashpotcoefficient)
 
     return out
     
@@ -1023,6 +1039,7 @@ def writeSet(fil,type,name,set,ofs=1):
 
     
 spring_elems = ['SPRINGA', ]
+dashpot_elems = ['DASHPOTA', ]
 connector_elems = ['CONN3D2','CONN2D2']
 frame_elems = ['FRAME3D','FRAME2D']
 truss_elems = [
@@ -1098,6 +1115,9 @@ def writeSection(fil,prop):
 
     elif eltype in spring_elems:
         fil.write(fmtSpring(el,setname))
+
+    elif eltype in dashpot_elems:
+        fil.write(fmtDashpot(el,setname))
 
     elif eltype in frame_elems:
         fil.write(fmtFrameSection(el,setname))
