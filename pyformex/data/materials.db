@@ -32,4 +32,15 @@ material
     density = 7.85e-9
 endmaterial
 
-
+# Reduced Polynomial 2nd Order material for large cerebral arteries. Derived from 
+#       Chalupnik, J. D., Daly, C. H., and Merchant, H. C., 1971, ''Material Properties of Cerebral Blood Vessels,'' Final Report on Contract No. NIH-69-2232, Report No. ME 71-11, Univ. of Washington, Seattle.
+# described in
+#       K. L. Monson, W. Goldsmith, N. M. Barbaro, and G. T. Manley "Axial mechanical properties of fresh human cerebral blood vessels," J Biomech Eng, vol. 125, no. 2, pp. 288-294, Apr. 2003.
+#
+# Units are in MPa
+material
+    name = vesselChalupnik1971
+    elasticity = hyperelastic
+    type = reduced polynomial
+    constants = [8.079804243E-02, 8.77088566, 0.0,0.0],
+endmaterial
