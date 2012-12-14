@@ -29,8 +29,8 @@ Create, measure and approximate cross section of a Formex.
 from __future__ import print_function
 
 import pyformex as pf
+from plugins.curve import PolyLine
 import simple
-from formex import *
 from gui.draw import *
 
 
@@ -63,24 +63,21 @@ def centerline(F,dir,nx=2,mode=2,th=0.2):
     
     grid = simple.regularGrid(x0,x1,n).reshape((-1,3))
 
-    if mode > 0:
-        th *= (x1[dir]-x0[dir])/nx
-        n = zeros((3,))
-        n[dir] = 1.0
-        center = []
-        for P in grid:
-            test = abs(F.distanceFromPlane(P,n)) < th
-            if mode == 1:
-                C = F.coords[test].mean(axis=0)
-            elif mode == 2:
-                test = test.sum(axis=-1)
-                G = F.select(test==F.coords.shape[1])
-                print(G)
-                C = G.center()
-            center.append(C)
-        grid = array(center)
+    th *= (x1[dir]-x0[dir])/nx
+    n = zeros((3,))
+    n[dir] = 1.0
 
-    return Formex(connectPoints(grid))
+    def localCenter(X,P,n):
+        """Return the local center of points X in the plane P,n"""
+        test = abs(X.distanceFromPlane(P,n)) < th # points close to plane
+        if mode == 1:
+            C = X[test].center()
+        elif mode == 2:
+            C = X[test].centroid()
+        return C
+
+    center = [ localCenter(F,P,n) for P in grid ]
+    return PolyLine(center)
 
 
 def createSegments(F,ns=None,th=None):
