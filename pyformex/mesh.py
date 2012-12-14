@@ -1090,7 +1090,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         and are both without duplicates.
             
         Returns the indices array of the elems of self that matches
-        the faces of mesh
+        the faces of mesh, and the matched face number 
         """
         sel = self.elType().getEntities(2)
         hi,lo = self.elems.insertLevel(sel)
@@ -1099,8 +1099,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         mesh=Mesh(mesh.coords,mesh.getFaces())
         c=fm.matchCentroids(mesh)
         hiinv = hiinv[c]
+        hpos=matchIndex(c,hi).reshape(hi.shape)
         enr =  unique(hiinv[hiinv >= 0])  # element number
-        return enr
+        fnr=column_stack(where(hpos!=-1)) # face number
+        return enr,fnr
     
 
     def compact(self):
