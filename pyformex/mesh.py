@@ -1083,7 +1083,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     # be replaced with a method applied on the BorderMesh
     #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
     def matchFaces(self,mesh):
-        """Match faces of mesh with faces of self.
+        """_Match faces of mesh with faces of self.
             
         self and Mesh can be same eltype meshes or different eltype but of the 
         same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
