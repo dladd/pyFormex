@@ -159,10 +159,10 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
     else:
         nelems = e.shape[0]
     n = None
-    #print("LIGTHING %s, AVGNORMALS %s" % (lighting,avgnormals))
+    #print("LIGHTING %s, AVGNORMALS %s" % (lighting,avgnormals))
     if lighting and objtype==-1:
         if normals is None:
-            pf.debug("Computing normals",pf.DEBUG.DRAW)
+            #print("Computing normals",pf.DEBUG.DRAW)
             if avgnormals and e is not None:
                 n = interpolateNormals(x,e,treshold=pf.cfg['render/avgnormaltreshold'])
             else:
@@ -170,7 +170,7 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
                     n = geomtools.polygonNormals(x)
                 else:
                     n = geomtools.polygonNormals(x[e])
-                pf.debug("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
+                #print("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
         else:
             try:
                 n = asarray(normals)
