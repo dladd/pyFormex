@@ -1821,7 +1821,14 @@ class Step(Dict):
             writeModelProps(fil,prop)
 
         if self.out:
-            out += self.out
+            #out += self.out
+            ##GDS   the previous line seems to add the AbqData.out to the Step.out. Then, if you re-run pyFormex multiple times (N),
+            ##the AbqData.out becomes larger and larger and if you will find that the .inp file contains N times the same output.
+            ##Is it needed to add the AbqData.out to the Step.out? I think not: 
+            ##-if you have Step.out, the AbqData.out should be ignored.
+            ##-if you have multiple steps and only some of them have no output, only for those the AbqData.out should be used.
+            ##Solution:
+            out = self.out
         
         for i in out:
             if i.kind is None:
