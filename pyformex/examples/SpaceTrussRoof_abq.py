@@ -138,17 +138,18 @@ def run():
     #Writing the inputfile
     ###################
 
-    step = Step()
-    out = Output(type='field',variable='preselect')
-    res = [ Result(kind='element',keys=['S']),
-            Result(kind='node',keys=['U'])
-            ]
+    step = Step(
+        out = [ Output(type='field',variable='preselect') ],
+        res = [ Result(kind='element',keys=['S']),
+                Result(kind='node',keys=['U'])
+                ]
+        )
     model = Model(M.coords,M.elems)
 
     if not checkWorkdir():
         return
 
-    AbqData(model,P,[step],eprop=F.prop,out=[out],res=res).write('SpaceTruss')
+    AbqData(model,P,[step],eprop=F.prop).write('SpaceTruss')
 
 if __name__ == 'draw':
     run()

@@ -1378,7 +1378,6 @@ def writeAmplitude(fil,prop):
         
 
 ### Output requests ###################################
-#
 # Output: goes to the .odb file (for postprocessing with Abaqus/CAE)
 # Result: goes to the .fil file (for postprocessing with other means)
 #######################################################
@@ -1612,7 +1611,7 @@ def writeStepExtra(fil,extra):
 # should be removed and change also the OUTPUT class (see comments)
 
 class Step(Dict):
-    """_Badly structured docstring
+    """_VERY badly structured docstring
 
     The basic logical unit in the simulation history.
 
@@ -1701,7 +1700,7 @@ class Step(Dict):
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom=False,
-                 subheading=None,tags=None,name=None,out=None,res=None,
+                 subheading=None,tags=None,name=None,out=[],res=[],
                  stepOptions=None,analysisOptions=None,extra=None):
         """Create a new analysis step."""
         
@@ -1820,17 +1819,7 @@ class Step(Dict):
             pf.message("  Writing step model props")
             writeModelProps(fil,prop)
 
-        if self.out:
-            #out += self.out
-            ##GDS   the previous line seems to add the AbqData.out to the Step.out. Then, if you re-run pyFormex multiple times (N),
-            ##the AbqData.out becomes larger and larger and if you will find that the .inp file contains N times the same output.
-            ##Is it needed to add the AbqData.out to the Step.out? I think not: 
-            ##-if you have Step.out, the AbqData.out should be ignored.
-            ##-if you have multiple steps and only some of them have no output, only for those the AbqData.out should be used.
-            ##Solution:
-            out = self.out
-        
-        for i in out:
+        for i in out + self.out:
             if i.kind is None:
                 fil.write(i.fmt())
             if i.kind == 'N':
@@ -1838,11 +1827,9 @@ class Step(Dict):
             elif i.kind == 'E':
                 writeElemOutput(fil,**i)
                 
-        if self.res:
-            res += self.res
         if res and self.analysis == 'EXPLICIT':
             writeFileOutput(fil,resfreq,timemarks)
-        for i in res:
+        for i in res + self.res:
             if i.kind == 'N':
                 writeNodeResult(fil,**i)
             elif i.kind == 'E':
@@ -1957,27 +1944,31 @@ class Interaction(Dict):
         self.surfacebehavior = surfacebehavior
         self.noseparation = noseparation
         self.pressureoverclosure = pressureoverclosure
+        
 ############################################################ AbqData
         
 class AbqData(object):
     """Contains all data required to write the Abaqus input file.
         
     - `model` : a :class:`Model` instance.
-    - `prop` : the `Property` database.
+    - `prop`  : the `Property` database.
+    - `nprop` : the node property numbers to be used for by-prop properties.
+    - `eprop` : the element property numbers to be used for by-prop properties.
     - `steps` : a list of `Step` instances.
-    - `res` : a list of `Result` instances.
-    - `out` : a list of `Output` instances.
+    - `res` : a list of `Result` instances (deprecated: set inside Step).
+    - `out` : a list of `Output` instances (deprecated: set inside Step).
     - `bound` : a tag or alist of the initial boundary conditions.
       The default is to apply ALL boundary conditions initially.
       Specify a (possibly non-existing) tag to override the default.
-
     """
     
     def __init__(self,model,prop,nprop=None,eprop=None,steps=[],res=[],out=[],bound=None):
         """Create new AbqData."""
         if not isinstance(model,Model) or not isinstance(prop,PropertyDB):
             raise ValueError,"Invalid arguments: expected Model and PropertyDB, got %s and %s" % (type(model),type(prop))
-        
+
+        if res or out:
+            warn("The use of the `res` and `out` arguments in AbqData is deprecated. Set them inside your Steps instead.")
         self.model = model
         self.prop = prop
         self.nprop = nprop
@@ -1995,7 +1986,7 @@ class AbqData(object):
           extension. If None is specified, the output is written to sys.stdout
           An extra header text may be specified.
         - `create_part` : if True, the model will be created as an Abaqus Part,
-          followed by and assembly of that part.
+          followed by an assembly of that part.
         """
         global materialswritten
         materialswritten = []

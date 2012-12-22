@@ -230,15 +230,15 @@ def run():
             ]
 
     # Define steps (default is static)
-    step1 = Step(time=[1., 1., 0.01, 1.],tags=['step1'])
-    step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
+    step1 = Step(time=[1., 1., 0.01, 1.],tags=['step1'],out=out,res=res)
+    step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'],out=out,res=res)
 
     # collect all data
     #
     # !! currently output/result request are global to all steps
     # !! this will be changed in future
     #
-    data = AbqData(M,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
+    data = AbqData(M,prop=P,steps=[step1,step2],bound=['init'])
 
     if ack('Export this model in ABAQUS input format?',default='No'):
         fn = askNewFilename(filter='*.inp')
