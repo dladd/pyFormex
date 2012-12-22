@@ -739,9 +739,7 @@ class Connectivity(ndarray):
     # BV: should we add a 'unique=False' option to create tables of
     # all intermediate entities without uniqifying?
     # 
-    # BV: do we need the lower_only? It is just as easy or easier to
-    # write elems.insertLevel(level)[1]
-    def insertLevel(self,selector,lower_only=False):
+    def insertLevel(self,selector):
         """Insert an extra hierarchical level in a Connectivity table.
 
         A Connectivity table identifies higher hierarchical entities in
@@ -764,26 +762,23 @@ class Connectivity(ndarray):
           single integer specifying one of the hierarchical levels of element
           entities (See the Element class). In that case the selector is
           constructed automatically from self.eltype.getEntities(selector).
-          
-        - `lower_only`: if True, only the definition of the new (lower)
-          entities is returned, complete without removing duplicates.
-          This is equivalent to using :meth:`selectNodes`, which
-          is prefered when you do not need the higher level info. 
         
         Returns: 
     
         - `hi`: a :class:`Connectivity` defining the original elements
-          in function of the intermediatelevel ones,
+          in function of the intermediate level ones,
         - `lo`: a :class:`Connectivity` defining the intermediate level
           items in function of the lowest level ones (the original nodes).
           If the `selector` has an `eltype` attribute, then `lo` will inherit
           the same `eltype` value.
           
-        Intermediate level items that consist of the same items in any
-        permutation order are collapsed to single items.
-        The low level items respect the numbering order inside the
-        original elements, but it is undefined which of the collapsed
-        sequences is returned.
+        All intermediate level items that consist of the same set of nodes
+        in any permutation order and with any multiplicity, are considered
+        identical and are collapsed into single items. 
+        The resulting node numbering of the created intermediate entities
+        (the `lo` return value) respects the numbering order of the original
+        elements and applied the selector, but it is undefined which of the
+        collapsed sequences is returned.
 
         Because the precise order of the data in the collapsed rows is lost,
         it is in general not possible to restore the exact original table
@@ -805,7 +800,10 @@ class Connectivity(ndarray):
                  [0, 3],
                  [1, 2],
                  [3, 2]]))
-           
+           >>> Connectivity([[0,1,2,3]]).insertLevel([[0,1,2],[1,2,3],[0,1,1],[0,0,1],[1,0,0]])
+           (Connectivity([[1, 2, 0, 0, 0]]), Connectivity([[0, 1, 1],
+                  [0, 1, 2],
+                  [1, 2, 3]]))
         """
         from elements import elementType
         
@@ -818,7 +816,13 @@ class Connectivity(ndarray):
             sel = Connectivity(selector)
         lo = self.selectNodes(sel)
         if lo.size > 0:
-            uniq,uniqid = uniqueRows(lo,permutations=True)
+            if sel.testDegenerate().any():
+                LO = lo.copy()
+                # change the double entries to -1
+                LO[LO[:,:-1] == LO[:,1:]] = -1
+            else:
+                LO = lo
+            uniq,uniqid = uniqueRows(LO,permutations=True)
             hi = Connectivity(uniqid.reshape(-1,sel.nelems()))
             lo = lo[uniq]
         else:

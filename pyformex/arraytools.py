@@ -1323,7 +1323,7 @@ def sortByColumns(a):
 
 
 def uniqueRows(a,permutations=False):
-    """Return (the indices of) the unique rows of a 2-D array.
+    """Find the unique rows of a 2-D array.
 
     Parameters:
 
@@ -1336,7 +1336,7 @@ def uniqueRows(a,permutations=False):
 
     - `uniq`: a 1-D integer array with the numbers of the unique rows from `a`.
       The order of the elements in `uniq` is determined by the sorting
-      procedure, which in the current implementation is :func:`sortByColumns`.
+      procedure: in the current implementation this is :func:`sortByColumns`.
       If `permutations==True`, `a` is sorted along its axis -1 before calling
       this sorting function. 
     - `uniqid`: a 1-D integer array with length equal to `a.shape[0]` with the
