@@ -510,7 +510,7 @@ def vertexinterp(level,p1,p2,val1,val2):
     return p1 + mu * (p2-p1)
 
 
-grid = array([
+grid = np.array([
     [0,0,0],
     [1,0,0],
     [1,1,0],
