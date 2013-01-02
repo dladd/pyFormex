@@ -1,0 +1,11 @@
+# backups
+#########
+*~
+*.tmp
+.#*
+
+# compiled files
+################
+*.[oa]
+*.so
+*.py[oc]
