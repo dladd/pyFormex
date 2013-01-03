@@ -892,13 +892,21 @@ def killProcesses(pids,signal=15):
             pf.debug("Error in killing of process '%s'" % pid,pf.DEBUG.INFO)
             
 
-
 def changeExt(fn,ext):
     """Change the extension of a file name.
 
     The extension is the minimal trailing part of the filename starting
     with a '.'. If the filename has no '.', the extension will be appended.
     If the given extension does not start with a dot, one is prepended.
+
+    Example:
+
+    >>> changeExt('image.png','.jpg')
+    'image.jpg'
+    >>> changeExt('image','.jpg')
+    'image.jpg'
+    >>> changeExt('image','jpg')
+    'image.jpg'
     """
     if not ext.startswith('.'):
         ext = ".%s" % ext
