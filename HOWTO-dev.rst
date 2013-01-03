@@ -1137,4 +1137,55 @@ Then, to install all the latest pyformex packages, just do::
    apt-get pyformex pyformex-lib pyformex-extra
 
 
+
+Using the git repository
+========================
+
+.. note: This is currently experimental and only accessible for the local
+   developers with `ssh` access to the `bumps.ugent.be` server.
+
+- Advantages of git: 
+
+  - It is THE current big thing in version control systems.
+  - It is FAR more powerful than Subversion
+  - There is no single central repository: every user has a clone of the
+    repository.
+  - It is easy to use many small branches to work on some specific topic.
+
+
+- Make sure you have `git` installed on your machine, and you have `ssh` access
+  to `bumps.ugent.be`. 
+
+- Learn more from `man git COMMAND` or from 
+  `http://www.kernel.org/pub/software/scm/git/docs/` or from
+  `http://git-scm.com/documentation`
+  
+- Clone the pyformex git repository into a directory `pyformex`::
+
+    git clone ssh://bumps/srv/git/pyformex pyformex
+
+  This will create a working directory `pyformex` with a clone of the
+  repository (in a hidden subdir `.git`) and a checked out working copy
+  of the master branch of the repository.
+
+- Translated svn workflow::
+
+  svn up : git pull  ---  git checkout
+  svn ci : git add  ---  git commit  ---  git push
+  
+
+
+- If you are not a developer, you may want to check out a sparse tree only::
+
+    git clone ssh://bumps/srv/git/pyformex pyformex
+    cd pyformex
+    git config core.sparsecheckout true
+    echo /pyformex >> .git/info/sparse-checkout
+    git read-tree -mu HEAD
+
+
+    
+
+  
+
 .. End

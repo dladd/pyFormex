@@ -273,11 +273,12 @@ def Libraries():
 
 def reportDetected():
     notfound = '** Not Found **'
-    s = "%s\n\n" % FullVersion()
-    s += "pyFormex C libraries: %s\n\n" % Libraries()
-    s += "Python version: %s\n" % sys.version
-    s += "Operating system: %s\n\n" % sys.platform
-    s += "Detected Python Modules:\n"
+    s = "%s\n" % FullVersion()
+    s += "\nInstall type: %s\n" % pf.installtype
+    s += "\npyFormex C libraries: %s\n" % Libraries()
+    s += "\nPython version: %s\n" % sys.version
+    s += "\nOperating system: %s\n" % sys.platform
+    s += "\nDetected Python Modules:\n"
     for k,v in the_version.iteritems():
         if not v:
             v = notfound

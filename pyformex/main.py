@@ -39,7 +39,9 @@ startup_messages = ''
 
 pyformexdir = sys.path[0]
 
-if os.path.exists(os.path.join(pyformexdir,'.svn')):
+if os.path.exists(os.path.join(pyformexdir,'.svn')) or \
+       os.path.exists(os.path.join(os.path.dirname(pyformexdir),'.git')):
+    
     # Running from source tree
     pf.installtype = 'S'
 
