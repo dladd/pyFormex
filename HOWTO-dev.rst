@@ -1159,6 +1159,11 @@ Using the git repository
 - Learn more from `man git COMMAND` or from 
   `http://www.kernel.org/pub/software/scm/git/docs/` or from
   `http://git-scm.com/documentation`
+
+- Set your user name and email address::
+
+    git config --global user.name "John Doe"
+    git config --global user.email john.doe@some.where
   
 - Clone the pyformex git repository into a directory `pyformex`::
 

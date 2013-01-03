@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+echo "Performing a sparse checkout of the pyFormex git repository"
+git config core.sparsecheckout true
+cat <<EOF > .git/info/sparse-checkout
+/pyformex
+/Makefile
+/RELEASE
+/setup.py
+/manifest.py
+EOF
+git read-tree -mu HEAD
