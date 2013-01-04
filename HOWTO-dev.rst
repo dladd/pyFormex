@@ -1141,9 +1141,6 @@ Then, to install all the latest pyformex packages, just do::
 Using the git repository
 ========================
 
-.. note: This is currently experimental and only accessible for the local
-   developers with `ssh` access to the `bumps.ugent.be` server.
-
 - Advantages of git: 
 
   - It is THE current big thing in version control systems.
@@ -1154,7 +1151,7 @@ Using the git repository
 
 
 - Make sure you have `git` installed on your machine, and you have `ssh` access
-  to `bumps.ugent.be`. 
+  to Savannah. 
 
 - Learn more from `man git COMMAND` or from 
   `http://www.kernel.org/pub/software/scm/git/docs/` or
@@ -1167,28 +1164,32 @@ Using the git repository
     git config --global user.name "John Doe"
     git config --global user.email john.doe@some.where
   
-- Clone the pyformex git repository into a directory `pyformex`::
+- Clone the pyformex git repository into a directory `pyformex` (use your
+  USERNAME at Savannah) ::
 
-    git clone ssh://bumps/srv/git/pyformex pyformex
+    git clone USERNAME@git.sv.gnu.org:/srv/git/pyformex.git
 
   This will create a working directory `pyformex` with a clone of the
   repository (in a hidden subdir `.git`) and a checked out working copy
-  of the master branch of the repository.
+  of the master branch of the repository. You should be able to run 
+  pyformex directly from it, just like you did with the Subversion checkout.
 
+- If you are not a (docs, website) developer, you may want to check out a
+  sparse tree only. Go into the checked out directory and run the
+  `sparse_checkout` script::
+
+    cd pyformex
+    sh sparse_checkout
+
+  This will remove the `sphinx` and `website` subdirs, as well as some
+  other cruft.
+    
 - Translated svn workflow::
 
   svn up : git pull  ---  git checkout
   svn ci : git add  ---  git commit  ---  git push
   
 
-
-- If you are not a developer, you may want to check out a sparse tree only::
-
-    git clone ssh://bumps/srv/git/pyformex pyformex
-    cd pyformex
-    git config core.sparsecheckout true
-    echo /pyformex >> .git/info/sparse-checkout
-    git read-tree -mu HEAD
 
 
     
