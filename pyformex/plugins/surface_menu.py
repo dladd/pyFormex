@@ -345,6 +345,18 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
             F.write(fn)   
             pf.GUI.setBusy(False)
 
+
+def export_webgl():
+    F = selection.check(single=True)
+    if F:
+        types = map(utils.fileDescription,['stl'])
+        fn = askNewFilename(pf.cfg['workdir'],types)
+        if fn:
+            pf.message("Exporting surface model to %s" % fn)
+            pf.GUI.setBusy()
+            F.webgl(fn)   
+            pf.GUI.setBusy(False)
+
 #
 # Operations with surface type, border, ...
 #
@@ -1378,6 +1390,7 @@ def create_menu():
         ("&Convert from Formex",fromFormex),
         ("&Convert from Mesh",fromMesh),
         ("&Write Surface Model",write_surface),
+        ("&Export as WebGL Model",export_webgl),
         ("---",None),
         ("&Create surface",
          [('&Cube',createCube),

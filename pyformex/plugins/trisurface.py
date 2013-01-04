@@ -2410,4 +2410,65 @@ tetgen.install_more_trisurface_methods()
 
 import vmtk_itf
 
+
+def stl2webgl(stlname,caption=None,magicmode=True,script="http://get.goXTK.com/xtk_edge.js"):
+    """Create a WebGL model from an STL file
+
+    - `stlname`: name of an (ascii or binary) STL file
+    - `caption`: text to use as caption
+    """
+    if caption is None:
+        caption = stlname
+    caption = '%s --- Created by pyFormex' % caption
+    
+    jstext = """window.onload = function() {
+var r = new X.renderer3D();
+r.init();
+var m = new X.mesh();
+m.file = '%s';
+m.magicmode = %s;
+m.caption = '%s';
+r.add(m);
+r.render();
+};
+""" % (stlname,str(bool(magicmode)).lower(),caption)
+    jsname = utils.changeExt(stlname,'.js')
+    with open(jsname,'w') as jsfile:
+        jsfile.write(jstext)
+        jsfile.close()
+    
+    htmltext = """<html>
+<head>
+<title>%s</title>
+<script type="text/javascript" src="%s"></script>
+<script type="text/javascript" src="%s"></script>
+</head>
+<body>
+</body>
+</html>
+""" % (caption,script,jsname)
+    htmlname = utils.changeExt(jsname,'.html')
+    with open(htmlname,'w') as htmlfile:
+        htmlfile.write(htmltext)
+
+
+def surface2webgl(S,name,caption=None):
+    """Create a WebGL model of a surface
+
+    - `S`: TriSurface
+    - `name`: basename of the output files
+    - `caption`: text to use as caption
+    """
+    stlname = utils.changeExt(name,'.stl')
+    stlaname = utils.changeExt(name+'_a','.stl')
+    scale = 50./S.sizes().max()
+    S.scale(scale).write(stlaname)
+    cmd = "admesh -b %s %s" % (stlname,stlaname)
+    sta,out = utils.runCommand(cmd)
+    stl2webgl(stlname,caption)
+
+
+TriSurface.webgl = surface2webgl
+
+
 # End
