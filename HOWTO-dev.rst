@@ -1,4 +1,4 @@
-.. HOWTO-dev.rst  $Revision$  $Date$  $Author$   *- rst -*-
+.. $Id$   *- rst -*-
   
 ..
   This file is part of the pyFormex project.
@@ -24,6 +24,11 @@
   along with this program.  If not, see http://www.gnu.org/licenses/.
   
 .. |date| date::
+
+..
+.. This document is written in ReST. To see a nicely formatted PDF version 
+.. you can compile this document with the rst2pdf command.
+..
 
 =============================
 HOWTO for pyFormex developers
@@ -1154,8 +1159,10 @@ Using the git repository
   to Savannah. 
 
 - Learn more from `man git COMMAND` or from 
-  `http://www.kernel.org/pub/software/scm/git/docs/` or from
-  `http://git-scm.com/documentation`
+  `http://www.kernel.org/pub/software/scm/git/docs/` or
+  `http://git-scm.com/documentation` or
+  `http://gitref.org/index.html`
+
 
 - Set your user name and email address::
 
@@ -1163,30 +1170,53 @@ Using the git repository
     git config --global user.email john.doe@some.where
   
 - Clone the pyformex git repository into a directory `pyformex` (use your
-  USERNAME at Savannah) ::
+  USERNAME) ::
 
-    git clone USERNAME@git.sv.gnu.org:/srv/git/pyformex.git
+    git clone USERNAME@bumps.ugent.be:/srv/git/pyformex.git
 
   This will create a working directory `pyformex` with a clone of the
   repository (in a hidden subdir `.git`) and a checked out working copy
   of the master branch of the repository. You should be able to run 
-  pyformex directly from it, just like you did with the Subversion checkout.
-
-- If you are not a (docs, website) developer, you may want to check out a
-  sparse tree only. Go into the checked out directory and run the
-  `sparse_checkout` script::
-
-    cd pyformex
-    sh sparse_checkout
-
-  This will remove the `sphinx` and `website` subdirs, as well as some
-  other cruft.
+  pyformex directly from it, just like you previously did with a 
+  Subversion checkout.
     
-- Translated svn workflow::
+- Git allows for workflows that are very different from what we were used to
+  with Subversion. However, until we gather more experience, you can follow
+  you tradidtional workflow by the following simple translation of svn 
+  commands to more or less corresponding git commands.
 
-  svn up : git pull  ---  git checkout
-  svn ci : git add  ---  git commit  ---  git push
-  
+  - See a status of what has changed (use it often!)::
+
+      git status
+
+  - Pull in the changes from the remote repository (like `svn up`)::
+      
+      git pull
+
+    Make sure you have a clean working directory (i.e. no changes) before
+    doing that.
+
+  - Commit your changes to the remote repository (like `svn ci`). This is now
+    a two-step (or even 3-step) procedure. First you commit the changes to
+    your local copy of the repository::
+
+      git commit -a
+
+    You will need to specify a commit message, like with `svn ci`.
+
+    Next you can push your changes up to the remote repository::
+
+      git push
+
+- Finally, here are some aliases you can use to have shortcuts for some
+  often used commands. Just add this section to your `~/.gitconfig` file::
+
+    [alias]
+	st = status
+	co = checkout
+	ci = commit
+	br = branch
+	last = log -1 HEAD
 
 
 

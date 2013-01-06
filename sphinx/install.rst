@@ -425,6 +425,73 @@ Obviously, the pyFormex developers use this method, but there are also
 several normal users who prefer this, because it allows for easy
 updating to the latest version.
 
+.. note: The pyFormex project has recently migrated from Subversion to git as 
+   its version control system. The Subversion repository is still accessible,
+   but does not contain the latest revisions. See below for checking out the
+   source from the Subversion repository
+
+
+To run pyFormex from the development sources you need to have the same
+dependencies installed as for the :ref:`sec:official-release`. 
+Furthermore, you need the `git`_ revision control system. 
+You can check whether you have it by trying the command ``git``. 
+If you do not have the command, you should first install it. 
+Debian and Ubuntu users can just do ``apt-get install git``.
+
+Now you can anonymously check out the latest pyFormex version
+from the `Source code`_ repository at the `Project page`_, using the
+command::
+
+  git clone git://git.savannah.nongnu.org/pyformex.git
+
+This will create a directory ``pyformex`` with the full source.
+
+.. note: If you already have a directory or file named ``pyformex`` in your 
+   current path, the git command will not overwrite it.
+
+Now you can directly run pyFormex from the created ``pyformex`` directory::
+
+  cd pyformex
+  pyformex/pyformex
+
+The first time you run the command, it will start with compiling the pyFormex
+acceleration libraries. When that has finished, the pyFormex GUI will start,
+running directly from your checked out source. 
+The next time you run the command, the library will not be
+recompiled, unless some updates have been made to the files, making the
+already compiled versions out of date. 
+
+You can make the ``pyformex/pyformex`` command
+executable from anywhere by creating a symlink under one of the
+directories in your ``PATH`` environment variable. 
+Many GNU/Linux distributions add ``/home/USER/bin`` to the user's path.
+Thus the following command is suitable in most cases::
+ 
+  ln -sfn BASEDIR/pyformex/pyformex /home/USER/bin
+
+where ``BASEDIR`` is the full path to the directory where you checked out the 
+source.
+
+The pyFormex repository contains a lot of files that are only needed and
+interesting for the pyFormex developers. As a normal user you may want to 
+remove this extra overhead in your copy. To do so, run the `sparse_checkout`
+script from the checkout directory::
+
+  sh sparse_checkout
+
+You can update your pyFormex installation at any time to the latest
+version by issuing the command ``git pull`` in your ``BASEDIR``
+directory. You can even roll back to any older revision of
+pyFormex. Just remember that after updating your sources, the compiled
+libraries could be out of sync with your new sources. Normally pyFormex
+will rebuild the libraries the next time you start it. 
+If you ever want to rebuild the libraries without starting the ``pyformex`` 
+program, you can use the command ``make lib`` from inside ``BASEDIR``.
+
+
+Using the older Subversion repository
+-------------------------------------
+
 To run pyFormex from the development sources you need to have the same
 dependencies installed as for the
 :ref:`sec:official-release`. Furthermore, you need the
@@ -434,7 +501,7 @@ you should install Subversion first. Debian and Ubuntu users can just
 do ``apt-get install subversion``.
 
 Now you can anonymously check out the latest pyFormex version
-from the `Source code`_ repository at the `Project page`_. 
+from the `SVN Source code`_ repository at the `Project page`_. 
 If you are not a pyFormex developer, the suggested commands for this checkout 
 are::
 
@@ -454,29 +521,9 @@ files which are only useful for pyFormex developers, not for normal users ::
   
   svn co svn://svn.savannah.nongnu.org/pyformex/trunk MYDIR
 
-Now change into the created ``MYDIR`` directory and execute
-the command ``pyformex/pyformex``. This will first compile the pyFormex
-acclearation library and then startup the pyFormex GUI right from your
-svn sources. The next time you run the command, the library will not be
-recompiled, unless some updates have been made to the files that make the
-already compiled versions out of date. 
-
-You can make the ``pyformex/pyformex`` command
-executable from anywhere by creating a symlink under one of the
-directories in your ``PATH`` environment variable. 
-Many GNU/Linux distributions add ``/home/USER/bin`` to the user's path.
-Thus the following command is suitable in most cases::
- 
-  ln -sfn MYDIR/pyformex/pyformex /home/USER/bin
-
-You can update your pyFormex installation at any time to the latest
-version by issuing the command ``svn update`` in your ``MYDIR``
-directory. You can even roll back to any older revision of
-pyFormex. Just remember that after updating your sources, the compiled
-libraries could be out of sync with your new sources. Normally pyFormex
-will rebuild the libraries the next time you start it. 
-If you ever want to rebuild the libraries without starting the ``pyformex`` 
-program, you can use the command ``make lib`` from inside ``MYDIR``.
+Now change into the created ``MYDIR`` directory, where you can execute
+the command ``pyformex/pyformex`` and proceed as explained above for a 
+checkout of the git repository.
 
 
 .. _sec:bumpix-live-linux:
