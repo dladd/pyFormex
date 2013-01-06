@@ -204,11 +204,22 @@ This only works for files that are already tracked. New files always need to
 be added first. 
 
 Remember that all the commits that you make, are only to your local copy of the
-repository. If you want to push the changes you have commited earlier, do ::
+repository. This can also be seen from the status command::
+
+  # On branch master
+  # Your branch is ahead of 'origin/master' by 3 commits.
+  #
+  nothing to commit (working directory clean)
+
+If you want to push the changes to the remote repository, do ::
 
   git push
 
 
+Working with multiple branches
+------------------------------
+
+.. note: This needs to be added
 
 Working with multiple repos
 ---------------------------
