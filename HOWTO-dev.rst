@@ -1159,8 +1159,10 @@ Using the git repository
   to Savannah. 
 
 - Learn more from `man git COMMAND` or from 
-  `http://www.kernel.org/pub/software/scm/git/docs/` or from
-  `http://git-scm.com/documentation`
+  `http://www.kernel.org/pub/software/scm/git/docs/` or
+  `http://git-scm.com/documentation` or
+  `http://gitref.org/index.html`
+
 
 - Set your user name and email address::
 

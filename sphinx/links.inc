@@ -43,7 +43,8 @@
 .. _`Project page`: http://savannah.nongnu.org/projects/pyformex/
 .. _`Support tracker`: http://savannah.nongnu.org/support/?group=pyformex
 .. _`Bug tracker`: http://savannah.nongnu.org/bugs/?group=pyformex
-.. _`Source code`: http://savannah.nongnu.org/svn/?group=pyformex
+.. _`Source code`: http://savannah.nongnu.org/git/?group=pyformex
+.. _`SVN Source code`: http://savannah.nongnu.org/svn/?group=pyformex
 .. _`News`: http://savannah.nongnu.org/news/?group=pyformex
 .. _`Releases`: http://download.savannah.gnu.org/releases/pyformex/
 
@@ -65,6 +66,7 @@
 .. _`PyOpenGL`: http://pyopengl.sourceforge.net
 .. _`Qt4`: http://trolltech.com/products/qt
 .. _`PyQt4`: http://www.riverbankcomputing.co.uk/pyqt
+.. _`git`: http://git-scm.com/
 .. _`Subversion`: http://subversion.tigris.org
 .. _`Sphinx`: http://sphinx.pocoo.org
 .. _`reStructuredText`: http://docutils.sourceforge.net/rst.html
