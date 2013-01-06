@@ -149,17 +149,52 @@ you have a new untracked file `git-examples.rst`. Suppose you want to get these
 changes in the repo (my local one!). First you should add the changes::
 
   git add HOWTO-dev.rst 
+  git add git-examples.rst
+  git status
 
-  git commit -a
+  # On branch master
+  # Changes to be committed:
+  #   (use "git reset HEAD <file>..." to unstage)
+  #
+  #	modified:   HOWTO-dev.rst
+  #	new file:   git-examples.rst
+  #
 
-Like in subversion, an editor will show up where you should enter a commit message. We recommend (maybe we should enforce?) to enter detailed commit messages, consisting of a single header line, a blank line and multiple detail lines. All
-lines should not be longer than 72 characters. ::
+Now the changes are ready to be committed to the repo::
+
+  git commit
+
+Like in subversion, an editor will show up where you should enter a commit message. We recommend (maybe we should enforce?) to enter detailed commit messages, consisting of a single short (max 50 chars) header line, a blank line and 
+multiple detail lines (by preference not longer than 72 characters). ::
 
   Added to developer documentation
 
   Added new file git-examples.rst, with an overview of git usage for 
   pyFormex.
   Unimportant change in HOWTO-dev.rst
+
+If you leave an empty message, the commit will be aborted. After a succesful commit the status looks like::
+
+  # On branch master
+  # Your branch is ahead of 'origin/master' by 1 commit.
+  #
+  nothing to commit (working directory clean)
+
+We again have a clean working directory, ready for more work. Remark that if
+you want to check in *all* your changes, you can do the *add* and *commit* in
+a single command::
+
+  git commit -a
+
+This only works for files that are already tracked. New files always need to
+be added first. 
+
+Remember that all the commits that you make, are only to your local copy of the
+repository. If you want to push the changes you have commited earlier, do ::
+
+  git push
+
+
 
 
 
