@@ -1,4 +1,4 @@
-.. HOWTO-dev.rst  $Revision$  $Date$  $Author$   *- rst -*-
+.. $Id$   *- rst -*-
   
 ..
   This file is part of the pyFormex project.
