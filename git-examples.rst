@@ -102,9 +102,9 @@ Of course you can also restore the situation of any other past commit (those
    In git, there is no such number, because there is no single repository.
 
 In git, individual commits are identified by a unique SHA hash number. 
-The following commands show the last commit::
+The following commands show the last commits::
 
-  git log -1
+  git log
 
 The result shows the commit SHA, author and date info, and commit message::
 
@@ -112,9 +112,23 @@ The result shows the commit SHA, author and date info, and commit message::
   Author: Benedict Verhegghe <benedict.verhegghe@ugent.be>
   Date:   Fri Jan 4 12:29:38 2013 +0100
 
-    Changed source checkout for migration to git
+      Changed source checkout for migration to git
+
+  commit 8d8d85394476a755d6f7de389e6052337d22a88d
+  Merge: 2e6f4c9 6c8d710
+  Author: Benedict Verhegghe <benedict.verhegghe@ugent.be>
+  Date:   Fri Jan 4 09:30:43 2013 +0100
+
+      Merge branch 'master' of git.sv.gnu.org:/srv/git/pyformex
+
+  commit 2e6f4c98de26754f44944108bdee5e695627b235
+  Author: Benedict Verhegghe <benedict.verhegghe@ugent.be>
+  Date:   Fri Jan 4 09:30:16 2013 +0100
+
+      Added gitref.org to git doc links
 
 In git commands, you can use an abbreviated SHA number to identify the commit.
+Look through the history above for examples.
 
 OK, let's do some work. First make sure we are on a clear master branch::
 
@@ -196,7 +210,8 @@ repository. If you want to push the changes you have commited earlier, do ::
 
 
 
-
+Working with multiple repos
+---------------------------
 
 Add another remote repo::
 
