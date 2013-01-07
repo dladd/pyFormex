@@ -33,7 +33,7 @@ from __future__ import print_function
 # It is loaded even before main.
 
 __version__ = "0.8.9r5"
-__revision__ = '2557M'
+__revision__ = 'a9715fb'
 Version = 'pyFormex %s' % __version__
 FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!
 Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
@@ -135,7 +135,6 @@ def debug(s,level=DEBUG.ALL):
         pass
     except:
         print("DEBUG(%s): %s" % (level,str(s)))
-
 
 def debugt(s,level):
     """Print a debug message with timer"""

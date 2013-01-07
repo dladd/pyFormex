@@ -1158,10 +1158,11 @@ Using the git repository
 - Make sure you have `git` installed on your machine, and you have `ssh` access
   to Savannah. 
 
-- Learn more from `man git COMMAND` or from 
-  `http://www.kernel.org/pub/software/scm/git/docs/` or
-  `http://git-scm.com/documentation` or
-  `http://gitref.org/index.html`
+- Learn more from `man git COMMAND` or 
+  http://www.kernel.org/pub/software/scm/git/docs/ or
+  http://git-scm.com/documentation or
+  http://gitref.org/index.html or
+  http://sitaramc.github.com/gcs/index.html
 
 
 - Set your user name and email address::

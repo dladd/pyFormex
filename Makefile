@@ -182,7 +182,7 @@ bumprelease:
 	make version
 
 revision:
-	sed -i "s|__revision__ = .*|__revision__ = '$$(svnversion)'|" ${PYFORMEXDIR}/__init__.py
+	sed -i "s|__revision__ = .*|__revision__ = '$$(git describe --always)'|" ${PYFORMEXDIR}/__init__.py
 
 version: ${PYFORMEXDIR}/__init__.py setup.py ${SPHINXDIR}/conf.py
 

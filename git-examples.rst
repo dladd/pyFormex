@@ -243,4 +243,14 @@ The default used is origin (the one I cloned from). The public is where I
 push changes to make them available to the general public.
 
 
+Git tools
+---------
+
+The program gitk is very useful in displaying the status and contents of a git
+repository. Install with::
+
+  apt-get install gitk
+
+
+
 .. End

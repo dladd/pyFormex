@@ -812,7 +812,6 @@ def system2(cmd, timeout=None):
     - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
     """
     import subprocess
-    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
     P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     if timeout == None:
         sta = P.wait() # wait for the process to finish
@@ -849,8 +848,9 @@ def runCommand(cmd,RaiseError=True,quiet=False,timeout=None):
     """
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    #    if pf.options and pf.options.commands:
-    if pf.cfg['commands']:
+    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
+    #  Use cfg.get here, so that runCommand can be used before condig is done
+    if pf.cfg.get('commands',False):
         sta,out = system1(cmd)
     else:
         sta,out = system2(cmd, timeout)

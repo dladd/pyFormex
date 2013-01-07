@@ -39,11 +39,13 @@ startup_messages = ''
 
 pyformexdir = sys.path[0]
 
-if os.path.exists(os.path.join(pyformexdir,'.svn')) or \
-       os.path.exists(os.path.join(os.path.dirname(pyformexdir),'.git')):
-    
-    # Running from source tree
+if os.path.exists(os.path.join(pyformexdir,'.svn')):
     pf.installtype = 'S'
+elif os.path.exists(os.path.join(os.path.dirname(pyformexdir),'.git')):
+    pf.installtype = 'G'
+
+if pf.installtype in 'SG':
+    # Running from source tree: (re)build libraries?
 
     def checkLibraries():
         #print "Checking pyFormex libraries"
@@ -79,13 +81,22 @@ import utils
 # Set the proper revision number when running from svn sources
 if pf.installtype=='S':
     try:
-        sta,out = utils.runCommand('cd %s && svnversion' % pyformexdir,quiet=True)
+        sta,out = utils.system2('cd %s && svnversion' % pyformexdir,quiet=True)
         if sta == 0 and not out.startswith('exported'):
             pf.__revision__ = out.strip()
     except:
         # The above may fail when a checked-out svn version is moved to
         # a system without subversion installed.
         # Therefore, silently ignore
+        pass
+
+# Set the proper revision number when running from git sources
+if pf.installtype=='G':
+    try:
+        sta,out = utils.system2('cd %s && git describe --always' % pyformexdir,quiet=True)
+        if sta == 0:
+            pf.__revision__ = out
+    except:
         pass
 
 # Set the Full pyFormex version string
