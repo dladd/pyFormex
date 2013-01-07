@@ -320,10 +320,17 @@ class Mesh(Geometry):
             return unique(self.prop)
 
 
-    def copy(self):
-        """Return a copy using the same data arrays"""
-        # SHOULD THIS RETURN A DEEP COPY?
-        return self.__class__(self.coords,self.elems,prop=self.prop,eltype=self.elType())
+    def shallowCopy(self,prop=None):
+        """Return a shallow copy.
+
+        A shallow copy of a Mesh is a Mesh object using the same data arrays
+        as the original Mesh. The only thing that can be changed is the
+        property array. This is a convenient method to use the same Mesh
+        with different property attributes.
+        """
+        if prop is None:
+            prop = self.prop
+        return self.__class__(self.coords,self.elems,prop=prop,eltype=self.elType())
 
 
     def toFormex(self):
@@ -2159,7 +2166,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         else:
             try:
                 print("CONVERT TO %s" % base)
-                M = self.copy().setProp(arange(self.nelems())).convert(base)
+                M = self.shallowCopy(prop=arange(self.nelems())).convert(base)
             except:
                 return None
         
