@@ -263,9 +263,6 @@ def _congratulations(name,version,typ='module',fatal=False,quiet=False,severity=
             sys.exit()
 
 
-def FullVersion():
-    return "%s (Rev. %s)" % (pf.Version,pf.__revision__)
-
 def Libraries():
     from lib import accelerated
     acc = [ m.__name__ for m in accelerated ]
@@ -273,7 +270,7 @@ def Libraries():
 
 def reportDetected():
     notfound = '** Not Found **'
-    s = "%s\n" % FullVersion()
+    s = "%s\n" % pf.FullVersion()
     s += "\nInstall type: %s\n" % pf.installtype
     s += "\npyFormex C libraries: %s\n" % Libraries()
     s += "\nPython version: %s\n" % sys.version

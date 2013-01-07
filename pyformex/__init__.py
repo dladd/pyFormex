@@ -33,9 +33,13 @@ from __future__ import print_function
 # It is loaded even before main.
 
 __version__ = "0.8.9r5"
-__revision__ = 'a9715fb'
+__revision__ = __version__
 Version = 'pyFormex %s' % __version__
-FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!
+
+
+def FullVersion():
+    return "%s (%s)" % (Version,__revision__)
+
 Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."

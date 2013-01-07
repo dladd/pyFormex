@@ -1300,7 +1300,7 @@ You should seriously consider to bail out now!!!
     pf.board.write("""%s   (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under the conditions of the GNU General Public License, version 3 or later. See Help->License or the file COPYING for details.
-""" % pf.FullVersion)
+""" % pf.FullVersion())
 
     # Set interaction functions
     

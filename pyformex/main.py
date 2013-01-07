@@ -81,7 +81,7 @@ import utils
 # Set the proper revision number when running from svn sources
 if pf.installtype=='S':
     try:
-        sta,out = utils.system2('cd %s && svnversion' % pyformexdir,quiet=True)
+        sta,out = utils.system2('cd %s && svnversion' % pyformexdir)
         if sta == 0 and not out.startswith('exported'):
             pf.__revision__ = out.strip()
     except:
@@ -93,15 +93,11 @@ if pf.installtype=='S':
 # Set the proper revision number when running from git sources
 if pf.installtype=='G':
     try:
-        sta,out = utils.system2('cd %s && git describe --always' % pyformexdir,quiet=True)
+        sta,out = utils.system2('cd %s && git describe --always' % pyformexdir)
         if sta == 0:
-            pf.__revision__ = out
+            pf.__revision__ = out.split('\n')[0].strip()
     except:
         pass
-
-# Set the Full pyFormex version string
-# This had to be deferred until the __revision__ was set
-pf.FullVersion = '%s (Rev. %s)' % (pf.Version,pf.__revision__)
 
 # intended Python version
 minimal_version = '2.5'
@@ -357,7 +353,7 @@ def run(argv=[]):
         # THE Qapp options are removed, because it does not seem to work !!!
         # SEE the comments in the gui.startGUI function  
         usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
-        version = utils.FullVersion(),
+        version = pf.FullVersion(),
         description = pf.Description,
         formatter = optparse.TitledHelpFormatter(),
         option_list=[
