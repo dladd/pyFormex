@@ -1,4 +1,4 @@
-.. $Id$   *- rst -*-
+.. $Id$
   
 ..
   This file is part of the pyFormex project.
@@ -26,9 +26,9 @@
 .. |date| date::
 
 ..
-.. This document is written in ReST. To see a nicely formatted PDF version 
-.. you can compile this document with the rst2pdf command.
-..
+  This document is written in ReST. To see a nicely formatted PDF version 
+  you can compile this document with the rst2pdf command.
+
 
 =============================
 HOWTO for pyFormex developers
@@ -36,8 +36,7 @@ HOWTO for pyFormex developers
 :Date: |date|
 :Author: benedict.verhegghe@ugent.be
 
-.. warning:: 
-  This document is currently under development!
+.. warning: This document is currently under development!
 
 This document describes the different tasks to be performed by pyFormex
 developers, the prefered way(s) that should be followed to perform these
@@ -101,7 +100,14 @@ have internet connection from your Linux system.
 
 .. note:: We should describe alternative linux systems here
 
-- You will certainly need to (learn to) use a decent text editor. pyFormex
+- In order to run pyFormex, you need to have some other software packages 
+  installed on your computer. See the :doc:`install` guide in the documentation
+  for a full list of the prerequisites. On a Debian system you can install these
+  with::
+
+  apt-get install python-dev python-numpy python-sphinx python-opengl python-qt4-gl
+
+- You certainly need to (learn to) use a decent text editor. pyFormex
   code, documentation, website, tools: everything is based on source text 
   files. Since we use a lot of `Python` code, an editor that can nicely
   highlight the Python syntax is recommended. We suggest `emacs` with the
@@ -110,17 +116,30 @@ have internet connection from your Linux system.
 
 .. note:: We should add a list of good editors here
 
-- Make sure you have Subversion installed and that your configuration file
-  ``.subversion/config`` contains at least the following::
+- Make sure you have `git` installed. This is the revision control system used
+  by pyFormex. To install all on Debian GNU/Linux::
 
-    [miscellany]
-    global-ignores = *~ *.pyc
-    use-commit-times = yes
-    enable-auto-props = yes
-    [auto-props]
-    *.c = svn:eol-style=native;svn:keywords=Id
-    *.py = svn:eol-style=native;svn:keywords=Id
-    *.rst = svn:eol-style=native;svn:keywords=Id
+  apt-get install emacs python-mode.el git
+
+
+- Configure git by setting your user name and email address::
+
+    git config --global user.name "John Doe"
+    git config --global user.email john.doe@some.where
+
+
+- We also recommend you to install some aliases as shortcuts for some
+  often used commands. For example, add the following section to your
+  `~/.gitconfig` file::
+
+    [alias]
+	st = status
+	co = checkout
+	ci = commit
+	br = branch
+	last = log -1 HEAD
+
+
       
 Get access to the repositories
 ------------------------------
@@ -147,9 +166,6 @@ your home directory.
   *My Account Conf*. Under *Authentication Setup* you can enter your 
   public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
-
-Now you are all set to checkout the pyFormex repository.
-
 .. note:: 
 
   If you are connecting from an Ubuntu system, and you find that you still can
@@ -162,6 +178,18 @@ Now you are all set to checkout the pyFormex repository.
     again to access the SVN.
 
 
+Currently, we are also using a developer repository, located on the server
+`bumps.ugent.be`. You should also have an ssh account on that server. If
+you do not have an account on the bump* servers yet, ask one: mailto:benedict.verhegghe@ugent.be.
+
+Then copy your ssh key to the bumps server::
+
+  ssh-copy-id username@bumps.ugen.be
+
+Note that your username at bumps may be different from that at Savannah
+
+Now you are all set to checkout the pyFormex repository.
+
 Further reading
 ---------------
 
@@ -173,21 +201,137 @@ For all of these information is widely available on the internet.
  
 .. note:: Maybe add here some good links.
 
-- Subversion
+
 - Python
 - Numerical Python (NumPy)
 - reStructuredText: http://docutils.sourceforge.net/rst.html
 - Sphinx
 - OpenGL (PyOpenGL)
 - QT4 (PyQt4)
+- git: `man git COMMAND` or 
+  http://www.kernel.org/pub/software/scm/git/docs/ or
+  http://git-scm.com/documentation or
+  http://gitref.org/index.html or
+  http://sitaramc.github.com/gcs/index.html
 
-To install these tools on Debian GNU/Linux::
 
-  apt-get install subversion python-dev python-numpy python-sphinx python-opengl python-qt4-gl
+Using the git repository
+========================
+
+.. note: Git allows for workflows that are very different from what we
+   were used to with Subversion. However, until we gather more
+   experience, you can follow you tradidtional workflow by the
+   following simple translation of svn commands to more or less
+   corresponding git commands.
+
+- Clone the pyFormex developer repository into a directory `pyformex` (use your
+  USERNAME) ::
+
+    git clone USERNAME@bumps.ugent.be:/srv/git/pyformex.git
+
+  This will create a working directory `pyformex` with a clone of the
+  repository (in a hidden subdir `.git`) and a checked out working copy
+  of the master branch of the repository. You should be able to run 
+  pyformex directly from it, just like you previously did with a 
+  Subversion checkout. 
+
+.. note: In case you only want to run/change some version of pyFormex and
+   do not want to contribute any changes back to the pyFormex project, you
+   can also clone the repository anonymously (see the install manual).
+    
+- See a status of what has changed (use it often!)::
+
+    git status
+
+- Pull in the changes from the remote repository (like `svn up`)::
+      
+    git pull
+
+  Make sure you have a clean working directory (i.e. no changes) before
+  doing that.
+
+- Commit your changes to the remote repository (like `svn ci`). This is now
+  a two-step (or even 3-step) procedure. First you commit the changes to
+  your local copy of the repository::
+
+    git commit -a
+
+  Like before with `svn ci`, you will need to specify a commit message.
+
+  Next you can push your changes up to the remote repository::
+
+    git push
 
 
-Checkout the pyFormex repository
-================================
+Structure of the pyFormex repository
+====================================
+After you checked out the trunk, you will find the following in the top
+directory of your local copy.
+
+:pyformex: This is where all the pyFormex source code (and more) is located.
+  Everything that is included in the distributed releases should be located
+  under this directory.
+
+:pkg: This directory is where we have the tools for building Debian packages.
+
+:screenshots: This contains some (early) screenshots. It could develop into
+  a container for all kinds of promotional material (images, movies, ...)
+
+:sphinx: This is where we build the documentation (not surprisingly, we use
+  **Sphinx** for this task). The built documents are copied in `pyformex/doc`
+  for inclusion in the release.
+
+:stats: Contains some statistics and tools to gather them.
+
+:user: Contains the minutes of pyFormex user meetings.
+
+:website: Holds the source for the pyFormex website. Since the move to 
+  Savannah recently, we also use Sphinx to build the website. 
+  Since the whole html documentation tree is also published as part of 
+  the website (`<http://www.nongnu.org/pyformex/doc/>`_) we could actually
+  integrate the *sphinx* part under *website*. The reasons for keeping them
+  apart are:
+  
+  - the html documents under *sphinx* are made part of the release (for use
+    as local documentation accessible from the pyFormex GUI), but the 
+    *website* documents are not, and    
+  - the *sphinx* documents need to be regenerated more often, because of the
+    fast development process of pyFormex, while the *website* is more static.
+ 
+Furthermore the top directory contains a bunch of other files, mostly managing tools. The most important ones will be treated further.
+
+
+
+Commit messages
+===============
+
+When committing something to a repository, you always need to specify
+a commit message. The message should be brief and to the point, but still
+complete: describing what was changed and possibly why. 
+
+The structure of the commit message should be as follow: a single line
+with a short contents, followed by a blank line and then multiple lines
+describing all the changes. If you only made a single change, 
+a single line message is allowed.
+
+If you find yourself writing a very long list of changes, consider
+splitting your commit into smaller parts.  Prefixing your comments
+with identifiers like Fix or Add is a good way of indicating what type
+of change you did.  It also makes it easier to filter the content
+later, either visually, by a human reader, or automatically, by a
+program.
+
+If you fixed a specific bug or implemented a specific change request,
+it is recommended to reference the bug or issue number in the commit
+message. Some tools may process this information and generate a link
+to the corresponding page in a bug tracking system or automatically
+update the issue based on the commit.
+    
+
+Using the subversion repository
+===============================
+
+.. warning: This is deprecated and retained here only for reference.
 
 Developer access
 ----------------
@@ -227,54 +371,6 @@ This means that everything that you commit (checkin) to the repository, constitu
 
 .. warning:: Never put anything in the repository that is not meant to be distributed worldwide!
 
-
-Anonymous access
-----------------
-
-Anybody (including group members) can checkout the complete 
-pyFormex repository anonymously. Anonymous checkout is done with the command::
- 
-  svn co svn://svn.savannah.nongnu.org/pyformex/trunk pyformex
-
-An anonymous checkout differs from a developer checkout in that it can not
-commit changes back to the repository.
-
-
-Structure of the pyFormex repository
-====================================
-After you checked out the trunk, you will find the following in the top directory of your local copy.
-
-:pyformex: This is where all the pyFormex source code (and more) is located.
-  Everything that is included in the distributed releases should be located
-  under this directory.
-
-:screenshots: This contains some (early) screenshots. It could develop into
-  a container for all kinds of promotional material (images, movies, ...)
-
-:sphinx: This is where we build the documentation (not surprisingly, we use
-  **Sphinx** for this task). The built documents are copied in `pyformex/doc`
-  for inclusion in the release.
-
-:user: Contains the minutes of pyFormex user meetings.
-
-:website: Holds the source for the pyFormex website. Since the move to 
-  Savannah recently, we also use Sphinx to build the website. 
-  Since the whole html documentation tree is also published as part of 
-  the website (`<http://www.nongnu.org/pyformex/doc/>`_) we could actually
-  integrate the *sphinx* part under *website*. The reasons for keeping them
-  apart are:
-  
-  - the html documents under *sphinx* are made part of the release (for use
-    as local documentation accessible from the pyFormex GUI), but the 
-    *website* documents are not, and    
-  - the *sphinx* documents need to be regenerated more often, because of the
-    fast development process of pyFormex, while the *website* is more static.
- 
-Furthermore the top directory contains a bunch of other files, mostly managing tools and statistics. The most important will be treated further.
-
-
-Working with the subversion repository
-======================================
 
 After you have created a checkout, you can start working in your local
 version, make changes, contribute these changes back to the central
@@ -335,13 +431,6 @@ in the top level directory of your checkout.
 - Convert your local tree to reflect a change in repository server (the *OLDURL* can be found from the *svn info* command ::
   
    svn switch --relocate OLDURL NEWURL
-
-
-Subversion commit messages
---------------------------
-Always write a comment when committing something to the repository. Your comment should be brief and to the point, describing what was changed and possibly why. If you made several changes, write one line or sentence about each part. If you find yourself writing a very long list of changes, consider splitting your commit into smaller parts, as described earlier. Prefixing your comments with identifiers like Fix or Add is a good way of indicating what type of change you did. It also makes it easier to filter the content later, either visually, by a human reader, or automatically, by a program.
-
-If you fixed a specific bug or implemented a specific change request, I also recommend to reference the bug or issue number in the commit message. Some tools may process this information and generate a link to the corresponding page in a bug tracking system or automatically update the issue based on the commit.
 
 
 Dealing with problems
@@ -422,8 +511,8 @@ from the SVN sources (sse below). This is to ensure that you pick up any changes
 the library. If compilation of the libraries during startup fails,  
 
 
-Run pyFormex from the svn source
-================================
+Run pyFormex from the checked-out source
+========================================
 In the toplevel directory, execute the command::
 
   pyformex/pyformex
@@ -1142,86 +1231,6 @@ Then, to install all the latest pyformex packages, just do::
    apt-get pyformex pyformex-lib pyformex-extra
 
 
-
-Using the git repository
-========================
-
-- Advantages of git: 
-
-  - It is THE current big thing in version control systems.
-  - It is FAR more powerful than Subversion
-  - There is no single central repository: every user has a clone of the
-    repository.
-  - It is easy to use many small branches to work on some specific topic.
-
-
-- Make sure you have `git` installed on your machine, and you have `ssh` access
-  to Savannah. 
-
-- Learn more from `man git COMMAND` or 
-  http://www.kernel.org/pub/software/scm/git/docs/ or
-  http://git-scm.com/documentation or
-  http://gitref.org/index.html or
-  http://sitaramc.github.com/gcs/index.html
-
-
-- Set your user name and email address::
-
-    git config --global user.name "John Doe"
-    git config --global user.email john.doe@some.where
-  
-- Clone the pyformex git repository into a directory `pyformex` (use your
-  USERNAME) ::
-
-    git clone USERNAME@bumps.ugent.be:/srv/git/pyformex.git
-
-  This will create a working directory `pyformex` with a clone of the
-  repository (in a hidden subdir `.git`) and a checked out working copy
-  of the master branch of the repository. You should be able to run 
-  pyformex directly from it, just like you previously did with a 
-  Subversion checkout.
-    
-- Git allows for workflows that are very different from what we were used to
-  with Subversion. However, until we gather more experience, you can follow
-  you tradidtional workflow by the following simple translation of svn 
-  commands to more or less corresponding git commands.
-
-  - See a status of what has changed (use it often!)::
-
-      git status
-
-  - Pull in the changes from the remote repository (like `svn up`)::
-      
-      git pull
-
-    Make sure you have a clean working directory (i.e. no changes) before
-    doing that.
-
-  - Commit your changes to the remote repository (like `svn ci`). This is now
-    a two-step (or even 3-step) procedure. First you commit the changes to
-    your local copy of the repository::
-
-      git commit -a
-
-    You will need to specify a commit message, like with `svn ci`.
-
-    Next you can push your changes up to the remote repository::
-
-      git push
-
-- Finally, here are some aliases you can use to have shortcuts for some
-  often used commands. Just add this section to your `~/.gitconfig` file::
-
-    [alias]
-	st = status
-	co = checkout
-	ci = commit
-	br = branch
-	last = log -1 HEAD
-
-
-
-    
 
   
 
