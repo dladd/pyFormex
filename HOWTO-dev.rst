@@ -328,6 +328,46 @@ to the corresponding page in a bug tracking system or automatically
 update the issue based on the commit.
     
 
+Solution to common git problems
+===============================
+
+Your branch and 'origin/master' have diverged
+---------------------------------------------
+After a `git pull` I had the following situation::
+
+  bene@bumpy 13:31 ~/prj/pyformex $ git st
+  # On branch master
+  # Your branch and 'origin/master' have diverged,
+  # and have 1 and 3 different commits each, respectively.
+  #
+  nothing to commit (working directory clean)
+
+This is a common situation. I had commited a change to my local repository,
+but did not push the changes to the remote repo. Meanwhile 3 other changes
+are pushed to the remote. Thus my local master branch is now diverging from
+the remote. To solve it, I could just merge the remote branch into my local
+branch, using `git merge origin/master`. Instead I choose here for another
+solution: rebase my commit. This will take my commit out of my local branch,
+then pull in the changes from the remote first, and then reapply my changes::
+
+  bene@bumpy 13:31 ~/prj/pyformex $ git rebase origin/master
+  First, rewinding head to replay your work on top of it...
+  Applying: Fix bug #37833: mesh (deep) copy
+  bene@bumpy 13:33 ~/prj/pyformex $ git st
+  # On branch master
+  # Your branch is ahead of 'origin/master' by 1 commit.
+  #
+  nothing to commit (working directory clean)
+
+The difference between the more commonly used 'merge' method and the 'rebase'
+method, is that in the first case, a new commit will be made to merge the
+diverged branches together again. In the second case however, the divergence
+is avoided and a linear branch history is kept. In both cases, my local branch
+is ready to be push up to the remote again.
+
+
+
+
 Using the subversion repository
 ===============================
 
