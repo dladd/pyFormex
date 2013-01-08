@@ -807,7 +807,7 @@ class Connectivity(ndarray):
         """
         from elements import elementType
         
-        if type(selector) == int:
+        if isInt(selector):
             if hasattr(self,'eltype'):
                 sel = self.eltype.getEntities(selector)
             else:

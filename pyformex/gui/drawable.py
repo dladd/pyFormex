@@ -32,7 +32,6 @@ import pyformex as pf
 from OpenGL import GL,GLU
 
 from colors import *
-from numpy import *
 from formex import *
 
 import geomtools
@@ -1119,7 +1118,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
     The return value is a tuple color,colormap. colormap will be None,
     unless color is an integer array, meaning a color index.
     """
-    if type(shape) == int:  # make sure we get a tuple
+    if isInt(shape):  # make sure we get a tuple
         shape = (shape,)
     color = saneColor(color)
     if color is not None:

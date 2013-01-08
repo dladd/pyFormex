@@ -55,6 +55,7 @@ import pyformex as pf
 from datetime import datetime
 import os,sys
 from utils import deprecation,removeDict
+from arraytools import isInt
 
 ##################################################
 ## Some Abaqus .inp format output routines
@@ -1265,7 +1266,7 @@ def writeBoundaries(fil,prop):
         
         if isinstance(p.bound,str):
             fil.write("%s, %s\n" % (setname,p.bound))
-        elif isinstance(p.bound[0],int):
+        elif isInt(p.bound[0]):
             for b in range(6):
                 if p.bound[b]==1:
                     fil.write("%s, %s\n" % (setname,b+1))
@@ -1392,10 +1393,10 @@ def writeNodeOutput(fil,kind,keys,set='Nall'):
       be written
     """
     output = 'OUTPUT'
-    if type(set) == str or type(set) == int:
+    if type(set) == str or isInt(set):
         set = [ set ]
     for i in set:
-        if type(i) == int:
+        if isInt(i):
             setname = Nset(str(i))
         else:
             setname = i
@@ -1431,10 +1432,10 @@ def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
     'Remark that the `kind` argument is not used, but is included so that we can
     easily call it with a `Results` dict as arguments.'
     """
-    if type(set) == str or type(set) == int:
+    if type(set) == str or isInt(set):
         set = [ set ]
     for i in set:
-        if type(i) == int:
+        if isInt(i):
             setname = Nset(str(i))
         else:
             setname = i
@@ -1465,10 +1466,10 @@ def writeElemOutput(fil,kind,keys,set='Eall'):
     """
     output = 'OUTPUT'
 
-    if type(set) == str or type(set) == int:
+    if type(set) == str or isInt(set):
         set = [ set ]
     for i in set:
-        if type(i) == int:
+        if isInt(i):
             setname = Eset(str(i))
         else:
             setname = i
@@ -1511,10 +1512,10 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
     Remark: the ``kind`` argument is not used, but is included so that we can
     easily call it with a Results dict as arguments
     """
-    if type(set) == str or type(set) == int:
+    if type(set) == str or isInt(set):
         set = [ set ]
     for i in set:
-        if type(i) == int:
+        if isInt(i):
             setname = Eset(str(i))
         else:
             setname = i

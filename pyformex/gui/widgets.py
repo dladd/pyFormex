@@ -38,6 +38,9 @@ import colors
 import odict,mydict,olist
 import utils
 import warnings
+from arraytools import isInt
+
+
 
 # timeout value for all widgets providing timeout feature
 #  (currently: InputDialog, MessageBox)
@@ -1698,7 +1701,7 @@ class InputDialog(QtGui.QDialog):
 
             if itemtype == 'slider':
                 value = item['value']
-                if type(value) == int:
+                if isInt(value):
                     pass
                 elif type(value) == float:
                     item['itemtype'] = 'fslider'
@@ -2469,7 +2472,7 @@ class ArrayModel(TableModel):
                 print("Setting value at %s,%s to %s" %(r,c,value))
                 if isinstance(self.arraydata[index.row()][index.column()],float):
                     value,ok = value.toDouble()
-                elif isinstance(self.arraydata[index.row()][index.column()],int):
+                elif isInt(self.arraydata[index.row()][index.column()]):
                     value,ok = value.toInt()
                 else:
                     print("Editing of other than float or int arrays is not implemented yet!")

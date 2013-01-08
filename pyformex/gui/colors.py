@@ -29,6 +29,7 @@ from __future__ import print_function
 
 from PyQt4 import QtCore,QtGui
 import numpy
+from arraytools import isInt
 
 # BV: THIS DETECTION SHOULD GO ELSEWHERE
 import pyformex as pf
@@ -74,7 +75,7 @@ def GLColor(color):
     try:
         col = tuple(col)
         if len(col) == 3:
-            if type(col[0]) == int:
+            if isInt(col[0]):
                 # convert int values to float
                 col = [ c/255. for c in col ]
             col = map(float,col)

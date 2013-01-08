@@ -113,6 +113,16 @@ Float = float32
 Int = int32
 
 
+def isInt(obj):
+    """Test if an object is an integer number
+
+    Returns True if the object is a single integer number, else False.
+    The type of the object can be either a Python integer (int) or a
+    numpy integer.
+    """
+    return isinstance(obj,(int,integer))
+
+
 ###########################################################################
 ##
 ##   some math functions

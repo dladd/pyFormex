@@ -53,7 +53,7 @@ import math
 
 from coords import Coords
 from numpy import *
-#asarray,where,unique,intersect1d,setdiff1d,empty,append,delete
+from arraytools import isInt
 
 
 # Some 2D vector operations
@@ -1351,9 +1351,9 @@ class NewiMultiCanvas(QtGui.QGridLayout):
             if ncols is None:
                 if nrows is None:
                     ncols = self.ncols()
-            if type(ncols) == int:
+            if isInt(ncols):
                 pos = [ divmod(i,ncols) for i in range(nvps) ]
-            elif type(nrows) == int:
+            elif isInt(nrows):
                 pos = [ divmod(i,nrows)[::-1] for i in range(nvps) ]
             else:
                 return
@@ -1431,7 +1431,7 @@ class NewiMultiCanvas(QtGui.QGridLayout):
         focus (pf.canvas).
         """
         #print "NEWCANVAS SETTING CURRENT VIEWPORT"
-        if type(view) == int and view in range(len(self.all)):
+        if isInt(view) and view in range(len(self.all)):
             view = self.all[view]
         if view == self.current:
             return  # already current
@@ -1596,7 +1596,7 @@ class MultiCanvas(FramedGridLayout):
         canv can be either a viewport or viewport number.
         """
         #print "SETTING CURRENT VIEWPORT"
-        if type(canv) == int and canv in range(len(self.all)):
+        if isInt(canv) and canv in range(len(self.all)):
             canv = self.all[canv]
         if canv == self.current:
             #print "ALREADY CURRENT"
@@ -1715,16 +1715,16 @@ Viewport %s;  Current:%s;  Settings:
         the pos argument can be used to specify the layout of the viewports.
         """
         # add or remove viewports to match the requested number
-        if type(nvps) == int:
+        if isInt(nvps):
             while len(self.all) > nvps:
                 self.removeView()
             while len(self.all) < nvps:
                 self.addView()
         # get the new layout definition
-        if type(ncols) == int:
+        if isInt(ncols):
             rowwise = True
             pos = None
-        elif type(nrows) == int:
+        elif isInt(nrows):
             ncols = nrows
             rowwise = False
             pos = None
