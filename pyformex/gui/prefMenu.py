@@ -394,15 +394,31 @@ def setRendering():
 
 
 def setDirs(dircfg):
-    """dircfg is a config variable that is a list of directories."""
-    dia = createDirsDialog(dircfg)
+    """Configure the paths from which to read apps/scripts
+
+    dircfg is a config variable that is a list of directories.
+    It should be one of 'appdirs' or 'scriptdirs'
+    """
+    mode = dircfg[:-4]
+    if mode == 'app':
+        title = 'Application paths'
+    else:
+        title='Script paths'
+    data = map(list,pf.cfg[dircfg])
+    dia = createDirsDialog(data,title)
     dia.exec_()
+    print(dia.result())
+    if (dia.result()==widgets.ACCEPTED):
+        import appMenu
+        pf.prefcfg[dircfg] = pf.cfg[dircfg] = map(tuple,data)
+        appMenu.reloadMenu(mode=dircfg[:-4])
+
 
     
-def createDirsDialog(dircfg):
+def createDirsDialog(data,title):
     """Create a Dialog to set a list of paths.
 
-    dircfg is a config variable that is a list of tuples (path,text)
+    data is a list of tuples ['text','path']
     where path is a valid directory pathname and text is a short name
     to display in the menus.
 
@@ -416,18 +432,8 @@ def createDirsDialog(dircfg):
         ww = widgets.FileSelection(pf.cfg['workdir'],'*',exist=True,dir=True)
         fn = ww.getFilename()
         if fn:
-            scr = pf.cfg[dircfg]
             _table.model().insertRows()
-            scr[-1] = ['New',fn]
-        _table.update()
-
-    def editRow():
-        row = _table.currentIndex().row()
-        scr = pf.cfg[dircfg]
-        item = scr[row]
-        res = draw.askItems([('Label',item[0]),('Path',item[1])])
-        if res:
-            scr[row] = [res['Label'],res['Path']]
+            _table.model().arraydata[-1] = [os.path.basename(fn).capitalize(),fn]
         _table.update()
 
     def removeRow():
@@ -437,42 +443,29 @@ def createDirsDialog(dircfg):
 
     def moveUp():
         row = _table.currentIndex().row()
-        scr = pf.cfg[dircfg]
         if row > 0:
-            a,b = scr[row-1:row+1]
-            scr[row-1:row+1] = b,a
-#            scr[row-1] = b
-#            scr[row] = a
+            a,b = _table.model().arraydata[row-1:row+1]
+            _table.model().arraydata[row-1:row+1] = b,a
         _table.setFocus() # For some unkown reason, this seems needed to
                           # immediately update the widget
         _table.update()
         pf.app.processEvents()
-
-    def saveTable():
-        pf.prefcfg[dircfg] = pf.cfg[dircfg]
-
-
-    mode = dircfg[:-4]
-    if mode == 'app':
-        title = 'Application paths'
-    else:
-        title='Script paths'
 
     def reloadMenu():
         import appMenu
         appMenu.reloadMenu(mode=mode)
 
     _dia = widgets.TableDialog(
-        data = pf.cfg[dircfg],
+        data = data,
         chead = ['Label','Path'],
+        edit=True,
         actions = [
             ('New',insertRow),
-            ('Edit',editRow),
             ('Delete',removeRow),
             ('Move Up',moveUp),
             ('Reload',reloadMenu),
-            ('Save',saveTable),
             ('OK',),
+            ('Cancel',),
             ],
         title=title)
     _table = _dia.table

@@ -661,8 +661,8 @@ def createAppMenu(mode='app',parent=None,before=None):
     #print("LOADING %s MENU"% mode) 
     appmenu = menu.Menu('&%s'%Mode,parent=parent,before=before)
     appmenu.mode = mode
-    if mode == 'apps':
-        appdirs = [ (d.name,d.path) for s in pf.appdirs ]
+    if mode == 'app':
+        appdirs = [ (d.name,d.path) for d in pf.appdirs ]
     else:
         appdirs = pf.cfg['scriptdirs']
         
@@ -706,7 +706,7 @@ def createAppMenu(mode='app',parent=None,before=None):
 
 def reloadMenu(mode='app'):
     """Reload the named menu."""
-    name = mode+'s'
+    name = mode#+'s'
     menu = pf.GUI.menu.item(name)
     if menu is not None:
         before = pf.GUI.menu.nextitem(name)
@@ -715,7 +715,7 @@ def reloadMenu(mode='app'):
             # reset pf.appdirs, we may have configuration changes
             import apps
             apps.setAppDirs()
-        newmenu = createMenu(pf.GUI.menu,before,mode=mode)
+        newmenu = createAppMenu(mode,pf.GUI.menu,before)
 
 
 

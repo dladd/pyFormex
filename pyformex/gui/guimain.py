@@ -1466,7 +1466,7 @@ def runGUI():
         pf.debug("Setting workdir to %s" % pf.cfg['workdir'],pf.DEBUG.INFO)
     else:
         # Save the current dir as workdir
-        prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
+        prefMenu.updateSettings({'workdir':os.getcwd(),'_save_':True})
 
     pf.interactive = True
     pf.debug("Start main loop",pf.DEBUG.INFO)
