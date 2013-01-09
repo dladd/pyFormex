@@ -269,7 +269,9 @@ class Gui(QtGui.QMainWindow):
         self.central.resize(*pf.cfg['gui/size'])
 
         self.viewports = viewport.MultiCanvas(parent=self.central)
-        self.central.setLayout(self.viewports)
+        self.centralgrid = QtGui.QGridLayout()
+        self.centralgrid.addLayout(self.viewports,0,0)
+        self.central.setLayout(self.centralgrid)
 
         # Create the message board
         self.board = Board()
