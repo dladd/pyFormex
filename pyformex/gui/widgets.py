@@ -1974,7 +1974,7 @@ class FileSelection(QtGui.QFileDialog):
     timeout = "accept()"
 
     def accept_any(self):
-        self.done(QtGui.QDialog.Accepted)
+        self.done(ACCEPTED)
         
     def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False,button=None):
         """The constructor shows the widget."""
@@ -2047,7 +2047,7 @@ class FileSelection(QtGui.QFileDialog):
         """
         self.show(timeout,modal=True)
         self.exec_()
-        if self.result() != QtGui.QDialog.Accepted:
+        if self.result() != ACCEPTED:
             # user canceled
             return None
         
@@ -2096,7 +2096,7 @@ class ProjectSelection(FileSelection):
 
     def getResult(self):
         self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
+        if self.result() == ACCEPTED:
             opt = mydict.Dict()
             opt.fn = str(self.selectedFiles()[0])
             opt.acc = self.acc.value()
@@ -2175,7 +2175,7 @@ class SaveImageDialog(FileSelection):
 
     def getResult(self):
         self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
+        if self.result() == ACCEPTED:
             opt = mydict.Dict()
             opt.fm = self.fmt.value()
             opt.qu = SaveImageDialog.default_size = self.qua.value()
@@ -2245,7 +2245,7 @@ class ListSelection(InputDialog):
         value.
         """
         self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
+        if self.result() == ACCEPTED:
             return self.value()
         else:
             return None
@@ -2358,10 +2358,15 @@ _EDITROLE = QtCore.Qt.EditRole
 class TableModel(QtCore.QAbstractTableModel):
     """A table model that represent data as a two-dimensional array of items.
 
-    data is any tabular data organized in a fixed number of rows and colums.
-    This means that an item at row i and column j can be addressed as
-    data[i][j].
-    Optional lists of column and row headers can be specified.
+    - `data`: any tabular data organized in a fixed number of rows and colums.
+      This means that an item at row i and column j can be addressed as
+      data[i][j]. Thus it can be a list of lists, but also a list of tuples.
+      Beware though that Python tuples can not be changed, so if you want
+      to use edit=True, be sure to use lists!
+    - `chead`: optional list of column headers
+    - `rhead`: optional list of row headers
+    - `edit`: if True, the table will be editable. Beware though that the
+      nature of the data may inhibit changing them.
     """
     def __init__(self,data,chead=None,rhead=None,edit=True): 
         QtCore.QAbstractTableModel.__init__(self) 
@@ -2418,20 +2423,19 @@ class TableModel(QtCore.QAbstractTableModel):
         """Return the TableModel flags."""
         return self._flags
 
-    
     def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
-            print("Setting items at %s to %s" % (str(index),str(value)))
+            #print("Setting items at %s to %s" % (str(index),str(value)))
             try:
                 r,c = [index.row(),index.column()]
-                print("Setting value at %s,%s to %s" %(r,c,value))
-                value = eval(str(value.toString()))
-                print("Setting value at %s,%s to %s" %(r,c,value))
+                #print("Setting value at %s,%s to %s" %(r,c,value))
+                value = str(value.toString())
+                #print("Setting value at %s,%s to %s" %(r,c,value))
                 self.arraydata[index.row()][index.column()] = value
-                print("Succesfully changed data")
+                #print("Succesfully changed data")
                 self.dataChanged.emit(index,index) #not sure if needed, ?way to check?
 #                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index) #or maybe this one
-                print("Signaled success")
+                #print("Signaled success")
                 return True
             except:
                 print("Could not set the value")
@@ -2440,7 +2444,6 @@ class TableModel(QtCore.QAbstractTableModel):
             print("CAN  NOT EDIT")
         return False
 
-from numpy import ndarray,asarray
 
 class ArrayModel(TableModel):
     """A TableModel specialized for represents 2D array data.
@@ -2452,6 +2455,7 @@ class ArrayModel(TableModel):
       the data readonly.
     """
     def __init__(self,data,chead=None,rhead=None,edit=True):
+        from numpy import asarray
         data = asarray(data)
         if rhead is None:
             rhead=range(data.shape[0])
@@ -2507,6 +2511,7 @@ class Table(QtGui.QTableView):
     """
     def __init__(self,data,chead=None,rhead=None,label=None,edit=True,parent=None,autowidth=True):
         """Initialize the Table widget."""
+        from numpy import ndarray
         QtGui.QTableView.__init__(self,parent)
         if isinstance(data,ndarray):
             self.tm = ArrayModel(data,chead,rhead,edit=edit)
@@ -2556,14 +2561,14 @@ class TableDialog(GenericDialog):
     A convenience class representing a Table within a dialog.
     """
     
-    def __init__(self,data,chead=None,rhead=None,title=None,parent=None,actions=[('OK',)],default='OK'):
+    def __init__(self,data,chead=None,rhead=None,title=None,parent=None,actions=[('OK',)],default='OK',edit=False):
         """Create the Table dialog.
         
         - data is a 2-D array of items, with nrow rows and ncol columns.
         - chead is an optional list of ncol column headers.
         - rhead is an optional list of nrow row headers.
         """
-        self.table = Table(data,chead=chead,rhead=rhead)
+        self.table = Table(data,chead=chead,rhead=rhead,edit=edit)
         GenericDialog.__init__(self,
                                [self.table],
                                title=title, parent=parent,
@@ -2788,7 +2793,7 @@ class TextBox(QtGui.QDialog):
         addTimeOut(self,timeout,"accept()")
 
     def getResult(self):
-        return self.exec_() == QtGui.QDialog.Accepted
+        return self.exec_() == ACCEPTED
 
     def updateText(self,text,format=''):
         updateText(self._t,text,format)
@@ -2980,34 +2985,6 @@ class ImageView(QtGui.QLabel):
         self.filename = filename
         self.image = image 
         self.zoom = 1.0
-
-        
-############################# Deprecated Features ###########################
-
-# removed in 0.9
-## class OldTableDialog(GenericDialog):
-##     """_A dialog widget to show two-dimensional arrays of items."""
-##     def __init__(self,items,caption=None,parent=None,tab=False):
-##         """_Create the Table dialog.
-        
-##         If tab = False, a dialog with one table is created and items
-##         should be a list [table_header,table_data].
-##         If tab = True, a dialog with multiple pages is created and items
-##         should be a list of pages [page_header,table_header,table_data].
-##         """
-##         warnings.warn('warn_old_table_dialog')
-        
-##         GenericDialog.__init__(self,[],title=caption,parent=parent)
-##         if tab:
-##             contents = Tabs(
-##                 [ (item[0], Table(data=item[2],chead=item[1],parent=None))
-##                   for item in items ], parent=parent)
-##         else:
-##             contents = Table(data=items[1],chead=items[0],parent=None)
-
-##         self.add(contents)
-##         self.show()
-
 
 
 # End
