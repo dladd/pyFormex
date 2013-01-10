@@ -52,8 +52,6 @@ Release 0.9
 
 **Add transparency to wires in smoothwire mode**
 
-**Save object names to pgf file**
-
 
 **Add Layers to the rendering engine**
   :sta: IDEA
@@ -98,13 +96,6 @@ Release 0.9
     Some exporting to Fluent has been done in user applications. Other 
     target codes of interest are: ANSYS,Code-Aster.
       
-**Step by step execution of scripts**
-  :dev: bverheg
-  :sta: Partially implemented via the stepScript() function
-  :rem: Only works for simple scripts where each part between draw() 
-    instructions can be executed separately.
-    **DEPRECATED* Use pause/delay instead
-      
 **Display camera settings**
   :rem:  This could be made part of a generalized 'Camera handling'
     plugin which could provide also things like move a camera
@@ -133,24 +124,11 @@ Release 0.9
   :rem: A single command line is available. 
 
 **Replace the timeout functions with a TIMEOUT signal/slot**
-      
-**Add an interactive Python aware editor widget**
-  :rem: This is currently not considered to be important. Most developers
-    like to use their own familiar editor (emacs, eric, kedit, gedit). 
     
 **Copy viewport defaults to newly added viewports**
   :sta: TODO
 
 **Complete the Coords.fromfile and Formex.fromfile arguments**
-
-**Add DEBUG LEVEL to all debug statements**
-  :sta: DONE
-
-**Syntax cleanup**
-  :sta: TODO
-  :rem: Some constructions to change:
-    
-    - type(a) == int  should become:   isinstance(a,int)
 
       
 Release 0.9.1
