@@ -1268,12 +1268,12 @@ def listFontFiles():
 
     Returns a list of path names to all the font files found on the system.
     """
-    cmd = 'fc-list : file'
+    cmd = "fc-list : file | sed 's|.*file=||'"
     sta,out = runCommand(cmd)
     if sta:
         warning("fc-list could not find your font files.\nMaybe you do not have fontconfig installed?")
     else:
-        return [ f.strip(' :') for f in out.split('\n') ]
+        return out.split('\n')
 
 
 ###########################################################################
