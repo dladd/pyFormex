@@ -292,7 +292,7 @@ def apply_config_changes(cfg):
         'input/timeout','filterwarnings',
         'render/ambient','render/diffuse','render/specular','render/emission',
         'render/material','canvas/propcolors','Save changes','canvas/bgmode',
-        'canvas/bgcolor2',
+        'canvas/bgcolor2','_save_',
         ]:
         if key in cfg.keys():
             print("DELETING CONFIG VARIABLE %s" % key)
@@ -439,7 +439,7 @@ def run(argv=[]):
            ),
         MO("--search",
            action="store_true", dest="search", default=False,
-           help="Search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. Adding -a  will use the extended search path. The final argument is the pattern to search.",
+           help="Search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command and/or '-a' to search all files in the extended search path. The final argument is the pattern to search. '-e' before the pattern will interprete this as an extended regular expression. '-l' option only lists the names of the matching files.",
            ),
         MO("--remove",
            action="store_true", dest="remove", default=False,
@@ -565,7 +565,7 @@ def run(argv=[]):
                 print('\n'.join(files))
             else:
                 cmd = "grep %s '%s' %s" % (' '.join(opts),args[0],''.join([" '%s'" % f for f in files]))
-                #print cmd 
+                #print(cmd)
                 os.system(cmd)
         return
 

@@ -175,7 +175,7 @@ your home directory.
     help of the scroll bar.
   - If it ends with '/' before "username@host.domain", replace the '/' with '=='.
   - After the update, wait for another day for the server to refresh, then try
-    again to access the SVN.
+    again to access the repository.
 
 
 Currently, we are also using a developer repository, located on the server
@@ -220,7 +220,7 @@ Using the git repository
 
 .. note: Git allows for workflows that are very different from what we
    were used to with Subversion. However, until we gather more
-   experience, you can follow you tradidtional workflow by the
+   experience, you can follow you traditional workflow by the
    following simple translation of svn commands to more or less
    corresponding git commands.
 
@@ -331,6 +331,28 @@ update the issue based on the commit.
 Solution to common git problems
 ===============================
 
+Commit only some changes
+------------------------
+For each file that you want to commit, do::
+
+  git add file_to_commit.py
+
+Then do::
+
+  git commit
+
+Revert changes that have not been commited yet
+----------------------------------------------
+If you have changed a file, then decide you want to undo these
+changes before you have added them, just check out that file
+again, and it will be restored to the version in the repo::
+
+  git checkout file_to_revert.py
+
+If you already added them, but did not commit yet, use::
+
+  git reset file_to_revert.py
+ 
 Your branch and 'origin/master' have diverged
 ---------------------------------------------
 After a `git pull` I had the following situation::
