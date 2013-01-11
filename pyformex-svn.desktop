@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Exec=/home/bene/prj/pyformex/pyformex/pyformex --redirect
-Icon=/home/bene/prj/pyformex/pyformex-svn.png
-Name=pyFormex (SVN)
-GenericName=pyFormex 3D Geometry Designer
-Comment=pyFormex is a program to design, manipulate and operate on 3D geometrical structures.
