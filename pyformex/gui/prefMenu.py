@@ -463,7 +463,7 @@ def createDirsDialog(data,title):
             ('New',insertRow),
             ('Delete',removeRow),
             ('Move Up',moveUp),
-            ('Reload',reloadMenu),
+#            ('Reload',reloadMenu),
             ('OK',),
             ('Cancel',),
             ],

@@ -429,7 +429,10 @@ class AppMenu(menu.Menu):
                 self.addSeparator()
                 self.addAction('Classify apps',self._classify)
                 self.addAction('Remove catalog',self._unclassify)
-                self.addAction('Reload apps',self.reload)
+
+                # Confined to 'app', crashes when applied on script
+                if self.mode == 'app':
+                    self.addAction('Reload apps',self.reload)
 
 
     def fileName(self,script):
