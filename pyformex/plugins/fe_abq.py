@@ -2213,69 +2213,6 @@ if __name__ == "script" or __name__ == "draw":
         print(fmtData(a,12))
 
     TestwriteFormatLines()
-    exit()
 
-    print("The data hereafter are incorrect and inconsistent.")
-    print("See the FeAbq example for a comprehensive example.")
-   
-    # Create the geometry (4 quads)
-    F = Formex('4:0123').replic2(2,2)
-
-    # Create Finite Element model
-    nodes,elems = F.feModel()
-
-    if pf.GUI:
-        draw(F)
-        drawNumbers(F)
-        drawNumbers(Formex(nodes),color=red)
-
-    # Create property database
-    P = PropertyDB()
-    #install example materials and section databases
-    # either like this
-    Mat = MaterialDB(getcfg('datadir')+'/materials.db')
-    P.setMaterialDB(Mat)
-    # or like this
-    P.setSectionDB(SectionDB(getcfg('datadir')+'/sections.db'))
-    
-    exit()
-    # creating some property data
-    S1 = ElemSection('IPEA100', 'steel')
-    S2 = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
-    S3 = ElemSection(sectiontype='join')
-    BL1 = ElemLoad(label='PZ',value=0.5)
-    BL2 = ElemLoad('Grav')
-    S2.cross_section=572
-    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
-
-    # populate the property database
-    P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
-    p = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    P.nodeProp(tag='d2',setname=p.name,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
-
-    bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
-    top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')
-    diag = P.elemProp(8,section=S3,eltype='conn3d2')
-        
-    # create the model
-    nodes,elems = F.feModel()
-    model = Model(nodes,elems)
-
-    # create the steps
-    step1 = Step(tags=['d1'])
-    step2 = Step(nlgeom='yes',tags=['d2'])
-
-    #create the output requests
-    out = [ Output(type='history'),
-            Output(type='field'),
-            Output(type='field',kind='element',set=Eset(bottom.nr),keys=['SF']),
-            ]
-    res = [ Result(kind='NODE',keys=['U']),
-            Result(kind='ELEMENT',keys=['SF'],set=Eset(top.nr)),
-            ]
-
-    all = AbqData(model,P,[step1,step2],res,out,bound=['b0'])
-    all.write('testing')
-    
     
 # End

@@ -254,6 +254,24 @@ def mergedModel(meshes,**kargs):
     return Model(*mergeMeshes(meshes,**kargs))
 
 
+def sortElemsByLoadedFace(ind):
+    """Sort a set of face loaded elements by the loaded face local number
+
+    ind is a (nelems,2) array, where ind[:,0] are element numbers and
+    ind[:,1] are the local numbers of the loaded faces
+
+    Returns a dict with the loaded face number as key and a list of
+    element numbers as value.
+
+    For a typical use case, see the FePlast example.
+    """
+    edgset = unique(ind[:,1])
+    d = {}
+    for e in edgset:
+        d[e] = ind[where(ind[:,1]==e)[0],0]
+    return d
+
+
 if __name__ == "__main__":
 
     print(__doc__)

@@ -273,5 +273,10 @@ outputdir = '~'
 cmd_abaqus = 'abaqus job=$F cpus=$C'
 cmd_calculix = 'ccx -i $F'
 
+
+[prop]
+matdb = os.path.join(datadir,'materials.db')
+secdb = os.path.join(datadir,'sections.db')
+
 #End
 

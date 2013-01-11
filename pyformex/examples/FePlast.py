@@ -46,21 +46,6 @@ from plugins import postproc_menu
 
 import simple
 
-def sortElemsByLoadedFace(ind):
-    """Sorted a set of face loaded elements by the loaded face local number
-
-    ind is a (nelems,2) array, where ind[:,0] are element numbers and
-    ind[:,1] are the local numbers of the loaded faces
-
-    Returns a dict with the loaded face number as key and a list of
-    element numbers as value.
-    """
-    edgset = unique(ind[:,1])
-    d = {}
-    for e in edgset:
-        d[e] = ind[where(ind[:,1]==e)[0],0]
-    return d
-
 
 def rectangle_with_hole(L,W,r,nl,nb,e0=0.0,eltype='quad4'):
     """Create a quarter of rectangle with a central circular hole.
