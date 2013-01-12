@@ -780,12 +780,12 @@ class Canvas(object):
 
     def setFgColor(self,color):
         """Set the default foreground color."""
-        self.settings.fgcolor = colors.GLColor(color)
+        self.settings.fgcolor = colors.GLcolor(color)
         
 
     def setSlColor(self,color):
         """Set the highlight color."""
-        self.settings.slcolor = colors.GLColor(color)
+        self.settings.slcolor = colors.GLcolor(color)
 
 
     def setTriade(self,on=None,pos='lb',siz=100):

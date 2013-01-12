@@ -1029,7 +1029,7 @@ def saneColor(color=None):
     The input value of color can be either of the following:
 
     - None: indicates that the default color will be used,
-    - a single color value in a format accepted by colors.GLColor,
+    - a single color value in a format accepted by colors.GLcolor,
     - a tuple or list of such colors,
     - an (3,) shaped array of RGB values, ranging from 0.0 to 1.0,
     - an (n,3) shaped array of RGB values,
@@ -1062,11 +1062,11 @@ def saneColor(color=None):
 
     # not a color index: it must be colors
     try:
-        color = GLColor(color)
+        color = GLcolor(color)
     except ValueError:
 
         try:
-            color = map(GLColor,color)
+            color = map(GLcolor,color)
         except ValueError:
             pass
 

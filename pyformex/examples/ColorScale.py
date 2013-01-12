@@ -95,7 +95,7 @@ def show():
         minexp = None
 
     if custom:
-        palet = map(GLColor,[mincol,medcol,maxcol])
+        palet = map(GLcolor,[mincol,medcol,maxcol])
 
     mw,mh = pf.canvas.getSize()
     x,y = position

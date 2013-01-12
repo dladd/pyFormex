@@ -24,9 +24,20 @@
 ##
 """pyFormex GUI module initialization.
 
-This file is mainly here to flag the gui directory as a Python package.
-Global variables for the gui package may be defined here.
+This module detects the underlying windowing system.
+Currently, the pyFormex GUI is only guaranteed on X11.
+For other systems, a warning will be printed that some things may not work.
 """
 from __future__ import print_function
+
+import pyformex as pf
+try:
+    from PyQt4 import QtGui
+    QtGui.QColor.setAllowX11ColorNames(True)
+    pf.X11 = True
+except:
+    print("WARNING: THIS IS NOT AN X11 WINDOW SYSTEM!")
+    print("SOME THINGS MAY NOT WORK PROPERLY!")
+    pf.X11 = False
 
 # End

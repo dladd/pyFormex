@@ -53,7 +53,7 @@ def run():
         F = Formex(shape).replic2(4,2)
         color3 = resize(color2,F.shape()) # full color
         #print F.shape(),color3
-        #print [ GLColor(c) for c in color3]
+        #print [ GLcolor(c) for c in color3]
         #continue
         for c in [ color0,color1,color2,color3]:
             for mode in Rendermode:

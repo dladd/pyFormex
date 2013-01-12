@@ -72,19 +72,20 @@ class _TimeOut(Exception):
 def Globals():
     """Return the globals that are passed to the scripts on execution.
 
-    This basically contains the globals defined in draw.py, colors.py,
-    and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the pyformex.PF, by
-    preference using the export() function.
-    During execution of the script, the global variable __name__ will be
-    set to either 'draw' or 'script' depending on whether the script
-    was executed in the 'draw' module (--gui option) or the 'script'
-    module (--nogui option).
+    When running pyformex with the --nogui option, this contains all the
+    globals defined in the module formex (which include those from
+    coords, arraytools and numpy.
+
+    When running with the GUI, this also includes the globals from gui.draw
+    (including those from gui.color).
+    
+    Furthermore, the global variable __name__ will be set to either 'draw'
+    or 'script' depending on whether the script was executed with the GUI
+    or not.
     """
     # :DEV it is not a good idea to put the pf.PF in the globals(),
     # because pf.PF may contain keys that are not acceptible as
     # Python names
-    #g = copy.copy(pf.PF)
     g = {}
     g.update(globals())
     if pf.GUI:
