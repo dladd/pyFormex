@@ -38,6 +38,8 @@ from __future__ import print_function
 import pyformex as pf
 import numpy as np
 from lib import misc
+import utils
+import os
 
 
 def writeData(data,fil,fmt=' '):
@@ -145,11 +147,11 @@ def writeGTS(fn,coords,edges,faces):
 
     - `fn`: file name, by preference ending on '.gts'
     - `coords`: float array with shape (ncoords,3), with the coordinates of
-      `ncoords` vertices.
+      `ncoords` vertices
     - `edges`: int array with shape (nedges,2), with the definition of
-      `nedges` edges in function of the vertex indices.
+      `nedges` edges in function of the vertex indices
     - `faces`: int array with shape (nfaces,3), with the definition of
-      `nfaces` triangles in function of the edge indices.
+      `nfaces` triangles in function of the edge indices
     """
     if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or edges.dtype.kind != 'i' or edges.ndim != 2 or edges.shape[1] != 2 or faces.dtype.kind != 'i' or faces.ndim != 2 or faces.shape[1] != 3:
         raise runtimeError, "Invalid type or shape of argument(s)"
@@ -161,6 +163,62 @@ def writeGTS(fn,coords,edges,faces):
     writeData(faces+1,fil,'%i ')
     fil.write("#GTS file written by %s\n" % pf.Version)
     fil.close()
+
+
+# Output of surface file formats
+
+def writeSTL(f,x,binary=False):
+    """Write a collection of triangles to an STL file.
+
+    Parameters:
+
+    - `fn`: file name, by preference ending with '.stl' or '.stla'
+    - `x`: (ntriangles,3,3) shaped array with the vertices of the
+      triangles
+    - `binary`: if True, the output file format  will be a binary STL.
+      The default is an ascii STL. Note that creation of a binary STL
+      requires the extermal program 'admesh'.
+    """
+    if binary:
+        from plugins.trisurface import stlConvert
+        tmp = utils.tempFile(suffix='.stl').name
+        writeSTLA(tmp,x)
+        stlConvert(tmp,f,binary=True)
+        os.remove(tmp)
+    else:
+        writeSTLA(f,x)
+        
+#
+# TODO: should we remove the 'own' feature here, or instead extend this
+# feature to the other functions
+#
+def writeSTLA(f,x):
+    """Write a collection of triangles to an ascii .stl file.
+
+    Parameters:
+
+    - `fn`: file name, by preference ending with '.stl' or '.stla'
+    - `x`: (ntriangles,3,3) shaped array with the vertices of the
+      triangles
+    """
+    import geomtools
+    own = type(f) == str
+    if own:
+        f = open(f,'w')
+    f.write("solid  Created by %s\n" % pf.Version)
+    area,norm = geomtools.areaNormals(x)
+    degen = geomtools.degenerate(area,norm)
+    print("The model contains %d degenerate triangles" % degen.shape[0])
+    for e,n in zip(x,norm):
+        f.write("  facet normal %s %s %s\n" % tuple(n))
+        f.write("    outer loop\n")
+        for p in e:
+            f.write("      vertex %s %s %s\n" % tuple(p))
+        f.write("    endloop\n")
+        f.write("  endfacet\n")
+    f.write("endsolid\n")
+    if own:
+        f.close()
 
 
 # End

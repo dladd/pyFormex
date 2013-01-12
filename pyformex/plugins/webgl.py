@@ -46,19 +46,24 @@ import pyformex as pf
 ## import tempfile
 
 import utils
-utils.hasExternal('admesh')
 
 from olist import List
 
 class WebGL(List):
-    """A 3D geometry model for export to WebGL.
+    """_A 3D geometry model for export to WebGL.
 
+    UNFINISHED! DO NOT USE
     """
     def __init__(self,data=[]):
         List.__init__(self,data)
+        self.script = "http://get.goXTK.com/xtk_edge.js"
 
-    def format_object(self,obj,name):
-        s = "var %s = new X.mesh();\n" % name
+    def format_object(self,obj):
+        if hasattr(obj,'name'):
+            name = obj.name
+            s = "var %s = new X.mesh();\n" % name
+        else:
+            return ''
         if hasattr(obj,'file'):
             s += "%s.file = '%s';\n" % (name,obj.file)
         if hasattr(obj,'caption'):
@@ -66,6 +71,7 @@ class WebGL(List):
         if hasattr(obj,'magicmode'):
             s += "%s.magicmode = '%s';\n" % (name,str(bool(obj.magicmode)))
         s += "r.add(%s);\n" % name
+        return s
 
     def export(self,name,title=None):
         if title is None:
@@ -79,26 +85,23 @@ r.init();
 r.render();
 };
 """
-        jsname = utils.changeExt(stlname,'.js')
+        jsname = utils.changeExt(name,'.js')
         with open(jsname,'w') as jsfile:
             jsfile.write(jstext)
 
-    ##     htmltext = """<html>
-    ## <head>
-    ## <title>%s</title>
-    ## <script type="text/javascript" src="%s"></script>
-    ## <script type="text/javascript" src="%s"></script>
-    ## </head>
-    ## <body>
-    ## </body>
-    ## </html>
-    ## """ % (caption,script,jsname)
-    ##     htmlname = utils.changeExt(jsname,'.html')
-    ##     with open(htmlname,'w') as htmlfile:
-    ##         htmlfile.write(htmltext)
-            
-        
-        
+        htmltext = """<html>
+<head>
+<title>%s</title>
+<script type="text/javascript" src="%s"></script>
+<script type="text/javascript" src="%s"></script>
+</head>
+<body>
+</body>
+</html>
+""" % (title,self.script,jsname)
+        htmlname = utils.changeExt(jsname,'.html')
+        with open(htmlname,'w') as htmlfile:
+            htmlfile.write(htmltext)
 
     
 def stl2webgl(stlname,caption=None,magicmode=True,script="http://get.goXTK.com/xtk_edge.js"):
@@ -150,11 +153,8 @@ def surface2webgl(S,name,caption=None):
     - `caption`: text to use as caption
     """
     stlname = utils.changeExt(name,'.stl')
-    stlaname = utils.changeExt(name+'_a','.stl')
     scale = 50./S.sizes().max()
-    S.scale(scale).write(stlaname)
-    cmd = "admesh -b %s %s" % (stlname,stlaname)
-    sta,out = utils.runCommand(cmd)
+    S.scale(scale).write(stlname,'stlb')
     stl2webgl(stlname,caption)
 
 

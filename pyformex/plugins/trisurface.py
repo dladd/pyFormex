@@ -46,21 +46,26 @@ from gui.drawable import interpolateNormals
 import os,tempfile
 import tempfile
 
-utils.hasExternal('admesh')
-
 from utils import deprecation
 
 # Conversion of surface file formats
 
-def stlConvert(stlname,outname=None,options='-d'):
-    """Transform an .stl file to .off or .gts format.
+def stlConvert(stlname,outname=None,binary=False,options='-d'):
+    """Transform an .stl file to .off or .gts or binary .stl format.
 
-    If outname is given, it is either '.off' or '.gts' or a filename ending
-    on one of these extensions. If it is only an extension, the stlname will
-    be used with extension changed.
+    Parameters:
+
+    - `stlname`: name of an existing .stl file (either ascii or binary).
+    - `outname`: name of the output file. The extension defines the format
+      and should be one of '.off', '.gts', '.stl', '.stla', or .stlb'.
+      As a convenience, if a file extension only is given (other than '.stl'),
+      then the outname will be constructed by changing the extension of the
+      input `stlname`.
+    - `binary`: if the extension of `outname` is '.stl', defines whether
+      the output format is a binary or ascii STL format.
 
     If the outname file exists and its mtime is more recent than the stlname,
-    the outname file is considered uptodate and the conversion programwill
+    the outname file is considered uptodate and the conversion program will
     not be run.
     
     The conversion program will be choosen depending on the extension.
@@ -77,16 +82,26 @@ def stlConvert(stlname,outname=None,options='-d'):
     if os.path.exists(outname) and utils.mtime(stlname) < utils.mtime(outname):
         return outname,0,"File '%s' seems to be up to date" % outname
     
-    if outname.endswith('.off'):
+    ftype = utils.fileTypeFromExt(outname)
+    if ftype == 'stl' and binary:
+        ftype = 'stlb'
+        
+    if ftype == 'off':
+        utils.hasExternal('admesh')
         cmd = "admesh %s --write-off '%s' '%s'" % (options,outname,stlname)
-    elif outname.endswith('.gts'):
+    elif ftype in [ 'stl', 'stla' ]:
+        utils.hasExternal('admesh')
+        cmd = "admesh %s -a '%s' '%s'" % (options,outname,stlname)
+    elif ftype == 'stlb':
+        utils.hasExternal('admesh')
+        cmd = "admesh %s -b '%s' '%s'" % (options,outname,stlname)
+    elif ftype == 'gts':
         cmd = "stl2gts < '%s' > '%s'" % (stlname,outname)
     else:
         return outname,1,"Can not convert file '%s' to '%s'" % (stlname,outname)
        
     sta,out = utils.runCommand(cmd)
     return outname,sta,out
-
 
 # Input of surface file formats
 
@@ -171,29 +186,8 @@ def read_gts_intersectioncurve(fn):
     return F
 
 
-# Output of surface file formats
 
-def write_stla(f,x):
-    """Export an x[n,3,3] float array as an ascii .stl file."""
-
-    own = type(f) == str
-    if own:
-        f = open(f,'w')
-    f.write("solid  Created by %s\n" % pf.Version)
-    area,norm = geomtools.areaNormals(x)
-    degen = degenerate(area,norm)
-    print("The model contains %d degenerate triangles" % degen.shape[0])
-    for e,n in zip(x,norm):
-        f.write("  facet normal %s %s %s\n" % tuple(n))
-        f.write("    outer loop\n")
-        for p in e:
-            f.write("      vertex %s %s %s\n" % tuple(p))
-        f.write("    endloop\n")
-        f.write("  endfacet\n")
-    f.write("endsolid\n")
-    if own:
-        f.close()
-
+# Surface characteristics
 
 def surface_volume(x,pt=None):
     """Return the volume inside a 3-plex Formex.
@@ -661,7 +655,9 @@ class TriSurface(Mesh):
         """Write the surface to file.
 
         If no filetype is given, it is deduced from the filename extension.
-        If the filename has no extension, the 'gts' file type is used.
+        If the filename has no extension, the 'off' file type is used.
+        For a file with extension 'stl', the ftype may be 'stla' or 'stlb'
+        to force ascii or binary STL format.
         """
         if ftype is None:
             ftype = os.path.splitext(fname)[1]
@@ -670,15 +666,17 @@ class TriSurface(Mesh):
         else:
             ftype = ftype.strip('.').lower()
 
-        pf.message("Writing surface to file %s" % fname)
+        pf.message("Writing surface to file %s (%s)" % (fname,ftype))
         if ftype == 'pgf':
             Geometry.write(self,fname)
         elif ftype == 'gts':
             filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
-        elif ftype in ['stl','off','smesh']:
-            if ftype == 'stl':
-                write_stla(fname,self.coords[self.elems])
+        elif ftype in ['stl','stla','stlb','off','smesh']:
+            if ftype in ['stl','stla']:
+                filewrite.writeSTL(fname,self.coords[self.elems],binary=False)
+            elif ftype == 'stlb':
+                filewrite.writeSTL(fname,self.coords[self.elems],binary=True)
             elif ftype == 'off':
                 filewrite.writeOFF(fname,self.coords,self.elems)
             elif ftype == 'smesh':
@@ -1105,7 +1103,7 @@ Quality: %s .. %s
 
         Returns the list of degenerate element numbers in a sorted array. 
         """
-        return degenerate(*self.areaNormals())
+        return geomtools.degenerate(*self.areaNormals())
 
 
     def removeDegenerate(self,compact=False):
@@ -1858,12 +1856,11 @@ Quality: %s .. %s
                 # Protect against impossible file handling for empty surfaces
                 return self
             tmp = tempfile.mktemp('.stl')
+            tmp1 = tempfile.mktemp('.off')
             pf.message("Writing temp file %s" % tmp)
             self.write(tmp,'stl')
-            tmp1 = tempfile.mktemp('.off')
-            cmd = "admesh -d --write-off='%s' '%s'" % (tmp1,tmp)
-            pf.message("Fixing surface normals with command\n %s" % cmd)
-            sta,out = utils.runCommand(cmd)
+            pf.message("Fixing surface while converting to OFF format %s %s" % tmp1)
+            stlConvert(tmp,tmp1)
             pf.message("Reading result from %s" % tmp1)
             S = TriSurface.read(tmp1)   
             os.remove(tmp)
@@ -2137,18 +2134,6 @@ Quality: %s .. %s
 ##########################################################################
 ################# Non-member and obsolete functions ######################
 
-def degenerate(area,normals):
-    """Return a list of the degenerate faces according to area and normals.
-
-    area,normals are equal sized arrays with the areas and normals of a
-    list of faces.
-    A face is degenerate if its area is less or equal to zero or the
-    normal has a nan (not-a-number) value.
-
-    Returns a list of the degenerate element numbers as a sorted array. 
-    """
-    return unique(concatenate([where(area<=0)[0],where(isnan(normals))[0]]))
-
 
 def read_error(cnt,line):
     """Raise an error on reading the stl file."""
@@ -2411,64 +2396,8 @@ tetgen.install_more_trisurface_methods()
 import vmtk_itf
 
 
-def stl2webgl(stlname,caption=None,magicmode=True,script="http://get.goXTK.com/xtk_edge.js"):
-    """Create a WebGL model from an STL file
-
-    - `stlname`: name of an (ascii or binary) STL file
-    - `caption`: text to use as caption
-    """
-    if caption is None:
-        caption = stlname
-    caption = '%s --- Created by pyFormex' % caption
-    
-    jstext = """window.onload = function() {
-var r = new X.renderer3D();
-r.init();
-var m = new X.mesh();
-m.file = '%s';
-m.magicmode = %s;
-m.caption = '%s';
-r.add(m);
-r.render();
-};
-""" % (stlname,str(bool(magicmode)).lower(),caption)
-    jsname = utils.changeExt(stlname,'.js')
-    with open(jsname,'w') as jsfile:
-        jsfile.write(jstext)
-        jsfile.close()
-    
-    htmltext = """<html>
-<head>
-<title>%s</title>
-<script type="text/javascript" src="%s"></script>
-<script type="text/javascript" src="%s"></script>
-</head>
-<body>
-</body>
-</html>
-""" % (caption,script,jsname)
-    htmlname = utils.changeExt(jsname,'.html')
-    with open(htmlname,'w') as htmlfile:
-        htmlfile.write(htmltext)
-
-
-def surface2webgl(S,name,caption=None):
-    """Create a WebGL model of a surface
-
-    - `S`: TriSurface
-    - `name`: basename of the output files
-    - `caption`: text to use as caption
-    """
-    stlname = utils.changeExt(name,'.stl')
-    stlaname = utils.changeExt(name+'_a','.stl')
-    scale = 50./S.sizes().max()
-    S.scale(scale).write(stlaname)
-    cmd = "admesh -b %s %s" % (stlname,stlaname)
-    sta,out = utils.runCommand(cmd)
-    stl2webgl(stlname,caption)
-
-
-TriSurface.webgl = surface2webgl
+import webgl
+TriSurface.webgl = webgl.surface2webgl
 
 
 # End

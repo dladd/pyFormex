@@ -50,6 +50,20 @@ def areaNormals(x):
     return area,normals
 
 
+def degenerate(area,normals):
+    """Return a list of the degenerate faces according to area and normals.
+
+    area,normals are equal sized arrays with the areas and normals of a
+    list of faces, such as the output of the :func:`areaNormals` function. 
+    
+    A face is degenerate if its area is less or equal to zero or the
+    normal has a nan (not-a-number) value.
+
+    Returns a list of the degenerate element numbers as a sorted array. 
+    """
+    return unique(concatenate([where(area<=0)[0],where(isnan(normals))[0]]))
+
+
 def levelVolumes(x):
     """Compute the level volumes of a collection of elements.
     
