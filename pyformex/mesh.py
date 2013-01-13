@@ -344,16 +344,28 @@ class Mesh(Geometry):
 
 
     def toSurface(self):
-        """Convert a Mesh to a Surface.
+        """Convert a Mesh to a TriSurface.
 
-        If the plexitude of the mesh is 3, returns a TriSurface equivalent
-        with the Mesh. Else, an error is raised.
+        Only Meshes of level 2 (surface) and 3 (volume) can be converted to a
+        TriSurface. For a level 3 Mesh, the border Mesh is taken first.
+        A level 2 Mesh is converted to element type 'tri3' and then to a
+        TriSurface.
+        The resulting TriSurface is only fully equivalent with the input
+        Mesh if the latter has element type 'tri3'.
+
+        On success, returns a TriSurface corresponding with the input Mesh.
+        If the Mesh can not be converted to a TriSurface, an error is raised.
         """
         from plugins.trisurface import TriSurface
-        if self.nplex() == 3:
-            return TriSurface(self)
+        if self.level() == 3:
+            obj = self.getBorderMesh()
+        elif self.level() == 2:
+            obj = self
         else:
-            raise ValueError,"Only plexitude-3 Meshes can be converted to TriSurface. Got plexitude %s" % self.nplex()
+            raise ValueError,"Can not convert a Mesh of level %s to a Surface" % self.level()
+
+        obj = obj.convert('tri3')
+        return TriSurface(obj)
 
             
     def ndim(self):
