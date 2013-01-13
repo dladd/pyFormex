@@ -2384,7 +2384,6 @@ def intersectSurfaceWithSegments(s1, segm, atol=1.e-5):
     return p[win], il[win], it[win]
 
 
-
 import pyformex_gts
 pyformex_gts.install_more_trisurface_methods()
 

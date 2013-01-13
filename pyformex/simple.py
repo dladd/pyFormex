@@ -254,9 +254,8 @@ def sphere(ndiv=6):
 
     Returns: 
 
-      A Mesh with eltype 'tri3', representing a triangulated
-      approximation of a spherical surface with radius 1 and center
-      at the origin.
+      A TriSurface, representing a triangulated approximation of a
+      spherical surface with radius 1 and center at the origin.
     """
     from elements import Icosa
     from plugins.trisurface import TriSurface
