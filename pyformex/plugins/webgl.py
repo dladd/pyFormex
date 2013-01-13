@@ -147,7 +147,7 @@ class WebGL(List):
         s += "r.add(%s);\n" % name
         return s
 
-    def export(self,name,title=None,description=None,keywords=None,author=None):
+    def export(self,name,title=None,description=None,keywords=None,author=None,createdby=False):
         """Export the WebGL scene.
 
         Parameters:
@@ -207,10 +207,14 @@ r.render();
 <script type="text/javascript" src="%s"></script>
 <script type="text/javascript" src="%s"></script>
 </head>
-<body>
-</body>
+<body>""" % (title,self.script,jsname)
+        if createdby:
+            s += """<div id='pyformex' style='position:absolute;top:10px;left:10px;'>
+<a href='http://pyformex.org' target=_blank><img src='http://pyformex.org/images/pyformex_createdby.png' border=0></a>
+</div>"""
+        s += """</body>
 </html>
-""" % (title,self.script,jsname)
+"""
         htmlname = utils.changeExt(jsname,'.html')
         with open(htmlname,'w') as htmlfile:
             htmlfile.write(s)

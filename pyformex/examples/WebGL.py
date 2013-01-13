@@ -81,7 +81,7 @@ def run():
     W.add(obj=C,name='cylinder',caption='A cylinder',color=yellow,alpha=0.7)
     # set the camera viewpoint
     W.view(position=[6.,0.,3.])
-    W.export('scene1','Two spheres and a cone')
+    W.export('scene1','Two spheres and a cone',createdby=True)
 
 if __name__ == 'draw':
     run()
