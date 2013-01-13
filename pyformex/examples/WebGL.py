@@ -82,7 +82,6 @@ def run():
     # set the camera viewpoint
     W.view(position=[6.,0.,3.])
     W.export('scene1','Two spheres and a cone')
-    print("Exported WebGL model to %s/%s" % (os.getcwd(),'scene1.html'))
 
 if __name__ == 'draw':
     run()

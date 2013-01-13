@@ -1859,7 +1859,7 @@ Quality: %s .. %s
             tmp1 = tempfile.mktemp('.off')
             pf.message("Writing temp file %s" % tmp)
             self.write(tmp,'stl')
-            pf.message("Fixing surface while converting to OFF format %s %s" % tmp1)
+            pf.message("Fixing surface while converting to OFF format %s" % tmp1)
             stlConvert(tmp,tmp1)
             pf.message("Reading result from %s" % tmp1)
             S = TriSurface.read(tmp1)   
