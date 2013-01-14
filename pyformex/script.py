@@ -233,7 +233,7 @@ def system(cmdline,result='output'):
     If result == 'output', the output of the command is returned.
     If result == 'both', a tuple of status and output is returned.
     """
-    sta,out = utils.system(cmdline)
+    sta,out,err = utils.system(cmdline)
     if result == 'status':
         return sta
     elif result == 'output':
@@ -390,7 +390,7 @@ def stopatbreakpt():
 
 def convertPrintSyntax(filename):
     """Convert a script to using the print function"""
-    sta,out = utils.runCommand("2to3 -f print -wn %s" % filename)
+    sta,out,err = utils.runCommand("2to3 -f print -wn %s" % filename)
     if sta:
         # Conversion error: show what is going on
         print(out)

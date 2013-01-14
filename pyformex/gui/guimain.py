@@ -1013,7 +1013,7 @@ def xwininfo(windowid=None,name=None):
     else:
         raise ValueError,"Either windowid or name have to be specified"
 
-    sta,out = utils.runCommand(cmd % args,RaiseError=False,quiet=True)
+    sta,out,err = utils.system(cmd % args)
     res = {}
     if not sta:
         for line in out.split('\n'):
@@ -1046,7 +1046,7 @@ def pidofxwin(windowid):
     a normal desktop configuration.
     """
     import re
-    sta,out = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,quiet=True)
+    sta,out,err = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,verbose=False)
     m = re.match("_NET_WM_PID\(.*\)\s*=\s*(?P<pid>\d+)",out)
     if m:
         pid = m.group('pid')
@@ -1076,8 +1076,8 @@ def windowId():
 def findOldProcesses(max=16):
     """Find old pyFormex GUI processes still running.
 
-    There is a maximum to the number of processes taht can be detected.
-    16 will suffice laregley, because there is no sane reason to open that many
+    There is a maximum to the number of processes that can be detected.
+    16 will suffice largely, because there is no sane reason to open that many
     pyFormex GUI's on the same screen.
 
     Returns the next available main window name, and a list of
@@ -1398,7 +1398,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.update()
 
     if pf.cfg['gui/fortune']:
-        sta,out = utils.runCommand(pf.cfg['fortune'])
+        sta,out,err = utils.runCommand(pf.cfg['fortune'])
         if sta == 0:
             draw.showInfo(out)
 

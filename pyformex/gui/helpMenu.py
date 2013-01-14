@@ -249,7 +249,7 @@ def createMenuData():
         
         def install_external(pkgdir,prgname):
             extdir = os.path.join(pf.cfg['pyformexdir'],'extra',pkgdir)
-            sta,out = utils.runCommand("cd %s; make && gksu make install" % extdir)
+            sta,out,err = utils.runCommand("cd %s; make && gksu make install" % extdir)
             if sta:
                 info = out
             else:

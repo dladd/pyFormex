@@ -81,7 +81,7 @@ import utils
 # Set the proper revision number when running from svn sources
 if pf.installtype=='S':
     try:
-        sta,out = utils.system2('cd %s && svnversion' % pyformexdir)
+        sta,out,err = utils.system('cd %s && svnversion' % pyformexdir)
         if sta == 0 and not out.startswith('exported'):
             pf.__revision__ = out.strip()
     except:
@@ -93,7 +93,7 @@ if pf.installtype=='S':
 # Set the proper revision number when running from git sources
 if pf.installtype=='G':
     try:
-        sta,out = utils.system2('cd %s && git describe --always' % pyformexdir)
+        sta,out,err = utils.system('cd %s && git describe --always' % pyformexdir)
         if sta == 0:
             pf.__revision__ = out.split('\n')[0].strip()
     except:
@@ -604,7 +604,7 @@ def run(argv=[]):
                 print("Error while executing %s, we ignore it and continue" % svnclean)
 
         def getSVNURL():
-            sta,out = utils.runCommand("cd %s;svn info | grep -F 'URL:'"%pyformexdir)
+            sta,out,err = utils.runCommand("cd %s;svn info | grep -F 'URL:'"%pyformexdir)
             if sta == 0:
                 return out
             else:

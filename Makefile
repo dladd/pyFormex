@@ -167,19 +167,19 @@ website:
 
 # Bump the version/release
 bumpversion:
-	@echo "bumpversion currently inactive" 
 	@OLD=$$(expr "${VERSION}" : '.*\([0-9])*\)$$'); \
 	 NEW=$$(expr $$OLD + 1); \
 	 sed -i "/^VERSION=/s|$$OLD$$|$$NEW|;/^RELEASE=/s|}.*|}|" RELEASE
-	#make version
+	make version
+	@echo "Bumped Version to $$(grep VERSION= RELEASE), $$(grep RELEASE= RELEASE)"
 
 # This increases the tail only: minor number or alpha number
 bumprelease:
-	@echo "bumprelease currently inactive" 
 	@OLD=$$(expr "${RELEASE}" : '.*r\([0-9])*\)$$'); \
 	 if [ -z "$$OLD" ]; then NEW=1; else NEW=$$(expr $$OLD + 1); fi; \
 	 sed -i "/^RELEASE=/s|}.*|}r$$NEW|" RELEASE
 	make version
+	@echo "Bumped Release to $$(grep VERSION= RELEASE), $$(grep RELEASE= RELEASE)"
 
 revision:
 	sed -i "s|__revision__ = .*|__revision__ = '$$(git describe --always)'|" ${PYFORMEXDIR}/__init__.py

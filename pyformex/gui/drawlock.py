@@ -65,7 +65,7 @@ class DrawLock(object):
         if self.allowed and not self.locked:
             if time is None:
                 time = pf.GUI.drawwait
-            if time > 0:
+            if time > 0.:
                 pf.debug('STARTING TIMER',pf.DEBUG.SCRIPT)
                 self.locked = True
                 self.timer = threading.Timer(time,self.release)

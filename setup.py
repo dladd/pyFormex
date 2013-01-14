@@ -147,7 +147,7 @@ def run_setup(with_cext):
         'sdist':sdist
         },
           name='pyformex',
-          version='0.8.9r5',
+          version='0.9.0-a1',
           description='program to create 3D geometry from Python scripts.',
           long_description="""
     pyFormex can be used to generate, transform and manipulate large

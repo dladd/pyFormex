@@ -2555,6 +2555,10 @@ class Tabs(QtGui.QTabWidget):
             self.addTab(widget,header)
 
 
+#
+# TODO: This should be replaced with an InputTable item in an InputDialog.
+#
+
 class TableDialog(GenericDialog):
     """A dialog widget to show/edit a two-dimensional array of items.
 

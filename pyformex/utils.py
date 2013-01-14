@@ -238,7 +238,7 @@ def checkExternal(name=None,command=None,answer=None,quiet=False):
         if answer is None:
             answer = ans
 
-    out = system2(command)[1]
+    out = system(command)[1]
     m = re.match(answer,out)
     if m:
         version = m.group(1)
@@ -427,7 +427,7 @@ def grepSource(pattern,options='',relative=True,quiet=False):
         extended = False
     files = sourceFiles(relative=relative,extended=extended,symlinks=False)
     cmd = "grep %s '%s' %s" % (options,pattern,' '.join(files))
-    sta,out = runCommand(cmd,quiet=quiet) 
+    sta,out,err = runCommand(cmd,verbose=not quiet) 
     return out
 
 
@@ -505,6 +505,8 @@ def underlineHeader(s,char='-'):
     the specified char.
     """
     i = s.find('\n')
+    if i < 0:
+        i = len(s)
     return s[:i] + '\n' + char*i + s[i:]
 
 
@@ -747,7 +749,7 @@ def timeEval(s,glob=None):
 
 def countLines(fn):
     """Return the number of lines in a text file."""
-    sta,out = runCommand("wc %s" % fn)
+    sta,out,err = runCommand("wc %s" % fn)
     if sta == 0:
         return int(out.split()[0])
     else:
@@ -758,65 +760,6 @@ def countLines(fn):
 ## Running external commands ##
 ###############################
 
-## def system(cmd):
-##     """Execute an external command.
-
-##     This version will write the subprocess stdout and stderr to pyFormex
-##     """
-##     import subprocess
-##     pf.message("Running command: %s" % cmd)
-##     P = subprocess.Popen(cmd,shell=True)
-##     sta = P.wait() # wait for the process to finish
-##     pf.message("Command finished with status: %s" % sta)
-##     return sta
-
-def timedWait(proc, timeout, waitToKill = 1.):
-    """It is an implementation of the wait() but with a timeout check.
-    
-    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
-    - `waitToKill` is the delay between proc.terminate() and proc.kill().
-    """
-    import timer
-    t = timer.Timer(0)    
-    while proc.poll() is None and t.seconds(rounded=False) < timeout:#check if proc is completed or timed out
-        pass
-    if proc.poll() is not None:
-        sta = proc.poll() # returncode
-        out = proc.communicate()[0] # get the stdout
-    elif t.seconds(rounded=False) > timeout:
-        proc.terminate()
-        try:
-            out = proc.stdout.read()
-        except:#the stdout was not yet generated
-            out = ''
-        try:
-            import time
-            time.sleep(waitToKill)            
-            #proc.kill()
-            killProcesses([proc.pid+1],signal=15)#VMTK use pid+1, is it general?
-        except:
-            pass
-        sta = -20#time out code (to be decided)
-    else:
-        raise ValueError,"This really should not happen!"
-    return sta, out
-
-
-def system2(cmd, timeout=None):
-    """Execute an external command with timeout.
-    
-    If timeout is given:
-    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
-    """
-    import subprocess
-    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    if timeout == None:
-        sta = P.wait() # wait for the process to finish
-        out = P.communicate()[0] # get the stdout
-    else:
-        sta, out = timedWait(P, timeout)  
-    return sta,out
-
 
 # DEPRECATED, KEPT FOR EMERGENCIES
 # currently activated by --commands option
@@ -826,16 +769,123 @@ def system1(cmd):
     return commands.getstatusoutput(cmd)
 
 
-def runCommand(cmd,RaiseError=True,quiet=False,timeout=None):
-    """Run a command and raise error if exited with error.
+## def timedWait(proc, timeout, waitToKill = 1.):
+##     """It is an implementation of the wait() but with a timeout check.
+    
+##     - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
+##     - `waitToKill` is the delay between proc.terminate() and proc.kill().
+##     """
+##     import timer
+##     t = timer.Timer(0)    
+##     while proc.poll() is None and t.seconds(rounded=False) < timeout:#check if proc is completed or timed out
+##         pass
+##     if proc.poll() is not None:
+##         sta = proc.poll() # returncode
+##         out = proc.communicate()[0] # get the stdout
+##     elif t.seconds(rounded=False) > timeout:
+##         proc.terminate()
+##         try:
+##             out = proc.stdout.read()
+##         except:#the stdout was not yet generated
+##             out = ''
+##         try:
+##             import time
+##             time.sleep(waitToKill)            
+##             #proc.kill()
+##             killProcesses([proc.pid+1],signal=15)#VMTK use pid+1, is it general?
+##         except:
+##             pass
+##         sta = -20#time out code (to be decided)
+##     else:
+##         raise ValueError,"This really should not happen!"
+##     return sta, out
 
-    cmd is a string with the command to be run. The command is run
-    in the background, waiting for the result. If no error occurs,
-    the exit status and stdout are returned.
-    Else an error is raised by default.
 
-    If timeout is given:
-    - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
+_TIMEOUT_EXITCODE = -15
+_TIMEOUT_KILLCODE = -9
+
+def system(cmd,timeout=None,gracetime=2.0,shell=True):
+    """Execute an external command.
+
+    Parameters:
+
+    - `cmd`: a string with the command to be executed
+    - `timeout`: float. If specified and > 0.0, the command will time out
+      and be killed after the specified number of seconds.
+    - `gracetime`: float. The time to wait after the terminate signal was
+      sent in case of a timeout, before a forced kill is done. 
+    - `shell`: if True (default) the command is run in a new shell
+
+    Returns:
+
+    - `sta`: exit code of the command. In case of a timeout this will be
+      `utils._TIMEOUT_EXITCODE`, or `utils._TIMEOUT_KILLCODE` if the command
+      had to be forcedly killed. Otherwise, the exitcode of the command
+      itself is returned.
+    - `out`: stdout produced by the command
+    - `err`: stderr produced by the command
+
+    """
+    from subprocess import PIPE,Popen
+    from threading import Timer
+    
+    def terminate(p):
+        """Terminate a subprocess when it times out"""
+        from time import sleep
+        if p.poll() is None:
+            print("Subprocess terminated due to timeout (%ss)" % timeout)
+            p.terminate()
+            if p.poll() is None:
+                # Give the process 2 seconds to terminate, then kill it
+                sleep(gracetime)
+                if p.poll() is None:
+                    print("Subprocess killed")
+                    p.kill()
+                    p.returncode = _TIMEOUT_KILLCODE
+            p.returncode = _TIMEOUT_EXITCODE
+
+    P = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE)
+    if timeout > 0.0:
+        # Start a timer
+        t = Timer(timeout,terminate,[P])
+        t.start()
+    else:
+        t = None
+
+    # start the process and wait for it to finish
+    out,err = P.communicate() # get the stdout and stderr
+    sta = P.returncode
+
+    if t:
+        # cancel the timer if one was started
+        t.cancel()
+
+    return sta,out,err
+
+
+def runCommand(cmd,timeout=None,RaiseError=True,verbose=True):
+    """Run an external command in a user friendly way.
+
+    This uses the :func:`system` function to run an external command,
+    adding some extra user notifications of what is happening.
+
+    Parameters:
+
+    - `cmd`: a string with the command to be executed
+    - `timeout`: float. If specified and > 0.0, the command will time out
+      and be killed after the specified number of seconds.
+    - `RaiseError`: boolean. If True (default), an error is raised if the
+      execution of the command failed (nonzero exit status).
+      If a `timeout` was set, a timeout condition (-15) will however not
+      raise an error.
+      If `RaiseError` is False, the user will be responsible himself for
+      checking whether the command has completed.
+    - `verbose`: boolean. If True (default), a message including the command
+      is printed before it is run and in case of a nonzero exit, the full
+      stdout, exit status and stderr are printed (in that order).
+    
+    Returns the output of the :func:`system` function, unless an error is
+    raised.
     
     Example:
     cmd = 'sleep 2'
@@ -843,28 +893,23 @@ def runCommand(cmd,RaiseError=True,quiet=False,timeout=None):
     print (sta,out)
     
     """
-    if not quiet:
-        pf.message("Running command: %s" % cmd)
+    if verbose:
+        print("Running command: %s" % cmd)
     pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
-    #  Use cfg.get here, so that runCommand can be used before condig is done
-    if pf.cfg.get('commands',False):
-        sta,out = system1(cmd)
-    else:
-        sta,out = system2(cmd, timeout)
+
+    sta,out,err = system(cmd,timeout)
+
     if sta != 0:
-        if not quiet:
-            pf.message(out)
-            if sta != -20:
-                pf.message("Command exited with an error (exitcode %s)" % sta)
-            else:
-                pf.message("Command exited because timed out")
-        if RaiseError:
-            
-            if sta != -20:
+        if timeout > 0.0 and sta in [ _TIMEOUT_EXITCODE,  _TIMEOUT_KILLCODE ]:
+            pass
+        else:
+            if verbose:
+                print(out)
+                print("Command exited with an error (exitcode %s)" % sta)
+                print(err)
+            if RaiseError:
                 raise RuntimeError, "Error while executing command:\n  %s" % cmd
-            else:
-                raise RuntimeError, "Command exited because timed out"
-    return sta,out.rstrip('\n')
+    return sta,out.rstrip('\n'),err
 
 
 def spawn(cmd):
@@ -1269,7 +1314,7 @@ def listFontFiles():
     Returns a list of path names to all the font files found on the system.
     """
     cmd = "fc-list : file | sed 's|.*file=||'"
-    sta,out = runCommand(cmd)
+    sta,out,err = runCommand(cmd)
     if sta:
         warning("fc-list could not find your font files.\nMaybe you do not have fontconfig installed?")
     else:

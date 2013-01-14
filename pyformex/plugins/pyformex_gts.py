@@ -117,7 +117,7 @@ def gtsset(self,surf,op,filt='',ext='.tmp',curve=False,check=False,verbose=False
     surf.write(tmp1,'gts')
     pf.message("Performing boolean operation")
     cmd = "gtsset %s %s %s %s %s > %s" % (options,op,tmp,tmp1,filt,tmp2)
-    sta,out = utils.runCommand(cmd)
+    sta,out,err = utils.runCommand(cmd)
     os.remove(tmp)
     os.remove(tmp1)
     if sta or verbose:
@@ -156,7 +156,7 @@ def gtsinside(self,pts,dir=0):
     f.close()
     pf.message("Performing inside testing")
     cmd = "gtsinside %s %s > %s" % (tmp,tmp1,tmp2)
-    sta,out = utils.runCommand(cmd)
+    sta,out,err = utils.runCommand(cmd)
     os.remove(tmp)
     os.remove(tmp1)
     if sta:
