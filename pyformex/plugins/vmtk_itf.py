@@ -72,7 +72,7 @@ def centerline(self):
     self.write(tmp,'stl')
     pf.message("Computing centerline using VMTK")
     cmd = 'vmtk vmtkcenterlines -ifile %s -ofile %s'%(tmp,tmp1)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     os.remove(tmp)
     if sta:
         pf.message("An error occurred during the remeshing.")
@@ -100,7 +100,7 @@ def remesh(self,edgelen=None):
     self.write(tmp,'stl')
     pf.message("Remeshing using VMTK (edge length = %s)" % edgelen)
     cmd = "vmtk vmtksurfaceremeshing -ifile %s -ofile %s -edgelength %s" % (tmp,tmp1,edgelen)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     os.remove(tmp)
     if sta:
         pf.message("An error occurred during the remeshing.")

@@ -108,7 +108,7 @@ def voronoi(fn):
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':
         S.write('%s.smesh' %fn)
-    sta,out,err = runCommand('tetgen -zpv %s.smesh' %fn)
+    sta,out = runCommand('tetgen -zpv %s.smesh' %fn)
     #information tetrahedra
     elems = tetgen.readElems('%s.1.ele' %fn)[0]
     nodes = tetgen.readNodes('%s.1.node' %fn)[0]
@@ -131,7 +131,7 @@ def voronoiInner(fn):
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':
         S.write('%s.smesh' %fn)
-    sta,out,err = runCommand('tetgen -zp %s.smesh' %fn)
+    sta,out = runCommand('tetgen -zp %s.smesh' %fn)
     #information tetrahedra
     elems = tetgen.readElems('%s.1.ele' %fn)[0]
     nodes = tetgen.readNodes('%s.1.node' %fn)[0].astype(float64)

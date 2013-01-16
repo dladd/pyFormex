@@ -397,7 +397,7 @@ def runTetgen(fn,options=''):
         return
 
     if os.path.exists(fn) and utils.hasExternal('tetgen'):
-        sta,out,err = utils.runCommand('tetgen -z%s %s' % (options,fn))
+        sta,out = utils.runCommand('tetgen -z%s %s' % (options,fn))
 
 
 def readTetgen(fn):
@@ -452,7 +452,7 @@ def checkSelfIntersectionsWithTetgen(self,verbose=False):
         cmd += '-V '
     cmd=cmd+ tmp
     pf.message("Checking with command\n %s" % cmd)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     if sta:
         pf.message('Tetgen got an error')
         return sta

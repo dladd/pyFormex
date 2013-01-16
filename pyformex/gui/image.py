@@ -283,7 +283,7 @@ def save_window(filename,format,quality=-1,windowname=None):
     pf.canvas.update()
     pf.app.processEvents()
     cmd = 'import -window "%s" %s:%s' % (windowname,format,filename)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     return sta
 
 
@@ -311,7 +311,7 @@ def save_main_window(filename,format,quality=-1,border=False):
 def save_rect(x,y,w,h,filename,format,quality=-1):
     """Save a rectangular part of the screen to a an image file."""
     cmd = 'import -window root -crop "%sx%s+%s+%s" %s:%s' % (w,h,x,y,format,filename)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     return sta
 
 
@@ -505,7 +505,7 @@ def saveMovie(filename,format,windowname=None):
     windowid = windowname
     cmd = "xvidcap --fps 5 --window %s --file %s" % (windowid,filename)
     pf.debug(cmd,pf.DEBUG.IMAGE)
-    #sta,out,err = utils.runCommand(cmd)
+    #sta,out = utils.runCommand(cmd)
     return sta
 
 

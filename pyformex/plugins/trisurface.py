@@ -100,7 +100,7 @@ def stlConvert(stlname,outname=None,binary=False,options='-d'):
     else:
         return outname,1,"Can not convert file '%s' to '%s'" % (stlname,outname)
        
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     return outname,sta,out
 
 # Input of surface file formats
@@ -160,7 +160,7 @@ def read_stl(fn,intermediate=None):
     Return a coords,edges,faces or a coords,elems tuple, depending on the
     intermediate format.
     """
-    ofn,sta,out,err = stlConvert(fn,intermediate)
+    ofn,sta,out = stlConvert(fn,intermediate)
     if sta:
         pf.debug("Error during conversion of file '%s' to '%s'" % (fn,ofn))
         pf.debug(out)
@@ -1898,7 +1898,7 @@ Quality: %s .. %s
         self.write(tmp,'gts')
         
         cmd = "gtscheck < %s" % tmp
-        sta,out,err = utils.runCommand(cmd,raiseError=False)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta == 0:
             pf.message('The surface is an orientable non self-intersecting manifold')
@@ -1943,7 +1943,7 @@ Quality: %s .. %s
         self.write(tmp,'gts')
         pf.message("Splitting with command\n %s" % cmd)
         cmd += ' < %s' % tmp
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -2009,7 +2009,7 @@ Quality: %s .. %s
         self.write(tmp,'gts')
         pf.message("Coarsening with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -2056,7 +2056,7 @@ Quality: %s .. %s
         self.write(tmp,'gts')
         pf.message("Refining with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -2094,7 +2094,7 @@ Quality: %s .. %s
         self.write(tmp,'gts')
         pf.message("Smoothing with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)

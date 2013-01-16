@@ -110,7 +110,7 @@ def getRemoteDirs(host,userdir):
     The userdir is relative to the user's home dir.
     """
     cmd = "ssh %s 'cd %s;ls -F|egrep \".*/\"'" % (host,userdir)
-    sta,out,err = utils.runCommand(cmd,raiseError=False)
+    sta,out = utils.runCommand(cmd)
     if sta:
         out = ''
     dirs = out.split('\n')
@@ -125,7 +125,7 @@ def getRemoteDirs(host,userdir):
 ##     The userdir is relative to the user's home dir.
 ##     """
 ##     cmd = "ssh %s 'cd %s;ls -F'" % (host,userdir)
-##     sta,out,err = utils.runCommand(cmd,raiseError=False)
+##     sta,out = utils.runCommand(cmd)
 ##     if sta:
 ##         out = ''
 ##     dirs = out.split('\n')
@@ -140,7 +140,7 @@ def transferFiles(host,userdir,files,targetdir):
     """
     files = [ '%s:%s/%s' % (host,userdir.rstrip('/'),f) for f in files ]
     cmd = "scp %s %s" % (' '.join(files),targetdir)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     return sta==0
 
 
@@ -167,7 +167,7 @@ def remoteCommand(host=None,command=None):
 
     if host and command:
         cmd = "ssh %s '%s'" % (host,command)
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         message(out)
 
 
@@ -191,7 +191,7 @@ def runLocalProcessor(filename='',processor='abaqus'):
         cmd = cmd.replace('$C',cpus)
         cmd = "cd %s;%s" % (dirname,cmd)
         print(cmd)
-        sta,out,err = utils.runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         print(out)
         
         

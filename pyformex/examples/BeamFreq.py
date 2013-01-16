@@ -164,7 +164,7 @@ stop
     if os.path.exists('test.out'):
         os.remove('test.out')
 
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     
     if verbose:
         # show calix output

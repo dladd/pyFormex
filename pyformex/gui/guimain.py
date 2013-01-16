@@ -1046,7 +1046,7 @@ def pidofxwin(windowid):
     a normal desktop configuration.
     """
     import re
-    sta,out,err = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,verbose=False)
+    sta,out = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,verbose=False)
     m = re.match("_NET_WM_PID\(.*\)\s*=\s*(?P<pid>\d+)",out)
     if m:
         pid = m.group('pid')
@@ -1398,7 +1398,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.update()
 
     if pf.cfg['gui/fortune']:
-        sta,out,err = utils.runCommand(pf.cfg['fortune'])
+        sta,out = utils.runCommand(pf.cfg['fortune'])
         if sta == 0:
             draw.showInfo(out)
 

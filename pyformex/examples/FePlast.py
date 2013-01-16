@@ -260,7 +260,7 @@ def run():
         if ack('Run ccx on the created file?'):
             chdir(fn)
             job = os.path.basename(fn)[:-4]
-            sta,out,err = utils.runCommand("ccx -i %s" % job)
+            sta,out = utils.runCommand("ccx -i %s" % job)
             print(out)
 
             if ack('Create the result database?'):

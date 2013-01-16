@@ -123,7 +123,7 @@ def convertInp(fn):
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
-    sta,out,err = utils.runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
 
 
 def readInpFile(filename):

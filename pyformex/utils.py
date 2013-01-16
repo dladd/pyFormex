@@ -427,7 +427,7 @@ def grepSource(pattern,options='',relative=True,quiet=False):
         extended = False
     files = sourceFiles(relative=relative,extended=extended,symlinks=False)
     cmd = "grep %s '%s' %s" % (options,pattern,' '.join(files))
-    sta,out,err = runCommand(cmd,verbose=not quiet) 
+    sta,out = runCommand(cmd,verbose=not quiet) 
     return out
 
 
@@ -749,7 +749,7 @@ def timeEval(s,glob=None):
 
 def countLines(fn):
     """Return the number of lines in a text file."""
-    sta,out,err = runCommand("wc %s" % fn)
+    sta,out = runCommand("wc %s" % fn)
     if sta == 0:
         return int(out.split()[0])
     else:
@@ -801,8 +801,8 @@ def system1(cmd):
 ##     return sta, out
 
 
-_TIMEOUT_EXITCODE = -15
-_TIMEOUT_KILLCODE = -9
+_TIMEOUT_EXITCODE = -1015
+_TIMEOUT_KILLCODE = -1009
 
 def system(cmd,timeout=None,gracetime=2.0,shell=True):
     """Execute an external command.
@@ -835,6 +835,8 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
         if p.poll() is None:
             print("Subprocess terminated due to timeout (%ss)" % timeout)
             p.terminate()
+            p.returncode = _TIMEOUT_EXITCODE
+            sleep(0.1)
             if p.poll() is None:
                 # Give the process 2 seconds to terminate, then kill it
                 sleep(gracetime)
@@ -842,7 +844,6 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
                     print("Subprocess killed")
                     p.kill()
                     p.returncode = _TIMEOUT_KILLCODE
-            p.returncode = _TIMEOUT_EXITCODE
 
     P = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE)
     if timeout > 0.0:
@@ -863,33 +864,35 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
     return sta,out,err
 
 
-def runCommand(cmd,timeout=None,RaiseError=True,verbose=True):
+def runCommand(cmd,timeout=None,verbose=True):
     """Run an external command in a user friendly way.
 
     This uses the :func:`system` function to run an external command,
     adding some extra user notifications of what is happening.
-
+    If no error occurs, the (sta,out) obtained form the :func:`system`
+    function are returned. The value sta will be zero, unless a timeout
+    condition has occurred, in which case sta will be -15 or -9.
+    If the :func:`system` call returns with an error that is not a timeout,
+    
+    
     Parameters:
 
     - `cmd`: a string with the command to be executed
     - `timeout`: float. If specified and > 0.0, the command will time out
       and be killed after the specified number of seconds.
-    - `RaiseError`: boolean. If True (default), an error is raised if the
-      execution of the command failed (nonzero exit status).
-      If a `timeout` was set, a timeout condition (-15) will however not
-      raise an error.
-      If `RaiseError` is False, the user will be responsible himself for
-      checking whether the command has completed.
     - `verbose`: boolean. If True (default), a message including the command
       is printed before it is run and in case of a nonzero exit, the full
       stdout, exit status and stderr are printed (in that order).
+
+    If no error occurs in the execution of the command by the :func:`system`
+    function, returns a tuple
     
-    Returns the output of the :func:`system` function, unless an error is
-    raised.
-    
+    - `sta`: 0, or a negative value in case of a timeout condition
+    - `out`: stdout produced by the command, with the last newline removed
+  
     Example:
     cmd = 'sleep 2'
-    sta,out=runCommand3(cmd, RaiseError=False,quiet=False, timeout=5.)
+    sta,out=runCommand3(cmd,quiet=False, timeout=5.)
     print (sta,out)
     
     """
@@ -907,9 +910,8 @@ def runCommand(cmd,timeout=None,RaiseError=True,verbose=True):
                 print(out)
                 print("Command exited with an error (exitcode %s)" % sta)
                 print(err)
-            if RaiseError:
                 raise RuntimeError, "Error while executing command:\n  %s" % cmd
-    return sta,out.rstrip('\n'),err
+    return sta,out.rstrip('\n')
 
 
 def spawn(cmd):
@@ -1314,7 +1316,7 @@ def listFontFiles():
     Returns a list of path names to all the font files found on the system.
     """
     cmd = "fc-list : file | sed 's|.*file=||'"
-    sta,out,err = runCommand(cmd)
+    sta,out = runCommand(cmd)
     if sta:
         warning("fc-list could not find your font files.\nMaybe you do not have fontconfig installed?")
     else:

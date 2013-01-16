@@ -390,7 +390,7 @@ def stopatbreakpt():
 
 def convertPrintSyntax(filename):
     """Convert a script to using the print function"""
-    sta,out,err = utils.runCommand("2to3 -f print -wn %s" % filename)
+    sta,out = utils.runCommand("2to3 -f print -wn %s" % filename)
     if sta:
         # Conversion error: show what is going on
         print(out)

@@ -604,7 +604,7 @@ def run(argv=[]):
                 print("Error while executing %s, we ignore it and continue" % svnclean)
 
         def getSVNURL():
-            sta,out,err = utils.runCommand("cd %s;svn info | grep -F 'URL:'"%pyformexdir)
+            sta,out = utils.runCommand("cd %s;svn info | grep -F 'URL:'"%pyformexdir)
             if sta == 0:
                 return out
             else:
