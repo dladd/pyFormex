@@ -1,5 +1,5 @@
 .. $Id$
-  
+
 ..
   This file is part of the pyFormex project.
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -26,7 +26,7 @@
 .. |date| date::
 
 ..
-  This document is written in ReST. To see a nicely formatted PDF version 
+  This document is written in ReST. To see a nicely formatted PDF version
   you can compile this document with the rst2pdf command.
 
 
@@ -42,16 +42,16 @@ This document describes the different tasks to be performed by pyFormex
 developers, the prefered way(s) that should be followed to perform these
 tasks, and the tools available to help with performing the tasks.
 
-In the current version of this document we use the term *developer* for 
+In the current version of this document we use the term *developer* for
 a pyFormex group member. All developers have the same tasks and privileges.
-The project manager of course has some extra tasks and extra privileges. 
-We will handle these separately at the end of this document. 
+The project manager of course has some extra tasks and extra privileges.
+We will handle these separately at the end of this document.
 
 In the future however, we might create distinct classes of group members
 with different tasks: coding, documenting, providing support and promotion.
 The term *developer* might then get a narrower meaning, but for now we use
 it to designate any pyFormex group member.
- 
+
 First, let's list the different tasks that an open source software project
 may entail:
 
@@ -67,9 +67,9 @@ may entail:
 - support (helping users, providing small solutions, resolving bugs)
 - publicity and distribution
 - organizing user meetings
-- discussion and planning 
+- discussion and planning
 
-Until now, code development has got the most attention, but if we want 
+Until now, code development has got the most attention, but if we want
 pyFormex to remain useful and attract more users, other tasks will become
 more important.
 
@@ -85,7 +85,7 @@ How to become a pyFormex developer
 
 License
 -------
-pyFormex is distributed under the GNU GPL version 3 or later. This means that all contributions you make to the pyFormex project will be distributed with this license. By becoming a pyFormex group member and by contributing code or text of any kind, you implicitely agree with the distribution under this license. 
+pyFormex is distributed under the GNU GPL version 3 or later. This means that all contributions you make to the pyFormex project will be distributed with this license. By becoming a pyFormex group member and by contributing code or text of any kind, you implicitely agree with the distribution under this license.
 
 The only exception we can make is for material on the pyFormex website that is
 not distributed with pyFormex. Media (images, movies) and data files may be placed there under other compatible licenses, but you should explicitely state the license and ask the project manager for approval.
@@ -100,7 +100,7 @@ have internet connection from your Linux system.
 
 .. note:: We should describe alternative linux systems here
 
-- In order to run pyFormex, you need to have some other software packages 
+- In order to run pyFormex, you need to have some other software packages
   installed on your computer. See the :doc:`install` guide in the documentation
   for a full list of the prerequisites. On a Debian system you can install these
   with::
@@ -108,11 +108,11 @@ have internet connection from your Linux system.
   apt-get install python-dev python-numpy python-sphinx python-opengl python-qt4-gl
 
 - You certainly need to (learn to) use a decent text editor. pyFormex
-  code, documentation, website, tools: everything is based on source text 
+  code, documentation, website, tools: everything is based on source text
   files. Since we use a lot of `Python` code, an editor that can nicely
   highlight the Python syntax is recommended. We suggest `emacs` with the
   `python-mode.el` extension (it has a somewhat steep learning curve, but
-  this will be rewarded). Many other editors will qualify as well.    
+  this will be rewarded). Many other editors will qualify as well.
 
 .. note:: We should add a list of good editors here
 
@@ -140,36 +140,36 @@ have internet connection from your Linux system.
 	last = log -1 HEAD
 
 
-      
+
 Get access to the repositories
 ------------------------------
 
-While anybody can get read access to the repositories on Savannah, 
+While anybody can get read access to the repositories on Savannah,
 write access is restricted to pyFormex group members. To authenticate
 yourself on Savannah, you need to provide an SSH key. Your SSH key is
-a pair of files `id_rsa` and `id_rsa.pub` the directory `.ssh` under 
-your home directory. 
+a pair of files `id_rsa` and `id_rsa.pub` the directory `.ssh` under
+your home directory.
 
 - If you do not have such files, create them first, using the command::
 
-    ssh-keygen 
+    ssh-keygen
 
   You can just accept all defaults by clicking 'ENTER'. After that, you
-  will have an SSH private,public keypair in your directory `.ssh`. 
+  will have an SSH private,public keypair in your directory `.ssh`.
 
 .. warning:: Never give the private part (`id_rsa`) of your key to anybody
-  or do not make it accessible by anybody but yourself! 
+  or do not make it accessible by anybody but yourself!
 
 - The public part (`id_rsa.pub`) should be registered on Savannah
-  to get easy developer access to the pyFormex repository. 
-  Login to Savannah and go to  
-  *My Account Conf*. Under *Authentication Setup* you can enter your 
+  to get easy developer access to the pyFormex repository.
+  Login to Savannah and go to
+  *My Account Conf*. Under *Authentication Setup* you can enter your
   public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
-.. note:: 
+.. note::
 
   If you are connecting from an Ubuntu system, and you find that you still can
-  not get access after more than one day, you may try the following:  
+  not get access after more than one day, you may try the following:
 
   - Check the end part of the public SSH key you pasted on Savannah, with the
     help of the scroll bar.
@@ -198,7 +198,7 @@ group member. Depending on your tasks you may at times have to study some
 other resources. Hereafter we give a list of the basic tools and software
 packages that are needed in developing/documenting/managing/using pyFormex.
 For all of these information is widely available on the internet.
- 
+
 .. note:: Maybe add here some good links.
 
 
@@ -208,7 +208,7 @@ For all of these information is widely available on the internet.
 - Sphinx
 - OpenGL (PyOpenGL)
 - QT4 (PyQt4)
-- git: `man git COMMAND` or 
+- git: `man git COMMAND` or
   http://www.kernel.org/pub/software/scm/git/docs/ or
   http://git-scm.com/documentation or
   http://gitref.org/index.html or
@@ -231,20 +231,20 @@ Using the git repository
 
   This will create a working directory `pyformex` with a clone of the
   repository (in a hidden subdir `.git`) and a checked out working copy
-  of the master branch of the repository. You should be able to run 
-  pyformex directly from it, just like you previously did with a 
-  Subversion checkout. 
+  of the master branch of the repository. You should be able to run
+  pyformex directly from it, just like you previously did with a
+  Subversion checkout.
 
 .. note: In case you only want to run/change some version of pyFormex and
    do not want to contribute any changes back to the pyFormex project, you
    can also clone the repository anonymously (see the install manual).
-    
+
 - See a status of what has changed (use it often!)::
 
     git status
 
 - Pull in the changes from the remote repository (like `svn up`)::
-      
+
     git pull
 
   Make sure you have a clean working directory (i.e. no changes) before
@@ -285,19 +285,19 @@ directory of your local copy.
 
 :user: Contains the minutes of pyFormex user meetings.
 
-:website: Holds the source for the pyFormex website. Since the move to 
-  Savannah recently, we also use Sphinx to build the website. 
-  Since the whole html documentation tree is also published as part of 
+:website: Holds the source for the pyFormex website. Since the move to
+  Savannah recently, we also use Sphinx to build the website.
+  Since the whole html documentation tree is also published as part of
   the website (`<http://www.nongnu.org/pyformex/doc/>`_) we could actually
   integrate the *sphinx* part under *website*. The reasons for keeping them
   apart are:
-  
+
   - the html documents under *sphinx* are made part of the release (for use
-    as local documentation accessible from the pyFormex GUI), but the 
-    *website* documents are not, and    
+    as local documentation accessible from the pyFormex GUI), but the
+    *website* documents are not, and
   - the *sphinx* documents need to be regenerated more often, because of the
     fast development process of pyFormex, while the *website* is more static.
- 
+
 Furthermore the top directory contains a bunch of other files, mostly managing tools. The most important ones will be treated further.
 
 
@@ -307,11 +307,11 @@ Commit messages
 
 When committing something to a repository, you always need to specify
 a commit message. The message should be brief and to the point, but still
-complete: describing what was changed and possibly why. 
+complete: describing what was changed and possibly why.
 
 The structure of the commit message should be as follow: a single line
 with a short contents, followed by a blank line and then multiple lines
-describing all the changes. If you only made a single change, 
+describing all the changes. If you only made a single change,
 a single line message is allowed.
 
 If you find yourself writing a very long list of changes, consider
@@ -326,7 +326,7 @@ it is recommended to reference the bug or issue number in the commit
 message. Some tools may process this information and generate a link
 to the corresponding page in a bug tracking system or automatically
 update the issue based on the commit.
-    
+
 
 Solution to common git problems
 ===============================
@@ -352,7 +352,7 @@ again, and it will be restored to the version in the repo::
 If you already added them, but did not commit yet, use::
 
   git reset file_to_revert.py
- 
+
 Your branch and 'origin/master' have diverged
 ---------------------------------------------
 After a `git pull` I had the following situation::
@@ -388,6 +388,42 @@ is avoided and a linear branch history is kept. In both cases, my local branch
 is ready to be push up to the remote again.
 
 
+Please, commit your changes or stash them before you can merge.
+---------------------------------------------------------------
+
+This situation occurs if you pull changes from the remote, and you have
+local changes. An example::
+
+  bene@bumper 14:29 ~/prj/pyformex $ git pull
+  remote: Counting objects: 47, done.
+  remote: Compressing objects: 100% (24/24), done.
+  remote: Total 24 (delta 23), reused 0 (delta 0)
+  Unpacking objects: 100% (24/24), done.
+  From bumps.ugent.be:/srv/git/pyformex
+     fd5bb16..8585d05  master     -> origin/master
+  Updating fd5bb16..8585d05
+  error: Your local changes to the following files would be overwritten by merge:
+         pyformex/plugins/trisurface.py
+  Please, commit your changes or stash them before you can merge.
+  Aborting
+
+The best thing is to chaeck what you have changed::
+
+  git diff pyformex/plugins/trisurface.py
+
+If your changes are not important, you can just delete the file ::
+
+  rm pyformex/plugins/trisurface.py
+
+If they are important, you can stash away your changes in a work directory::
+
+  git stash
+
+In both cases then just redo the pull::
+
+  git pull
+
+which will now succeed.
 
 
 Using the subversion repository
@@ -399,7 +435,7 @@ Developer access
 ----------------
 
 Checking out a Subversion repository means creating a local copy on your
-machine, where you can work on and make change and test them out. When you 
+machine, where you can work on and make change and test them out. When you
 are satisfied, you can then commit (checkin) your changes back to the repository
 so that other users can enjoy your work too.
 
@@ -410,12 +446,12 @@ command, replacing *USER* with you username on Savannah::
 
 This will checkout the subdirectory *trunk* of the pyFormex repository and put
 it in a subdirectory *pyformex* of your current path. Most users put this under
-their home directory. You can use any other target directory name if you wish. 
+their home directory. You can use any other target directory name if you wish.
 
 The above command will always checkout the latest version, but sometimes you
 may need to have an older revision, e.g. to diagnose a bug in that particular
 revision or to run a script that only works with that version. Just specify the
-requested revision number in the command. We recommend to use a target 
+requested revision number in the command. We recommend to use a target
 directory name reflecting that value::
 
   svn co svn+ssh://USER@svn.savannah.nongnu.org/pyformex/trunk -r NUMBER pyformex-rNUMBER
@@ -428,8 +464,8 @@ The trunk is only part of the pyFormex repository, but it is the part where all 
 
 The commands shown here give you full developer access (read and write) to the repository.
 You should be aware though that anybody (including developers) can checkout
-the whole pyFormex repository by anonymous access (see below). 
-This means that everything that you commit (checkin) to the repository, constitues an immediate worldwide distribution. 
+the whole pyFormex repository by anonymous access (see below).
+This means that everything that you commit (checkin) to the repository, constitues an immediate worldwide distribution.
 
 .. warning:: Never put anything in the repository that is not meant to be distributed worldwide!
 
@@ -458,7 +494,7 @@ in the top level directory of your checkout.
     svn ci
 
   You will be asked to enter a message to describe the changes you've made.
-  This uses a default or configured editor (can be set in `.ssh/config`). 
+  This uses a default or configured editor (can be set in `.ssh/config`).
   See `Subversion commit messages`_ below for suggestions on how
   to construct the message. After you finished the message, your changes
   are uploaded to the repository.
@@ -483,7 +519,7 @@ in the top level directory of your checkout.
     svn revert FILENAME
 
 - Change your local directory to another branch ::
-  
+
    svn switch svn+ssh://USER@svn.savannah.nongnu.org/pyformex/branches/mybranch
 
 - Show information about your local copy::
@@ -491,7 +527,7 @@ in the top level directory of your checkout.
     svn info
 
 - Convert your local tree to reflect a change in repository server (the *OLDURL* can be found from the *svn info* command ::
-  
+
    svn switch --relocate OLDURL NEWURL
 
 
@@ -509,9 +545,9 @@ Some possible problems during ``svn up`` operation:
   If your version of SOME_FILE contains changes you have made (and
   want to keep), the best thing is to postpone (p) and resolve the conflicts
   after the update operation has finished. You may use 'df' first to see if
-  your changes are worthwile keeping. 
+  your changes are worthwile keeping.
 
-  If you know however that your changes are not important, you can just use 
+  If you know however that your changes are not important, you can just use
   'tc' to remove your version and get the changes from the repository.
 
 - Blocked by unversioned file::
@@ -544,9 +580,9 @@ A final tip: if you add a *-n* option to the make command, make will not actuall
 
 Create the pyFormex acceleration library
 ========================================
-Most of the pyFormex source code is written in the Python scripting language: this allows for quick development, elegant error recovery and powerful interfacing with other software. The drawback is that it may be slow for loop operations over large data sets. In pyFormex, that problem has largely been solved by using **Numpy**, which handles most such operations by a call to a (fast) compiled C-library. 
+Most of the pyFormex source code is written in the Python scripting language: this allows for quick development, elegant error recovery and powerful interfacing with other software. The drawback is that it may be slow for loop operations over large data sets. In pyFormex, that problem has largely been solved by using **Numpy**, which handles most such operations by a call to a (fast) compiled C-library.
 
-Some bottlenecks remained however, and therefore we have developed our own compiled C-libraries to further speed up some tasks. While we try to always provide Python equivalents for all the functions in the library, the penalty for using those may be quite high, and we recommend everyone to always try to use the compiled libraries. Therefore, after creating a new local svn tree, you should first proceed to compiling these libraries. 
+Some bottlenecks remained however, and therefore we have developed our own compiled C-libraries to further speed up some tasks. While we try to always provide Python equivalents for all the functions in the library, the penalty for using those may be quite high, and we recommend everyone to always try to use the compiled libraries. Therefore, after creating a new local svn tree, you should first proceed to compiling these libraries.
 
 Prerequisites for compiling the libraries
 -----------------------------------------
@@ -561,7 +597,7 @@ under the same names on Debian derivatives and Ubuntu and derivatives.
 
 Creating the libraries
 ----------------------
-The source for the libraries are the '.c' files in the `pyformex/lib` 
+The source for the libraries are the '.c' files in the `pyformex/lib`
 directory of your svn tree. You will find there also the equivalent
 Python implementations. To compile the liraries, got to ``TOPDIR`` and execute
 the command::
@@ -570,7 +606,7 @@ the command::
 
 Note that this command is executed automatically when you run pyFormex directly
 from the SVN sources (sse below). This is to ensure that you pick up any changes made to
-the library. If compilation of the libraries during startup fails,  
+the library. If compilation of the libraries during startup fails,
 
 
 Run pyFormex from the checked-out source
@@ -602,11 +638,11 @@ repository checkout). You can also use a relative path, but this should be
 as seen from the ``~/bin`` directory.
 
 After starting a new terminal, you should be able to just enter the command
-``pyformex`` to run your svn version from anywhere.  
+``pyformex`` to run your svn version from anywhere.
 
-When pyformex starts up from the svn source, it will first check that the 
+When pyformex starts up from the svn source, it will first check that the
 compiled acceleration libraries are not outdated, and if they are, pyformex
-will try to recompile them by invoking the 'make lib' command from the 
+will try to recompile them by invoking the 'make lib' command from the
 parent directory. This is to avoid nasty crashes when the implementation of
 the library has changed. If this automatic compilation fails, pyformex will
 nevertheless continue, using the old compiled libraries or the slower Python
@@ -627,7 +663,7 @@ The ``pyformex`` command provides the necessary tool to do so::
     pyformex --search -- [OPTIONS] PATTERN
 
 This will actually execute the command::
-    
+
     grep OPTIONS PATTERN FILES
 
 where ``FILES`` will be replaced with the list of Python source files in the
@@ -640,7 +676,7 @@ If you find the pyformext command above to elaborate, you can just define a
 shorter alias. If you put the following line in your ``.bashrc``
 file ::
 
-    alias pysea='pyformex --search --'  
+    alias pysea='pyformex --search --'
 
 you will be able to just do ::
 
@@ -650,9 +686,9 @@ you will be able to just do ::
 Creating pyFormex documentation
 ===============================
 
-The pyFormex documentation (as well as the website) are created by the 
+The pyFormex documentation (as well as the website) are created by the
 **Sphinx** system from source files written in ReST (ReStructuredText).
-The source files are in the ``sphinx`` directory of your svn tree and	
+The source files are in the ``sphinx`` directory of your svn tree and
 have an extension ``.rst``.
 
 Install Sphinx
@@ -660,17 +696,17 @@ Install Sphinx
 You need a (slightly) patched version of Sphinx. The patch adds a small
 functionality leaving normal operation intact. Therefore, if you have root
 access, we advise to just patch a normally installed version of Sphinx.
- 
+
 - First, install the required packages. On Debian GNU/Linux do ::
- 
+
     apt-get install dvipng
     apt-get install python-sphinx
 
 - Then Patch the sphinx installation. Find out where the installed Sphinx
-  package resides. On Debian this is ``/usr/share/pyshared/sphinx``. 
-  The pyformex source tree contains the required patch in a file 
+  package resides. On Debian this is ``/usr/share/pyshared/sphinx``.
+  The pyformex source tree contains the required patch in a file
   ``sphinx/sphinx-1.04-bv.diff``. It was created for Sphinx 1.0.4 but will
-  still work for slightly newer versions (it was tested on 1.0.8). 
+  still work for slightly newer versions (it was tested on 1.0.8).
   Do the following as root::
 
     cd /usr/share/pyshared/sphinx
@@ -713,8 +749,8 @@ generated with the ``py2rst.py`` script. They will generate the pyFormex
 reference manual automatically from the docstrings in the Python
 source files of pyFormex. Never add or change any of the .rst files in
 ``sphinx/ref`` directly. Also, these files should *not* be added to the
-svn repository.    
- 
+svn repository.
+
 
 Adding image files
 ------------------
@@ -741,7 +777,7 @@ Create the pyFormex manual
 
 The pyFormex documentation is normally generated in HTML format, allowing it
 to be published on the website. This is also the format that is included in
-the pyFormex distributions. Alternative formats (like PDF) may also be 
+the pyFormex distributions. Alternative formats (like PDF) may also be
 generated and made available online, but are not distributed with pyFormex.
 
 The ``make`` commands to generate the documentation are normally executed
@@ -760,7 +796,7 @@ from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
 
 - The make procedure often produces a long list of warnings and errors.
   You may therefore prefer to use the following command instead ::
-  
+
     make html 2>&1 | tee > errors
 
   This will log the stdout and stderr to a file ``errors``, where you
@@ -773,19 +809,19 @@ from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
    make svndoc
 
   Note: If you created any *new* files, do not forget to ``svn add`` them.
- 
+
 - A PDF version of the full manual can be created with ::
 
    make latexpdf
- 
-  This will put the PDF manual in ``sphinx/_build/latex``. 
+
+  This will put the PDF manual in ``sphinx/_build/latex``.
 
 The newly generated documentation is not automatically published on the
 pyFormex website. Currently, only the project manager can do that. After you
-have made substantial improvements (and checked them in), you should contact 
+have made substantial improvements (and checked them in), you should contact
 the project manager and ask him to publish the new docs.
 
-  
+
 Create a distribution
 =====================
 
@@ -813,18 +849,18 @@ This will create the package file `pyformex-${VERSION}.tar.gz` in
 `dist/`.  The version is read from the `RELEASE` file in the top
 directory. Do not change the *VERSION* or *RELEASE* settings in this
 file by hand: we have make commands to do this (see below). Make sure
-that the *RELEASE* contains a trailing field (*rNUMBER*). 
-This means that it is an intermediate, unsupported release. 
-Official, supported releases do not have the trailer. 
+that the *RELEASE* contains a trailing field (*rNUMBER*).
+This means that it is an intermediate, unsupported release.
+Official, supported releases do not have the trailer.
 
-Any developer can create intermediate release tarballs and distribute them. 
+Any developer can create intermediate release tarballs and distribute them.
 However, *currently only the project manager is allowed
 to create and distribute official releases!*
 
 After you have tested that pyFormex installation and operation from the
-resulting works fine, you can distribute the package to other users, e.g. 
+resulting works fine, you can distribute the package to other users, e.g.
 by passing them the package file explicitely (make sure they understand the
-alpha status) or by uploading the file to our local file server. 
+alpha status) or by uploading the file to our local file server.
 Once the package file has been distributed by any means, you should immediately
 bump the version, so that the next created distribution will have a higher number::
 
@@ -833,7 +869,7 @@ bump the version, so that the next created distribution will have a higher numbe
 
 .. note:: There is a (rather small) risk here that two developers might
   independently create a release with the same number.
-  
+
 
 Style guidelines for source and text files
 ==========================================
@@ -850,13 +886,13 @@ General guidelines
 
 - All new (Python, C) source and other text files in the pyFormex repository
   should be created with the following line as the first line::
-  
+
     # $Id$
 
   If the file is an executable Python script, it should be started
   with the following two lines::
 
-    #!/usr/bin/env python	  
+    #!/usr/bin/env python
     # $Id$
 
   Start pyFormex examples with the following line::
@@ -867,7 +903,7 @@ General guidelines
   an empty line)::
 
     .. $Id$
-    
+
 
 - The ``$Id$`` will be sustituted by Subversion on your next updates. Never
   edit this ``$Id:...$`` field directly.
@@ -882,7 +918,7 @@ General guidelines
 
 - In Python files, always use 4 blanks for indenting, never TABs. Use
   a decent Python-aware editor that allows you to configure this. The
-  main author of pyFormex uses ``Emacs`` with ``python-mode.el``. 
+  main author of pyFormex uses ``Emacs`` with ``python-mode.el``.
 
 
 pyFormex modules
@@ -893,17 +929,17 @@ pyFormex modules
   statement, like below::
 
     """Test module
-    
+
     """
     from __future__ import print_function
-    
+
 - pyFormex modules providing a functionality that can be used under
   plain Python can, and probably should, end with a section to test
   the modules::
 
     if __name__ == "__main__":
         # Statements to test the module functionality
-   
+
 
   The statements in this section will be executed when the module is
   run with the command::
@@ -920,7 +956,7 @@ pyFormex scripts
 
     if __name__ == "draw":
         # Statements to execute when run under the GUI
-    
+
     elif __name__ == "script":
         # Statements to execute when run without the GUI
 
@@ -930,14 +966,14 @@ Coding style
 
 - Variables, functions, classes and their methods should be named
   as closely as possible according to the following scheme:
-  
-  - classes: ``UpperUpperUpper`` 
+
+  - classes: ``UpperUpperUpper``
   - functions and methods: ``lowerUpperUpper``
   - variables: ``lowercaseonly``
 
   Lower case only names can have underscores inserted to visually separate
   the constituant parts: ``lower_case_only``.
-  
+
   Local names that are not supposed to be used directly by the user
   or application programmer, can have underscores inserted or
   appended.
@@ -949,7 +985,7 @@ Coding style
 - Do not put blanks before or after operators, except with the assignment
   operator (``=``), where you should always put a single blank before and after it.
 
-- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements. 
+- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements.
 
 - Always try to use implicit for loops instead of explicit ones.
 
@@ -968,7 +1004,7 @@ Docstrings
 
 - Docstrings should end and start with triple double-quotes (""").
 
-- Docstrings should not exceed the 80 character total line length. 
+- Docstrings should not exceed the 80 character total line length.
   Python statements can exceed that length, if the result is more easy
   to read than splitting the line.
 
@@ -982,7 +1018,7 @@ Docstrings
 - reStructuredText is very keen to the precise indentation (but as Python
   coders we are already used to that). All text belonging to the same
   logical unit should get the same indentation. And beware espacially for
-  the required blank lines to delimit different section. A typical 
+  the required blank lines to delimit different section. A typical
   example is that of a bullet list::
 
     Text before the bullet list.
@@ -1021,7 +1057,7 @@ Docstrings
   documented in the Class docstring, not in the ``__init__`` method
   itself.
 
-- Special sections (note, warning) can be used to draw special attention of 
+- Special sections (note, warning) can be used to draw special attention of
   the user. Format these as follows (leave a space after '..')::
 
     .. note::
@@ -1050,7 +1086,7 @@ Docstrings
 
   Lines starting with '>>>' should be executable Python (pyFormex) code.
   If the code creates any output, that output should be added exactly as
-  generated (but aligned with the '>>>' below the code line. 
+  generated (but aligned with the '>>>' below the code line.
   When the module is tested with::
 
     pyformex --testmodule MODULENAME
@@ -1082,7 +1118,7 @@ for the full procedure to make and publish an official release tarball.
 - Make a distribution file available on Savannah FTP server ::
 
    make pub
-  
+
 - Bump the pyFormex version. While any developer can bump the version,
   it really should only be done after publishing a release (official
   or interim) or when there is anothr good reason to change the
@@ -1102,7 +1138,7 @@ Publish the documentation
 
 - Publish a PDF manual ::
 
-   make pubpdf  
+   make pubpdf
 
 
 Release a distribution to the general public
@@ -1179,7 +1215,7 @@ First, create the distribution and test it out locally: both the installation pr
 - Bump the RELEASE and VERSION variables in the file RELEASE, then ::
 
    make bumpversion
-   make lib	
+   make lib
    svn ci -m 'Bump version after release'
 
 Well, that was easy, uh? ~)_do build
@@ -1193,9 +1229,9 @@ Creating (official) Debian packages
 Debian packages are create in the `pkg` subdirectory of the trunk.
 The whole process is controlled by the script `_do`. The debian-template
 subdirectory contains starting versions of the `debian` files packaging.
-They will need to be tuned for the release. 
+They will need to be tuned for the release.
 
-- Needed software packages for the build process: debhelper, devscripts. 
+- Needed software packages for the build process: debhelper, devscripts.
   Furthermore you also need to have installed all dependencies for the build,
   as declared in the variables `Build-Depends` and `Build-Depends-Indep` in
   the file `control`.
@@ -1217,14 +1253,14 @@ They will need to be tuned for the release.
   distribution (from the `dist/` or `dist/pyformex/` subdirectory) in
   a directory `pyformex-VERSION` and copies the `debian-template` as a
   starting `debian` subdirectory.
-- Edit the files in the generated `pyformex-VERSION/debian` subdirectory. 
-  At least a new entry in the file `changelog` needs to be added. 
+- Edit the files in the generated `pyformex-VERSION/debian` subdirectory.
+  At least a new entry in the file `changelog` needs to be added.
   Other files that are likely to require changes are `control` and `rules`.
 
 .. note: If errors occur during the build, you will most likely have to fix
    the files in `debian` and then rerun the build. Often a rebuild requires
    a clean first. Beware that this will remove your changes and reinstall
-   the original `debian` files. It is therefore adviced to edit the 
+   the original `debian` files. It is therefore adviced to edit the
    files in `debian-template` instead of those in `pyformex-VERSION/debian`.
    Then do a `_do clean unpack`.
 
@@ -1232,12 +1268,12 @@ They will need to be tuned for the release.
 
     _do build | tee log
 
-  This will build the python modules, 
-  the compiled libraries and the extra binaries under a path 
+  This will build the python modules,
+  the compiled libraries and the extra binaries under a path
   `pyformex-VERSION/debian/tmp` and install the needed files into
   the package directories `pyformex`, `pyformex-lib` and `pyformex-extras`.
 
-  Check that no errors occur during the procedure. A log file is written 
+  Check that no errors occur during the procedure. A log file is written
   for each package.
 
 - Test installing and running of the packages::
@@ -1267,7 +1303,6 @@ do::
 
   reprepro -b /net/bumps/var/www/repos/debian include unstable pyformex_$VERSION_amd64.changes
 
-  
 
 
 Using the local debian repository
@@ -1275,7 +1310,7 @@ Using the local debian repository
 
 .. note:: This belongs in the pyFormex install guide.
 
-Our local repository contains unofficial debian packages for intermediate releases and some extra packages that are not in the official Debian repositories. 
+Our local repository contains unofficial debian packages for intermediate releases and some extra packages that are not in the official Debian repositories.
 
 These packages are constructed with the same quality as the official packages.
 
@@ -1293,7 +1328,5 @@ Then, to install all the latest pyformex packages, just do::
    apt-get pyformex pyformex-lib pyformex-extra
 
 
-
-  
 
 .. End
