@@ -1395,11 +1395,11 @@ class Coords(ndarray):
             x = self.copy()
             x[...,n] = P[n]
             return x
-        
+
         n = normalize(Coords(n).reshape(-1,3))
         x = self.reshape(-1,3)
-        x =  - dotpr(n,(x-P))
-        return self + outer(x,n).reshape(self.shape)
+        x = dotpr(n,(x-P)).reshape(-1,1)
+        return self - x*n
 
 
     def projectOnSphere(self,radius=1.,center=[0.,0.,0.]):
