@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,7 +30,7 @@ connectivity. This is e.g. used in mesh models, where geometry is
 represented by a set of numbered points (nodes) and the geometric elements
 are described by refering to the node numbers.
 In a mesh model, points common to adjacent elements are unique, and
-adjacency of elements can easily be detected from common node numbers. 
+adjacency of elements can easily be detected from common node numbers.
 """
 from __future__ import print_function
 
@@ -63,7 +63,7 @@ class Connectivity(ndarray):
 
     The current implementation limits a Connectivity object to numbers that
     are smaller than 2**31.
-    
+
     In a row (element), the same node number may occur more than once, though
     usually all numbers in a row are different. Rows containing duplicate
     numbers are called `degenerate` elements.
@@ -71,16 +71,16 @@ class Connectivity(ndarray):
     are called duplicates.
 
     A new Connectivity object is created with the following syntax ::
-    
+
       Connectivity(data=[],dtyp=None,copy=False,nplex=0)
 
     Parameters:
-    
+
     - `data`: should be compatible with an integer array with shape
       `(nelems,nplex)`, where `nelems` is the number of elements and
       `nplex` is the plexitude of the elements.
     - `dtype`: can be specified to force an integer type but is set by
-      default from the passed `data`. 
+      default from the passed `data`.
     - `copy`: can be set True to force copying the data. By default, the
       specified data will be used without copying, if possible.
     - `nplex`: can be specified to force a check on the plexitude of the
@@ -101,7 +101,7 @@ class Connectivity(ndarray):
      [0 1 3]
      [0 3 2]
      [0 5 3]]
-      
+
     """
     #
     # :DEV
@@ -121,7 +121,7 @@ class Connectivity(ndarray):
                 eltype = data.eltype
             except:
                 eltype = None
-        
+
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
         if ar.ndim < 2:
@@ -129,14 +129,14 @@ class Connectivity(ndarray):
                 ar = ar.reshape(-1,nplex)
             else:
                 ar = ar.reshape(-1,1)
-                
+
         elif ar.ndim > 2:
             raise ValueError,"Expected 2-dim data"
 
         # Make sure dtype is an int type
         if ar.dtype.kind != 'i':
             ar = ar.astype(Int)
- 
+
         # Check values
         if ar.size > 0:
             maxval = ar.max()
@@ -147,11 +147,11 @@ class Connectivity(ndarray):
         else:
             maxval = -1
             ar = ar.reshape(0,nplex)
-            
+
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)
 
-        ## # Other data 
+        ## # Other data
         ar.eltype = eltype  # ! this may be a string!!!!!!!!!!!
         ar.inv = None   # inverse index
         return ar
@@ -163,7 +163,7 @@ class Connectivity(ndarray):
         self.eltype = getattr(obj, 'eltype', None)
         self.inv = getattr(obj, 'inv', None)
 
-            
+
     def __reduce__(self):
         """Reduce the object to a pickled state"""
         # Get the pickled ndarray state (as a list, so we can change it)
@@ -174,7 +174,7 @@ class Connectivity(ndarray):
         object_state[2] = (object_state[2],subclass_state)
         return tuple(object_state)
 
-    
+
     def __setstate__(self,state):
         """Restore from pickled state"""
         # In __reduce__, we replaced ndarray's state with a tuple
@@ -192,7 +192,7 @@ class Connectivity(ndarray):
             except:
                 print("I could not unpickle the Connectivity, neither in old not new format")
                 raise
-            
+
 
     def nelems(self):
         """Return the number of elements in the Connectivity table.
@@ -220,7 +220,7 @@ class Connectivity(ndarray):
         """
         return unique(self).shape[0]
 
-    
+
     def nplex(self):
         """Return the plexitude of the elements in the Connectivity table.
 
@@ -244,30 +244,30 @@ class Connectivity(ndarray):
         """Flag the degenerate elements (rows).
 
         A degenerate element is a row which contains at least two
-        equal values. 
+        equal values.
 
         Returns a boolean array with shape (self.nelems(),).
         The True values flag the degenerate rows.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).testDegenerate()
           array([False,  True, False], dtype=bool)
-          
+
         """
         srt = asarray(self.copy())
         srt.sort(axis=1)
         return (srt[:,:-1] == srt[:,1:]).any(axis=1)
-        
+
 
     def listDegenerate(self):
         """Return a list with the numbers of the degenerate elements.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).listDegenerate()
           array([1])
-          
+
         """
         return arange(self.nelems())[self.testDegenerate()]
 
@@ -276,7 +276,7 @@ class Connectivity(ndarray):
         """Return a list with the numbers of the non-degenerate elements.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).listNonDegenerate()
           array([0, 2])
 
@@ -288,11 +288,11 @@ class Connectivity(ndarray):
         """Remove the degenerate elements from a Connectivity table.
 
         Degenerate elements are rows with repeating values.
-        
+
         Returns a Connectivity with the degenerate elements removed.
 
         Example:
-        
+
         >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).removeDegenerate()
         Connectivity([[0, 1, 2],
                [0, 3, 2]])
@@ -314,7 +314,7 @@ class Connectivity(ndarray):
         a reduction scheme is available, will be tried.
 
         Returns:
-        
+
           A list of Connectivities of which the first one contains
           the originally non-degenerate elements and the last one contains
           the elements that could not be reduced and may be empty.
@@ -327,12 +327,12 @@ class Connectivity(ndarray):
            the property numbers into the resulting Meshes.
 
         Example:
-        
+
         >>> C = Connectivity([[0,1,2],[0,1,1],[0,3,2]],eltype='line3')
         >>> print(C.reduceDegenerate())
         [Connectivity([[0, 1]]), Connectivity([[0, 1, 2],
                [0, 3, 2]])]
-        
+
         """
         from elements import elementType
         if self.eltype is None:
@@ -386,7 +386,7 @@ class Connectivity(ndarray):
 
         return ML
 
-    
+
     def testDuplicate(self,permutations=True):
         """Test the Connectivity list for duplicates.
 
@@ -396,7 +396,7 @@ class Connectivity(ndarray):
         every position.
 
         This function returns a tuple with two arrays:
-        
+
         - an index used to sort the elements
         - a flags array with the value True for indices of the unique elements
           and False for those of the duplicates.
@@ -416,7 +416,7 @@ class Connectivity(ndarray):
           [3 4 0 1 2 5] [ True False  True  True False False]
           >>> print(ok.cumsum())
           [1 1 2 3 3 3]
-          
+
         """
         if permutations:
             C = self.copy()
@@ -429,16 +429,16 @@ class Connectivity(ndarray):
         if not ok[0]: # all duplicates -> should result in one unique element
             ok[0] = True
         return ind,ok
-    
+
 
     def listUnique(self,permutations=True):
         """Return a list with the numbers of the unique elements.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listUnique()
           array([0, 2])
-          
+
         """
         ind,ok = self.testDuplicate(permutations)
         return ind[ok]
@@ -448,15 +448,15 @@ class Connectivity(ndarray):
         """Return a list with the numbers of the duplicate elements.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDuplicate()
           array([1])
-          
+
         """
         ind,ok = self.testDuplicate(permutations)
         return ind[~ok]
 
-   
+
     def removeDuplicate(self,permutations=True):
         """Remove duplicate elements from a Connectivity list.
 
@@ -468,7 +468,7 @@ class Connectivity(ndarray):
         Returns a new Connectivity with the duplicate elements removed.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).removeDuplicate()
           Connectivity([[0, 1, 2],
                  [0, 3, 2]])
@@ -526,7 +526,7 @@ class Connectivity(ndarray):
                  [0, 1],
                  [1, 2],
                  [2, 3]])
-         
+
         """
         if order == 'nodes':
             a = sort(self,axis=-1)  # first sort rows
@@ -548,9 +548,9 @@ class Connectivity(ndarray):
 
         Returns the inverse index of the Connectivity, as computed
         by :func:`arraytools.inverseIndex`.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,4],[0,4,2]]).inverse()
           array([[ 0,  1,  2],
                  [-1,  0,  1],
@@ -572,15 +572,15 @@ class Connectivity(ndarray):
         Returns a 1-D int array with the number of elements connected
         to each node. The length of the array is equal to the highest
         node number + 1. Unused node numbers will have a count of zero.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,4],[0,4,2]]).nParents()
           array([3, 2, 2, 0, 2])
         """
         r = self.inverse()
         return (r>=0).sum(axis=1)
-        
+
 
     def connectedTo(self,nodes):
         """Return a list of elements connected to the specified nodes.
@@ -589,9 +589,9 @@ class Connectivity(ndarray):
 
         Returns an int array with the numbers of the elements that
         contain at least one of the specified nodes.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).connectedTo(2)
           array([0, 2])
         """
@@ -606,14 +606,14 @@ class Connectivity(ndarray):
 
         Returns an int array with the numbers of the elements that
         do not contain any of the specified nodes.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).notConnectedTo(2)
-          array([0, 1])
+          array([1])
         """
         connected = self.connectedTo(nodes)
-        return complement(nodes,self.nelems())
+        return complement(connected,self.nelems())
 
 
     def adjacency(self,kind='e',mask=None):
@@ -639,16 +639,16 @@ class Connectivity(ndarray):
           beforehand::
 
             self[mask].adjacency('n')
-        
-        Returns: 
+
+        Returns:
 
         An Adjacency array with shape (nr,nc),
         where row `i` holds a sorted list of all the items that are
         adjacent to item `i`, padded with -1 values to create an equal
         list length for all items.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1],[0,2],[1,3],[0,5]]).adjacency('e')
           Adjacency([[ 1,  2,  3],
                  [-1,  0,  3],
@@ -711,11 +711,11 @@ class Connectivity(ndarray):
 
           A :class:`Connectivity` object with shape
           ``(self.nelems*selector.nelems,selector.nplex)``.
-          This function does not collapse the duplicate elements. The eltype 
+          This function does not collapse the duplicate elements. The eltype
           of the result is equal to that of the selector, possibly None.
-           
+
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).selectNodes([[0,1],[0,2]])
           Connectivity([[0, 1],
                  [0, 2],
@@ -735,10 +735,10 @@ class Connectivity(ndarray):
         else:
             return Connectivity()
 
-        
+
     # BV: should we add a 'unique=False' option to create tables of
     # all intermediate entities without uniqifying?
-    # 
+    #
     def insertLevel(self,selector):
         """Insert an extra hierarchical level in a Connectivity table.
 
@@ -762,19 +762,19 @@ class Connectivity(ndarray):
           single integer specifying one of the hierarchical levels of element
           entities (See the Element class). In that case the selector is
           constructed automatically from self.eltype.getEntities(selector).
-        
-        Returns: 
-    
+
+        Returns:
+
         - `hi`: a :class:`Connectivity` defining the original elements
           in function of the intermediate level ones,
         - `lo`: a :class:`Connectivity` defining the intermediate level
           items in function of the lowest level ones (the original nodes).
           If the `selector` has an `eltype` attribute, then `lo` will inherit
           the same `eltype` value.
-          
+
         All intermediate level items that consist of the same set of nodes
         in any permutation order and with any multiplicity, are considered
-        identical and are collapsed into single items. 
+        identical and are collapsed into single items.
         The resulting node numbering of the created intermediate entities
         (the `lo` return value) respects the numbering order of the original
         elements and applied the selector, but it is undefined which of the
@@ -791,7 +791,7 @@ class Connectivity(ndarray):
         The resulting rows may however be permutations of the original.
 
         Example:
-        
+
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[1,2],[2,0]])
           (Connectivity([[0, 3, 1],
                  [1, 3, 0],
@@ -806,7 +806,7 @@ class Connectivity(ndarray):
                   [1, 2, 3]]))
         """
         from elements import elementType
-        
+
         if isInt(selector):
             if hasattr(self,'eltype'):
                 sel = self.eltype.getEntities(selector)
@@ -830,7 +830,7 @@ class Connectivity(ndarray):
         if hasattr(sel,'eltype'):
             lo.eltype = elementType(sel.eltype)
         return hi,lo
-    
+
 
     # TODO: This is currently far from general!!!
     # should probably be moved to Mesh/TriSurface if needed there
@@ -864,7 +864,7 @@ class Connectivity(ndarray):
                  [0, 3, 2]])
 
         """
-        lo = Connectivity(lo) 
+        lo = Connectivity(lo)
         if self.shape[1] < 2 or lo.shape[1] != 2:
             raise ValueError,"Can only combine plex>=2 with plex==2"
         elems = lo[self]
@@ -874,7 +874,7 @@ class Connectivity(ndarray):
             elems[flags,i] = roll(elems[flags,i],1,axis=1)
         return Connectivity(elems[:,:,0])
 
-    
+
     def resolve(self):
         """Resolve the connectivity into plex-2 connections.
 
@@ -888,7 +888,7 @@ class Connectivity(ndarray):
         pairs. In each element the nodes are sorted.
 
         Example:
-        
+
           >>> print([ i for i in combinations(range(3),2) ])
           [(0, 1), (0, 2), (1, 2)]
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).resolve()
@@ -1017,7 +1017,7 @@ class Connectivity(ndarray):
           [[ 2 10 22]
            [ 4 13 20]
            [ 0 10 22]]
-          
+
         """
         try:
             m = len(clist)
@@ -1053,12 +1053,12 @@ class Connectivity(ndarray):
     # BV: the methods below should probably be removed,
     # after a check that they are not essential
 
-    ## @deprecation("tangle has been renamed to combine") 
+    ## @deprecation("tangle has been renamed to combine")
     ## def tangle(self,*args,**kargs):
     ##     return self.combine(*args,**kargs)
-    
-    
-    ## @deprecation("untangle has been deprecated. Use insertLevel instead.") 
+
+
+    ## @deprecation("untangle has been deprecated. Use insertLevel instead.")
     ## def untangle(self,ind):
     ##     return self.insertLevel(ind)
 
@@ -1080,18 +1080,18 @@ class Connectivity(ndarray):
     ##       numbers at the same position.
     ##     - return_magic: if True, return a codes,magic tuple. The default is
     ##       to return only the codes.
-          
+
     ##     Returns:
-    
+
     ##     - codes: an (nelems,) shaped array with the element code numbers,
     ##     - magic: the information needed to restore the original rows from
     ##       the codes. See Connectivity.decode()
 
     ##     Example:
-        
+
     ##       >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).encode(return_magic=True)
     ##       (array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
-          
+
     ##     *The use of this function is deprecated.*
     ##     """
     ##     def compact_encode2(data):
@@ -1116,14 +1116,14 @@ class Connectivity(ndarray):
     ##         rt = column_stack([posa, posb])
     ##         codes, magic = enmagic2(rt)
     ##         return codes,magic,uniqa,uniqb
-        
-        
+
+
     ##     if permutations:
     ##         data = self.copy()
     ##         data.sort(axis=1)
     ##     else:
     ##         data = self
-            
+
     ##     magic = []
     ##     codes = data[:,0]
     ##     for i in range(1,data.shape[1]):
@@ -1148,18 +1148,18 @@ class Connectivity(ndarray):
 
     ##     This is a static method, and should be invoked as
     ##     ``Connectivity.decode(codes,magic)``.
-        
+
     ##     - codes: code numbers as returned by Connectivity.encode, or a subset
     ##       thereof.
     ##     - magic: the magic information as returned by Connectivity.encode,
     ##       with argument return_magic=True.
 
-    ##     Returns: 
+    ##     Returns:
 
     ##     A Connectivity table.
 
     ##     Example:
-        
+
     ##       >>> Connectivity.decode(array([0,1,3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
     ##       Connectivity([[0, 1, 2],
     ##              [0, 1, 3],
@@ -1180,7 +1180,7 @@ class Connectivity(ndarray):
     ##         # decoding returns the indices into the uniq numberings
     ##         pos = demagic2(codes,magic)
     ##         return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
-        
+
     ##     data = []
     ##     for mag in magic:
     ##         cols = compact_decode2(codes,mag[0],mag[1],mag[2])
@@ -1192,7 +1192,7 @@ class Connectivity(ndarray):
 ############################################################################
 
 
-# BV: This could become one of the schemes of Connectivity.reorder 
+# BV: This could become one of the schemes of Connectivity.reorder
 def findConnectedLineElems(elems):
     """Find a single path of connected line elems.
 
@@ -1209,9 +1209,9 @@ def findConnectedLineElems(elems):
     Parameters:
 
     - `elems`: Connectivity-like. Any plexitude is allowed, but only the
-      first and the last column are relevant. 
+      first and the last column are relevant.
 
-    Returns: 
+    Returns:
 
     - `con`: a Connectivity with the same shape as the input Connectivity
       `elems`, holding a single chain extracted from the input and filled
@@ -1227,7 +1227,7 @@ def findConnectedLineElems(elems):
 
     .. warning:
 
-       As a side-effect, all elements contained in the output Connectivity 
+       As a side-effect, all elements contained in the output Connectivity
        will have their entries in the input table `elems` changed to -1.
 
     Example:
@@ -1243,7 +1243,7 @@ def findConnectedLineElems(elems):
        [ 1  1]
        [ 3 -1]
        [ 2 -1]]
-             
+
       >>> con,inv = findConnectedLineElems([[0,1],[1,2],[0,4]])
       >>> print(con)
       [[2 1]
@@ -1253,7 +1253,7 @@ def findConnectedLineElems(elems):
       [[ 1 -1]
        [ 0 -1]
        [ 2  1]]
-             
+
       >>> C = Connectivity([[0,1],[0,2],[0,3],[4,5]])
       >>> con,inv = findConnectedLineElems(C)
       >>> print(con)
@@ -1271,7 +1271,7 @@ def findConnectedLineElems(elems):
        [-1 -1]
        [ 0  3]
        [ 4  5]]
-       
+
     """
 
     #
@@ -1280,7 +1280,7 @@ def findConnectedLineElems(elems):
     #     in the ind array
     #     That would avoid the need to make a copy in connectedLineElems
     #
-    
+
     if not isinstance(elems,Connectivity):
         elems = Connectivity(elems)
     #
@@ -1338,7 +1338,7 @@ def findConnectedLineElems(elems):
 
 def connectedLineElems(elems,return_indices=False):
     """Partition a collection of line segments into connected polylines.
-    
+
     The input argument is a (nelems,2) shaped array of integers.
     Each row holds the two vertex numbers of a single line segment.
 
@@ -1356,26 +1356,26 @@ def connectedLineElems(elems,return_indices=False):
     original direction (+1) or the reverse (-1).
 
     Example:
-    
+
       >>> connectedLineElems([[0,1],[1,2],[0,4],[4,2]])
       [Connectivity([[0, 1],
              [1, 2],
              [2, 4],
              [4, 0]])]
-             
+
       >>> connectedLineElems([[0,1],[1,2],[0,4]])
       [Connectivity([[2, 1],
              [1, 0],
              [0, 4]])]
-             
+
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
       [Connectivity([[1, 0],
              [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
-             
+
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
       [Connectivity([[1, 0],
              [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])]
-             
+
       >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]],True)
       ([Connectivity([[1, 0],
              [0, 2]]), Connectivity([[4, 5]]), Connectivity([[0, 3]])], [array([[ 0, -1],
@@ -1384,7 +1384,7 @@ def connectedLineElems(elems,return_indices=False):
       [Connectivity([[3, 0, 2],
              [2, 1, 0],
              [0, 3, 1]]), Connectivity([[4, 5, 2]])]
-    
+
     Obviously, from the input elems table and the second return value,
     the first return value could be reconstructed::
 
@@ -1392,12 +1392,12 @@ def connectedLineElems(elems,return_indices=False):
           where(i[:,-1:] > 0, elems[i[:,0]], elems[i[:,0],::-1])
           for i in second
       ]
-      
+
     But since the construction of the first list is required by the algorithm,
     it is returned anyway.
     """
     elems = Connectivity(elems).copy() # make copy to avoid side effects
-    elnrs =  arange(elems.shape[0]) # needed to return indices 
+    elnrs =  arange(elems.shape[0]) # needed to return indices
     parts = []
     chains = []
     while elems.size != 0:
@@ -1440,7 +1440,7 @@ def connected(index,i):
     adj = concatenate([ where(ind==j)[0] for j in ind[i] if j >= 0 ])
     return unique(adj[adj != i])
 
-   
+
 @deprecation(_future_deprecation)
 def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
@@ -1461,10 +1461,10 @@ def enmagic2(cols,magic=0):
     cmax = cols.max()
     if cmax >= 2**31 or cols.min() < 0:
         raise ValueError,"Integer value too high (>= 2**31) in enmagic2"
-        
+
     if cols.ndim != 2 or cols.shape[1] != 2:
         raise ValueError,"Invalid array (type %s, shape %s) in enmagic2" % (cols.dtype,cols.shape)
-    
+
     if magic < 0:
         magic = -1
         cols = array(cols,copy=True,dtype=int32,order='C')
@@ -1475,7 +1475,7 @@ def enmagic2(cols,magic=0):
         codes = cols[:,0].astype(int64) * magic + cols[:,1]
     return codes,magic
 
-        
+
 @deprecation(_future_deprecation)
 def demagic2(codes,magic):
     """Decode an integer number into two integers.
@@ -1484,7 +1484,7 @@ def demagic2(codes,magic):
     This will restore the original two values for the codes.
 
     A negative magic value flags the fastencode option.
-    
+
     *The use of this function is deprecated.*
     """
     if magic < 0:
@@ -1570,6 +1570,6 @@ if __name__ == "__main__":
     print(C.selectNodes([]))
 
     print(Connectivity().report())
-    
+
     print(connectedLineElems([[0,1],[0,2],[0,3],[4,5]]))
 # End
