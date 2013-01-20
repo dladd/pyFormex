@@ -814,7 +814,7 @@ def splitar(ar,nblk,close=False):
     if nblk > na:
         return [ar]
 
-    ndata = splitrange(na,3)
+    ndata = splitrange(na,nblk)
     if close:
         return [ ar[i:j+1] for i,j in zip(ndata[:-1],ndata[1:]) ]
     else:
