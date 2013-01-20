@@ -140,6 +140,10 @@ def setExpanding(w):
     w.setSizePolicy(freePol)
     w.adjustSize()
 
+def hspacer():
+    spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum )
+    return spacer
+
 #####################################################################
 ########### General Input Dialog ####################################
 #####################################################################
@@ -203,6 +207,11 @@ class InputItem(QtGui.QWidget):
     - `tooltip`: A descriptive text which is only shown when the user pauses
       the cursor for some time on the widget. It can be used to give
       more comprehensive explanation to first time users.
+    - `spacer`: string. Only the characters 'l', 'r' and 'c' are relevant.
+      If the string contains an 'l', a spacer in inserted before the label.
+      If the string contains an 'r', a spacer in inserted after the input field.
+      If the string contains a 'c', a spacer in inserted between the label and
+      the input filed.
 
     Subclasses should have an ``__init__()`` method which first constructs
     a proper widget for the input field, and stores it in the attribute
@@ -242,6 +251,10 @@ class InputItem(QtGui.QWidget):
         #layout.setSpacing(0)
         layout.setMargin(0)
         self.setLayout(layout)
+        spacer = kargs.get('spacer','')
+        if 'l' in spacer:
+            layout.addStretch()
+
         self.key = str(name)
         if 'text' in kargs:
             text = kargs['text']
@@ -254,11 +267,13 @@ class InputItem(QtGui.QWidget):
                 self.label.setPixmap(text)
             else:
                 self.label.setText(text)
-            if 'b' in kargs.get('stretch',''):
-                layout.addStretch()
+            ## if 'b' in kargs.get('stretch',''):
+            ##     layout.addStretch()
             layout.addWidget(self.label)
-            if 'a' in kargs.get('stretch',''):
-                print('test')
+            ## if 'a' in kargs.get('stretch',''):
+            ##     print('test')
+            ##     layout.addStretch()
+            if 'c' in spacer:
                 layout.addStretch()
 
         if 'data' in kargs:
@@ -294,6 +309,10 @@ class InputItem(QtGui.QWidget):
             self.buttons = ButtonBox(actions=kargs['buttons'],parent=self)
             layout.addWidget(self.buttons)
 
+        if 'r' in spacer:
+            layout.addStretch()
+
+
     def name(self):
         """Return the name of the InputItem."""
         return self.key
@@ -323,7 +342,7 @@ class InputInfo(InputItem):
     There are no specific options.
     """
     def __init__(self,name,value,*args,**kargs):
-        """Creates the input item."""
+        """Initialize the input item."""
         self.input = QtGui.QLineEdit(str(value))
         self.input.setReadOnly(True)
         InputItem.__init__(self,name,*args,**kargs)
@@ -345,7 +364,7 @@ class InputLabel(InputItem):
     ReStructuredText ot html. Specify plain=True to display in plain text.
     """
     def __init__(self,name,value,*args,**kargs):
-        """Create the input item."""
+        """Initialize the input item."""
         self._plain = kargs.get('plain',False)
         self.input =  QtGui.QLabel()
         #maxw,maxh = self.maxSize()
@@ -394,7 +413,7 @@ class InputString(InputItem):
     - `max`: the maximum number of characters in the string.
     """
     def __init__(self,name,value,max=None,*args,**kargs):
-        """Creates the input item."""
+        """Initialize the input item."""
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
         if type(max) is int and max > 0:
@@ -428,7 +447,7 @@ class InputText(InputItem):
     before returning.
     """
     def __init__(self,name,value,*args,**kargs):
-        """Creates the input item."""
+        """Initialize the input item."""
         self._is_string_ = type(value) == str
         self._plain = kargs.get('plain',False)
         self.input =  QtGui.QTextEdit()
@@ -509,7 +528,7 @@ class InputBool(InputItem):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates the input item."""
+        """Initialize the input item."""
         if 'text' in kargs:
             text = kargs['text']
         else:
@@ -535,56 +554,6 @@ class InputBool(InputItem):
             self.input.setCheckState(QtCore.Qt.Checked)
         else:
             self.input.setCheckState(QtCore.Qt.Unchecked)
-
-
-class ListWidget(QtGui.QListWidget):
-    """A customized QListWidget with ability to compute its required size.
-
-    """
-    def __init__(self,maxh=0):
-        """Initialize the ListWidget"""
-        QtGui.QListWidget.__init__(self)
-        self.maxh = maxh
-        self._size = QtGui.QListWidget.sizeHint(self)
-
-    def allItems(self):
-        return [ self.item(i) for i in range(self.count()) ]
-
-    def reqSize(self):
-        w = 0
-        h = 10 # margin
-        for i in self.allItems():
-            r = self.visualItemRect(i)
-            h += r.height()
-            w = max(w,r.width())
-        return w,h
-
-    def setSize(self):
-        w,h = self.reqSize()
-        pf.debug("Required list size is %s,%s" % (w,h),pf.DEBUG.WIDGET)
-        if self.maxh > -1:
-            self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
-            if self.maxh > 0:
-                h = min(h,self.maxh)
-            w,hs = objSize(QtGui.QListWidget.sizeHint(self))
-            pf.debug("QListWidget hints size %s,%s" % (w,hs),pf.DEBUG.WIDGET)
-
-        if self.maxh < 0:
-            self.setFixedSize(w,h)
-
-        pf.debug("Setting list size to %s,%s" % (w,h),pf.DEBUG.WIDGET)
-        self._size = QtCore.QSize(w,h)
-
-    def sizeHint(self):
-        if self.maxh > 0:
-            w,h = objSize(QtGui.QListWidget.sizeHint(self))
-            print(w)
-            print(h)
-            print("QListWidget hints size %s,%s" % (w,h),pf.DEBUG.WIDGET)
-            h = max(h,self.maxh)
-            return QtCore.QSize(w,h)
-        else:
-            return self._size
 
 
 class InputList(InputItem):
@@ -613,7 +582,7 @@ class InputList(InputItem):
     """
 
     def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,fast_sel=False,maxh=-1,*args,**kargs):
-        """Create the listwidget."""
+        """Initialize the input item."""
         if len(choices) == 0:
             raise ValueError,"List input expected choices!"
         self._choices_ = [ str(s) for s in choices ]
@@ -730,7 +699,7 @@ class InputCombo(InputItem):
     """
 
     def __init__(self,name,default,choices=[],onselect=None,func=None,*args,**kargs):
-        """Create the combobox."""
+        """Initialize the input item."""
         if len(choices) == 0:
             raise ValueError,"Selection expected choices!"
         if default is None:
@@ -791,7 +760,7 @@ class InputRadio(InputItem):
     """
 
     def __init__(self,name,default,choices=[],direction='h',*args,**kargs):
-        """Creates the radiobuttons."""
+        """Initialize the input item."""
         if default is None:
             default = choices[0]
         elif default not in choices:
@@ -851,7 +820,7 @@ class InputPush(InputItem):
     """
 
     def __init__(self,name,default=None,choices=[],direction='h',*args,**kargs):
-        """Create the pushbuttons"""
+        """Initialize the input item."""
         if default is None:
             default = choices[0]
         elif default not in choices:
@@ -911,7 +880,7 @@ class InputInteger(InputItem):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new integer input field with a label in front."""
+        """Initialize the input item."""
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QIntValidator(self)
@@ -938,10 +907,10 @@ class InputInteger(InputItem):
 
 
 class InputFloat(InputItem):
-    """An float input item."""
+    """A float input item."""
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new float input field with a label in front."""
+        """Initialize the input item."""
         self.input = QtGui.QLineEdit(str(value))
         InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QDoubleValidator(self)
@@ -969,38 +938,39 @@ class InputFloat(InputItem):
         self.input.setText(str(val))
 
 
-## class InputFloatTable(InputItem):
-##     """A table of floats input item."""
+class InputTable(InputItem):
+    """An input item for tabular data.
 
-##     def __init__(self,name,value,*args,**kargs):
-##         """Creates a new float table input field."""
-##         if value is None:
-##             ncols = kargs.get('ncols',1)
-##             nrows = kargs.get('nrows',1)
-##             value = zeros(nrows,ncols)
-##         else:
-##             nrows,ncols = value.shape
+    - `value`: a 2-D array of items, with `nrow` rows and `ncol` columns.
 
-##         chead = kargs.get('chead',None)
-##         rhead = kargs.get('rhead',None)
+      If `value` is an numpy array, the Table will use the ArrayModel:
+      editing the data will directly change the input data array; all
+      items are of the same type; the size of the table can not be changed.
 
-##         self.input = ArrayTable(value,rhead=rhead,chead=chead)
-##         InputItem.__init__(self,name,*args,**kargs)
-##         self.layout().insertWidget(1,self.input)
+      Else a TableModel is used. Rows and columns can be added to or removed
+      from the table. Item type can be set per row or per column or for the
+      whole table.
+    - `autowidth`:
+    - additionally, all keyword parameters of the TableModel or ArrayModel
+      may be passed
+    """
 
-##     def show(self):
-##         """Select all text on first display."""
-##         InputItem.show(self)
-##         self.input.selectAll()
+    def __init__(self,name,value,chead=None,rhead=None,celltype=None,rowtype=None,coltype=None,edit=True,resize=None,autowidth=True,*args,**kargs):
+        """Initialize the input item."""
+        self.input = Table(value,chead=chead,rhead=rhead,celltype=celltype,rowtype=rowtype,coltype=coltype,edit=edit,resize=resize,autowidth=autowidth)
+        InputItem.__init__(self,name,*args,**kargs)
+        self.layout().addWidget(self.input)
 
-##     def value(self):
-##         """Return the widget's value."""
-##         return float(self.input.text())
 
-##     def setValue(self,val):
-##         """Change the widget's value."""
-##         val = float(val)
-##         self.input.setText(str(val))
+    def value(self):
+        """Return the widget's value."""
+        return self.input.value()
+
+    # TODO: need to implement
+    ## def setValue(self,val):
+    ##     """Change the widget's value."""
+    ##     self.input.setText(str(val))
+
 
 
 class InputSlider(InputInteger):
@@ -1015,7 +985,7 @@ class InputSlider(InputInteger):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new integer input slider."""
+        """Initialize the input item."""
         InputInteger.__init__(self,name,value,*args,**kargs)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
@@ -1055,7 +1025,7 @@ class InputFSlider(InputFloat):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new integer input slider."""
+        """Initialize the input item."""
         InputFloat.__init__(self,name,value,*args,**kargs)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
@@ -1088,7 +1058,7 @@ class InputPoint(InputItem):
     """A 3D point/vector input item."""
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new point input field with a label in front."""
+        """Initialize the input item."""
         self.input = CoordsBox()
         InputItem.__init__(self,name,*args,**kargs)
         self.layout().insertWidget(1,self.input)
@@ -1107,7 +1077,7 @@ class InputIVector(InputItem):
     """A vector of int values."""
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new ivector input field with a label in front."""
+        """Initialize the input item."""
         self.ndim = len(value)
         if 'fields' in kargs:
             fields = kargs['fields']
@@ -1154,7 +1124,7 @@ class InputButton(InputItem):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Create a new button input field."""
+        """Initialize the input item."""
         value = str(value)
         self.input = QtGui.QPushButton(value)
         self.func = kargs.get('func',None)
@@ -1182,7 +1152,7 @@ class InputColor(InputItem):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Create the color input item."""
+        """Initialize the input item."""
         color = colors.colorName(value)
         self.input = QtGui.QPushButton(color)
         InputItem.__init__(self,name,*args,**kargs)
@@ -1207,7 +1177,7 @@ class InputColor(InputItem):
 class InputFont(InputItem):
     """An input item to select a font."""
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new font input field."""
+        """Initialize the input item."""
         if value is None:
             value = pf.app.font().toString()
         self.input = QtGui.QPushButton(value)
@@ -1239,8 +1209,7 @@ class InputWidget(InputItem):
     """
 
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new InputWidget."""
-
+        """Initialize the input item."""
         kargs['text'] = '' # Force no label
         self.input = value
         InputItem.__init__(self,name,*args,**kargs)
@@ -1269,6 +1238,7 @@ class InputForm(QtGui.QVBoxLayout):
     """
 
     def __init__(self):
+        """Initialize the InputForm."""
         QtGui.QVBoxLayout.__init__(self)
         self.tabs = []      # list of tab widgets in this form
         self.last = None    # last added itemtype
@@ -1283,6 +1253,7 @@ class ScrollForm(QtGui.QScrollArea):
     """
 
     def __init__(self):
+        """Initialize the ScrollForm."""
         QtGui.QScrollArea.__init__(self)
         self.form = InputForm()
 
@@ -1291,6 +1262,7 @@ class InputGroup(QtGui.QGroupBox):
     """A boxed group of InputItems."""
 
     def __init__(self,name,*args,**kargs):
+        """Initialize the input item."""
         QtGui.QGroupBox.__init__(self,*args)
         self.key = name
         self.input = self
@@ -1324,6 +1296,7 @@ class InputTab(QtGui.QWidget):
     """A tab page in an input form."""
 
     def __init__(self,name,tab,*args,**kargs):
+        """Initialize the input item."""
         QtGui.QWidget.__init__(self,*args)
         self.key = name
         self.form = InputForm()
@@ -1368,31 +1341,32 @@ def tabInputItem(name,items=[],**kargs):
     kargs['itemtype'] = 'tab'
     return kargs
 
+# BV: removed in 0.9.0
 
-def compatInputItem(name,value,itemtype=None,kargs={}):
-    """A convenience function to create an InputItem dictionary
+## def compatInputItem(name,value,itemtype=None,kargs={}):
+##     """A convenience function to create an InputItem dictionary
 
-    This function accepts InputItem data in the old format::
+##     This function accepts InputItem data in the old format::
 
-      ( name, value, [ itemtype, [ optionsdict ] ] )
+##       ( name, value, [ itemtype, [ optionsdict ] ] )
 
-    and turns them into a dictionary as required by the new
-    InputItem format.
-    """
-    utils.deprec("depr_compat_input")
-    # Create a new dict item!
-    # We cannot change kargs directly like in simpleInputItem,
-    # that would permanently change the value of the empty dict!
-    item = {}
-    if isinstance(itemtype,dict):
-        # in case the itemtype was missing
-        kargs = itemtype
-        itemtype = None
-    item.update(kargs)
-    item['name'] = name
-    item['value'] = value
-    item['itemtype'] = itemtype
-    return item
+##     and turns them into a dictionary as required by the new
+##     InputItem format.
+##     """
+##     utils.deprec("depr_compat_input")
+##     # Create a new dict item!
+##     # We cannot change kargs directly like in simpleInputItem,
+##     # that would permanently change the value of the empty dict!
+##     item = {}
+##     if isinstance(itemtype,dict):
+##         # in case the itemtype was missing
+##         kargs = itemtype
+##         itemtype = None
+##     item.update(kargs)
+##     item['name'] = name
+##     item['value'] = value
+##     item['itemtype'] = itemtype
+##     return item
 
 
 def convertInputItem(data):
@@ -1404,9 +1378,8 @@ def convertInputItem(data):
     The conversion does the following:
 
     - if `data` is a dict, it is considered proper data and returned as is.
-    - if `data` is a tuple or a list, first conversion with simpleInputItem
-      is tried, then conversion with compatInputItem, using the data items
-      as arguments.
+    - if `data` is a tuple or a list, conversion with simpleInputItem
+      is tried, using the data items as arguments.
     - if neither succeeds, an error is raised.
     """
     if isinstance(data,dict):
@@ -1415,12 +1388,12 @@ def convertInputItem(data):
         try:
             return simpleInputItem(*data)
         except:
-            try:
-                return compatInputItem(*data)
-            except:
-                pass
+            ## try:
+            ##     return compatInputItem(*data)
+            ## except:
+            ##     pass
             pass
-    raise ValueError,"Invalid inputItem data: %s" % str(data)
+    raise ValueError,"Invalid InputItem data: %s" % str(data)
 
 
 # define a function to have the same enabling name as for InputItem
@@ -1506,7 +1479,7 @@ class InputDialog(QtGui.QDialog):
       combo or group. Also, any input field should only have one enabler!
 
     """
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[],scroll=False,size=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[],scroll=False,size=None,align_right=False):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
@@ -1837,7 +1810,9 @@ class InputDialog(QtGui.QDialog):
         return self.results
 
     # for compatibility, TODO: should be deprecated
-    getResult = getResults
+    def getResult(self,*args,**kargs):
+        utils.deprec("depr_getResult")
+        return self.getResults(*args,**kargs)
 
 
 
@@ -1950,6 +1925,451 @@ def updateOldDialogItems(data,newdata):
                 v = newdata.get(d[0],None)
                 if v is not None:
                     d[1] = v
+
+
+
+#####################################################################
+########### Specialized Widgets #####################################
+#####################################################################
+
+
+class ListWidget(QtGui.QListWidget):
+    """A customized QListWidget with ability to compute its required size.
+
+    """
+    def __init__(self,maxh=0):
+        """Initialize the ListWidget"""
+        QtGui.QListWidget.__init__(self)
+        self.maxh = maxh
+        self._size = QtGui.QListWidget.sizeHint(self)
+
+    def allItems(self):
+        return [ self.item(i) for i in range(self.count()) ]
+
+    def reqSize(self):
+        w = 0
+        h = 10 # margin
+        for i in self.allItems():
+            r = self.visualItemRect(i)
+            h += r.height()
+            w = max(w,r.width())
+        return w,h
+
+    def setSize(self):
+        w,h = self.reqSize()
+        pf.debug("Required list size is %s,%s" % (w,h),pf.DEBUG.WIDGET)
+        if self.maxh > -1:
+            self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+            if self.maxh > 0:
+                h = min(h,self.maxh)
+            w,hs = objSize(QtGui.QListWidget.sizeHint(self))
+            pf.debug("QListWidget hints size %s,%s" % (w,hs),pf.DEBUG.WIDGET)
+
+        if self.maxh < 0:
+            self.setFixedSize(w,h)
+
+        pf.debug("Setting list size to %s,%s" % (w,h),pf.DEBUG.WIDGET)
+        self._size = QtCore.QSize(w,h)
+
+    def sizeHint(self):
+        if self.maxh > 0:
+            w,h = objSize(QtGui.QListWidget.sizeHint(self))
+            print(w)
+            print(h)
+            print("QListWidget hints size %s,%s" % (w,h),pf.DEBUG.WIDGET)
+            h = max(h,self.maxh)
+            return QtCore.QSize(w,h)
+        else:
+            return self._size
+
+
+########################### Table widgets ###########################
+
+_EDITROLE = QtCore.Qt.EditRole
+
+
+class TableModel(QtCore.QAbstractTableModel):
+    """A model representing a two-dimensional array of items.
+
+    - `data`: any tabular data organized in a fixed number of rows and colums.
+      This means that an item at row i and column j can be addressed as
+      data[i][j]. Thus it can be a list of lists, or a list of tuples or
+      a 2D numpy array. The data will always be returned as a list of lists
+      though.
+      Unless otherwise specified by the use of a `celltype`, `coltype` or
+      `rowtype` argument, all items are converted to strings and will be
+      returned as strings.
+      Item storage order is row by row.
+    - `chead`: optional list of (ncols) column headers
+    - `rhead`: optional list of (nrows) row headers
+    - `celltype`: callable: if specified, it is used to map all items.
+      This is only used if neither `rowtype` nor `coltype` are specified.
+      If unspecified, it will be set to 'str', unless `data` is a numpy array,
+      in which case it will be set to the datatype of the array.
+    - `rowtype`: list of nrows callables: if specified, the items of each row
+      are mapped by the corresponding callable.
+      This overrides `celltype` and is only used if `coltype` ais not specified.
+    - `coltype`: list of ncols callables: if specified, the items of each
+      column are mapped by the corresponding callable.
+      This overrides `celltype` and `rowtype`.
+    - `edit`: bool: if True (default), the table is editable. Set to False
+      to make the data readonly.
+    - `resize`: bool: if True, the table can be resized: rows and columns can be
+      added or removed. If False, the size of the table can not be changed.
+      The default value is equal to the value of `edit`.
+      If `coltype` is specified, the number of columns can not be changed.
+      If `rowtype` is specified, the number of rows can not be changed.
+    """
+
+    def __init__(self,data,chead=None,rhead=None,celltype=None,rowtype=None,coltype=None,edit=True,resize=None):
+        """Initialize the TableModel"""
+        import numpy as np
+        QtCore.QAbstractTableModel.__init__(self)
+        self.celltype = self.rowtype = self.coltype = None
+        if coltype is not None:
+            self.coltype = coltype
+        elif rowtype is not None:
+            self.rowtype = rowtype
+        elif celltype is not None:
+            self.celltype = celltype
+        else:
+            if isinstance(data,np.ndarray):
+                self.celltype = data.dtype
+            else:
+                self.celltype = str
+        if self.coltype:
+            self._data = [ [ coltype(i) for i,coltype in zip(r,self.coltype) ] for r in data ]
+        elif self.rowtype:
+            self._data = [ [ rowtype(i) for i in r ] for r,rowtype in zip(data,self.rowtype) ]
+        else:
+            self._data = [ [ self.celltype(i) for i in r ] for r in data ]
+        self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
+        self.makeEditable(edit,resize)
+
+
+    def makeEditable(self,edit=True,resize=None):
+        """Make the table editable or not.
+
+        - `edit`: bool: makes the items in the table editable or not.
+        - `resize`: bool: makes the table resizable or not. If unspecified,
+          it is set equal to the `edit`.
+        """
+        self._flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+        if edit:
+            self._flags |= QtCore.Qt.ItemIsEditable
+        self.edit = edit
+        if resize is None:
+            self.resize = edit
+        else:
+            self.resize = resize
+
+
+    def rowCount(self,parent=None):
+        """Return number of rows in the table"""
+        return len(self._data)
+
+
+    def columnCount(self,parent=None):
+        """Return number of columns in the table"""
+        return len(self._data[0])
+
+
+    def data(self,index,role):
+        """Return the data at the specified index"""
+        if index.isValid() and role == QtCore.Qt.DisplayRole:
+            r,c = index.row(),index.column()
+            value = QtCore.QVariant(self._data[r][c])
+        else:
+            value = QtCore.QVariant()
+        return value
+
+
+    def cellType(self,r,c):
+        """Return the type of the item at the specified position"""
+        if self.coltype:
+            itemtype = self.coltype[c]
+        elif self.rowtype:
+            itemtype = self.rowtype[r]
+        else:
+            itemtype = self.celltype
+        return itemtype
+
+
+    def setCellData(self,r,c,value):
+        """Set the value of an individual table element.
+
+        This changes the stored data, not the interface.
+        """
+        itemtype = self.cellType(r,c)
+        if self.coltype:
+            itemtype = self.coltype[c]
+        elif self.rowtype:
+            itemtype = self.rowtype[r]
+        else:
+            itemtype = self.celltype
+        self._data[r][c] = itemtype(value)
+
+
+    def setData(self,index,value,role=_EDITROLE):
+        """Set the value of an individual table element."""
+        if self.edit and role == QtCore.Qt.EditRole:
+            try:
+                r,c = [index.row(),index.column()]
+                self.setCellData(r,c,value.toString())
+                self.dataChanged.emit(index,index) #not sure if needed
+                return True
+            except:
+                raise
+                print("Could not set the value")
+                return False
+        else:
+            print("CAN  NOT EDIT")
+        return False
+
+
+    def headerData(self,col,orientation,role):
+        """Return the header data for the sepcified row or column"""
+        if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.headerdata[orientation][col])
+        return QtCore.QVariant()
+
+
+    def insertRows(self,row=None,count=None):
+        """Insert row(s) in table"""
+        if row is None:
+            row = self.rowCount()
+        if count is None:
+            count = 1
+        last = row+count-1
+        newdata = [ [ None ] * self.columnCount() ] * count
+        self.beginInsertRows(QtCore.QModelIndex(),row,last)
+        self._data[row:row] = newdata
+        self.endInsertRows()
+        return True
+
+
+    def removeRows(self,row=None,count=None):
+        """Remove row(s) from table"""
+        if row is None:
+            row = self.rowCount()
+        if count is None:
+            count = 1
+        last = row+count-1
+        self.beginRemoveRows(QtCore.QModelIndex(),row,last)
+        self._data[row:row+count] = []
+        self.endRemoveRows()
+        return True
+
+
+    def flags(self,index):
+        """Return the TableModel flags."""
+        return self._flags
+
+
+# Generic Python types for numpy data types
+_generic_nptype = {
+    'i': int,
+    'f': float,
+    's': str,
+    }
+
+class ArrayModel(QtCore.QAbstractTableModel):
+    """A model representing a two-dimensional numpy array.
+
+    - `data`: a numpy array with two dimensions.
+    - `chead`, `rhead`: column and row headers. The default will show column
+      and row numbers.
+    - `edit`: if True (default), the data can be edited. Set to False to make
+      the data readonly.
+    """
+
+    def __init__(self,data,chead=None,rhead=None,edit=True):
+        import numpy as np
+        QtCore.QAbstractTableModel.__init__(self)
+        self._data = np.asarray(data)
+        self.generictype = _generic_nptype[self._data.dtype.kind]
+        if rhead is None:
+            rhead = range(data.shape[0])
+        if chead is None:
+            chead = range(data.shape[1])
+        self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
+        self.makeEditable(edit)
+
+
+    def makeEditable(self,edit=True):
+        """Make the table editable or not.
+
+        - `edit`: bool: makes the items in the table editable or not.
+         """
+        self._flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+        if edit:
+            self._flags |= QtCore.Qt.ItemIsEditable
+        self.edit = edit
+
+
+    def rowCount(self,parent=None):
+        """Return number of rows in the table"""
+        return self._data.shape[0]
+
+
+    def columnCount(self,parent=None):
+        """Return number of columns in the table"""
+        return self._data.shape[1]
+
+
+    def data(self,index,role):
+        if index.isValid() and role == QtCore.Qt.DisplayRole:
+            r,c = index.row(),index.column()
+            value = QtCore.QVariant(self.generictype(self._data[r,c]))
+            #print("DATA at %s,%s is %s" % (r,c,value))
+        else:
+            value = QtCore.QVariant()
+        return value
+
+
+    def cellType(self,r,c):
+        """Return the type of the item at the specified position"""
+        return self._data.dtype
+
+
+    def setData(self,index,value,role=_EDITROLE):
+        """Set the value of an individual table element."""
+        if self.edit and role == QtCore.Qt.EditRole:
+            try:
+                k = self._data.dtype.kind
+                if k == 'f':
+                    value,ok = value.toDouble()
+                elif k == 'i':
+                    value,ok = value.toInt()
+                else:
+                    ok = False
+                if not ok:
+                    pf.warning("Expected %s data" % self.generictype)
+                    return False
+                r,c = [index.row(),index.column()]
+                self._data[r,c] = value
+                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                return True
+            except:
+                raise
+                print("Could not set the value")
+                return False
+        else:
+             print("CAN  NOT EDIT")
+        return False
+
+
+    def headerData(self,col,orientation,role):
+        """Return the header data for the sepcified row or column"""
+        if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.headerdata[orientation][col])
+        return QtCore.QVariant()
+
+
+    def flags(self,index):
+        """Return the TableModel flags."""
+        return self._flags
+
+
+class Table(QtGui.QTableView):
+    """A widget to show/edit a two-dimensional array of items.
+
+    - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns.
+
+      If `data` is an numpy array, the Table will use the ArrayModel:
+      editing the data will directly change the input data array; all
+      items are of the same type; the size of the table can not be changed.
+
+      Else a TableModel is used. Rows and columns can be added to or removed
+      from the table. Item type can be set per row or per column or for the
+      whole table.
+    - `label`: currently unused (intended to display an optional label
+      in the upper left corner if both `chead` and `rhead` are specified.
+    - `parent`:
+    - `autowidth`:
+    - additionally, all other parameters for the initialization of the
+      TableModel or ArrayModel may be passed
+    """
+    def __init__(self,data,chead=None,rhead=None,label=None,celltype=None,rowtype=None,coltype=None,edit=True,resize=None,parent=None,autowidth=True):
+        """Initialize the Table widget."""
+        import numpy as np
+        QtGui.QTableView.__init__(self,parent)
+        if isinstance(data,np.ndarray):
+            self.tm = ArrayModel(data,chead,rhead,edit=edit)
+        else:
+            self.tm = TableModel(data,chead,rhead,celltype,rowtype,coltype,edit=edit,resize=resize)
+        self.setModel(self.tm)
+        self.horizontalHeader().setVisible(chead is not None)
+        self.verticalHeader().setVisible(rhead is not None)
+        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
+        #self.connect(tm,dataChanged
+        self.autowidth = autowidth
+        if self.autowidth:
+            self.resizeColumnsToContents()
+        self.setCornerButtonEnabled
+        self.adjustSize()
+
+    def colWidths(self):
+        """Return the width of the columns in the table"""
+        return [self.columnWidth(i) for i in range(self.tm.columnCount())]
+
+    def rowHeights(self):
+        """Return the height of the rows in the table"""
+        return [self.rowHeight(i) for i in range(self.tm.rowCount())]
+
+    def minimumSizeHint(self):
+        #self.update()
+        minsize = size = QtGui.QTableView.sizeHint(self)
+        #print("ORIG SIZE: %s, %s" % (size.width(),size.height()))
+        size = self.size()
+        #print("ACTUAL SIZE: %s, %s" % (size.width(),size.height()))
+        width = sum(self.colWidths())
+        height = sum(self.rowHeights())
+        #print("NET SIZE: %s, %s" % (width,height))
+        width += self.tm.columnCount() * 1 + 1
+        height += self.tm.rowCount() * 1 + 1
+        #print("SPACED SIZE: %s, %s" % (width,height))
+        if self.horizontalHeader().isVisible():
+            height += self.horizontalHeader().height()
+        if self.verticalHeader().isVisible():
+            width += self.verticalHeader().width()
+        #print("HEADERED SIZE: %s, %s" % (width,height))
+        size = QtCore.QSize(width,height)
+        return size
+
+    sizeHint = minimumSizeHint
+
+    def dataChanged(self,ind1,ind2):
+        print("DATA CHANGED")
+        QtGui.QTableView.dataChanged(self,ind1,ind2)
+        self.update()
+
+    def update(self):
+        """Update the table.
+
+        This method should be called to update the widget when the data of
+        the table have changed. If autowidth is True, this will also
+        adjust the column widths.
+        """
+        print("UPDATE")
+        QtGui.QTableView.update(self)
+        if self.autowidth:
+            print("ADJUSTING COLUMNS")
+            self.resizeColumnsToContents()
+        self.adjustSize()
+        self.updateGeometry()
+
+
+
+    def value(self):
+        """Return the Table's value."""
+        return self.tm._data
+
+
+
+#####################################################################
+########### Specialized Dialogs #####################################
+#####################################################################
 
 
 ###################### File Selection Dialog #########################
@@ -2250,33 +2670,14 @@ class ListSelection(InputDialog):
             return None
 
 
-class Selection(ListSelection):
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
-        """Create the SelectionList dialog."""
-        utils.deprec("depr_widgets_selection")
-        ListSelection.__init__(self,caption=title,choices=slist,default=selected,single=mode=='single',sort=sort)
+# BV: removed in 0.9.0
 
+## class Selection(ListSelection):
+##     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
+##         """Create the SelectionList dialog."""
+##         utils.deprec("depr_widgets_selection")
+##         ListSelection.__init__(self,caption=title,choices=slist,default=selected,single=mode=='single',sort=sort)
 
-# BV uncommented, because I can not find any place where it is used,
-# and probably it would be better to use a generic docked widget and
-# an InputList
-
-## class DockedSelection(QtGui.QDockWidget):
-##     """A docked selection widget.
-
-##     A widget that is docked in the main window and contains a modeless
-##     dialog for selecting items.
-##     """
-##     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
-##         QtGui.QDockWidget.__init__(self)
-##         self.setWidget(ModelessSelection(slist,title,mode,sort,func))
-
-##     def setSelected(self,selected,bool):
-##         self.widget().setSelected(selected,bool)
-
-##     def getResult(self):
-##         res = self.widget().getResult()
-##         return res
 
 
 # !! The QtGui.QColorDialog can not be instantiated or subclassed.
@@ -2350,340 +2751,9 @@ class GenericDialog(QtGui.QDialog):
             self.form.insertWidget(ind,w)
 
 
-########################### Table widgets ###########################
-
-_EDITROLE = QtCore.Qt.EditRole
-
-
-class TableModel(QtCore.QAbstractTableModel):
-    """A model representing a two-dimensional array of items.
-
-    - `data`: any tabular data organized in a fixed number of rows and colums.
-      This means that an item at row i and column j can be addressed as
-      data[i][j]. Thus it can be a list of lists, or a list of tuples or
-      a 2D numpy array. The data will always be returned as a list of lists
-      though.
-      Unless otherwise specified by the use of a `celltype`, `coltype` or
-      `rowtype` argument, all items are converted to strings and will be
-      returned as strings.
-      Item storage order is row by row.
-    - `chead`: optional list of (ncols) column headers
-    - `rhead`: optional list of (nrows) row headers
-    - `celltype`: callable: if specified, it is used to map all items.
-      This is only used if neither `rowtype` nor `coltype` are specified.
-      If unspecified, it will be set to 'str', unless `data` is a numpy array,
-      in which case it will be set to the datatype of the array.
-    - `rowtype`: list of nrows callables: if specified, the items of each row
-      are mapped by the corresponding callable.
-      This overrides `celltype` and is only used if `coltype` ais not specified.
-    - `coltype`: list of ncols callables: if specified, the items of each
-      column are mapped by the corresponding callable.
-      This overrides `celltype` and `rowtype`.
-    - `edit`: bool: if True (default), the table is editable. Set to False
-      to make the data readonly.
-    - `resize`: bool: if True, the table can be resized: rows and columns can be
-      added or removed. If False, the size of the table can not be changed.
-      The default value is equal to the value of `edit`.
-      If `coltype` is specified, the number of columns can not be changed.
-      If `rowtype` is specified, the number of rows can not be changed.
-    """
-
-    def __init__(self,data,chead=None,rhead=None,celltype=None,rowtype=None,coltype=None,edit=True,resize=None):
-        """Initialize the TableModel"""
-        import numpy as np
-        QtCore.QAbstractTableModel.__init__(self)
-        self.celltype = self.rowtype = self.coltype = None
-        if coltype is not None:
-            self.coltype = coltype
-        elif rowtype is not None:
-            self.rowtype = rowtype
-        elif celltype is not None:
-            self.celltype = celltype
-        else:
-            if isinstance(data,np.ndarray):
-                self.celltype = data.dtype
-            else:
-                self.celltype = str
-        if self.coltype:
-            self._data = [ [ coltype(i) for i,coltype in zip(r,self.coltype) ] for r in data ]
-        elif self.rowtype:
-            self._data = [ [ rowtype(i) for i in r ] for r,rowtype in zip(data,self.rowtype) ]
-        else:
-            self._data = [ [ self.celltype(i) for i in r ] for r in data ]
-        self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
-        self.makeEditable(edit,resize)
-
-
-    def makeEditable(self,edit=True,resize=None):
-        """Make the table editable or not.
-
-        - `edit`: bool: makes the items in the table editable or not.
-        - `resize`: bool: makes the table resizable or not. If unspecified,
-          it is set equal to the `edit`.
-        """
-        self._flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
-        if edit:
-            self._flags |= QtCore.Qt.ItemIsEditable
-        self.edit = edit
-        if resize is None:
-            self.resize = edit
-        else:
-            self.resize = resize
-
-
-    def rowCount(self,parent=None):
-        """Return number of rows in the table"""
-        return len(self._data)
-
-
-    def columnCount(self,parent=None):
-        """Return number of columns in the table"""
-        return len(self._data[0])
-
-
-    def data(self,index,role):
-        """Return the data at the specified index"""
-        if index.isValid() and role == QtCore.Qt.DisplayRole:
-            r,c = index.row(),index.column()
-            value = QtCore.QVariant(self._data[r][c])
-        else:
-            value = QtCore.QVariant()
-        return value
-
-
-    def cellType(self,r,c):
-        """Return the type of the item at the specified position"""
-        if self.coltype:
-            itemtype = self.coltype[c]
-        elif self.rowtype:
-            itemtype = self.rowtype[r]
-        else:
-            itemtype = self.celltype
-        return itemtype
-
-
-    def setData(self,index,value,role=_EDITROLE):
-        """Set the value of an individual table element."""
-        if self.edit and role == QtCore.Qt.EditRole:
-            try:
-                r,c = [index.row(),index.column()]
-                itemtype = self.cellType(r,c)
-                value = str(value.toString())
-                self._data[r][c] = itemtype(value)
-                self.dataChanged.emit(index,index) #not sure if needed
-                return True
-            except:
-                raise
-                print("Could not set the value")
-                return False
-        else:
-            print("CAN  NOT EDIT")
-        return False
-
-
-    def headerData(self,col,orientation,role):
-        """Return the header data for the sepcified row or column"""
-        if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.headerdata[orientation][col])
-        return QtCore.QVariant()
-
-
-    def insertRows(self,row=None,count=None):
-        """Insert row(s) in table"""
-        if row is None:
-            row = self.rowCount()
-        if count is None:
-            count = 1
-        last = row+count-1
-        newdata = [ [ None ] * self.columnCount() ] * count
-        self.beginInsertRows(QtCore.QModelIndex(),row,last)
-        self._data[row:row] = newdata
-        self.endInsertRows()
-        return True
-
-
-    def removeRows(self,row=None,count=None):
-        """Remove row(s) from table"""
-        if row is None:
-            row = self.rowCount()
-        if count is None:
-            count = 1
-        last = row+count-1
-        self.beginRemoveRows(QtCore.QModelIndex(),row,last)
-        self._data[row:row+count] = []
-        self.endRemoveRows()
-        return True
-
-
-    def flags(self,index):
-        """Return the TableModel flags."""
-        return self._flags
-
-
-# Generic Python types for numpy data types
-_generic_nptype = {
-    'i': int,
-    'f': float,
-    's': str,
-    }
-
-class ArrayModel(QtCore.QAbstractTableModel):
-    """A model representing a two-dimensional numpy array.
-
-    - `data`: a numpy array with two dimensions.
-    - `chead`, `rhead`: column and row headers. The default will show column
-      and row numbers.
-    - `edit`: if True (default), the data can be edited. Set to False to make
-      the data readonly.
-    """
-
-    def __init__(self,data,chead=None,rhead=None,edit=True):
-        import numpy as np
-        QtCore.QAbstractTableModel.__init__(self)
-        self._data = np.asarray(data)
-        self.generictype = _generic_nptype[self._data.dtype.kind]
-        if rhead is None:
-            rhead = range(data.shape[0])
-        if chead is None:
-            chead = range(data.shape[1])
-        self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
-        self.makeEditable(edit)
-
-
-    def makeEditable(self,edit=True):
-        """Make the table editable or not.
-
-        - `edit`: bool: makes the items in the table editable or not.
-         """
-        self._flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
-        if edit:
-            self._flags |= QtCore.Qt.ItemIsEditable
-        self.edit = edit
-
-
-    def rowCount(self,parent=None):
-        """Return number of rows in the table"""
-        return self._data.shape[0]
-
-
-    def columnCount(self,parent=None):
-        """Return number of columns in the table"""
-        return self._data.shape[1]
-
-
-    def data(self,index,role):
-        if index.isValid() and role == QtCore.Qt.DisplayRole:
-            r,c = index.row(),index.column()
-            value = QtCore.QVariant(self.generictype(self._data[r,c]))
-            #print("DATA at %s,%s is %s" % (r,c,value))
-        else:
-            value = QtCore.QVariant()
-        return value
-
-
-    def cellType(self,r,c):
-        """Return the type of the item at the specified position"""
-        return self._data.dtype
-
-
-    def setData(self,index,value,role=_EDITROLE):
-        """Set the value of an individual table element."""
-        if self.edit and role == QtCore.Qt.EditRole:
-            try:
-                k = self._data.dtype.kind
-                if k == 'f':
-                    value,ok = value.toDouble()
-                elif k == 'i':
-                    value,ok = value.toInt()
-                else:
-                    ok = False
-                if not ok:
-                    pf.warning("Expected %s data" % self.generictype)
-                    return False
-                r,c = [index.row(),index.column()]
-                self._data[r,c] = value
-                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
-                return True
-            except:
-                raise
-                print("Could not set the value")
-                return False
-        else:
-             print("CAN  NOT EDIT")
-        return False
-
-
-    def headerData(self,col,orientation,role):
-        """Return the header data for the sepcified row or column"""
-        if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.headerdata[orientation][col])
-        return QtCore.QVariant()
-
-
-    def flags(self,index):
-        """Return the TableModel flags."""
-        return self._flags
-
-
-
-class Table(QtGui.QTableView):
-    """A widget to show/edit a two-dimensional array of items.
-
-    - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns.
-
-      If `data` is an numpy array, the Table will use the ArrayModel:
-      editing the data will directly change the input data array; all
-      items are of the same type; the size of the table can not be changed.
-
-      Else a TableModel is used. Rows and columns can be added to or removed
-      from the table. Item type can be set per row or per column or for the
-      whole table.
-    - `label`: currently unused (intended to display an optional label
-      in the upper left corner if both `chead` and `rhead` are specified.
-    - `parent`:
-    - `autowidth`:
-    - additionally, all other parameters for the initialization of the
-      TableModel or ArrayModel may be passed
-    """
-    def __init__(self,data,chead=None,rhead=None,label=None,celltype=None,rowtype=None,coltype=None,edit=True,resize=None,parent=None,autowidth=True):
-        """Initialize the Table widget."""
-        import numpy as np
-        QtGui.QTableView.__init__(self,parent)
-        if isinstance(data,np.ndarray):
-            self.tm = ArrayModel(data,chead,rhead,edit=edit)
-        else:
-            self.tm = TableModel(data,chead,rhead,celltype,rowtype,coltype,edit=edit,resize=resize)
-        self.setModel(self.tm)
-        self.horizontalHeader().setVisible(chead is not None)
-        self.verticalHeader().setVisible(rhead is not None)
-        self.autowidth = autowidth
-        if self.autowidth:
-            self.resizeColumnsToContents()
-        self.setCornerButtonEnabled
-
-
-    def update(self):
-        """Update the table.
-
-        This method should be called to update the widget when the data of
-        the table have changed. If autowidth is True, this will also
-        adjust the column widths.
-        """
-        QtGui.QTableView.update(self)
-        if self.autowidth:
-            self.resizeColumnsToContents()
-
-
-    def value(self):
-        """Return the Table's value."""
-        return self.tm._data
-
-
-#
-# THIS SHOULD BE DEPRECATED: use InputDialog
-#
+# Deprecated in 0.9.0
 class Tabs(QtGui.QTabWidget):
-    """Present a list of widgets as a single tabbed widget.
+    """_Present a list of widgets as a single tabbed widget.
 
     - `items`: a list of (header,widget) tuples.
     - `caption`:
@@ -2691,17 +2761,15 @@ class Tabs(QtGui.QTabWidget):
     """
     def __init__(self,items,parent=None):
         """Create the TabWidget."""
+        utils.deprec("depr_tabs")
         QtGui.QTabWidget.__init__(self,parent)
         for header,widget in items:
             self.addTab(widget,header)
 
 
-#
-# TODO: This should be replaced with an InputTable item in an InputDialog.
-#
-
+# Deprecated in 0.9.0
 class TableDialog(GenericDialog):
-    """A dialog widget to show/edit a two-dimensional array of items.
+    """_A dialog widget to show/edit a two-dimensional array of items.
 
     A convenience class representing a Table within a dialog.
     """
@@ -2713,6 +2781,7 @@ class TableDialog(GenericDialog):
         - chead is an optional list of ncol column headers.
         - rhead is an optional list of nrow row headers.
         """
+        utils.deprec("depr_tabledialog")
         self.table = Table(data,chead=chead,rhead=rhead,edit=edit)
         GenericDialog.__init__(self,
                                [self.table],
