@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -26,7 +26,7 @@
 
 This example illustrates how to display and transform 2D images.
 First, a 2D image is read from a file. You can select a file by clicking ont
-the filename button. 
+the filename button.
 Then a grid type geometry is constructed. The size of the grid can be set,
 and the image will be rescaled to that size.
 The individual elements of the grid are attributed colors corresponding with
@@ -46,6 +46,8 @@ from plugins.imagearray import *
 from odict import ODict
 
 resetAll()
+
+viewer = None
 
 def selectImage(fn):
     fn = askImageFile(fn)
@@ -78,7 +80,7 @@ def loadImage(fn):
 
 
 def run():
-    global image, scaled_image
+    global image, scaled_image, viewer
     flat()
     lights(False)
     transparent(False)
@@ -102,11 +104,12 @@ def run():
 
     res = askItems([
         _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-        _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
+        viewer,   # image previewing widget
         _I('nx',w,text='width'),
         _I('ny',h,text='height'),
         _I('transform',itemtype='vradio',choices=transforms.keys()),
         ])
+
 
     if not res:
         return
@@ -121,6 +124,7 @@ def run():
         return
 
     # Create the colors
+    print("Image size is %s" % image.size())
     color,colortable = image2glcolor(image.scaled(nx,ny))
     print("Converting image to color array")
 
@@ -144,7 +148,7 @@ def run():
     drawTransform(transform)
     zoomAll()
 
-    
+
     ## layout(2)
     ## viewport(0)
     ## drawTransform('cylindrical')

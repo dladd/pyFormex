@@ -1369,31 +1369,30 @@ def tabInputItem(name,items=[],**kargs):
 ##     return item
 
 
-def convertInputItem(data):
-    """Convert InputItem data to a proper dict.
+def convertInputItem(item):
+    """Convert InputItem item to a dict or a widget.
 
-    This function tries to convert some old style or sloppy InputItem data
-    to a proper InputItem data dict.
+    This function tries to convert some old style or sloppy InputItem item
+    to a proper InputItem item dict.
 
     The conversion does the following:
 
-    - if `data` is a dict, it is considered proper data and returned as is.
-    - if `data` is a tuple or a list, conversion with simpleInputItem
-      is tried, using the data items as arguments.
+    - if `item` is a dict, it is considered a proper item and returned as is.
+    - if `item` is a QWidget, it is also returned as is.
+    - if `item` is a tuple or a list, conversion with simpleInputItem
+      is tried, using the item items as arguments.
     - if neither succeeds, an error is raised.
     """
-    if isinstance(data,dict):
-        return data
-    elif type(data) in [list,tuple]:
+    if isinstance(item,dict):
+        return item
+    elif isinstance(item,QtGui.QWidget):
+        return item
+    elif type(item) in [list,tuple]:
         try:
-            return simpleInputItem(*data)
+            return simpleInputItem(*item)
         except:
-            ## try:
-            ##     return compatInputItem(*data)
-            ## except:
-            ##     pass
             pass
-    raise ValueError,"Invalid InputItem data: %s" % str(data)
+    raise ValueError,"Invalid InputItem item: %s" % str(item)
 
 
 # define a function to have the same enabling name as for InputItem
@@ -1453,6 +1452,10 @@ class InputDialog(QtGui.QDialog):
     - max:
     - scale:
     - func:
+
+    For convenience, simple items can also be specified as a tuple.
+    A tuple (key,value) will be transformed to a dict
+    {'key':key, 'value':value}.
 
     Other arguments
 
@@ -1524,6 +1527,10 @@ class InputDialog(QtGui.QDialog):
             self.form = self.scroll.form
         else:
             self.form = InputForm()
+
+        # add the items to the input form
+        # converting first allows for sloppy input
+        items = [ convertInputItem(i) for i in items ]
         self.add_items(items,self.form,self.prefix)
 
         # add the action buttons
@@ -3173,7 +3180,9 @@ class ImageView(QtGui.QLabel):
         self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
         if maxheight:
             self.setMaximumHeight(maxheight)
-        if image is not None:
+        if image is None:
+            self.filename = self.image = None
+        else:
             self.showImage(image,maxheight=maxheight)
 
 
