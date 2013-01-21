@@ -129,6 +129,12 @@ def run_setup(with_cext):
             kargs['ext_modules'] = ext_modules
 
     # PKG_DATA, relative from pyformex path
+
+    INCLUDE = []
+
+    import numpy
+    INCLUDE.append(numpy.get_include()),
+     
     PKG_DATA = [
         'pyformexrc',
         'icons/README',
@@ -196,6 +202,7 @@ def run_setup(with_cext):
               'Topic :: Scientific/Engineering :: Physics',
               ],
           requires=['numpy','OpenGL','PyQt4'],
+          include_dirs=INCLUDE,
           **kargs
           )
 

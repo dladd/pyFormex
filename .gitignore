@@ -1,13 +1,19 @@
-# backups
-#########
+# backups and logs
+##################
 *~
 *.tmp
 *#
 *.#*
+*.log
+*.out
 
 # compiled files
 ################
 *.[oa]
 *.so
 *.py[oc]
+*.1
 
+# foreign directories
+#####################
+dist/
