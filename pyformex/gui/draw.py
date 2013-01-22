@@ -56,6 +56,7 @@ from script import *
 from colors import *
 from signals import *
 from formex import *
+from coordsys import CoordinateSystem
 from mesh import Mesh
 from plugins.trisurface import TriSurface
 
