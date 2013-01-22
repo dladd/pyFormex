@@ -1,5 +1,5 @@
 .. $Id$  -*- rst -*-
-  
+
 ..
   This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,22 +8,22 @@
   Project page:  http://savannah.nongnu.org/projects/pyformex/
   Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 .. pyFormex documentation reference manual master file
 
@@ -44,7 +44,7 @@
    It describes most of the classes and functions
    defined in the pyFormex modules. It was built automatically from
    the pyFormex sources and is therefore the ultimate reference
-   document if you want to look up the precise arguments (and their meaning) 
+   document if you want to look up the precise arguments (and their meaning)
    of any class constructor or function in pyFormex. The :ref:`genindex`
    and :ref:`modindex` may be helpful in navigating through this
    document.
@@ -60,13 +60,13 @@ the pyFormex sources. The pyFormex modules are placed in three paths:
   graphical user interface,
 - ``pyformex/plugins`` contains extensions that are not considered to
   be essential parts of pyFormex. They usually provide additional
-  functionality for specific applications. 
+  functionality for specific applications.
 
 Some of the modules are loaded automatically when pyFormex is
 started. Currently this is the case with the modules
 :mod:`coords`, :mod:`formex`, :mod:`arraytools`, :mod:`script` and, if the GUI is used, :mod:`draw` and :mod:`colors`.
 All the public definitions in these modules are available to pyFormex
-scripts without explicitly importing them. Also available is the complete 
+scripts without explicitly importing them. Also available is the complete
 :mod:`numpy` namespace, because it is imported by :mod:`arraytools`.
 
 The definitions in the other modules can only be accessed using the
@@ -82,7 +82,7 @@ the need to explicitely import them.
 
 .. toctree::
    :maxdepth: 2
-   :numbered: 0
+   :numbered: -1
 
    ref/coords
    ref/formex
@@ -99,11 +99,11 @@ Other pyFormex core modules
 ===========================
 
 Together with the autoloaded modules, the following modules located under the
-main pyformex path are considered to belong to the pyformex core functionality. 
+main pyformex path are considered to belong to the pyformex core functionality.
 
 .. toctree::
    :maxdepth: 2
-   :numbered: 6
+   :numbered: -1
 
    ref/geometry
    ref/connectivity
@@ -127,7 +127,7 @@ These modules are located under pyformex/gui.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 17
+   :numbered: -1
 
    ref/widgets
    ref/menu
@@ -151,13 +151,13 @@ These modules are located under pyformex/gui.
 pyFormex plugins
 ================
 
-Plugin modules extend the basic pyFormex functions to variety of 
+Plugin modules extend the basic pyFormex functions to variety of
 specific applications. Apart from being located under the pyformex/plugins
-path, these modules are in no way different from other pyFormex modules. 
+path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 32
+   :numbered: -1
 
    ref/calpy_itf
    ref/cameratools
@@ -206,7 +206,7 @@ pyFormex plugin menus
 Plugin menus are optionally loadable menus for the pyFormex GUI, providing
 specialized interactive functionality. Because these are still under heavy
 development, they are currently not documented. Look to the source code or
-try them out in the GUI. They can be loaded from the File menu option and 
+try them out in the GUI. They can be loaded from the File menu option and
 switched on permanently from the Settings menu.
 
 Currently avaliable:
@@ -231,11 +231,11 @@ pyFormex tools
 The main pyformex path contains a number of modules that are not
 considered to be part of the pyFormex core, but are rather tools that
 were used in the implementation of other modules, but can also be useful
-elsewhere. 
+elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 60
+   :numbered: -1
 
    ref/olist
    ref/mydict

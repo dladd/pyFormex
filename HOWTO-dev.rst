@@ -8,21 +8,21 @@
   Project page:  https://savannah.nongnu.org/projects/pyformex/
   Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
+
 .. |date| date::
 
 ..
@@ -105,22 +105,26 @@ have internet connection from your Linux system.
   for a full list of the prerequisites. On a Debian system you can install these
   with::
 
-  apt-get install python-dev python-numpy python-sphinx python-opengl python-qt4-gl
+  apt-get install python-dev python-numpy python-opengl python-qt4-gl
 
 - You certainly need to (learn to) use a decent text editor. pyFormex
   code, documentation, website, tools: everything is based on source text
   files. Since we use a lot of `Python` code, an editor that can nicely
   highlight the Python syntax is recommended. We suggest `emacs` with the
   `python-mode.el` extension (it has a somewhat steep learning curve, but
-  this will be rewarded). Many other editors will qualify as well.
+  this will be rewarded)::
 
-.. note:: We should add a list of good editors here
+    apt-get install emacs python-mode.el
+
+  Of course, many other editors will qualify as well.
+
+.. note:: We should add a list of other good editors here
 
 - Make sure you have `git` installed. This is the revision control system used
-  by pyFormex. To install all on Debian GNU/Linux::
+  by pyFormex. And the graphical tool `gitk` may also be helpful.
+  To install on Debian GNU/Linux::
 
-  apt-get install emacs python-mode.el git
-
+  apt-get install git gitk
 
 - Configure git by setting your user name and email address::
 
@@ -139,6 +143,13 @@ have internet connection from your Linux system.
 	br = branch
 	last = log -1 HEAD
 
+- If you want to work on the documentation (and as a developer you really
+  sould), then you need `python-sphinx`::
+
+    apt-get install python-sphinx
+
+  The installed version of sphinx needs to be patched however. See further
+  for how to do this.
 
 
 Get access to the repositories
@@ -224,8 +235,8 @@ Using the git repository
    following simple translation of svn commands to more or less
    corresponding git commands.
 
-- Clone the pyFormex developer repository into a directory `pyformex` (use your
-  USERNAME) ::
+- Clone the pyFormex developer repository into a directory `pyformex` (using
+  your at the bump* servers)::
 
     git clone USERNAME@bumps.ugent.be:/srv/git/pyformex.git
 
@@ -261,6 +272,17 @@ Using the git repository
   Next you can push your changes up to the remote repository::
 
     git push
+
+- Once you get sufficiently comfortable with using git, you can also add
+  the public repository as a remote (using your Savannah username)::
+
+    git remote add public USERNAME@git.sv.gnu.org:/srv/git/pyformex.git
+
+- Then, according to the project policy, you may push your changes to the
+  public repository as well. Here you have to specify the repository name
+  and branch::
+
+    git push public master
 
 
 Structure of the pyFormex repository
@@ -340,6 +362,46 @@ For each file that you want to commit, do::
 Then do::
 
   git commit
+
+
+Stash your local changes to allow a pull
+----------------------------------------
+When you do a ::
+
+  git pull
+
+to update your local working directory from the remote repository, you may
+get an error like this::
+
+  error: Your local changes to the following files would be overwritten by merge:
+	<SOME FILES>
+  Please, commit your changes or stash them before you can merge.
+  Aborting
+
+Remember that the pull actually does two things:
+first it fetches the required commits from the
+remote to update your local repository, and then it checks out these
+changes from your local repository and merges them into your working
+directory. This is equivalent with::
+
+  git fetch
+  git co
+
+As the error shows, it is the merging that is failing, because you have
+local changes. You can do three things to solve this problem:
+
+- commit your changes first (if they are ok),
+- throw your changes (if they were unneeded/unwanted),
+- stash away your changes to allow the merge, and possibly continue to work
+  on them later. This is the prefered and easiest way. You just do a::
+
+    git stash
+
+  and after that the pull (or checkout) command will work. You then get your
+  changes back with::
+
+    git stash apply
+
 
 Revert changes that have not been commited yet
 ----------------------------------------------
@@ -694,28 +756,43 @@ have an extension ``.rst``.
 Install Sphinx
 --------------
 You need a (slightly) patched version of Sphinx. The patch adds a small
-functionality leaving normal operation intact. Therefore, if you have root
+functionality leaving normal operation intact.
+Therefore, if you have root
 access, we advise to just patch a normally installed version of Sphinx.
 
 - First, install the required packages. On Debian GNU/Linux do ::
 
-    apt-get install dvipng
-    apt-get install python-sphinx
+    apt-get install dvipng python-sphinx
 
-- Then Patch the sphinx installation. Find out where the installed Sphinx
+- Then patch the sphinx installation. Find out where the installed Sphinx
   package resides. On Debian this is ``/usr/share/pyshared/sphinx``.
   The pyformex source tree contains the required patch in a file
-  ``sphinx/sphinx-1.04-bv.diff``. It was created for Sphinx 1.0.4 but will
-  still work for slightly newer versions (it was tested on 1.0.8).
+  ``sphinx/sphinx-1.1.3-bv.diff``. It was created for Sphinx 1.1.3 but will
+  probably work for slightly older or newer versions as well.
   Do the following as root::
 
     cd /usr/share/pyshared/sphinx
-    patch -p1 --dry-run < TOPDIR/sphinx/sphinx-1.0.4-bv.diff
+    patch -p1 --dry-run < TOPDIR/sphinx/sphinx-1.1.3-bv.diff
 
   This will only test the patching. If all hunks succeed, run the
   command again without the '--dry-run'::
 
-    patch -p1 < ???/pyformex/sphinx/sphinx-1.0.4-bv.diff
+    patch -p1 < ???/pyformex/sphinx/sphinx-1.1.3-bv.diff
+
+The patched version allows you to specify a negative number for the
+`:numbered:` option in a toctree. See the following extract from `refman.rst`
+for an example::
+
+  .. toctree::
+     :maxdepth: 1
+     :numbered: -1
+
+This means that the modules listed thereafter will be descended 1 level deep
+and be numbered one level deep. But unlike the default working of sphinx (with
+positive value), the modules in different toctrees in the same document are
+numbered globally over the document, instead of restarting at 1 for every
+toctree.
+
 
 Writing documentation source files
 ----------------------------------
@@ -1022,27 +1099,27 @@ Docstrings
   example is that of a bullet list::
 
     Text before the bullet list.
-    
+
     - Bullet item 1
     - Bullet item 2, somewhat longer and continued
       on the next line.
     - Bullet item 3
-    
+
     Text below the bullet item
 
 
 - The extended description should contain a section describing the parameters
   and one describing the return value (if any). These should
   be structured as follows::
-    
+
     Parameters:
-    
+
     - `par1`: type: meaning of parameter 1.
     - `par2`: type: meaning of parameter 2.
     - `par3`, `par4`: type(s): meaning of parameters 3 and 4.
-    
+
     Returns:
-    
+
     - `ret1`: type: return value 1.
     - `ret2`: type: return value 2.
 
@@ -1073,7 +1150,7 @@ Docstrings
   framework. This should be structured as follows::
 
     Examples:
-    
+
       >>> F = Formex('3:012934',[1,3])
       >>> print F.coords
       [[[ 0.  0.  0.]
@@ -1194,22 +1271,22 @@ First, create the distribution and test it out locally: both the installation pr
    (NOT CORRECT) make publocal
 
 - Put the documentation on the web site ::
-  
+
    make pubdoc
    make listwww
    # now add the missing files by hand : cvs add FILE
    make commit
 
 - Upload to the python package index ::
-  
+
    (NOT CORRECT) make upload  # should replace make sdist above
 
 - Add the release data to the database ::
-   
+
    edt stats/pyformex-releases.fdb
 
 - Create statistics ::
-   
+
    make stats   # currently gives an error
 
 - Bump the RELEASE and VERSION variables in the file RELEASE, then ::
@@ -1242,7 +1319,7 @@ They will need to be tuned for the release.
   from here.
 
 - Set new version::
-  
+
     dch -i
 
 - Unpack latest release::
@@ -1285,11 +1362,11 @@ They will need to be tuned for the release.
     _do clean unpack final | tee log
 
 - upload::
-   
+
     dput mentors PYFVER.changes
 
 - copy to bumper::
-    
+
     rsync *VERSION[.-]* bumper:prj/pyformex/pkg -av
 
 

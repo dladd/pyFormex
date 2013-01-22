@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -50,7 +50,7 @@ print sys.path
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#needs_sphinx = '1.0'
+needs_sphinx = '1.1'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
@@ -240,12 +240,33 @@ latex_logo = 'images/pyformex_logo_with_dome.png'
 # If false, no module index is generated.
 #latex_domain_indices = True
 
+def list_toctree(app, doctree, docname):
+    """Change the numbering of the  multiple toctrees in a document"""
+    if docname == "refman":
+        print app.env.toc_num_entries
+        print app.env.toc_secnumbers
+        numberedfrom = 0
+        for node in doctree.traverse():
+            #print node.tagname
+            if node.tagname == 'title':
+                print node
+            if node.tagname == 'toctree':
+                att = node.attributes
+                print att.keys()
+                if att['numberedfrom'] < 0:
+                    att['numberedfrom'] = numberedfrom
+                nentries = len(att['entries'])
+                print numberedfrom,nentries
+                numberedfrom += nentries
+                print att
+
 def setup(app):
     from sphinx.ext.autodoc import cut_lines
+#    app.connect("doctree-resolved", list_toctree)
     app.connect('autodoc-process-docstring', cut_lines(2, what=['module']))
 ##     app.connect('autodoc-skip-member', autodoc_skip_member1)
 
-    
+
 ## def autodoc_skip_member1(app,what,name,obj,skip,options):
 ##     #from sphinx.ext.autodoc import autodoc_skip_member
 ##     print obj
@@ -263,5 +284,6 @@ man_pages = [
     ('index', 'sometext', u'sometext Documentation',
      [u'we'], 1)
 ]
+
 
 # End

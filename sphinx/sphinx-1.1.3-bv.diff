@@ -1,0 +1,24 @@
+--- /usr/share/pyshared/sphinx/environment.py.orig	2012-03-10 21:38:40.000000000 +0100
++++ /usr/share/pyshared/sphinx/environment.py	2013-01-22 14:04:43.603370678 +0100
+@@ -1585,11 +1585,19 @@
+ 
+         for docname in self.numbered_toctrees:
+             doctree = self.get_doctree(docname)
++            count = 0
+             for toctreenode in doctree.traverse(addnodes.toctree):
+                 depth = toctreenode.get('numbered', 0)
+                 if depth:
+-                    # every numbered toctree gets new numbering
+-                    numstack = [0]
++                    if depth < 0:
++                        # toctrees are numbered consecutively
++                        numstack = [count]
++                        nentries = len(toctreenode.attributes['entries'])
++                        count += nentries
++                        depth = -depth
++                    else:
++                        # every numbered toctree gets new numbering
++                        numstack = [0]
+                     _walk_toctree(toctreenode, depth)
+ 
+         return rewrite_needed
