@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>58. trisurface — Operations on triangulated surfaces. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="59. turtle — Turtle graphics for pyFormex" href="turtle.html" />
     <link rel="prev" title="57. tools — tools.py" href="tools.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -164,9 +167,14 @@ set property values.</p>
 <dl class="method">
 <dt id="trisurface.TriSurface.areas">
 <tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.areas" title="Permalink to this definition">¶</a></dt>
-<dd><p>area of elements</p>
-<p>For surface element the faces&#8217; area is returned.
-For volume elements the sum of the faces&#8217;areas is returned.</p>
+<dd><p>Return the area of all elements in a level-2 Mesh.</p>
+<p>For a Mesh with eltype &#8216;tri3&#8217;, the areas are exact. For other
+eltypes, a conversion to &#8216;tri3&#8217; is done before computing the areas.
+This may produce an exact result, an approximated result or no result
+(if the conversion fails).</p>
+<p>If succesful, returns an (nelems,) float array with the areas.
+Returns None if the Mesh level is not 2, or the conversion to &#8216;tri3&#8217;
+does not succeed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -251,7 +259,9 @@ versions are deleted after reading.</p>
 <tt class="descname">write</tt><big>(</big><em>fname</em>, <em>ftype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the surface to file.</p>
 <p>If no filetype is given, it is deduced from the filename extension.
-If the filename has no extension, the &#8216;gts&#8217; file type is used.</p>
+If the filename has no extension, the &#8216;off&#8217; file type is used.
+For a file with extension &#8216;stl&#8217;, the ftype may be &#8216;stla&#8217; or &#8216;stlb&#8217;
+to force ascii or binary STL format.</p>
 </dd></dl>
 
 <dl class="method">
@@ -687,17 +697,25 @@ an edge is smaller</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.fixNormals">
-<tt class="descname">fixNormals</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fixNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fixNormals</tt><big>(</big><em>outwards=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fixNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix the orientation of the normals.</p>
-<p>Some surface operations may result in improperly oriented normals.
-This tries to reverse improperly oriented normals so that a
-single oriented surface is achieved. It only works on a
-closed surface.</p>
-<p>In the current version, this uses the external program <cite>admesh</cite>,
-so this should be installed on the machine.</p>
-<p>If the surface was a (possibly non-orientable) manifold, the result
-will be an orientable manifold. This is a necessary condition
-for the <cite>gts</cite> methods to be applicable.</p>
+<p>Some surface operations may result in improperly oriented normals,
+switching directions from one triangle to the adjacent one.
+This method tries to reverse improperly oriented normals so that a
+singly oriented surface is achieved.</p>
+<p>If the surface is a (possibly non-orientable) manifold, the result
+will be an orientable manifold.</p>
+<p>If the surface is a closed manifold, the normals will be
+oriented to the outside. This is done by computing the volume
+inside the surface and reversing the normals if that turns out
+to be negative.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>outwards</cite>: boolean: if True (default), a test is done whether
+the surface is a closed manifold, and if so, the normals are
+oriented outwards. Setting this value to False will skip this
+test and the (possible) reversal of the normals.</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -807,6 +825,26 @@ Use the <a class="reference internal" href="#trisurface.TriSurface.check" title=
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.inside">
+<tt class="descname">inside</tt><big>(</big><em>pts</em>, <em>method='gts'</em>, <em>tol=0.0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test which of the points pts are inside the surface.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>pts</cite>: a Coords or compatible.</li>
+<li><cite>method</cite>: string: method to be used for the detection. Depending on
+the software you have installed the following are possible:<ul>
+<li>&#8216;gts&#8217;: provided by pyformex-extra</li>
+<li>&#8216;vtk&#8217;: provided by python-vtk</li>
+</ul>
+</li>
+<li><cite>tol</cite>: only available for method &#8216;vtk&#8217;</li>
+</ul>
+<p>Returns an integer array with the indices of the points that are
+inside the surface. The indices refer to the onedimensional list
+of points as obtained from pts.points().</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.boolean">
 <tt class="descname">boolean</tt><big>(</big><em>surf</em>, <em>op</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a boolean operation with another surface.</p>
@@ -845,18 +883,6 @@ if one of them is, the set of self-intersecting faces is written
 <li><cite>verbose</cite>: boolean: print statistics about the surface</li>
 </ul>
 <p>Returns: a list of intersection curves.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.correctNegativeVolumes">
-<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify the connectivity of negative-volume elements to make
-positive-volume elements.</p>
-<p>Negative-volume elements (hex or tet with inconsistent face orientation)
-may appear by error during geometrical trnasformations
-(e.g. reflect, sweep, extrude, revolve).
-This function fixes those elements.
-Currently it only works with linear tet and hex.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1107,20 +1133,6 @@ volumes and can be fixed with the  correctNegativeVolumes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.inside">
-<tt class="descname">inside</tt><big>(</big><em>pts</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.inside" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test which of the points pts are inside the surface.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>pts</cite>: a (usually 1-plex) Formex or a data structure that can be used
-to initialize a Formex.</li>
-</ul>
-<p>Returns an integer array with the indices of the points that are
-inside the surface. The indices refer to the onedimensional list
-of points as obtained from pts.points().</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.setType">
 <tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the eltype from a character string.</p>
@@ -1145,6 +1157,17 @@ normally set the element type at creation time.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.webgl">
+<tt class="descname">webgl</tt><big>(</big><em>S</em>, <em>name</em>, <em>caption=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.webgl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a WebGL model of a surface</p>
+<ul class="simple">
+<li><cite>S</cite>: TriSurface</li>
+<li><cite>name</cite>: basename of the output files</li>
+<li><cite>caption</cite>: text to use as caption</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.setProp">
 <tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or destroy the property array for the Mesh.</p>
@@ -1154,6 +1177,12 @@ You can specify a single value or a list/array of integer values.
 If the number of passed values is less than the number of elements,
 they wil be repeated. If you give more, they will be ignored.</p>
 <p>If a value None is given, the properties are removed from the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1186,9 +1215,13 @@ the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy using the same data arrays</p>
+<dt id="trisurface.TriSurface.shallowCopy">
+<tt class="descname">shallowCopy</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shallowCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a shallow copy.</p>
+<p>A shallow copy of a Mesh is a Mesh object using the same data arrays
+as the original Mesh. The only thing that can be changed is the
+property array. This is a convenient method to use the same Mesh
+with different property attributes.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1203,9 +1236,15 @@ the Formex data model.</p>
 <dl class="method">
 <dt id="trisurface.TriSurface.toSurface">
 <tt class="descname">toSurface</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.toSurface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a Mesh to a Surface.</p>
-<p>If the plexitude of the mesh is 3, returns a TriSurface equivalent
-with the Mesh. Else, an error is raised.</p>
+<dd><p>Convert a Mesh to a TriSurface.</p>
+<p>Only Meshes of level 2 (surface) and 3 (volume) can be converted to a
+TriSurface. For a level 3 Mesh, the border Mesh is taken first.
+A level 2 Mesh is converted to element type &#8216;tri3&#8217; and then to a
+TriSurface.
+The resulting TriSurface is only fully equivalent with the input
+Mesh if the latter has element type &#8216;tri3&#8217;.</p>
+<p>On success, returns a TriSurface corresponding with the input Mesh.
+If the Mesh can not be converted to a TriSurface, an error is raised.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1640,17 +1679,6 @@ and are both without duplicates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.matchFaces">
-<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.matchFaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Match faces of mesh with faces of self.</p>
-<p>self and Mesh can be same eltype meshes or different eltype but of the 
-same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
-and are both without duplicates.</p>
-<p>Returns the indices array of the elems of self that matches
-the faces of mesh</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.compact">
 <tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.compact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove unconnected nodes and renumber the mesh.</p>
@@ -1790,10 +1818,13 @@ contain any of the specified nodes.</p>
 <dl class="method">
 <dt id="trisurface.TriSurface.splitProp">
 <tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition a Mesh according to its property values.</p>
-<p>Returns a dict with the property values as keys and the
-corresponding partitions as values. Each value is a Mesh instance.
-It the Mesh has no props, an empty dict is returned.</p>
+<dd><p>Partition a Mesh according to its prop values.</p>
+<p>Returns a list of Meshes. Each Mesh contains all the elements with
+property number equal to one of the unique values in the property set.
+The Meshes in the list are given in order of ascending property
+number. Each Mesh has this value set as property number for all its
+elements
+It the Mesh has no props, an empty list is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1809,17 +1840,20 @@ off for efficiency reasons.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.reverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Mesh where all elements have been reversed.</p>
+<tt class="descname">reverse</tt><big>(</big><em>sel=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh where the elements have been reversed.</p>
 <p>Reversing an element has the following meaning:</p>
 <ul class="simple">
 <li>for 1D elements: reverse the traversal direction,</li>
 <li>for 2D elements: reverse the direction of the positive normal,</li>
 <li>for 3D elements: reverse inside and outside directions of the
-element&#8217;s border surface</li>
+element&#8217;s border surface. This also changes the sign of the
+elementt&#8217;s volume.</li>
 </ul>
 <p>The <a class="reference internal" href="#trisurface.TriSurface.reflect" title="trisurface.TriSurface.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">reflect()</span></tt></a> method by default calls this method to undo
 the element reversal caused by the reflection operation.</p>
+<p>Parameters:</p>
+<p>-<cite>sel</cite>: a selector (index or True/False array)</p>
 </dd></dl>
 
 <dl class="method">
@@ -2001,41 +2035,46 @@ the following predefined strings:<ul>
 <dd><p>Connect a sequence of toplogically congruent Meshes into a hypermesh.</p>
 <p>Parameters:</p>
 <ul>
-<li><p class="first"><cite>coordslist</cite>: either a list of Coords instances, all having the same
-shape as self.coords, or a single Mesh instance whose <cite>coords</cite>
-attribute has the same shape.</p>
-<p>If it is a list of Coords, consider a
-list of Meshes obtained by combining each Coords object with the
-connectivity table, element type and property numbers of the current
-Mesh. The return value then is the hypermesh obtained by connecting
+<li><p class="first"><cite>coordslist</cite>: either a list of Coords objects, or a list of
+Mesh objects or a single Mesh object.</p>
+<p>If Mesh objects are given, they should (all) have the same element
+type as <cite>self</cite>. Their connectivity tables will not be used though.
+They will only serve to construct a list of Coords objects by
+taking the <cite>coords</cite> attribute of each of the Meshes. If only a single
+Mesh was specified, <cite>self.coords</cite> will be added as the first Coords
+object in the list.</p>
+<p>All Coords objects in the coordslist (either specified or
+constructed from the Mesh objects), should have the exact same
+shape as <cite>self.coords</cite>. The number of Coords items in the list should
+be a multiple of <cite>degree</cite>, plus 1.</p>
+<p>Each of the Coords in the final coordslist is combined with the
+connectivity table, element type and property numbers of <cite>self</cite> to
+produce a list of toplogically congruent meshes.
+The return value is the hypermesh obtained by connecting
 each consecutive slice of (degree+1) of these meshes. The hypermesh
 has a dimensionality that is one higher than the original Mesh (i.e.
 points become lines, lines become surfaces, surfaces become volumes).
 The resulting elements will be of the given <cite>degree</cite> in the
-direction of the connection. Notice that the coords of the current
-Mesh are not used, unless these coords are explicitely included into
-the specified <cite>coordslist</cite>. In many cases <cite>self.coords</cite> will be the
-first item in <cite>coordslist</cite>, but it could occur anywhere in the list
-or even not at all. The number of Coords items in the list should
-be a multiple of <cite>degree</cite> plus 1.</p>
-<p>Specifying a single Mesh instead of a list of Coords is
-just a convenience for the often occurring situation of connecting
-a Mesh (self) with another one (mesh) having the same connectivity:
-in this case the list of Coords will automatically be set to
-<tt class="docutils literal"><span class="pre">[</span> <span class="pre">self.coords,</span> <span class="pre">mesh.coords</span> <span class="pre">]</span></tt>. The <cite>degree</cite> should be 1 in this
-case.</p>
+direction of the connection.</p>
+<p>Notice that unless a single Mesh was specified as coordslist, the
+coords of <cite>self</cite> are not used. In many cases however <cite>self</cite> or
+<cite>self.coords</cite> will be one of the items in the specified <cite>coordslist</cite>.</p>
 </li>
 <li><p class="first"><cite>degree</cite>: degree of the connection. Currently only degree 1 and 2
 are supported.</p>
-<ul class="simple">
-<li>If degree is 1, every Coords from the <cite>coordslist</cite>
+<ul>
+<li><p class="first">If degree is 1, every Coords from the <cite>coordslist</cite>
 is connected with hyperelements of a linear degree in the
-connection direction.</li>
-<li>If degree is 2, quadratic hyperelements are
+connection direction.</p>
+</li>
+<li><p class="first">If degree is 2, quadratic hyperelements are
 created from one Coords item and the next two in the list.
 Note that all Coords items should contain the same number of nodes,
 even for higher order elements where the intermediate planes
-contain less nodes.</li>
+contain less nodes.</p>
+<p>Currently, degree=2 is not allowed when <cite>coordslist</cite> is specified
+as a single Mesh.</p>
+</li>
 </ul>
 </li>
 <li><p class="first"><cite>loop</cite>: if True, the connections with loop around the list and
@@ -2043,10 +2082,9 @@ connect back to the first. This is accomplished by adding the first
 Coords item back at the end of the list.</p>
 </li>
 <li><p class="first"><cite>div</cite>: Either an integer, or a sequence of float numbers (usually
-in the range ]0.0..1.0]). This should only
-be used for degree==1.</p>
-<p>With this parameter the generated elements
-can be further subdivided along the connection direction.
+in the range ]0.0..1.0]). This should only be used for degree==1.</p>
+<p>With this parameter the generated elements  can be further
+subdivided along the connection direction.
 If an int is given, the connected elements will be divided
 into this number of elements along the connection direction. If a
 sequence of float numbers is given, the numbers specify the relative
@@ -2171,6 +2209,42 @@ at one side of the plane (p,n)</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.levelVolumes">
+<tt class="descname">levelVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.levelVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the level volumes of all elements in a Mesh.</p>
+<p>The level volume of an element is defined as:</p>
+<ul class="simple">
+<li>the length of the element if the Mesh is of level 1,</li>
+<li>the area of the element if the Mesh is of level 2,</li>
+<li>the (signed) volume of the element if the Mesh is of level 3.</li>
+</ul>
+<p>The level volumes can be computed directly for Meshes of eltypes
+&#8216;line2&#8217;, &#8216;tri3&#8217; and &#8216;tet4&#8217; and will produce accurate results.
+All other Mesh types are converted to one of these before computing
+the level volumes. Conversion may result in approximation of the
+results. If conversion can not be performed, None is returned.</p>
+<p>If succesful, returns an (nelems,) float array with the level
+volumes of the elements.
+Returns None if the Mesh level is 0, or the conversion to the
+level&#8217;s base element was unsuccesful.</p>
+<p>Note that for level-3 Meshes, negative volumes will be returned
+for elements having a reversed node ordering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of all elements in a level-1 Mesh.</p>
+<p>For a Mesh with eltype &#8216;line2&#8217;, the lengths are exact. For other
+eltypes, a conversion to &#8216;line2&#8217; is done before computing the lengths.
+This may produce an exact result, an approximated result or no result
+(if the conversion fails).</p>
+<p>If succesful, returns an (nelems,) float array with the lengths.
+Returns None if the Mesh level is not 1, or the conversion to &#8216;line2&#8217;
+does not succeed.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.volumes">
 <tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.volumes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the signed volume of all the mesh elements</p>
@@ -2184,18 +2258,44 @@ If the Mesh conversion to tetraeder does not succeed, the return
 value is None.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="trisurface.TriSurface.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of a Mesh.</p>
+<p>Returns the sum of self.lengths(), or 0.0 if the self.lengths()
+returned None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.fixVolumes">
+<tt class="descname">fixVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fixVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the elements with negative volume.</p>
+<p>Elements with negative volume may result from incorrect
+local node numbering. This method will reverse all elements
+in a Mesh of dimensionality 3, provide the volumes of these
+elements can be computed.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">trisurface</span></tt></p>
 <dl class="function">
 <dt id="trisurface.stlConvert">
-<tt class="descclassname">trisurface.</tt><tt class="descname">stlConvert</tt><big>(</big><em>stlname</em>, <em>outname=None</em>, <em>options='-d'</em><big>)</big><a class="headerlink" href="#trisurface.stlConvert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform an .stl file to .off or .gts format.</p>
-<p>If outname is given, it is either &#8216;.off&#8217; or &#8216;.gts&#8217; or a filename ending
-on one of these extensions. If it is only an extension, the stlname will
-be used with extension changed.</p>
+<tt class="descclassname">trisurface.</tt><tt class="descname">stlConvert</tt><big>(</big><em>stlname</em>, <em>outname=None</em>, <em>binary=False</em>, <em>options='-d'</em><big>)</big><a class="headerlink" href="#trisurface.stlConvert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform an .stl file to .off or .gts or binary .stl format.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>stlname</cite>: name of an existing .stl file (either ascii or binary).</li>
+<li><cite>outname</cite>: name of the output file. The extension defines the format
+and should be one of &#8216;.off&#8217;, &#8216;.gts&#8217;, &#8216;.stl&#8217;, &#8216;.stla&#8217;, or .stlb&#8217;.
+As a convenience, if a file extension only is given (other than &#8216;.stl&#8217;),
+then the outname will be constructed by changing the extension of the
+input <cite>stlname</cite>.</li>
+<li><cite>binary</cite>: if the extension of <cite>outname</cite> is &#8216;.stl&#8217;, defines whether
+the output format is a binary or ascii STL format.</li>
+</ul>
 <p>If the outname file exists and its mtime is more recent than the stlname,
-the outname file is considered uptodate and the conversion programwill
+the outname file is considered uptodate and the conversion program will
 not be run.</p>
 <p>The conversion program will be choosen depending on the extension.
 This uses the external commands &#8216;admesh&#8217; or &#8216;stl2gts&#8217;.</p>
@@ -2229,12 +2329,6 @@ generated by changing the extension of fn to &#8216;.gts&#8217; or &#8216;.off&#
 on the setting of the &#8216;surface/stlread&#8217; config setting.</p>
 <p>Return a coords,edges,faces or a coords,elems tuple, depending on the
 intermediate format.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="trisurface.write_stla">
-<tt class="descclassname">trisurface.</tt><tt class="descname">write_stla</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="headerlink" href="#trisurface.write_stla" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export an x[n,3,3] float array as an ascii .stl file.</p>
 </dd></dl>
 
 <dl class="function">
@@ -2301,17 +2395,6 @@ on irregular 3D borders.</p>
 returned surface will use the same point coordinate array as the input
 object.</p>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="trisurface.degenerate">
-<tt class="descclassname">trisurface.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>normals</em><big>)</big><a class="headerlink" href="#trisurface.degenerate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the degenerate faces according to area and normals.</p>
-<p>area,normals are equal sized arrays with the areas and normals of a
-list of faces.
-A face is degenerate if its area is less or equal to zero or the
-normal has a nan (not-a-number) value.</p>
-<p>Returns a list of the degenerate element numbers as a sorted array.</p>
 </dd></dl>
 
 <dl class="function">
@@ -2427,7 +2510,7 @@ Each face of the cube is represented by two triangles.</p>
         <li class="right" >
           <a href="tools.html" title="57. tools — tools.py"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -2435,9 +2518,9 @@ Each face of the cube is represented by two triangles.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

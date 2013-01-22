@@ -883,7 +883,7 @@ from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
   the pyFormex SVN tree (under ``pyformex/doc/html``) and thus into
   the **Help** system of pyFormex ::
 
-   make svndoc
+   make incdoc
 
   Note: If you created any *new* files, do not forget to ``svn add`` them.
 
@@ -1183,6 +1183,12 @@ Docstrings
 Things that have to be done by the project manager
 ==================================================
 
+Extra needed packages:
+
+- cvs, for the pyFormex website at Savannah
+
+  apt-get install cvs
+
 Make file(s) public
 -------------------
 This is for interim releases, not for an official release ! See below
@@ -1236,7 +1242,7 @@ First, create the distribution and test it out locally: both the installation pr
 
    make html
    make latexpdf
-   make svndoc
+   make incdoc
 
 - Check in (creating the dist may modify some files) ::
 

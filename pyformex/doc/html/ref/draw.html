@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -210,7 +213,7 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 <tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, itemtype='text', actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text in a dialog window.</p>
 <p>Creates a dialog window displaying some text. The dialog can be modal
-(blocking user input to the main window) or modeless. 
+(blocking user input to the main window) or modeless.
 Scrollbars aree added if the text is too large to display at once.
 By default, the dialog has a single button to close the dialog.</p>
 <p>Parameters:</p>
@@ -230,13 +233,13 @@ plain text, e.g. to show the output of an external command.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Modal dialog:</th><td class="field-body">the result of the dialog after closing.
+<tr class="field-odd field"><th class="field-name">Modal dialog:</th><td class="field-body">the result of the dialog after closing.
 The result is a dictionary with a single key: &#8216;text&#8217; having the
 displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
 be a changed text.</td>
 </tr>
-<tr class="field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
-<tr class="field"><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
+<tr class="field-even field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
 </tr>
 </tbody>
 </table>
@@ -357,7 +360,7 @@ arguments exist=False.</p>
 
 <dl class="function">
 <dt id="draw.askDirname">
-<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askDirname" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em>, <em>byfile=False</em><big>)</big><a class="headerlink" href="#draw.askDirname" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively select a directory and change the current workdir.</p>
 <p>The user is asked to select a directory through the standard file
 dialog. Initially, the dialog shows all the subdirectories in the
@@ -787,7 +790,7 @@ color to sea the image unaltered.</li>
 
 <dl class="function">
 <dt id="draw.renderMode">
-<tt class="descclassname">draw.</tt><tt class="descname">renderMode</tt><big>(</big><em>mode</em>, <em>avg=False</em>, <em>light=None</em><big>)</big><a class="headerlink" href="#draw.renderMode" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">renderMode</tt><big>(</big><em>mode</em>, <em>light=None</em><big>)</big><a class="headerlink" href="#draw.renderMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the rendering profile to a predefined mode.</p>
 <p>Currently the following modes are defined:</p>
 <ul class="simple">
@@ -1163,7 +1166,7 @@ to their default operating mode.</p>
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1171,9 +1174,9 @@ to their default operating mode.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.9 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -569,8 +572,8 @@ The returned Formex inherits the property of its parent.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="formex.Formex.points">
-<tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.points" title="Permalink to this definition">¶</a></dt>
+<dt id="formex.Formex.asPoints">
+<tt class="descname">asPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.asPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex containing only the points.</p>
 <p>This is obviously a Formex with plexitude 1. It holds the same data
 as the original Formex, but in another shape: the number of points
@@ -578,16 +581,8 @@ per element is 1, and the number of elements is equal to the total
 number of points.
 The properties are not copied over, since they will usually not make
 any sense.</p>
-<p>The vertices() method returns the same data, but as a Coords object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.vertices">
-<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.vertices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points of a Formex as a 2dim Coords object.</p>
-<p>The return value holds the same coordinate data as the input Formex,
-but in another shape: (npoints,3).</p>
-<p>The points() method returns the same data, but as a Formex.</p>
+<p>The points() method returns the same data, but as a Coords object
+with a simple list of points.</p>
 </dd></dl>
 
 <dl class="method">
@@ -625,9 +620,12 @@ The returned Formex inherits the matching properties.</p>
 <dt id="formex.Formex.splitProp">
 <tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.splitProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition a Formex according to its prop values.</p>
-<p>Returns a dict with the prop values as keys and the corresponding
-partitions as values. Each value is a Formex instance.
-It the Formex has no props, an empty dict is returned.</p>
+<p>Returns a list of Formices. Each Formex contains all the elements with
+property number equal to one of the unique values in the property set.
+The Formices in the list are given in order of ascending property
+number. Each Formex has this value set as property number for all its
+elements
+It the Formex has no props, an empty list is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -838,6 +836,63 @@ form a higher plexitude structure.</p>
 <p>Currently, this function correctly transforms: point1 to line2,
 line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 <p>See the &#8216;connect&#8217; function for a more versatile tool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.divide">
+<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide a plex-2 Formex at the values in div.</p>
+<p>Replaces each member of the Formex by a sequence of members obtained
+by dividing the Formex at the relative values specified in div.
+The values should normally range from 0.0 to 1.0.</p>
+<p>As a convenience, if an integer is specified for div, it is taken as a
+number of divisions for the interval [0..1].</p>
+<p>This function only works on plex-2 Formices (line segments).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.intersectionWithPlane">
+<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of a Formex with the plane (p,n).</p>
+<p>Currently this only works for plex-2 and plex-3 Formices.</p>
+<p>The intersection of the Formex with a plane specified by a point p
+and normal n is returned. For a plex-2 Formex (lines), the returned
+Formex will be of plexitude 1 (points). For a plex-3 Formex
+(triangles) the returned Formex has plexitude 2 (lines).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.cutWithPlane">
+<tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut a Formex with the plane(s) (p,n).</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method currently only works for plexitude 2 or 3!</p>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>p</cite>, <cite>n</cite>: a point and normal vector defining the cutting plane.
+In case of a Formex of plexitude 2, both <cite>p</cite> and <cite>n</cite> have shape (3,).
+In case of plexitude 3, <cite>p</cite> and/or <cite>n</cite> can be sequences of
+points, resp. vectors, allowing cutting with multiple planes. 
+Both <cite>p</cite> and <cite>n</cite> can have shape (3) or (nplanes,3).</li>
+<li><cite>side</cite>: either an empty string, or one of &#8216;+&#8217; or &#8216;-&#8216;. In the latter
+cases, only the part at the positive, resp. negative side of the
+plane (as defined by its normal) is returned. The (default) empty
+string makes both parts being returned as a tuple (pos,neg).</li>
+</ul>
+<p>Returns:</p>
+<blockquote>
+<div><p>The default return value is a tuple of two Formices of the same
+plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
+Formex at the positive side of the plane (as defined by the normal
+vector), and Fneg is the part at the negative side.
+Elements of the input Formex that are lying completely on one side
+of the plane will return unaltered. Elements that are crossing the
+plane will be cut and split up into multiple parts.</p>
+<p>When side = &#8216;+&#8217; or &#8216;-&#8216; (or &#8216;positive&#8217;or &#8216;negative&#8217;), only one
+of the sides is returned.</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -1105,68 +1160,34 @@ the maximum size are not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="formex.Formex.divide">
-<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Divide a plex-2 Formex at the values in div.</p>
-<p>Replaces each member of the Formex by a sequence of members obtained
-by dividing the Formex at the relative values specified in div.
-The values should normally range from 0.0 to 1.0.</p>
-<p>As a convenience, if an integer is specified for div, it is taken as a
-number of divisions for the interval [0..1].</p>
-<p>This function only works on plex-2 Formices (line segments).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.intersectionWithPlane">
-<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of a Formex with the plane (p,n).</p>
-<p>Currently this only works for plex-2 and plex-3 Formices.</p>
-<p>The intersection of the Formex with a plane specified by a point p
-and normal n is returned. For a plex-2 Formex (lines), the returned
-Formex will be of plexitude 1 (points). For a plex-3 Formex
-(triangles) the returned Formex has plexitude 2 (lines).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.cutWithPlane">
-<tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cut a Formex with the plane(s) (p,n).</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This method currently only works for plexitude 2 or 3!</p>
-</div>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>p</cite>, <cite>n</cite>: a point and normal vector defining the cutting plane.
-In case of a Formex of plexitude 2, both <cite>p</cite> and <cite>n</cite> have shape (3,).
-In case of plexitude 3, <cite>p</cite> and/or <cite>n</cite> can be sequences of
-points, resp. vectors, allowing cutting with multiple planes. 
-Both <cite>p</cite> and <cite>n</cite> can have shape (3) or (nplanes,3).</li>
-<li><cite>side</cite>: either an empty string, or one of &#8216;+&#8217; or &#8216;-&#8216;. In the latter
-cases, only the part at the positive, resp. negative side of the
-plane (as defined by its normal) is returned. The (default) empty
-string makes both parts being returned as a tuple (pos,neg).</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div><p>The default return value is a tuple of two Formices of the same
-plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
-Formex at the positive side of the plane (as defined by the normal
-vector), and Fneg is the part at the negative side.
-Elements of the input Formex that are lying completely on one side
-of the plane will return unaltered. Elements that are crossing the
-plane will be cut and split up into multiple parts.</p>
-<p>When side = &#8216;+&#8217; or &#8216;-&#8216; (or &#8216;positive&#8217;or &#8216;negative&#8217;), only one
-of the sides is returned.</p>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
 <dt id="formex.Formex.split">
 <tt class="descname">split</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#formex.Formex.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a Formex in subFormices containing n elements.</p>
 <p>The number of elements in the Formex should be a multiple of n. 
 Returns a list of Formices each comprising n elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the length of all elements of a 2-plex Formex.</p>
+<p>The length of an element is the distance between its two points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.areas">
+<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the areas of all elements of a 3-plex Formex.</p>
+<p>The area of an element is the aread of the triangle formed by its
+three points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.volumes">
+<tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the volume of all elements of a 4-plex Formex.</p>
+<p>The volume of an element is the volume of the tetraeder formed
+by its points.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1361,7 +1382,7 @@ side is either &#8216;+&#8217;, &#8216;-&#8216; or &#8216;&#8217;</p>
 <dl class="function">
 <dt id="formex.connect">
 <tt class="descclassname">formex.</tt><tt class="descname">connect</tt><big>(</big><em>Flist</em>, <em>nodid=None</em>, <em>bias=None</em>, <em>loop=False</em><big>)</big><a class="headerlink" href="#formex.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Formex which connects the formices in list.</p>
+<dd><p>Return a Formex which connects the Formices in list.</p>
 <p>Flist is a list of formices, nodid is an optional list of nod ids and
 bias is an optional list of element bias values. All lists should have
 the same length.
@@ -1424,7 +1445,7 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1432,9 +1453,9 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

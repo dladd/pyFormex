@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -48,7 +48,7 @@ PUBDIR= ${PKGDIR}/pyformex/doc
 
 FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
-.PHONY: prereq ref pdf svndoc pubn pub pubpdf publocal
+.PHONY: prereq ref pdf incdoc pubn pub pubpdf publocal
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
 
@@ -188,12 +188,12 @@ pyformex.help: ../pyformex/pyformex
 
 pdf: latexpdf
 
-# Transfer the html docs to doc
-svndoc:
+# Transfer the html docs to doc (i.e. include them as local docs)
+incdoc:
 	${RSYNC} -a --exclude '.svn' --exclude '.buildinfo' --delete _build/html ../pyformex/doc
 
 # Transfer the html docs to www for publication
-pubdoc: 
+pubdoc:
 	${RSYNC} -a --exclude 'CVS' --exclude '.svn' --exclude '.buildinfo' --delete _build/html/ ../www/doc
 
 # Publish the PDF manual
@@ -213,6 +213,6 @@ ${PUBDIR}/${PDF}: ${THE_PDF}
 	cp ${THE_PDF} ${PUBDIR}
 
 
-cvswww: 
+cvswww:
 
 # End
