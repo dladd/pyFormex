@@ -135,7 +135,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
 
     Creates a dialog window displaying some text. The dialog can be modal
     (blocking user input to the main window) or modeless.
-    Scrollbars aree added if the text is too large to display at once.
+    Scrollbars are added if the text is too large to display at once.
     By default, the dialog has a single button to close the dialog.
 
     Parameters:
@@ -278,7 +278,7 @@ def editFile(fn,exist=False):
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None):
+def askItems(items,timeout=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -295,10 +295,11 @@ def askItems(items,caption=None,timeout=None):
     See the widgets.InputDialog class for complete description of the
     available input items.
 
+    A timeout (in seconds) can be specified to have the input dialog
+    interrupted automatically and return the default values.
+
     The remaining arguments are keyword arguments that are passed to the
     widgets.InputDialog.getResult method.
-    A timeout (in seconds) can be specified to have the input dialog
-    interrupted automatically.
 
     Returns a dictionary with the results: for each input item there is a
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
@@ -306,7 +307,7 @@ def askItems(items,caption=None,timeout=None):
     """
     global _dialog_widget,_dialog_result
 
-    w = widgets.InputDialog(items,caption,**kargs)
+    w = widgets.InputDialog(items,**kargs)
 
     _dialog_widget = w
     _dialog_result = None
