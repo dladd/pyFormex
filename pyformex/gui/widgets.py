@@ -505,6 +505,7 @@ class InputText(InputItem):
     def setValue(self,val):
         """Change the widget's value."""
         val = str(val)
+        print("PLAIN:%s" % self._plain)
         if self._plain:
             self.input.setPlainText(val)
             ## self.input.setLineWrapMode(QtGui.QTextEdit.FixedColumnWidth)
@@ -2832,29 +2833,21 @@ def updateText(widget,text,format=''):
     if format not in ['plain','html','rest']:
         if type(text) is str and text.startswith('..'):
             format = 'rest'
-        ## else:
-        ##     format = 'plain'
 
     # conversion
     if format == 'rest' and pf.cfg['gui/rst2html']:
-        html = utils.rst2html(text)
-        if html[:10] == text[:10]:
-            #print "CONVERSION TO HTML FAILED"
-            text += "\n\nNote: This reStructuredText is displayed as plain text because it could not be converted to html. If you install python-docutils, you will see this text (and other pyFormex messages) in a much nicer layout!\n"
-        else:
-            text = html
-
-        # We leave the format undefined, because we are not sure
-        # that the conversion function (docutils) is available
-        # and always produces good results
+        # Try conversion to html
+        text = utils.rst2html(text)
         format = ''
+        # We leave the format undefined, because we are not sure
+        # that the conversion succeeded. QT will found out
 
     if format == 'plain':
         widget.setPlainText(text)
     elif format == 'html':
         widget.setHtml(text)
     else:
-        # As a last rescue, try QT4's autorecognition
+        # Default is to use QT's autorecognition
         widget.setText(text)
 
 

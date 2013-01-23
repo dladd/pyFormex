@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -48,7 +48,7 @@ known_externals = {
     'Python': ('python --version','Python (\\S+)'),
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
-    'calpy': ('calpy --version','Calpy (\S+)'), 
+    'calpy': ('calpy --version','Calpy (\S+)'),
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
     'units': ('units --version','GNU Units version (\S+)'),
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\S+)'),
@@ -85,14 +85,14 @@ def checkVersion(name,version,external=False):
     else:
         return -1
 
-    
+
 def hasModule(name,check=False):
     """Test if we have the named module available.
 
     Returns a nonzero (version) string if the module is available,
     or an empty string if it is not.
 
-    By default, the module is only checked on the first call. 
+    By default, the module is only checked on the first call.
     The result is remembered in the the_version dict.
     The optional argument check==True forces a new detection.
     """
@@ -126,8 +126,8 @@ def requireModule(name):
         errmsg = known_modules[name][0]
         if errmsg:
             pf.error(errmsg)
-        
-        
+
+
 
 # Python modules we know how to use
 # Do not include pyformex or python here: they are predefined
@@ -146,15 +146,15 @@ known_modules = {
     'gl2ps'     : ('','','GL2PS_VERSION'),
     'vtk'       : ('','','VTK_VERSION'),
      }
-    
+
 
 def checkAllModules():
     """Check the existing of all known modules.
 
     """
     [ checkModule(n,quiet=True) for n in known_modules ]
-    return 
-    
+    return
+
 
 def checkModule(name,ver=(),fatal=False,quiet=False):
     """Check if the named Python module is available, and record its version.
@@ -198,7 +198,7 @@ def checkModule(name,ver=(),fatal=False,quiet=False):
         m = ''
 
     #print("Module %s: Version %s" % (name,m))
-   
+
     # make sure version is a string (e.g. gl2ps uses a float!)
     m = str(m)
     _congratulations(name,m,'module',fatal,quiet=quiet)
@@ -230,7 +230,7 @@ def checkExternal(name=None,command=None,answer=None,quiet=False):
     if name is None:
         [ checkExternal(n,quiet=True) for n in known_externals.keys() ]
         return
-    
+
     if command is None or answer is None:
         cmd,ans = known_externals.get(name,(name,'(.+)\n'))
         if command is None:
@@ -287,7 +287,7 @@ def reportDetected():
         s += "%s (%s)\n" % ( k,v)
     return s
 
-    
+
 def procInfo(title):
     print(title)
     print('module name: %s' %  __name__)
@@ -308,7 +308,7 @@ def matchMany(regexps,target):
 def matchCount(regexps,target):
     """Return the number of matches of target to  regexps."""
     return len(filter(None,matchMany(regexps,target)))
-                  
+
 
 def matchAny(regexps,target):
     """Check whether target matches any of the regular expressions."""
@@ -331,7 +331,7 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
     If ``listdirs==False``, directories are not listed.
     By default the tree is listed top down and entries in the same directory
     are unsorted.
-    
+
     `exludedirs` and `excludefiles` are lists of regular expressions with
     dirnames, resp. filenames to exclude from the result.
 
@@ -415,7 +415,7 @@ def grepSource(pattern,options='',relative=True,quiet=False):
     pattern text in the pyFormex source .py files (including the examples).
     Extra options can be passed to the grep command. See `man grep` for
     more info.
-    
+
     Returns the output of the grep command.
     """
     opts = options.split(' ')
@@ -427,7 +427,7 @@ def grepSource(pattern,options='',relative=True,quiet=False):
         extended = False
     files = sourceFiles(relative=relative,extended=extended,symlinks=False)
     cmd = "grep %s '%s' %s" % (options,pattern,' '.join(files))
-    sta,out = runCommand(cmd,verbose=not quiet) 
+    sta,out = runCommand(cmd,verbose=not quiet)
     return out
 
 
@@ -459,14 +459,14 @@ def setSaneLocale(localestring=''):
 ##########################################################################
 ## Text conversion  tools ##
 ############################
- 
+
 def strNorm(s):
     """Normalize a string.
 
     Text normalization removes all '&' characters and converts it to lower case.
     """
     return str(s).replace('&','').lower()
-   
+
 ###################### ReST conversion ###################
 
 #try:
@@ -478,8 +478,14 @@ if checkModule('docutils',quiet=True):
 #except ImportError:
 else:
     def rst2html(text,writer='html'):
-        return text
-    
+        return """.. note:
+   This is a reStructuredText message, but it is currently displayed
+   as plain text, because it could not be converted to html.
+   If you install python-docutils, you will see this text (and other
+   pyFormex messages) in a much nicer layout!
+
+""" + text
+
 
 def forceReST(text,underline=False):
     """Convert a text string to have it recognized as reStructuredText.
@@ -569,7 +575,7 @@ def gunzip(filename,unzipped=None,remove=True):
       does not end in '.gz', the name of a temporary file is generated. Since
       you will normally want to read something from the decompressed file, this
       temporary file is not deleted after closing. It is up to the user to
-      delete it (using the returned file name) when he is ready with it. 
+      delete it (using the returned file name) when he is ready with it.
     - `remove`: if True (default), the input file is removed after
       succesful decompression. You probably want to set this to False when
       decompressing to a temporary file.
@@ -600,7 +606,7 @@ def gunzip(filename,unzipped=None,remove=True):
 def all_image_extensions():
     """Return a list with all known image extensions."""
     imgfmt = []
-    
+
 
 file_description = {
     'all': 'All files (*)',
@@ -656,7 +662,7 @@ def fileType(ftype):
     'pdf'
     >>> fileType('.PDF')
     'pdf'
-    
+
     """
     ftype = ftype.lower()
     if len(ftype) > 0 and ftype[0] == '.':
@@ -703,7 +709,7 @@ def findIcon(name):
     if os.path.exists(fname):
         return fname
     return os.path.join(pf.cfg['icondir'],'question') + pf.cfg['gui/icontype']
-                                                               
+
 
 def projectName(fn):
     """Derive a project name from a file name.
@@ -771,12 +777,12 @@ def system1(cmd):
 
 ## def timedWait(proc, timeout, waitToKill = 1.):
 ##     """It is an implementation of the wait() but with a timeout check.
-    
+
 ##     - `timeout`: if a project is not completed before the timeout (float, seconds) it will be terminated.
 ##     - `waitToKill` is the delay between proc.terminate() and proc.kill().
 ##     """
 ##     import timer
-##     t = timer.Timer(0)    
+##     t = timer.Timer(0)
 ##     while proc.poll() is None and t.seconds(rounded=False) < timeout:#check if proc is completed or timed out
 ##         pass
 ##     if proc.poll() is not None:
@@ -790,7 +796,7 @@ def system1(cmd):
 ##             out = ''
 ##         try:
 ##             import time
-##             time.sleep(waitToKill)            
+##             time.sleep(waitToKill)
 ##             #proc.kill()
 ##             killProcesses([proc.pid+1],signal=15)#VMTK use pid+1, is it general?
 ##         except:
@@ -813,7 +819,7 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
     - `timeout`: float. If specified and > 0.0, the command will time out
       and be killed after the specified number of seconds.
     - `gracetime`: float. The time to wait after the terminate signal was
-      sent in case of a timeout, before a forced kill is done. 
+      sent in case of a timeout, before a forced kill is done.
     - `shell`: if True (default) the command is run in a new shell
 
     Returns:
@@ -828,7 +834,7 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
     """
     from subprocess import PIPE,Popen
     from threading import Timer
-    
+
     def terminate(p):
         """Terminate a subprocess when it times out"""
         from time import sleep
@@ -873,8 +879,8 @@ def runCommand(cmd,timeout=None,verbose=True):
     function are returned. The value sta will be zero, unless a timeout
     condition has occurred, in which case sta will be -15 or -9.
     If the :func:`system` call returns with an error that is not a timeout,
-    
-    
+
+
     Parameters:
 
     - `cmd`: a string with the command to be executed
@@ -886,15 +892,15 @@ def runCommand(cmd,timeout=None,verbose=True):
 
     If no error occurs in the execution of the command by the :func:`system`
     function, returns a tuple
-    
+
     - `sta`: 0, or a negative value in case of a timeout condition
     - `out`: stdout produced by the command, with the last newline removed
-  
+
     Example:
     cmd = 'sleep 2'
     sta,out=runCommand3(cmd,quiet=False, timeout=5.)
     print (sta,out)
-    
+
     """
     if verbose:
         print("Running command: %s" % cmd)
@@ -934,7 +940,7 @@ def killProcesses(pids,signal=15):
             os.kill(pid,signal)
         except:
             pf.debug("Error in killing of process '%s'" % pid,pf.DEBUG.INFO)
-            
+
 
 def changeExt(fn,ext):
     """Change the extension of a file name.
@@ -966,7 +972,7 @@ def tildeExpand(fn):
     the bash tilde expansion, such as strings in the configuration file.
     """
     return fn.replace('~',os.environ['HOME'])
-    
+
 
 def userName():
     """Find the name of the user."""
@@ -980,7 +986,7 @@ def is_script(appname):
     """Checks whether an application name is rather a script name"""
     return appname.endswith('.py') or appname.endswith('.pye')
 
-    
+
 def is_app(appname):
     return not is_script(appname)
 
@@ -1024,7 +1030,7 @@ def getDocString(scriptfile):
         if j >= i+3:
             return s[i+3:j]
     return ''
-    
+
 
 tempFile = tempfile.NamedTemporaryFile
 tempDir = tempfile.mkdtemp
@@ -1050,7 +1056,7 @@ def numsplit(s):
     """
     return digits.split(s)
 
-    
+
 def hsorted(l):
     """Sort a list of strings in human order.
 
@@ -1077,7 +1083,7 @@ def splitDigits(s,pos=-1):
     a contiguous series of digits. The second argument specifies at which
     numerical substring the splitting is done. By default (pos=-1) this is
     the last one.
-    
+
     Returns a tuple of three strings, any of which can be empty. The
     second string, if non-empty is a series of digits. The first and last
     items are the parts of the string before and after that series.
@@ -1149,7 +1155,7 @@ class NameSequence(object):
     >>> [ N.next() for i in range(2) ]
     ['/home/user/abc235.png', '/home/user/abc245.png']
     """
-    
+
     def __init__(self,name,ext=''):
         """Create a new NameSequence from name,ext."""
         prefix,number,suffix = splitDigits(name)
@@ -1195,7 +1201,7 @@ class NameSequence(object):
         if callable(sort):
             files = sort(files)
         return files
-    
+
 
 def prefixDict(d,prefix=''):
     """Prefix all the keys of a dict with the given prefix.
@@ -1215,7 +1221,7 @@ def subDict(d,prefix='',strip=True):
     - `d`: a dict where all the keys are strings.
     - `prefix`: a string
     - `strip`: if True (default), the prefix is stripped from the keys.
-    
+
     The return value is a dict with all the items from d whose key starts
     with prefix. The keys in the returned dict will have the prefix
     stripped off, unless strip=False is specified.
@@ -1231,11 +1237,11 @@ def selectDict(d,keys):
 
     - `d`: a dict where all the keys are strings.
     - `keys`: a set of key values, can be a list or another dict.
-    
+
     The return value is a dict with all the items from d whose key
     is in keys.
     See :func:`removeDict` for the complementary operation.
-    
+
     Example:
 
     >>> d = dict([(c,c*c) for c in range(6)])
@@ -1284,7 +1290,7 @@ def sortedKeys(d):
     k.sort()
     return k
 
-    
+
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.
 
@@ -1297,7 +1303,7 @@ def stuur(x,xval,yval,exp=2.5):
     is returned.
     """
     xmin,x0,xmax = xval
-    ymin,y0,ymax = yval 
+    ymin,y0,ymax = yval
     if x < xmin:
         return ymin
     elif x < x0:
@@ -1309,7 +1315,7 @@ def stuur(x,xval,yval,exp=2.5):
     else:
         return ymax
 
-  
+
 def listFontFiles():
     """List all fonts known to the system.
 
@@ -1324,7 +1330,7 @@ def listFontFiles():
 
 
 ###########################################################################
-    
+
 
 def interrogate(item):
     """Print useful information about item."""
@@ -1387,7 +1393,7 @@ def deprecation(message):
             return func(*_args,**_kargs)
         return wrapper
     return decorator
-    
+
 
 def deprecated(replacement):
     def decorator(func):
