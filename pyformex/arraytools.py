@@ -244,12 +244,11 @@ def niceNumber(f,below=False):
 
     Example:
 
-    >>> numbers = [ 0.0837, 0.837, 8.37, 83.7, 93.7]
-    >>> [ str(niceNumber(f)) for f in numbers ]
-    ['0.09', '0.9', '9.0', '90.0', '100.0']
-    >>> [ str(niceNumber(f,below=True)) for f in numbers ]
-    ['0.08', '0.8', '8.0', '80.0', '90.0']
-
+      >>> numbers = [ 0.0837, 0.837, 8.37, 83.7, 93.7]
+      >>> [ str(niceNumber(f)) for f in numbers ]
+      ['0.09', '0.9', '9.0', '90.0', '100.0']
+      >>> [ str(niceNumber(f,below=True)) for f in numbers ]
+      ['0.08', '0.8', '8.0', '80.0', '90.0']
     """
     fa = abs(f)
     s = "%.0e" % fa
@@ -778,8 +777,8 @@ def splitrange(n,nblk):
 
     Example:
 
-    >>> splitrange(7,3)
-    array([0, 2, 5, 7])
+      >>> splitrange(7,3)
+      array([0, 2, 5, 7])
     """
     if n > nblk:
         ndata = (arange(nblk+1) * n * 1.0 / nblk).round().astype(int)
@@ -802,10 +801,10 @@ def splitar(ar,nblk,close=False):
 
     Example:
 
-    >>> splitar(arange(7),3)
-    [array([0, 1]), array([2, 3, 4]), array([5, 6])]
-    >>> splitar(arange(7),3,close=True)
-    [array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]
+      >>> splitar(arange(7),3)
+      [array([0, 1]), array([2, 3, 4]), array([5, 6])]
+      >>> splitar(arange(7),3,close=True)
+      [array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]
     """
     ar = asanyarray(ar)
     na = ar.shape[0]
@@ -1509,13 +1508,12 @@ def matchIndex(target,values):
     Remark that after ``m = matchIndex(target,values)`` the equality
     ``target[m] == values`` holds in all the non-negative positions of `m`.
 
-    Example::
+    Example:
 
       >>> A = array([1,3,4,5,7,8,9])
       >>> B = array([0,6,7,1,2])
       >>> matchIndex(A,B)
       array([-1, -1,  4,  0, -1])
-
     """
     target = target.reshape(-1,1)
     values = values.reshape(-1)
@@ -1723,17 +1721,16 @@ def histogram2(a,bins,range=None):
 
     Example:
 
-    >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
-    >>> print(hist)
-    [2 2 2 1]
-    >>> for i in ind: print(i)
-    [0 6]
-    [1 4]
-    [2 5]
-    [3]
-    >>> print(xbins)
-    [1 2 3 4 5]
-
+      >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
+      >>> print(hist)
+      [2 2 2 1]
+      >>> for i in ind: print(i)
+      [0 6]
+      [1 4]
+      [2 5]
+      [3]
+      >>> print(xbins)
+      [1 2 3 4 5]
     """
     ar = asarray(a)
     if array(bins).size == 1:
@@ -1761,34 +1758,34 @@ def movingView(a, size):
 
       Using swapaxes(0,axis) moving views over any axis can be created.
 
-    Examples:
+    Example:
 
-    >>> x=arange(10).reshape((5,2))
-    >>> print(x)
-    [[0 1]
-     [2 3]
-     [4 5]
-     [6 7]
-     [8 9]]
-    >>> print(movingView(x, 3))
-    [[[0 1]
-      [2 3]
-      [4 5]]
-    <BLANKLINE>
-     [[2 3]
-      [4 5]
-      [6 7]]
-    <BLANKLINE>
-     [[4 5]
-      [6 7]
-      [8 9]]]
+      >>> x=arange(10).reshape((5,2))
+      >>> print(x)
+      [[0 1]
+       [2 3]
+       [4 5]
+       [6 7]
+       [8 9]]
+      >>> print(movingView(x, 3))
+      [[[0 1]
+        [2 3]
+        [4 5]]
+      <BLANKLINE>
+       [[2 3]
+        [4 5]
+        [6 7]]
+      <BLANKLINE>
+       [[4 5]
+        [6 7]
+        [8 9]]]
 
     Calculate rolling sum of first axis:
 
-    >>> print(movingView(x, 3).sum(axis=0))
-    [[ 6  9]
-     [12 15]
-     [18 21]]
+      >>> print(movingView(x, 3).sum(axis=0))
+      [[ 6  9]
+       [12 15]
+       [18 21]]
     """
     from numpy.lib import stride_tricks
     if size < 1:
@@ -1825,20 +1822,19 @@ def movingAverage(a,n,m0=None,m1=None):
       will be computed thus that the return array has a first axis with length
       a.shape[0].
 
-    Examples:
+    Example:
 
-    >>> x=arange(10).reshape((5,2))
-    >>> print(movingAverage(x,3))
-    [[ 2.  3.]
-     [ 4.  5.]
-     [ 6.  7.]]
-    >>> print(movingAverage(x,3,2))
-    [[ 0.          1.        ]
-     [ 0.66666667  1.66666667]
-     [ 2.          3.        ]
-     [ 4.          5.        ]
-     [ 6.          7.        ]]
-
+      >>> x=arange(10).reshape((5,2))
+      >>> print(movingAverage(x,3))
+      [[ 2.  3.]
+       [ 4.  5.]
+       [ 6.  7.]]
+      >>> print(movingAverage(x,3,2))
+      [[ 0.          1.        ]
+       [ 0.66666667  1.66666667]
+       [ 2.          3.        ]
+       [ 4.          5.        ]
+       [ 6.          7.        ]]
     """
     if m0 is None and m1 is None:
         ae = a
@@ -1900,18 +1896,47 @@ def uniformParamValues(n,umin=0.0,umax=1.0):
 
     Example:
 
-    >>> uniformParamValues(4).tolist()
-    [0.0, 0.25, 0.5, 0.75, 1.0]
-    >>> uniformParamValues(0).tolist()
-    [0.5]
-    >>> uniformParamValues(-1).tolist()
-    []
-    >>> uniformParamValues(2,1.5,2.5).tolist()
-    [1.5, 2.0, 2.5]
+      >>> uniformParamValues(4).tolist()
+      [0.0, 0.25, 0.5, 0.75, 1.0]
+      >>> uniformParamValues(0).tolist()
+      [0.5]
+      >>> uniformParamValues(-1).tolist()
+      []
+      >>> uniformParamValues(2,1.5,2.5).tolist()
+      [1.5, 2.0, 2.5]
     """
     if n == 0:
         return array([0.5*(umax+umin)])
     else:
         return umin + arange(n+1) * (umax-umin) / n
+
+
+def pprint(a,label=''):
+    """Pretty print an array with a label in front.
+
+    When printing a numpy array with a lable in font, the first row of
+    the array is not aligned with the remainder. This function will solve
+    that issue and prints the full array nicely aligned.
+
+    - `a`: a numpy array
+    - `label`: a sting to be printed in front of the array
+
+    Example:
+
+      >>> a = arange(12).reshape(-1,3)
+      >>> pprint(a,'Reshaped range = ')
+      Reshaped range = [[ 0  1  2]
+                        [ 3  4  5]
+                        [ 6  7  8]
+                        [ 9 10 11]]
+
+    """
+    import pprint
+    s = str(a).split('\n')
+    print(label+s[0])
+    dummy = ' '*len(label)
+    for l in s[1:]:
+        print(dummy+l)
+
 
 # End

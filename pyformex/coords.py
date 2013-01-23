@@ -850,7 +850,7 @@ class Coords(ndarray):
         return out
 
 
-    # THIS SHOULD BE GENERALIZED TO TAKE SAME `dir` OPTIONS AS translate
+    # TODO: THIS SHOULD BE GENERALIZED TO TAKE SAME `dir` OPTIONS AS translate
     def reflect(self,dir=0,pos=0.,inplace=False):
         """Reflect the coordinates in direction dir against plane at pos.
 
@@ -869,7 +869,7 @@ class Coords(ndarray):
 
 
     def affine(self,mat,vec=None):
-        """Returns a general affine transform of the :class:`Coords` object.
+        """Perform a general affine transformation.
 
         Parameters:
 
@@ -877,6 +877,8 @@ class Coords(ndarray):
         - `vec`: a length 3 list or array of floats
 
         The returned object has coordinates given by ``self * mat + vec``.
+        If `mat` is a rotation matrix, than the operation performs a
+        rigid rotation of the object plus a translation.
         """
         out = dot(self,mat)
         if vec is not None:
