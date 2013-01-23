@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -29,37 +29,43 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['dialog', 'animation', 'persistence', 'color'] 
+_techniques = ['dialog', 'animation', 'persistence', 'color']
 
 from gui.draw import *
 from plugins.properties import *
 import time
 
-############################
-# Load the needed calpy modules    
-from plugins import calpy_itf
-calpy_itf.check()
-import calpy
-calpy.options.optimize = False
-from calpy.fe_util import *
-from calpy.truss3d import *
+def check_calpy():
+    try:
+        ############################
+        # Load the needed calpy modules
+        from plugins import calpy_itf
+        calpy_itf.check()
+        import calpy
+        calpy.options.optimize = False
+        from calpy import fe_util
+        from calpy import truss3d
 
-############################
+        ############################
+        return True
+    except:
+        return False
 
 
 def run():
-
+    if not check_calpy():
+        return
     if not checkWorkdir():
         return
-        
+
     ####
     #Data
     ###################
 
     dx = 1800  # Modular size [mm]
     ht = 1500  # Deck height [mm]
-    nx = 8     # number of bottom deck modules in x direction 
-    ny = 6     # number of bottom deck modules in y direction 
+    nx = 8     # number of bottom deck modules in x direction
+    ny = 6     # number of bottom deck modules in y direction
 
     q = -0.005 #distributed load [N/mm^2]
 
@@ -136,10 +142,10 @@ def run():
 
     # Since all elems have same characteristics, we could just have used:
     #   P.elemProp(section=circ20,elemtype='T3D2')
-    # But putting the elems in three sets allows for separate postprocessing 
+    # But putting the elems in three sets allows for separate postprocessing
 
 
-    ######### 
+    #########
     #calpy analysis
     ###################
 
@@ -216,7 +222,7 @@ def run():
             # In this case there is only one resultant force per element (the
             # normal force), and only load case; we still need to select the
             # scalar element result values from the array into a onedimensional
-            # vector val. 
+            # vector val.
             val = frc[:,0,0]
             # create a colorscale
             CS = cs.ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
@@ -275,26 +281,22 @@ def run():
 
 
         def showAnimatedDeformation():
-
-            # Show animated deformation
-            scale = optimscale
-            nframes = 10
-            form = 'revert'
-            duration = 5./nframes
-            ncycles = 2
-            items = [ ['scale',scale], ['nframes',nframes],
-                      ['form',form],
-                      ['duration',duration], ['ncycles',ncycles] ]
-            res = askItems(items,'Animation Parameters')
+            """Show animated deformation"""
+            res = askItems([
+                ('scale',optimscale),
+                ('nframes',10),
+                ('form','revert',choices=['up','updown','revert']),
+                ('duration',5./nframes),
+                ('ncycles',2),
+                ],caption='Animation Parameters')
             if res:
-                scale = float(res['scale'])
-                nframes = int(res['nframes'])
-                duration = float(res['duration'])
-                ncycles = int(res['ncycles'])
+                scale = res['scale']
+                nframes = res['nframes']
                 form = res['form']
-                if form in [ 'up', 'updown', 'revert' ]:
-                    amp = scale * frameScale(nframes,form)
-                    animate_deformed_plot(amp,duration,ncycles)
+                duration = res['duration']
+                ncycles = res['ncycles']
+                amp = scale * frameScale(nframes,form)
+                animate_deformed_plot(amp,duration,ncycles)
 
 
         optimscale = getOptimscale()
@@ -308,7 +310,7 @@ def run():
             functions[ind]()
             if widgets.input_timeout > 0:  #timeout
                 break
-        
+
 if __name__ == 'draw':
     run()
 # End

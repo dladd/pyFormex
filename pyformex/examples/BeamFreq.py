@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -41,27 +41,29 @@ from gui.draw import *
 from plugins.curve import *
 import simple
 
-# Check that we have the required calix version
-_required_calix_version = '1.5-a8'
-_ok = utils.checkVersion('calix',_required_calix_version,True) >= 0
-## _sorry ="""..
+def check_calix(version='1.5-a8'):
+    """Check that we have the required calix version"""
+    ok = utils.checkVersion('calix',version,True) >= 0
+    if not ok:
+        showText("""..
 
-## Error
-## -----
-## An error occurred when I tried to find the program 'calix'.
-## This probably means that calix is not installed on your system,
-## or that the installed version is not one I can use for this example.
+Error
+-----
+An error occurred when I tried to find the program 'calix'.
+This probably means that calix is not installed on your system,
+or that the installed version is not one I can use for this example.
 
-## Calix is a free program and you can install it as follows:
+Calix is a free program and you can install it as follows:
 
-## - download calix (%s or higher) from ftp://bumps.ugent.be/pub/calix/
-## - unpack, compile and install (as root)::
+- download calix (%s or higher) from ftp://bumps.ugent.be/pub/calix/
+- unpack, compile and install (as root)::
 
-##    tar xvzf calix-%s.tar.gz
-##    cd calix-1.5
-##    make
-##    (sudo) make install
-## """ % (_required_calix_version,_required_calix_version)
+   tar xvzf calix-%s.tar.gz
+   cd calix-1.5
+   make
+   (sudo) make install
+""" % (version,version))
+    return ok
 
 
 def geometry():
@@ -81,20 +83,20 @@ def geometry():
         ])
     if not res:
         return
-    
+
     globals().update(res)
     F = simple.line([0.,0.,0.],[0.,1.,0.],n)
     M = F.toMesh()
     return M
-    
-    
+
+
 def compute():
     global nshow,a,freq
     nnod = M.ncoords()
     nel = M.nelems()
     nmat = 1
     iout = 1
-   
+
     # init
     s=""";calix script written by pyFormex (example BeamFreq)
 start
@@ -154,7 +156,7 @@ stop
     fil = open('temp.dta','w')
     fil.write(s)
     fil.close()
-    
+
     if verbose:
         # show calix input data
         showFile('temp.dta')
@@ -165,7 +167,7 @@ stop
         os.remove('test.out')
 
     sta,out = utils.runCommand(cmd)
-    
+
     if verbose:
         # show calix output
         showText(out)
@@ -221,14 +223,13 @@ def showResults(hscale):
         drawDeformed(M,u,r)
         fi = freq[i]
         mi = fi/freq[0]
-        drawText('%s Hz = %.2f f0' % (fi,mi),20,20,size=20) 
+        drawText('%s Hz = %.2f f0' % (fi,mi),20,20,size=20)
 
 
 def run():
     resetAll()
     clear()
-    if not _ok:
-        showText(_sorry)
+    if not check_calix():
         return
 
     M = geometry()
