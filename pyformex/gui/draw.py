@@ -278,7 +278,7 @@ def editFile(fn,exist=False):
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None,**kargs):
+def askItems(items,caption=None,timeout=None):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -305,8 +305,7 @@ def askItems(items,caption=None,timeout=None,**kargs):
     Sets the dialog timeout and accepted status in global variables.
     """
     global _dialog_widget,_dialog_result
-    if 'legacy' in kargs:
-        warnings.warn("The use of the 'legacy' argument in askitems is deprecated.")
+
     w = widgets.InputDialog(items,caption,**kargs)
 
     _dialog_widget = w

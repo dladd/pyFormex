@@ -364,45 +364,6 @@ Then do::
   git commit
 
 
-Stash your local changes to allow a pull
-----------------------------------------
-When you do a ::
-
-  git pull
-
-to update your local working directory from the remote repository, you may
-get an error like this::
-
-  error: Your local changes to the following files would be overwritten by merge:
-	<SOME FILES>
-  Please, commit your changes or stash them before you can merge.
-  Aborting
-
-Remember that the pull actually does two things:
-first it fetches the required commits from the
-remote to update your local repository, and then it checks out these
-changes from your local repository and merges them into your working
-directory. This is equivalent with::
-
-  git fetch
-  git co
-
-As the error shows, it is the merging that is failing, because you have
-local changes. You can do three things to solve this problem:
-
-- commit your changes first (if they are ok),
-- throw your changes (if they were unneeded/unwanted),
-- stash away your changes to allow the merge, and possibly continue to work
-  on them later. This is the prefered and easiest way. You just do a::
-
-    git stash
-
-  and after that the pull (or checkout) command will work. You then get your
-  changes back with::
-
-    git stash apply
-
-
 Revert changes that have not been commited yet
 ----------------------------------------------
 If you have changed a file, then decide you want to undo these
@@ -469,14 +430,6 @@ local changes. An example::
   Please, commit your changes or stash them before you can merge.
   Aborting
 
-The best thing is to chaeck what you have changed::
-
-  git diff pyformex/plugins/trisurface.py
-
-If your changes are not important, you can just delete the file ::
-
-  rm pyformex/plugins/trisurface.py
-
 If they are important, you can stash away your changes in a work directory::
 
   git stash
@@ -487,6 +440,96 @@ In both cases then just redo the pull::
 
 which will now succeed.
 
+
+Stash your local changes to allow a pull
+----------------------------------------
+When you do a ::
+
+  git pull
+
+to update your local working directory from the remote repository, you may
+get an error like this::
+
+  error: Your local changes to the following files would be overwritten by merge:
+	<SOME FILES>
+  Please, commit your changes or stash them before you can merge.
+  Aborting
+
+Remember that the pull actually does two things:
+first it fetches the required commits from the
+remote to update your local repository, and then it checks out these
+changes from your local repository and merges them into your working
+directory. This is equivalent with::
+
+  git fetch
+  git co
+
+As the error shows, it is the merging that is failing, because you have
+local changes. Here are four ways to solve this problem:
+
+- if you know your changes are ok: commit them first,
+
+- if you know your changes are unneeded/unwanted, remove them::
+
+   rm MODIFIED_FILE
+
+- you can check first what you have changed::
+
+    git diff MODIFIED_FILE
+
+and see if your changes are important, and then proceed along one of the first
+paths.
+
+- in most cases however you will not want to find out now what changes
+  to keep, but rather wait until you have merged the incoming changes.
+  The easiest way to proceed then is to stash away your changes to
+  allow the merge, and possibly continue to work on them later::
+
+    git stash
+
+  and after that the pull (or checkout) command will work. You then get your
+  changes back with::
+
+    git stash apply
+
+
+
+Resolving merge conflicts
+-------------------------
+Merge operations (whether explicit, or implicit during a `git pull`, or
+`git stash apply`) can lead to conflicts. Here is an example output of a
+`git stash apply`::
+
+  Auto-merging pyformex/plugins/trisurface.py
+  CONFLICT (content): Merge conflict in pyformex/plugins/trisurface.py
+  Auto-merging pyformex/gui/draw.py
+  Auto-merging HOWTO-dev.rst
+
+Two files got merged fine, one created a problem. Conflicts should be
+resolved immediately, before adding/committing new changes, even before
+you can run pyFormex. The `git st` says::
+
+  #
+  # Unmerged paths:
+  #   (use "git reset HEAD <file>..." to unstage)
+  #   (use "git add/rm <file>..." as appropriate to mark resolution)
+  #
+  #	both modified:      pyformex/plugins/trisurface.py
+  #
+
+In the file, you will find the conflicting parts marked by markers such
+as the following::
+
+  <<<<<<< Updated upstream
+      Lines that were changed upstream and pulled in
+  =======
+      Lines that were changed in the local (stashed away) version
+  >>>>>>> Stashed changes
+
+In this case the stashed changes were wrong, so I just restored the checkout
+version::
+
+  git co -- pyformex/plugins/trisurface.py
 
 Using the subversion repository
 ===============================
