@@ -40,7 +40,6 @@ def check_calpy():
         ############################
         # Load the needed calpy modules
         from plugins import calpy_itf
-        calpy_itf.check()
         import calpy
         calpy.options.optimize = False
         from calpy import fe_util

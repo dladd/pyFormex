@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -66,11 +66,11 @@ if pf.installtype in 'SG':
         cmd = "cd %s/..; make lib" % pyformexdir
         os.system(cmd)
         msg = checkLibraries()
-    
+
     if msg:
         msg += """
-        
-I had a problem rebuilding the libraries in %s/lib. 
+
+I had a problem rebuilding the libraries in %s/lib.
 You should probably exit pyFormex, fix the problem first and then restart pyFormex.
 """ % pyformexdir
     startup_warnings += msg
@@ -112,7 +112,7 @@ Your Python version is %s, but pyFormex requires Python >= %s. We advice you to 
 """ % (found_version,minimal_version)
     print(startup_warnings)
     sys.exit()
-    
+
 if utils.SaneVersion(found_version[:3]) > utils.SaneVersion(target_version):
 #if utils.checkVersion('python',target_version) > 0:
     startup_warnings += """
@@ -132,7 +132,7 @@ def filterWarnings():
             utils.filterWarning(*w)
     except:
         pf.debug("Error while processing warning filters: %s" % pf.cfg['warnings/filters'],pf.DEBUG.WARNING)
-    
+
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
@@ -146,7 +146,7 @@ def refLookup(key):
 def prefLookup(key):
     """Lookup a key in the reference configuration."""
     return pf.prefcfg[key]
-    
+
 
 def printcfg(key):
     try:
@@ -161,12 +161,12 @@ def remove_pyFormex(pyformexdir,bindir):
     if pf.installtype == 'P':
         print("It looks like this version of pyFormex was installed from a distribution package. You should use your distribution's package tools to remove the pyFormex installation.")
         return
-    
-    if pf.installtype == 'S':
+
+    if pf.installtype in 'SG':
         print("It looks like you are running pyFormex directly from a source tree at %s. I will not remove it. If you have enough privileges, you can just remove the whole source tree from the file system." % pyformexdir)
         return
-    
-        
+
+
     print("""
 BEWARE!
 This procedure will remove the complete pyFormex installation!
@@ -194,7 +194,7 @@ You will need proper permissions to actually delete the files.
                 os.remove(f)
             else:
                 print("Could not remove %s" % f)
-        
+
         print("\nBye, bye! I won't be back until you reinstall me!")
     elif s.startswith('y') or s.startswith('Y'):
         print("You need to type exactly 'yes' to remove me.")
@@ -237,7 +237,7 @@ def savePreferences():
 
     pf.debug("="*60,pf.DEBUG.CONFIG)
     pf.debug("!!!Saving config:\n%s" % pf.prefcfg,pf.DEBUG.CONFIG)
-    
+
     try:
         pf.prefcfg.write(pf.preffile)
         res = "Saved"
@@ -254,7 +254,7 @@ def apply_config_changes(cfg):
     # Safety checks
     if type(cfg['warnings/filters']) != list:
         cfg['warnings/filters'] = []
-    
+
     # Adhoc changes
     if type(cfg['gui/dynazoom']) is str:
         cfg['gui/dynazoom'] = [ cfg['gui/dynazoom'], '' ]
@@ -345,13 +345,13 @@ def run(argv=[]):
     # Read the defaults (before the options)
     defaults = os.path.join(pyformexdir,"pyformexrc")
     pf.cfg.read(defaults)
-    
+
     # Process options
     import optparse
     from optparse import make_option as MO
     parser = optparse.OptionParser(
         # THE Qapp options are removed, because it does not seem to work !!!
-        # SEE the comments in the gui.startGUI function  
+        # SEE the comments in the gui.startGUI function
         usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
         version = pf.FullVersion(),
         description = pf.Description,
@@ -482,7 +482,7 @@ def run(argv=[]):
 
     if pf.options.whereami: # or pf.options.detect :
         pf.options.debuglevel |= pf.DEBUG.INFO
-            
+
     pf.debug("pyformex script started from %s" % pf.bindir,pf.DEBUG.INFO)
     pf.debug("I found pyFormex installed in %s " %  pyformexdir,pf.DEBUG.INFO)
     pf.debug("Current Python sys.path: %s" % sys.path,pf.DEBUG.INFO)
@@ -500,7 +500,7 @@ def run(argv=[]):
     # These values should not be changed
     pf.cfg.userprefs = os.path.join(pf.cfg.userconfdir,'pyformexrc')
     pf.cfg.autorun = os.path.join(pf.cfg.userconfdir,'startup.py')
-    
+
     # Set the config files
     if pf.options.nodefaultconfig:
         sysprefs = []
@@ -519,12 +519,12 @@ def run(argv=[]):
         userprefs = [ pf.cfg.userprefs ]
 
     pf.preffile = os.path.abspath(userprefs[-1]) # Settings will be saved here
-   
+
     # Read all but the last as reference
     for f in filter(os.path.exists,sysprefs + userprefs[:-1]):
         pf.debug("Reading config file %s" % f,pf.DEBUG.CONFIG)
         pf.cfg.read(f)
-     
+
     pf.refcfg = pf.cfg
     pf.debug("="*60,pf.DEBUG.CONFIG)
     pf.debug("RefConfig: %s" % pf.refcfg,pf.DEBUG.CONFIG)
@@ -578,7 +578,7 @@ def run(argv=[]):
 
     ###################################################################
 
-    
+
     # This should probably be changed to options overriding config
     # Set option from config if it was not explicitely given
     if pf.options.uselib is None:
@@ -592,10 +592,10 @@ def run(argv=[]):
     if pf.options.gui:
         pf.options.interactive = True
 
-    #  If we run from an SVN version, we should set the proper revision
+    #  If we run from an source version, we should set the proper revision
     #  number and run the svnclean procedure.
 
-    if pf.installtype=='S':
+    if pf.installtype in 'SG':
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
             try:
@@ -617,7 +617,7 @@ def run(argv=[]):
         ## m = re.match(".*//(?P<user>[^@]*)@svn\.savanna\.nongnu\.org.*",s)
         ## pf.svnuser = m.group('user')
         ## print pf.svnuser
-    
+
 
 
     ###### We have the config and options all set up ############
@@ -685,7 +685,7 @@ pyFormex Warning
     if pf.options.debuglevel & pf.DEBUG.INFO:
         # NOTE: inside an if to avoid computing the report when not printed
         pf.debug(utils.reportDetected(),pf.DEBUG.INFO)
- 
+
     #
     # Qt4 may have changed the locale.
     # Since a LC_NUMERIC setting other than C may cause lots of troubles
@@ -714,20 +714,20 @@ pyFormex Warning
         pf.debug("Remaining args: %s" % args,pf.DEBUG.INFO)
         from script import processArgs
         res = processArgs(args)
-        
+
         if res:
             if pf.options.gui:
                 pf.message("There was an error while executing a script")
             else:
                 return res # EXIT
-                
+
     else:
         pf.debug("stdin is a tty: %s" % sys.stdin.isatty(),pf.DEBUG.INFO)
         # Play script from stdin
         # Can we check for interactive session: stdin connected to terminal?
         #from script import playScript
         #playScript(sys.stdin)
-        
+
 
     # after processing all args, go into interactive mode
     if pf.options.gui and pf.app:
@@ -737,7 +737,7 @@ pyFormex Warning
     ##     print("Enter your script and end with CTRL-D")
     ##     from script import playScript
     ##     playScript(sys.stdin)
-        
+
     #Save the preferences that have changed
     savePreferences()
 

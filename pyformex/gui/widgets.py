@@ -505,7 +505,6 @@ class InputText(InputItem):
     def setValue(self,val):
         """Change the widget's value."""
         val = str(val)
-        print("PLAIN:%s" % self._plain)
         if self._plain:
             self.input.setPlainText(val)
             ## self.input.setLineWrapMode(QtGui.QTextEdit.FixedColumnWidth)

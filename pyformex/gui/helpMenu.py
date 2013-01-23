@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -131,7 +131,7 @@ out in error, please write to
 benedict.verhegghe@ugent.be.
 """ % '\n'.join(_developers))
 
-                  
+
 _cookies = [
     "Smoking may be hazardous to your health.",
     "Windows is a virus.",
@@ -153,7 +153,7 @@ _cookies = [
     "Windows 9x: n. 32 bit extensions and a graphical shell for a 16 bit patch to an 8 bit operating system originally coded for a 4 bit microprocessor, written by a 2 bit company that can't stand 1 bit of competition. (Cygwin FAQ)",
     "You know, when you have a program that does something really cool, and you wrote it from scratch, and it took a significant part of your life, you grow fond of it. When it's finished, it feels like some kind of amorphous sculpture that you've created. It has an abstract shape in your head that's completely independent of its actual purpose. Elegant, simple, beautiful.\nThen, only a year later, after making dozens of pragmatic alterations to suit the people who use it, not only has your Venus-de-Milo lost both arms, she also has a giraffe's head sticking out of her chest and a cherubic penis that squirts colored water into a plastic bucket. The romance has become so painful that each day you struggle with an overwhelming urge to smash the fucking thing to pieces with a hammer. (Nick Foster)",
     "One of my most productive days was throwing away 1000 lines of code. (Ken Thompson)",
-    ]    
+    ]
 random.shuffle(_cookies)
 
 def roll(l):
@@ -199,12 +199,12 @@ def searchText():
     if res:
         out = utils.grepSource(relative=False,quiet=True,**res)
         draw.showText(out,mono=True,modal=False)
- 
+
 
 
 def createMenuData():
     """Returns the help menu data"""
-    DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 
+    DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']]
     Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in pf.cfg['help/docs2']]
     LinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/links']]
 
@@ -214,17 +214,17 @@ def createMenuData():
             (_('&Current Application'),draw.showDoc),
             ('---',None),
             ] + Docs2MenuData + [
-            (_('&Detected Software'),detected), 
-            (_('&OpenGL Format'),opengl), 
+            (_('&Detected Software'),detected),
+            (_('&OpenGL Format'),opengl),
             (_('&Fortune Cookie'),cookie),
             (_('&Favourite Links'),LinksMenuData),
-            (_('&People'),developers), 
-            (_('&About'),about), 
+            (_('&People'),developers),
+            (_('&About'),about),
             ]
     except:
         MenuData = []
 
-    if pf.installtype=='S':
+    if pf.installtype in 'SG':
         pyformexdir = pf.cfg['pyformexdir']
         devtodo = os.path.join(pyformexdir,"..","TODO")
         devhowto = os.path.join(pyformexdir,"..","HOWTO-dev.rst")
@@ -239,14 +239,14 @@ def createMenuData():
            ('Numpy documentation guidelines','http://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt'),
             ('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')
             ]
-        
-    
+
+
         DevLinksMenuData = [(k,showFileOrURL,{'data':v}) for k,v in developer]
         MenuData += [
             ('---',None),
             (_('&Developer Guidelines'),DevLinksMenuData),
             ]
-        
+
         def install_external(pkgdir,prgname):
             extdir = os.path.join(pf.cfg['pyformexdir'],'extra',pkgdir)
             sta,out = utils.runCommand("cd %s; make && gksu make install" % extdir)
@@ -257,19 +257,19 @@ def createMenuData():
                     info = "Succesfully installed %s" % pkgdir
                 else:
                     info ="You should now restart pyFormex!"
-            draw.showInfo(info)  
+            draw.showInfo(info)
             return sta
-        
+
         def install_dxfparser():
             install_external('dxfparser','pyformex-dxfparser')
-        
+
         def install_postabq():
             install_external('postabq','pyformex-postabq')
-        
+
         def install_gts():
             install_external('gts','gtsinside')
 
-       
+
         MenuData.append((_('&Install Externals'),[
             (_('dxfparser'),install_dxfparser,{'tooltip':"Install dxfparser: requires libdxflib-dev!"}),
             (_('postabq'),install_postabq),
@@ -287,7 +287,7 @@ def createMenuData():
         ##     import guimain
         ##     ret = guimain.exitDialog()
         ##     print "ExitDialog returned: %s" % ret
-            
+
         ## MenuData.append((_('&Test Functions'),[
         ##     (_('test exit'),testExit),
         ##     ]))

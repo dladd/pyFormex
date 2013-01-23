@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -52,10 +52,16 @@ from gui.draw import *
 # download it from ftp://bumps.ugent.be/pub/calpy
 # and compile/install it
 
-# Locate calpy and load interface
-from plugins import calpy_itf
-
 def run():
+
+    # Locate calpy and load interface
+    from plugins import calpy_itf
+    try:
+        Q = calpy_itf.QuadInterpolator
+    except:
+        print("NO CALPY: I'm out of here!")
+        return
+
 
     # Now, let's create a grid of 'quad8' elements
     # size of the grid

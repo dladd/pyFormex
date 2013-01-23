@@ -102,7 +102,7 @@ I can not import .DXF format on your machine, because I can not find the require
 
 *dxfparser* comes with pyFormex, so this probably means that it just was not (properly) installed. The pyFormex install manual describes how to do it.
 """
-if pf.installtype=='S':
+if pf.installtype in 'SG':
     warn_no_dxfparser += """
 If you are running pyFormex from SVN sources and you can get root access, you can go to the directory `...pyformex/extra/dxfparser/` and follow the instructions there, or you can just try the **Install externals** menu option of the **Help** menu.
 """
