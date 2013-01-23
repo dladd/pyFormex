@@ -480,12 +480,15 @@ class GeomActor(Actor):
         return self.object.__class__
 
     def nplex(self):
+        """Return the plexitude of the elements in the actor."""
         return self.shape()[1]
 
     def nelems(self):
+        """Return the number of elements in the actor."""
         return self.shape()[0]
 
     def shape(self):
+        """Return the number and plexitude of the elements in the actor."""
         if self.elems is None:
             return self.coords.shape[:-1]
         else:

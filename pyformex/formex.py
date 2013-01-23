@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -57,24 +57,24 @@ def lpattern(s,connect=True):
     z +/-= 1. This gives the following schema::
 
                  z+=1             z unchanged            z -= 1
-            
-             F    B    E          6    2    5         f    b    e 
-                  |                    |                   |     
-                  |                    |                   |     
-             C----I----A          3----9----1         c----i----a  
-                  |                    |                   |     
-                  |                    |                   |     
+
+             F    B    E          6    2    5         f    b    e
+                  |                    |                   |
+                  |                    |                   |
+             C----I----A          3----9----1         c----i----a
+                  |                    |                   |
+                  |                    |                   |
              G    D    H          7    4    8         g    d    h
-             
+
     The special character '/' can be put before any character to make the
     move without inserting an element.
     The effect of any other character is undefined.
-    
+
     The resulting list is directly suited to initialize a Formex.
     """
     # We do not allow the '+' anymore
     s = s.replace('+','/0')
-    
+
     x = y = z = 0
     l = []
     insert = True
@@ -132,7 +132,7 @@ def lpattern(s,connect=True):
             l.append(element)
         insert = True
     return l
-            
+
 
 @deprecation('depr_mpattern')
 def mpattern(s):
@@ -231,7 +231,7 @@ def mpattern(s):
 
 def pointsAt(F,t):
     """Return the points of a plex-2 Formex at times t.
-    
+
     F is a plex 2 Formex and t is an array with F.nelems() float values which
     are interpreted as local parameters along the edges of the Formex, such
     that the first node has value 0.0 and the last has value 1.0.
@@ -258,7 +258,7 @@ def pointsAt(F,t):
 ##     t = intersectionWithPlane(F,p,n).reshape((-1,1))
 ##     #print t.shape
 ##     from geomtools import intersectionTimesSWP
-##     t = intersectionTimesSWP(f,p,n,mode='pair').reshape((-1,1))    
+##     t = intersectionTimesSWP(f,p,n,mode='pair').reshape((-1,1))
 ##     #print t.shape
 ##     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
 
@@ -266,7 +266,7 @@ def pointsAt(F,t):
 
 def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     """Return the intersection lines of a plex-3 Formex with plane (p,n).
-    
+
     F is a Formex of plexitude 3.
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
@@ -322,7 +322,7 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     if w3.size > 0:
         Tb3 = Tb[w3]
         Tf3 = Tf[w3]
-        Ts3 = Ts[w3]        
+        Ts3 = Ts[w3]
         Pb3 = Pb[w3]
         Pf3 = Pf[w3]
         Ps3 = Ps[w3]
@@ -330,11 +330,11 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
         w31 = where((i == 1)+(i==-2))[0] # different vertices
         if w31.size > 0:
             P1 = Pf3[w31][Tf3[w31]].reshape(-1,1,3)
-            P2 = Ps3[w31][Ts3[w31]].reshape(-1,1,3)            
+            P2 = Ps3[w31][Ts3[w31]].reshape(-1,1,3)
             P = column_stack([P1,P2])
             F32 = Formex(P)
         w32 = where((i == -1)+(i==2))[0] # equal vertices
-        if w32.size > 0:   
+        if w32.size > 0:
             P1 = Pb3[w32][Tb3[w32]].reshape(-1,1,3)
             P2 = Pf3[w32][Tf3[w32]].reshape(-1,1,3)
             P = column_stack([P1,P2])
@@ -358,7 +358,7 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
         w43 = where((i == 1)+(i==-2))[0] # different vertices
         if w43.size > 0:
             P1 = Pf43[w43][Tf43[w43]].reshape(-1,1,3)
-            P2 = Ps43[w43][Ts43[w43]].reshape(-1,1,3)            
+            P2 = Ps43[w43][Ts43[w43]].reshape(-1,1,3)
             P = column_stack([P1,P2])
             F43 = Formex(P)
     # join all the pieces
@@ -395,7 +395,7 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     n is the normal vector to a plane, specified by 3 components.
 
     The return value is:
-    
+
     - with side = '+' or '-' or 'positive'or 'negative' :
       a Formex of the same plexitude with all elements
       located completely at the positive/negative side of the plane(s) (p,n)
@@ -420,7 +420,7 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     B = F.clip(above==0)
     cutting = (above>0)*(below>0)
     if newprops:
-       A.setProp(newprops[0]) 
+       A.setProp(newprops[0])
        B.setProp(newprops[1])
     ## print("Elements in F: %s" % F.nelems())
     ## print("Elements in A: %s" % A.nelems())
@@ -430,7 +430,7 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
         G = F.clip(cutting)
         H = G.copy()
 
-        
+
         g = G.intersectionWithPlane(p,n)
         dist = dist[cutting]
         i0 = dist[:,0] < 0.
@@ -456,9 +456,9 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
     p is a point or a list of points.
     n is the normal vector to a plane or a list of normal vectors.
     Both p and n have shape (3) or (npoints,3).
-    
+
     The return value is:
-    
+
     - with side='+' or '-' or 'positive'or 'negative' :
       a Formex of the same plexitude with all elements
       located completely at the positive/negative side of the plane(s) (p,n)
@@ -474,11 +474,11 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
     The elements intersecting a plane can have one or more vertices for which
     :math:`|dist|<atol`.
     These vertices are projected on the plane so that their distance is zero.
-    
+
     If the Formex has a property set, the new elements will get the property
     numbers defined in newprops. This is a list of 7 property numbers flagging
     elements with following properties:
-    
+
     0) no vertices with :math:`|dist|<atol`, triangle after cut
     1) no vertices with :math:`|dist|<atol`, triangle 1 from quad after cut
     2) no vertices with :math:`|dist|<atol`, triangle 2 from quad after cut
@@ -501,7 +501,7 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
         except:
             newprops = range(7)
     side = _sane_side(side)
-       
+
     p = asarray(p).reshape(-1,3)
     n = asarray(n).reshape(-1,3)
     nplanes = len(p)
@@ -546,7 +546,7 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
                         F_neg += cut_neg
                     S = R + cut_pos
                 F_pos += S
-                
+
     return _select_side(side,[ F_pos, F_neg ])
 
 
@@ -555,13 +555,13 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 
     Should it be called by the user? or only via cut3AtPlane?
     For now, lets suppose the last, so no need to check arguments here.
-    
+
     newprops should be a list of 7 values: each an integer or None
     side is either '+', '-' or ''
     """
     if atol is None:
         atol = 1.e-5*F.dsize()
-        
+
     def get_new_prop(p,ind,newp):
         """Determines the value of the new props for a subset.
 
@@ -570,7 +570,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         newp is the new property value.
 
         The return value is determined as follows:
-        
+
         - If p is None: return None (no property set)
         - If p is set, but newp is None: return p[ind] : keep original
         - if p is set, and newp is set: return newp (single value)
@@ -581,7 +581,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             return p[ind]
         else:
             return newp
-    
+
     from geomtools import intersectionSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     errh = seterr(divide='ignore',invalid='ignore')
@@ -661,7 +661,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         W = (d2 > atol).sum(axis=-1)
         w21 = where(W == 2)[0] # case 1: two vertices at positive side
         w22 = where(W == 1)[0] # case 2: one vertex at positive side
-        w23 = where(W == 0)[0] # case 3: no vertices at positive side 
+        w23 = where(W == 0)[0] # case 3: no vertices at positive side
         # case 1: two vertices at positive side
         if w21.size > 0 and side in '+':
             F21 = F2[w21]
@@ -799,7 +799,7 @@ class Formex(Geometry):
     Properties can be specified at creation time, and they can be set,
     modified or deleted at any time. Of course, the properties that are
     copied in an operation are those that exist at the time of performing
-    the operation.   
+    the operation.
 
     The Formex data can be initialized by another Formex,
     by a 2D or 3D coordinate list, or by a string to be used in one of the
@@ -817,7 +817,7 @@ class Formex(Geometry):
     Because the coordinates are stored in an array with 3 axes,
     all the elements in a Formex must contain the same number of points.
     This number is called the plexitude of the Formex.
-    
+
     A Formex may be initialized with a string instead of the numerical
     coordinate data. The string has the format `#:data` where `#` is a
     leader specifying the plexitude of the elements to be created.
@@ -844,7 +844,7 @@ class Formex(Geometry):
     derived from the plexitude as follows: 1 = point, 2 = line segment,
     3 = triangle, 4 or more is a polygon. Specifying ``eltype = 'tet4'``
     will e.g. interprete 4 point elements as a tetraeder.
-    
+
     Because the :class:`Formex` class is derived from :class:`Geometry`,
     the following :class:`Formex` methods exist and return the value of the
     same method applied on the :attr:`coords` attribute:
@@ -901,7 +901,7 @@ class Formex(Geometry):
     `rot`,
     `trl`.
     """
-            
+
 
 ###########################################################################
 #
@@ -932,7 +932,7 @@ class Formex(Geometry):
                         raise ValueError,"Invalid string data for Formex"
 
             data = asarray(data).astype(Float)
-            
+
             if data.size == 0:   ### MAYBE THIS SHOULD BE CHANGED ?????
                 if len(data.shape) == 3:
                     nplex = data.shape[1]
@@ -957,11 +957,11 @@ class Formex(Geometry):
                 if data.shape[-1] == 2:
                     z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
                     data = concatenate([data,z],axis=-1)
-                    
+
         # data should be OK now
-        self.coords = Coords(data)    # make sure coordinates are a Coords object 
+        self.coords = Coords(data)    # make sure coordinates are a Coords object
         self.setProp(prop)
-        
+
         try:
             self.eltype = eltype.lower()
         except:
@@ -979,7 +979,7 @@ class Formex(Geometry):
             return Formex(coords,self.prop,self.eltype)
         else:
             raise ValueError,"Invalid reinitialization of Formex coords"
-            
+
 
     def __getitem__(self,i):
         """Return element i of the Formex.
@@ -998,7 +998,7 @@ class Formex(Geometry):
 
     def __setstate__(self,state):
         """Set the object from serialized state.
-        
+
         This allows to read back old pyFormex Project files where the Formex
         class had 'f' and 'p' attributes.
         """
@@ -1033,20 +1033,20 @@ class Formex(Geometry):
 
 
     __len__ = nelems  # implements len(Formex)
-    
+
 
     def nplex(self):
         """Return the number of points per element.
 
         Examples:
-        
+
         1. unconnected points,
         2. straight line elements,
         3. triangles or quadratic line elements,
         4. tetraeders or quadrilaterals or cubic line elements.
         """
         return self.coords.shape[1]
-    
+
     def ndim(self):
         """Return the number of dimensions.
 
@@ -1056,7 +1056,7 @@ class Formex(Geometry):
         will automatically be set to zero.
         """
         return self.coords.shape[2]
-    
+
     def npoints(self):
         """Return the number of points in the formex.
 
@@ -1064,16 +1064,19 @@ class Formex(Geometry):
         with the number of nodes per element.
         """
         return self.coords.shape[0]*self.coords.shape[1]
-    
+
+
+    # Making this a property so it can be used as (constant) attribute
+    @property
     def shape(self):
         """Return the shape of the Formex.
 
-        The shape of a Formex is the shape of its data array,
+        The shape of a Formex is the shape of its coords array,
         i.e. a tuple (nelems, nplex, ndim).
         """
         return self.coords.shape
 
-    
+
     def level(self):
         """Return the level (dimensionality) of the Formex.
 
@@ -1146,10 +1149,10 @@ class Formex(Geometry):
         The return value is a Coords object with nelems points.
         """
         return self.coords.mean(axis=1)
- 
+
 
     # Data conversion
-    
+
     def fuse(self,repeat=True,ppb=1,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
@@ -1188,7 +1191,7 @@ class Formex(Geometry):
         x,e = self.fuse(*args,**kargs)
         return Mesh(x,e,prop=self.prop,eltype=self.eltype)
 
-    
+
     def toSurface(self):
         """Convert a Formex to a Surface.
 
@@ -1210,7 +1213,7 @@ bbox[lo] = %s
 bbox[hi] = %s
 center   = %s
 maxprop  = %s
-""" % (self.shape(),bb[0],bb[1],self.center(),self.maxProp())
+""" % (self.shape,bb[0],bb[1],self.center(),self.maxProp())
 
 ##############################################################################
 # Create string representations of a Formex
@@ -1235,16 +1238,16 @@ maxprop  = %s
             s += clas.point2str(elem[0])
             if len(elem) > 1:
                 for i in elem[1:]:
-                    s += "; " + clas.point2str(i) 
+                    s += "; " + clas.point2str(i)
         return s+"]"
-    
+
     def asFormex(self):
         """Return string representation of a Formex as in Formian.
 
         Coordinates are separated by commas, points are separated
         by semicolons and grouped between brackets, elements are
         separated by commas and grouped between braces::
-        
+
            >>> F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
            >>> print(F)
            {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
@@ -1269,7 +1272,7 @@ maxprop  = %s
         else:
             s += " no prop "
         return s
-                
+
     def asArray(self):
         """Return string representation as a numpy array."""
         return self.coords.__str__()
@@ -1292,7 +1295,7 @@ maxprop  = %s
 
     def fprint(self,*args,**kargs):
         self.coords.fprint(*args,**kargs)
-           
+
 
 ##############################################################################
 #
@@ -1308,7 +1311,7 @@ maxprop  = %s
         You can specify a single value or a list/array of integer values.
         If the number of passed values is less than the number of elements,
         they wil be repeated. If you give more, they will be ignored.
-        
+
         If a value None is given, the properties are removed from the Formex.
         """
         if p is None:
@@ -1323,7 +1326,7 @@ maxprop  = %s
         """Append the members of Formex F to this one.
 
         This function changes the original one! Use __add__ if you want to
-        get a copy with the sum. 
+        get a copy with the sum.
 
         >>> F = Formex([[[1.0,1.0,1.0]]])
         >>> G = F.append(F)
@@ -1353,10 +1356,10 @@ maxprop  = %s
 
 
 ##############################################################################
-## 
+##
 ## All the following functions leave the original Formex unchanged and return
 ## a new Formex instead.
-## This is a design decision intended so that the user can write statements as 
+## This is a design decision intended so that the user can write statements as
 ##   G = F.op1().op2().op3()
 ## without having an impact on F. If the user wishes, he can always change an
 ## existing Formex by a statement such as
@@ -1397,7 +1400,7 @@ maxprop  = %s
         >>> F = Formex([[[1,2,3]]],1)
         >>> print(Formex.concatenate([F,F,F]))
         {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
-        
+
         Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
         The latter is simpler to write for a list with a few elements.
         If the list becomes large, or the number of items in the list
@@ -1424,7 +1427,7 @@ maxprop  = %s
 
         return Formex(f,prop,Flist[0].eltype)
 
-      
+
     def select(self,idx):
         """Return a Formex which holds only element with numbers in ids.
 
@@ -1437,7 +1440,7 @@ maxprop  = %s
             idx = asarray(idx)
             return Formex(self.coords[idx],self.prop[idx],self.eltype)
 
-      
+
     def cselect(self,idx):
         """Return a Formex without the elements with numbers in ids.
 
@@ -1448,7 +1451,7 @@ maxprop  = %s
         """
         return self.select(complement(idx,self.nelems()))
 
-      
+
     def selectNodes(self,idx):
         """Return a Formex which holds only some nodes of the parent.
 
@@ -1470,7 +1473,7 @@ maxprop  = %s
         number of points.
         The properties are not copied over, since they will usually not make
         any sense.
-        
+
         The points() method returns the same data, but as a Coords object
         with a simple list of points.
         """
@@ -1504,14 +1507,14 @@ maxprop  = %s
             p = self.prop[flag>0]
         return Formex(self.coords[flag>0],p,self.eltype)
 
-    
+
     def whereProp(self,val):
         """Return the numbers of the elements with property val.
 
         val is either a single integer, or a list/array of integers.
         The return value is an array holding all the numbers of all the
         elements that have the property val, resp. one of the values in val.
-        
+
         If the Formex has no properties, a empty array is returned.
         """
         if self.prop is not None:
@@ -1521,7 +1524,7 @@ maxprop  = %s
                 return unique(concatenate([where(self.prop==v)[0] for v in val]))
         return array([],dtype=Int)
 
-    
+
     def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
 
@@ -1529,7 +1532,7 @@ maxprop  = %s
         The return value is a Formex holding all the elements that
         have the property val, resp. one of the values in val.
         The returned Formex inherits the matching properties.
-        
+
         If the Formex has no properties, a copy with all elements is returned.
         """
         if self.prop is None:
@@ -1541,7 +1544,7 @@ maxprop  = %s
             for v in asarray(val).flat:
                 t += (self.prop == v)
             return Formex(self.coords[t],self.prop[t],self.eltype)
-            
+
 
     def splitProp(self):
         """Partition a Formex according to its prop values.
@@ -1590,7 +1593,7 @@ maxprop  = %s
         ind,ok = M.elems.testDuplicate()
         return self.select(ind[ok])
 
-   
+
     unique = removeDuplicate
 
 
@@ -1614,7 +1617,7 @@ maxprop  = %s
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Formex.
-        
+
         The test plane can be defined in two ways, depending on the value of dir.
         If dir==0, 1 or 2, it specifies a global axis and min and max are
         the minimum and maximum values for the coordinates along that axis.
@@ -1623,7 +1626,7 @@ maxprop  = %s
         Else, dir should be compaitble with a (3,) shaped array and specifies
         the direction of the normal on the planes. In this case, min and max
         are points and should also evaluate to (3,) shaped arrays.
-        
+
         nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
         - a single (integer) point number (< the number of points in the Formex)
@@ -1708,7 +1711,7 @@ maxprop  = %s
         res = self.map(lambda x,y,z:[where(y==0,x,(x*x+x*y*e)/sqrt(x*x+y*y)),where(x==0,y,(x*y+y*y*e)/sqrt(x*x+y*y)),0])
         seterr(**errh) # reactivate division errors
         return res
-    
+
 
     def circulize1(self):
         """Transforms the first octant of the 0-1 plane into 1/6 of a circle.
@@ -1742,14 +1745,14 @@ maxprop  = %s
 ##############################################################################
 #
 #   Transformations that change the topology
-#        
+#
 
     def reverse(self):
         """Return a Formex where all elements have been reversed.
 
         Reversing an element means reversing the order of its points.
         This is equivalent to::
-        
+
           self.selectNodes(arange(self.nplex()-1,-1,-1))
         """
         return Formex(self.coords[:,::-1],self.prop,self.eltype)
@@ -1811,7 +1814,7 @@ maxprop  = %s
         ## the replication of the properties is automatic!
         return Formex(f,self.prop,self.eltype)
 
-    
+
     def replic2(self,n1,n2,t1=1.0,t2=1.0,d1=0,d2=1,bias=0,taper=0):
         """Replicate in two directions.
 
@@ -1826,7 +1829,7 @@ maxprop  = %s
         ## guaranteed that either none or all formices in P have props.
         return Formex.concatenate(P)
 
- 
+
     def rosette(self,n,angle,axis=2,point=[0.,0.,0.]):
         """Return a Formex with n rotational replications with angular
         step angle around an axis parallel with one of the coordinate axes
@@ -1847,7 +1850,7 @@ maxprop  = %s
     def translatem(self,*args,**kargs):
         """Multiple subsequent translations in axis directions.
 
-        The argument list is a sequence of tuples (axis, step). 
+        The argument list is a sequence of tuples (axis, step).
         Thus translatem((0,x),(2,z),(1,y)) is equivalent to
         translate([x,y,z]). This function is especially conveniant
         to translate in calculated directions.
@@ -1861,7 +1864,7 @@ maxprop  = %s
 ##############################################################################
 #
 #   Transformations that change the plexitude
-#        
+#
 
     def extrude(self,n,step=1.,dir=0):
         """Extrude a Formex in one of the axis directions.
@@ -1883,7 +1886,7 @@ maxprop  = %s
 ##############################################################################
 #
 #   Transformations that work only for some plexitudes
-#        
+#
 # !! It is not clear if they really belong here, or should go to a subclass
 
 
@@ -1926,10 +1929,10 @@ maxprop  = %s
         else:
             # OTHER PLEXITUDES NEED TO BE IMPLEMENTED
             raise ValueError,"Formex should be plex-2 or plex-3"
-    
+
 
     # Removed in 0.8.7
-    
+
     ## @deprecation("\nUse Formex.intersectionWithPlane() instead.")
     ## def intersectionPointsWithPlane(self,p,n):
     ##     return self.intersectionWithPlane(p,n)
@@ -1943,22 +1946,22 @@ maxprop  = %s
         """Cut a Formex with the plane(s) (p,n).
 
         .. warning:: This method currently only works for plexitude 2 or 3!
-        
+
         Parameters:
-        
+
         - `p`, `n`: a point and normal vector defining the cutting plane.
           In case of a Formex of plexitude 2, both `p` and `n` have shape (3,).
           In case of plexitude 3, `p` and/or `n` can be sequences of
-          points, resp. vectors, allowing cutting with multiple planes. 
+          points, resp. vectors, allowing cutting with multiple planes.
           Both `p` and `n` can have shape (3) or (nplanes,3).
         - `side`: either an empty string, or one of '+' or '-'. In the latter
           cases, only the part at the positive, resp. negative side of the
           plane (as defined by its normal) is returned. The (default) empty
           string makes both parts being returned as a tuple (pos,neg).
-        
+
 
         Returns:
-        
+
           The default return value is a tuple of two Formices of the same
           plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
           Formex at the positive side of the plane (as defined by the normal
@@ -1966,7 +1969,7 @@ maxprop  = %s
           Elements of the input Formex that are lying completely on one side
           of the plane will return unaltered. Elements that are crossing the
           plane will be cut and split up into multiple parts.
-        
+
           When side = '+' or '-' (or 'positive'or 'negative'), only one
           of the sides is returned.
 
@@ -1987,7 +1990,7 @@ maxprop  = %s
     def split(self,n=1):
         """Split a Formex in subFormices containing n elements.
 
-        The number of elements in the Formex should be a multiple of n. 
+        The number of elements in the Formex should be a multiple of n.
         Returns a list of Formices each comprising n elements.
         """
         if self.nelems() % n != 0:
@@ -2036,7 +2039,7 @@ maxprop  = %s
 
 #################### Read/Write Formex File ##################################
 
-    
+
     def write(self,fil,sep=' ',mode='w'):
         """Write a Formex to file.
 
@@ -2051,8 +2054,8 @@ maxprop  = %s
         f.write(self)
         if f.isname and mode[0]=='w':
             f.close()
-        
-       
+
+
     @classmethod
     def read(clas,fil,sep=' '):
         """Read a Formex from file.
@@ -2075,13 +2078,13 @@ maxprop  = %s
         This uses the :meth:`Coords.fromstring` method to read coordinates
         from a string and restructures them into a Formex of the specified
         plexitude.
-        
+
         Parameters:
 
         - `fil`: a string containing a single sequence of float numbers separated
           by whitespace and a possible separator string.
         - `sep`: the separator used between the coordinates. If not a space,
-          all extra whitespace is ignored. 
+          all extra whitespace is ignored.
         - `ndim`: number of coordinates per point. Should be 1, 2 or 3 (default).
           If 1, resp. 2, the coordinate string only holds x, resp. x,y values.
         - `count`: total number of coordinates to read. This should be a multiple
@@ -2111,7 +2114,7 @@ maxprop  = %s
 
         if self.nelems() == 0:
             return None
-        
+
         return GeomActor(self,**kargs)
 
 
@@ -2119,15 +2122,15 @@ maxprop  = %s
     #
     # Obsolete and deprecated functions
     #
-    
+
     nnodes = npoints
- 
+
 
 ##############################################################################
 #
 #    Functions which are not Formex class methods
 #
-        
+
 def connect(Flist,nodid=None,bias=None,loop=False):
     """Return a Formex which connects the Formices in list.
 
@@ -2157,7 +2160,7 @@ def connect(Flist,nodid=None,bias=None,loop=False):
                 raise TypeError
     except TypeError:
         raise TypeError,'connect(): first argument should be a list of formices'
-    
+
     if not nodid:
         nodid = [ 0 for i in range(m) ]
     if not bias:
@@ -2203,20 +2206,20 @@ def interpolate(F,G,div,swap=False,concat=True):
     if swap:
         r = r.swapaxes(0,1)
     return Formex(r.reshape((-1,) + r.shape[-2:]))
-    
+
 
 ##############################################################################
 #
 #  Testing
 #
-#  Some of the docstrings above hold test examples. They should be carefully 
+#  Some of the docstrings above hold test examples. They should be carefully
 #  crafted to test the functionality of the Formex class.
 #
 #  Ad hoc test examples during development can be added to the test() function
 #  below.
 #
 #  python formex.py
-#    will execute the docstring examples silently. 
+#    will execute the docstring examples silently.
 #  python formex.py -v
 #    will execute the docstring examples verbosely.
 #  In both cases, the ad hoc tests are only run if the docstring tests
@@ -2224,7 +2227,7 @@ def interpolate(F,G,div,swap=False,concat=True):
 #
 
 if __name__ == "__main__":
-    
+
     def test():
         """Run some additional examples.
 
