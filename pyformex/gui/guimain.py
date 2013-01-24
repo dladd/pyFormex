@@ -39,7 +39,7 @@ utils.checkModule('pyopengl',fatal=True)
 
 import os.path
 
-from PyQt4 import QtCore, QtGui
+from gui import QtCore, QtGui
 
 import menu
 import cameraMenu

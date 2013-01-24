@@ -58,7 +58,7 @@ def showStepPlot(x,y,label='',title=None,plot2d_system=None):
         
     elif plot2d_system == 'qwt':
         pass
-        #from PyQt4.Qwt5.qplt import *
+        #from gui.Qwt5.qplt import *
 
     elif plot2d_system == 'matplotlib':
         import matplotlib.pyplot as plt

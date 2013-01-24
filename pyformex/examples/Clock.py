@@ -35,7 +35,7 @@ _techniques = ['timer']
 from gui.draw import *
 import simple
 from datetime import datetime
-from PyQt4 import QtCore
+from gui import QtCore
 
 class AnalogClock(object):
     """An analog clock built from Formices"""

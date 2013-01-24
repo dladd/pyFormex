@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,7 +30,11 @@ anywhere, causing attached functions to be executed.
 from __future__ import print_function
 import pyformex as pf
 
-from PyQt4.QtCore import Qt,QObject,SIGNAL,QThread
+from gui import QtCore
+Qt = QtCore.Qt
+QObject = QtCore.QObject
+SIGNAL = QtCore.SIGNAL
+QThread = QtCore.QThread
 
 # signals
 CANCEL = SIGNAL("Cancel")   # cancel the operation, undoing it
@@ -38,8 +42,8 @@ DONE   = SIGNAL("Done")     # accept and finish the operation
 REDRAW = SIGNAL("Redraw")   # redraw a preview state
 WAKEUP = SIGNAL("Wakeup")   # wake up from a sleep state
 TIMEOUT = SIGNAL("Timeout") # terminate what was going on
-SAVE = SIGNAL("Save")       # 
-FULLSCREEN = SIGNAL("Fullscreen")    # 
+SAVE = SIGNAL("Save")       #
+FULLSCREEN = SIGNAL("Fullscreen")    #
 
 keypress_signal = {
     Qt.Key_F2: SAVE,
@@ -58,6 +62,6 @@ def offSignal(signal,function,widget=None):
     if widget is None:
         widget = pf.GUI
     QObject.disconnect(widget,signal,function)
-    
+
 # End
 

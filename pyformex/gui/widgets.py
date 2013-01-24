@@ -32,7 +32,7 @@ Qt widgets directly.
 from __future__ import print_function
 
 import os,types
-from PyQt4 import QtCore, QtGui
+from gui import QtCore, QtGui
 import pyformex as pf
 import colors
 import odict,mydict,olist

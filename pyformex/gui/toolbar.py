@@ -30,7 +30,7 @@ from __future__ import print_function
 
 import pyformex as pf
 import os
-from PyQt4 import QtCore, QtGui
+from gui import QtCore, QtGui
 
 import widgets
 import draw

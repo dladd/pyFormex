@@ -30,7 +30,8 @@ from __future__ import print_function
 import pyformex as pf
 import apps
 
-from PyQt4.QtCore import SIGNAL
+from gui import QtCore
+SIGNAL = QtCore.SIGNAL
 
 import utils,olist
 import script,draw

@@ -30,7 +30,7 @@ instead of through the 3D OpenGL engine.
 from __future__ import print_function
 
 from OpenGL import GL
-from PyQt4 import QtOpenGL
+from gui import QtOpenGL
 
 from drawable import *
 from text import *

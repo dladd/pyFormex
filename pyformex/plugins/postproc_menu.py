@@ -43,7 +43,7 @@ from formex import *
 from gui.draw import *
 from gui.colors import *
 
-from PyQt4 import QtCore
+from gui import QtCore
 
 
 class AttributeModel(QtCore.QAbstractTableModel):

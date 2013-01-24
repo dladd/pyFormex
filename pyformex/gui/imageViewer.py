@@ -31,7 +31,7 @@ from __future__ import print_function
 
 caption = "pyFormex Image Viewer"
 
-from PyQt4 import QtCore, QtGui
+from gui import QtCore, QtGui
 
 
 def tr(s):

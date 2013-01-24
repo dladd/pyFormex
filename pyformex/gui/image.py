@@ -35,7 +35,7 @@ from __future__ import print_function
 import pyformex as pf
 
 from OpenGL import GL
-from PyQt4 import QtCore,QtGui,QtOpenGL
+from gui import QtCore,QtGui,QtOpenGL
 import utils
 import os
 

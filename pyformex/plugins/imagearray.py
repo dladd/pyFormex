@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -32,7 +32,10 @@ This code was based on ideas found on the PyQwt mailing list.
 from __future__ import print_function
 
 import pyformex as pf
-from PyQt4.QtGui import QImage, QColor
+from gui import QtGui
+QImage = QtGui.QImage
+QColor = QtGui.QColor
+
 import numpy as np
 import utils
 
@@ -49,7 +52,7 @@ def resizeImage(image,w=0,h=0):
       the image.
 
     Returns a QImage with the requested size.
-    """     
+    """
     if not isinstance(image,QImage):
         image = QImage(image)
 
@@ -111,7 +114,7 @@ def image2numpy(image,resize=(0,0),order='RGBA',flip=True,indexed=None,expand=No
     - if `indexed` is True: a tuple (colors,colortable) where colors is an
       (height,width) shaped int array of indices into the colortable,
       which is an int8 array with shape (ncolors,4).
-      
+
     - if `indexed` is None (default), a tuple (colors,colortable) is returned,
       the type of which depend on the original image format:
 
@@ -124,15 +127,15 @@ def image2numpy(image,resize=(0,0),order='RGBA',flip=True,indexed=None,expand=No
     if expand is not None:
         utils.warn("depr_image2numpy_arg")
         indexed = not expand
-        
-    
+
+
     image = resizeImage(image,*resize)
 
     if indexed:
         image = image.convertToFormat(QImage.Format_Indexed8)
-        
+
     h,w = image.height(),image.width()
-    
+
     if image.format() in (QImage.Format_ARGB32_Premultiplied,
                           QImage.Format_ARGB32,
                           QImage.Format_RGB32):
@@ -155,7 +158,7 @@ def image2numpy(image,resize=(0,0),order='RGBA',flip=True,indexed=None,expand=No
             #ar = ar[:w*h]
         ar = ar.reshape(h,-1)
         #print "IMAGE SHAPE IS %s" % str(ar.shape)
-        
+
     else:
         raise ValueError("image2numpy only supports 32bit and 8bit images")
 
@@ -173,7 +176,7 @@ def image2numpy(image,resize=(0,0),order='RGBA',flip=True,indexed=None,expand=No
         return ar
     else:
         return ar,ct
-    
+
 
 def numpy2qimage(array):
         if np.ndim(array) == 2:
@@ -244,7 +247,7 @@ def image2glcolor(image,resize=(0,0)):
     c = c.reshape(-1,3)
     c = c / 255.
     return c, None
-     
+
 
 # Import images using PIL
 

@@ -31,7 +31,7 @@ from __future__ import print_function
 
 import pyformex as pf
 from pyformex.gui import *
-from PyQt4 import QtGui,QtCore # For Sphinx
+from gui import QtGui,QtCore # For Sphinx
 import odict
 import utils
 
