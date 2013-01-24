@@ -251,6 +251,9 @@ def askConfigPreferences(items,prefix=None,store=None):
     The current values are retrieved from the store, and the type returned
     will be in accordance.
     If no store is specified, the global config pf.cfg is used.
+
+    This function can be used to change individual values by a simpler
+    interface than the full settings dialog.
     """
     if store is None:
         store = pf.cfg
@@ -549,12 +552,15 @@ _activate_settings = {
     'draw/wait':updateDrawWait,
     }
 
+def setDrawWait():
+    askConfigPreferences(['draw/wait'])
 
 MenuData = [
     (_('&Settings'),[
         (_('&Settings Dialog'),settings),
-        (_('&Options'),setOptions),
         (_('&Debug'),setDebug),
+        (_('&Options'),setOptions),
+        (_('&Draw Wait'),setDrawWait),
         (_('&Rendering Params'),setRendering),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),

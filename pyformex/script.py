@@ -258,12 +258,12 @@ scriptInit = None # can be set to execute something before each script
 def scriptLock(id):
     pf.debug("Setting script lock %s" %id,pf.DEBUG.SCRIPT)
     pf.scriptlock |= set([id])
-    print(pf.scriptlock)
+    #print(pf.scriptlock)
 
 def scriptRelease(id):
     pf.debug("Releasing script lock %s" %id,pf.DEBUG.SCRIPT)
     pf.scriptlock -= set([id])
-    print(pf.scriptlock)
+    #print(pf.scriptlock)
 
 
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
@@ -289,7 +289,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
     if len(pf.scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
-        print(pf.scriptlock)
+        #print(pf.scriptlock)
         return
 
     scriptLock('__auto__')
@@ -356,7 +356,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 def force_finish():
     pf.scriptlock = set() # release all script locks (in case of an error)
-    print(pf.scriptlock)
+    #print(pf.scriptlock)
 
 
 def breakpt(msg=None):
@@ -490,7 +490,7 @@ def runApp(appname,argv=[],refresh=False):
     global exitrequested
     if len(pf.scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
-        print(pf.scriptlock)
+        #print(pf.scriptlock)
         return
 
     import apps
@@ -596,24 +596,24 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
         return runApp(appname,argv,refresh)
 
 
-def runAll(applist,refresh=False):
-    """Run all the scripts/apps in given list."""
-    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
-    for f in applist:
-        while pf.scriptlock:
-            print(pf.scriptlock)
-            print("WAITING BECAUSE OF SCRIPT LOCK")
-            sleep(5)
-        runAny(f,refresh=refresh)
-        if exitrequested:
-            break
-    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+## def runAll(applist,refresh=False):
+##     """Run all the scripts/apps in given list."""
+##     pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
+##     for f in applist:
+##         while pf.scriptlock:
+##             #print(pf.scriptlock)
+##             print("WAITING BECAUSE OF SCRIPT LOCK")
+##             sleep(5)
+##         runAny(f,refresh=refresh)
+##         if exitrequested:
+##             break
+##     pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
 
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
-    print("DRAW.EXIT")
-    print(pf.scriptlock)
+    #print("DRAW.EXIT")
+    #print(pf.scriptlock)
     if len(pf.scriptlock) > 0:
         if all:
             raise _ExitAll # ask exit from pyformex

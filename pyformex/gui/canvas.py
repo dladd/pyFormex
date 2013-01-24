@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -80,7 +80,7 @@ def glLineSmooth(onoff):
     elif onoff is False:
         GL.glDisable(GL.GL_LINE_SMOOTH)
 
-    
+
 def glLineStipple(factor,pattern):
     """Set the line stipple pattern.
 
@@ -92,7 +92,7 @@ def glLineStipple(factor,pattern):
     """
     if factor > 0:
         GL.glLineStipple(factor,pattern)
-        GL.glEnable(GL.GL_LINE_STIPPLE)    
+        GL.glEnable(GL.GL_LINE_STIPPLE)
     else:
         GL.glDisable(GL.GL_LINE_STIPPLE)
 
@@ -102,11 +102,11 @@ def glSmooth(smooth=True):
         GL.glShadeModel(GL.GL_SMOOTH)
     else:
         GL.glShadeModel(GL.GL_FLAT)
-        
+
 def glFlat():
     """Disable smooth shading"""
     glSmooth(False)
-    
+
 
 def onOff(onoff):
     """Convert On/Off strings to a boolean"""
@@ -126,14 +126,14 @@ def glEnable(facility,onoff):
     onoff can be True or False to enable, resp. disable the facility, or
     None to leave it unchanged.
     """
-    pf.debug("%s: %s" % (facility,onoff),pf.DEBUG.DRAW)
+    #pf.debug("%s: %s" % (facility,onoff),pf.DEBUG.DRAW)
     if onOff(onoff):
-        pf.debug("ENABLE",pf.DEBUG.DRAW)
+        #pf.debug("ENABLE",pf.DEBUG.DRAW)
         GL.glEnable(facility)
     else:
-        pf.debug("DISABLE",pf.DEBUG.DRAW)
+        #pf.debug("DISABLE",pf.DEBUG.DRAW)
         GL.glDisable(facility)
-        
+
 
 def glCulling(onoff=True):
     glEnable(GL.GL_CULL_FACE,onoff)
@@ -154,12 +154,12 @@ def glPolygonFillMode(mode):
         elif mode == 'Back':
             glBackFill()
 
-            
+
 def glPolygonMode(mode):
     if type(mode) is str:
         mode = mode.lower()
         glFill(mode == 'fill')
-    
+
 
 def glShadeModel(model):
     if type(model) is str:
@@ -169,7 +169,7 @@ def glShadeModel(model):
         elif model == 'flat':
             glFlat()
 
-    
+
 class ActorList(list):
     """A list of drawn objects of the same kind.
 
@@ -178,11 +178,11 @@ class ActorList(list):
     Currently the implementation does not check that the objects are of
     the proper type.
     """
-    
+
     def __init__(self,canvas):
         self.canvas = canvas
         list.__init__(self)
-        
+
     def add(self,actor):
         """Add an actor or a list thereof to a ActorList."""
         if type(actor) is list:
@@ -231,7 +231,7 @@ class Material(object):
                 #print getattr(self,k)
 
 
-    def activate(self):   
+    def activate(self):
         GL.glMaterialfv(fill_mode,GL.GL_AMBIENT,colors.GREY(self.ambient))
         GL.glMaterialfv(fill_mode,GL.GL_DIFFUSE,colors.GREY(self.diffuse))
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
@@ -242,7 +242,7 @@ class Material(object):
     def dict(self):
         """Return the material light parameters as a dict"""
         return dict([(k,getattr(self,k)) for k in ['ambient','diffuse','specular','emission','shininess']])
-    
+
 
     def __str__(self):
         return """MATERIAL: %s
@@ -252,7 +252,7 @@ class Material(object):
     emission: %s
     shininess: %s
 """ % (self.name,self.ambient,self.diffuse,self.specular,self.emission,self.shininess)
-        
+
 
 
 def getMaterials():
@@ -313,7 +313,7 @@ class LightProfile(object):
         'emission': GL.GL_EMISSION,
         'specular': GL.GL_SPECULAR,
         }
-    
+
     def __init__(self,model,ambient,lights):
         self.model = self.light_model[model]
         self.ambient = ambient
@@ -332,7 +332,7 @@ class LightProfile(object):
         for light in self.lights:
             light.enable()
         GL.glPopMatrix()
-        
+
 
 
 ##################################################################
@@ -346,15 +346,15 @@ class CanvasSettings(Dict):
     The canvas settings are a collection of settings and default values
     affecting the rendering in an individual viewport. There are two type of
     settings:
-    
+
     - mode settings are set during the initialization of the canvas and
       can/should not be changed during the drawing of actors and decorations;
     - default settings can be used as default values but may be changed during
       the drawing of actors/decorations: they are reset before each individual
       draw instruction.
-      
+
     Currently the following mode settings are defined:
-    
+
     - bgcolor: the viewport background color: a single color or a list of
       colors (max. 4 are used).
     - bgimage: background image filename
@@ -372,7 +372,7 @@ class CanvasSettings(Dict):
     - culling: boolean
     - transparency: float (0.0..1.0)
     - avgnormals: boolean
-    - edges: 'none', 'feature' or 'all' 
+    - edges: 'none', 'feature' or 'all'
     - pointsize: the default size for drawing points
     - marksize: the default size for drawing markers
     - linewidth: the default width for drawing lines
@@ -441,7 +441,7 @@ class CanvasSettings(Dict):
             }),
         }
     edge_options = [ 'none','feature','all' ]
-    
+
     def __init__(self,**kargs):
         """Create a new set of CanvasSettings."""
         Dict.__init__(self)
@@ -502,7 +502,7 @@ class CanvasSettings(Dict):
                 if strict:
                     raise ValueError,"Invalid key/value for CanvasSettings: %s = %s" % (k,v)
         return ok
-    
+
     def __str__(self):
         return utils.formatDict(self)
 
@@ -515,7 +515,7 @@ class CanvasSettings(Dict):
         else:
             color = self.bgcolor
         GL.glClearColor(*colors.RGBA(color))
- 
+
 
     def activate(self):
         """Activate the default canvas settings in the GL machine."""
@@ -550,8 +550,8 @@ def glSettings(settings):
     glPolygonFillMode(settings.get('Polygon Fill',None))
     glPolygonMode(settings.get('Polygon Mode',None))
     pf.canvas.update()
-    
-            
+
+
 
 def extractCanvasSettings(d):
     """Split a dict in canvas settings and other items.
@@ -570,7 +570,7 @@ def extractCanvasSettings(d):
 def print_camera(self):
     print(self.report())
 
-    
+
 class Canvas(object):
     """A canvas for OpenGL rendering.
 
@@ -579,7 +579,7 @@ class Canvas(object):
     It also keeps lists of the actors and decorations in the scene.
     The canvas has a Camera object holding important viewing parameters.
     Finally, it stores the lighting information.
-    
+
     It does not however contain the viewport size and position.
     """
 
@@ -621,7 +621,7 @@ class Canvas(object):
     def has_lighting(self):
         """Return the status of the lighting."""
         return GL.glIsEnabled(GL.GL_LIGHTING)
-        
+
 
     def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
@@ -632,11 +632,11 @@ class Canvas(object):
     def setAmbient(self,ambient):
         """Set the global ambient lighting for the canvas"""
         self.lightprof.ambient = float(ambient)
-        
+
     def setMaterial(self,matname):
         """Set the default material light properties for the canvas"""
         self.material = pf.GUI.materials[matname]
-        
+
 
     def resetLighting(self):
         """Change the light parameters"""
@@ -652,7 +652,7 @@ class Canvas(object):
 
         This sets or changes the rendermode and lighting attributes.
         If lighting is not specified, it is set depending on the rendermode.
-        
+
         If the canvas has not been initialized, this merely sets the
         attributes self.rendermode and self.settings.lighting.
         If the canvas was already initialized (it has a camera), and one of
@@ -668,7 +668,7 @@ class Canvas(object):
         #print(self.settings)
         if lighting is None:
             lighting = self.settings.lighting
-            
+
         #if mode != self.rendermode or lighting != self.settings.lighting:
         #print("SWITCHING MODE")
         if self.camera:
@@ -716,17 +716,17 @@ class Canvas(object):
             #print("REDRAW")
             self.actors.redraw()
             self.display()
-       
+
 
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)
-       
+
 
     def setLineStipple(self,repeat,pattern):
         """Set the linestipple for line rendering."""
         self.settings.update({'linestipple':(repeat,pattern)})
-        
+
 
     def setPointSize(self,sz):
         """Set the size for point drawing."""
@@ -739,12 +739,12 @@ class Canvas(object):
         Change the background settings according to the specified parameters
         and set the canvas background accordingly. Only (and all) the specified
         parameters get a new value.
-        
+
         Parameters:
 
         - `color`: either a single color, a list of two colors or a list of
           four colors.
-        - `image`: an image to be set. 
+        - `image`: an image to be set.
         """
         self.settings.update(dict(bgcolor=color,bgimage=image))
         color = self.settings.bgcolor
@@ -776,12 +776,12 @@ class Canvas(object):
                 pass
         #print("BACKGROUN %s,%s"%(x2,y2))
         self.background = decors.Rectangle(x1,y1,x2,y2,color=color,texture=image)
-        
+
 
     def setFgColor(self,color):
         """Set the default foreground color."""
         self.settings.fgcolor = colors.GLcolor(color)
-        
+
 
     def setSlColor(self,color):
         """Set the highlight color."""
@@ -803,7 +803,7 @@ class Canvas(object):
         if on:
             self.triade = decors.Triade(pos,siz)
             self.addAnnotation(self.triade)
-    
+
 
     def initCamera(self):
         self.makeCurrent()  # we need correct OpenGL context for camera
@@ -812,15 +812,15 @@ class Canvas(object):
             self.camera.modelview_callback = print_camera
             self.camera.projection_callback = print_camera
 
-            
+
     def clear(self):
         """Clear the canvas to the background color."""
         self.settings.setMode()
         self.setDefaults()
 
-    
+
     def setSize (self,w,h):
-        if h == 0:	# prevent divide by zero 
+        if h == 0:	# prevent divide by zero
             h = 1
         GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
@@ -848,7 +848,7 @@ class Canvas(object):
         """Override some settings"""
         settings = CanvasSettings.RenderProfiles[mode]
         CanvasSettings.glOverride(settings,self.settings)
-        
+
 
     def glinit(self):
         """Initialize the rendering machine.
@@ -866,15 +866,15 @@ class Canvas(object):
 
         if self.rendermode.endswith('wire'):
             GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)
-            GL.glPolygonOffset(1.0,1.0) 
+            GL.glPolygonOffset(1.0,1.0)
         else:
             GL.glDisable(GL.GL_POLYGON_OFFSET_FILL)
-            
+
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
         GL.glFlush()
-        
+
 
     def display(self):
         """(Re)display all the actors in the scene.
@@ -885,10 +885,10 @@ class Canvas(object):
         #pf.debugt("UPDATING CURRENT OPENGL CANVAS",pf.DEBUG.DRAW)
         self.makeCurrent()
         self.clear()
-        
+
         # draw background decorations in 2D mode
         self.begin_2D_drawing()
-        
+
         if self.background:
             #pf.debug("Displaying background",pf.DEBUG.DRAW)
             # If we have a shaded background, we need smooth/fill anyhow
@@ -912,12 +912,12 @@ class Canvas(object):
                 self.draw_focus_rectangle(0,color=colors.blue)
             if self.focus:      # pyFormex DRAW focus
                 self.draw_focus_rectangle(2,color=colors.red)
-                
+
         self.end_2D_drawing()
 
         # start 3D drawing
         self.camera.set3DMatrices()
-        
+
         # draw the highlighted actors
         if self.highlights:
             for actor in self.highlights:
@@ -977,12 +977,12 @@ class Canvas(object):
         if zoom is None:
             zoom = (0,self.width(),0,self.height())
         GLU.gluOrtho2D(*zoom)
-            
+
 
     def begin_2D_drawing(self):
         """Set up the canvas for 2D drawing on top of 3D canvas.
 
-        The 2D drawing operation should be ended by calling end_2D_drawing. 
+        The 2D drawing operation should be ended by calling end_2D_drawing.
         It is assumed that you will not try to change/refresh the normal
         3D drawing cycle during this operation.
         """
@@ -1001,20 +1001,20 @@ class Canvas(object):
         self.enable_lighting(False)
         self.mode2D = True
 
- 
+
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
         #pf.debug("End 2D drawing",pf.DEBUG.DRAW)
         if self.mode2D:
-            GL.glEnable(GL.GL_DEPTH_TEST)    
+            GL.glEnable(GL.GL_DEPTH_TEST)
             GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glPopMatrix()
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glPopMatrix()
             self.enable_lighting(self.settings.lighting)
             self.mode2D = False
-       
-        
+
+
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible.
 
@@ -1041,11 +1041,11 @@ class Canvas(object):
     def addHighlight(self,itemlist):
         """Add a highlight or a list thereof to the 3D scene."""
         self.highlights.add(itemlist)
-         
+
     def addAnnotation(self,itemlist):
         """Add an annotation or a list thereof to the 3D scene."""
         self.annotations.add(itemlist)
-         
+
     def addDecoration(self,itemlist):
         """Add a 2D decoration or a list thereof to the canvas."""
         self.decorations.add(itemlist)
@@ -1078,10 +1078,10 @@ class Canvas(object):
             itemlist = self.actors[:]
         self.actors.delete(itemlist)
         self.setBbox()
-        
+
     def removeHighlight(self,itemlist=None):
         """Remove a highlight or a list thereof from the 3D scene.
-        
+
         Without argument, removes all highlights from the scene.
         """
         if itemlist == None:
@@ -1126,7 +1126,7 @@ class Canvas(object):
         self.removeHighlight(itemlist)
         self.removeAnnotation(itemlist)
         self.removeDecoration(itemlist)
-    
+
 
     def redrawAll(self):
         """Redraw all actors in the scene."""
@@ -1136,7 +1136,7 @@ class Canvas(object):
         self.decorations.redraw()
         self.display()
 
-        
+
     def setCamera(self,bbox=None,angles=None):
         """Sets the camera looking under angles at bbox.
 
@@ -1171,14 +1171,14 @@ class Canvas(object):
         #
         # TODO: we should add the rectangle (digital) zooming to
         #       the docstring
-        
+
         self.makeCurrent()
-        
+
         # set scene center
         if bbox is not None:
             pf.debug("SETTING BBOX: %s" % self.bbox,pf.DEBUG.DRAW)
             self.setBbox(bbox)
-            
+
             X0,X1 = self.bbox
             center = 0.5*(X0+X1)
             self.camera.setCenter(*center)

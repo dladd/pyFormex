@@ -695,7 +695,7 @@ class GeomActor(Actor):
         # represent a valid Mesh elementType
         # This is only here for Formex type.
         # We can probably remove it if we avoid eltype 'curve'
-        elif nplex == 3 and self.eltype in ['curve','line3']:
+        elif nplex == 3 and self.eltype == 'curve':
             drawQuadraticCurves(self.coords,self.elems,color)
 
         elif self.eltype is None:
