@@ -66,7 +66,7 @@ def run():
                     lights(light)
                     print("%s: color %s, mode %s, lights %s" % (i,str(c),mode,light))
                     i += 1
-                    pause(1)
+                    sleep(1)
 
 
 if __name__ == 'draw':

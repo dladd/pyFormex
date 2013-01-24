@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -51,17 +51,17 @@ def run():
     a = Formex([[[0,0],[1,0],[0.5,v]]],1)
     aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
     draw(a+aa)
-    pause(1)
+    sleep(1)
 
     d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)
     dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)
     clear()
     draw(d+dd)
-    pause(1)
+    sleep(1)
 
     e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
     draw(e)
-    pause(1)
+    sleep(1)
 
     g = e.mapd(2,lambda d:f*sqrt((m+1)**2-d**2),e.center(),[0,1])
     clear()

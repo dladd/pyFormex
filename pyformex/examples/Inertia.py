@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -42,7 +42,7 @@ def unitAxes():
     Hx.setProp(4)
     Hy.setProp(5)
     Hz.setProp(6)
-    return Formex.concatenate([Hx,Hy,Hz])    
+    return Formex.concatenate([Hx,Hy,Hz])
 
 def showPrincipal1(F):
     """Show the principal axes."""
@@ -75,7 +75,7 @@ def run():
     Fr = F
     C,I,Ip,Ia = showPrincipal1(Fr)
 
-    pause(2)
+    sleep(2)
     Fr = F.rotate(30,0).rotate(45,1).rotate(60,2)
     C,I,Ip,Ia = showPrincipal1(Fr)
 

@@ -75,7 +75,7 @@ def run():
     draw(M.coords[n0],marksize=10,bbox='last',ontop=True)
 
     # compute and draw parts connected to the common nodes
-    pause(4)
+    sleep(4)
     clear()
     draw(M.coords[n0],marksize=10,bbox='last',ontop=True)
     M = M.connectedTo(n0)

@@ -244,8 +244,6 @@ def system(cmdline,result='output'):
 
 ########################### PLAYING SCRIPTS ##############################
 
-sleep = time.sleep
-
 scriptThread = None
 exitrequested = False
 starttime = 0.0
@@ -603,7 +601,7 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
 ##         while pf.scriptlock:
 ##             #print(pf.scriptlock)
 ##             print("WAITING BECAUSE OF SCRIPT LOCK")
-##             sleep(5)
+##             time.sleep(5)
 ##         runAny(f,refresh=refresh)
 ##         if exitrequested:
 ##             break

@@ -131,5 +131,7 @@ else:
 
     else:
 
+        print("Could not import calpy")
+
 
 ### End

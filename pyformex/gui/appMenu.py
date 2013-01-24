@@ -493,7 +493,7 @@ class AppMenu(menu.Menu):
         The first and last arguments do not apply to the submenus.
 
         """
-        from gui.draw import layout,reset,pause
+        from gui.draw import layout,reset,sleep
         pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if last is None:
             last = len(self.files)
@@ -509,8 +509,9 @@ class AppMenu(menu.Menu):
         for f in files:
             while pf.scriptlock:
                 print("RUNALL WAITING BECAUSE OF SCRIPT LOCK")
+                print("Locked by: %s" % pf.scriptlock)
                 import time
-                time.sleep(5)
+                time.sleep(2)
                 pf.app.processEvents()
             layout(1)
             reset()
@@ -518,7 +519,7 @@ class AppMenu(menu.Menu):
             #print("RUNNING %s" %f)
             self.runApp(f)
             script.breakpt(msg="Breakpoint from runall")
-            pause(1)#,msg="EXITREQUESTED: %s" % script.exitrequested)
+            sleep(1)#,msg="EXITREQUESTED: %s" % script.exitrequested)
             if script.exitrequested:
                 break
         tcount = len(files)

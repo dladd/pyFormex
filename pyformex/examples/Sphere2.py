@@ -61,7 +61,7 @@ def run():
         draw(s,bbox=bb)#,color='random')
         nx = int(m*nx)
         ny = int(m*ny)
-        pause(2)
+        sleep(2)
 
 if __name__ == 'draw':
     run()

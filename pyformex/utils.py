@@ -29,7 +29,8 @@ from __future__ import print_function
 
 import pyformex as pf
 
-import os,re,sys,tempfile
+import os,re,sys,tempfile,time
+
 from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
@@ -745,7 +746,6 @@ def timeEval(s,glob=None):
     the overhead of the time calls. Use Python's timeit module to measure
     microlevel execution time.
     """
-    import time
     start = time.time()
     res = eval(s,glob)
     stop = time.time()
@@ -795,7 +795,6 @@ def system1(cmd):
 ##         except:#the stdout was not yet generated
 ##             out = ''
 ##         try:
-##             import time
 ##             time.sleep(waitToKill)
 ##             #proc.kill()
 ##             killProcesses([proc.pid+1],signal=15)#VMTK use pid+1, is it general?
@@ -837,15 +836,14 @@ def system(cmd,timeout=None,gracetime=2.0,shell=True):
 
     def terminate(p):
         """Terminate a subprocess when it times out"""
-        from time import sleep
         if p.poll() is None:
             print("Subprocess terminated due to timeout (%ss)" % timeout)
             p.terminate()
             p.returncode = _TIMEOUT_EXITCODE
-            sleep(0.1)
+            time.sleep(0.1)
             if p.poll() is None:
                 # Give the process 2 seconds to terminate, then kill it
-                sleep(gracetime)
+                time.sleep(gracetime)
                 if p.poll() is None:
                     print("Subprocess killed")
                     p.kill()

@@ -232,7 +232,7 @@ def postproc(coords,elements,displ,frc):
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200) 
     decorate(CLA)
-    pause(timeout=3)
+    sleep(timeout=3)
 
     # and a deformed plot on multiple scales
     dscales = arange(1,6) * 1.0

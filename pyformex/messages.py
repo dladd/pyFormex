@@ -71,19 +71,6 @@ warn_flat_removed = "The 'flat=True' parameter of the draw function has been rep
 
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 
-warn_avoid_sleep = """.. warn_avoid_sleep
-
-Avoid sleep function
---------------------
-The sleep function may cause a heavy processor load during it wait cycle,
-and its use should therefore be avoided. Depending on your intentions,
-there are several better alternatives:
-
-- the `Draw Wait Time` preference setting,
-- the delay() and wait() functions,
-- the pause() function,
-"""
-
 warn_widgets_updatedialogitems = "gui.widgets.updateDialogItems now expects data in the new InputItem format. Use gui.widgets.updateOldDialogItems for use with old data format."
 
 _future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."

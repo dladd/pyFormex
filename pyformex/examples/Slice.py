@@ -104,9 +104,9 @@ def run():
     y = pf.canvas.height() - 40
     T = drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
     for i in range(10):
-        pause(0.3)
+        sleep(0.3)
         undecorate(T)
-        pause(0.3)
+        sleep(0.3)
         decorate(T)
 
 if __name__ == 'draw':

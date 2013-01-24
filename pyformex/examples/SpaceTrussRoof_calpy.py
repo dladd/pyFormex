@@ -259,7 +259,7 @@ def run():
                     if TA:
                         pf.canvas.removeDecoration(TA)
                     TA,FA = T,F
-                    pause(sleeptime)
+                    sleep(sleeptime)
 
         def getOptimscale():
             """Determine an optimal scale for displaying the deformation"""
