@@ -26,6 +26,7 @@
 
 """
 
+from numpy import *
 from coords import Coords
 
 class BoundVectors(Coords):
