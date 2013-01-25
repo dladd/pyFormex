@@ -26,6 +26,7 @@
 
 """
 
+from coords import Coords
 
 class BoundVectors(Coords):
     """A collection of bound vectors in a 3D Cartesian space.
@@ -71,7 +72,7 @@ class BoundVectors(Coords):
     def actor(self,**kargs):
         """_This allows a BoundVectors object to be drawn directly."""
         from gui.actors import GeomActor
-        from formex import Formex,connect
+        from formex import connect
         return GeomActor(connect([self.origins(),self.heads()]),**kargs)
 
 
