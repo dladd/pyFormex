@@ -56,9 +56,10 @@ from script import *
 from colors import *
 from signals import *
 from formex import *
-from coordsys import CoordinateSystem
-from mesh import Mesh
-from plugins.trisurface import TriSurface
+
+# these are already imported in script
+#from mesh import Mesh
+#from plugins.trisurface import TriSurface
 
 #################### Interacting with the user ###############################
 
@@ -934,6 +935,7 @@ def drawAxes(CS=None,*args,**kargs):
     this function gives a better result because it has specialized color
     and annotation settings and provides reasonable deafults.
     """
+    from coordsys import CoordinateSystem
     if CS is None:
         CS = CoordinateSystem()
     A = actors.AxesActor(CS,*args,**kargs)

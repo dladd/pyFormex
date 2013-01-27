@@ -54,10 +54,10 @@ bindir = os.path.join(pyformexdir,'bin')
 userconfdir = os.path.join(homedir,'.pyformex')
 siteprefs = '/etc/pyformexrc'
 localprefs = '.pyformex/pyformexrc'
+autorun = os.path.join(userconfdir,'startup.py')
 scripttemplate = os.path.join(pyformexdir,'template.py')
 curfile = ''
 curproj = ''
-
 
 # extra paths to append tot sys.path
 syspath = []

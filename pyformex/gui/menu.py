@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -58,17 +58,17 @@ class BaseMenu(object):
     The item names are normalized by removing all '&' characters and
     converting the result to lower case.
     It thus becomes easy to search for an existing item in a menu.
-    
+
     This class is not intended for direct use, but through subclasses.
     Subclasses should implement at least the following methods:
-    
+
     - addSeparator()
     - insertSeperator(before)
     - addAction(text,action)
     - insertAction(before,text,action)
     - addMenu(text,menu)
     - insertMenu(before,text,menu)
-      
+
     QtGui.Menu and QtGui.MenuBar provide these methods.
     """
 
@@ -109,7 +109,7 @@ class BaseMenu(object):
             return self.actionList().index(utils.strNorm(text))
         except ValueError:
             return -1
-    
+
 
     def action(self,text):
         """Return the action with specified text.
@@ -169,7 +169,7 @@ class BaseMenu(object):
             if isinstance(action,QtGui.QMenu):
                 action.close()
                 del action
-    
+
     # The need for the following functions demonstrates how much more
     # powerful a dynamically typed language as Python is as compared to
     # the C++ language used by Qt
@@ -183,27 +183,26 @@ class BaseMenu(object):
     def insert_menu(self,menu,before=None):
         """Insert an existing menu."""
         self._submenus_.append(menu)
-        #print("---insert submenu %s to %s ---" % (menu.title(),self.title()))
         if before:
             return self.insertMenu(before,menu)
         else:
             return self.addMenu(menu)
 
     def insert_action(self,action,before=None):
-        """Insert an action.""" 
+        """Insert an action."""
         if before:
             return self.insertAction(before,action)
         else:
             return self.addAction(action)
 
-    def create_insert_action(self,str,val,before=None):
-        """Create and insert an action.""" 
+    def create_insert_action(self,name,val,before=None):
+        """Create and insert an action."""
         if before:
             raise RuntimeError,"THIS CAN NOT WORK"
-            return self.insertAction(before,str,val)
+            return self.insertAction(before,name,val)
         else:
-            return self.addAction(str,val)
-    
+            return self.addAction(name,val)
+
 
     def insertItems(self,items,before=None,debug=False):
         """Insert a list of items in the menu.
@@ -278,7 +277,7 @@ class BaseMenu(object):
                     if before is not None:
                         raise RuntimeError,"I can not insert a QAction menu item before an existing one."
                     a = self.create_insert_action(txt,val,before)
-                for k,v in options.items():                        
+                for k,v in options.items():
                     if k == 'icon':
                         a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
                     elif k == 'shortcut':
@@ -292,7 +291,7 @@ class BaseMenu(object):
                         a.setChecked(v)
                     elif k == 'disabled':
                         a.setDisabled(True)
-                
+
 
     def print_report(self,recursive=False):
         print("=========== MENU: %s =============" % self.title())
@@ -304,7 +303,7 @@ class BaseMenu(object):
             for a in self._submenus_:
                 if isinstance(a,BaseMenu):
                     a.print_report()
-            
+
 
 class Menu(BaseMenu,QtGui.QMenu):
     """A popup/pulldown menu."""
@@ -316,7 +315,7 @@ class Menu(BaseMenu,QtGui.QMenu):
         If parent is given, the menu will be inserted in the parent menu.
         If parent==pf.GUI, the menu is inserted in the main menu bar.
         If a parent is given, and tearoff==True, the menu can be teared-off.
-        
+
         If insert == True, the menu will be inserted in the main menubar
         before the item specified by before.
         If before is None or not the normalized text of an item of the
@@ -339,7 +338,7 @@ class Menu(BaseMenu,QtGui.QMenu):
                 #tearoff = False
             self.setTearOffEnabled(tearoff)
         self.done = False
-            
+
 
     def process(self):
         if not self.done:
@@ -377,7 +376,7 @@ class DAction(QtGui.QAction):
     """
 
     signal = "Clicked"
-    
+
     def __init__(self,name,icon=None,data=None,signal=None):
         """Create a new DAction with name, icon and string data.
 
@@ -385,8 +384,8 @@ class DAction(QtGui.QAction):
         in a toolbar, you will probably want to specify an icon.
         When the action is triggered, the data is sent as a parameter to
         the SLOT function connected with the 'Clicked' signal.
-        If no data is specified, the name is used as data. 
-        
+        If no data is specified, the name is used as data.
+
         See the views.py module for an example.
         """
         QtGui.QAction.__init__(self,name,None)
@@ -399,7 +398,7 @@ class DAction(QtGui.QAction):
             data = name
         self.setData(QtCore.QVariant(data))
         self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
-        
+
     def activated(self):
         self.emit(QtCore.SIGNAL(self.signal), str(self.data().toString()))
 
@@ -494,7 +493,7 @@ def resetWarnings():
     print("This will only become effective in your future sessions!")
     print("FILTERS:",pf.prefcfg['warnings/filters'])
 
-            
+
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
 
@@ -522,7 +521,7 @@ def closeLogFile():
     if draw.logfile:
         draw.logfile.close()
         draw.logfile = None
-        
+
 def openLogFile():
     fn = draw.askFilename(filter=['*.log','*'],multi=False)
     if fn:
@@ -534,20 +533,20 @@ def saveBoard():
     fn = draw.askFilename(filter=['*.txt','*'],multi=False,exist=False)
     if fn:
         pf.GUI.board.save(fn)
-    
+
 
 def unloadCurrentApp():
     appname = pf.cfg['curfile']
     import apps
     apps.unload(appname)
-    
-    
+
+
 def printSysPath():
     import sys
     print(sys.path)
 
 
-    
+
 
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""
@@ -556,7 +555,7 @@ def createMenuData():
         (_('&Play'),draw.play),
         (_('&Rerun'),draw.replay),
         ## (_('&Step'),draw.step),
-        (_('&Continue'),draw.fforward), 
+        (_('&Continue'),draw.fforward),
         (_('&Stop'),draw.raiseExit),
         ("---",None),
         # (_('&Edit',fileMenu.editApp),   # is in file menu
@@ -587,14 +586,14 @@ def createMenuData():
         (_('&Restore Geometry'),restoreGeometry),
         (_('&Toggle Input Timeout'),toolbar.timeout),
         ]
-             
+
 
     MenuData = [
         (_('&File'),fileMenu.MenuData),
         (_('&Actions'),ActionMenuData),
         (_('&Help'),helpMenu.createMenuData())
         ]
-    
+
     # Insert configurable menus
     if pf.cfg.get('gui/prefsmenu','True'):
         MenuData[1:1] = prefMenu.MenuData
@@ -605,5 +604,5 @@ def createMenuData():
 
     return MenuData
 
- 
+
 # End

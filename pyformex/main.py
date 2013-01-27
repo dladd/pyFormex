@@ -499,7 +499,6 @@ def run(argv=[]):
 
     # These values should not be changed
     pf.cfg.userprefs = os.path.join(pf.cfg.userconfdir,'pyformexrc')
-    pf.cfg.autorun = os.path.join(pf.cfg.userconfdir,'startup.py')
 
     # Set the config files
     if pf.options.nodefaultconfig:
@@ -599,25 +598,9 @@ def run(argv=[]):
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
             try:
-                utils.runCommand(svnclean)
+                utils.system(svnclean)
             except:
                 print("Error while executing %s, we ignore it and continue" % svnclean)
-
-        def getSVNURL():
-            sta,out = utils.runCommand("cd %s;svn info | grep -F 'URL:'"%pyformexdir)
-            if sta == 0:
-                return out
-            else:
-                return ''
-
-
-        ## s = getSVNURL()
-        ## print s
-        ## import re
-        ## m = re.match(".*//(?P<user>[^@]*)@svn\.savanna\.nongnu\.org.*",s)
-        ## pf.svnuser = m.group('user')
-        ## print pf.svnuser
-
 
 
     ###### We have the config and options all set up ############
@@ -695,18 +678,13 @@ pyFormex Warning
     utils.setSaneLocale()
 
     # Initialize the libraries
-    #print("NOW LOAIDNG LIBS")
     #import lib
     #lib.init_libs(pf.options.uselib,pf.options.gui)
 
-    # Prepend the autorun scripts
+    # Prepend the autorun script
     ar = pf.cfg.get('autorun','')
-    if ar :
-        if type(ar) is str:
-            ar = [ ar ]
-        # expand tilde, as would bash
-        ar = map(utils.tildeExpand,ar)
-        args[0:0] = [ fn for fn in ar if os.path.exists(fn) ]
+    if ar and os.path.exists(ar):
+        args[0:0] = [ ar ]
 
     # remaining args are interpreted as scripts and their parameters
     res = 0

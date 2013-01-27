@@ -1357,7 +1357,10 @@ The whole process is controlled by the script `_do`. The debian-template
 subdirectory contains starting versions of the `debian` files packaging.
 They will need to be tuned for the release.
 
-- Needed software packages for the build process: debhelper, devscripts.
+- Install needed software packages for the build process::
+
+    apt-get install debhelper devscripts
+
   Furthermore you also need to have installed all dependencies for the build,
   as declared in the variables `Build-Depends` and `Build-Depends-Indep` in
   the file `control`.

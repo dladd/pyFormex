@@ -878,7 +878,7 @@ class Gui(QtGui.QMainWindow):
         pf.canvas.cancel_selection()
         pf.canvas.cancel_draw()
         draw.clear_canvas()
-        draw.wakeup()
+        #draw.wakeup()
         self.setBusy(False)
 
 
@@ -1332,7 +1332,8 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.debug("Setting the canvas",pf.DEBUG.GUI)
     pf.GUI.viewports.changeLayout(1)
     pf.GUI.viewports.setCurrent(0)
-    pf.canvas = pf.GUI.viewports.current
+    #pf.canvas = pf.GUI.viewports.current
+    pf.canvas.setRenderMode(pf.cfg['draw/rendermode'])
     draw.reset()
 
     # setup the status bar
@@ -1354,6 +1355,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     before = parent.item('---1')
     if pf.GUI.apphistory:
         parent.insert_menu(pf.GUI.apphistory,before)
+
     if pf.GUI.scripthistory:
         parent.insert_menu(pf.GUI.scripthistory,before)
 

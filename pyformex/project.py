@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -52,8 +52,8 @@ def find_global(module,name):
     __import__(module)
     mod = sys.modules[module]
     clas = getattr(mod, name)
-    return clas        
-    
+    return clas
+
 
 def pickle_load(f,try_resolve=True):
     """Load data from pickle file f."""
@@ -116,7 +116,7 @@ class Project(TrackedDict):
       If the file exists (and `access` is not `w`), it should be a previously
       saved Project and an attempt will be made to load the data from this
       file into the Project.
-      If this fails, an error is raised. 
+      If this fails, an error is raised.
 
       If the file exists and `access` is `w`, it will be overwritten,
       destroying any previous contents.
@@ -131,14 +131,14 @@ class Project(TrackedDict):
       read into the dict. If the string starts with an 'r', the file should
       exist. If the string contains a 'w', the data can be written back to
       the file. The 'r' access mode is thus a read-only mode.
-      
+
       ======  ===============  ============  ===================
       access  File must exist  File is read  File can be written
       ======  ===============  ============  ===================
-        r           yes             yes             no          
-        rw          yes             yes             yes         
-        wr          no         if it exists         yes         
-        w           no              no              yes         
+        r           yes             yes             no
+        rw          yes             yes             yes
+        wr          no         if it exists         yes
+        w           no              no              yes
       ======  ===============  ============  ===================
 
     - `convert`: if True (default), and the file is opened for reading, an
@@ -146,7 +146,7 @@ class Project(TrackedDict):
       necessary conversions to new data formats. If convert is set False,
       only the latest format can be read and older formats will generate
       an error.
-    
+
     - `signature`: A text that will be written in the header record of the
       file. This can e.g. be used to record format version info.
 
@@ -159,10 +159,10 @@ class Project(TrackedDict):
       uses a binary format. Using binary=False is deprecated.
 
     - `data`: a dict-like object to initialize the Project contents. These data
-      may override values read from the file.  
+      may override values read from the file.
 
     Example:
-    
+
       >>> d = dict(a=1,b=2,c=3,d=[1,2,3],e={'f':4,'g':5})
       >>> import tempfile
       >>> f = tempfile.mktemp('.pyf','w')
@@ -186,13 +186,13 @@ class Project(TrackedDict):
             utils.warn("The create=True argument should be replaced with access='w'")
         if 'legacy' in kargs:
             utils.warn("The legacy=True argument has become superfluous")
-            
+
         self.filename = filename
         self.access = access
         self.signature = str(signature)
         self.gzip = compression if compression in range(1,10) else 0
         self.mode = 'b' if binary or compression > 0 else ''
-        
+
         TrackedDict.__init__(self)
         if filename and os.path.exists(filename) and 'r' in self.access:
             # read existing contents
@@ -245,7 +245,7 @@ class Project(TrackedDict):
         else:
             if not quiet:
                 print("Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip))
-            #print("  Contents: %s" % self.keys()) 
+            #print("  Contents: %s" % self.keys())
         f = open(self.filename,'w'+self.mode)
         # write header
         f.write("%s\n" % self.header_data())
@@ -267,7 +267,7 @@ class Project(TrackedDict):
 
     def readHeader(self,quiet=False):
         """Read the header from a project file.
-        
+
         Tries to read the header from different legacy formats,
         and if succesfull, adjusts the project attributes according
         to the values in the header.
@@ -313,7 +313,7 @@ class Project(TrackedDict):
 
     def load(self,try_resolve=False,quiet=False):
         """Load a project from file.
-        
+
         The loaded definitions will update the current project.
         """
         f = self.readHeader(quiet)
@@ -333,11 +333,11 @@ class Project(TrackedDict):
                     print("Unpickling clear")
                 p = pickle_load(f,try_resolve)
             self.update(p)
-    
+
 
     def convert(self,filename=None):
         """Convert an old format project file.
-        
+
         The project file is read, and if successfull, is immediately
         saved. By default, this will overwrite the original file.
         If a filename is specified, the converted data are saved to
@@ -352,11 +352,11 @@ class Project(TrackedDict):
         self.access = 'w'
         print("Will now save to %s" % self.filename)
         self.save()
-    
+
 
     def uncompress(self):
         """Uncompress a compressed project file.
-        
+
         The project file is read, and if successfull, is written
         back in uncompressed format. This allows to make conversions
         of the data inside.
@@ -365,7 +365,7 @@ class Project(TrackedDict):
         print(self.format,self.gzip)
         if f:
             if self.gzip:
-                try: 
+                try:
                     pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
                 except:
                     self.gzip = 0
@@ -384,12 +384,12 @@ class Project(TrackedDict):
                         break
                 fu.close()
                 print("Uncompressed %s to %s" % (self.filename,fn))
-                
-            else:    
+
+            else:
                 utils.warn("The contents of the file does not appear to be compressed.")
             f.close()
 
- 
+
     def delete(self):
         """Unrecoverably delete the project file."""
         os.remove(self.filename)

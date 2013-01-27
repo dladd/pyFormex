@@ -40,6 +40,7 @@ from geometry import Geometry
 
 ########################
 # Imported here only to make available in scripts
+from olist import List
 from mesh import Mesh
 from plugins.trisurface import TriSurface
 
