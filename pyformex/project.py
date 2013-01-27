@@ -43,15 +43,28 @@ module_relocations = {
     'plugins.surface' : 'plugins.trisurface',
 }
 
+class_relocations = {
+    'coords.BoundVectors' : 'plugins.alt.BoundVectors',
+    'coords.CoordinateSystem' : 'coordsys.CoordinateSystem',
+}
+
 def find_global(module,name):
     """Override the import path of some classes"""
     pf.debug("I want to import %s from %s" % (name,module),pf.DEBUG.PROJECT)
-    if module in module_relocations:
+    clas = '%s.%s' % (module,name)
+    pf.debug("Object is %s" % clas,pf.DEBUG.PROJECT)
+    if clas in class_relocations:
+        module = class_relocations[clas]
+        lastdot = module.rfind('.')
+        module,name = module[:lastdot],module[lastdot+1:]
+        pf.debug("  I will try %s from module %s instead" % (name,module),pf.DEBUG.PROJECT)
+    elif module in module_relocations:
         module = module_relocations[module]
         pf.debug("  I will try module %s instead" % module,pf.DEBUG.PROJECT)
     __import__(module)
     mod = sys.modules[module]
     clas = getattr(mod, name)
+    pf.debug("Success: Got %s" % clas.__class__.__name__,pf.DEBUG.PROJECT)
     return clas
 
 
@@ -60,6 +73,8 @@ def pickle_load(f,try_resolve=True):
     pi = cPickle.Unpickler(f)
     if try_resolve:
         pi.find_global = find_global
+    else:
+        pf.debug("NOT TRYING TO RESOLVE RELOCATIONS: YOU MAY GET INTO TROUBLE",pf.DEBUG.PROJECT)
 
     return pi.load()
 
