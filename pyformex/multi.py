@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -27,10 +27,11 @@
 
 This module contains some functions to perform multiprocessing inside
 pyFormex in a unified way.
-   
+
 """
 from __future__ import print_function
 
+import pyformex as pf
 from arraytools import splitar
 from multiprocessing import Pool,cpu_count
 
@@ -50,7 +51,7 @@ def multitask(tasks,nproc=-1):
     Runs a number of tasks in parallel over a number of subprocesses.
 
     Parameters:
-    
+
     - `tasks` : a list of (function,args) tuples, where function is a
       callable and args is a tuple with the arguments to be passed to the
       function.
@@ -63,7 +64,8 @@ def multitask(tasks,nproc=-1):
     """
     if nproc < 0:
         nproc = min(len(tasks),cpu_count())
-        
+
+    pf.debug("Multiprocessing using %s processors" % nproc,pf.DEBUG.MULTI)
     pool = Pool(nproc)
     res = pool.map(dofunc,tasks)
     return res
@@ -77,7 +79,7 @@ def worker(input, output):
     This is the function executed by any of the processes started
     by the multitask function. It takes tuples (function,args) from
     the input queue, computes the results of the call function(args),
-    and pushes these results on the output queue. 
+    and pushes these results on the output queue.
 
     Parameters:
 
@@ -95,7 +97,7 @@ def multitask2(tasks,nproc=-1):
     Runs a number of tasks in parallel over a number of subprocesses.
 
     Parameters:
-    
+
     - `tasks` : a list of (function,args) tuples, where function is a
       callable and args is a tuple with the arguments to be passed to the
       function.
@@ -108,7 +110,7 @@ def multitask2(tasks,nproc=-1):
     """
     if nproc < 0:
         nproc = min(len(tasks),cpu_count())
-    
+
     # Create queues
     task_queue = Queue()
     done_queue = Queue()
@@ -123,7 +125,7 @@ def multitask2(tasks,nproc=-1):
 
     # Get results
     res = [ done_queue.get() for i in range(len(tasks)) ]
-    
+
     # Tell child processes to stop
     for i in range(nproc):
         task_queue.put('STOP')
