@@ -120,7 +120,7 @@ depr_trisurface_Sphere = "trisurface.Sphere is deprecated: use simple.sphere(ndi
 depr_mesh_getlowerentities_unique = "The use of the unique argument is deprecated. Use Mesh.insertLevel() instead."
 
 depr_adjacencyArrays = "adjacencyArrays is deprecated. Use Adjacency.frontWalk() instead."
-depr_mesh_eltype = "The 'eltype' attribute of a Mesh should no longer be used. To get the element type, use Mesh.elType() or Mesh.elName(). To set the element type of a Mesh, use Mesh.setType(eltype)."
+mesh_removed_eltype = "The 'eltype' attribute of the Mesh class has been removed. The eltype is now stored solely in the elems attibute. To get the element type from the Mesh, use Mesh.elType() or Mesh.elName(). To set the element type of a Mesh, use Mesh.setType(eltype)."
 depr_pathextension = "patchextension is deprecated. Use border().extrude() instead."
 depr_vertices = "vertices is deprecated. Use points() instead."
 depr_correctNegativeVolumes = "correctNegativeVolumes is deprecated. Use ficVolume() instead."

@@ -1,5 +1,5 @@
 # $Id$
-##_action
+##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
@@ -269,7 +269,7 @@ class AppMenu(menu.Menu):
     when you created a new script file.
     """
 
-    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True,parent=None,before=None,runall=False):
+    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True,parent=None,before=None,runall=True):
         """Create a menu with pyFormex apps/scripts to play."""
         menu.Menu.__init__(self,title,parent=parent,before=before)
         self.dir = dir
@@ -295,6 +295,8 @@ class AppMenu(menu.Menu):
             self.pkg = None
         self.runall = runall
         self.load()
+        #self.addRunAllMenu()
+
 
 
     def loadCatalog(self):
@@ -306,7 +308,7 @@ class AppMenu(menu.Menu):
                     files = col[k]
                 else:
                     files = []
-                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=self,runall=self.runall)
+                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=self,runall=True)
                 for i in cat[k]:
                     if '-' in i:
                         # alpha label like A-B
@@ -316,8 +318,11 @@ class AppMenu(menu.Menu):
                         lbl = i.capitalize()
                     ki = '%s/%s' % (k,i)
                     mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk,runall=self.runall)
+                    mi.addRunAllMenu()
+
                 mk.addRunAllMenu()
 
+            #self.addRunAllMenu()
             self.files = []
             return True
         return False
