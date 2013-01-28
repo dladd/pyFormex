@@ -1,0 +1,8 @@
+#/bin/sh
+#
+# Set up the pyFormex local clone to use $Id$ expansion
+#
+cd $(dirname $0)
+DIR=$(pwd)
+git config filter.idexpansion.smudge $DIR/id_smudge
+git config filter.idexpansion.clean $DIR/id_clean

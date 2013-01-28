@@ -1,0 +1,3 @@
+#!/bin/sh
+INFO=$(git log --pretty=format:"%h on %ad by %cn" -1)
+sed "s/\$Id:\?\\\$/\$Id: $INFO $/"
