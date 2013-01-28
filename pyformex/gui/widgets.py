@@ -1194,6 +1194,32 @@ class InputFont(InputItem):
             #pf.GUI.setFont(font)
 
 
+class InputFile(InputItem):
+    """An input item to select a file.
+
+    The following arguments are passed to the FileSelection widget:
+    path,pattern,exist,multi,dir.
+    """
+    def __init__(self,name,value,pattern='*',exist=False,multi=False,dir=False,*args,**kargs):
+        """Initialize the input item."""
+        self.input = FileSelection(value,pattern,exist,multi,dir)
+        # remove the dialog buttons, since the widget is embedded
+        for b in self.input.findChildren(QtGui.QPushButton):
+            b.close()
+
+        InputItem.__init__(self,name,*args,**kargs)
+        self.layout().insertWidget(1,self.input)
+
+
+    def value(self):
+        """Return the widget's value."""
+        #self.input.accept()
+        return self.input.value()
+
+    def setValue(self,value):
+        self.input.selectFile(value)
+
+
 class InputWidget(InputItem):
     """An input item containing any other widget.
 
@@ -2384,17 +2410,37 @@ class Table(QtGui.QTableView):
 class FileSelection(QtGui.QFileDialog):
     """A file selection dialog.
 
-    You can specify a default path/filename that will be suggested initially.
-    If a pattern is specified, only matching files will be shown.
-    A pattern can be something like ``Images (*.png *.jpg)`` or a list
-    of such strings.
-    Default mode is to accept any filename. You can specify exist=True
-    to accept only existing files. Or set exist=True and multi=True to
-    accept multiple files.
+    The FileSelection dialog is a special purpose complex dialog widget
+    that allows to interactively select a file or directory from the file
+    system, possibly even multiple files, create new files or directories.
 
-    If dir is True, only directories can be selected. If dir evaluates to
-    True, but is not the value True, either a directory or a filename can be
-    selected.
+    Parameters:
+
+    - `path`: the path shown on initial display of the dialog. It should
+      be an existing path in the file system. The default is '.' for the
+      current directory.
+    - `pattern`: a string or a list of strings: specifies one or more UNIX
+      glob patterns, used to limit the set of displayed filenames to those
+      matching the glob. Each string can
+      contain multiple globs, and an explanation string can be place in front::
+
+        'Image files (*.png *.jpg)'
+
+      The function :func:`utils.fileDescription` can be used to create some
+      strings for common classes of files.
+
+      If a list of multiple strings is given, a combo box will allow the
+      user to select between one of them.
+    - `exist`: bool: if True, the filename must exist. The default will
+      allow any new filename to be created.
+    - `multi`: bool: if True, multiple files can be selected. The default is
+      to allow only a single file.
+    - `dir`: bool: if True, only directories can be selected. If dir evaluates
+      to True, but is not the value True, either a directory or a filename can
+      be selected.
+    - `button`: string: the label to be displayed on the accept button. The
+      default is set to 'Save' if new files are allowed or 'Open' if only
+      existing files can be selected.
     """
 
     timeout = "accept()"
@@ -2402,9 +2448,9 @@ class FileSelection(QtGui.QFileDialog):
     def accept_any(self):
         self.done(ACCEPTED)
 
-    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False,button=None):
+    def __init__(self,path='.',pattern='*',exist=False,multi=False,dir=False,button=None,**kargs):
         """The constructor shows the widget."""
-        QtGui.QFileDialog.__init__(self)
+        QtGui.QFileDialog.__init__(self,**kargs)
         if os.path.isfile(path):
             self.setDirectory(os.path.dirname(path))
             self.selectFile(path)
@@ -2465,18 +2511,9 @@ class FileSelection(QtGui.QFileDialog):
         addTimeOut(self,timeout,timeoutfunc)
 
 
-    def getFilename(self,timeout=None):
-        """Ask for a filename by user interaction.
-
-        Return the filename selected by the user.
-        If the user hits CANCEL or ESC, None is returned.
-        """
-        self.show(timeout,modal=True)
-        self.exec_()
-        if self.result() != ACCEPTED:
-            # user canceled
-            return None
-
+    def value(self):
+        """Return the selected value"""
+        # TODO: since API2, this mapping may be left out?
         ret = map(str,self.selectedFiles())
         if self.fileMode() != QtGui.QFileDialog.ExistingFiles:
             # not multiple selection
@@ -2485,6 +2522,21 @@ class FileSelection(QtGui.QFileDialog):
             ##     # requested directory but have file
             ##     ret = os.path.dirname(ret)
         return ret
+
+
+    def getFilename(self,timeout=None):
+        """Ask for a filename by user interaction.
+
+        Return the filename selected by the user.
+        If the user hits CANCEL or ESC, None is returned.
+        """
+        self.show(timeout,modal=True)
+        self.exec_()
+        if self.result() == ACCEPTED:
+            return self.value()
+        else:
+            # user canceled
+            return None
 
 
 class ProjectSelection(FileSelection):
