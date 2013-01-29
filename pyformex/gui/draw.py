@@ -340,7 +340,7 @@ def dialogTimedOut():
     return _dialog_result == widgets.TIMEOUT
 
 
-def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True):
+def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True,timeout=None):
     """Ask for a file name or multiple file names using a file dialog.
 
     cur is a directory or filename. All the files matching the filter in that
@@ -361,7 +361,7 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)
-    fn = w.getFilename()
+    fn = w.getFilename(timeout)
     if fn and change:
         if multi:
             chdir(fn[0])
@@ -372,13 +372,13 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     return fn
 
 
-def askNewFilename(cur=None,filter="All files (*.*)"):
+def askNewFilename(cur=None,filter="All files (*.*)",timeout=None):
     """Ask a single new filename.
 
     This is a convenience function for calling askFilename with the
     arguments exist=False.
     """
-    return askFilename(cur=cur,filter=filter,exist=False,multi=False)
+    return askFilename(cur=cur,filter=filter,exist=False,multi=False,timeout=timeout)
 
 
 def askDirname(path=None,change=True,byfile=False):
