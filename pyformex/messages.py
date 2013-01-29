@@ -58,13 +58,6 @@ You can convert your scripts automatically with the command::
 
 """
 
-no_tetgen = """..
-
-I could not find the 'tetgen' command.
-
-tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator. See http://tetgen.org
-"""
-
 warn_drawImage_changed = "The `drawImage` function has changed: it now draws an image in 2D on the canvas. Use `drawImage3D` to get the old behavior of drawing a 3D grid colored like the image."
 
 warn_flat_removed = "The 'flat=True' parameter of the draw function has been replaced with 'nolight=True'."

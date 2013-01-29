@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -102,7 +102,7 @@ def readSmeshFile(fn):
             elems[e] -= 1
 
     # We currently do not read the holes and attributes
-    
+
     return nodeInfo[0],facetInfo[0]
 
 
@@ -150,7 +150,7 @@ def readSurface(fn):
     elems = elemInfo[0]
     print("Read %s elems" % elems.shape[0])
     #if numbers[0] == 1:
-    #    elems -= 1 
+    #    elems -= 1
     return nodes,elems
 
 
@@ -204,7 +204,7 @@ def addElem(elems,nrs,e,n,nplex):
         nrs[nplex] = []
     elems[nplex].append(e)
     nrs[nplex].append(n)
-    
+
 
 def readNodesBlock(fil,npts,ndim,nattr,nbmark):
     """Read a tetgen nodes block.
@@ -290,7 +290,7 @@ def readSmeshFacetsBlock(fil,nfacets,nbmark):
 
     - elems: for each plexitude a Connectivity array
     - nrs: for each plexitude a list of element numbers in corresponding elems
-    
+
     """
     elems = {}
     nrs = {}
@@ -306,7 +306,7 @@ def readSmeshFacetsBlock(fil,nfacets,nbmark):
                 addElem(elems,nrs,e,i,nplex)
             else:
                 raise ValueError,"Invalid data line:\n%s" % line
-            
+
     for np in elems:
         if np == 3:
             eltype= 'tri3'
@@ -393,7 +393,12 @@ def runTetgen(fn,options=''):
     and create a new approximation of the surface as a by-product.
     """
     if not utils.hasExternal('tetgen'):
-        utils.warn("no_tetgen")
+        pf.warning("""..
+
+I could not find the 'tetgen' command.
+
+tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator. See http://tetgen.org. It is available from the Debian non-free section.
+""")
         return
 
     if os.path.exists(fn) and utils.hasExternal('tetgen'):
@@ -420,12 +425,12 @@ def readTetgen(fn):
             elems = elems-1
         M = Mesh(nodes,elems,eltype=elems.eltype)
         res['tetgen'+ext] = M
-        
+
     elif ext == '.smesh':
         nodes,elems = readSmeshFile(fn)
         ML = [ Mesh(nodes,elems[e]) for e in elems ]
         res = dict([('Mesh-%s'%M.nplex(),M) for M in ML])
-        
+
     elif ext == '.poly':
         nodes,elems = readPolyFile(fn)
         ML = [ Mesh(nodes,elems[e]) for e in elems ]

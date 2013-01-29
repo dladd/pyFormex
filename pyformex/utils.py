@@ -46,19 +46,21 @@ the_version = {
 the_external = {}
 
 known_externals = {
-    'Python': ('python --version','Python (\\S+)'),
-    'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
+    'abaqus': ('abaqus info=sys|head -n2|tail -n1', 'Abaqus (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
+    'calculix': ('ccx -v','.*version (\S+)'),
+    'calix': ('calix --version','CALIX-(\S+)'),
     'calpy': ('calpy --version','Calpy (\S+)'),
-    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
-    'units': ('units --version','GNU Units version (\S+)'),
+    'dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\S+)'),
     'gts': ('gtsset -h','Usage(:) '),
-    'calix': ('calix --version','CALIX-(\S+)'),
-    'dxfparser': ('pyformex-dxfparser --version','dxfparser (\S+)'),
+    'imagemagick': ('import -version','Version: ImageMagick (\S+)'),
     'postabq': ('pyformex-postabq -V','postabq (\S+).*'),
-    'vmtk': ('vmtk --help','Usage: 	vmtk(\S+).*'),
+    'python': ('python --version','Python (\\S+)'),
     'recordmydesktop': ('recordmydesktop --version','recordMyDesktop v(\S+)'),
+    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
+    'units': ('units --version','GNU Units version (\S+)'),
+    'vmtk': ('vmtk --help','Usage: 	vmtk(\S+).*'),
     }
 
 def checkVersion(name,version,external=False):

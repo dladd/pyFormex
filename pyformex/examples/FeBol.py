@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -61,7 +61,7 @@ def globalNodeNr(M,group,nodid):
 
 def groupCentralPoint(M,group):
     """Return the node number of the most central point of the given group"""
-    # Find the local group center 
+    # Find the local group center
     nodid = centralPoint(M.coords[M.elems[group]])
     return globalNodeNr(M,group,nodid)
 
@@ -79,7 +79,11 @@ def run():
 
     # Create a solid sphere
     BolSurface = simple.sphere().scale(scale)
-    Bol = BolSurface.tetmesh(quality=True).setProp(pbol)
+    try:
+        # tetmesh may not be available
+        Bol = BolSurface.tetmesh(quality=True).setProp(pbol)
+    except:
+        return
     draw(Bol)
 
     # Create top and bottom plates
@@ -88,7 +92,7 @@ def run():
     botplate = plate.setProp(pbot).trl(2,-1.).scale(scale)
     draw([topplate,botplate])
 
-    # model is completely drawn, keep fixed bbox 
+    # model is completely drawn, keep fixed bbox
     setDrawOptions({'bbox':'last','marksize':8})
 
     # Assemble the model
@@ -123,12 +127,12 @@ def run():
             (1.,  0.37363),
             ],
         }
-    solid_steel = { 
+    solid_steel = {
         'name': 'solid_steel',
         'sectiontype': 'solid',
         'material': 'steel',   # Need material reference for Abaqus
         }
-    steel_plate = { 
+    steel_plate = {
         'name': 'solid_steel',
         'sectiontype': 'solid',
         'thickness': 3,
@@ -154,7 +158,7 @@ def run():
     else:
         P.elemProp(set=eset[ptop],name='TopPlate',eltype='CPS4',section=ElemSection(section=steel_plate,material=steel))
 
-    
+
     # Bottom plate is rigid or elasto-plastic
     refbot = groupCentralPoint(M,2)
     print("Bottom plate refnode: %s" % refbot)
@@ -179,7 +183,7 @@ def run():
 
     from plugins.fe_abq import Interaction
     P.Prop(tag='init',generalinteraction=Interaction(name='interaction1',friction=0.1))
-    
+
     print("Element properties")
     for p in P.getProp('e'):
         print(p)
@@ -219,5 +223,5 @@ def run():
 
 if __name__ == 'draw':
     run()
-    
+
 # End

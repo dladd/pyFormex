@@ -2443,10 +2443,13 @@ class FileSelection(QtGui.QFileDialog):
       existing files can be selected.
     """
 
-    timeout = "accept()"
 
     def accept_any(self):
         self.done(ACCEPTED)
+
+    # Default timeout function
+    timeout = accept_any
+
 
     def __init__(self,path='.',pattern='*',exist=False,multi=False,dir=False,button=None,**kargs):
         """The constructor shows the widget."""
