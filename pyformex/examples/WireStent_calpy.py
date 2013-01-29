@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -29,12 +29,12 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['color'] 
+_techniques = ['color']
 
 from gui.draw import *
 
 ############################
-# Load the needed calpy modules    
+# Load the needed calpy modules
 
 from plugins import calpy_itf
 from calpy.fe_util import *
@@ -52,7 +52,7 @@ import datetime
 def geometry():
     from examples.WireStent import DoubleHelixStent
     global wire_diameter
-    
+
     # create a Doublehelix stent with fixed geometry
     stent_diameter = 10.
     stent_length = 150.
@@ -216,7 +216,7 @@ def postproc(coords,elements,displ,frc):
     # In this case there is only one resultant force per element (the
     # normal force), and only load case; we still need to select the
     # scalar element result values from the array into a onedimensional
-    # vector val. 
+    # vector val.
     val = frc[:,0,0]
     # create a colorscale
     CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
@@ -230,9 +230,9 @@ def postproc(coords,elements,displ,frc):
     x = pf.canvas.width()//2
     TA = drawText('Normal force in the members',x,100,font='tr32')
     CL = ColorLegend(CS,100)
-    CLA = decors.ColorLegend(CL,10,10,30,200) 
+    CLA = decors.ColorLegend(CL,10,10,30,200)
     decorate(CLA)
-    sleep(timeout=3)
+    sleep(3)
 
     # and a deformed plot on multiple scales
     dscales = arange(1,6) * 1.0
@@ -269,7 +269,7 @@ def run():
 
     if pf.options.gui:
          postproc(*results)
-    
+
          if ack("Show the analysis output file?"):
              showFile(outfilename)
 

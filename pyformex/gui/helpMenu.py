@@ -179,14 +179,15 @@ def showFileOrURL(link):
     """Show a html document or a text file.
 
     `link` is either a file name or an URL of a html document.
-    If `link` starts with `http://`, it is interpreted as an URL and the corresponding
-    document is shown in the user's browser. Else, `link` is interpreted as a filename
-    and iof the file exists, it is shown in a pyFormex text window.
+    If `link` starts with `http://`, it is interpreted as an URL and the
+    corresponding document is shown in the user's browser.
+    Else, `link` is interpreted as a filename and if the file exists, it
+    is shown in a pyFormex text window.
     """
     if link.startswith('http://'):
         showURL(link)
     else:
-        draw.showFile(link)
+        draw.showFile(link,mono=not link.endswith('.rst'))
 
 
 def searchText():

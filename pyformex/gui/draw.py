@@ -177,7 +177,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
         return w
 
 
-def showFile(filename,mono=False,**kargs):
+def showFile(filename,mono=True,**kargs):
     """Display a text file.
 
     This will use the :func:`showText()` function to display a text read

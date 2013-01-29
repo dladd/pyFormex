@@ -273,8 +273,12 @@ def createMaterials():
 class Light(object):
 
     def __init__(self,nr,**kargs):
+        #print("INIT LIGHT %s: %s" % (nr,kargs))
         self.light = GL.GL_LIGHT0 + (nr % GL.GL_MAX_LIGHTS)
-        self.set(ambient=0.5,diffuse=0.5,specular=0.5,position=[0.,0.,1.,0.],enabled=False)
+        self.ambient = self.diffuse = self.specular = 0.5
+        self.position = [1.,1.,1.,0.]
+        self.enabled = False
+        self.set(**kargs)
 
     def set(self,**kargs):
         for k in kargs:

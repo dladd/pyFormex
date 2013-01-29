@@ -35,7 +35,8 @@ from gui.draw import *
 from plugins.properties import *
 import time
 
-def check_calpy():
+
+def run():
     try:
         ############################
         # Load the needed calpy modules
@@ -46,14 +47,9 @@ def check_calpy():
         from calpy import truss3d
 
         ############################
-        return True
     except:
-        return False
-
-
-def run():
-    if not check_calpy():
         return
+
     if not checkWorkdir():
         return
 
@@ -151,7 +147,7 @@ def run():
     # boundary conditions
     bcon = zeros([nnod,3],dtype=int)
     bcon[support] = [ 1,1,1 ]
-    NumberEquations(bcon)
+    fe_util.NumberEquations(bcon)
 
     #materials
     mats = array([ [p.young_modulus,p.density,p.cross_section] for p in props])
@@ -165,9 +161,9 @@ def run():
     nlc=1
     loads=zeros((ndof,nlc),Float)
     for n in field:
-        loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q ],bcon[n,:])
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],[ 0.0, 0.0, Q ],bcon[n,:])
     for n in edge:
-        loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
 
     message("Performing analysis: this may take some time")
 
@@ -193,7 +189,7 @@ def run():
     sys.stdout = outfile
     print("# File created by pyFormex on %s" % time.ctime())
     print("# Script name: %s" % pf.scriptName)
-    displ,frc = static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
+    displ,frc = truss3d.static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
     print("# Analysis finished on %s" % time.ctime())
     sys.stdout = stdout_saved
     outfile.close()
@@ -281,12 +277,13 @@ def run():
 
         def showAnimatedDeformation():
             """Show animated deformation"""
+            nframes = 10
             res = askItems([
-                ('scale',optimscale),
-                ('nframes',10),
-                ('form','revert',choices=['up','updown','revert']),
-                ('duration',5./nframes),
-                ('ncycles',2),
+                _I('scale',optimscale),
+                _I('nframes',nframes),
+                _I('form','revert',choices=['up','updown','revert']),
+                _I('duration',5./nframes),
+                _I('ncycles',2),
                 ],caption='Animation Parameters')
             if res:
                 scale = res['scale']

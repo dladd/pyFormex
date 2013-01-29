@@ -116,6 +116,12 @@ have internet connection from your Linux system.
 
     apt-get install emacs python-mode.el
 
+  .. warning: Make sure you have python-mode 5, not 6. The 6 version is
+     really complete sh** and unusable/unuseful.
+
+
+
+
   Of course, many other editors will qualify as well.
 
 .. note:: We should add a list of other good editors here
@@ -1123,6 +1129,9 @@ Docstrings
   components.
 
 - Docstrings should end and start with triple double-quotes (""").
+
+.. warning: Try not to use lines starting with the word 'class' in a
+   multiline docstring: it tends to confuse emacs+python-mode.
 
 - Docstrings should not exceed the 80 character total line length.
   Python statements can exceed that length, if the result is more easy
