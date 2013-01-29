@@ -263,6 +263,9 @@ class Project(TrackedDict):
             #print("  Contents: %s" % self.keys())
         f = open(self.filename,'w'+self.mode)
         # write header
+        print("HEADER:%s" % self.header_data())
+        print("SELF.SIGNATURE: %s" % self.signature)
+        print("_SIGNATURE_: %s" % _signature_)
         f.write("%s\n" % self.header_data())
         f.flush()
         if self.mode == 'b':

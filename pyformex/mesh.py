@@ -292,7 +292,26 @@ class Mesh(Geometry):
         class did not set element type yet.
         """
         if 'eltype' in state:
-            self.setType(eltype)
+            if state['eltype'] is not None:
+                # We acknowledge this eltype, even if it is also stored
+                # in elems. This makes the restore also work for older projects
+                # where eltype was not in elems.
+                pf.debug("MESH HAS ELTYPE %s" % state['eltype'],pf.DEBUG.PROJECT)
+                elems.eltype = elementType(state['eltype'])
+            # Do not store the eltype in the Mesh anymore
+            del state['eltype']
+        else:
+            # No eltype in Mesh
+            if hasattr(elems,eltype):
+                # eltype in elems: leave as it is
+                pf.debug("ELEMS ELTYPE IS %s" % elems.eltype,pf.DEBUG.PROJECT)
+            else:
+                # Try to set elems eltype from plexitude
+                try:
+                    elems.eltype = elementType(nplex=elems.nplex())
+                except:
+                    raise ValueError,"I can not restore a Mesh without eltype"
+        self.__dict__.update(state)
 
 
     def getProp(self):
