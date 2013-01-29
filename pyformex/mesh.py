@@ -295,6 +295,7 @@ class Mesh(Geometry):
         This allows to read back old pyFormex Project files where the Mesh
         class did not set element type yet.
         """
+        elems = state['elems']
         if 'eltype' in state:
             if state['eltype'] is not None:
                 # We acknowledge this eltype, even if it is also stored
