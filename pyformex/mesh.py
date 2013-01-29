@@ -270,19 +270,23 @@ class Mesh(Geometry):
         self.coords[i] = val
 
 
-    def __getstate__(self):
-        import copy
-        state = copy.copy(self.__dict__)
-        # Store the element type by name,
-        # This is needed because of the way ElementType is initialized
-        # Maybe we should change that.
-        # The setstate then needs to set the elementType
-        # And this needs also to be done in Connectivity, if it has an eltype
-        try:
-            state['eltype'] = state['eltype'].name()
-        except:
-            state['eltype'] = None
-        return state
+    ## def __getstate__(self):
+    ##     import copy
+    ##     state = copy.copy(self.__dict__)
+    ##     #print("GOT = %s" % sorted(state.keys()))
+    ##     # Store the element type by name,
+    ##     # This is needed because of the way ElementType is initialized
+    ##     # Maybe we should change that.
+    ##     # The setstate then needs to set the elementType
+    ##     # And this needs also to be done in Connectivity, if it has an eltype
+    ##     ## try:
+    ##     ##     state['eltype'] = state['eltype'].name()
+    ##     ## except:
+    ##     ##state['eltype'] = None
+    ##     if 'eltype' in state:
+    ##         del state['eltype']
+    ##     #print("STORE = %s" % sorted(state.keys()))
+    ##     return state
 
 
     def __setstate__(self,state):
@@ -296,15 +300,14 @@ class Mesh(Geometry):
                 # We acknowledge this eltype, even if it is also stored
                 # in elems. This makes the restore also work for older projects
                 # where eltype was not in elems.
-                pf.debug("MESH HAS ELTYPE %s" % state['eltype'],pf.DEBUG.PROJECT)
                 elems.eltype = elementType(state['eltype'])
             # Do not store the eltype in the Mesh anymore
             del state['eltype']
         else:
             # No eltype in Mesh
-            if hasattr(elems,eltype):
+            if hasattr(elems,'eltype'):
                 # eltype in elems: leave as it is
-                pf.debug("ELEMS ELTYPE IS %s" % elems.eltype,pf.DEBUG.PROJECT)
+                pass
             else:
                 # Try to set elems eltype from plexitude
                 try:

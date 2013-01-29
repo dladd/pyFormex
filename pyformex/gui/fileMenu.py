@@ -96,7 +96,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
         pf.GUI.setBusy(False)
 
     proj.hits = 0
-    print("START COUNTING HITS")
+    pf.debug("START COUNTING HITS",pf.DEBUG.PROJECT)
     return proj
 
 
@@ -344,7 +344,7 @@ def closeProjectWithoutSaving():
 def convertProjectFile():
     proj = openProject(pf.PF.filename,access=['c'],default='c',exist=True)
     if proj is not None:
-        pf.debug("Converting project file %s" % proj.filename,pf.DEBUG.INFO)
+        pf.debug("Converting project file %s" % proj.filename,pf.DEBUG.PROJECT|pf.DEBUG.INFO)
         proj.convert(proj.filename.replace('.pyf','_converted.pyf'))
 
 
