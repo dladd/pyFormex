@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -301,7 +301,7 @@ def SineWave():
     A simple yet powerful illusion: the vertical lines seem larger at places
     where the sine wave is more horizontal, and smaller where the sine wave
     is more vertical.
-    
+
     Play with the parameters to get a more obvious result. Amplitude 0 shows
     that all lines are equally large.
     """
@@ -422,7 +422,7 @@ def CrazyCircles():
 
 
 ############ Other actions #################
-    
+
 def resetview(bgcol='white'):
     clear()
     reset()
@@ -474,7 +474,7 @@ def close():
         explanation = None
     # Release script lock
     scriptRelease(__file__)
-    
+
 
 def explain():
     """Show the explanation"""
@@ -542,7 +542,7 @@ def openDialog():
         )
     dialog.timeout = timeOut
     dialog.show()
-    
+
 
 def run():
     global Illusion, Explain
@@ -556,9 +556,9 @@ def run():
     close()
     openDialog()
 
-    # Block other scripts 
+    # Block other scripts
     scriptLock(__file__)
-    
+
 if __name__ == 'draw':
     run()
 # End

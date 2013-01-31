@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Publish the website
+#
+
+
+[ -d "www/CVS" ] || {
+    echo "This script is intended for the project manaager only!"
+    exit
+}
+cd www
+cvs -qn update > ../update.log  2>../update.out
+cd ..
+
+gawk '/^? / { print $2} {}' update.log > update.add
+gawk '/^cvs update: warning: / { print substr($4,2,length($4)-2) } {}' update.out > update.del
+
+cd www
+for f in $(cat ../update.add); do
+    cvs add $f
+done
+for f in $(cat ../update.del); do
+    cvs delete $f
+done
+
+cvs -qn update
+
+cd ..
+rm -f update.log update.out update.del update.add
+

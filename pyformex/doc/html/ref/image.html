@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>28. image — Saving OpenGL renderings to image files. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>28. image — Saving OpenGL renderings to image files. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="29. imagearray — Convert bitmap images into numpy arrays." href="imagearray.html" />
     <link rel="prev" title="27. camera — OpenGL camera handling" href="camera.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="camera.html" title="27. camera — OpenGL camera handling"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -182,21 +185,6 @@ If the supplied extension is empty, the default format &#8216;png&#8217; is retu
 <p>canvas specifies the qtcanvas rendering window.
 fn is the name of the file
 fmt is the image file format</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="image.save_PS">
-<tt class="descclassname">image.</tt><tt class="descname">save_PS</tt><big>(</big><em>canvas</em>, <em>filename</em>, <em>filetype=None</em>, <em>title=''</em>, <em>producer=''</em>, <em>viewport=None</em><big>)</big><a class="headerlink" href="#image.save_PS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export OpenGL rendering to PostScript/PDF/TeX format.</p>
-<p>Exporting OpenGL renderings to PostScript is based on the PS2GL
-library by Christophe Geuzaine (<a class="reference external" href="http://geuz.org/gl2ps/">http://geuz.org/gl2ps/</a>), linked
-to Python by Toby Whites&#8217;s wrapper
-(<a class="reference external" href="http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz">http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz</a>)</p>
-<p>This function is only defined if the gl2ps module is found.</p>
-<p>The filetype should be one of &#8216;ps&#8217;, &#8216;eps&#8217;, &#8216;pdf&#8217; or &#8216;tex&#8217;.
-If not specified, the type is derived from the file extension.
-In case of the &#8216;tex&#8217; filetype, two files are written: one with
-the .tex extension, and one with .eps extension.</p>
 </dd></dl>
 
 <dl class="function">
@@ -356,7 +344,7 @@ The current background color is selected from the lower left pixel.</p>
         <li class="right" >
           <a href="camera.html" title="27. camera — OpenGL camera handling"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -364,9 +352,9 @@ The current background color is selected from the lower left pixel.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

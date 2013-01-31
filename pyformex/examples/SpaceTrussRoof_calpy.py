@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -29,37 +29,38 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['dialog', 'animation', 'persistence', 'color'] 
+_techniques = ['dialog', 'animation', 'persistence', 'color']
 
 from gui.draw import *
 from plugins.properties import *
 import time
 
-############################
-# Load the needed calpy modules    
-from plugins import calpy_itf
-calpy_itf.check()
-import calpy
-calpy.options.optimize = False
-from calpy.fe_util import *
-from calpy.truss3d import *
-
-############################
-
 
 def run():
+    try:
+        ############################
+        # Load the needed calpy modules
+        from plugins import calpy_itf
+        import calpy
+        calpy.options.optimize = False
+        from calpy import fe_util
+        from calpy import truss3d
+
+        ############################
+    except:
+        return
 
     if not checkWorkdir():
         return
-        
+
     ####
     #Data
     ###################
 
     dx = 1800  # Modular size [mm]
     ht = 1500  # Deck height [mm]
-    nx = 8     # number of bottom deck modules in x direction 
-    ny = 6     # number of bottom deck modules in y direction 
+    nx = 8     # number of bottom deck modules in x direction
+    ny = 6     # number of bottom deck modules in y direction
 
     q = -0.005 #distributed load [N/mm^2]
 
@@ -136,17 +137,17 @@ def run():
 
     # Since all elems have same characteristics, we could just have used:
     #   P.elemProp(section=circ20,elemtype='T3D2')
-    # But putting the elems in three sets allows for separate postprocessing 
+    # But putting the elems in three sets allows for separate postprocessing
 
 
-    ######### 
+    #########
     #calpy analysis
     ###################
 
     # boundary conditions
     bcon = zeros([nnod,3],dtype=int)
     bcon[support] = [ 1,1,1 ]
-    NumberEquations(bcon)
+    fe_util.NumberEquations(bcon)
 
     #materials
     mats = array([ [p.young_modulus,p.density,p.cross_section] for p in props])
@@ -160,9 +161,9 @@ def run():
     nlc=1
     loads=zeros((ndof,nlc),Float)
     for n in field:
-        loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q ],bcon[n,:])
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],[ 0.0, 0.0, Q ],bcon[n,:])
     for n in edge:
-        loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
 
     message("Performing analysis: this may take some time")
 
@@ -188,7 +189,7 @@ def run():
     sys.stdout = outfile
     print("# File created by pyFormex on %s" % time.ctime())
     print("# Script name: %s" % pf.scriptName)
-    displ,frc = static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
+    displ,frc = truss3d.static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
     print("# Analysis finished on %s" % time.ctime())
     sys.stdout = stdout_saved
     outfile.close()
@@ -216,7 +217,7 @@ def run():
             # In this case there is only one resultant force per element (the
             # normal force), and only load case; we still need to select the
             # scalar element result values from the array into a onedimensional
-            # vector val. 
+            # vector val.
             val = frc[:,0,0]
             # create a colorscale
             CS = cs.ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
@@ -254,7 +255,7 @@ def run():
                     if TA:
                         pf.canvas.removeDecoration(TA)
                     TA,FA = T,F
-                    pause(sleeptime)
+                    sleep(sleeptime)
 
         def getOptimscale():
             """Determine an optimal scale for displaying the deformation"""
@@ -275,26 +276,23 @@ def run():
 
 
         def showAnimatedDeformation():
-
-            # Show animated deformation
-            scale = optimscale
+            """Show animated deformation"""
             nframes = 10
-            form = 'revert'
-            duration = 5./nframes
-            ncycles = 2
-            items = [ ['scale',scale], ['nframes',nframes],
-                      ['form',form],
-                      ['duration',duration], ['ncycles',ncycles] ]
-            res = askItems(items,'Animation Parameters')
+            res = askItems([
+                _I('scale',optimscale),
+                _I('nframes',nframes),
+                _I('form','revert',choices=['up','updown','revert']),
+                _I('duration',5./nframes),
+                _I('ncycles',2),
+                ],caption='Animation Parameters')
             if res:
-                scale = float(res['scale'])
-                nframes = int(res['nframes'])
-                duration = float(res['duration'])
-                ncycles = int(res['ncycles'])
+                scale = res['scale']
+                nframes = res['nframes']
                 form = res['form']
-                if form in [ 'up', 'updown', 'revert' ]:
-                    amp = scale * frameScale(nframes,form)
-                    animate_deformed_plot(amp,duration,ncycles)
+                duration = res['duration']
+                ncycles = res['ncycles']
+                amp = scale * frameScale(nframes,form)
+                animate_deformed_plot(amp,duration,ncycles)
 
 
         optimscale = getOptimscale()
@@ -308,7 +306,7 @@ def run():
             functions[ind]()
             if widgets.input_timeout > 0:  #timeout
                 break
-        
+
 if __name__ == 'draw':
     run()
 # End

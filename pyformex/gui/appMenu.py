@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,14 +30,15 @@ from __future__ import print_function
 import pyformex as pf
 import apps
 
-from PyQt4.QtCore import SIGNAL
+from gui import QtCore
+SIGNAL = QtCore.SIGNAL
 
 import utils,olist
 import script,draw
 import menu
 import os,random
 from gettext import gettext as _
-    
+
 catname = 'apps.cat'
 
 
@@ -75,16 +76,16 @@ def classify(appdir,pkg,nmax=0):
         cat['all'] = lbl
         for l,g in zip(lbl,grp):
             col['all/'+l] = g
-                            
+
     for i,appname in enumerate(all_apps):
-        
+
         #col['all'].update([appname])
         try:
             app = apps.load(pkg+'.'+appname)
         except:
             app = failed
             print("Failed to load app '%s'" % (str(pkg)+'.'+appname))
-            
+
         for k in kat:
             if hasattr(app,'_'+k):
                 v = getattr(app,'_'+k)
@@ -115,7 +116,7 @@ def splitAlpha(strings,n,ignorecase=True):
     Each bin can contain strings starting with multiple successive
     characters, but not more than n items. Items starting with the same
     character are always in the same bin. If any starting character
-    occurs more than n times, the maximum will be exceeded. 
+    occurs more than n times, the maximum will be exceeded.
 
     - `files`: a list of strings start with an upper case letter ('A'-'Z')
     - `n`: the desired maximum number of items in a bin.
@@ -126,7 +127,7 @@ def splitAlpha(strings,n,ignorecase=True):
       (or the single start character) for the bins
     - `groups`: a list with the contents of the bins. Each item is a list
       of sorted strings starting with one of the characters in the
-      corresponding label 
+      corresponding label
     """
     from arraytools import multiplicity
     if ignorecase:
@@ -135,11 +136,7 @@ def splitAlpha(strings,n,ignorecase=True):
         key = str
     strings = sorted(strings,key=key)
     mult,bins = multiplicity([ord(key(f[0])) for f in strings ])
-    #print(ord('A'))
-    #print(bins)
-    #print(mult)
     count = dict(zip(bins,mult))
-    #print(count)
     cat = []
     grp = []
 
@@ -177,13 +174,13 @@ def splitAlpha(strings,n,ignorecase=True):
             accept(i,j,mtot,skip)
 
     # The grouping has to start from char(0) and loop over all values!
-    group(chr(0),chr(31),skip=True)  
-    group(' ','@')  
+    group(chr(0),chr(31),skip=True)
+    group(' ','@')
     group('A','Z')
     if not ignorecase:
-        # we should skip the group between 
+        # we should skip the group between
         group('a','z')
-    
+
     return cat,grp
 
 
@@ -199,9 +196,9 @@ class AppMenu(menu.Menu):
     into the pyFormex GUI.
 
     Apps are simply Python modules that have a 'run' function.
-    Only these modules will be added to the menu. 
+    Only these modules will be added to the menu.
     Only files that are recognized by :func:`utils.is_pyFormex()` as being
-    pyFormex scripts will be added to the menu. 
+    pyFormex scripts will be added to the menu.
 
     The constructor takes the following arguments:
 
@@ -225,7 +222,7 @@ class AppMenu(menu.Menu):
       directory and below will be constructed. If only `dir` and no `files`
       are specified, the default is True
     - `max`: if specified, the list of files will be truncated to this number
-      of items. Adding more files to the menu will then be done at the top and  
+      of items. Adding more files to the menu will then be done at the top and
       the surplus number of files will be dropped from the bottom of the list.
 
     The defaults were thus chosen to be convenient for the three most frequent
@@ -255,19 +252,6 @@ class AppMenu(menu.Menu):
     will make the corresponding file the current script and unless the
     `autoplay` configuration variable was set to False, the script is executed.
 
-    If the file specification was done by a directory path only,
-    some extra options will be included in the menu.
-    They are fairly self-explaining and mainly intended for the pyFormex
-    developers, in order to test the functionality by running a sets of
-    example scripts:
-
-    - :menuselection:`Run next script`
-    - :menuselection:`Run all following scripts`
-    - :menuselection:`Run all scripts`
-    - :menuselection:`Run a random script`
-    - :menuselection:`Run all in random order`
-
-
     Furthermore, if the menu is a toplevel one, it will have the following
     extra options:
 
@@ -284,8 +268,8 @@ class AppMenu(menu.Menu):
     The last option reloads a ScriptMenu. This can be used to update the menu
     when you created a new script file.
     """
-    
-    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True,parent=None,before=None):
+
+    def __init__(self,title,dir=None,files=None,mode='app',ext=None,recursive=None,max=0,autoplay=False,toplevel=True,parent=None,before=None,runall=True):
         """Create a menu with pyFormex apps/scripts to play."""
         menu.Menu.__init__(self,title,parent=parent,before=before)
         self.dir = dir
@@ -309,7 +293,10 @@ class AppMenu(menu.Menu):
             self.pkg = os.path.basename(self.dir)
         else:
             self.pkg = None
+        self.runall = runall
         self.load()
+        #self.addRunAllMenu()
+
 
 
     def loadCatalog(self):
@@ -321,7 +308,7 @@ class AppMenu(menu.Menu):
                     files = col[k]
                 else:
                     files = []
-                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=self)
+                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=self,runall=True)
                 for i in cat[k]:
                     if '-' in i:
                         # alpha label like A-B
@@ -330,9 +317,12 @@ class AppMenu(menu.Menu):
                         # string from catalog file
                         lbl = i.capitalize()
                     ki = '%s/%s' % (k,i)
-                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk)
+                    mi = AppMenu(lbl,dir=self.dir,files=col.get(ki,[]),mode=self.mode,recursive=False,toplevel=False,autoplay=self.autoplay,parent=mk,runall=self.runall)
+                    mi.addRunAllMenu()
+
                 mk.addRunAllMenu()
 
+            #self.addRunAllMenu()
             self.files = []
             return True
         return False
@@ -347,8 +337,8 @@ class AppMenu(menu.Menu):
         dirs = filter(filtr,dirs)
         dirs.sort()
         for d in dirs:
-            m = AppMenu(d,os.path.join(self.dir,d),mode=self.mode,ext=self.ext,autoplay=self.autoplay,recursive=self.recursive,parent=self)
-            
+            m = AppMenu(d,os.path.join(self.dir,d),mode=self.mode,ext=self.ext,autoplay=self.autoplay,recursive=self.recursive,parent=self,runall=self.runall)
+
 
     def getFiles(self):
         """Get a list of scripts in self.dir"""
@@ -365,7 +355,7 @@ class AppMenu(menu.Menu):
         files.sort()
         return files
 
- 
+
     def filterFiles(self,files):
         """Filter a list of scripts"""
         filtr = lambda s:utils.is_pyFormex(self.fileName(s))
@@ -375,7 +365,7 @@ class AppMenu(menu.Menu):
             files = files[:self.max]
 
         return files
-      
+
 
     def loadFiles(self,files=None):
         """Load the app/script files in this menu"""
@@ -394,21 +384,17 @@ class AppMenu(menu.Menu):
         self.files = files
 
         pf.debug("Found %ss in %s\n%s" % (self.mode.capitalize(),self.dir,self.files),pf.DEBUG.INFO)
-            
-        self.my_actions = [ self.addAction(f) for f in self.files ]           
+
+        self.my_actions = [ self.insert_action(f) for f in self.files ]
         self.connect(self,SIGNAL("triggered(QAction*)"),self.run)
 
-        self.addRunAllMenu()
         self.current = ""
 
 
     def addRunAllMenu(self):
-        if pf.cfg['gui/runalloption']:
-            self.addSeparator()
-            self.addAction('Run all apps',self.runAllApps)
-            ## self.addAction('Run all',self.runAll)
-            ## self.addAction('Run all next',self.runNext)
-            ## self.addAction('Run a random app',self.runRandom)
+        if self.runall and pf.cfg['gui/runalloption']:
+            self.insert_sep()
+            self.create_insert_action('Run all apps',self.runAllApps)
 
 
     def load(self):
@@ -426,10 +412,13 @@ class AppMenu(menu.Menu):
                 self.loadFiles(self.files)
 
             if self.toplevel:
-                self.addSeparator()
-                self.addAction('Classify apps',self._classify)
-                self.addAction('Remove catalog',self._unclassify)
-                self.addAction('Reload apps',self.reload)
+                self.insert_sep()
+                self.create_insert_action('Classify apps',self._classify)
+                self.create_insert_action('Remove catalog',self._unclassify)
+
+                # Confined to 'app', crashes when applied on script
+                if self.mode == 'app':
+                    self.create_insert_action('Reload apps',self.reload)
 
 
     def fileName(self,script):
@@ -457,7 +446,7 @@ class AppMenu(menu.Menu):
         app = str(action.text())
         if app in self.files:
             self.runApp(app,play=self.autoplay)
-    
+
 
     def runApp(self,app,play=True):
         """Set/Run the specified app.
@@ -487,9 +476,9 @@ class AppMenu(menu.Menu):
         If rand is True, the files are shuffled before running.
         If recursive is True, also the files in submenu are played.
         The first and last arguments do not apply to the submenus.
-     
+
         """
-        from gui.draw import layout,reset,pause
+        from gui.draw import layout,reset,sleep
         pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if last is None:
             last = len(self.files)
@@ -504,15 +493,17 @@ class AppMenu(menu.Menu):
         print(files)
         for f in files:
             while pf.scriptlock:
-                pause(5,msg="WAITING BECAUSE OF SCRIPT LOCK")
+                print("RUNALL WAITING BECAUSE OF SCRIPT LOCK")
+                print("Locked by: %s" % pf.scriptlock)
+                import time
+                time.sleep(2)
                 pf.app.processEvents()
             layout(1)
             reset()
             pf.PF.clear()
-            #print("RUNNING %s" %f)
             self.runApp(f)
             script.breakpt(msg="Breakpoint from runall")
-            pause(1)#,msg="EXITREQUESTED: %s" % script.exitrequested)
+            sleep(1)#,msg="EXITREQUESTED: %s" % script.exitrequested)
             if script.exitrequested:
                 break
         tcount = len(files)
@@ -521,7 +512,7 @@ class AppMenu(menu.Menu):
                 n = m.runAll(recursive=recursive,random=random,count=count-tcount)
                 tcount += n
                 if count > 0 and tcount >= count:
-                    print("Ran %s examples; getting out" % tcount)     
+                    print("Ran %s examples; getting out" % tcount)
                     break
                 else:
                     print("Still want %s more examples" % (count-tcount))
@@ -540,12 +531,12 @@ class AppMenu(menu.Menu):
         except ValueError:
             i = 0
         self.runAll(first=i,count=count)
-        
+
 
     def runCurrent(self):
         """Run the current app, or the first if none was played yet."""
         self.runNext(1)
-         
+
 
     def runRandom(self):
         """Run a random script."""
@@ -562,7 +553,7 @@ class AppMenu(menu.Menu):
     def runAllApps(self):
         res =draw.askItems([
             ('timeout',True),
-            ('random',True),
+            ('random',False),
             ('recursive',True),
             ('count',-1),
             ])
@@ -591,10 +582,13 @@ class AppMenu(menu.Menu):
             self.load()
 
 
-    def add(self,name,strict=True):
+    def add(self,name,strict=True,skipconfig=True):
         """Add a new filename to the front of the menu.
 
-        By default, only legal pyFormex apps can be added.
+        This function is used to add app/scripts to the history menus.
+        By default, only legal pyFormex apps or scripts can be added, and
+        scripts from the user config will not be added.
+        Setting strict and or skipconfig to False will skip the filter(s).
         """
         if strict:
             if self.mode == 'app':
@@ -606,6 +600,11 @@ class AppMenu(menu.Menu):
             else:
                 if not utils.is_pyFormex(name):
                     return
+                if skipconfig:
+                    # This is here to skip the startup script
+                    if os.path.dirname(os.path.abspath(name)) == pf.cfg.userconfdir:
+                        return
+
         files = self.files
         olist.toFront(files,name)
         if self.max > 0 and len(files) > self.max:
@@ -641,7 +640,7 @@ class AppMenu(menu.Menu):
 
 from prefMenu import setDirs
 
- 
+
 def createAppMenu(mode='app',parent=None,before=None):
     """Create the menu(s) with pyFormex apps
 
@@ -658,55 +657,44 @@ def createAppMenu(mode='app',parent=None,before=None):
     replaced.
     """
     Mode = mode.capitalize()
-    #print("LOADING %s MENU"% mode) 
     appmenu = menu.Menu('&%s'%Mode,parent=parent,before=before)
     appmenu.mode = mode
-    if mode == 'apps':
-        appdirs = [ (d.name,d.path) for s in pf.appdirs ]
+    if mode == 'app':
+        appdirs = [ (d.name,d.path) for d in pf.appdirs ]
     else:
         appdirs = pf.cfg['scriptdirs']
-        
+
     # Fill in missing default locations : this enables the user
     # to keep the pyFormex installed examples in his config
     guessName = lambda n,s: s if len(s) > 0 else pf.cfg['%sdir' % n.lower()]
-    #print(pf.cfg['examplesdir'])
-    #print("GUESS %s %s" % ('examples',guessName('Examples','')))
-    #print("LOADING APPDIRS",appdirs) 
     appdirs = [ (d[0],guessName(*d)) for d in appdirs ]
-    #print("LOADING APPDIRS",appdirs) 
     appdirs = [ d for d in appdirs if d[1] is not None and len(d[1]) > 0 ] # may be removed?
-    #print("LOADING APPDIRS",appdirs) 
     appdirs = [ d for d in appdirs if os.path.exists(d[1]) ]
-    #print("LOADING APPDIRS",appdirs) 
     for name,path in appdirs:
         pf.debug("Loading menu %s from %s" % (name,path),pf.DEBUG.MENU)
-        m = AppMenu(name,path,mode=mode,autoplay=True,parent=appmenu)
- 
-    history = AppMenu('%s History'%Mode,files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],mode=mode,parent=appmenu)
-    
+        m = AppMenu(name,path,mode=mode,autoplay=True,parent=appmenu,runall=True)
+
+    history = AppMenu('%s History'%Mode,files=pf.cfg['gui/%shistory'%mode],max=pf.cfg['gui/history_max'],mode=mode,parent=appmenu,runall=False)
+
     setattr(pf.GUI,'%shistory'%mode,history)
 
-    #print("BEFORE")
-    #appmenu.print_report()
     appmenu.insertItems([
         ('---',None),
         (_('&Configure %s Paths'%Mode),setDirs,{'data':'%sdirs'%mode}),
         (_('&Reload %s Menu'%Mode),reloadMenu,{'data':mode}),
         ])
-    #print("AFTER")
-    #appmenu.print_report()
     if mode == 'app':
         appmenu.insertItems([
             (_('&List loaded Apps'),script.printLoadedApps),
             (_('&Unload Current App'),menu.unloadCurrentApp),
             ])
-    
+
     return appmenu
 
 
 def reloadMenu(mode='app'):
     """Reload the named menu."""
-    name = mode+'s'
+    name = mode#+'s'
     menu = pf.GUI.menu.item(name)
     if menu is not None:
         before = pf.GUI.menu.nextitem(name)
@@ -715,7 +703,7 @@ def reloadMenu(mode='app'):
             # reset pf.appdirs, we may have configuration changes
             import apps
             apps.setAppDirs()
-        newmenu = createMenu(pf.GUI.menu,before,mode=mode)
+        newmenu = createAppMenu(mode,pf.GUI.menu,before)
 
 
 

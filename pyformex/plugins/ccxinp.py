@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -25,7 +25,7 @@
 ##
 
 """
-Interface with Calculix FE input files (.inp).
+Interface with Abaqus/Calculix FE input files (.inp).
 
 
 """
@@ -37,18 +37,18 @@ from __future__ import print_function
 
 import re
 import numpy as np
-from pyformex.arraytools import *
+#from pyformex.arraytools import *
 
 re_eltypeB = re.compile("^(?P<type>B)(?P<ndim>[23])(?P<degree>\d)?(?P<mod>(OS)?H*)$")
 re_eltype = re.compile("^(?P<type>.*?)(?P<ndim>[23]D)?(?P<nplex>\d+)?(?P<mod>[HIMRSW]*)$")
 
 #
 # List of known Abaqus/Calculix element type
-# 
 #
-    
+#
+
 abq_elems = [
-    'SPRINGA', 
+    'SPRINGA',
     'CONN3D2','CONN2D2',
     'FRAME3D','FRAME2D',
     'T2D2','T2D2H','T2D3','T2D3H',
@@ -78,7 +78,7 @@ abq_elems = [
     'S8R','S8R5',
     'S9R5',
     'STRI3',
-    'STRI65', 
+    'STRI65',
     'SC8R',
     'SFM3D3',
     'SFM3D4','SFM3D4R',
@@ -188,7 +188,7 @@ def pyf_eltype(d):
     if isinstance(eltype,dict):
         eltype = eltype[d['ndim']]
     return eltype
-    
+
 
 def print_catalog():
     for el in abq_elems:
@@ -198,8 +198,8 @@ def print_catalog():
         else:
             print("No match: %s" % el)
 
-    
-print_catalog()
+
+#print_catalog()
 #
 #  TODO: S... and RAX elements are still scanned wrongly
 #
@@ -249,7 +249,7 @@ def do_HEADING(opts,data):
 def do_PART(opts,data):
     """Set the part name"""
     startPart(opts['NAME'])
-    
+
 
 def do_SYSTEM(opts,data):
     """Read the system data"""
@@ -257,7 +257,7 @@ def do_SYSTEM(opts,data):
     if len(data) == 0:
         system = None
         return
-    
+
     s = data[0].split(',')
     A = map(float,s[:3])
     try:
@@ -275,7 +275,7 @@ def do_SYSTEM(opts,data):
     else:
         r = rotmat(array([A,B,C]))
     system = (t,r)
-    
+
 
 def do_NODE(opts,data):
     """Read the nodal data"""
@@ -342,7 +342,21 @@ def endCommand(cmd,opts,data):
 
 
 def readInput(fn):
-    """Read an input file (.inp)"""
+    """Read an input file (.inp)
+
+    Returns an object with the following attributes:
+
+    - `heading`: the heading read from the .inp file
+    - `parts`: a list with parts.
+
+    A part is a dict and can contain the following keys:
+
+    - `name`: string: the part name
+    - `coords`: float (nnod,3) array: the nodal coordinates
+    - `nodid`: int (nnod,) array: node numbers; default is arange(nnod)
+    - `elems`: int (nelems,nplex) array: element connectivity
+    - `elid`: int (nelems,) array: element numbers; default is arange(nelems)
+    """
     global line,part,log,model
     model = InpModel()
     model.parts = []

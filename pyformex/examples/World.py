@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -49,10 +49,21 @@ def run():
     lights(False)
     view('front')
 
+    # default image
     fn = os.path.join(getcfg('datadir'),'world.jpg')
-    fn = askFilename(cur=fn,filter=utils.fileDescription('img'),)
-    if not fn:
+
+    # pattern of files to select from
+    pat = utils.fileDescription('img')
+
+    res = askItems([
+        _I('fn',fn,itemtype='file',pattern=pat,exist=True,text=''),
+        _I('part',itemtype='radio',choices=["Plane","Half Sphere","Full Sphere"],text='Show image on'),
+        ])
+    if not res:
         return
+
+    fn = res['fn']
+    part = res['part']
 
     im = QtGui.QImage(fn)
     if im.isNull():
@@ -68,8 +79,6 @@ def run():
     if colormap is not None:
         print("Size of colormap: %s" % str(colormap.shape))
 
-
-    part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])
 
     # Create a 2D grid of nx*ny elements
     F = Formex('4:0123').replic2(nx,ny).centered().translate(2,1.)

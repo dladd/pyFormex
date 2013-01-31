@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -43,7 +43,7 @@ from elements import Hex8
 def cube_tri(color=None):
     """Create a cube with triangles."""
     back = Formex('3:012934')
-    left = back.rotate(-90,1) 
+    left = back.rotate(-90,1)
     bot = back.rotate(90,0)
     front = back.translate(2,1)
     right = left.translate(0,1).reverse()
@@ -88,7 +88,7 @@ def showCube(base,color):
     export({'cube':cube})
 #    zoomAll()
 
-        
+
 def run():
     from gui import widgets
 

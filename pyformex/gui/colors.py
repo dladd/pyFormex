@@ -27,30 +27,35 @@
 """
 from __future__ import print_function
 
-from PyQt4 import QtCore,QtGui
-import numpy
+from gui import QtCore,QtGui
+from arraytools import array,isInt,Int
 
-# BV: THIS DETECTION SHOULD GO ELSEWHERE
-import pyformex as pf
-try:
-    QtGui.QColor.setAllowX11ColorNames(True)
-    pf.X11 = True
-except:
-    print("WARNING: THIS IS NOT AN X11 WINDOW SYSTEM!")
-    print("SOME THINGS MAY NOT WORK PROPERLY!")
-    pf.X11 = False
 
-def GLColor(color):
+def GLcolor(color):
     """Convert a color to an OpenGL RGB color.
 
     The output is a tuple of three RGB float values ranging from 0.0 to 1.0.
     The input can be any of the following:
+
     - a QColor
     - a string specifying the Xwindow name of the color
     - a hex string '#RGB' with 1 to 4 hexadecimal digits per color 
     - a tuple or list of 3 integer values in the range 0..255
     - a tuple or list of 3 float values in the range 0.0..1.0
+
     Any other input may give unpredictable results.
+
+    Examples:
+    >>> GLcolor('indianred')
+    (0.803921568627451, 0.3607843137254902, 0.3607843137254902)
+    >>> print(GLcolor('#ff0000'))
+    (1.0, 0.0, 0.0)
+    >>> GLcolor(red)
+    (1.0, 0.0, 0.0)
+    >>> GLcolor([200,200,255])
+    (0.7843137254901961, 0.7843137254901961, 1.0)
+    >>> GLcolor([1.,1.,1.])
+    (1.0, 1.0, 1.0)
     """
     col = color
 
@@ -74,7 +79,7 @@ def GLColor(color):
     try:
         col = tuple(col)
         if len(col) == 3:
-            if type(col[0]) == int:
+            if isInt(col[0]):
                 # convert int values to float
                 col = [ c/255. for c in col ]
             col = map(float,col)
@@ -84,30 +89,46 @@ def GLColor(color):
         pass
 
     # No success: rais an error
-    raise ValueError,"GLColor: unexpected input of type %s: %s" % (type(color),color)
+    raise ValueError,"GLcolor: unexpected input of type %s: %s" % (type(color),color)
+
+
+def RGBcolor(color):
+    """Return an RGB (0-255) tuple for a color
+
+    color can be anything that is accepted by GLcolor.
+    Returns the corresponding RGB tuple.
+    """
+    col = array(GLcolor(color))*255
+    return col.round().astype(Int)
+
+
+def WEBcolor(color):
+    """Return an RGB hex string for a color
+
+    color can be anything that is accepted by GLcolor.
+    Returns the corresponding WEB color, which is a hexadecimal string
+    representation of the RGB components.
+    """
+    col = RGBcolor(color)
+    return "#%02x%02x%02x" % tuple(col)
 
 
 def colorName(color):
     """Return a string designation for the color.
 
-    color can be anything that is accepted by GLColor.
-    In most cases
-    If color can not be converted, None is returned.
+    color can be anything that is accepted by GLcolor.
+    In the current ijmplementation, the returned color name is the
+    WEBcolor (hexadecimal string).
+
+    Examples:
+    >>> colorName('red')
+    '#ff0000'
+    >>> colorName('#ffddff')
+    '#ffddff'
+    >>> colorName([1.,0.,0.5])
+    '#ff0080'
     """
-    try:
-        return str(QtGui.QColor.fromRgbF(*(GLColor(color))).name())
-    except:
-        return None
-
-def RGBcolor(color):
-    """Return an RGB (0-255) tuple for an OpenGL color"""
-    col = array(color)*255
-    return col.round().astype(Int)
-
-def WEBcolor(color):
-    """Return an RGB hex string for an OpenGL color"""
-    col = RGBcolor(color)
-    return "#%02x%02x%02x" % tuple(col)
+    return WEBcolor(color)
 
 
 def createColorDict():
@@ -123,7 +144,7 @@ def closestColorName(color):
 
 def RGBA(rgb,alpha=1.0):
     """Adds an alpha channel to an RGB color"""
-    return GLColor(rgb)+(alpha,)
+    return GLcolor(rgb)+(alpha,)
 
 
 black   = (0.0, 0.0, 0.0)
@@ -149,19 +170,4 @@ lightgrey = grey(0.8)
 mediumgrey = grey(0.7)
 darkgrey = grey(0.5)
 
-if __name__ == "__main__":
-    print(GLColor(QtGui.QColor('red')))
-    print(GLColor(QtGui.QColor('indianred')))
-    print(GLColor('red'))
-    print(GLColor(red))
-    print(GLColor([200,200,255]))
-    print(GLColor([1.,1.,1.]))
-    print(GLColor(lightgrey))
-    print(GLColor('#ffddff'))
-    
-    print(colorName(red))
-    print(colorName('red'))
-    print(colorName('#ffddff'))
-    print(colorName([1.,1.,1.]))
-        
-    createColorDict()
+# End

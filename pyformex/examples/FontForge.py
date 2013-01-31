@@ -1,4 +1,4 @@
-# $Id$    *** pyformex ***
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -193,8 +193,14 @@ def drawCurve(curve,color,fill=None,with_border=True,with_points=True):
             print("POLYGON")
             surface = fillBorder(border,'planar')
         else:
-            print("DELAUNAY")
-            surface = delaunay(border.coords)
+            # Test importing voronoi
+            try:
+                from voronoi import voronoi
+                surface = delaunay(border.coords)
+            except:
+                print(sys.path)
+                warning("DELAUNAY fill requires the voronoi module")
+                surface = []
         draw(surface,color=color)
         #drawNumbers(surface)
     else:
@@ -214,7 +220,6 @@ def drawCurve2(curve,color,fill=None,with_border=True,with_points=True):
 
 
 def show(fontname,character,fill=None):
-
     curve = charCurves(fontname,character)
     size = curve[0].pointsOn().bbox().dsize()
     clear()
@@ -245,12 +250,15 @@ fonts = []
 
 def run():
     # disabled this example
-    return
+    #return
 
     global fonts
     if not fonts:
         fonts = utils.listFontFiles() + [
             f for f in extra_fonts if os.path.exists(f) ]
+
+    fonts.sort()
+    print(fonts)
 
     data = dict(
         fontname = None,
@@ -275,6 +283,9 @@ def run():
     pf.PF['_FontForge_data_'] = res
     if res['fill'] == 'None':
         del res['fill']
+
+
+    print(res)
     
     show(**res)
     

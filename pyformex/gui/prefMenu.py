@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -71,7 +71,7 @@ def updateSettings(res,save=None):
         if save and pf.prefcfg[k] != res[k]:
             pf.prefcfg[k] = res[k]
             changed = True
-            
+
         # if not saved, set in cfg
         print("Setting %s = %s" % (k,res[k]))
         if pf.cfg[k] != res[k]:
@@ -102,13 +102,13 @@ def settings():
     import plugins
     import sendmail
     from elements import elementTypes
-    
+
     dia = None
     _actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit', 'info' ]
 
     def close():
         dia.close()
-        
+
     def accept(save=False):
         dia.acceptData()
         res = dia.results
@@ -247,10 +247,13 @@ def askConfigPreferences(items,prefix=None,store=None):
     can be any class that allow the setdefault method for lookup while
     setting the default, and the store[key]=val syntax for setting the
     value.
-    If a prefix is given, actual keys will be 'prefix/key'. 
+    If a prefix is given, actual keys will be 'prefix/key'.
     The current values are retrieved from the store, and the type returned
     will be in accordance.
     If no store is specified, the global config pf.cfg is used.
+
+    This function can be used to change individual values by a simpler
+    interface than the full settings dialog.
     """
     if store is None:
         store = pf.cfg
@@ -264,7 +267,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if res and store==pf.cfg:
         updateSettings(res)
     return res
-            
+
 
 def set_mat_value(field):
     key = field.text().replace('material/','')
@@ -281,7 +284,7 @@ def set_light_value(field):
     val = field.value()
     #print light,key,val
     draw.set_light_value(light,key,val)
-    
+
 
 def createLightDialogItems(light=0,enabled=True):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
@@ -289,7 +292,7 @@ def createLightDialogItems(light=0,enabled=True):
     val = pf.cfg[tgt]
     print("LIGHT %s" % light)
     print("CFG %s " % val)
-    
+
     items = [
         _I('enabled',enabled),
         ] + [
@@ -321,10 +324,10 @@ def setRendering():
         val = utils.prefixDict(mat.dict(),'material/')
         print("UPDATE",val)
         dia.updateData(val)
-    
+
     def close():
         dia.close()
-        
+
     def accept(save=False):
         dia.acceptData()
         print("RESULTS",dia.results)
@@ -349,12 +352,12 @@ def setRendering():
         print(vp.rendermode,vp.settings.lighting)
         vp.update()
         toolbar.updateLightButton()
-        
+
 
     def acceptAndSave():
         accept(save=True)
-        
-    def createDialog():  
+
+    def createDialog():
         matnames = pf.GUI.materials.keys()
         mat = vp.material
         mat_items = [
@@ -394,40 +397,43 @@ def setRendering():
 
 
 def setDirs(dircfg):
-    """dircfg is a config variable that is a list of directories."""
+    """Configure the paths from which to read apps/scripts
+
+    dircfg is a config variable that is a list of directories.
+    It should be one of 'appdirs' or 'scriptdirs'.
+    The config value should be a list of tuples ['text','path'].
+    """
     dia = createDirsDialog(dircfg)
     dia.exec_()
+    if (dia.result()==widgets.ACCEPTED):
+        import appMenu
+        #print(dia.results)
+        data = dia.results[dircfg]
+        pf.prefcfg[dircfg] = pf.cfg[dircfg] = map(tuple,data)
+        #print("SET %s to %s" % (dircfg,pf.prefcfg[dircfg]))
+        appMenu.reloadMenu(mode=dircfg[:-4])
 
-    
+
 def createDirsDialog(dircfg):
     """Create a Dialog to set a list of paths.
 
-    dircfg is a config variable that is a list of tuples (path,text)
-    where path is a valid directory pathname and text is a short name
-    to display in the menus.
-
-    Examples of dircfg are 'scriptdirs' and 'appdirs'.
+    dircfg is a config variable that is a list of directories.
     """
-    
     _dia=None
     _table=None
+
+    mode = dircfg[:-4]
+    if mode == 'app':
+        title = 'Application paths'
+    else:
+        title='Script paths'
 
     def insertRow():
         ww = widgets.FileSelection(pf.cfg['workdir'],'*',exist=True,dir=True)
         fn = ww.getFilename()
         if fn:
-            scr = pf.cfg[dircfg]
             _table.model().insertRows()
-            scr[-1] = ['New',fn]
-        _table.update()
-
-    def editRow():
-        row = _table.currentIndex().row()
-        scr = pf.cfg[dircfg]
-        item = scr[row]
-        res = draw.askItems([('Label',item[0]),('Path',item[1])])
-        if res:
-            scr[row] = [res['Label'],res['Path']]
+            _table.model()._data[-1] = [os.path.basename(fn).capitalize(),fn]
         _table.update()
 
     def removeRow():
@@ -437,48 +443,36 @@ def createDirsDialog(dircfg):
 
     def moveUp():
         row = _table.currentIndex().row()
-        scr = pf.cfg[dircfg]
         if row > 0:
-            a,b = scr[row-1:row+1]
-            scr[row-1:row+1] = b,a
-#            scr[row-1] = b
-#            scr[row] = a
+            a,b = _table.model()._data[row-1:row+1]
+            _table.model()._data[row-1:row+1] = b,a
         _table.setFocus() # For some unkown reason, this seems needed to
                           # immediately update the widget
         _table.update()
         pf.app.processEvents()
 
-    def saveTable():
-        pf.prefcfg[dircfg] = pf.cfg[dircfg]
-
-
-    mode = dircfg[:-4]
-    if mode == 'app':
-        title = 'Application paths'
-    else:
-        title='Script paths'
-
     def reloadMenu():
         import appMenu
         appMenu.reloadMenu(mode=mode)
 
-    _dia = widgets.TableDialog(
-        data = pf.cfg[dircfg],
-        chead = ['Label','Path'],
+    data = map(list,pf.cfg[dircfg])
+    _dia = widgets.InputDialog(
+        items = [
+            _I(dircfg,data,itemtype='table',chead = ['Label','Path']),
+            ],
         actions = [
             ('New',insertRow),
-            ('Edit',editRow),
             ('Delete',removeRow),
             ('Move Up',moveUp),
-            ('Reload',reloadMenu),
-            ('Save',saveTable),
             ('OK',),
+            ('Cancel',),
             ],
-        title=title)
-    _table = _dia.table
-    
+        caption=title)
+    _table = _dia[dircfg].input
+
+
     return _dia
-        
+
 
 def setDebug():
     options = [ o for o in dir(pf.DEBUG) if o[0] != '_' ]
@@ -495,10 +489,10 @@ def setDebug():
                 debug |= v
         print("debuglevel = %s" % debug)
         pf.options.debuglevel = debug
-        
+
 
 def setOptions():
-    options = [ 'redirect','debuglevel','rst2html'] 
+    options = [ 'redirect','debuglevel','rst2html']
     options = [ o for o in options if hasattr(pf.options,o) ]
     items = [ _I(o,getattr(pf.options,o)) for o in options ]
     res = draw.askItems(items)
@@ -516,7 +510,7 @@ def setOptions():
 def coordsbox():
     """Toggle the coordinate display box on or off"""
     pf.GUI.coordsbox.setVisible(pf.cfg['gui/coordsbox'])
-    
+
 def timeoutbutton():
     """Toggle the timeout button on or off"""
     toolbar.addTimeoutButton(pf.GUI.toolbar)
@@ -526,7 +520,7 @@ def updateCanvas():
 
 def updateStyle():
     pf.GUI.setAppearence()
- 
+
 
 def updateToolbars():
     pf.GUI.updateToolBars()
@@ -540,7 +534,7 @@ def updateAppdirs():
 def updateDrawWait():
     pf.GUI.drawwait = pf.cfg['draw/wait']
 
-    
+
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
     'gui/coordsbox':coordsbox,
@@ -557,13 +551,16 @@ _activate_settings = {
     'appdirs':updateAppdirs,
     'draw/wait':updateDrawWait,
     }
-   
+
+def setDrawWait():
+    askConfigPreferences(['draw/wait'])
 
 MenuData = [
     (_('&Settings'),[
-        (_('&Settings Dialog'),settings), 
-        (_('&Options'),setOptions),
+        (_('&Settings Dialog'),settings),
         (_('&Debug'),setDebug),
+        (_('&Options'),setOptions),
+        (_('&Draw Wait'),setDrawWait),
         (_('&Rendering Params'),setRendering),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
@@ -573,5 +570,5 @@ MenuData = [
     ]
 
 
-   
+
 # End

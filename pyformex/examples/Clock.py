@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -35,7 +35,7 @@ _techniques = ['timer']
 from gui.draw import *
 import simple
 from datetime import datetime
-from PyQt4 import QtCore
+from gui import QtCore
 
 class AnalogClock(object):
     """An analog clock built from Formices"""
@@ -43,7 +43,7 @@ class AnalogClock(object):
     def __init__(self,lw=2,mm=0.75,hm=0.85,mh=0.7,hh=0.6, sh=0.9):
         """Create an analog clock."""
         self.linewidth = lw
-        self.circle = simple.circle(a1=2.,a2=2.)
+        self.circle = simple.circle()
         radius = Formex('l:2')
         self.mainmark = radius.divide([mm,1.0])
         self.hourmark = radius.divide([hm,1.0])
@@ -56,7 +56,7 @@ class AnalogClock(object):
         self.hands = []
         self.timer = None
 
-        
+
     def draw(self):
         """Draw the clock (without hands)"""
         draw(self.circle,color='black',linewidth=self.linewidth)
@@ -81,7 +81,7 @@ class AnalogClock(object):
             SH = draw(self.secshand.rot(srot),bbox=None,color='orange',linewidth=0.5*self.linewidth)
             self.hands.append(SH)
 
-            
+
     def drawNow(self):
         """Draw the hands showing the current time."""
         now = datetime.now()
@@ -101,14 +101,14 @@ class AnalogClock(object):
             self.timeout.setSingleShot(True)
             self.timeout.start(1000*runtime)
 
-        
+
     def stop(self):
         """Stop a running clock."""
         print("STOP")
         if self.timer:
             self.timer.stop()
 
-            
+
 def run():
     reset()
     C = AnalogClock()
@@ -120,6 +120,7 @@ def run():
         C.run()
         sleep(res['runtime'])
         C.stop()
+        print(pf.scriptlock)
 
 if __name__ == 'draw':
     run()

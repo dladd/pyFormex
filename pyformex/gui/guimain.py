@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -39,7 +39,7 @@ utils.checkModule('pyopengl',fatal=True)
 
 import os.path
 
-from PyQt4 import QtCore, QtGui
+from gui import QtCore, QtGui
 
 import menu
 import cameraMenu
@@ -99,11 +99,11 @@ def hasDRI():
 
 class Board(QtGui.QTextEdit):
     """Message board for displaying read-only plain text messages."""
-    
+
     def __init__(self,parent=None):
         """Construct the Message Board widget."""
         QtGui.QTextEdit.__init__(self,parent)
-        self.setReadOnly(True) 
+        self.setReadOnly(True)
         self.setAcceptRichText(False)
         self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.setMinimumSize(24,24)
@@ -114,7 +114,7 @@ class Board(QtGui.QTextEdit):
         #font.setStyle(QtGui.QFont.StyleNormal)
         self.setFont(font)
         self.stdout = self.stderr = None # redirected streams
-        
+
 
     def write(self,s,color=None):
         """Write a string to the message board.
@@ -146,7 +146,7 @@ class Board(QtGui.QTextEdit):
         fil = open(filename,'w')
         fil.write(self.toPlainText())
         fil.close()
-        
+
 
     def flush(self):
         self.update()
@@ -168,7 +168,7 @@ class Board(QtGui.QTextEdit):
                 sys.stdout = self.stdout
             self.stderr = None
             self.stdout = None
-    
+
 
 #####################################
 ################# GUI ###############
@@ -189,7 +189,7 @@ def toggleAppScript():
             pf.GUI.setcurfile(appname)
         else:
             pf.warning("This script is not in an application directory.\n\nYou should add the directory path '%s' to the application paths before you can run this file as an application.")
-            
+
     else:
         fn = apps.findAppSource(appname)
         if os.path.exists(fn):
@@ -214,7 +214,7 @@ class Gui(QtGui.QMainWindow):
         on top, and a statusbar at the bottom.
         """
         pf.debug('Creating Main Window',pf.DEBUG.GUI)
-        self.on_exit = [] 
+        self.on_exit = []
         QtGui.QMainWindow.__init__(self)
         self.fullscreen = False
         self.setWindowTitle(windowname)
@@ -234,7 +234,7 @@ class Gui(QtGui.QMainWindow):
         self.curdir = widgets.ButtonBox('Cwd:',[('None',draw.askDirname)])
         self.canPlay = False
         self.canEdit = False
-        
+
         # The menu bar
         pf.debug('Creating Menu Bar',pf.DEBUG.GUI)
         self.menu = menu.MenuBar('TopMenu')
@@ -244,7 +244,7 @@ class Gui(QtGui.QMainWindow):
         pf.debug('Creating ToolBar',pf.DEBUG.GUI)
         self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
-        
+
         # Create a box for the central widget
         self.box = QtGui.QWidget()
         self.setCentralWidget(self.box)
@@ -260,7 +260,7 @@ class Gui(QtGui.QMainWindow):
         self.splitter.show()
 
         # self.central is the central widget of the main window
-        # self.viewports is its layout, containing multiple viewports 
+        # self.viewports is its layout, containing multiple viewports
         pf.debug('Creating Central Widget',pf.DEBUG.GUI)
         self.central = QtGui.QWidget()
         self.central.autoFillBackground()
@@ -269,7 +269,9 @@ class Gui(QtGui.QMainWindow):
         self.central.resize(*pf.cfg['gui/size'])
 
         self.viewports = viewport.MultiCanvas(parent=self.central)
-        self.central.setLayout(self.viewports)
+        self.centralgrid = QtGui.QGridLayout()
+        self.centralgrid.addLayout(self.viewports,0,0)
+        self.central.setLayout(self.centralgrid)
 
         # Create the message board
         self.board = Board()
@@ -279,7 +281,7 @@ class Gui(QtGui.QMainWindow):
         self.splitter.addWidget(self.board)
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
-        
+
         # Create the top menu
         pf.debug('Creating Menus',pf.DEBUG.GUI)
         menudata = menu.createMenuData()
@@ -287,19 +289,19 @@ class Gui(QtGui.QMainWindow):
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
 
-        # timeout button 
+        # timeout button
         toolbar.addTimeoutButton(self.toolbar)
 
         self.menu.show()
 
         # Define Toolbars
-    
+
         pf.debug('Creating Toolbars',pf.DEBUG.GUI)
         self.camerabar = self.updateToolBar('camerabar','Camera ToolBar')
         self.modebar = self.updateToolBar('modebar','RenderMode ToolBar')
         self.viewbar = self.updateToolBar('viewbar','Views ToolBar')
         self.toolbars = [self.camerabar, self.modebar, self.viewbar]
-        
+
         ###############  CAMERA menu and toolbar #############
         if self.camerabar:
             toolbar.addCameraButtons(self.camerabar)
@@ -311,11 +313,11 @@ class Gui(QtGui.QMainWindow):
             mmenu = QtGui.QMenu('Render Mode')
         else:
             mmenu = None
-            
+
         #menutext = '&' + name.capitalize()
         self.modebtns = menu.ActionList(
             modes,guifunc.renderMode,menu=mmenu,toolbar=self.modebar)
-        
+
         # Add the toggle type buttons
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
@@ -325,7 +327,7 @@ class Gui(QtGui.QMainWindow):
             toolbar.addNormalsButton(self.modebar)
         if self.modebar and pf.cfg['gui/shrinkbutton']:
             toolbar.addShrinkButton(self.modebar)
-         
+
         if mmenu:
             # insert the mode menu in the viewport menu
             pmenu = self.menu.item('viewport')
@@ -358,7 +360,7 @@ class Gui(QtGui.QMainWindow):
 
         self.saved_views = {}
         self.saved_views_name = utils.NameSequence('View')
-            
+
         if self.viewsMenu:
             name = self.saved_views_name.next()
             self.menu.item('camera').addAction('Save View',self.saveView)
@@ -378,7 +380,7 @@ class Gui(QtGui.QMainWindow):
         # TODO: we should redirect it to a buffer and
         # wait until GUI shown, then show in board
         # else show on stdout/err
-        
+
         #self.board.redirect(pf.cfg['gui/redirect'])
 
         if pf.options.debuglevel:
@@ -399,7 +401,7 @@ class Gui(QtGui.QMainWindow):
         # Modeless child dialogs
         self.doc_dialog = None
         pf.debug('Done initializing GUI',pf.DEBUG.GUI)
-            
+
 
     def close_doc_dialog(self):
         """Close the doc_dialog if it is open."""
@@ -459,11 +461,11 @@ class Gui(QtGui.QMainWindow):
         else:
             self.viewports.current.setCamera(angles=view)
         self.viewports.current.update()
- 
+
 
     def updateAppdirs(self):
         appMenu.reloadMenu()
-        
+
 
     def updateToolBars(self):
         for t in ['camerabar','modebar','viewbar']:
@@ -492,7 +494,7 @@ class Gui(QtGui.QMainWindow):
             toolbar = getattr(self,shortname)
         except:
             toolbar = None
-            
+
         if area:
             area = self.toolbar_area.get(area,4) # default is top
             # Add/reposition the toolbar
@@ -505,9 +507,9 @@ class Gui(QtGui.QMainWindow):
             if toolbar is not None:
                 self.removeToolBar(toolbar)
                 toolbar = None
-            
+
         return toolbar
- 
+
 
     ## def activateToolBar(self,fullname,shortname):
     ##     """Add a new toolbar to the GUI main window.
@@ -557,7 +559,7 @@ class Gui(QtGui.QMainWindow):
         self.coordsbox = widgets.CoordsBox()
         self.statusbar.addPermanentWidget(self.coordsbox)
 
-        
+
     def toggleCoordsTracker(self,onoff=None):
         def track(x,y,z):
             X,Y,Z = pf.canvas.unProject(x,y,z,True)
@@ -583,7 +585,7 @@ class Gui(QtGui.QMainWindow):
         """
         return Size(pf.GUI.central)
 
-    
+
     def showEditor(self):
         """Start the editor."""
         if not hasattr(self,'editor'):
@@ -596,7 +598,7 @@ class Gui(QtGui.QMainWindow):
         if hasattr(self,'editor'):
             self.editor.close()
             self.editor = None
-    
+
 
     def setcurproj(self,project=''):
         """Show the current project name."""
@@ -668,7 +670,7 @@ class Gui(QtGui.QMainWindow):
         while pf.app.overrideCursor():
             pf.app.restoreOverrideCursor()
         self.processEvents()
-    
+
 
 
     def keyPressEvent(self,e):
@@ -732,7 +734,7 @@ class Gui(QtGui.QMainWindow):
                            'pos':Pos(pf.GUI),
                            'bdsize':Size(pf.GUI.board),
                            },name='gui')
-            
+
 # THESE FUNCTION SHOULD BECOME app FUNCTIONS
 
 
@@ -876,7 +878,7 @@ class Gui(QtGui.QMainWindow):
         pf.canvas.cancel_selection()
         pf.canvas.cancel_draw()
         draw.clear_canvas()
-        draw.wakeup()
+        #draw.wakeup()
         self.setBusy(False)
 
 
@@ -884,10 +886,10 @@ class Gui(QtGui.QMainWindow):
         """Register a function for execution on exit"""
         self.on_exit.append(func)
 
-        
+
     def closeEvent(self,event):
         """Override the close event handler.
-        
+
         We override the default close event handler for the main
         window, to allow the user to cancel the exit.
         """
@@ -905,7 +907,7 @@ class Gui(QtGui.QMainWindow):
             dooze = pf.cfg['gui/dooze']
             if dooze > 0:
                 print("Exiting in %s seconds" % dooze)
-                draw.pause(dooze)
+                draw.sleep(dooze)
             # force reset redirect
             sys.stderr.flush()
             sys.stdout.flush()
@@ -928,7 +930,7 @@ class Gui(QtGui.QMainWindow):
         for the central canvas, maximizes the main window, and removes the
         window decorations, thus leaving only the OpenGL canvas on the full
         screen. (Currently there is also still a small border remaining.)
-        
+
         This mode is activated by pressing the F5 key. A second F5 press
         will revert to normal display mode.
         """
@@ -948,9 +950,9 @@ class Gui(QtGui.QMainWindow):
         self.update()
         self.fullscreen = not self.fullscreen
         pf.app.processEvents()
-                            
 
-    
+
+
 def exitDialog():
     """Show the exit dialog to the user.
 
@@ -959,13 +961,13 @@ def exitDialog():
     ## print "confirm = %s" % confirm
     ## print "pf.PF.filename = %s" % pf.PF.filename
     ## print "pf.PF.hits = %s" % pf.PF.hits
-    
+
     if confirm == 'never':
         return True
 
     if confirm == 'smart' and (pf.PF.filename is None or pf.PF.hits == 0):
         return True
-    
+
     print("Project variable changes: %s" % pf.PF.hits)
     print("pyFormex globals: %s" % pf.PF.keys())
 
@@ -976,7 +978,7 @@ def exitDialog():
           draw._I('reopen',pf.cfg['openlastproj'],text="Reopen the project on next startup"),
           ],
         caption='pyFormex exit dialog')
-        
+
     if not res:
         # Cancel the exit
         return False
@@ -1011,7 +1013,7 @@ def xwininfo(windowid=None,name=None):
     else:
         raise ValueError,"Either windowid or name have to be specified"
 
-    sta,out = utils.runCommand(cmd % args,RaiseError=False,quiet=True)
+    sta,out,err = utils.system(cmd % args)
     res = {}
     if not sta:
         for line in out.split('\n'):
@@ -1044,13 +1046,13 @@ def pidofxwin(windowid):
     a normal desktop configuration.
     """
     import re
-    sta,out = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,quiet=True)
+    sta,out = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,verbose=False)
     m = re.match("_NET_WM_PID\(.*\)\s*=\s*(?P<pid>\d+)",out)
     if m:
         pid = m.group('pid')
         #print "Found PID %s" % pid
         return int(pid)
-    
+
     return None
 
 
@@ -1068,14 +1070,14 @@ def windowId():
     info = QtGui.QX11Info()
     print(info)
     print("%x" % info.appRootWindow())
-    
+
 
 
 def findOldProcesses(max=16):
     """Find old pyFormex GUI processes still running.
 
-    There is a maximum to the number of processes taht can be detected.
-    16 will suffice laregley, because there is no sane reason to open that many
+    There is a maximum to the number of processes that can be detected.
+    16 will suffice largely, because there is no sane reason to open that many
     pyFormex GUI's on the same screen.
 
     Returns the next available main window name, and a list of
@@ -1102,10 +1104,10 @@ def findOldProcesses(max=16):
             else:
                 break
         else:
-            break 
+            break
 
     return windowname,running
-        
+
 
 def killProcesses(pids):
     """Kill the processes in the pids list."""
@@ -1139,7 +1141,7 @@ does not seem to work, use the KILL(9) signal.
 
 class Application(QtGui.QApplication):
     """The interactive Qt4 application"""
-    
+
     def __init__(self,args):
         QtGui.QApplication.__init__(self,args)
 
@@ -1181,7 +1183,7 @@ def startGUI(args):
     pf.app.setApplicationVersion(pf.__version__)
     ## pf.settings = QtCore.QSettings("pyformex.org", "pyFormex")
     ## pf.settings.setValue("testje","testvalue")
-    
+
     QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
@@ -1198,8 +1200,8 @@ def startGUI(args):
     else:
         windowname,running = "UNKOWN",[]
     pf.debug("%s,%s" % (windowname,running),pf.DEBUG.INFO)
-    
-    
+
+
     while len(running) > 0:
         if len(running) >= 16:
             print("Too many open pyFormex windows --- bailing out")
@@ -1210,7 +1212,7 @@ def startGUI(args):
 
 pyFormex is already running on this screen
 ------------------------------------------
-A main pyFormex window already exists on your screen. 
+A main pyFormex window already exists on your screen.
 
 If you really intended to start another instance of pyFormex, you
 can just continue now.
@@ -1234,7 +1236,7 @@ I have identified the process(es) by their PID as::
 If you trust me enough, you can also have me kill this processes for you.
 """ % pids
             actions[2:2] = ['Kill the running processes']
-            
+
         if dri:
             answer = draw.ask(warning,actions)
         else:
@@ -1252,15 +1254,15 @@ You should seriously consider to bail out now!!!
 
         elif answer == 'Rerun the tests':
             windowname,running = findOldProcesses() # try again
-        
+
         elif answer == 'Kill the running processes':
             killProcesses(pids)
             windowname,running = findOldProcesses() # try again
-            
+
         else:
             return -1 # I'm out of here!
 
-        
+
     # Load the splash image
     pf.debug("Loading the splash image",pf.DEBUG.GUI)
     splash = None
@@ -1300,10 +1302,10 @@ You should seriously consider to bail out now!!!
     pf.board.write("""%s   (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under the conditions of the GNU General Public License, version 3 or later. See Help->License or the file COPYING for details.
-""" % pf.FullVersion)
+""" % pf.FullVersion())
 
     # Set interaction functions
-    
+
     def show_warning(message,category,filename,lineno,file=None,line=None):
         """Replace the default warnings.showwarning
 
@@ -1317,11 +1319,11 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         if check[0]:
             utils.filterWarning(str(message))
             utils.saveWarningFilter(str(message))
-                  
+
     if pf.cfg['warnings/popup']:
         warnings.showwarning = show_warning
-    
-    
+
+
     pf.message = draw.message
     pf.warning = draw.warning
     pf.error = draw.error
@@ -1330,7 +1332,8 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.debug("Setting the canvas",pf.DEBUG.GUI)
     pf.GUI.viewports.changeLayout(1)
     pf.GUI.viewports.setCurrent(0)
-    pf.canvas = pf.GUI.viewports.current
+    #pf.canvas = pf.GUI.viewports.current
+    pf.canvas.setRenderMode(pf.cfg['draw/rendermode'])
     draw.reset()
 
     # setup the status bar
@@ -1346,18 +1349,19 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     # App menu
     pf.GUI.appmenu = appMenu.createAppMenu(parent=pf.GUI.menu,before='help')
-    
+
     # Link History Menus also in the File menu
     parent = pf.GUI.menu.item('file')
     before = parent.item('---1')
     if pf.GUI.apphistory:
         parent.insert_menu(pf.GUI.apphistory,before)
+
     if pf.GUI.scripthistory:
         parent.insert_menu(pf.GUI.scripthistory,before)
 
     # Create databases
     createDatabases()
- 
+
     # Plugin menus
     import plugins
     filemenu = pf.GUI.menu.item('file')
@@ -1416,7 +1420,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
             except:
                 # Avoid crashes from a faulty project file
                 # TODO: should we push this up to fileMenu.readProjectFile ?
-                # 
+                #
                 pf.message("Could not load the current project %s" % fn)
     #
     return 0
@@ -1445,7 +1449,7 @@ def createDatabases():
 
 def runGUI():
     """Go into interactive mode"""
-    
+
     egg = pf.cfg.get('gui/easter_egg',None)
     pf.debug('EGG: %s' % str(egg),pf.DEBUG.INFO)
     if egg:
@@ -1464,7 +1468,7 @@ def runGUI():
         pf.debug("Setting workdir to %s" % pf.cfg['workdir'],pf.DEBUG.INFO)
     else:
         # Save the current dir as workdir
-        prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
+        prefMenu.updateSettings({'workdir':os.getcwd(),'_save_':True})
 
     pf.interactive = True
     pf.debug("Start main loop",pf.DEBUG.INFO)

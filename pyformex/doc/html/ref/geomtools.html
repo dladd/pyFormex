@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>15. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>15. geomtools — Basic geometrical operations. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="16. fileread — Read geometry from file in a whole number of formats." href="fileread.html" />
     <link rel="prev" title="14. utils — A collection of miscellaneous utility functions." href="utils.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -147,10 +150,37 @@ such as lines, triangles, circles, planes.</p>
 <dt id="geomtools.areaNormals">
 <tt class="descclassname">geomtools.</tt><tt class="descname">areaNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.areaNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the area and normal vectors of a collection of triangles.</p>
-<p>x is an (ntri,3,3) array of coordinates.</p>
-<p>Returns a tuple of areas,normals.
-The normal vectors are normalized.
-The area is always positive.</p>
+<p>x is an (ntri,3,3) array with the coordinates of the vertices of ntri
+triangles.</p>
+<p>Returns a tuple (areas,normals) with the areas and the normals of the
+triangles. The area is always positive. The normal vectors are normalized.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.degenerate">
+<tt class="descclassname">geomtools.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>normals</em><big>)</big><a class="headerlink" href="#geomtools.degenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the degenerate faces according to area and normals.</p>
+<p>area,normals are equal sized arrays with the areas and normals of a
+list of faces, such as the output of the <a class="reference internal" href="#geomtools.areaNormals" title="geomtools.areaNormals"><tt class="xref py py-func docutils literal"><span class="pre">areaNormals()</span></tt></a> function.</p>
+<p>A face is degenerate if its area is less or equal to zero or the
+normal has a nan (not-a-number) value.</p>
+<p>Returns a list of the degenerate element numbers as a sorted array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.levelVolumes">
+<tt class="descclassname">geomtools.</tt><tt class="descname">levelVolumes</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.levelVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the level volumes of a collection of elements.</p>
+<p>x is an (nelems,nplex,3) array with the coordinates of the nplex vertices
+of nelems elements, with nplex equal to 2, 3 or 4.</p>
+<p>If nplex == 2, returns the lengths of the straight line segments.
+If nplex == 3, returns the areas of the triangle elements.
+If nplex == 4, returns the signed volumes of the tetraeder elements.
+Positive values result if vertex 3 is at the positive side of the plane
+defined by the vertices (0,1,2). Negative volumes are reported for
+tetraeders having reversed vertex order.</p>
+<p>For any other value of nplex, raises an error.
+If succesful, returns an (nelems,) shaped float array.</p>
 </dd></dl>
 
 <dl class="function">
@@ -800,7 +830,7 @@ be inside the simplex.</p>
         <li class="right" >
           <a href="utils.html" title="14. utils — A collection of miscellaneous utility functions."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -808,9 +838,9 @@ be inside the simplex.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

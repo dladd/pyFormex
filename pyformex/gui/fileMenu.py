@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -80,7 +80,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     access = res.acc
     compression = res.cpr
     convert = res.cvt
-    signature = pf.FullVersion
+    signature = pf.FullVersion()
 
     # OK, we have all data, now create/open the project
     pf.message("Opening project %s" % fn)
@@ -96,7 +96,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
         pf.GUI.setBusy(False)
 
     proj.hits = 0
-    print("START COUNTING HITS")
+    pf.debug("START COUNTING HITS",pf.DEBUG.PROJECT)
     return proj
 
 
@@ -106,7 +106,7 @@ def readProjectFile(fn):
         return proj
     else:
         return None
-        
+
 
 def setProject(proj):
     """Make the specified project the current project.
@@ -115,7 +115,7 @@ def setProject(proj):
     If a filename, the project file is opened.
 
     .. note: The remainder is obsolete
-    
+
     The user is asked for a Project file name and the access modalities.
     Depending on the results of the dialog:
 
@@ -132,7 +132,7 @@ def setProject(proj):
     existing project files.
 
     If a compression level (1..9) is given, the contents will be compressed,
-    resulting in much smaller project files at the cost of  
+    resulting in much smaller project files at the cost of
 
     Only one pyFormex project can be open at any time. The open project
     owns all the global data created and exported by any script.
@@ -142,7 +142,7 @@ def setProject(proj):
     If makeDefault is False, the project data are imported into pf.PF
     and the current project does not change. This means that if a project was
     open, the imported data will be added to it.
-    
+
     If addGlobals is None, the user is asked whether the current globals
     should be added to the project. Set True or False to force or reject
     the adding without asking.
@@ -169,7 +169,7 @@ def setProject(proj):
             'workdir':os.path.dirname(pf.PF.filename),
             },save=True)
     pf.GUI.setcurproj(pf.PF.filename)
-    
+
     if hasattr(proj,'_autoscript_'):
         _ignore = "Ignore it!"
         _show = "Show it"
@@ -248,13 +248,13 @@ def importProject():
             pf.message("Importing symbols: %s" % utils.sortedKeys(proj))
             pf.PF.update(proj)
             listProject()
-        
+
 
 def setAutoScript():
     """Set the current script as autoScript in the project"""
     if pf.cfg['curfile'] and pf.GUI.canPlay:
         pf.PF._autoscript_ = open(pf.cfg['curfile']).read()
- 
+
 
 def setAutoFile():
     """Set the current script/app as autofile in the project"""
@@ -288,6 +288,7 @@ def saveAsProject():
     if proj is not None: # even if empty
         pf.PF.filename = proj.filename
         pf.PF.gzip = proj.gzip
+        pf.PF.signature = proj.signature  # put new signature inside
         saveProject()
     if pf.PF.filename is not None:
         updateSettings({
@@ -295,7 +296,7 @@ def saveAsProject():
             'workdir':os.path.dirname(pf.PF.filename),
             },save=True)
     pf.GUI.setcurproj(pf.PF.filename)
-    
+
 
 def listProject():
     """Print all global variable names."""
@@ -338,12 +339,12 @@ def closeProject(save=None,delet=None):
 def closeProjectWithoutSaving():
     """Close the current project without saving it."""
     closeProject(False)
- 
+
 
 def convertProjectFile():
     proj = openProject(pf.PF.filename,access=['c'],default='c',exist=True)
     if proj is not None:
-        pf.debug("Converting project file %s" % proj.filename,pf.DEBUG.INFO)
+        pf.debug("Converting project file %s" % proj.filename,pf.DEBUG.PROJECT|pf.DEBUG.INFO)
         proj.convert(proj.filename.replace('.pyf','_converted.pyf'))
 
 
@@ -392,11 +393,11 @@ def openScript(fn=None,exist=True,create=False):
             draw.editFile(fn)
     return fn
 
-      
+
 def createScript(fn=None):
     return openScript(fn,exist=False,create=True)
 
-    
+
 def editApp(appname=None):
     """Edit an application source file.
 
@@ -423,9 +424,9 @@ def editApp(appname=None):
         if not os.path.exists(fn):
             draw.warning("The file '%s' does not exist" % fn)
             return
-            
+
     draw.editFile(fn)
-    
+
 
 ##################### other functions ##########################
 
@@ -439,7 +440,7 @@ def saveImage(multi=False):
      - start the multisave/autosave mode
      - do nothing
     """
-    pat = map(utils.fileDescription, ['img','icon','all'])  
+    pat = map(utils.fileDescription, ['img','icon','all'])
     dia = widgets.SaveImageDialog(pf.cfg['workdir'],pat,multi=multi)
     opt = dia.getResult()
     if opt:
@@ -462,19 +463,19 @@ def saveImage(multi=False):
                    rootcrop=opt.rc
                    )
 
-        
+
 def saveIcon():
     """Save an image as icon.
 
     This will show the Save Image dialog, with the multisave mode off and
     asking for an icon file name. Then save the current rendering to that file.
     """
-    ## We should create a specialized input dialog, asking also for the size 
+    ## We should create a specialized input dialog, asking also for the size
     fn = draw.askNewFilename(filter=utils.fileDescription('icon'))
     if fn:
         image.saveIcon(fn,size=32)
 
-    
+
 def startMultiSave():
     """Start/change multisave mode."""
     saveImage(True)
@@ -554,7 +555,7 @@ def recordSession(stop=0):
     fn = draw.askFilename(pf.cfg['workdir'],"Theora video files (*.ogv)",exist=False)
     if not fn:
         return
-    
+
     print("Recording your session to file %s" % fn)
     x,y,w,h = pf.GUI.XGeometry()
     cmd = "recordmydesktop -x %s -y %s --width %s --height %s --no-frame -o %s" % (x,y,w,h,fn)
@@ -576,7 +577,7 @@ def stopRecording(stop=15):
 
 def abortRecording():
     stopRecording(6)
-    
+
 
 
 MenuData = [

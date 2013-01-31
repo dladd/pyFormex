@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -47,7 +47,7 @@ from elements import elementType
 from geometry import Geometry
 from simple import regularGrid
 import utils
-   
+
 
 ##############################################################
 
@@ -58,23 +58,23 @@ class Mesh(Geometry):
     are gathered in a single twodimensional array with shape (ncoords,3).
     The individual geometrical elements are then described by indices into
     the coordinates array.
-    
+
     This model has some advantages over the Formex data model (which stores
     all the points of all the elements by their coordinates):
-    
+
     - a more compact storage, because coordinates of coinciding
       points are not repeated,
     - faster connectivity related algorithms.
-    
+
     The downside is that geometry generating algorithms are far more complex
     and possibly slower.
-    
+
     In pyFormex we therefore mostly use the Formex data model when creating
     geometry, but when we come to the point of exporting the geometry to
     file (and to other programs), a Mesh data model may be more adequate.
 
     The Mesh data model has at least the following attributes:
-    
+
     - `coords`: (ncoords,3) shaped Coords object, holding the coordinates of
       all points in the Mesh;
     - `elems`: (nelems,nplex) shaped Connectivity object, defining the elements
@@ -89,20 +89,20 @@ class Mesh(Geometry):
       In most cases the eltype can be set automatically.
       The user can override the default value, but an error will occur if
       the element type does not exist or does not match the plexitude.
-      
+
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
 
     If only an element type is provided, a unit sized single element Mesh
     of that type is created. Without parameters, an empty Mesh is created.
-    
+
     """
     ###################################################################
     ## DEVELOPERS: ATTENTION
     ##
     ## Because the TriSurface is derived from Mesh, all methods which
     ## return a Mesh and will also work correctly on a TriSurface,
-    ## should use self.__class__ to return the proper class, and they 
+    ## should use self.__class__ to return the proper class, and they
     ## should specify the prop and eltype arguments using keywords
     ## (because only the first two arguments match).
     ## See the copy() method for an example.
@@ -123,15 +123,15 @@ class Mesh(Geometry):
         newf.__doc__ = coords_func.__doc__
         return newf
 
-    
+
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
-        self.coords = self.elems = self.prop = self.eltype = None
+        self.coords = self.elems = self.prop = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
         self.elem_edges = self.eadj = None
-        self.conn = self.econn = self.fconn = None 
-        
+        self.conn = self.econn = self.fconn = None
+
         if coords is None:
             if eltype is None:
                 # Create an empty Mesh object
@@ -175,7 +175,7 @@ class Mesh(Geometry):
     def __getattribute__(self,name):
         """This is temporarily here to warn people about the eltype removal"""
         if name == 'eltype':
-            warn("depr_mesh_eltype")
+            warn("mesh_removed_eltype")
 
         # Default behaviour
         return object.__getattribute__(self, name)
@@ -208,7 +208,7 @@ class Mesh(Geometry):
         # of both the Mesh and the Mesh.elems attribute
         if eltype is None and hasattr(self.elems,'eltype'):
             eltype = self.elems.eltype
-        self.eltype = self.elems.eltype = elementType(eltype,self.nplex())
+        self.elems.eltype = elementType(eltype,self.nplex())
         if self.elems.eltype is None:
             raise ValueError,"No element type set for Mesh/Connectivity"
         return self
@@ -226,7 +226,7 @@ class Mesh(Geometry):
 
         """
         return self.elType().name()
-    
+
 
     def setProp(self,prop=None):
         """Create or destroy the property array for the Mesh.
@@ -236,7 +236,7 @@ class Mesh(Geometry):
         You can specify a single value or a list/array of integer values.
         If the number of passed values is less than the number of elements,
         they wil be repeated. If you give more, they will be ignored.
-        
+
         If a value None is given, the properties are removed from the Mesh.
         """
         if prop is None:
@@ -245,7 +245,7 @@ class Mesh(Geometry):
             prop = array(prop).astype(Int)
             self.prop = resize(prop,(self.nelems(),))
         return self
-            
+
 
     def __getitem__(self,i):
         """Return element i of the Mesh.
@@ -258,46 +258,65 @@ class Mesh(Geometry):
         an assignment like  M[i][j] = [1.,0.,0.].
         """
         return self.coords[self.elems[i]]
-    
+
 
     def __setitem__(self,i,val):
         """Change element i of the Mesh.
 
         This allows changing all the coordinates of an element by direct
         assignment such as M[i] = [[1.,0.,0.], ...]. The user should make sure
-        that the data match the plexitude of the element. 
+        that the data match the plexitude of the element.
         """
         self.coords[i] = val
 
 
-    def __getstate__(self):
-        import copy
-        state = copy.copy(self.__dict__)
-        # Store the element type by name,
-        # This is needed because of the way ElementType is initialized
-        # Maybe we should change that.
-        # The setstate then needs to set the elementType
-        # And this needs also to be done in Connectivity, if it has an eltype
-        try:
-            state['eltype'] = state['eltype'].name()
-        except:
-            state['eltype'] = None
-        return state
+    ## def __getstate__(self):
+    ##     import copy
+    ##     state = copy.copy(self.__dict__)
+    ##     #print("GOT = %s" % sorted(state.keys()))
+    ##     # Store the element type by name,
+    ##     # This is needed because of the way ElementType is initialized
+    ##     # Maybe we should change that.
+    ##     # The setstate then needs to set the elementType
+    ##     # And this needs also to be done in Connectivity, if it has an eltype
+    ##     ## try:
+    ##     ##     state['eltype'] = state['eltype'].name()
+    ##     ## except:
+    ##     ##state['eltype'] = None
+    ##     if 'eltype' in state:
+    ##         del state['eltype']
+    ##     #print("STORE = %s" % sorted(state.keys()))
+    ##     return state
 
 
     def __setstate__(self,state):
         """Set the object from serialized state.
-        
+
         This allows to read back old pyFormex Project files where the Mesh
         class did not set element type yet.
         """
+        elems = state['elems']
         if 'eltype' in state:
-            state['eltype'] = elementType(state['eltype'])
-            self.__dict__.update(state)
+            if state['eltype'] is not None:
+                # We acknowledge this eltype, even if it is also stored
+                # in elems. This makes the restore also work for older projects
+                # where eltype was not in elems.
+                elems.eltype = elementType(state['eltype'])
+            # Do not store the eltype in the Mesh anymore
+            del state['eltype']
         else:
-            # Old Project files did not save element type
-            self.setType(self.eltype)
-    
+            # No eltype in Mesh
+            if hasattr(elems,'eltype'):
+                # eltype in elems: leave as it is
+                pass
+            else:
+                # Try to set elems eltype from plexitude
+                try:
+                    elems.eltype = elementType(nplex=elems.nplex())
+                except:
+                    raise ValueError,"I can not restore a Mesh without eltype"
+        self.__dict__.update(state)
+
 
     def getProp(self):
         """Return the properties as a numpy array (ndarray)"""
@@ -344,18 +363,30 @@ class Mesh(Geometry):
 
 
     def toSurface(self):
-        """Convert a Mesh to a Surface.
+        """Convert a Mesh to a TriSurface.
 
-        If the plexitude of the mesh is 3, returns a TriSurface equivalent
-        with the Mesh. Else, an error is raised.
+        Only Meshes of level 2 (surface) and 3 (volume) can be converted to a
+        TriSurface. For a level 3 Mesh, the border Mesh is taken first.
+        A level 2 Mesh is converted to element type 'tri3' and then to a
+        TriSurface.
+        The resulting TriSurface is only fully equivalent with the input
+        Mesh if the latter has element type 'tri3'.
+
+        On success, returns a TriSurface corresponding with the input Mesh.
+        If the Mesh can not be converted to a TriSurface, an error is raised.
         """
         from plugins.trisurface import TriSurface
-        if self.nplex() == 3:
-            return TriSurface(self)
+        if self.level() == 3:
+            obj = self.getBorderMesh()
+        elif self.level() == 2:
+            obj = self
         else:
-            raise ValueError,"Only plexitude-3 Meshes can be converted to TriSurface. Got plexitude %s" % self.nplex()
+            raise ValueError,"Can not convert a Mesh of level %s to a Surface" % self.level()
 
-            
+        obj = obj.convert('tri3')
+        return TriSurface(obj)
+
+
     def ndim(self):
         return 3
     def level(self):
@@ -370,7 +401,7 @@ class Mesh(Geometry):
     npoints = ncoords
     def shape(self):
         return self.elems.shape
-    
+
 
     def nedges(self):
         """Return the number of edges.
@@ -437,13 +468,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     def getCoords(self):
         """Get the coords data.
-    
+
         Returns the full array of coordinates stored in the Mesh object.
         Note that this may contain points that are not used in the mesh.
         :meth:`compact` will remove the unused points.
         """
         return self.coords
-    
+
 
     def getElems(self):
         """Get the elems data.
@@ -482,7 +513,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         For both meshes however,  getLowerEntities(+1) returns the edges.
 
         By default, all entities for all elements are returned and common
-        entities will appear multiple times. Specifying unique=True will 
+        entities will appear multiple times. Specifying unique=True will
         return only the unique ones.
 
         The return value may be an empty table, if the element type does
@@ -522,7 +553,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         the coords attribute.
         """
         return self.coords[self.getNodes()]
-        
+
 
     def getEdges(self):
         """Return the unique edges of all the elements in the Mesh.
@@ -535,7 +566,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if self.edges is None:
             self.edges = self.elems.insertLevel(1)[1]
         return self.edges
-        
+
 
     def getFaces(self):
         """Return the unique faces of all the elements in the Mesh.
@@ -548,7 +579,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if self.faces is None:
             self.faces = self.elems.insertLevel(2)[1]
         return self.faces
-        
+
 
     def getCells(self):
         """Return the cells of the elements.
@@ -577,7 +608,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             self.elem_edges,self.edges = self.elems.insertLevel(1)
         return self.elem_edges
 
-    
+
     def getFreeEntities(self,level=-1,return_indices=False):
         """Return the border of the Mesh.
 
@@ -595,17 +626,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 return Connectivity(),[]
             else:
                 return Connectivity()
-            
+
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
-        isbrd = (ncon<=1)   # < 1 should not occur 
+        isbrd = (ncon<=1)   # < 1 should not occur
         brd = lo[isbrd]
         #
         if brd.eltype is None:
             raise ValueError,"THIS ERROR SHOULD NOT OCCUR! CONTACT MAINTAINERS!"
         if not return_indices:
             return brd
-        
+
         # return indices where the border elements come from
         binv = hiinv[isbrd]
         enr = binv[binv >= 0]  # element number
@@ -784,7 +815,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         the element was reached by the walker.
         """
         return self.adjacency(level).frontWalk(startat=startat,frontinc=frontinc,partinc=partinc,maxval=maxval)
-    
+
 
     def maskedEdgeFrontWalk(self,mask=None,startat=0,frontinc=1,partinc=1,maxval=-1):
         """Perform a front walk over masked edge connections.
@@ -816,7 +847,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         the other element without leaving the Mesh.
         The partitioning is returned as a integer array having a value
         for ech element corresponding to the part number it belongs to.
-       
+
         By default the parts are sorted in decreasing order of the number
         of elements. If you specify nparts, you may wish to switch off the
         sorting by specifying sort=''.
@@ -835,7 +866,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Returns a list of Meshes that each form a connected part.
         By default the parts are sorted in decreasing order of the number
-        of elements. 
+        of elements.
         """
         p = self.partitionByConnection(level=level,startat=startat,sort=sort)
         split = self.setProp(p).splitProp()
@@ -869,7 +900,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         level = {'node':0,'edge':1}[mode]
         p = self.frontWalk(level=level,startat=sel,maxval=nsteps)
-        return where(p>=0)[0]  
+        return where(p>=0)[0]
 
 
     def partitionByAngle(self,**arg):
@@ -902,7 +933,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     #
     #  IDEA: Should we move these up to Connectivity ?
-    #        That would also avoid some possible problems 
+    #        That would also avoid some possible problems
     #        with storing conn and econn
     #
 
@@ -911,7 +942,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if self.conn is None:
             self.conn = self.elems.inverse()
         return self.conn
-    
+
 
     def nNodeConnected(self):
         """Find the number of elems connected to nodes."""
@@ -932,7 +963,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     #
     # Are these really needed? better use adjacency(level)
-    # 
+    #
     #
     def nodeAdjacency(self):
         """Find the elems adjacent to each elem via one or more nodes."""
@@ -962,11 +993,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Returns an integer array with a sorted list of non-manifold node
         numbers. Possibly empty (always if the dimensionality of the Mesh
-        is lower than 2). 
+        is lower than 2).
         """
         if self.level() < 2:
             return []
-                
+
         ML = self.splitByConnection(1,sort='')
         nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
         return unique(concat(nm))
@@ -991,9 +1022,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if self.level() < 3:
             return []
 
-        elems = self.getElemEdges() 
+        elems = self.getElemEdges()
         p = self.partitionByConnection(2,sort='')
-        eL = [ elems[p==i] for i in unique(p) ] 
+        eL = [ elems[p==i] for i in unique(p) ]
         nm = [ intersect1d(ei,ej) for ei,ej in combinations(eL,2) ]
         return unique(concat(nm))
 
@@ -1007,11 +1038,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Returns an integer array with a sorted list of numbers of nodes
         on the non-manifold edges.
         Possibly empty (always if the dimensionality of the Mesh
-        is lower than 3). 
+        is lower than 3).
         """
         if self.level() < 3:
             return []
-                
+
         ML = self.splitByConnection(2,sort='')
         nm = [ intersect1d(Mi.elems,Mj.elems) for Mi,Mj in combinations(ML,2) ]
         return unique(concat(nm))
@@ -1028,12 +1059,12 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     # should not be a mesh method, but of some MeshValue class? Field?
     def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
         """_Smooth nodal scalar values by averaging over adjacent nodes iter times.
-        
+
         Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
         are averaged over adjacent nodes an number of time (iter)
-        in order to provide a smoothed mapping. 
+        in order to provide a smoothed mapping.
         """
-        
+
         if iter==0: return val
         nadjn=self.getEdges().adjacency(kind='n')
         nadjn=[x[x>=0] for x in nadjn]
@@ -1052,7 +1083,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """Fuse the nodes of a Meshes.
 
         All nodes that are within the tolerance limits of each other
-        are merged into a single node.  
+        are merged into a single node.
 
         The merging operation can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
@@ -1071,14 +1102,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         See also :meth:`Coords.match`
         """
         return self.coords.match(mesh.coords,**kargs)
-        
-    
+
+
     def matchCentroids(self, mesh,**kargs):
         """Match elems of Mesh with elems of self.
-        
+
         self and Mesh are same eltype meshes
         and are both without duplicates.
-        
+
         Elems are matched by their centroids.
         """
         c = Mesh(self.centroids(), arange(self.nelems() ))
@@ -1091,13 +1122,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
     def matchFaces(self,mesh):
         """_Match faces of mesh with faces of self.
-            
-        self and Mesh can be same eltype meshes or different eltype but of the 
-        same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
+
+        self and Mesh can be same eltype meshes or different eltype but of the
+        same hierarchical type (i.e. hex8-quad4 or tet4 - tri3)
         and are both without duplicates.
-            
+
         Returns the indices array of the elems of self that matches
-        the faces of mesh, and the matched face number 
+        the faces of mesh, and the matched face number
         """
         sel = self.elType().getEntities(2)
         hi,lo = self.elems.insertLevel(sel)
@@ -1110,7 +1141,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         enr =  unique(hiinv[hiinv >= 0])  # element number
         fnr=column_stack(where(hpos!=-1)) # face number
         return enr,fnr
-    
+
 
     def compact(self):
         """Remove unconnected nodes and renumber the mesh.
@@ -1122,7 +1153,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         nodes = unique(self.elems)
         if nodes.size == 0:
             return self.__class__([],[])
-        
+
         elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
             if nodes[-1] >= nodes.size:
@@ -1130,7 +1161,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             else:
                 elems = self.elems
             return self.__class__(coords,elems,prop=self.prop,eltype=self.elType())
-        
+
         else:
             return self
 
@@ -1145,10 +1176,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         - `compact`: boolean. If True (default), the returned Mesh will be
           compacted, i.e. the unused nodes are removed and the nodes are
           renumbered from zero. If False, returns the node set and numbers
-          unchanged. 
-          
+          unchanged.
+
         Returns a Mesh (or subclass) with only the selected elements.
-        
+
         See `cselect` for the complementary operation.
         """
         M = self.__class__(self.coords,self.elems[selected],eltype=self.elType())
@@ -1169,10 +1200,10 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         - `compact`: boolean. If True (default), the returned Mesh will be
           compacted, i.e. the unused nodes are removed and the nodes are
           renumbered from zero. If False, returns the node set and numbers
-          unchanged. 
-          
+          unchanged.
+
         Returns a Mesh with all but the selected elements.
-        
+
         This is the complimentary operation of `select`.
         """
         return self.select(complement(selected,self.nelems()),compact=compact)
@@ -1246,9 +1277,9 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         prop = self.prop
         if prop is not None:
             prop = column_stack([prop]*len(nodsel)).reshape(-1)
-        return Mesh(self.coords,elems,prop=prop,eltype=eltype)   
+        return Mesh(self.coords,elems,prop=prop,eltype=eltype)
 
-    
+
     def withProp(self,val):
         """Return a Mesh which holds only the elements with property val.
 
@@ -1256,7 +1287,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         The return value is a Mesh holding all the elements that
         have the property val, resp. one of the values in val.
         The returned Mesh inherits the matching properties.
-        
+
         If the Mesh has no properties, a copy with all elements is returned.
         """
         if self.prop is None:
@@ -1268,8 +1299,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             for v in asarray(val).flat:
                 t += (self.prop == v)
             return self.__class__(self.coords,self.elems[t],prop=self.prop[t],eltype=self.elType())
-        
-    
+
+
     def withoutProp(self, val):
         """Return a Mesh without the elements with property `val`.
 
@@ -1278,7 +1309,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         The return value is a Mesh holding all the elements that do not
         have the property val, resp. one of the values in val.
         The returned Mesh inherits the matching properties.
-        
+
         If the Mesh has no properties, a copy with all elements is returned.
         """
         ps=self.propSet()
@@ -1309,7 +1340,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         contain any of the specified nodes.
         """
         return self.select(self.elems.notConnectedTo(nod))
-          
+
 
     def splitProp(self):
         """Partition a Mesh according to its prop values.
@@ -1356,11 +1387,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           elementt's volume.
 
         The :meth:`reflect` method by default calls this method to undo
-        the element reversal caused by the reflection operation. 
+        the element reversal caused by the reflection operation.
 
         Parameters:
 
-        -`sel`: a selector (index or True/False array) 
+        -`sel`: a selector (index or True/False array)
         """
         utils.warn('warn_mesh_reverse')
         # TODO: These can be merged
@@ -1379,7 +1410,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             elems[sel] = elsel
         return self.__class__(self.coords,elems,prop=self.prop,eltype=self.elType())
 
-            
+
     def reflect(self,dir=0,pos=0.0,reverse=True,**kargs):
         """Reflect the coordinates in one of the coordinate directions.
 
@@ -1396,16 +1427,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         if 'autofix' in kargs:
             utils.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
             reverse = kargs['autofix']
-            
+
         if reverse is None:
             reverse = True
             utils.warn("warn_mesh_reflect")
-        
+
         M = Geometry.reflect(self,dir=dir,pos=pos)
         if reverse:
             M = M.reverse()
         return M
-    
+
 
     def convert(self,totype,fuse=False):
         """Convert a Mesh to another element type.
@@ -1423,7 +1454,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         The return value is a Mesh of the requested element type, representing
         the same geometry (possibly approximatively) as the original mesh.
-        
+
         If the requested conversion is not implemented, an error is raised.
 
         .. warning:: Conversion strategies that add new nodes may produce
@@ -1435,16 +1466,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         #
         # totype is a string !
         #
-        
+
         if elementType(totype) == self.elType():
             return self
-        
+
         strategy = self.elType().conversions.get(totype,None)
 
         while not type(strategy) is list:
             # This allows for aliases in the conversion database
             strategy = self.elType().conversions.get(strategy,None)
-            
+
             if strategy is None:
                 raise ValueError,"Don't know how to convert %s -> %s" % (self.elName(),totype)
 
@@ -1464,7 +1495,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
             if steptype == 'a':
                 mesh = mesh.addMeanNodes(stepdata,totype)
-                
+
             elif steptype == 's':
                 mesh = mesh.selectNodes(stepdata,totype)
 
@@ -1554,22 +1585,22 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         The result is a list of Meshes of which the last one contains the
         elements that could not be reduced and may be empty.
-        Property numbers propagate to the children. 
+        Property numbers propagate to the children.
         """
         #
         # This duplicates a lot of the functionality of
         # Connectivity.reduceDegenerate
         # But this is really needed to keep the properties
         #
-        
+
         if self.nelems() == 0:
             return [self]
-        
+
         try:
             strategies = self.elType().degenerate
         except:
             return [self]
-        
+
         if eltype is not None:
             s = strategies.get(eltype,[])
             if s:
@@ -1658,7 +1689,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         by default in no particular order. Setting permutations=False will
         only consider elements with the same nodes in the same order as
         duplicates.
-        
+
         Returns a Mesh with all duplicate elements removed.
         """
         ind,ok = self.elems.testDuplicate(permutations)
@@ -1675,7 +1706,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         order can also be a predefined value that will generate the node
         index automatically:
-        
+
         - 'elems': the nodes are number in order of their appearance in the
           Mesh connectivity.
         - 'random': the nodes are numbered randomly.
@@ -1705,7 +1736,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
           - 'nodes': order the elements in increasing node number order.
           - 'random': number the elements in a random order.
-          - 'reverse': number the elements in reverse order. 
+          - 'reverse': number the elements in reverse order.
 
         Returns a Mesh equivalent with self but with the elements ordered as specified.
 
@@ -1787,7 +1818,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           sequence of float numbers is given, the numbers specify the relative
           distance along the connection direction where the elements should
           end. If the last value in the sequence is not equal to 1.0, there
-          will be a gap between the consecutive connections. 
+          will be a gap between the consecutive connections.
 
         - `eltype`: the element type of the constructed hypermesh. Normally,
           this is set automatically from the base element type and the
@@ -1806,7 +1837,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 raise ValueError,"This only works for linear connection"
             ## BV: Any reason why this would not work??
             ##     xm = 0.5 * (clist[0]+clist[1])
-            ##     clist.insert(1, xm) 
+            ##     clist.insert(1, xm)
         else:
             raise ValueError,"Invalid coordslist argument"
 
@@ -1833,13 +1864,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         # Concatenate the coordinates
         x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(clist[:-1:degree],clist[degree::degree]) ]
         x = Coords.concatenate(clist[:1] + x)
-        
+
         # Create the connectivity table
         nnod = self.ncoords()
         nrep = (x.shape[0]//nnod - 1) // degree
         e = extrudeConnectivity(self.elems,nnod,degree)
         e = replicConnectivity(e,nrep,nnod*degree)
-        
+
         # Create the Mesh
         M = Mesh(x,e).setProp(self.prop)
         # convert to proper eltype
@@ -1853,7 +1884,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
         Returns a new Mesh obtained by extruding the given Mesh
         over `n` steps of length `step` in direction of axis `dir`.
-          
+
         """
         print("Extrusion over %s steps of length %s" % (n,step))
         x = [ self.coords.trl(dir,i*n*step/degree) for i in range(1,degree+1) ]
@@ -1882,7 +1913,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         The returned Mesh has double plexitude of the original.
         The operation is similar to the extrude() method, but the path
         can be any 3D curve.
-        
+
         This function is usually used to extrude points into lines,
         lines into surfaces and surfaces into volumes.
         By default it will try to fix the connectivity ordering where
@@ -1898,37 +1929,37 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclnod=[], exclelem=[]):
         """Return a smoothed mesh.
-        
+
         Smoothing algorithm based on lowpass filters.
-        
+
         If edg is True, the algorithm tries to smooth the
         outer border of the mesh seperately to reduce mesh shrinkage.
-        
+
         Higher values of k can reduce shrinkage even more
         (up to a point where the mesh expands),
         but will result in less smoothing per iteration.
-        
+
         - `exclnod`: It contains a list of node indices to exclude from the smoothing.
           If exclnod is 'border', all nodes on the border of the mesh will
           be unchanged, and the smoothing will only act inside.
           If exclnod is 'inner', only the nodes on the border of the mesh will
           take part to the smoothing.
-        
+
         - `exclelem`: It contains a list of elements to exclude from the smoothing.
           The nodes of these elements will not take part to the smoothing.
           If exclnod and exclelem are used at the same time the union of them
           will be exluded from smoothing.
         """
-        if iterations < 1: 
+        if iterations < 1:
             return self
-        
+
         if lamb*k == 1:
             raise ValueError,"Cannot assign values of lamb and k which result in lamb*k==1"
-        
+
         mu = -lamb/(1-k*lamb)
         adj = self.getEdges().adjacency(kind='n')
         incl = resize(True, self.ncoords())
-        
+
         if exclnod == 'border':
             exclnod = unique(self.getBorder())
             k = 0. #k can be zero because it cannot shrink
@@ -1939,7 +1970,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         exclude=array(unique(concatenate([exclnod, exclelemnod])), dtype = int)
 
         incl[exclude] = False
-        
+
         if edg:
             externals = resize(False,self.ncoords())
             expoints = unique(self.getFreeEntities())
@@ -1975,7 +2006,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         subclass thereof).
         """
         return self.__class__.concatenate([self,other])
-    
+
 
     @classmethod
     def concatenate(clas,meshes,**kargs):
@@ -1984,7 +2015,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         All Meshes in the list should have the same plexitude.
         Meshes with plexitude are ignored though, to allow empty
         Meshes to be added in.
-        
+
         Merging of the nodes can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
 
@@ -2002,7 +2033,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 return zeros(m.nelems(),dtype=Int)
             else:
                 return m.prop
-            
+
         meshes = [ m for m in meshes if m.nplex() > 0 ]
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
@@ -2019,14 +2050,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             prop = concatenate([_force_prop(m) for m in meshes])
         else:
             prop = concatenate(prop)
-            
+
         coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
         return clas(coords,elems,prop=prop,eltype=eltype.pop())
 
- 
+
     # Test and clipping functions
-    
+
 
     def test(self,nodes='all',dir=0,min=None,max=None,atol=0.):
         """Flag elements having nodal coordinates between min and max.
@@ -2036,7 +2067,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Mesh
-        
+
         The test plane can be defined in two ways, depending on the value of dir.
         If dir == 0, 1 or 2, it specifies a global axis and min and max are
         the minimum and maximum values for the coordinates along that axis.
@@ -2045,14 +2076,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         Else, dir should be compaitble with a (3,) shaped array and specifies
         the direction of the normal on the planes. In this case, min and max
         are points and should also evaluate to (3,) shaped arrays.
-        
+
         nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
-        
+
         - a single (integer) point number (< the number of points in the Formex)
         - a list of point numbers
         - one of the special strings: 'all', 'any', 'none'
-        
+
         The default ('all') will flag all the elements that have all their
         nodes between the planes x=min and x=max, i.e. the elements that
         fall completely between these planes. One of the two clipping planes
@@ -2109,7 +2140,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     def cclip(self,t,compact=True):
         """This is the complement of clip, returning a Mesh where t<=0.
-        
+
         """
         return self.select(t<=0,compact=compact)
 
@@ -2133,7 +2164,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         - the length of the element if the Mesh is of level 1,
         - the area of the element if the Mesh is of level 2,
         - the (signed) volume of the element if the Mesh is of level 3.
-        
+
         The level volumes can be computed directly for Meshes of eltypes
         'line2', 'tri3' and 'tet4' and will produce accurate results.
         All other Mesh types are converted to one of these before computing
@@ -2160,7 +2191,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             base = base_elem[self.level()]
         except:
             return None
-        
+
         if self.elName() == base:
              M = self
         else:
@@ -2169,11 +2200,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 M = self.shallowCopy(prop=arange(self.nelems())).convert(base)
             except:
                 return None
-        
+
         V = levelVolumes(M.coords[M.elems])
         if V is not None and M != self:
             V = array([ V[where(M.prop==i)[0]].sum() for i in arange(self.nelems()) ])
-            
+
         return V
 
     def lengths(self):
@@ -2281,13 +2312,13 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         elements can be computed.
         """
         return self.reverse(self.volumes() < 0.)
-    
+
 
     def actor(self,**kargs):
 
         if self.nelems() == 0:
             return None
-        
+
         from gui.actors import GeomActor
         return GeomActor(self,**kargs)
 
@@ -2307,11 +2338,11 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     # Formulas for both linear and quadratic edges
     # For quadratic: Option to select tangential or chordal directions
     #
-    #### Currently reinstated in trisurface.py ! 
-    
+    #### Currently reinstated in trisurface.py !
+
     ## def getAngles(self, angle_spec=Deg):
     ##     """_Returns the angles in Deg or Rad between the edges of a mesh.
-        
+
     ##     The returned angles are shaped  as (nelems, n1faces, n1vertices),
     ##     where n1faces are the number of faces in 1 element and the number
     ##     of vertices in 1 face.
@@ -2331,15 +2362,15 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     ## #this is define for every linear surface or linear volume mesh.
     ## def equiAngleSkew(self):
     ##     """Returns the equiAngleSkew of the elements, a mesh quality parameter .
-       
+
     ##   It quantifies the skewness of the elements: normalize difference between
-    ##   the worst angle in each element and the ideal angle (angle in the face 
+    ##   the worst angle in each element and the ideal angle (angle in the face
     ##   of an equiangular element, qe).
     ##   """
     ##     eang=self.getAngles(Deg)
     ##     eangsh= eang.shape
     ##     eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
-    ##     eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)        
+    ##     eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)
     ##     f= self.elType().faces[1]
     ##     nedginface=len( array(f[ f.keys()[0] ], int)[0] )
     ##     qe=180.*(nedginface-2.)/nedginface
@@ -2360,7 +2391,7 @@ def extrudeConnectivity(e,nnod,degree):
     The extrusion adds `degree` planes of nodes, each with an node increment
     `nnod`, to the original Connectivity `e` and then selects the target nodes
     from it as defined by the e.eltype.extruded[degree] value.
-    
+
     Currently returns an integer array, not a Connectivity!
     """
     try:
@@ -2390,7 +2421,7 @@ def replicConnectivity(e,n,inc):
     of the original e, but having the node numbers increased by inc.
     """
     return Connectivity(concatenate([e+i*inc for i in range(n)]),eltype=e.eltype)
-    
+
 
 def mergeNodes(nodes,fuse=True,**kargs):
     """Merge all the nodes of a list of node sets.
@@ -2408,7 +2439,7 @@ def mergeNodes(nodes,fuse=True,**kargs):
     - `**kargs`: keyword arguments that are passed to the fuse operation
 
     Returns:
-    
+
     - a Coords with the coordinates of all (unique) nodes,
     - a list of indices translating the old node numbers to the new. These
       numbers refer to the serialized Coords.
@@ -2458,7 +2489,7 @@ def unitAttractor(x,e0=0.,e1=0.):
       will become sparsely populated.
 
     .. note: This function is usually called from the :func:`seed` function,
-       passing an initially uniformly distributed set of points. 
+       passing an initially uniformly distributed set of points.
 
     Example:
 
@@ -2496,7 +2527,7 @@ def seed(n,e0=0.,e1=0.):
     x = arange(n+1) * 1. / n
     return unitAttractor(x,e0,e1)
 
-# 
+#
 # Local utilities: move these to elements.py ??
 #
 
@@ -2514,7 +2545,7 @@ def tri3_els(ndiv):
     els1 = [ row_stack([ array([0,1,n-j]) + i for i in range(ndiv-j) ]) + j * n - j*(j-1)/2 for j in range(ndiv) ]
     els2 = [ row_stack([ array([1,1+n-j,n-j]) + i for i in range(ndiv-j-1) ]) + j * n - j*(j-1)/2 for j in range(ndiv-1) ]
     elems = row_stack(els1+els2)
-    
+
     return elems
 
 # TODO: can be removed, this is equivalent to gridpoints(seed(nx),seed(ny))
@@ -2565,7 +2596,7 @@ def quadgrid(seed0,seed1):
     e = concatenate([els+i*wts.shape[0] for i in range(E.nelems())])
     M = Mesh(U,e,eltype=E.elType())
     return M.fuse()
- 
+
 
 
 ########### Deprecated #####################
@@ -2592,17 +2623,6 @@ def correctHexMeshOrientation(hm):
     hm.elems[tp<0.]=hm.elems[tp<0.][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
     return hm
 
-
-# removed in 0.8.7
-## def connectMeshSequence(ML,loop=False,**kargs):
-##     utils.deprec("connectMeshSequence is deprecated: use Mesh.connect instead")
-##     MR = ML[1:]
-##     if loop:
-##         MR.append(ML[0])
-##     else:
-##         ML = ML[:-1]
-##     HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-##     return Mesh.concatenate(HM)
 
 
 # End

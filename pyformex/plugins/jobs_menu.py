@@ -110,7 +110,7 @@ def getRemoteDirs(host,userdir):
     The userdir is relative to the user's home dir.
     """
     cmd = "ssh %s 'cd %s;ls -F|egrep \".*/\"'" % (host,userdir)
-    sta,out = utils.runCommand(cmd,False)
+    sta,out = utils.runCommand(cmd)
     if sta:
         out = ''
     dirs = out.split('\n')
@@ -125,7 +125,7 @@ def getRemoteDirs(host,userdir):
 ##     The userdir is relative to the user's home dir.
 ##     """
 ##     cmd = "ssh %s 'cd %s;ls -F'" % (host,userdir)
-##     sta,out = utils.runCommand(cmd,False)
+##     sta,out = utils.runCommand(cmd)
 ##     if sta:
 ##         out = ''
 ##     dirs = out.split('\n')

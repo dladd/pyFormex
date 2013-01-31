@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -40,6 +40,7 @@ from geometry import Geometry
 
 ########################
 # Imported here only to make available in scripts
+from olist import List
 from mesh import Mesh
 from plugins.trisurface import TriSurface
 
@@ -51,19 +52,19 @@ import threading,os,copy,re,time
 
 class _Exit(Exception):
     """Exception raised to exit from a running script."""
-    pass    
+    pass
 
 class _ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
-    pass    
+    pass
 
 class _ExitSeq(Exception):
     """Exception raised to exit from a sequence of scripts."""
-    pass    
+    pass
 
 class _TimeOut(Exception):
     """Exception raised to timeout from a dialog widget."""
-    pass    
+    pass
 
 
 ############################# Globals for scripts ############################
@@ -72,19 +73,20 @@ class _TimeOut(Exception):
 def Globals():
     """Return the globals that are passed to the scripts on execution.
 
-    This basically contains the globals defined in draw.py, colors.py,
-    and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the pyformex.PF, by
-    preference using the export() function.
-    During execution of the script, the global variable __name__ will be
-    set to either 'draw' or 'script' depending on whether the script
-    was executed in the 'draw' module (--gui option) or the 'script'
-    module (--nogui option).
+    When running pyformex with the --nogui option, this contains all the
+    globals defined in the module formex (which include those from
+    coords, arraytools and numpy.
+
+    When running with the GUI, this also includes the globals from gui.draw
+    (including those from gui.color).
+
+    Furthermore, the global variable __name__ will be set to either 'draw'
+    or 'script' depending on whether the script was executed with the GUI
+    or not.
     """
     # :DEV it is not a good idea to put the pf.PF in the globals(),
     # because pf.PF may contain keys that are not acceptible as
     # Python names
-    #g = copy.copy(pf.PF)
     g = {}
     g.update(globals())
     if pf.GUI:
@@ -115,7 +117,7 @@ def forget(names):
 def forgetAll():
     """Delete all the global variables."""
     pf.PF = {}
-    
+
 
 def rename(oldnames,newnames):
     """Rename the global variables in oldnames to newnames."""
@@ -207,7 +209,7 @@ def error(message):
     print("pyFormex Error: "+message)
     if not ack("Do you want to continue?"):
         exit()
-    
+
 def warning(message):
     print("pyFormex Warning: "+message)
     if not ack("Do you want to continue?"):
@@ -232,7 +234,7 @@ def system(cmdline,result='output'):
     If result == 'output', the output of the command is returned.
     If result == 'both', a tuple of status and output is returned.
     """
-    sta,out = utils.system(cmdline)
+    sta,out,err = utils.system(cmdline)
     if result == 'status':
         return sta
     elif result == 'output':
@@ -242,8 +244,6 @@ def system(cmdline,result='output'):
 
 
 ########################### PLAYING SCRIPTS ##############################
-
-sleep = time.sleep
 
 scriptThread = None
 exitrequested = False
@@ -257,12 +257,14 @@ scriptInit = None # can be set to execute something before each script
 def scriptLock(id):
     pf.debug("Setting script lock %s" %id,pf.DEBUG.SCRIPT)
     pf.scriptlock |= set([id])
+    #print(pf.scriptlock)
 
 def scriptRelease(id):
     pf.debug("Releasing script lock %s" %id,pf.DEBUG.SCRIPT)
     pf.scriptlock -= set([id])
+    #print(pf.scriptlock)
 
- 
+
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
 
@@ -283,17 +285,18 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         pf.message("Not executing this script because another one is already running")
         return
 
-       
+
     if len(pf.scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
+        #print(pf.scriptlock)
         return
-    
+
     scriptLock('__auto__')
     exitrequested = False
 
     if pf.GUI:
         pf.GUI.startRun()
-    
+
     # Get the globals
     g = Globals()
     if pf.GUI:
@@ -327,7 +330,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             exitall = True
         except:
             raise
-            
+
     finally:
         # honour the exit function
         if 'atExit' in g:
@@ -336,7 +339,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 atExit()
             except:
                 pf.debug('Error while calling script exit function',pf.DEBUG.SCRIPT)
-                
+
         if pf.cfg['autoglobals']:
             exportNames.extend(listAll(clas=Geometry,dic=g))
         pf.PF.update([(k,g[k]) for k in exportNames])
@@ -344,7 +347,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         scriptRelease('__auto__') # release the lock
         if pf.GUI:
             pf.GUI.stopRun()
-            
+
     if exitall:
         pf.debug("Calling quit() from playscript",pf.DEBUG.SCRIPT)
         quit()
@@ -352,6 +355,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 def force_finish():
     pf.scriptlock = set() # release all script locks (in case of an error)
+    #print(pf.scriptlock)
 
 
 def breakpt(msg=None):
@@ -372,7 +376,7 @@ def breakpt(msg=None):
 def raiseExit():
     pf.debug("RAISING _Exit",pf.DEBUG.SCRIPT)
     if pf.GUI:
-        pf.GUI.drawlock.release()   
+        pf.GUI.drawlock.release()
     raise _Exit,"EXIT REQUESTED FROM SCRIPT"
 
 
@@ -385,7 +389,7 @@ def stopatbreakpt():
     """Set the exitrequested flag."""
     global exitrequested
     exitrequested = True
-    
+
 
 def convertPrintSyntax(filename):
     """Convert a script to using the print function"""
@@ -394,7 +398,7 @@ def convertPrintSyntax(filename):
         # Conversion error: show what is going on
         print(out)
     return sta == 0
-    
+
 
 def checkPrintSyntax(filename):
     """Check whether the script in the given files uses print function syntax.
@@ -431,7 +435,7 @@ into a print function call::
 You can try an automatic conversion with the command::
 
     2to3 -f print -%s
-    
+
 If you want, I can run this command for you now. Beware though!
 This will overwrite the contents of file %s.
 
@@ -485,8 +489,9 @@ def runApp(appname,argv=[],refresh=False):
     global exitrequested
     if len(pf.scriptlock) > 0:
         pf.message("!!Not executing because a script lock has been set: %s" % pf.scriptlock)
+        #print(pf.scriptlock)
         return
-    
+
     import apps
     from timer import Timer
     t = Timer()
@@ -497,7 +502,7 @@ def runApp(appname,argv=[],refresh=False):
         if pf.GUI:
             if apps._traceback and pf.cfg['showapploaderrors']:
                 print(apps._traceback)
-                
+
             from gui import draw
             fn = apps.findAppSource(appname)
             if os.path.exists(fn):
@@ -514,9 +519,9 @@ def runApp(appname,argv=[],refresh=False):
                 draw.error(errmsg)
         else:
             error(errmsg)
-               
+
         return
-    
+
     if hasattr(app,'_status') and app._status == 'unchecked':
         pf.warning("This looks like an Example script that has been automatically converted to the pyFormex Application model, but has not been checked yet as to whether it is working correctly in App mode.\nYou can help here by running and rerunning the example, checking that it works correctly, and where needed fixing it (or reporting the failure to us). If the example runs well, you can change its status to 'checked'")
 
@@ -562,7 +567,7 @@ def runApp(appname,argv=[],refresh=False):
 
 def runAny(appname=None,argv=[],step=False,refresh=False):
     """Run the current pyFormex application or script file.
-    
+
     This function does nothing if no appname/filename is passed or no current
     script/app was set.
     If arguments are given, they are passed to the script. If `step` is True,
@@ -578,10 +583,10 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
     if scriptInit:
         #print "INITFUNC"
         scriptInit()
-    
+
     if pf.GUI:
         pf.GUI.setcurfile(appname)
-       
+
     if utils.is_script(appname):
         #print "RUNNING SCRIPT %s" % appname
         return runScript(appname,argv)
@@ -590,22 +595,24 @@ def runAny(appname=None,argv=[],step=False,refresh=False):
         return runApp(appname,argv,refresh)
 
 
-def runAll(applist,refresh=False):
-    """Run all the scripts/apps in given list."""
-    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
-    for f in applist:
-        while pf.scriptlock:
-            print("WAITING BECAUSE OF SCRIPT LOCK")
-            sleep(5)
-        runAny(f,refresh=refresh)
-        if exitrequested:
-            break
-    pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
+## def runAll(applist,refresh=False):
+##     """Run all the scripts/apps in given list."""
+##     pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
+##     for f in applist:
+##         while pf.scriptlock:
+##             #print(pf.scriptlock)
+##             print("WAITING BECAUSE OF SCRIPT LOCK")
+##             time.sleep(5)
+##         runAny(f,refresh=refresh)
+##         if exitrequested:
+##             break
+##     pf.GUI.enableButtons(pf.GUI.actions,['Stop'],False)
 
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
-    #print "DRAW.EXIT"
+    #print("DRAW.EXIT")
+    #print(pf.scriptlock)
     if len(pf.scriptlock) > 0:
         if all:
             raise _ExitAll # ask exit from pyformex
@@ -620,12 +627,12 @@ def quit():
     This is a hard exit from pyFormex. It is normally not called
     directly, but results from an exit(True) call.
     """
-    if pf.app and pf.app_started: # quit the QT app 
+    if pf.app and pf.app_started: # quit the QT app
         pf.debug("draw.exit called while no script running",pf.DEBUG.SCRIPT)
         pf.app.quit() # closes the GUI and exits pyformex
     else: # the QT app didn't even start
         sys.exit(0) # use Python to exit pyformex
-        
+
 
 def processArgs(args):
     """Run the application without gui.
@@ -645,9 +652,9 @@ def processArgs(args):
         res = runScript(fn,args)
         if res and pf.GUI:
             pf.message("Error during execution of script %s" % fn)
-        
+
     return res
-        
+
 
 def setPrefs(res,save=False):
     """Update the current settings (store) with the values in res.
@@ -670,7 +677,7 @@ def setPrefs(res,save=False):
 
 
 ########################## print information ################################
-    
+
 
 def printall():
     """Print all Formices in globals()"""
@@ -686,7 +693,7 @@ def printglobalnames():
     a.sort()
     print(a)
 
-    
+
 def printconfig():
     print("Reference Configuration: " + str(pf.refcfg))
     print("Preference Configuration: " + str(pf.prefcfg))
@@ -731,7 +738,7 @@ def chdir(fn):
     holding fn.
     In either case, the current directory is stored in the user's preferences
     for persistence between pyFormex invocations.
-    
+
     If fn does not exist, nothing is done.
     """
     if os.path.exists(fn):
@@ -763,7 +770,7 @@ def checkRevision(rev,comp='>='):
 
     - rev: a positive integer.
     - comp: a string specifying a comparison operator.
-    
+
     By default, this function returns True if the pyFormex revision
     number is equal or larger than the specified number.
 
@@ -789,7 +796,7 @@ def requireRevision(rev,comp='>='):
         raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pf.__revision__,comp,rev)
 
 
-   
+
 ################### read and write files #################################
 
 def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
@@ -797,7 +804,7 @@ def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
 
     A pyFormex Geometry File can store multiple geometrical objects in a
     native format that can be efficiently read back into pyformex.
-    The format is portable over different pyFormex versions and 
+    The format is portable over different pyFormex versions and
     even to other software.
 
     - `filename`: the name of the file to be written. If it ends with '.gz'
@@ -825,20 +832,20 @@ def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
     if gzip:
         utils.gzip(filename)
     return len(objects)
-    
+
 
 def readGeomFile(filename):
     """Read a pyFormex Geometry File.
 
     A pyFormex Geometry File can store multiple geometrical objects in a
     native format that can be efficiently read back into pyformex.
-    The format is portable over different pyFormex versions and 
+    The format is portable over different pyFormex versions and
     even to other software.
 
     - `filename`: the name of an existing pyFormex Geometry File. If the
       filename ends on '.gz', it is considered to be a gzipped file and
       will be uncompressed transparently during the reading.
-    
+
     Returns a dictionary with the geometric objects read from the file.
     If object names were stored in the file, they will be used as the keys.
     Else, default names will be provided.
@@ -851,6 +858,6 @@ def readGeomFile(filename):
     if gzip:
         utils.removeFile(filename)
     return objects
-    
+
 
 #### End

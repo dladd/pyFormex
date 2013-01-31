@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -54,7 +54,7 @@ input_data = [
     _T('Grid/Label',[
         _I('ngrid',-1,text='Number of grid intervals'),
         _I('linewidth',1.5,text='Line width'),
-        _I('nlabel',-1, text='Number of label intervals'), 
+        _I('nlabel',-1, text='Number of label intervals'),
         _I('dec',2,text='Decimals'),
         _I('scale',0,text='Scaling exponent'),
         _I('lefttext',True,text='Text left of colorscale'),
@@ -78,24 +78,29 @@ input_enablers = [
     ]
 
 
+dialog = None
 def show():
     """Accept the data and draw according to them"""
-    global medval,medcol,palet,minexp,grid,nlabels
-    
+    global medval,medcol,palet,minexp,grid,nlabels,dialog
+
+    print("SHOW",dialog)
     clear()
+    print("CLEARED")
     lights(False)
+    print("ACCEPT DATA")
     dialog.acceptData()
+    print("GET REUSLTS")
     res = dialog.results
     print(res)
     globals().update(res)
 
-    
+
     if valrange == 'Minimum-Maximum':
         medval = None
         minexp = None
 
     if custom:
-        palet = map(GLColor,[mincol,medcol,maxcol])
+        palet = map(GLcolor,[mincol,medcol,maxcol])
 
     mw,mh = pf.canvas.getSize()
     x,y = position
@@ -106,17 +111,17 @@ def show():
         w,h = size
     if autopos:
         x = 100
-        
+
 
     # ok, now draw it
-    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ngrid,linewidth,nlabel,lefttext,font,x,y,w,h)     
+    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ngrid,linewidth,nlabel,lefttext,font,x,y,w,h)
 
 
 def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ngrid,linewidth,nlabel,lefttext,font,x,y,w,h):
     """Draw a color scale with the specified parameters"""
     CS = ColorScale(palet,minval,maxval,midval=medval,exp=maxexp,exp2=minexp)
     CL = ColorLegend(CS,ncolors)
-    CLA = decors.ColorLegend(CL,x,y,w,h,ngrid=ngrid,linewidth=linewidth,nlabel=nlabel,font=font,dec=dec,scale=scale,lefttext=lefttext) 
+    CLA = decors.ColorLegend(CL,x,y,w,h,ngrid=ngrid,linewidth=linewidth,nlabel=nlabel,font=font,dec=dec,scale=scale,lefttext=lefttext)
     decorate(CLA)
 
 
@@ -138,10 +143,8 @@ def timeOut():
     dialog timeout.
     Most users can simply ignore this.
     """
-    print("TIMEOUT")
+    print("COLORSCALE TIMEOUT")
     show()
-    #wait()
-    print("CLOSE")
     close()
 
 
@@ -175,7 +178,7 @@ def run():
     #dialog = widgets.ScrollDialog(dialog)
     dialog.show()
 
-    # Block other scripts 
+    # Block other scripts
     scriptLock(__file__)
 
 

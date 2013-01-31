@@ -215,6 +215,63 @@ If you want to push the changes to the remote repository, do ::
 
   git push
 
+Selected commits
+----------------
+I had this situation::
+
+  bene@bumpy 17:09 ~/prj/pyformex $ git st
+  # On branch master
+  # Changes not staged for commit:
+  #   (use "git add <file>..." to update what will be committed)
+  #   (use "git checkout -- <file>..." to discard changes in working directory)
+  #
+  #	modified:   HOWTO-dev.rst
+  #	modified:   TODO
+  #	modified:   pyformex/gui/appMenu.py
+  #	modified:   pyformex/gui/guimain.py
+  #	modified:   pyformex/gui/prefMenu.py
+  #	modified:   pyformex/gui/widgets.py
+  #	modified:   pyformex/main.py
+  #
+  # Untracked files:
+  #   (use "git add <file>..." to include in what will be committed)
+  #
+  #	USER.rst
+  #	USER.txt
+  #	pyformex/data/work/
+  no changes added to commit (use "git add" and/or "git commit -a")
+
+I want to checkin the changes to the widgets.py separately::
+
+  git add pyformex/gui/widgets.py
+  git commit
+
+Next checked in other changes::
+
+  git add pyformex/gui/appMenu.py pyformex/gui/guimain.py pyformex/gui/prefMenu.py
+  git commit
+
+After that the status became::
+  bene@bumpy 17:27 ~/prj/pyformex $ git status
+  # On branch master
+  # Your branch is ahead of 'origin/master' by 2 commits.
+  #
+  # Changes not staged for commit:
+  #   (use "git add <file>..." to update what will be committed)
+  #   (use "git checkout -- <file>..." to discard changes in working directory)
+  #
+  #	modified:   HOWTO-dev.rst
+  #	modified:   TODO
+  #	modified:   pyformex/main.py
+  #
+  # Untracked files:
+  #   (use "git add <file>..." to include in what will be committed)
+  #
+  #	USER.rst
+  #	USER.txt
+  #	pyformex/data/work/
+  no changes added to commit (use "git add" and/or "git commit -a")
+
 
 Working with multiple branches
 ------------------------------
@@ -241,6 +298,16 @@ gives::
 
 The default used is origin (the one I cloned from). The public is where I
 push changes to make them available to the general public.
+
+
+Git tools
+---------
+
+The program gitk is very useful in displaying the status and contents of a git
+repository, and to see the diffs of an individual commit. Install with::
+
+  apt-get install gitk
+
 
 
 .. End

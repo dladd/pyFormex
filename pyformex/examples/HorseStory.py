@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -31,7 +31,7 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'normal'
 _topics = ['surface']
-_techniques = ['animation','colors'] 
+_techniques = ['animation','colors']
 
 from gui.draw import *
 from plugins.trisurface import TriSurface
@@ -94,7 +94,7 @@ def run():
         B = draw(T,color=color)
         undraw(A)
         A = B
-        pause(0.5)
+        sleep(0.5)
 
 if __name__ == 'draw':
     run()

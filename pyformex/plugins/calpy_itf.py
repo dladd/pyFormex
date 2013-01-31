@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -44,11 +44,11 @@ def detect(trypaths=None):
     """Check if we have calpy and if so, add its path to sys.path."""
 
     global calpy_path
-    
+
     calpy = utils.checkExternal('calpy')
     if not calpy:
         return
-    
+
     pf.message("You have calpy version %s" % calpy)
     path = ''
     calpy = calpy.split('-')[0]  # trim the version trailer
@@ -85,22 +85,22 @@ def check(trypaths=None):
         import calpy
     except ImportError:
         pass
-    
+
     if utils.hasModule('calpy',check=True):
         return True
     else:
         pf.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
         return False
- 
+
 
 
 if __name__ == "__main__":
     print(__doc__)
 else:
     pf.debug("Loading plugin %s" % __file__)
-    check()
 
     if check():
+
         from calpy import plane
         class QuadInterpolator(plane.Quad):
             """A class to interface with calpy's Quad class.
@@ -120,12 +120,18 @@ else:
                 """A dummy class to keep calpy happy."""
                 option = 'dummy'
                 tempfilename = 'dummy'
-                
+
             def __init__(self,nelems,nplex,gprule):
                 from numpy import array
                 plane.Quad.__init__(self,'myQuad',gprule,self.Model)
                 self.nnod = nplex
                 self.nelems = nelems
                 self.natCoords = array([1,1,-1,1,-1,-1,1,-1,0,1,-1,0,0,-1,1,0,0,0],dtype=float).reshape((9,2))[:self.nnod,:]
+
+
+    else:
+
+        print("Could not import calpy")
+
 
 ### End

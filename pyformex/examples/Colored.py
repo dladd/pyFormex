@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -51,9 +51,9 @@ def run():
     i=0
     for shape in Shapes:
         F = Formex(shape).replic2(4,2)
-        color3 = resize(color2,F.shape()) # full color
-        #print F.shape(),color3
-        #print [ GLColor(c) for c in color3]
+        color3 = resize(color2,F.shape) # full color
+        #print F.shape,color3
+        #print [ GLcolor(c) for c in color3]
         #continue
         for c in [ color0,color1,color2,color3]:
             for mode in Rendermode:
@@ -66,7 +66,7 @@ def run():
                     lights(light)
                     print("%s: color %s, mode %s, lights %s" % (i,str(c),mode,light))
                     i += 1
-                    pause(1)
+                    sleep(1)
 
 
 if __name__ == 'draw':

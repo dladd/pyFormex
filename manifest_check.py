@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,61 +30,64 @@ Check that the files in MANIFEST are valid for distribution.
 This is done separately from the MANIFEST creator, because manifest.py
 is also included in the distribution, while this scipt is not.
 """
-import pysvn
-client = pysvn.Client()
+
+def gitRepo(path='.'):
+    import git
+    return git.Repo(path)
+
+
+def gitFileStatus(repo,files=None):
+    status = {}
+    st = repo.git.status(porcelain=True)
+    print st
+    for line in st.split('\n'):
+        st = line[:2]
+        fn = line[3:]
+        if files is not None and fn not in files:
+            st = 'ND'
+        if st not in status:
+            status[st] = []
+        status[st].append(fn)
+    return status
 
 def get_manifest_files():
     return [ f.strip('\n') for f in open('MANIFEST').readlines() if not f.startswith('#')]
 
 
-check = {
-    'M':[],
-    'U':[],
-    '?':[],
-    '-':[],
-}
 
-    
-def get_status(f):
-    try:
-        s = client.status(f)[0]
-        if s.text_status == pysvn.wc_status_kind.modified:
-            status = 'M'
-        elif s.text_status == pysvn.wc_status_kind.added:
-            status = 'M'
-        elif s.text_status == pysvn.wc_status_kind.unversioned:
-            status = 'U'
-        elif s.text_status == pysvn.wc_status_kind.normal:
-            status = 'N'
-        else:
-            print s.text_status
-            status = '?'
-    except:
-        status = '-'
-    if status != 'N':
-        check[status].append(f)
-    
+
 def printfiles(files):
     print '  '+'\n  '.join(files)
 
-def check_files(files):
-    [ get_status(f) for f in files ]
 
-    print "\nFiles in unversioned paths:"
-    printfiles(check['-'])
-    print "\nUnversioned files:"
-    printfiles(check['U'])
-    print "\nModified or added files:"
-    printfiles(check['M'])
-    print "\nFiles with unknown status:"
-    printfiles(check['?'])
-    
+def filterFileStatus(status,files):
+    for st in status:
+        status[st] = [ f for f in status[st] if f in files ]
+    return status
+
+
+def checkFileStatus(status):
+    check = {
+        ' M': 'Modified files',
+        '??': 'Untracked files',
+        'ND': 'Undistributed files',
+        'NF': 'Unfound files',
+        }
+
+    for st in check:
+        print '\n'+check[st]+':'
+        printfiles(status[st])
+
 
 if __name__ == '__main__':
 
     files = get_manifest_files()
     print "Checking %s manifest files" % len(files)
-    check_files(files)
+
+    repo = gitRepo()
+    status = gitFileStatus(repo)
+    print status
+    #checkFileStatus(status)
 
 
 # End

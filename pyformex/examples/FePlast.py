@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -34,7 +34,7 @@ from __future__ import print_function
 _status = 'checked'
 _level = 'advanced'
 _topics = ['FEA']
-_techniques = ['properties', 'export'] 
+_techniques = ['properties', 'export']
 
 from gui.draw import *
 
@@ -46,21 +46,6 @@ from plugins import postproc_menu
 
 import simple
 
-def sortElemsByLoadedFace(ind):
-    """Sorted a set of face loaded elements by the loaded face local number
-
-    ind is a (nelems,2) array, where ind[:,0] are element numbers and
-    ind[:,1] are the local numbers of the loaded faces
-
-    Returns a dict with the loaded face number as key and a list of
-    element numbers as value.
-    """
-    edgset = unique(ind[:,1])
-    d = {}
-    for e in edgset:
-        d[e] = ind[where(ind[:,1]==e)[0],0]
-    return d
-
 
 def rectangle_with_hole(L,W,r,nl,nb,e0=0.0,eltype='quad4'):
     """Create a quarter of rectangle with a central circular hole.
@@ -71,7 +56,7 @@ def rectangle_with_hole(L,W,r,nl,nb,e0=0.0,eltype='quad4'):
     - r: radius of the hole
     - nl,nb: number of elements over length,width
 
-    Returns a Mesh 
+    Returns a Mesh
     """
     L = W
     import elements
@@ -121,11 +106,23 @@ def run():
         _I('material',choices=['Elastic','Plastic'],text='Material model'),
         _I('eltype',choices=['quad4','quad8','hex8','hex20'],text='Element type'),
         _I('interpolation',choices=['Linear','Quadratic'],text='Degree of interpolation'),
-        _I('format',choices=['Calculix','Abaqus','None'],text='FEA input format'),
+        _I('format',choices=['CalculiX','Abaqus'],text='FEA input format'),
+        _I('run',True,text='Run simulation'),
         ])
 
     if not res:
         return
+
+    cmd = None
+    if res['run']:
+        cmd = {'CalculiX':'ccx','Abaqus':'abaqus'}[res['format']]
+        if not utils.hasExternal(res['format'].lower()):
+            ans = pf.warning("I did not find the command '%s' on your system.\nIf you continue, I can prepare the model and write the input file,but not run the simulation" % cmd,actions=['Cancel','Continue'])
+            if ans == 'Continue':
+                cmd = None
+            else:
+                return
+
 
     # Create geometry
     if res['geometry'] == 'Rectangle':
@@ -141,7 +138,7 @@ def run():
 
     draw(plate)
 
-    # model is completely shown, keep camera bbox fixed 
+    # model is completely shown, keep camera bbox fixed
     setDrawOptions({'bbox':'last','marksize':8})
 
     # Assemble the FEmodel (this may renumber the nodes!)
@@ -182,7 +179,7 @@ def run():
              })
 
     # Define the thin steel plate section
-    steel_plate = { 
+    steel_plate = {
         'name': 'steel_plate',
         'sectiontype': 'solid',
         'thickness': th,
@@ -190,7 +187,7 @@ def run():
         }
 
     # Give the elements their properties: this is simple here because
-    # all elements have the same properties. The element type is 
+    # all elements have the same properties. The element type is
     # for an Abaqus plain stress quadrilateral element with 4 nodes.
     P.elemProp(name='Plate',eltype='CPS4',section=ElemSection(section=steel_plate,material=steel))
 
@@ -205,7 +202,7 @@ def run():
     nxz = where(nxz)[0]
     draw(FEM.coords[nyz],color=cyan)
     draw(FEM.coords[nxz],color=green)
-    
+
     # Define the boundary conditions
     # For Abaqus, we could define it like follows
     #P.nodeProp(tag='init',set=nyz,name='YZ_plane',bound='XSYMM')
@@ -260,7 +257,7 @@ def run():
             Result(kind='NODE',keys=['U'],output='PRINT'),
             Result(kind='ELEMENT',keys=['S'],output='PRINT'),
             ]
-        
+
 
     # Define the simulation steps
     # The tags refer to the property database
@@ -268,13 +265,17 @@ def run():
 
     data = AbqData(FEM,prop=P,steps=simsteps,res=result,bound=['init'])
 
-    fn = askNewFilename(filter='*.inp')
+    fn = askNewFilename(filter='*.inp',timeout=4)
     if fn:
         data.write(jobname=fn,group_by_group=True)
 
-        if ack('Run ccx on the created file?'):
+        if cmd:
             chdir(fn)
             job = os.path.basename(fn)[:-4]
+            if cmd == 'ccx':
+                cmd = "ccx -i %s" % job
+            elif cmd == 'abaqus':
+                cmd == "abaqus job=%s" % job
             sta,out = utils.runCommand("ccx -i %s" % job)
             print(out)
 
@@ -291,10 +292,10 @@ def run():
                     postproc_menu.selection.set(name)
                     postproc_menu.selectDB(DB)
                     postproc_menu.open_dialog()
-                
 
-                
+
+
 if __name__ == 'draw':
     run()
-    
+
 # End

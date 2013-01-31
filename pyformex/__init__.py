@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -32,11 +32,15 @@ from __future__ import print_function
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.9r5"
-__revision__ = '2557M'
+__version__ = "0.9.0-a1"
+__revision__ = __version__
 Version = 'pyFormex %s' % __version__
-FullVersion = '%s (Rev. %s)' % (Version,__revision__) # is reset in main.py!
-Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
+
+
+def FullVersion():
+    return "%s (%s)" % (Version,__revision__)
+
+Copyright = 'Copyright (C) 2004-2013 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
 
@@ -62,7 +66,7 @@ installtype = 'R'
 # The GUI parts
 app_started = False
 interactive = False
-app = None         # the Qapplication 
+app = None         # the Qapplication
 GUI = None         # the GUI QMainWindow
 canvas = None      # the OpenGL Drawing widget controlled by the running script
 #board = None       # the message board
@@ -74,17 +78,17 @@ StartTime = datetime.datetime.now()
 # initialize some global variables used for communication between modules
 
 options = None     # the options found on the command line
-   
+
 print_help = None  # the function to print(the pyformex help text (pyformex -h))
 
 cfg = {}         # the current session configuration
-prefcfg = None     # the preferenced configuration 
-refcfg = None      # the reference configuration 
+prefcfg = None     # the preferenced configuration
+refcfg = None      # the reference configuration
 preffile = None    # the file where the preferenced configuration will be saved
 
 PF = {}            # explicitely exported globals
 #_PF_ = {}          # globals that will be offered to scripts
-    
+
 scriptName = None
 scriptlock = set()
 
@@ -110,8 +114,8 @@ class DebugLevels(object):
     NONE = 0
     INFO, WARNING, OPTION, CONFIG, DETECT, MEM, SCRIPT, GUI, MENU, DRAW, \
           CANVAS, OPENGL, LIB, MOUSE, APPS, IMAGE, MISC, ABQ, WIDGET, \
-          PROJECT = \
-          [ 2 ** i for i in range(20) ]
+          PROJECT, MULTI = \
+          [ 2 ** i for i in range(21) ]
 
 delattr(DebugLevels,'i')
 
@@ -126,7 +130,7 @@ def debugLevel(sl):
             pass
     return lev
 
-        
+
 def debug(s,level=DEBUG.ALL):
     """Print a debug message"""
     try: # to make sure that debug() can be used before options are set
@@ -135,7 +139,6 @@ def debug(s,level=DEBUG.ALL):
         pass
     except:
         print("DEBUG(%s): %s" % (level,str(s)))
-
 
 def debugt(s,level):
     """Print a debug message with timer"""

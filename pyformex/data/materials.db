@@ -27,9 +27,27 @@
 # Units are N and mm
 material
     name = steel
-    young_modulus = 207000
+    young_modulus = 207000.
     poisson_ratio = 0.3
     density = 7.85e-9
+endmaterial
+material
+    name = steel_austenitic
+    young_modulus = 196000.
+    poisson_ratio = 0.3
+    density = 7.85e-9
+endmaterial
+material
+    name = aluminum
+    young_modulus = 72000.
+    poisson_ratio = 0.32
+    density = 2.8e-9
+endmaterial
+material
+    name = titanium
+    young_modulus = 110000.
+    poisson_ratio = 0.34
+    density = 4.42e-9
 endmaterial
 
 # Reduced Polynomial 2nd Order material for large cerebral arteries. Derived from 

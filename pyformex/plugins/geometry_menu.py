@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -28,7 +28,7 @@ This is a pyFormex plugin menu. It is not intended to be executed as a script,
 but to be loaded into pyFormex using the plugin facility.
 
 The geometry menu is intended to become the major interactive geometry menu
-in pyFormex. 
+in pyFormex.
 """
 from __future__ import print_function
 
@@ -102,8 +102,8 @@ def _init_():
 def geomList():
     """Return a list with all the currently displayed geometry actors"""
     return selection.check()
-            
- 
+
+
 def set_selection(clas='geometry'):
     sel = pf.GUI.selection.get(clas)
     if sel:
@@ -114,7 +114,7 @@ def set_selection(clas='geometry'):
 
         if not sel.names:
             message("Nothing selected")
-            
+
         selection.set(sel.names)
         selection.draw()
 
@@ -126,7 +126,7 @@ def shrink():
     else:
         selection.shrink = None
     selection.draw()
-        
+
 
 ##################### read and write ##########################
 
@@ -138,12 +138,12 @@ def readGeometry(filename,filetype=None):
     for some file type. Some file types require the existence of more
     than one file, may need to write intermediate files, or may call
     external programs.
-    
+
     The return value is a dictionary with named geometry objects read from
     the file.
 
     If no filetype is given, it is derived from the filename extension.
-    Currently the following file types can be handled. 
+    Currently the following file types can be handled.
 
     'pgf': pyFormex Geometry File. This is the native pyFormex geometry
         file format. It can store multiple parts of different type, together
@@ -157,7 +157,7 @@ def readGeometry(filename,filetype=None):
     res = {}
     if filetype is None:
         filetype = utils.fileTypeFromExt(filename)
-        
+
     print("Reading file of type %s" % filetype)
 
     if filetype == 'pgf' or filetype == 'pgf.gz':
@@ -186,13 +186,13 @@ def readGeometry(filename,filetype=None):
     else:
         error("Can not import from file %s of type %s" % (filename,filetype))
     pf.GUI.setBusy(False)
-       
+
     return res
 
 
 def importGeometry(select=True,draw=True,ftype=None):
     """Read geometry from file.
-    
+
     If select is True (default), the imported geometry becomes the current
     selection.
     If select and draw are True (default), the selection is drawn.
@@ -253,7 +253,7 @@ def importModel(fn=None):
             return
     if type(fn) == str:
         fn = [fn]
-        
+
     pf.GUI.setBusy(True)
     for f in fn:
         d = fileread.readMeshFile(f)
@@ -279,7 +279,7 @@ def readInp(fn=None):
             fileread.convertInp(f)
         pf.GUI.setBusy(False)
         return
-        
+
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):
     """Write the geometry items in objdict to the specified file.
@@ -287,7 +287,7 @@ def writeGeometry(obj,filename,filetype=None,shortlines=False):
     """
     if filetype is None:
         filetype = utils.fileTypeFromExt(filename)
-        
+
     print("Writing file of type %s" % filetype)
 
     if filetype in [ 'pgf', 'pgf.gz', 'pyf' ]:
@@ -297,7 +297,7 @@ def writeGeometry(obj,filename,filetype=None,shortlines=False):
 
     else:
         error("Don't know how to export in '%s' format" % filetype)
-        
+
     return res
 
 
@@ -306,7 +306,7 @@ def exportGeometry(types=['pgf','all'],shortlines=False):
     drawable.ask()
     if not drawable.check():
         return
-    
+
     filter = utils.fileDescription(types)
     cur = pf.cfg['workdir']
     fn = askNewFilename(cur=cur,filter=filter)
@@ -322,7 +322,7 @@ def exportPgfShortlines():
     exportGeometry(['pgf'],shortlines=True)
 def exportOff():
     exportGeometry(['off'])
- 
+
 
 def convertGeometryFile():
     """Convert pyFormex geometry file to latest format."""
@@ -333,7 +333,7 @@ def convertGeometryFile():
         from geomfile import GeometryFile
         message("Converting geometry file %s to version %s" % (fn,GeometryFile._version_))
         GeometryFile(fn).rewrite()
-    
+
 ##################### properties ##########################
 
 def printDataSize():
@@ -370,7 +370,7 @@ def toFormex(suffix=''):
 
     clear()
     selection.draw()
-    
+
 
 def toMesh(suffix=''):
     """Transform the selected Geometry objects to Meshes.
@@ -396,7 +396,7 @@ def toMesh(suffix=''):
     export(meshes)
 
     selection.set(meshes.keys())
-    
+
 
 def toSurface(suffix=''):
     """Transform the selected Geometry objects to TriSurfaces.
@@ -419,10 +419,10 @@ def toSurface(suffix=''):
     if not all(ok):
         warning("Only objects with plexitude 3 can be converted to TriSurface. I can not convert the following objects: %s" % [ n for i,n in zip(ok,names) if not i ])
         return
-    
+
     if suffix:
         names = [ n + suffix for n in names ]
-    
+
     print("CONVERTING %s" % names)
     surfaces =  dict([ (n,TriSurface(o)) for n,o in zip(names,objects)])
     print("Converted %s" % surfaces.keys())
@@ -439,7 +439,7 @@ def toSurface(suffix=''):
 def splitProp():
     """Split the selected object based on property values"""
     from plugins import partition
-    
+
     F = selection.check(single=True)
     if not F:
         return
@@ -473,7 +473,7 @@ base_patterns = [
     'l:2',
     'l:12',
     'l:127',
-    ]    
+    ]
 
 def createGrid():
     _data_ = _name_+'createGrid_data'
@@ -542,7 +542,7 @@ def createRectangle():
         if res['object type'] == 'TriSurface':
             surface_menu.selection.set([name])
         selection.draw()
-    
+
 
 def createCylinder():
     _data_ = _name_+'createCylinder_data'
@@ -601,7 +601,7 @@ def createCone():
         }
     if _data_ in pf.PF:
         res.update(pf.PF[_data_])
-        
+
     res = askItems(store=res, items=[
         _I('name'),
         _I('object type',choices=['Formex','Mesh','TriSurface']),
@@ -612,7 +612,7 @@ def createCone():
         _I('div_along_circ'),
         _I('diagonals',choices=['none','up','down']),
         ])
-    
+
     if res:
         pf.PF[_data_] = res
         name = res['name']
@@ -621,7 +621,7 @@ def createCone():
 
         F = simple.sector(r=res['radius'],t=res['angle'],nr=res['div_along_radius'],
                           nt=res['div_along_circ'],h=res['height'],diag=res['diagonals'])
-        
+
         F = convertFormex(F,res['object type'])
         export({name:F})
         selection.set([name])
@@ -667,7 +667,7 @@ def createSphere():
         if res['object type'] == 'TriSurface':
             surface_menu.selection.set([name])
         selection.draw()
-        
+
 
 #############################################
 ###  Transformations
@@ -676,6 +676,7 @@ def createSphere():
 
 def showPrincipal():
     """Show the principal axes."""
+    import coordsys
     F = selection.check(single=True)
     if not F:
         return
@@ -687,7 +688,7 @@ def showPrincipal():
     pf.message("Principal Values: %s" % Iprin)
     pf.message("Inertia tensor: %s" % I)
     # display the axes
-    CS = CoordinateSystem(origin=C,axes=Iaxes.transpose())
+    CS = coordsys.CoordinateSystem(origin=C,axes=Iaxes.transpose())
     size = 0.6*F.dsize()
     drawAxes(CS,size=size,psize=0.1*size)
     export({'_principal_data_':data})
@@ -699,7 +700,7 @@ def rotatePrincipal():
     try:
         data = named('_principal_data_')
     except:
-        data = showPrincipal() 
+        data = showPrincipal()
     FL = selection.check()
     if FL:
         ctr,rot = data[:2]
@@ -715,7 +716,7 @@ def transformPrincipal():
     try:
         data = named('_principal_data_')
     except:
-        data = showPrincipal() 
+        data = showPrincipal()
     FL = selection.check()
     if FL:
         ctr,rot = data[:2]
@@ -726,13 +727,13 @@ def transformPrincipal():
 #############################################
 ###  Mesh functions
 #############################################
-       
+
 def narrow_selection(clas):
     global selection
     print("SELECTION ALL TYPES",selection.names)
     selection.set([n for n in selection.names if isinstance(named(n),clas)])
     print("SELECTION MESH TYPE",selection.names)
-    
+
 
 def reverseMesh():
     """Fuse the nodes of a Mesh"""
@@ -749,7 +750,7 @@ def reverseMesh():
     export2(selection.names,meshes)
     clear()
     selection.draw()
-    
+
 
 def doOnSelectedMeshes(method):
     """Apply some method to all selected meshes"""
@@ -770,7 +771,7 @@ def doOnSelectedMeshes(method):
 
 def removeDegenerate():
     doOnSelectedMeshes(Mesh.removeDegenerate)
-    
+
 
 def compactMesh():
     """Compact the Mesh"""
@@ -787,7 +788,7 @@ def compactMesh():
     export2(selection.names,meshes)
     clear()
     selection.draw()
-    
+
 
 def peelOffMesh():
     """Peel the Mesh"""
@@ -804,7 +805,7 @@ def peelOffMesh():
     export2(selection.names,meshes)
     clear()
     selection.draw()
-    
+
 
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
@@ -896,7 +897,7 @@ def convertMesh():
         selection.ask()
 
     narrow_selection(Mesh)
-    
+
     if not selection.names:
         return
 
@@ -936,7 +937,7 @@ def convertMesh():
             if _compact:
                 print("compacting meshes")
                 meshes = [ m.compact() for m in meshes ]
-                
+
             export2(names,meshes)
             selection.set(names)
             clear()
@@ -965,14 +966,14 @@ def renumberMesh(order='elems'):
 
 
 def renumberMeshRandom():
-    """Renumber the nodes of the selected Meshes in random order. 
+    """Renumber the nodes of the selected Meshes in random order.
 
     """
     renumberMesh('random')
 
 
 def renumberMeshFront():
-    """Renumber the nodes of the selected Meshes in random order. 
+    """Renumber the nodes of the selected Meshes in random order.
 
     """
     renumberMesh('front')
@@ -1001,9 +1002,9 @@ def getBorderMesh():
     selection.draw()
 
 
- 
+
 ################### menu #################
- 
+
 _menu = 'Geometry'
 
 def loadDxfMenu():
@@ -1012,7 +1013,7 @@ def loadDxfMenu():
 
 def toggleNumbersOntop():
     selection.editAnnotations(ontop='')
-    
+
 
 def create_menu():
     """Create the plugin menu."""
@@ -1142,7 +1143,7 @@ def create_menu():
     ##     I.setEnabled(False)
     return M
 
-    
+
 def show_menu():
     """Show the menu."""
     if not pf.GUI.menu.item(_menu):
@@ -1154,7 +1155,7 @@ def close_menu():
     m = pf.GUI.menu.item(_menu)
     if m :
         m.remove()
-      
+
 
 def reload_menu():
     """Reload the menu."""
@@ -1173,7 +1174,7 @@ def run():
 
 if __name__ == 'draw':
     run()
-    
+
 
 # End
 

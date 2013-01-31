@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -45,7 +45,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 	$(wildcard ${LIBDIR}/*.py) \
 
-LIBSOURCE= ${addprefix ${LIBDIR}/, drawgl_.c misc_.c nurbs_.c} 
+LIBSOURCE= ${addprefix ${LIBDIR}/, drawgl_.c misc_.c nurbs_.c}
 LIBOBJECTS= $(CSOURCE:.c=.o)
 LIBOBJECTS= $(CSOURCE:.c=.so)
 
@@ -90,7 +90,7 @@ OTHERSTAMPABLE= README Makefile ReleaseNotes \
 	${EXAMPLEDATA} \
 	$(wildcard ${DOCDIR}/*.rst)
 
-NONSTAMPABLE= COPYING 
+NONSTAMPABLE= COPYING
 
 STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
 	${EXECUTABLE} ${CSOURCE} ${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} \
@@ -111,7 +111,7 @@ STATICDIRS= pyformex/data/README pyformex/icons/README \
 	website/README website/images/README website/src/README \
 	website/src/examples/README
 
-STAMP= stamp 
+STAMP= stamp
 VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
 
@@ -133,13 +133,13 @@ default:
 	@echo Please specify a target
 
 clean:
-	alldirs . "rm -f *~" 
+	alldirs . "rm -f *~"
 
 distclean: clean
 	alldirs . "rm -f *.pyc *.so"
 
 # Create the C library
-lib: 
+lib:
 	python setup.py build_ext
 	find build -name '*.so' -exec mv {} pyformex/lib \;
 	rm -rf build
@@ -157,32 +157,32 @@ lib:
 #	make -C ${LIBDIR} reset
 
 # Create the minutes of the user meeting
-minutes: 
+minutes:
 	make -C user
 
 # Create the website
-website: 
+website:
 	make -C website
 
 
 # Bump the version/release
 bumpversion:
-	@echo "bumpversion currently inactive" 
 	@OLD=$$(expr "${VERSION}" : '.*\([0-9])*\)$$'); \
 	 NEW=$$(expr $$OLD + 1); \
 	 sed -i "/^VERSION=/s|$$OLD$$|$$NEW|;/^RELEASE=/s|}.*|}|" RELEASE
-	#make version
+	make version
+	@echo "Bumped Version to $$(grep VERSION= RELEASE), $$(grep RELEASE= RELEASE)"
 
 # This increases the tail only: minor number or alpha number
 bumprelease:
-	@echo "bumprelease currently inactive" 
 	@OLD=$$(expr "${RELEASE}" : '.*r\([0-9])*\)$$'); \
 	 if [ -z "$$OLD" ]; then NEW=1; else NEW=$$(expr $$OLD + 1); fi; \
 	 sed -i "/^RELEASE=/s|}.*|}r$$NEW|" RELEASE
 	make version
+	@echo "Bumped Release to $$(grep VERSION= RELEASE), $$(grep RELEASE= RELEASE)"
 
 revision:
-	sed -i "s|__revision__ = .*|__revision__ = '$$(svnversion)'|" ${PYFORMEXDIR}/__init__.py
+	sed -i "s|__revision__ = .*|__revision__ = '$$(git describe --always)'|" ${PYFORMEXDIR}/__init__.py
 
 version: ${PYFORMEXDIR}/__init__.py setup.py ${SPHINXDIR}/conf.py
 
@@ -258,7 +258,7 @@ sign: ${PUBDIR}/${PKGVER}
 	cd ${PUBDIR}; gpg -b --use-agent ${PKGVER}
 
 pubn: ${PUBDIR}/${PKGVER}.sig
-	rsync ${PUBDIR}/* ${FTPPUB} -rtlvn 
+	rsync ${PUBDIR}/* ${FTPPUB} -rtlvn
 
 pub: ${PUBDIR}/${PKGVER}.sig
 	rsync ${PUBDIR}/* ${FTPPUB} -rtlv
@@ -284,10 +284,10 @@ stats:
 # Create the Sphinx documentation
 html:
 	make -C ${SPHINXDIR} html
-	@echo "Remember to do 'make svndoc' to make the new docs available in pyformex-svn"
+	@echo "Remember to do 'make incdoc' to make the new docs available in pyformex-svn"
 
-svndoc:
-	make -C ${SPHINXDIR} svndoc
+incdoc:
+	make -C ${SPHINXDIR} incdoc
 
 latexpdf:
 	make -C ${SPHINXDIR} latexpdf
@@ -298,9 +298,9 @@ pubdoc:
 	make -C ${SPHINXDIR} pubdoc
 
 
-listwww:
-	cd www; cvs ls | grep '^?'; cd ..
-	@echo "Add the ? files by hand!"
+# Publish the website
+publish:
+	./publish
 
 commit:
 	cd www; cvs commit; cd ..

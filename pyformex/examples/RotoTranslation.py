@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -33,7 +33,7 @@ _status = 'checked'
 _level = 'advanced'
 _topics = ['geometry']
 _techniques = ['transform']
-_author = 'gianluca' 
+_author = 'gianluca'
 
 from gui.draw import *
 import simple
@@ -102,7 +102,7 @@ def run():
     # Scene 0: The story starts idyllic
     T = 'There once was a white horse running free in the wood.'
     script += [ createScene(text=T,caged=False,color=7) ]
-    pause(5)
+    sleep(5)
 
     # Scene 1: Things turn out badly
     T = 'Some wicked pyFormex user caged the horse and transported it around.'
@@ -110,7 +110,7 @@ def run():
     H,CS = [ i.translate([0.,3.,6.]) for i in [H,CS] ]
     C = simple.cuboid(*H.bbox())
     script += [ createScene(text=T) ]
-    pause(5)
+    sleep(5)
 
     # Scene 2..n: caged movements
     T = 'The angry horse randomly changed colour at each step.'
@@ -118,7 +118,7 @@ def run():
     m = len(script)
     n = 16
     script += [ createScene(move=i) for i in range(m,n,1) ]
-    pause(5)
+    sleep(5)
 
 
     # Scene n+1: the escape
@@ -126,7 +126,7 @@ def run():
     escape = script[-1]
     script += [ createScene(text=T,color=0,caged=False) ]
     undraw(escape)
-    pause(5)
+    sleep(5)
 
     # The problem
     T = "But alas, it couldn't remember how it got there!!!"
@@ -135,7 +135,7 @@ def run():
     for s in script[:-2]:
         #sleep(0.1)
         undraw(s)
-    pause(5)
+    sleep(5)
 
     # The solution
     T = "But thanks to pyFormex's orientation,\nit could go back in a single step, straight through the bushes."
@@ -143,7 +143,7 @@ def run():
     line += line_inc
     H = H.transformCS(CS0,CS)
     draw(Formex([[CS[3],CS0[3]]]))
-    pause(5)
+    sleep(5)
 
     T = "And the horse lived happily ever after."
     script += [ createScene(text=T,color=7,caged=False) ]

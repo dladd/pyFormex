@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -72,7 +72,7 @@ def run():
 
     for i in range(n):
         TB = drawText(T[t[i]],a[i][0],a[i][1],font=fonts[f[i]],size=size[i],color=list(colors[i]))
-        pause(0.5)
+        sleep(0.5)
         breakpt()
         if i < n/2:
             undecorate(TA)

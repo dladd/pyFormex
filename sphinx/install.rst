@@ -480,8 +480,11 @@ script from the checkout directory::
   sh sparse_checkout
 
 You can update your pyFormex installation at any time to the latest
-version by issuing the command ``git pull`` in your ``BASEDIR``
-directory. You can even roll back to any older revision of
+version by issuing the command ::
+
+  git pull 
+
+in your ``BASEDIR`` directory. You can even roll back to any older revision of
 pyFormex. Just remember that after updating your sources, the compiled
 libraries could be out of sync with your new sources. Normally pyFormex
 will rebuild the libraries the next time you start it. 

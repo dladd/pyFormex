@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -29,7 +29,7 @@ These are general utility functions that depend only on the :mod:`numpy`
 array model. All pyformex modules needing :mod:`numpy` should import
 everything from this module::
 
-  from arraytools import * 
+  from arraytools import *
 """
 from __future__ import print_function
 
@@ -93,7 +93,7 @@ try:
     unique([1],True)
 except TypeError:
     from numpy import unique1d as unique
-   
+
 if unique([1],True)[0][0] == 0:
     # We have the old numy version
     import warnings
@@ -111,6 +111,16 @@ if unique([1],True)[0][0] == 0:
 # default float and int types
 Float = float32
 Int = int32
+
+
+def isInt(obj):
+    """Test if an object is an integer number
+
+    Returns True if the object is a single integer number, else False.
+    The type of the object can be either a Python integer (int) or a
+    numpy integer.
+    """
+    return isinstance(obj,(int,integer))
 
 
 ###########################################################################
@@ -209,7 +219,7 @@ def arctand2(sin,cos,angle_spec=Deg):
     180.0 -2.35619449019
     """
     return arctan2(sin,cos)/angle_spec
-   
+
 
 def niceLogSize(f):
     """Return the smallest integer e such that 10**e > abs(f).
@@ -218,10 +228,10 @@ def niceLogSize(f):
 
     >>> print([ niceLogSize(a) for a in [1.3, 35679.23, 0.4, 0.00045676] ])
     [1, 5, 0, -3]
-  
+
     """
     return int(ceil(log10(abs(f))))
-   
+
 
 def niceNumber(f,below=False):
     """Return a nice number close to f.
@@ -234,12 +244,11 @@ def niceNumber(f,below=False):
 
     Example:
 
-    >>> numbers = [ 0.0837, 0.837, 8.37, 83.7, 93.7]
-    >>> [ str(niceNumber(f)) for f in numbers ]
-    ['0.09', '0.9', '9.0', '90.0', '100.0']
-    >>> [ str(niceNumber(f,below=True)) for f in numbers ]
-    ['0.08', '0.8', '8.0', '80.0', '90.0']
-
+      >>> numbers = [ 0.0837, 0.837, 8.37, 83.7, 93.7]
+      >>> [ str(niceNumber(f)) for f in numbers ]
+      ['0.09', '0.9', '9.0', '90.0', '100.0']
+      >>> [ str(niceNumber(f,below=True)) for f in numbers ]
+      ['0.08', '0.8', '8.0', '80.0', '90.0']
     """
     fa = abs(f)
     s = "%.0e" % fa
@@ -415,15 +424,15 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
 
     `values` is a float array, `target` is a float value.
     `values` and `target` should be broadcastable to the same shape.
-    
+
     The return value is a boolean array with shape of `values` flagging
     where the values are close to target.
     Two values `a` and `b` are considered close if
     :math:`| a - b | < atol + rtol * | b |`
     """
     values = asarray(values)
-    target = asarray(target) 
-    return abs(values - target) < atol + rtol * abs(target) 
+    target = asarray(target)
+    return abs(values - target) < atol + rtol * abs(target)
 
 
 def anyVector(v):
@@ -464,10 +473,10 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     In either case a 3x3 rotation matrix is returned.
     Note that:
 
-    - rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
-    - rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+    - rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0)
+    - rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1)
     - rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
-      
+
     but the latter functions calls are more efficient.
     The result is returned as an array.
     """
@@ -491,7 +500,7 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
         f = [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
               [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
               [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
-        
+
     return array(f)
 
 
@@ -512,7 +521,7 @@ def rotmat(x):
     m = row_stack([u,v,w])
     return m
 
-    
+
 def trfMatrix(x,y):
     """Find the transformation matrix from points x0 to x1.
 
@@ -545,7 +554,7 @@ def trfMatrix(x,y):
 def rotMatrix(u,w=[0.,0.,1.],n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
 
-    u is a vector representing the 
+    u is a vector representing the
     Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
     """
     u = unitVector(u)
@@ -558,11 +567,11 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
             v = unitVector(cross(w,u))
         else:
             raise
-        
+
     w = unitVector(cross(u,v))
 
     m = row_stack([u,v,w])
-    
+
     if n != 4:
         return m
     else:
@@ -573,7 +582,7 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
 # HOW DOES THIS DEAL WITH GIMBALL LOCK?
 def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     """Return rotation angles from rotation matrix mat.
-    
+
     This returns the three angles around the global axes 0, 1 and 2.
     The angles are returned in degrees, unless angle_spec=Rad.
     """
@@ -669,7 +678,7 @@ def reorderAxis(a,order,axis=-1):
     """Reorder the planes of an array along the specified axis.
 
     The elements of the array are reordered along the specified axis
-    according to the specified order. 
+    according to the specified order.
 
     Parameters:
 
@@ -691,11 +700,11 @@ def reorderAxis(a,order,axis=-1):
     along the specified axis has been changed.
 
     Example::
-    
+
       >>> reorderAxis([[1,2,3],[4,5,6]],[2,0,1])
       array([[3, 1, 2],
              [6, 4, 5]])
-      
+
     """
     a = asarray(a)
     n = a.shape[axis]
@@ -712,11 +721,11 @@ def reverseAxis(a,axis=-1):
     """Reverse the elements along a computed axis.
 
     Example::
-    
+
       >>> reverseAxis([[1,2,3],[4,5,6]],0)
       array([[4, 5, 6],
              [1, 2, 3]])
-      
+
     Note that if the axis is known in advance, it may be more efficient to use
     an indexing operation::
 
@@ -724,7 +733,7 @@ def reverseAxis(a,axis=-1):
       >>> print(A[:,::-1])
       [[3 2 1]
        [6 5 4]]
-      
+
     """
     return reorderAxis(a,'reverse',axis)
 
@@ -764,12 +773,12 @@ def splitrange(n,nblk):
 
     This divides the range of integer numbers 0..n in nblk slices of (almost)
     equal size. If n > nblk, returns nblk+1 integers in the range 0..n.
-    If n <= nblk, returns range(n+1). 
+    If n <= nblk, returns range(n+1).
 
     Example:
-    
-    >>> splitrange(7,3)
-    array([0, 2, 5, 7])
+
+      >>> splitrange(7,3)
+      array([0, 2, 5, 7])
     """
     if n > nblk:
         ndata = (arange(nblk+1) * n * 1.0 / nblk).round().astype(int)
@@ -791,11 +800,11 @@ def splitar(ar,nblk,close=False):
     blocks delimited by the element.
 
     Example:
-    
-    >>> splitar(arange(7),3)
-    [array([0, 1]), array([2, 3, 4]), array([5, 6])]
-    >>> splitar(arange(7),3,close=True)
-    [array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]
+
+      >>> splitar(arange(7),3)
+      [array([0, 1]), array([2, 3, 4]), array([5, 6])]
+      >>> splitar(arange(7),3,close=True)
+      [array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]
     """
     ar = asanyarray(ar)
     na = ar.shape[0]
@@ -804,12 +813,12 @@ def splitar(ar,nblk,close=False):
     if nblk > na:
         return [ar]
 
-    ndata = splitrange(na,3)
+    ndata = splitrange(na,nblk)
     if close:
         return [ ar[i:j+1] for i,j in zip(ndata[:-1],ndata[1:]) ]
-    else: 
+    else:
         return [ ar[i:j] for i,j in zip(ndata[:-1],ndata[1:]) ]
-     
+
 
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
@@ -837,7 +846,7 @@ def checkArray(a,shape=None,kind=None,allow=None):
         return a
     except:
         raise ValueError,"Expected shape %s, kind %s, got: %s, %s" % (shape,kind,a.shape,a.dtype.kind)
-    
+
 
 
 def checkArray1D(a,size=None,kind=None,allow=None):
@@ -861,7 +870,7 @@ def checkArray1D(a,size=None,kind=None,allow=None):
         return a
     except:
         raise ValueError,"Expected size %s, kind %s, got: %s" % (size,kind,a)
-    
+
 
 def checkArrayDim(a,ndim=-1):
     """Check that an array has the correct dimensionality.
@@ -876,7 +885,7 @@ def checkArrayDim(a,ndim=-1):
         return aa
     except:
         raise ValueError,"Expected an array with %s dimensions" % ndim
-              
+
 
 def checkUniqueNumbers(nrs,nmin=0,nmax=None):
     """Check that an array contains a set of unique integers in a given range.
@@ -885,7 +894,7 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None):
     range math:`nmin <= i < nmax`
 
     Parameters:
-    
+
     - `nrs`: an integer array of any shape.
     - `nmin`: minimum allowed value. If set to None, the test is skipped.
     - `nmax`: maximum allowed value + 1! If set to None, the test is skipped.
@@ -930,18 +939,18 @@ def cubicEquation(a,b,c,d):
 
     a,b,c,d are the (floating point) coefficients of a third degree
     polynomial equation::
-  
+
       a*x**3+b*x**2+c*x+d=0
 
     This function computes the three roots (real and complex) of this equation
     and returns full information about their kind, sorting order, occurrence
     of double roots. It uses scaling of the variables to enhance the accuracy.
-    
+
     The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
     float values and kind is an integer specifying the kind of roots.
 
     Depending on the value of `kind`, the roots are defined as follows:
-    
+
     ======     ============================================================
      kind        roots
     ======     ============================================================
@@ -960,7 +969,7 @@ def cubicEquation(a,b,c,d):
 
       >>> cubicEquation(1.,-3.,3.,-1.)
       ([1.0, 1.0, 1.0], 3)
-      
+
     """
     #
     # BV: We should return the solution of a second degree equation if a==0
@@ -980,11 +989,11 @@ def cubicEquation(a,b,c,d):
     r = r/sc
     s = s/sc/sc
     t = t/sc/sc/sc
-    
+
     rx = r*e3
     p3 = (s-r*rx)*e3
     q2 = rx**3-rx*s/2.+t/2.
-    
+
     q2s = q2*q2
     p3c = p3**3
     som = q2s+p3c
@@ -999,7 +1008,7 @@ def cubicEquation(a,b,c,d):
             phi = cos(-q2/rt)*e3
             rt = 2.*sqrt(-p3)
             roots += rt * cos(phi + [0.,+pie, -pie])
-        
+
         # sort the 3 roots
 
         roots.sort()
@@ -1025,7 +1034,7 @@ def cubicEquation(a,b,c,d):
     # scale and return values
     roots *= sc
     return roots,ic
- 
+
 
 # THIS MAY BE FASTER THAN olist.collectOnLength, BUT IT IS DEPENDENT ON NUMPY
 
@@ -1053,7 +1062,7 @@ def cubicEquation(a,b,c,d):
 def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     """
     Find the unique elements of an array.
-    
+
     This works like numpy's unique, but uses a stable sorting algorithm.
     The returned index may therefore hold other entries for multiply
     occurring values. In such case, uniqueOrdered returns the first
@@ -1062,7 +1071,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     returned by numpy's unique.
 
     Parameters:
-    
+
     - `ar1`: array_like
       This array will be flattened if it is not already 1-D.
     - `return_index`: bool, optional
@@ -1073,7 +1082,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
       result in `ar1`.
 
     Returns:
-    
+
     - `unique`: ndarray
       The unique values.
     - `unique_indices`: ndarray, optional
@@ -1084,7 +1093,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
       `return_inverse` is True.
 
     Example::
-    
+
       >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
       >>> uniq,ind,inv = unique(a,True,True)
       >>> print(uniq)
@@ -1132,7 +1141,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
         ar.sort()
         flag = np.concatenate(([True], ar[1:] != ar[:-1]))
         return ar[flag]
-               
+
 
 def renumberIndex(index):
     """Renumber an index sequentially.
@@ -1146,7 +1155,7 @@ def renumberIndex(index):
     position `0..nval`.
 
     Parameters:
-    
+
     - `index`: array_like, 1-D, integer
       An array with non-negative integer values
 
@@ -1162,12 +1171,12 @@ def renumberIndex(index):
       needed to replace the values in the index by the new ones.
 
     Example::
-    
+
       >>> renumberIndex([0,5,2,2,6,0])
       array([0, 5, 2, 6])
       >>> inverseUniqueIndex(renumberIndex([0,5,2,2,6,0]))[[0,5,2,2,6,0]]
       array([0, 1, 2, 2, 3, 0])
-      
+
     """
     un,pos = uniqueOrdered(index,True)
     srt = pos.argsort()
@@ -1192,16 +1201,16 @@ def complement(index,n=-1):
       type integer and `n` is not specified or is negative, it will be set
       equal to the largest number in `index` plus 1. If `index` is of type
       boolean and `n` is larger than the length of `index`, `index` will be
-      padded with `False` values until length `n`. 
+      padded with `False` values until length `n`.
 
     Returns:
 
       If `index` is integer: a 1-D integer array with the numbers from
       range(0,n) that are not included in `index`. If `index` is boolean,
       the negated `index` padded to or cut at length `n`.
-      
+
     Example:
-    
+
       >>> print(complement([0,5,2,6]))
       [1 3 4]
       >>> print(complement([0,5,2,6],10))
@@ -1215,13 +1224,13 @@ def complement(index,n=-1):
         if n > m:
             comp = ones(n,dtype=bool)
             comp[:m] = ~index
-            return comp
         else:
-            return ~index[:n]
+            comp = ~index[:n]
     else:
         if n < 0:
             n = max(n,1+index.max())
-        return delete(arange(n),index)
+        comp = delete(arange(n),index)
+    return comp
 
 
 def inverseUniqueIndex(index):
@@ -1233,7 +1242,7 @@ def inverseUniqueIndex(index):
     get a value -1 in the inverse index.
 
     Parameters:
-    
+
     - `index`: array_like, 1-D, integer
       An array with non-negative values, which all have to be unique.
 
@@ -1242,16 +1251,16 @@ def inverseUniqueIndex(index):
       A 1-D integer array with length `max+1`, with the positions in
       `index` of the values `0..max`, or -1 if the value does not occur in
       `index`.
-    
+
     Remark:
 
       The inverse index translates the unique index numbers in a
       sequential index, so that
       ``inverseUniqueIndex(index)[index] == arange(1+index.max())``.
-      
+
 
     Example::
-    
+
       >>> inverseUniqueIndex([0,5,2,6])
       array([ 0, -1,  2, -1, -1,  1,  3])
       >>> inverseUniqueIndex([0,5,2,6])[[0,5,2,6]]
@@ -1262,7 +1271,7 @@ def inverseUniqueIndex(index):
     inv = -ones(ind.max()+1,dtype=ind.dtype)
     inv[ind] = arange(ind.size,dtype=inv.dtype)
     return inv
-    
+
 
 def sortSubsets(a,w=None):
     """Sort subsets of an integer array a.
@@ -1296,7 +1305,7 @@ def sortSubsets(a,w=None):
     srt = argsort(h)[::-1]
     inv = inverseUniqueIndex(srt)
     return inv[a]
-            
+
 
 def sortByColumns(a):
     """Sort an array on all its columns, from left to right.
@@ -1310,12 +1319,12 @@ def sortByColumns(a):
 
     Returns a 1-D integer array specifying the order in which the rows have to
       be taken to obtain an array sorted by columns.
-    
+
     Example::
-    
+
       >>> sortByColumns([[1,2],[2,3],[3,2],[1,3],[2,3]])
       array([0, 3, 1, 4, 2])
-      
+
     """
     A = checkArrayDim(a,2)
     keys = [A[:,i] for i in range(A.shape[1]-1,-1,-1)]
@@ -1338,17 +1347,17 @@ def uniqueRows(a,permutations=False):
       The order of the elements in `uniq` is determined by the sorting
       procedure: in the current implementation this is :func:`sortByColumns`.
       If `permutations==True`, `a` is sorted along its axis -1 before calling
-      this sorting function. 
+      this sorting function.
     - `uniqid`: a 1-D integer array with length equal to `a.shape[0]` with the
       numbers of `uniq` corresponding to each of the rows of `a`.
 
     Example::
-    
+
       >>> uniqueRows([[1,2],[2,3],[3,2],[1,3],[2,3]])
       (array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))
       >>> uniqueRows([[1,2],[2,3],[3,2],[1,3],[2,3]],permutations=True)
       (array([0, 3, 1]), array([0, 2, 2, 1, 2]))
-    
+
     """
     A = array(a,copy=permutations)
     if A.ndim != 2:
@@ -1379,7 +1388,7 @@ def argNearestValue(values,target):
     nearest to `target`.
 
     Example:
-    
+
       >>> argNearestValue([0.1,0.5,0.9],0.7)
       1
     """
@@ -1392,7 +1401,7 @@ def nearestValue(values,target):
     """Return the item nearest to target.
 
     ``values``: a list of float values
-    
+
     ``target``: a single value
 
     Returns the item in ``values`` values that is
@@ -1412,7 +1421,7 @@ def inverseIndex(index,maxcon=4):
     Negative values in the input index are disregarded.
 
     Parameters:
-    
+
     - `index`: an array of integers, where only non-negative values are
       meaningful, and negative values are silently ignored. A Connectivity
       is a suitable argument.
@@ -1423,7 +1432,7 @@ def inverseIndex(index,maxcon=4):
     Returns:
 
       An (mr,mc) shaped integer array where:
-    
+
       - `mr` will be equal to the highest positive value in index, +1.
       - `mc` will be equal to the highest row-multiplicity of any number
         in `index`.
@@ -1436,13 +1445,13 @@ def inverseIndex(index,maxcon=4):
       non-existing entries.
 
     Example::
-    
+
       >>> inverseIndex([[0,1],[0,2],[1,2],[0,3]])
       array([[ 0,  1,  3],
              [-1,  0,  2],
              [-1,  1,  2],
              [-1, -1,  3]])
-    
+
     """
     ind = asarray(index)
     if len(ind.shape) != 2 or ind.dtype.kind != 'i':
@@ -1488,7 +1497,7 @@ def matchIndex(target,values):
     - `values`: an index array with all non-negative values. If not 1-D, it
       will be flattened.
 
-    Returns: 
+    Returns:
 
       An index array with the same size as `values`.
       For each number in `values`, the index contains the position of that value
@@ -1499,13 +1508,12 @@ def matchIndex(target,values):
     Remark that after ``m = matchIndex(target,values)`` the equality
     ``target[m] == values`` holds in all the non-negative positions of `m`.
 
-    Example::
-    
+    Example:
+
       >>> A = array([1,3,4,5,7,8,9])
       >>> B = array([0,6,7,1,2])
       >>> matchIndex(A,B)
       array([-1, -1,  4,  0, -1])
-
     """
     target = target.reshape(-1,1)
     values = values.reshape(-1)
@@ -1582,12 +1590,12 @@ def vectorPairAreaNormals(vec1,vec2):
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
     As a convenience, single vectors may also be specified with shape (3,),
     and will be converted to (1,3).
-    
+
     The result is a tuple of two arrays:
-    
+
     - area (n) : the area of the parallellogram formed by vec1 and vec2.
     - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
-    
+
     These are calculated from the cross product of vec1 and vec2, which indeed
     gives area * normal.
 
@@ -1621,7 +1629,7 @@ def vectorPairNormals(vec1,vec2):
     each couple (edg1,edg2).
     """
     return vectorPairAreaNormals(vec1,vec2)[1]
-        
+
 
 def vectorTripleProduct(vec1,vec2,vec3):
     """Compute triple product vec1 . (vec2 x vec3).
@@ -1688,7 +1696,7 @@ def histogram2(a,bins,range=None):
     the bin index for each individual entry in the data set.
 
     Parameters:
-    
+
     - `a`: array_like.
       Input data. The histogram is computed over the flattened array.
 
@@ -1713,17 +1721,16 @@ def histogram2(a,bins,range=None):
 
     Example:
 
-    >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
-    >>> print(hist)
-    [2 2 2 1]
-    >>> for i in ind: print(i)
-    [0 6]
-    [1 4]
-    [2 5]
-    [3]
-    >>> print(xbins)
-    [1 2 3 4 5]
-
+      >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
+      >>> print(hist)
+      [2 2 2 1]
+      >>> for i in ind: print(i)
+      [0 6]
+      [1 4]
+      [2 5]
+      [3]
+      >>> print(xbins)
+      [1 2 3 4 5]
     """
     ar = asarray(a)
     if array(bins).size == 1:
@@ -1740,9 +1747,9 @@ def histogram2(a,bins,range=None):
 
 def movingView(a, size):
     """Create a moving view along the first axis of an array
-    
+
     Parameters:
-    
+
     - `a` : array_like: array for wihch to create a moving view
     - `size` : int: size of the moving view
 
@@ -1750,35 +1757,35 @@ def movingView(a, size):
       axis of length w.
 
       Using swapaxes(0,axis) moving views over any axis can be created.
-    
-    Examples:
-    
-    >>> x=arange(10).reshape((5,2))
-    >>> print(x)
-    [[0 1]
-     [2 3]
-     [4 5]
-     [6 7]
-     [8 9]]
-    >>> print(movingView(x, 3))
-    [[[0 1]
-      [2 3]
-      [4 5]]
-    <BLANKLINE>
-     [[2 3]
-      [4 5]
-      [6 7]]
-    <BLANKLINE>
-     [[4 5]
-      [6 7]
-      [8 9]]]
+
+    Example:
+
+      >>> x=arange(10).reshape((5,2))
+      >>> print(x)
+      [[0 1]
+       [2 3]
+       [4 5]
+       [6 7]
+       [8 9]]
+      >>> print(movingView(x, 3))
+      [[[0 1]
+        [2 3]
+        [4 5]]
+      <BLANKLINE>
+       [[2 3]
+        [4 5]
+        [6 7]]
+      <BLANKLINE>
+       [[4 5]
+        [6 7]
+        [8 9]]]
 
     Calculate rolling sum of first axis:
-    
-    >>> print(movingView(x, 3).sum(axis=0))
-    [[ 6  9]
-     [12 15]
-     [18 21]]
+
+      >>> print(movingView(x, 3).sum(axis=0))
+      [[ 6  9]
+       [12 15]
+       [18 21]]
     """
     from numpy.lib import stride_tricks
     if size < 1:
@@ -1794,7 +1801,7 @@ def movingAverage(a,n,m0=None,m1=None):
     """Compute the moving average along the first axis of an array.
 
     Parameters:
-    
+
     - `a` : array_like: array to be averaged
     - `n` : int: moving sample size
     - `m0` : optional, int: if specified, the first data set of a will
@@ -1803,38 +1810,37 @@ def movingAverage(a,n,m0=None,m1=None):
       be appended this number of times
 
     Returns:
-    
+
       An array with the moving average over n data sets along the first axis of a.
       The array has the same shape as a, except possibly for the length of the
       first axis.
       If neither m0 nor m1 are set, the first axis will have a length of
       a.shape[0] - (n-1).
       If both m0 and m1 are give, the first axis will have a length of
-      a.shape[0] - (n-1) + m0 + m1. 
+      a.shape[0] - (n-1) + m0 + m1.
       If either m0 or m1 are set and the other not, the missing value m0 or m1
       will be computed thus that the return array has a first axis with length
       a.shape[0].
 
-    Examples:
-    
-    >>> x=arange(10).reshape((5,2))
-    >>> print(movingAverage(x,3))
-    [[ 2.  3.]
-     [ 4.  5.]
-     [ 6.  7.]]
-    >>> print(movingAverage(x,3,2))
-    [[ 0.          1.        ]
-     [ 0.66666667  1.66666667]
-     [ 2.          3.        ]
-     [ 4.          5.        ]
-     [ 6.          7.        ]]
+    Example:
 
+      >>> x=arange(10).reshape((5,2))
+      >>> print(movingAverage(x,3))
+      [[ 2.  3.]
+       [ 4.  5.]
+       [ 6.  7.]]
+      >>> print(movingAverage(x,3,2))
+      [[ 0.          1.        ]
+       [ 0.66666667  1.66666667]
+       [ 2.          3.        ]
+       [ 4.          5.        ]
+       [ 6.          7.        ]]
     """
     if m0 is None and m1 is None:
         ae = a
     else:
         if m0 is None:
-            m0 = n-1 - m1 
+            m0 = n-1 - m1
         elif m1 is None:
             m1 = n-1 - m0
         ae = [a[:1]] * m0 + [ a ] + [a[-1:]] * m1
@@ -1854,7 +1860,7 @@ def unitDivisor(div,start=0):
     that accept an input as either an int or a list of floats.
 
     Parameters:
-    
+
     - `div`: an integer, or a list of floating point values.
       If it is an integer, returns a list of floating point values
       dividing the interval 0.0 toi 1.0 in div equal parts.
@@ -1869,39 +1875,68 @@ def unitDivisor(div,start=0):
         n = div[0]
         div = arange(start,n+1) / float(n)
     return div
-    
-    
+
+
 def uniformParamValues(n,umin=0.0,umax=1.0):
     """Create a set of uniformly distributed parameter values in a range.
 
-    Parameters: 
+    Parameters:
 
     - `n`: int: number of intervals in which the range should be divided.
       The number of values returned is ``n+1``.
     - `umin`, `umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
-    Returns: 
+    Returns:
 
       A float array with n+1 equidistant values in the range umin..umax.
       For n > 0, both of the endpoints are included. For n=0, a single
       value at the center of the interval will be returned. For n<0, an
       empty array is returned.
-    
+
     Example:
-    
-    >>> uniformParamValues(4).tolist()
-    [0.0, 0.25, 0.5, 0.75, 1.0]
-    >>> uniformParamValues(0).tolist()
-    [0.5]
-    >>> uniformParamValues(-1).tolist()
-    []
-    >>> uniformParamValues(2,1.5,2.5).tolist()
-    [1.5, 2.0, 2.5]
+
+      >>> uniformParamValues(4).tolist()
+      [0.0, 0.25, 0.5, 0.75, 1.0]
+      >>> uniformParamValues(0).tolist()
+      [0.5]
+      >>> uniformParamValues(-1).tolist()
+      []
+      >>> uniformParamValues(2,1.5,2.5).tolist()
+      [1.5, 2.0, 2.5]
     """
     if n == 0:
         return array([0.5*(umax+umin)])
     else:
         return umin + arange(n+1) * (umax-umin) / n
+
+
+def pprint(a,label=''):
+    """Pretty print an array with a label in front.
+
+    When printing a numpy array with a lable in font, the first row of
+    the array is not aligned with the remainder. This function will solve
+    that issue and prints the full array nicely aligned.
+
+    - `a`: a numpy array
+    - `label`: a sting to be printed in front of the array
+
+    Example:
+
+      >>> a = arange(12).reshape(-1,3)
+      >>> pprint(a,'Reshaped range = ')
+      Reshaped range = [[ 0  1  2]
+                        [ 3  4  5]
+                        [ 6  7  8]
+                        [ 9 10 11]]
+
+    """
+    import pprint
+    s = str(a).split('\n')
+    print(label+s[0])
+    dummy = ' '*len(label)
+    for l in s[1:]:
+        print(dummy+l)
+
 
 # End

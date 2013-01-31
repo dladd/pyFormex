@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -66,10 +66,10 @@ class ElementType(object):
 
     - `name`: a string. It is capitalized before use, thus all ElementType
       subclasses have a name starting with an uppercase letter. Usually the
-      name has a numeric last part, equal to the plexitude of the element. 
+      name has a numeric last part, equal to the plexitude of the element.
 
     - `vertices`: the natural coordinates of its vertices,
-    
+
     - `edges`: a list of edges, each defined by 2 or 3 node numbers,
     - `faces`: a list of faces, each defined by a list of minimum 3 node
       numbers,
@@ -81,7 +81,7 @@ class ElementType(object):
       is no correct drawing function.
 
     The vertices of the elements are defined in a unit space [0,1] in each
-    axis direction. 
+    axis direction.
 
     The elements guarantee a fixed local numbering scheme of the vertices.
     One should however not rely on a specific numbering scheme of edges, faces
@@ -92,14 +92,14 @@ class ElementType(object):
     normal on the face.
 
     The list of available element types can be found from:
-    
+
     >>> printElementTypes()
     Available Element Types:
       0-dimensional elements: ['Point']
       1-dimensional elements: ['Line2', 'Line3']
       2-dimensional elements: ['Tri3', 'Tri6', 'Quad4', 'Quad6', 'Quad8', 'Quad9']
       3-dimensional elements: ['Tet4', 'Tet10', 'Tet14', 'Tet15', 'Wedge6', 'Hex8', 'Hex16', 'Hex20', 'Hex27', 'Icosa']
-      
+
     Optional attributes:
 
     - `conversions`: Defines possible strategies for conversion of the element
@@ -119,14 +119,14 @@ class ElementType(object):
     - 'v': perform a conversion via an intermediate type. data is the name of
       the intermediate element type. The current element will first be converted
       to the intermediate type, and then conversion from that type to the
-      target will be attempted. 
+      target will be attempted.
     - 'r': randomly choose one of the possible conversions. data is a list of
       element names. This can e.g. be used to select randomly between
       different but equivalent conversion paths.
 
     """
-    
-   
+
+
 ## Proposed changes in the Element class
 ## =====================================
 
@@ -150,15 +150,15 @@ class ElementType(object):
     def nplex(self):
         """Return the plexitude of the element"""
         return self.vertices.shape[0]
-    
+
     nvertices = nplex
     nnodes = nplex
 
-                                      
+
     @classmethod
     def nedges(self):
         return self.edges.nelems()
-    
+
     @classmethod
     def nfaces(self):
         return self.faces.nelems()
@@ -179,7 +179,7 @@ class ElementType(object):
     @classmethod
     def getCells(self):
         return self.getEntities(3)
-    
+
     @classmethod
     def getElement(self):
         return self.getEntities(self.ndim)
@@ -202,12 +202,12 @@ class ElementType(object):
         For both types however, getLowerEntities(+1) returns the edges.
 
         The return value is a dict where the keys are element types
-        and the values are connectivity tables. 
+        and the values are connectivity tables.
         If reduce == False: there will be only one connectivity table
         and it may include degenerate elements.
         If reduce == True, an attempt is made to reduce the degenerate
         elements. The returned dict may then have multiple entries.
-        
+
         If the requested entity level is outside the range 0..ndim,
         the return value is None.
         """
@@ -216,7 +216,7 @@ class ElementType(object):
 
         if level < 0 or level > self.ndim:
             return Connectivity()
-        
+
         if level == 0:
             return Connectivity(arange(self.nplex()).reshape((-1,1)),eltype='point')
 
@@ -228,7 +228,7 @@ class ElementType(object):
 
         elif level == 2:
             return self.faces
- 
+
 
     @classmethod
     def getDrawEdges(self,quadratic=False):
@@ -258,7 +258,7 @@ class ElementType(object):
         x = self.vertices
         e = self.getElement()
         return Mesh(x,e,eltype=e.eltype)
-        
+
 
     @classmethod
     def toFormex(self):
@@ -303,7 +303,7 @@ def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs
         raise ValueError,"Element type %s already exists" % name
 
     #print "\n CREATING ELEMENT TYPE %s\n" % name
-    
+
     D = dict(
         __doc__ = '_'+doc,  # block autodoc for generated classed
         ndim = ndim,
@@ -317,7 +317,7 @@ def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs
             D[a] = [ _sanitize(e) for e in kargs[a] ]
             del kargs[a]
 
-    # other args are added as-is        
+    # other args are added as-is
     D.update(kargs)
     #print "Final class dict:",D
 
@@ -331,7 +331,7 @@ def createElementType(name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs
     return C
 
 #####################################################
-# Define the collection of default pyFormex elements 
+# Define the collection of default pyFormex elements
 
 Point = createElementType(
     'point',"A single point",
@@ -377,7 +377,7 @@ Tri6 = createElementType(
                  ( 0.5, 0.0, 0.0 ),
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
-                 ],    
+                 ],
     edges = ('line3', [ (0,3,1), (1,4,2), (2,5,0) ], ),
     reversed = (2,1,0,4,3,5),
     drawfaces = [('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )]
@@ -404,7 +404,7 @@ Quad6 = createElementType(
           ]]),
     edges = ('line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] ),
     reversed = (3,2,1,0,5,4),
-    drawedges = [ ('line2', [(1,2), (3,0)]), 
+    drawedges = [ ('line2', [(1,2), (3,0)]),
                   ('line3', [(0,4,1), (2,5,3)])
                   ],
 #    drawfaces = [('tri3',[(0,4,3),(4,5,3),(4,1,5),(1,2,5)])]
@@ -427,7 +427,7 @@ Quad8 = createElementType(
     drawfaces = [('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6)]), ('quad4', [(4,5,6,7)], )],
     drawfaces2 = [('quad8', [(0,1,2,3,4,5,6,7)], )],
     )
-    
+
 
 Quad9 = createElementType(
     'quad9',"A 9-node quadrilateral",
@@ -453,7 +453,7 @@ Tet4 = createElementType(
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.0, 0.0, 1.0 ),
                  ],
-    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], ), 
+    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], ),
     faces = ('tri3', [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], ),
     reversed = (0,1,3,2),
     )
@@ -473,7 +473,7 @@ Tet10 = createElementType(
                  ( 0.0, 0.5, 0.5 ),
                  ( 0.5, 0.0, 0.5 ),
                  ],
-    edges = ('line3', [ (0,4,1),(1,7,2),(2,5,0),(0,6,3),(1,9,3),(2,8,3) ],), 
+    edges = ('line3', [ (0,4,1),(1,7,2),(2,5,0),(0,6,3),(1,9,3),(2,8,3) ],),
     # BV: This needs further specification!
     faces = Tet4.faces,
     reversed = (0,1,3,2,4,6,5,9,8,7),
@@ -490,13 +490,13 @@ Tet14 = createElementType(
           ( 1./3., 0.0, 1./3. ),
           ( 1./3., 1./3., 1./3. ),
           ]]),
-    edges = Tet10.edges, 
+    edges = Tet10.edges,
     # BV: This needs further specification!
     faces = Tet4.faces,
     reversed = (0,1,3,2,4,6,5,9,8,7,12,11,10,13),
     )
-    
-    
+
+
 Tet15 = createElementType(
     'tet15',"A 15-node tetrahedron",
     ndim = 3,
@@ -531,7 +531,7 @@ Wedge6 = createElementType(
 Hex8 = createElementType(
     'hex8',"An 8-node hexahedron",
     ndim = 3,
-    vertices = [ ( 0.0, 0.0, 0.0 ),  
+    vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 1.0, 1.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
@@ -569,7 +569,7 @@ Hex16 = createElementType(
                         (4,12,5),(5,13,6),(6,14,7),(7,15,4),
                         (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], ),
     faces = ('quad8', [ (0,4,7,3,0,15,7,11), (1,2,6,5,9,2,13,5),
-                        (0,1,5,4,8,1,12,4), (3,7,6,2,3,14,6,10), 
+                        (0,1,5,4,8,1,12,4), (3,7,6,2,3,14,6,10),
                         (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
     reversed= (4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11),
     drawedges = [ Hex8.edges ],
@@ -695,10 +695,10 @@ The operation of these methods is as follows:
 
 """
 Line2.conversions = {
-    'line3'   : [ ('a', [ (0,1) ]), 
-                  ('s', [ (0,2,1) ]), 
+    'line3'   : [ ('a', [ (0,1) ]),
+                  ('s', [ (0,2,1) ]),
                   ],
-    'line2-2' : [ ('v', 'line3'), 
+    'line2-2' : [ ('v', 'line3'),
                   ('s', [ (0,2), (2,1) ]), ],
     }
 Line3.conversions = {
@@ -790,13 +790,13 @@ Hex8.conversions = {
     'tet4-5' : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
     'tet4-6' : [ ('v', 'wedge6') ],
     'tet4-24': [ ('a', [(0,3,2,1),(0,1,5,4),(0,4,7,3),(1,2,6,5),(2,3,7,6),(4,5,6,7)]),
-                 ('a', [(0,1,2,3,4,5,6,7)]), 
-                 ('s', [(0,1,8,14),(1,2,8,14),(2,3,8,14),(3,0,8,14), 
-                        (0,4,9,14),(4,5,9,14),(5,1,9,14),(1,0,9,14), 
+                 ('a', [(0,1,2,3,4,5,6,7)]),
+                 ('s', [(0,1,8,14),(1,2,8,14),(2,3,8,14),(3,0,8,14),
+                        (0,4,9,14),(4,5,9,14),(5,1,9,14),(1,0,9,14),
                         (0,3,10,14),(3,7,10,14),(7,4,10,14),(4,0,10,14),
                         (1,5,11,14),(5,6,11,14),(6,2,11,14),(2,1,11,14),
-                        (2,6,12,14),(6,7,12,14),(7,3,12,14),(3,2,12,14),    
-                        (4,7,13,14),(7,6,13,14),(6,5,13,14),(5,4,13,14),]),], 
+                        (2,6,12,14),(6,7,12,14),(7,3,12,14),(3,2,12,14),
+                        (4,7,13,14),(7,6,13,14),(6,5,13,14),(5,4,13,14),]),],
     'hex8-8': [ ('v', 'hex20'), ],
     'hex20' : [ ('a', [ (0,1), (1,2), (2,3), (3,0),
                         (4,5), (5,6), (6,7), (7,4),
@@ -809,21 +809,21 @@ Hex16.conversions = {
 Hex20.conversions = {
     'hex8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
     'hex8-8': [ ('v', 'hex27'), ],
-    'hex27' : [ ('a', [ (0,1,2,3),(0,1,5,4),(0,3,7,4),(1,2,6,5),(2,6,7,3),(4,5,6,7), ]), 
-                ('a', [ (0,1,2,3,4,5,6,7), ]),                                                                                          
-                ('s', [ (0,8,1,11,20,9,3,10,2,16,21,17,22,26,23,19,24,18,4,12,5,15,25,13,7,14,6), ]), 
+    'hex27' : [ ('a', [ (0,1,2,3),(0,1,5,4),(0,3,7,4),(1,2,6,5),(2,6,7,3),(4,5,6,7), ]),
+                ('a', [ (0,1,2,3,4,5,6,7), ]),
+                ('s', [ (0,8,1,11,20,9,3,10,2,16,21,17,22,26,23,19,24,18,4,12,5,15,25,13,7,14,6), ]),
                 ],
     'tet4'  : [ ('v', 'hex8'), ],
     }
 Hex27.conversions = {
-    'hex8-8': [ ('s', [ (0, 1, 4, 3, 9, 10,13,12), 
-                        (1, 2, 5, 4, 10,11,14,13), 
-                        (3, 4, 7, 6, 12,13,16,15), 
-                        (4, 5, 8, 7, 13,14,17,16), 
-                        (9, 10,13,12,18,19,22,21), 
-                        (10,11,14,13,19,20,23,22), 
-                        (12,13,16,15,21,22,25,24), 
-                        (13,14,17,16,22,23,26,25), 
+    'hex8-8': [ ('s', [ (0, 1, 4, 3, 9, 10,13,12),
+                        (1, 2, 5, 4, 10,11,14,13),
+                        (3, 4, 7, 6, 12,13,16,15),
+                        (4, 5, 8, 7, 13,14,17,16),
+                        (9, 10,13,12,18,19,22,21),
+                        (10,11,14,13,19,20,23,22),
+                        (12,13,16,15,21,22,25,24),
+                        (13,14,17,16,22,23,26,25),
                       ]), ],
     }
 
@@ -893,7 +893,7 @@ Hex8.degenerate = {
     }
 
 
-##########################################################  
+##########################################################
 # This element added just for fun, no practical importance
 
 from arraytools import golden_ratio as phi
@@ -904,7 +904,7 @@ Icosa = createElementType(
 
     nfaces = 20, nedges = 30, nvertices = 12
 
-    All points of the icosahedron lie on a sphere with unit radius.  
+    All points of the icosahedron lie on a sphere with unit radius.
     """,
     ndim = 3,
     vertices = [ ( 0.0, 1.0, phi ),
@@ -974,13 +974,13 @@ def elementType(name=None,nplex=-1):
 
     Returns a subclass of :class:`ElementType`.
 
-    Errors: 
+    Errors:
 
       If neither `name` nor `nplex` can resolve into an element type,
       an error is raised.
 
     Example:
-    
+
       >>> elementType('tri3').name()
       'tri3'
       >>> elementType(nplex=2).name()
@@ -993,7 +993,7 @@ def elementType(name=None,nplex=-1):
             return eltype
     except:
         pass
-    
+
     if eltype is None:
         try:
             return _default_eltype[nplex]
@@ -1011,29 +1011,31 @@ def elementType(name=None,nplex=-1):
     return None
 
 
-def elementTypes(ndim=None):
+def elementTypes(ndim=None,lower=True):
     """Return the names of available elements.
 
     If a value is specified for ndim, only the elements with the matching
     dimensionality are returned.
     """
-    if ndim is None:
-        return _registered_element_types.keys()
-    else:
-        return [ k for k,v in _registered_element_types.items() if v.ndim==ndim] 
+    eltypes = _registered_element_types.keys()
+    if ndim:
+        eltypes = [ k for k in eltypes if _registered_element_types[k].ndim==ndim ]
+    if lower:
+        eltypes = [ k.lower() for k in eltypes ]
+    return eltypes
 
 
-def printElementTypes():
+def printElementTypes(lower=False):
     """Print all available element types.
 
     Prints a list of the names of all available element types,
     grouped by their dimensionality.
     """
-    print("Available Element Types:")        
+    print("Available Element Types:")
     for ndim in range(4):
-        print("  %s-dimensional elements: %s" % (ndim,elementTypes(ndim))        )
+        print("  %s-dimensional elements: %s" % (ndim,elementTypes(ndim,lower))        )
 
-if __name__ == "__main__":
-    printElementTypes()
+
+#printElementTypes()
 
 # End

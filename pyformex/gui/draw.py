@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -56,9 +56,11 @@ from script import *
 from colors import *
 from signals import *
 from formex import *
-from mesh import Mesh
-from plugins.trisurface import TriSurface
-        
+
+# these are already imported in script
+#from mesh import Mesh
+#from plugins.trisurface import TriSurface
+
 #################### Interacting with the user ###############################
 
 
@@ -90,7 +92,7 @@ def showMessage(text,actions=['OK'],level='info',modal=True,align='00',**kargs):
     They differ only in the icon that is shown next to the test.
     By default, the message widget has a single button with the text 'OK'.
     The dialog is closed if the user clicks a button.
-    The return value is the button text. 
+    The return value is the button text.
     """
     w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
     if align == '--':
@@ -100,20 +102,20 @@ def showMessage(text,actions=['OK'],level='info',modal=True,align='00',**kargs):
     else:
         w.show()
         return None
-        
+
 
 def showInfo(text,actions=['OK'],modal=True):
     """Show an informational message and wait for user acknowledgement."""
     return showMessage(text,actions,'info',modal)
-    
+
 def warning(text,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
     return showMessage(text,actions,'warning')
-    
+
 def error(text,actions=['OK']):
     """Show an error message and wait for user acknowledgement."""
     return showMessage(text,actions,'error')
-    
+
 
 def ask(question,choices=None,**kargs):
     """Ask a question and present possible answers.
@@ -133,8 +135,8 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
     """Display a text in a dialog window.
 
     Creates a dialog window displaying some text. The dialog can be modal
-    (blocking user input to the main window) or modeless. 
-    Scrollbars aree added if the text is too large to display at once.
+    (blocking user input to the main window) or modeless.
+    Scrollbars are added if the text is too large to display at once.
     By default, the dialog has a single button to close the dialog.
 
     Parameters:
@@ -142,7 +144,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
     - `text`: a multiline text to be displayed. It can be plain text or html
       or reStructuredText (starts with '..').
     - `itemtype`: an InputItem type that can be used for text display. This
-      should be either 'text' of 'info'. 
+      should be either 'text' of 'info'.
     - `actions`: a list of action button definitions.
     - `modal`: bool: if True, a modal dialog is constructed. Else, the dialog
       is modeless.
@@ -156,7 +158,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
       displayed text as a value. If an itemtype 'text' was used, this may
       be a changed text.
     :modeless dialog: the open dialog window itself.
-    
+
     """
     if mono:
         font = "DejaVu Sans Mono"
@@ -175,7 +177,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
         return w
 
 
-def showFile(filename,mono=False,**kargs):
+def showFile(filename,mono=True,**kargs):
     """Display a text file.
 
     This will use the :func:`showText()` function to display a text read
@@ -195,7 +197,7 @@ def showDoc(obj=None,rst=True,modal=False):
     """Show the docstring of an object.
 
     Parameters:
-    
+
     - `obj`: any object (module, class, method, function) that has a
       __doc__ attribute. If None is specified, the docstring of the current
       application is shown.
@@ -222,7 +224,7 @@ def showDoc(obj=None,rst=True,modal=False):
 
     if text is None:
         raise ValueError,"No documentation found for object %s" % obj
-    
+
     text = utils.forceReST(text,underline=True)
     if pf.GUI.doc_dialog is None:
         if modal:
@@ -254,7 +256,7 @@ def editFile(fn,exist=False):
 
     - `fn`: filename. The corresponding file is loaded into the editor.
     - `exist`: bool. If True, only existing filenames will be accepted.
-    
+
     Loading a file in the editor is done by executing an external command with
     the filename as argument. The command to be used can be set in the
     configuration. If none is set, pyFormex will try to lok at the `EDITOR`
@@ -277,7 +279,7 @@ def editFile(fn,exist=False):
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None,**kargs):
+def askItems(items,timeout=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -290,26 +292,24 @@ def askItems(items,caption=None,timeout=None,**kargs):
     For convenience, simple items can also be specified as a tuple.
     A tuple (key,value) will be transformed to a dict
     {'key':key, 'value':value}.
-    
+
     See the widgets.InputDialog class for complete description of the
     available input items.
 
+    A timeout (in seconds) can be specified to have the input dialog
+    interrupted automatically and return the default values.
+
     The remaining arguments are keyword arguments that are passed to the
     widgets.InputDialog.getResult method.
-    A timeout (in seconds) can be specified to have the input dialog
-    interrupted automatically.
 
     Returns a dictionary with the results: for each input item there is a
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     """
     global _dialog_widget,_dialog_result
-    if 'legacy' in kargs:
-        warnings.warn("The use of the 'legacy' argument in askitems is deprecated.")
-    # convert items, allows for sloppy style
-    items = [ widgets.convertInputItem(i) for i in items ]
-    w = widgets.InputDialog(items,caption,**kargs)
-        
+
+    w = widgets.InputDialog(items,**kargs)
+
     _dialog_widget = w
     _dialog_result = None
     res = w.getResult(timeout)
@@ -340,7 +340,7 @@ def dialogTimedOut():
     return _dialog_result == widgets.TIMEOUT
 
 
-def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True):
+def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True,timeout=None):
     """Ask for a file name or multiple file names using a file dialog.
 
     cur is a directory or filename. All the files matching the filter in that
@@ -361,7 +361,7 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)
-    fn = w.getFilename()
+    fn = w.getFilename(timeout)
     if fn and change:
         if multi:
             chdir(fn[0])
@@ -372,13 +372,13 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     return fn
 
 
-def askNewFilename(cur=None,filter="All files (*.*)"):
+def askNewFilename(cur=None,filter="All files (*.*)",timeout=None):
     """Ask a single new filename.
 
     This is a convenience function for calling askFilename with the
     arguments exist=False.
     """
-    return askFilename(cur=cur,filter=filter,exist=False,multi=False)
+    return askFilename(cur=cur,filter=filter,exist=False,multi=False,timeout=timeout)
 
 
 def askDirname(path=None,change=True,byfile=False):
@@ -429,10 +429,10 @@ def checkWorkdir():
         askDirname()
         ok = os.access(os.getcwd(),os.W_OK)
     return ok
-    
+
 
 logfile = None     # the log file
-    
+
 
 def printMessage(s):
     """Print a message on the message board.
@@ -504,7 +504,7 @@ def drawable(objects):
             return None
     r = [ fltr(i) for i in objects ]
     return [ i for i in r if i is not None ]
-    
+
 
 def draw(F,shrink=None,
          color='prop',colormap=None,alpha=None,
@@ -532,7 +532,7 @@ def draw(F,shrink=None,
 
     The remaining arguments are drawing options. If None, they are filled in
     from the current viewport drawing options.
-    
+
     view is either the name of a defined view or 'last' or None.
     Predefined views are 'front','back','top','bottom','left','right','iso'.
     With view=None the camera settings remain unchanged (but might be changed
@@ -558,12 +558,12 @@ def draw(F,shrink=None,
     color,colormap,linewidth,alpha,marksize are passed to the
     creation of the 3D actor.
 
-        
+
     if color is None, it is drawn with the color specified on creation.
     if color is 'prop' and a colormap was installed, props define color.
     else, color should be an array of RGB values, either with shape
     (3,) for a single color, or (nelems,3) for differently colored
-    elements 
+    elements
 
 
     shrink is a floating point shrink factor that will be applied to object
@@ -575,7 +575,7 @@ def draw(F,shrink=None,
     If color is one color value, the whole Formex will be drawn with
     that color.
     Finally, if color=None is specified, the whole Formex is drawn in black.
-    
+
     Each draw action activates a locking mechanism for the next draw action,
     which will only be allowed after drawdelay seconds have elapsed. This
     makes it easier to see subsequent images and is far more elegant that an
@@ -588,7 +588,7 @@ def draw(F,shrink=None,
     """
     if 'flat' in kargs:
         utils.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
-        
+
     # For simplicity of the code, put objects to draw always in a list
     if isinstance(F,list):
         FL = F
@@ -613,7 +613,7 @@ def draw(F,shrink=None,
 
     if shrink is None:
         shrink = pf.canvas.options.get('shrink',None)
- 
+
     if marksize is None:
         marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
@@ -637,7 +637,7 @@ def draw(F,shrink=None,
     pf.app.processEvents()
 
     try:
-       
+
         actors = []
 
         # loop over the objects
@@ -666,9 +666,9 @@ def draw(F,shrink=None,
                 bkcolor=bkcolor,bkcolormap=bkcolormap,bkalpha=bkalpha,
                 mode=mode,linewidth=linewidth,linestipple=linestipple,
                 marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
-            
+
             actors.append(actor)
-            
+
             if actor is not None:
                 # Show the actor
                 if highlight:
@@ -699,7 +699,7 @@ def draw(F,shrink=None,
             pf.GUI.drawlock.lock()
     finally:
         pf.GUI.setBusy(False)
-        
+
     if type(F) is list or len(actors) != 1:
         return actors
     else:
@@ -730,21 +730,21 @@ def focus(object):
     pf.canvas.setCamera(bbox=coords.bbox(object))
     pf.canvas.update()
 
-    
+
 def setDrawOptions(kargs0={},**kargs):
     """Set default values for the draw options.
 
     Draw options are a set of options that hold default values for the
     draw() function arguments and for some canvas settings.
     The draw options can be specified either as a dictionary, or as
-    keyword arguments. 
+    keyword arguments.
     """
     d = {}
     d.update(kargs0)
     d.update(kargs)
     pf.canvas.setOptions(d)
 
-    
+
 def showDrawOptions():
     pf.message("Current Drawing Options: %s" % pf.canvas.options)
     pf.message("Current Viewport Options: %s" % pf.canvas.settings)
@@ -838,7 +838,7 @@ def drawFreeEdges(M,color='black'):
     B = M.getFreeEdgesMesh()
     #print B
     draw(B,color=color,nolight=True)
-    
+
 
 def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=None):
     """Draw numbers on all elements of F.
@@ -863,7 +863,7 @@ def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=N
     if numbers is None:
         numbers = numpy.arange(X.shape[0])
     return drawMarks(X,numbers+offset,color=color,leader=leader,ontop=ontop)
-    
+
 
 def drawPropNumbers(F,**kargs):
     """Draw property numbers on all elements of F.
@@ -877,7 +877,7 @@ def drawPropNumbers(F,**kargs):
     else:
         nrs = F.prop
     drawNumbers(F,nrs,**kargs)
-                
+
 
 def drawVertexNumbers(F,color='black',trl=None,ontop=False):
     """Draw (local) numbers on all vertices of F.
@@ -922,7 +922,7 @@ def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     pf.canvas.addAnnotation(M)
     pf.canvas.update()
     return M
-        
+
 
 def drawAxes(CS=None,*args,**kargs):
     """Draw the axes of a CoordinateSystem.
@@ -935,12 +935,13 @@ def drawAxes(CS=None,*args,**kargs):
     this function gives a better result because it has specialized color
     and annotation settings and provides reasonable deafults.
     """
+    from coordsys import CoordinateSystem
     if CS is None:
         CS = CoordinateSystem()
     A = actors.AxesActor(CS,*args,**kargs)
     drawActor(A)
     return A
-        
+
 
 def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     """Draw an image as a colored Formex
@@ -953,7 +954,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     Parameters:
 
     - `image`: a QImage or any data that can be converted to a QImage,
-      e.g. the name of a raster image file. 
+      e.g. the name of a raster image file.
     - `nx`,`ny`: width and height (in cells) of the Formex grid.
       If the supplied image has a different size, it will be rescaled.
       Values <= 0 will be replaced with the corresponding actual size of
@@ -961,7 +962,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     - `pixel`: the Formex representing a single pixel. It should be either
       a single element Formex, or one of the strings 'dot' or 'quad'. If 'dot'
       a single point will be used, if 'quad' a unit square. The difference
-      will be important when zooming in. The default is 'dot'. 
+      will be important when zooming in. The default is 'dot'.
 
     Returns the drawn Actor.
 
@@ -969,7 +970,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     """
     pf.GUI.setBusy()
     from plugins.imagearray import image2glcolor,resizeImage
-    
+
     # Create the colors
     image = resizeImage(image,nx,ny)
     nx,ny = image.width(),image.height()
@@ -989,7 +990,7 @@ def drawImage3D(image,nx=0,ny=0,pixel='dot'):
     FA = draw(F,color=color,colormap=colortable,nolight=True)
     pf.GUI.setBusy(False)
     return FA
-    
+
 
 def drawImage(image,w=0,h=0,x=-1,y=-1,color=white,ontop=False):
     """Draws an image as a viewport decoration.
@@ -1015,12 +1016,12 @@ def drawImage(image,w=0,h=0,x=-1,y=-1,color=white,ontop=False):
     Note that the Decoration has a fixed size (and position) on the canvas
     and will not scale when the viewport size is changed.
     The :func:`bgcolor` function can be used to draw an image that completely
-    fills the background. 
+    fills the background.
     """
     utils.warn("warn_drawImage_changed")
     from plugins.imagearray import image2numpy
     from gui.decors import Rectangle
-    
+
     image = image2numpy(image,resize=(w,h),indexed=False)
     w,h = image.shape[:2]
     if x < 0:
@@ -1061,7 +1062,7 @@ def undraw(itemlist):
         pf.canvas.removeAny(itemlist)
     pf.canvas.update()
     pf.app.processEvents()
-    
+
 
 def view(v,wait=True):
     """Show a named view, either a builtin or a user defined.
@@ -1135,7 +1136,7 @@ def createView(name,angles,addtogui=False):
     pf.canvas.view_angles[name] = angles
     if addtogui:
         pf.GUI.createView(name,angles)
-    
+
 
 def setView(name,angles=None):
     """Set the default view for future drawing operations.
@@ -1152,7 +1153,7 @@ def setView(name,angles=None):
 
 def saveView(name,addtogui=False):
     pf.GUI.saveView(name)
-    
+
 
 def frontView():
     view("front")
@@ -1174,7 +1175,7 @@ def bgcolor(color=None,image=None):
     """Change the background color and image.
 
     Parameters:
-    
+
     - `color`: a single color or a list of 4 colors. A single color sets a
       solid background color. A list of four colors specifies a gradient.
       These 4 colors are those of the Bottom Left, Bottom Right, Top Right
@@ -1230,23 +1231,23 @@ def renderMode(mode,light=None):
     toolbar.updateLightButton()
     pf.GUI.processEvents()
     #print "DONE DRAW>RENDERMODE"
-    
-    
+
+
 def wireframe():
     renderMode("wireframe")
-    
+
 def smooth():
     renderMode("smooth")
 
 def smoothwire():
     renderMode("smoothwire")
-    
+
 def flat():
     renderMode("flat")
-    
+
 def flatwire():
     renderMode("flatwire")
-    
+
 def smooth_avg():
     renderMode("smooth_avg")
 
@@ -1276,7 +1277,7 @@ def perspective(state=True):
     toolbar.updatePerspectiveButton()
     pf.GUI.processEvents()
 
-    
+
 def timeout(state=None):
     toolbar.timeout(state)
 
@@ -1366,7 +1367,7 @@ def delay(s=None):
 
     Returns the current setting of the draw wait time (in seconds).
     This drawing delay is obeyed by drawing and viewing operations.
-    
+
     A parameter may be given to set the delay time to a new value.
     It should be convertable to a float.
     The function still returns the old setting. This may be practical
@@ -1393,13 +1394,13 @@ def wait(relock=True):
     pf.GUI.drawlock.wait()
     if relock:
         pf.GUI.drawlock.lock()
-        
+
 
 # Functions corresponding with control buttons
 
 def play(refresh=False):
     """Start the current script or if already running, continue it.
-    
+
     """
     if len(pf.scriptlock) > 0:
         # An application is running
@@ -1433,7 +1434,76 @@ def fforward():
     be set again and your script will execute till the end.
     """
     pf.GUI.drawlock.free()
- 
+
+
+## _repeat_timed_out = False
+## _repeat_exit_requested = False
+
+## def repeat(func,duration=-1,maxcount=-1,sleep=0,*args,**kargs):
+##     """Repeatedly execute a function.
+
+##     func(*args,**kargs) is repeatedly executed until one of the following
+##     conditions is met:
+##     - the function returns a value that evaluates to False
+##     - duration >= 0 and duration seconds have elapsed
+##     - maxcount >=0 and maxcount executions have been reached
+##     The default will indefinitely execute the function until it returns False.
+
+##     Between each execution of the function, application events are processed.
+##     If sleep > 0, an extra wait time of this length is executed on
+##     each step. This avoids high processor load when running idle.
+##     """
+##     pf.debug("REPEAT: %s, %s" % (duration,maxcount),pf.DEBUG.SCRIPT)
+##     global _repeat_timed_out, _repeat_exit_requested
+##     _repeat_timed_out = False
+##     _repeat_exit_requested = False
+##     _repeat_count_reached = False
+
+##     def timeOut():
+##         global _repeat_timed_out
+##         _repeat_timed_out = True
+
+##     if duration >= 0:
+##         timer = threading.Timer(duration,timeOut)
+##         timer.start()
+
+##     count = 0
+##     while True:
+##         pf.app.processEvents()
+##         if callable(func):
+##             res = func(*args,**kargs)
+##             _repeat_exit_requested = not(res)
+##         count += 1
+##         pf.debug("Count: %s"% count,pf.DEBUG.SCRIPT)
+##         if maxcount >= 0:
+##              _repeat_count_reached = count >= maxcount
+##         if _repeat_exit_requested or _repeat_timed_out or _repeat_count_reached:
+##             pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out),pf.DEBUG.SCRIPT)
+##             break
+##         if sleep > 0:
+##             time.sleep(sleep)
+
+##     pf.debug("EXIT FROM REPEAT",pf.DEBUG.SCRIPT)
+
+
+## def interrupt():
+##     """Interrupt a repeat"""
+##     global _repeat_exit_requested
+##     _repeat_exit_requested = True
+
+
+## def wakeup(mode=0):
+##     """Wake up from the sleep function.
+
+##     This is the only way to exit the sleep() function.
+##     Default is to wake up from the current sleep. A mode > 0
+##     forces wakeup for longer period.
+##     """
+##     global timer,sleeping,_wakeup_mode
+##     if timer:
+##         timer.cancel()
+##     sleeping = False
+##     _wakeup_mode = mode
 
 #
 # IDEA: The pause() could display a progress bar showing how much time
@@ -1447,14 +1517,13 @@ def pause(timeout=None,msg=None):
     is suspended until some external event forces it to proceed again.
     Clicking the PLAY, STEP or CONTINUE button will produce such an event.
     """
-    from gui.drawlock import repeat
-
+    from drawlock import Repeater
     def _continue_():
         return pf.GUI.drawlock.locked
 
     if msg is None and timeout is None:
         msg = "Use the Play/Step/Continue button to proceed"
-        
+
     pf.debug("Pause (%s): %s" % (timeout,msg),pf.DEBUG.SCRIPT)
     if msg:
         print(msg)
@@ -1465,54 +1534,63 @@ def pause(timeout=None,msg=None):
         pf.GUI.drawlock.locked = True
     if timeout is None:
         timeout = widgets.input_timeout
-    repeat(_continue_,timeout)
+    R = Repeater(_continue_,timeout)
+    #R.start()
 
 
 ################### EXPERIMENTAL STUFF: AVOID! ###############
-_wakeup_mode=0
-sleeping = False
-timer = None
-def sleep(timeout=None):
-    """Sleep until key/mouse press in the canvas or until timeout"""
-    utils.warn('warn_avoid_sleep')
-    #
-    global sleeping,_wakeup_mode,timer
-    if _wakeup_mode > 0 or timeout == 0:  # don't bother
-        return
-    # prepare for getting wakeup event 
-    onSignal(WAKEUP,wakeup)
-    # create a Timer to wakeup after timeout
-    if timeout and timeout > 0:
-        timer = threading.Timer(timeout,wakeup)
-        timer.start()
-    else:
-        timer = None
-    # go into sleep mode
-    sleeping = True
-    ## while sleeping, we have to process events
-    ## (we could start another thread for this)
-    while sleeping:
-        pf.app.processEvents()
-        # And we have to sleep in between, or we would be using to much
-        # processor time idling. 0.1 is a good compromise to get some
-        # responsitivity while not pegging the cpu
-        time.sleep(0.01)
-    # ignore further wakeup events
-    offSignal(WAKEUP,wakeup)
 
-        
-def wakeup(mode=0):
-    """Wake up from the sleep function.
 
-    This is the only way to exit the sleep() function.
-    Default is to wake up from the current sleep. A mode > 0
-    forces wakeup for longer period.
-    """
-    global timer,sleeping,_wakeup_mode
-    if timer:
-        timer.cancel()
-    sleeping = False
-    _wakeup_mode = mode
+def sleep(duration,granularity=0.01):
+    from drawlock import Repeater
+    R = Repeater(None,duration,sleep=granularity)
+    #R.start()
+
+
+## _wakeup_mode=0
+## sleeping = False
+## timer = None
+## def sleep1(timeout=None):
+##     """Sleep until key/mouse press in the canvas or until timeout"""
+##     utils.warn('warn_avoid_sleep')
+##     #
+##     global sleeping,_wakeup_mode,timer
+##     if _wakeup_mode > 0 or timeout == 0:  # don't bother
+##         return
+##     # prepare for getting wakeup event
+##     onSignal(WAKEUP,wakeup)
+##     # create a Timer to wakeup after timeout
+##     if timeout and timeout > 0:
+##         timer = threading.Timer(timeout,wakeup)
+##         timer.start()
+##     else:
+##         timer = None
+##     # go into sleep mode
+##     sleeping = True
+##     ## while sleeping, we have to process events
+##     ## (we could start another thread for this)
+##     while sleeping:
+##         pf.app.processEvents()
+##         # And we have to sleep in between, or we would be using to much
+##         # processor time idling. 0.1 is a good compromise to get some
+##         # responsitivity while not pegging the cpu
+##         time.sleep(0.01)
+##     # ignore further wakeup events
+##     offSignal(WAKEUP,wakeup)
+
+
+## def wakeup(mode=0):
+##     """Wake up from the sleep function.
+
+##     This is the only way to exit the sleep() function.
+##     Default is to wake up from the current sleep. A mode > 0
+##     forces wakeup for longer period.
+##     """
+##     global timer,sleeping,_wakeup_mode
+##     if timer:
+##         timer.cancel()
+##     sleeping = False
+##     _wakeup_mode = mode
 
 
 ########################## print information ################################
@@ -1523,7 +1601,7 @@ def printbbox():
 
 def printviewportsettings():
     pf.GUI.viewports.printSettings()
-    
+
 def reportCamera():
     print(pf.canvas.camera.report())
 
@@ -1550,40 +1628,40 @@ def zoomIn(factor=None):
     pf.canvas.update()
 def zoomOut(factor=None):
     pf.canvas.camera.zoomArea(zoom_factor(factor))
-    pf.canvas.update()    
-    
+    pf.canvas.update()
+
 def panRight(factor=None):
     pf.canvas.camera.transArea(-pan_factor(factor),0.)
-    pf.canvas.update()   
+    pf.canvas.update()
 def panLeft(factor=None):
     pf.canvas.camera.transArea(pan_factor(factor),0.)
-    pf.canvas.update()   
+    pf.canvas.update()
 def panUp(factor=None):
     pf.canvas.camera.transArea(0.,-pan_factor(factor))
-    pf.canvas.update()   
+    pf.canvas.update()
 def panDown(factor=None):
     pf.canvas.camera.transArea(0.,pan_factor(factor))
     pf.canvas.update()
-    
+
 def rotRight(factor=None):
     pf.canvas.camera.rotate(rot_factor(factor),0,1,0)
-    pf.canvas.update()   
+    pf.canvas.update()
 def rotLeft(factor=None):
     pf.canvas.camera.rotate(-rot_factor(factor),0,1,0)
-    pf.canvas.update()   
+    pf.canvas.update()
 def rotUp(factor=None):
     pf.canvas.camera.rotate(-rot_factor(factor),1,0,0)
-    pf.canvas.update()   
+    pf.canvas.update()
 def rotDown(factor=None):
     pf.canvas.camera.rotate(rot_factor(factor),1,0,0)
-    pf.canvas.update()   
+    pf.canvas.update()
 def twistLeft(factor=None):
     pf.canvas.camera.rotate(rot_factor(factor),0,0,1)
-    pf.canvas.update()   
+    pf.canvas.update()
 def twistRight(factor=None):
     pf.canvas.camera.rotate(-rot_factor(factor),0,0,1)
     pf.canvas.update()
-    
+
 def transLeft(factor=None):
     val = pan_factor(factor) * pf.canvas.camera.getDist()
     pf.canvas.camera.translate(-val,0,0,pf.cfg['draw/localaxes'])
@@ -1595,7 +1673,7 @@ def transRight(factor=None):
 def transDown(factor=None):
     val = pan_factor(factor) * pf.canvas.camera.getDist()
     pf.canvas.camera.translate(0,-val,0,pf.cfg['draw/localaxes'])
-    pf.canvas.update()   
+    pf.canvas.update()
 def transUp(factor=None):
     val = pan_factor(factor) * pf.canvas.camera.getDist()
     pf.canvas.camera.translate(0,+val,0,pf.cfg['draw/localaxes'])
@@ -1618,13 +1696,13 @@ def zoomRectangle():
     pf.canvas.start_rectangle_zoom()
     pf.canvas.update()
 
-    
+
 def zoomBbox(bb):
     """Zoom thus that the specified bbox becomes visible."""
     #pf.canvas.setBbox(bb)
     pf.canvas.setCamera(bbox=bb)
     pf.canvas.update()
-    
+
 
 def zoomAll():
     """Zoom thus that all actors become visible."""
@@ -1646,7 +1724,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
       of a 2-plex camera path.
     - `sleeptime`: a delay between subsequent images, to slow down
       the camera movement.
-      
+
     This function moves the camera through the subsequent elements of the
     Formex. For each element the first point is used as the center of the
     camera and the second point as the eye (the center of the scene looked at).
@@ -1692,7 +1770,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
 
 ### BEWARE FOR EFFECTS OF SPLITTING pf.canvas and pf.canvas if these
 ### are called from interactive functions!
-   
+
 
 def viewport(n=None):
     """Select the current viewport.
@@ -1731,7 +1809,7 @@ def removeViewport():
 def linkViewport(vp,tovp):
     """Link viewport vp to viewport tovp.
 
-    Both vp and tovp should be numbers of viewports. 
+    Both vp and tovp should be numbers of viewports.
     """
     pf.GUI.viewports.link(vp,tovp)
     viewport()
@@ -1754,7 +1832,7 @@ def highlightActor(i):
     actor = pf.canvas.actors[i]
     FA = actors.GeomActor(actor,color=pf.canvas.settings.slcolor)
     pf.canvas.addHighlight(FA)
-    
+
 
 def highlightActors(K):
     """Highlight a selection of actors on the canvas.
@@ -1797,7 +1875,7 @@ def highlightEdges(K):
         actor = pf.canvas.actors[i]
         FA = actors.GeomActor(Formex(actor.coords[actor.object.getEdges()[K[i]]]),color=pf.canvas.settings.slcolor,linewidth=3)
         pf.canvas.addHighlight(FA)
-            
+
     pf.canvas.update()
 
 
@@ -1826,7 +1904,7 @@ def highlightPartitions(K):
     for i in K.keys():
         pf.debug("Actor %s: Partitions %s" % (i,K[i][0]),pf.DEBUG.DRAW)
         actor = pf.canvas.actors[i]
-        for j in K[i][0].keys():           
+        for j in K[i][0].keys():
             FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
             pf.canvas.addHighlight(FA)
     pf.canvas.update()
@@ -1843,7 +1921,7 @@ def removeHighlight():
     """Remove the highlights from the current viewport"""
     pf.canvas.removeHighlight()
     pf.canvas.update()
-    
+
 
 
 
@@ -1861,7 +1939,7 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
       activated on entering the pick mode. All available filters are
       presented in a combobox.
     """
-    
+
     def _set_selection_filter(s):
         """Set the selection filter mode
 
@@ -1873,7 +1951,7 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
         if pf.canvas.selection_mode is not None and s in pf.canvas.selection_filters:
             pf.canvas.start_selection(None,s)
 
-            
+
     if pf.canvas.selection_mode is not None:
         warning("You need to finish the previous picking operation first!")
         return
@@ -1883,7 +1961,7 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
         return
 
     pick_buttons = widgets.ButtonBox('Selection:',[('Cancel',pf.canvas.cancel_selection),('OK',pf.canvas.accept_selection)])
-    
+
     if mode == 'element':
         filters = pf.canvas.selection_filters
     else:
@@ -1891,7 +1969,7 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
     filter_combo = widgets.InputCombo('Filter:',None,choices=filters,onselect=_set_selection_filter)
     if filter is not None and filter in pf.canvas.selection_filters:
         filter_combo.setValue(filter)
-    
+
     if func is None:
         func = highlight_funcs.get(mode,None)
     pf.message("Select %s %s" % (filter,mode))
@@ -1907,8 +1985,8 @@ def pick(mode='actor',filter=None,oneshot=False,func=None):
         pf.GUI.statusbar.removeWidget(pick_buttons)
         pf.GUI.statusbar.removeWidget(filter_combo)
     return sel
- 
-    
+
+
 def pickActors(filter=None,oneshot=False,func=None):
     return pick('actor',filter,oneshot,func)
 
@@ -1993,18 +2071,18 @@ def showLineDrawing(L):
 ################################
 
 def setLocalAxes(mode=True):
-    pf.cfg['draw/localaxes'] = mode 
+    pf.cfg['draw/localaxes'] = mode
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
-         
- 
+
+
 def resetGUI():
     """Reset the GUI to its default operating mode.
 
     When an exception is raised during the execution of a script, the GUI
     may be left in a non-consistent state.
     This function may be called to reset most of the GUI components
-    to their default operating mode. 
+    to their default operating mode.
     """
     ## resetPick()
     pf.GUI.resetCursor()

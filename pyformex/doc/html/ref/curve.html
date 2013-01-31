@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>35. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>35. curve — Definition of curves in pyFormex. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="36. datareader — Numerical data reader" href="datareader.html" />
     <link rel="prev" title="34. cameratools — Camera tools" href="cameratools.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="cameratools.html" title="34. cameratools — Camera tools"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -157,13 +160,13 @@ or override them if the defaults are not suitable.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Coords :</th><td class="field-body">coordinates of points defining the curve</td>
+<tr class="field-odd field"><th class="field-name">Coords :</th><td class="field-body">coordinates of points defining the curve</td>
 </tr>
-<tr class="field"><th class="field-name">Parts :</th><td class="field-body">number of parts (e.g. straight segments of a polyline)</td>
+<tr class="field-even field"><th class="field-name">Parts :</th><td class="field-body">number of parts (e.g. straight segments of a polyline)</td>
 </tr>
-<tr class="field"><th class="field-name">Closed :</th><td class="field-body">is the curve closed or not</td>
+<tr class="field-odd field"><th class="field-name">Closed :</th><td class="field-body">is the curve closed or not</td>
 </tr>
-<tr class="field"><th class="field-name">Range :</th><td class="field-body">[min,max] : range of the parameter: default 0..1</td>
+<tr class="field-even field"><th class="field-name">Range :</th><td class="field-body">[min,max] : range of the parameter: default 0..1</td>
 </tr>
 </tbody>
 </table>
@@ -172,20 +175,20 @@ or override them if the defaults are not suitable.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name" colspan="2">Sub_points(t,j) :</th></tr>
-<tr class="field"><td>&nbsp;</td><td class="field-body">returns points at parameter value t,j</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">Sub_points(t,j) :</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">returns points at parameter value t,j</td>
 </tr>
-<tr class="field"><th class="field-name" colspan="2">Sub_directions(t,j) :</th></tr>
-<tr class="field"><td>&nbsp;</td><td class="field-body">returns direction at parameter value t,j</td>
+<tr class="field-even field"><th class="field-name" colspan="2">Sub_directions(t,j) :</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">returns direction at parameter value t,j</td>
 </tr>
-<tr class="field"><th class="field-name">Pointson() :</th><td class="field-body">the defining points placed on the curve</td>
+<tr class="field-odd field"><th class="field-name">Pointson() :</th><td class="field-body">the defining points placed on the curve</td>
 </tr>
-<tr class="field"><th class="field-name">Pointsoff() :</th><td class="field-body">the defining points placeded off the curve (control points)</td>
+<tr class="field-even field"><th class="field-name">Pointsoff() :</th><td class="field-body">the defining points placeded off the curve (control points)</td>
 </tr>
-<tr class="field"><th class="field-name">Parts(j,k) :</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Parts(j,k) :</th><td class="field-body"></td>
 </tr>
-<tr class="field"><th class="field-name" colspan="2">Approx(ndiv,ntot) :</th></tr>
-<tr class="field"><td>&nbsp;</td><td class="field-body"></td>
+<tr class="field-even field"><th class="field-name" colspan="2">Approx(ndiv,ntot) :</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
@@ -194,10 +197,10 @@ or override them if the defaults are not suitable.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Sub_points_2 :</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Sub_points_2 :</th><td class="field-body"></td>
 </tr>
-<tr class="field"><th class="field-name" colspan="2">Sub_directions_2 :</th></tr>
-<tr class="field"><td>&nbsp;</td><td class="field-body"></td>
+<tr class="field-even field"><th class="field-name" colspan="2">Sub_directions_2 :</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
@@ -4154,16 +4157,14 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <dl class="class">
 <dt id="curve.Arc">
-<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords=None</em>, <em>mode=''</em>, <em>center=None</em>, <em>radius=None</em>, <em>angles=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords=None</em>, <em>center=None</em>, <em>radius=None</em>, <em>angles=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
-<p>The arc can be specified by 3 points: either three points on the arc
-(begin, intermediate, end), or, when mode=&#8217;BCE&#8217;, (begin, center, end),
-where center is the center of the circle.
+<p>The arc can be specified by 3 points (begin, center, end)
+or by center, radius and two angles. In the latter case, the arc
+lies in a plane parallel to the x,y plane.
 If specified by 3 colinear points, the plane of the circle will be
 parallel to the x,y plane if the points are in such plane, else the
 plane will be parallel to the z-axis.</p>
-<p>Alternatively, an arc in a plane parallel to the x,y plane can also
-be specified by center, radius and two angles.</p>
 <dl class="method">
 <dt id="curve.Arc.endPoints">
 <tt class="descname">endPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.endPoints" title="Permalink to this definition">¶</a></dt>
@@ -5063,7 +5064,7 @@ with curl 0.375058 through 8 points.</p>
         <li class="right" >
           <a href="cameratools.html" title="34. cameratools — Camera tools"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -5071,9 +5072,9 @@ with curl 0.375058 through 8 points.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -26,7 +26,7 @@
 """Elements
 
 This example is intended for testing the drawing functions for each of the
-implemented element types. 
+implemented element types.
 """
 from __future__ import print_function
 _status = 'checked'
@@ -53,7 +53,7 @@ def showElement(eltype,options):
         print(el.report())
 
     M = el.toMesh()
-    
+
     ndim = el.ndim
 
     if ndim == 3:
@@ -65,7 +65,7 @@ def showElement(eltype,options):
             flatwire()
         else:
             smoothwire()
-        
+
     #print options['Deformed']
     if options['Deformed']:
         M.coords = M.coords.addNoise(rsize=0.1)
@@ -81,12 +81,12 @@ def showElement(eltype,options):
         M = M + M.reflect(i)
 
     M.setProp([5,6])
-    
+
     if options['Draw as'] == 'Formex':
         M = M.toFormex()
     elif options['Draw as'] == 'Border':
         M = M.getBorderMesh()
-        
+
     draw(M.coords)#,color=None,wait=False)
     drawNumbers(M.coords,color=None)
 
@@ -95,9 +95,9 @@ def showElement(eltype,options):
         draw(M)
     else:
         draw(M,color=red,bkcolor=blue)
-        
-         
-        
+
+
+
 def run():
     ElemList = []
     for ndim in [0,1,2,3]:
@@ -113,7 +113,7 @@ def run():
         }
     res.update(pf.PF.get('Elements_data',{}))
     #print res
-        
+
     res = askItems(
         store=res,
         items=[
@@ -130,18 +130,18 @@ def run():
 
     # save the results for persistence
     pf.PF['Elements_data'] = res
-    
+
     eltype = res['Element Type']
     if eltype == 'All':
         ellist = ElemList
     else:
         ellist = [eltype]
     clear()
-    delay(1)
+    #delay(1)
     for el in ellist:
         showElement(el,res)
 
-    
+
 if __name__ == 'draw':
     run()
 # End

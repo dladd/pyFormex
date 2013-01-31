@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -53,12 +53,12 @@ def series():
             clear()
             draw(torus(m,n),view)
             view=None
-        
+
 def drawTorus(m,n):
     clear()
     print(m,n)
     draw(torus(m,n),None)
-    
+
 def nice():
     drawTorus(72,36)
 
@@ -68,9 +68,10 @@ def run():
     m = 20
     n = 10
     while not dialogTimedOut():
-        res = askItems([('m',m,'slider',{'text':'Number of elements along large circle','min':3,'max':72}),
-                        ('n',n,'slider',{'text':'Number of elements along small circle','min':3,'max':36})
-                        ])
+        res = askItems([
+            _I('m',m,itemtype='slider',text='Number of elements along large circle',min=3,max=72),
+            _I('n',n,itemtype='slider',text='Number of elements along small circle',min=3,max=36)
+            ])
         if not res:
             break
 

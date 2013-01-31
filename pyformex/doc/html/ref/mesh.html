@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>11. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.9 documentation</title>
+    <title>11. mesh — Finite element meshes in pyFormex. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="12. simple — Predefined geometries with a simple shape." href="simple.html" />
     <link rel="prev" title="10. elements — Definition of elements." href="elements.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="elements.html" title="10. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -165,13 +168,13 @@ geometry, but when we come to the point of exporting the geometry to
 file (and to other programs), a Mesh data model may be more adequate.</p>
 <p>The Mesh data model has at least the following attributes:</p>
 <ul class="simple">
-<li>coords: (ncoords,3) shaped Coords object, holding the coordinates of
+<li><cite>coords</cite>: (ncoords,3) shaped Coords object, holding the coordinates of
 all points in the Mesh;</li>
-<li>elems: (nelems,nplex) shaped Connectivity object, defining the elements
+<li><cite>elems</cite>: (nelems,nplex) shaped Connectivity object, defining the elements
 by indices into the Coords array. All values in elems should be in the
 range 0 &lt;= value &lt; ncoords.</li>
-<li>prop: an array of element property numbers, default None.</li>
-<li>eltype: an element type (a subclass of <tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt>) or the name
+<li><cite>prop</cite>: an array of element property numbers, default None.</li>
+<li><cite>eltype</cite>: an element type (a subclass of <tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt>) or the name
 of an Element type, or None (default).
 If eltype is None, the eltype of the elems Connectivity table is used,
 and if that is missing, a default eltype is derived from the plexitude,
@@ -239,9 +242,13 @@ they wil be repeated. If you give more, they will be ignored.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy using the same data arrays</p>
+<dt id="mesh.Mesh.shallowCopy">
+<tt class="descname">shallowCopy</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.shallowCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a shallow copy.</p>
+<p>A shallow copy of a Mesh is a Mesh object using the same data arrays
+as the original Mesh. The only thing that can be changed is the
+property array. This is a convenient method to use the same Mesh
+with different property attributes.</p>
 </dd></dl>
 
 <dl class="method">
@@ -256,9 +263,15 @@ the Formex data model.</p>
 <dl class="method">
 <dt id="mesh.Mesh.toSurface">
 <tt class="descname">toSurface</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.toSurface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a Mesh to a Surface.</p>
-<p>If the plexitude of the mesh is 3, returns a TriSurface equivalent
-with the Mesh. Else, an error is raised.</p>
+<dd><p>Convert a Mesh to a TriSurface.</p>
+<p>Only Meshes of level 2 (surface) and 3 (volume) can be converted to a
+TriSurface. For a level 3 Mesh, the border Mesh is taken first.
+A level 2 Mesh is converted to element type &#8216;tri3&#8217; and then to a
+TriSurface.
+The resulting TriSurface is only fully equivalent with the input
+Mesh if the latter has element type &#8216;tri3&#8217;.</p>
+<p>On success, returns a TriSurface corresponding with the input Mesh.
+If the Mesh can not be converted to a TriSurface, an error is raised.</p>
 </dd></dl>
 
 <dl class="method">
@@ -613,6 +626,18 @@ The <cite>mode</cite> argument specifies how a single frontal step is done:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.partitionByAngle">
+<tt class="descname">partitionByAngle</tt><big>(</big><em>**arg</em><big>)</big><a class="headerlink" href="#mesh.Mesh.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a surface Mesh by the angle between adjacent elements.</p>
+<p>The Mesh is partitioned in parts bounded by the sharp edges in the
+surface. The arguments and return value are the same as in
+<tt class="xref py py-meth docutils literal"><span class="pre">TriSurface.partitionByAngle()</span></tt>.</p>
+<p>Currently this only works for &#8216;tri3&#8217; and &#8216;quad4&#8217; type Meshes.
+Also, the &#8216;quad4&#8217; partitioning method currently only works correctly
+if the quads are nearly planar.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.nodeConnections">
 <tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeConnections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find and store the elems connected to nodes.</p>
@@ -728,17 +753,6 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 <p>self and Mesh are same eltype meshes
 and are both without duplicates.</p>
 <p>Elems are matched by their centroids.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.matchFaces">
-<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchFaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Match faces of mesh with faces of self.</p>
-<p>self and Mesh can be same eltype meshes or different eltype but of the 
-same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
-and are both without duplicates.</p>
-<p>Returns the indices array of the elems of self that matches
-the faces of mesh</p>
 </dd></dl>
 
 <dl class="method">
@@ -881,10 +895,13 @@ contain any of the specified nodes.</p>
 <dl class="method">
 <dt id="mesh.Mesh.splitProp">
 <tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.splitProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition a Mesh according to its property values.</p>
-<p>Returns a dict with the property values as keys and the
-corresponding partitions as values. Each value is a Mesh instance.
-It the Mesh has no props, an empty dict is returned.</p>
+<dd><p>Partition a Mesh according to its prop values.</p>
+<p>Returns a list of Meshes. Each Mesh contains all the elements with
+property number equal to one of the unique values in the property set.
+The Meshes in the list are given in order of ascending property
+number. Each Mesh has this value set as property number for all its
+elements
+It the Mesh has no props, an empty list is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -900,17 +917,20 @@ off for efficiency reasons.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Mesh where all elements have been reversed.</p>
+<tt class="descname">reverse</tt><big>(</big><em>sel=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh where the elements have been reversed.</p>
 <p>Reversing an element has the following meaning:</p>
 <ul class="simple">
 <li>for 1D elements: reverse the traversal direction,</li>
 <li>for 2D elements: reverse the direction of the positive normal,</li>
 <li>for 3D elements: reverse inside and outside directions of the
-element&#8217;s border surface</li>
+element&#8217;s border surface. This also changes the sign of the
+elementt&#8217;s volume.</li>
 </ul>
 <p>The <a class="reference internal" href="#mesh.Mesh.reflect" title="mesh.Mesh.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">reflect()</span></tt></a> method by default calls this method to undo
 the element reversal caused by the reflection operation.</p>
+<p>Parameters:</p>
+<p>-<cite>sel</cite>: a selector (index or True/False array)</p>
 </dd></dl>
 
 <dl class="method">
@@ -1099,41 +1119,46 @@ the following predefined strings:<ul>
 <dd><p>Connect a sequence of toplogically congruent Meshes into a hypermesh.</p>
 <p>Parameters:</p>
 <ul>
-<li><p class="first"><cite>coordslist</cite>: either a list of Coords instances, all having the same
-shape as self.coords, or a single Mesh instance whose <cite>coords</cite>
-attribute has the same shape.</p>
-<p>If it is a list of Coords, consider a
-list of Meshes obtained by combining each Coords object with the
-connectivity table, element type and property numbers of the current
-Mesh. The return value then is the hypermesh obtained by connecting
+<li><p class="first"><cite>coordslist</cite>: either a list of Coords objects, or a list of
+Mesh objects or a single Mesh object.</p>
+<p>If Mesh objects are given, they should (all) have the same element
+type as <cite>self</cite>. Their connectivity tables will not be used though.
+They will only serve to construct a list of Coords objects by
+taking the <cite>coords</cite> attribute of each of the Meshes. If only a single
+Mesh was specified, <cite>self.coords</cite> will be added as the first Coords
+object in the list.</p>
+<p>All Coords objects in the coordslist (either specified or
+constructed from the Mesh objects), should have the exact same
+shape as <cite>self.coords</cite>. The number of Coords items in the list should
+be a multiple of <cite>degree</cite>, plus 1.</p>
+<p>Each of the Coords in the final coordslist is combined with the
+connectivity table, element type and property numbers of <cite>self</cite> to
+produce a list of toplogically congruent meshes.
+The return value is the hypermesh obtained by connecting
 each consecutive slice of (degree+1) of these meshes. The hypermesh
 has a dimensionality that is one higher than the original Mesh (i.e.
 points become lines, lines become surfaces, surfaces become volumes).
 The resulting elements will be of the given <cite>degree</cite> in the
-direction of the connection. Notice that the coords of the current
-Mesh are not used, unless these coords are explicitely included into
-the specified <cite>coordslist</cite>. In many cases <cite>self.coords</cite> will be the
-first item in <cite>coordslist</cite>, but it could occur anywhere in the list
-or even not at all. The number of Coords items in the list should
-be a multiple of <cite>degree</cite> plus 1.</p>
-<p>Specifying a single Mesh instead of a list of Coords is
-just a convenience for the often occurring situation of connecting
-a Mesh (self) with another one (mesh) having the same connectivity:
-in this case the list of Coords will automatically be set to
-<tt class="docutils literal"><span class="pre">[</span> <span class="pre">self.coords,</span> <span class="pre">mesh.coords</span> <span class="pre">]</span></tt>. The <cite>degree</cite> should be 1 in this
-case.</p>
+direction of the connection.</p>
+<p>Notice that unless a single Mesh was specified as coordslist, the
+coords of <cite>self</cite> are not used. In many cases however <cite>self</cite> or
+<cite>self.coords</cite> will be one of the items in the specified <cite>coordslist</cite>.</p>
 </li>
 <li><p class="first"><cite>degree</cite>: degree of the connection. Currently only degree 1 and 2
 are supported.</p>
-<ul class="simple">
-<li>If degree is 1, every Coords from the <cite>coordslist</cite>
+<ul>
+<li><p class="first">If degree is 1, every Coords from the <cite>coordslist</cite>
 is connected with hyperelements of a linear degree in the
-connection direction.</li>
-<li>If degree is 2, quadratic hyperelements are
+connection direction.</p>
+</li>
+<li><p class="first">If degree is 2, quadratic hyperelements are
 created from one Coords item and the next two in the list.
 Note that all Coords items should contain the same number of nodes,
 even for higher order elements where the intermediate planes
-contain less nodes.</li>
+contain less nodes.</p>
+<p>Currently, degree=2 is not allowed when <cite>coordslist</cite> is specified
+as a single Mesh.</p>
+</li>
 </ul>
 </li>
 <li><p class="first"><cite>loop</cite>: if True, the connections with loop around the list and
@@ -1141,10 +1166,9 @@ connect back to the first. This is accomplished by adding the first
 Coords item back at the end of the list.</p>
 </li>
 <li><p class="first"><cite>div</cite>: Either an integer, or a sequence of float numbers (usually
-in the range ]0.0..1.0]). This should only
-be used for degree==1.</p>
-<p>With this parameter the generated elements
-can be further subdivided along the connection direction.
+in the range ]0.0..1.0]). This should only be used for degree==1.</p>
+<p>With this parameter the generated elements  can be further
+subdivided along the connection direction.
 If an int is given, the connected elements will be divided
 into this number of elements along the connection direction. If a
 sequence of float numbers is given, the numbers specify the relative
@@ -1292,6 +1316,55 @@ at one side of the plane (p,n)</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.levelVolumes">
+<tt class="descname">levelVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.levelVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the level volumes of all elements in a Mesh.</p>
+<p>The level volume of an element is defined as:</p>
+<ul class="simple">
+<li>the length of the element if the Mesh is of level 1,</li>
+<li>the area of the element if the Mesh is of level 2,</li>
+<li>the (signed) volume of the element if the Mesh is of level 3.</li>
+</ul>
+<p>The level volumes can be computed directly for Meshes of eltypes
+&#8216;line2&#8217;, &#8216;tri3&#8217; and &#8216;tet4&#8217; and will produce accurate results.
+All other Mesh types are converted to one of these before computing
+the level volumes. Conversion may result in approximation of the
+results. If conversion can not be performed, None is returned.</p>
+<p>If succesful, returns an (nelems,) float array with the level
+volumes of the elements.
+Returns None if the Mesh level is 0, or the conversion to the
+level&#8217;s base element was unsuccesful.</p>
+<p>Note that for level-3 Meshes, negative volumes will be returned
+for elements having a reversed node ordering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of all elements in a level-1 Mesh.</p>
+<p>For a Mesh with eltype &#8216;line2&#8217;, the lengths are exact. For other
+eltypes, a conversion to &#8216;line2&#8217; is done before computing the lengths.
+This may produce an exact result, an approximated result or no result
+(if the conversion fails).</p>
+<p>If succesful, returns an (nelems,) float array with the lengths.
+Returns None if the Mesh level is not 1, or the conversion to &#8216;line2&#8217;
+does not succeed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.areas">
+<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the area of all elements in a level-2 Mesh.</p>
+<p>For a Mesh with eltype &#8216;tri3&#8217;, the areas are exact. For other
+eltypes, a conversion to &#8216;tri3&#8217; is done before computing the areas.
+This may produce an exact result, an approximated result or no result
+(if the conversion fails).</p>
+<p>If succesful, returns an (nelems,) float array with the areas.
+Returns None if the Mesh level is not 2, or the conversion to &#8216;tri3&#8217;
+does not succeed.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.volumes">
 <tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volumes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the signed volume of all the mesh elements</p>
@@ -1306,12 +1379,40 @@ value is None.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of a Mesh.</p>
+<p>Returns the sum of self.lengths(), or 0.0 if the self.lengths()
+returned None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.area">
+<tt class="descname">area</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total volume of a Mesh.</p>
+<p>Returns the sum of self.areas(), or 0.0 if the self.areas()
+returned None.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.volume">
 <tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total volume of a Mesh.</p>
-<p>Computes the volume of Mesh of dimensionality 3 by converting it
-first to a &#8216;tet4&#8217; type Mesh. If the Mesh dimensionality is less than 3
-or the Mesh can not be converted to type &#8216;tet4&#8217;, 0.0 is returned.</p>
+<p>Returns the sum of self.volumes(), or 0.0 if the self.volumes()
+returned None.</p>
+<p>Note that even if self.volumes() is computed, a value 0.0 may be
+returned, and even negative values are possible, if the
+node numbering of the elements is reversed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.fixVolumes">
+<tt class="descname">fixVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.fixVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the elements with negative volume.</p>
+<p>Elements with negative volume may result from incorrect
+local node numbering. This method will reverse all elements
+in a Mesh of dimensionality 3, provide the volumes of these
+elements can be computed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1546,6 +1647,12 @@ or the Mesh can not be converted to type &#8216;tet4&#8217;, 0.0 is returned.</p
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.resized">
 <tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#mesh.Mesh.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the Geometry scaled to the given size.</p>
@@ -1688,7 +1795,7 @@ leading to a unit square grid.</p>
         <li class="right" >
           <a href="elements.html" title="10. elements — Definition of elements."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1696,9 +1803,9 @@ leading to a unit square grid.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

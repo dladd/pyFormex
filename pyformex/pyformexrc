@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -27,12 +27,12 @@
 """pyformexrc
 
 This is the global configuration file for pyFormex. It should always
-be present in the installation path and not be changed. 
+be present in the installation path and not be changed.
 
 Changes should go to /etc/pyformexrc (for site-wide changes)
 or to ~/.pyformex/pyformexrc (for personal settings).
 If your are missing these files, you can safely copy (parts of) this file
-as a start. 
+as a start.
 
 Config settings are read from the following files in order:
 this file, /etc/pyformexrc, ~/.pyformex/pyformexrc.
@@ -54,10 +54,10 @@ bindir = os.path.join(pyformexdir,'bin')
 userconfdir = os.path.join(homedir,'.pyformex')
 siteprefs = '/etc/pyformexrc'
 localprefs = '.pyformex/pyformexrc'
+autorun = os.path.join(userconfdir,'startup.py')
 scripttemplate = os.path.join(pyformexdir,'template.py')
 curfile = ''
 curproj = ''
-
 
 # extra paths to append tot sys.path
 syspath = []
@@ -160,7 +160,7 @@ easter_egg = ()
 layout = 1
 showfocus = True
 
-wireframe_mode = 'smart'    # set to 'gl' for old behavior   
+wireframe_mode = 'smart'    # set to 'gl' for old behavior
 
 ##########################
 # Default canvas settings
@@ -173,14 +173,14 @@ bgimage = ''            # background image, filename
 fgcolor = 'black'       # default drawing color
 bkcolor = None          # if defined, backsides of planes have this color
 slcolor = 'yellow'      # highlighting color
-colormap = ['black','red','green','blue','cyan','magenta','yellow','white'] 
+colormap = ['black','red','green','blue','cyan','magenta','yellow','white']
 bkcolormap = colormap
 smooth = False              # smooth shading off
 fill = False                # polygon filling off
 lighting = False            # default lights off
 alphablend = False          # alphablend (transparency) off
 culling = False             # culling off
-avgnormals = False          
+avgnormals = False
 transparency = 0.5          # default transparency value
 pointsize = 4.0             # size of points
 linewidth = 1.0             # width of lines
@@ -196,7 +196,7 @@ numbersontop = True
 wait = 0.0  # time(sec.) to wait between draw operations
 flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
 localaxes = True     # by default, buttons rotate/pan in local axes
-quadline = [] # 'line3' ]
+quadline = [ 'line3' ]
 quadsurf = [] # [ 'quad8', 'quad9', 'hex20' ]
 avgnormalsize = '_auto_'
 picksize=(12,12) # size of the pick window
@@ -209,9 +209,9 @@ plastic = dict(ambient=0.9,diffuse=0.9,specular=0.7)
 metal = dict(ambient=0.1,diffuse=0.1,specular=0.9)
 
 [light]
-light0 = {'enabled':True,'ambient':0.3,'diffuse':1.0,'specular':0.2,'position':(1.,1.,1.,0.)}
-light1 = {'enabled':True,'ambient':0.0,'diffuse':1.0,'specular':0.2,'position':(-1.,1.,1.,0.)}
-light2 = {'enabled':False,'ambient':0.0,'diffuse':1.0,'specular':0.2,'position':(0.,0.,1.,0.)}
+light0 = {'enabled':True,'ambient':0.4,'diffuse':1.0,'specular':0.4,'position':(1.,1.,2.,0.)}
+light1 = {'enabled':True,'ambient':0.0,'diffuse':1.0,'specular':0.3,'position':(0.,1.,2.,0.)}
+light2 = {'enabled':True,'ambient':0.2,'diffuse':1.0,'specular':0.4,'position':(0.,0.,1.,0.)}
 #light3 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,-1.,1.,0.)}
 #light4 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,1.,-1.,0.)}
 #light5 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,1.,-1.,0.)}
@@ -224,7 +224,7 @@ mode = 'wireframe'
 lightmodel = 'ambient and diffuse' # currently only model supported
 ambient = 0.2     # does this really do anything?
 material = 'default' # the name of a material defined above
-lights = ['light0','light1'] # a list of enabled lights
+lights = ['light0','light2'] # a list of enabled lights
 avgnormaltreshold = 0.5
 line = '2' # '1' or '2'; if '1', quadratic lines are shown as linear
 surface = '1' # '1' or '2'; if '1', quadratic surfaces are shown as linear
@@ -252,7 +252,7 @@ links = [('pyFormex','pyformex.org'),('pyFormex-dev',projpage),('Python','www.py
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('Tutorial',tutorial),('&Module Index',modindex),('&Index',index),('&Running pyFormex',running),('&Online documentation',webdoc),]
 docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license)]
 
-             
+
 [keys]
 save = 'F2'
 
@@ -273,5 +273,9 @@ outputdir = '~'
 cmd_abaqus = 'abaqus job=$F cpus=$C'
 cmd_calculix = 'ccx -i $F'
 
-#End
 
+[prop]
+matdb = os.path.join(datadir,'materials.db')
+secdb = os.path.join(datadir,'sections.db')
+
+#End

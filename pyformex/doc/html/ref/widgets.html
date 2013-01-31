@@ -29,18 +29,21 @@
 ##
 -->
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.9 documentation</title>
+    <title>18. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex 0.9.0-a1 documentation</title>
 
+    
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.9',
+        VERSION:     '0.9.0-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +52,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="19. menu — Menus for the pyFormex GUI." href="menu.html" />
     <link rel="prev" title="17. filewrite — Write geometry to file in a whole number of formats." href="filewrite.html" />
@@ -80,7 +83,7 @@
         <li class="right" >
           <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -199,6 +202,11 @@ normal fashion.</li>
 <li><cite>tooltip</cite>: A descriptive text which is only shown when the user pauses
 the cursor for some time on the widget. It can be used to give
 more comprehensive explanation to first time users.</li>
+<li><cite>spacer</cite>: string. Only the characters &#8216;l&#8217;, &#8216;r&#8217; and &#8216;c&#8217; are relevant.
+If the string contains an &#8216;l&#8217;, a spacer in inserted before the label.
+If the string contains an &#8216;r&#8217;, a spacer in inserted after the input field.
+If the string contains a &#8216;c&#8217;, a spacer in inserted between the label and
+the input filed.</li>
 </ul>
 <p>Subclasses should have an <tt class="docutils literal"><span class="pre">__init__()</span></tt> method which first constructs
 a proper widget for the input field, and stores it in the attribute
@@ -439,12 +447,6 @@ of the checkbox.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="widgets.ListWidget">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListWidget</tt><big>(</big><em>maxh=0</em><big>)</big><a class="headerlink" href="#widgets.ListWidget" title="Permalink to this definition">¶</a></dt>
-<dd><p>A customized QListWidget with ability to compute its required size.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="widgets.InputList">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>maxh=-1</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputList" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list selection InputItem.</p>
@@ -458,7 +460,7 @@ If default is None or an empty list, nothing is selected initially.</p>
 a list of all currently selected items.
 If single is True, only a single item can be selected.</p>
 <p>If maxh==-1, the widget gets a fixed height to precisely take the number of
-items in the list. If maxh&gt;=0, the widget will get scrollbars when the 
+items in the list. If maxh&gt;=0, the widget will get scrollbars when the
 height is not sufficient to show all items. With maxh&gt;0, the item will
 get the specified height (in pixels), while maxh==0 will try to give the
 widget the required height to show all items</p>
@@ -692,7 +694,7 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dl class="class">
 <dt id="widgets.InputFloat">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
-<dd><p>An float input item.</p>
+<dd><p>A float input item.</p>
 <dl class="method">
 <dt id="widgets.InputFloat.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.show" title="Permalink to this definition">¶</a></dt>
@@ -721,6 +723,51 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputFloat.text">
 <tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputTable">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>autowidth=True</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>An input item for tabular data.</p>
+<ul>
+<li><p class="first"><cite>value</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>value</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all keyword parameters of the TableModel or ArrayModel
+may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt id="widgets.InputTable.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputTable.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputTable.name">
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputTable.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputTable.text">
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputTable.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputTable.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputTable.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1004,6 +1051,12 @@ specified in the dict.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="widgets.InputWidget.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="widgets.InputWidget.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputWidget.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
@@ -1013,12 +1066,6 @@ specified in the dict.</li>
 <dt id="widgets.InputWidget.name">
 <tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the name of the InputItem.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.InputWidget.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1067,7 +1114,7 @@ in which items can be layed out using tab pages.</p>
 
 <dl class="class">
 <dt id="widgets.InputDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span>, <em>scroll=False</em>, <em>size=None</em><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span>, <em>scroll=False</em>, <em>size=None</em>, <em>align_right=False</em><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to interactively set the value of one or more items.</p>
 <p>Overview</p>
 <p>The pyFormex user has full access to the Qt4 framework on which the
@@ -1098,6 +1145,9 @@ while using a short name for handling the value in your script.</li>
 <li>scale:</li>
 <li>func:</li>
 </ul>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
 <p>Other arguments</p>
 <ul class="simple">
 <li>caption: the window title to be shown in the window decoration</li>
@@ -1164,7 +1214,7 @@ layout is the widget layout where the input widgets will be added</p>
 <tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the dialog.</p>
 <p>For a non-modal dialog, the user has to call this function to
-display the dialog. 
+display the dialog.
 For a modal dialog, this is implicitely executed by getResult().</p>
 <p>If a timeout is given, start the timeout timer.</p>
 </dd></dl>
@@ -1209,32 +1259,236 @@ The default is to use the global variable input_timeout.</p>
 Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ListWidget">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListWidget</tt><big>(</big><em>maxh=0</em><big>)</big><a class="headerlink" href="#widgets.ListWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>A customized QListWidget with ability to compute its required size.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.TableModel">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A model representing a two-dimensional array of items.</p>
+<ul class="simple">
+<li><cite>data</cite>: any tabular data organized in a fixed number of rows and colums.
+This means that an item at row i and column j can be addressed as
+data[i][j]. Thus it can be a list of lists, or a list of tuples or
+a 2D numpy array. The data will always be returned as a list of lists
+though.
+Unless otherwise specified by the use of a <cite>celltype</cite>, <cite>coltype</cite> or
+<cite>rowtype</cite> argument, all items are converted to strings and will be
+returned as strings.
+Item storage order is row by row.</li>
+<li><cite>chead</cite>: optional list of (ncols) column headers</li>
+<li><cite>rhead</cite>: optional list of (nrows) row headers</li>
+<li><cite>celltype</cite>: callable: if specified, it is used to map all items.
+This is only used if neither <cite>rowtype</cite> nor <cite>coltype</cite> are specified.
+If unspecified, it will be set to &#8216;str&#8217;, unless <cite>data</cite> is a numpy array,
+in which case it will be set to the datatype of the array.</li>
+<li><cite>rowtype</cite>: list of nrows callables: if specified, the items of each row
+are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and is only used if <cite>coltype</cite> ais not specified.</li>
+<li><cite>coltype</cite>: list of ncols callables: if specified, the items of each
+column are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and <cite>rowtype</cite>.</li>
+<li><cite>edit</cite>: bool: if True (default), the table is editable. Set to False
+to make the data readonly.</li>
+<li><cite>resize</cite>: bool: if True, the table can be resized: rows and columns can be
+added or removed. If False, the size of the table can not be changed.
+The default value is equal to the value of <cite>edit</cite>.
+If <cite>coltype</cite> is specified, the number of columns can not be changed.
+If <cite>rowtype</cite> is specified, the number of rows can not be changed.</li>
+</ul>
 <dl class="method">
-<dt id="widgets.InputDialog.getResult">
-<tt class="descname">getResult</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.getResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the results from the input dialog.</p>
-<p>This fuction is used to present a modal dialog to the user (i.e. a
-dialog that must be ended before the user can continue with the
-program. The dialog is shown and user interaction is processed.
-The user ends the interaction either by accepting the data (e.g. by
-pressing the OK button or the ENTER key) or by rejecting them (CANCEL
-button or ESC key).
-On accept, a dictionary with all the fields and their values is
-returned. On reject, an empty dictionary is returned.</p>
-<p>If a timeout (in seconds) is given, a timer will be started and if no
-user input is detected during this period, the input dialog returns
-with the default values set.
-A value 0 will timeout immediately, a negative value will never timeout.
-The default is to use the global variable input_timeout.</p>
-<p>The result() method can be used to find out how the dialog was ended.
-Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+<dt id="widgets.TableModel.makeEditable">
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em>, <em>resize=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.makeEditable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+<li><cite>resize</cite>: bool: makes the table resizable or not. If unspecified,
+it is set equal to the <cite>edit</cite>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.rowCount">
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.rowCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.columnCount">
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.columnCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.data">
+<tt class="descname">data</tt><big>(</big><em>index</em>, <em>role</em><big>)</big><a class="headerlink" href="#widgets.TableModel.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the data at the specified index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.cellType">
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big><a class="headerlink" href="#widgets.TableModel.cellType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.setCellData">
+<tt class="descname">setCellData</tt><big>(</big><em>r</em>, <em>c</em>, <em>value</em><big>)</big><a class="headerlink" href="#widgets.TableModel.setCellData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of an individual table element.</p>
+<p>This changes the stored data, not the interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.setData">
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big><a class="headerlink" href="#widgets.TableModel.setData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.headerData">
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big><a class="headerlink" href="#widgets.TableModel.headerData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.insertRows">
+<tt class="descname">insertRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.insertRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert row(s) in table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.removeRows">
+<tt class="descname">removeRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.removeRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove row(s) from table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.flags">
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ArrayModel">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A model representing a two-dimensional numpy array.</p>
+<ul class="simple">
+<li><cite>data</cite>: a numpy array with two dimensions.</li>
+<li><cite>chead</cite>, <cite>rhead</cite>: column and row headers. The default will show column
+and row numbers.</li>
+<li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
+the data readonly.</li>
+</ul>
+<dl class="method">
+<dt id="widgets.ArrayModel.makeEditable">
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.makeEditable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.rowCount">
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.rowCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.columnCount">
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.columnCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.cellType">
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.cellType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.setData">
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.setData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.headerData">
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.headerData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ArrayModel.flags">
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.Table">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>parent=None</em>, <em>autowidth=True</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget to show/edit a two-dimensional array of items.</p>
+<ul>
+<li><p class="first"><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>data</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>label</cite>: currently unused (intended to display an optional label
+in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</p>
+</li>
+<li><p class="first"><cite>parent</cite>:</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all other parameters for the initialization of the
+TableModel or ArrayModel may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt id="widgets.Table.colWidths">
+<tt class="descname">colWidths</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.colWidths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the width of the columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.Table.rowHeights">
+<tt class="descname">rowHeights</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.rowHeights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the height of the rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.Table.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the table.</p>
+<p>This method should be called to update the widget when the data of
+the table have changed. If autowidth is True, this will also
+adjust the column widths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.Table.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Table&#8217;s value.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.FileSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>button=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog.</p>
 <p>You can specify a default path/filename that will be suggested initially.
 If a pattern is specified, only matching files will be shown.
@@ -1242,8 +1496,10 @@ A pattern can be something like <tt class="docutils literal"><span class="pre">I
 of such strings.
 Default mode is to accept any filename. You can specify exist=True
 to accept only existing files. Or set exist=True and multi=True to
-accept multiple files.
-If dir==True, a single existing directory is asked.</p>
+accept multiple files.</p>
+<p>If dir is True, only directories can be selected. If dir evaluates to
+True, but is not the value True, either a directory or a filename can be
+selected.</p>
 <dl class="method">
 <dt id="widgets.FileSelection.getFilename">
 <tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
@@ -1364,7 +1620,7 @@ layout is the widget layout where the input widgets will be added</p>
 <tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.ListSelection.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the dialog.</p>
 <p>For a non-modal dialog, the user has to call this function to
-display the dialog. 
+display the dialog.
 For a modal dialog, this is implicitely executed by getResult().</p>
 <p>If a timeout is given, start the timeout timer.</p>
 </dd></dl>
@@ -1426,85 +1682,6 @@ an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
 to avoid creation of a button box.</li>
 <li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
 </ul>
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.TableModel">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.TableModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>A table model that represent data as a two-dimensional array of items.</p>
-<p>data is any tabular data organized in a fixed number of rows and colums.
-This means that an item at row i and column j can be addressed as
-data[i][j].
-Optional lists of column and row headers can be specified.</p>
-<dl class="method">
-<dt id="widgets.TableModel.flags">
-<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the TableModel flags.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.ArrayModel">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>A TableModel specialized for represents 2D array data.</p>
-<ul class="simple">
-<li><cite>data</cite>: a numpy array with two dimensions.</li>
-<li><cite>chead</cite>, <cite>rhead</cite>: column and row headers. The default will show column
-and row numbers.</li>
-<li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
-the data readonly.</li>
-</ul>
-<dl class="method">
-<dt id="widgets.ArrayModel.flags">
-<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.flags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the TableModel flags.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.Table">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em>, <em>autowidth=True</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
-<dd><p>A widget to show/edit a two-dimensional array of items.</p>
-<ul class="simple">
-<li><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns. If
-<cite>data</cite> is an ndarray instance, the Table will use an ArrayModel,
-else a TableModel. The difference is important when editing the table.
-Also, an ArrayModel has default row and column headers, while a
-TableModel doesn&#8217;t.</li>
-<li><cite>chead</cite>: an optional list of <cite>ncol</cite> column headers.</li>
-<li><cite>rhead</cite>: an optional list of <cite>nrow</cite> row headers.</li>
-<li><cite>label</cite>: currently unused (intended to display an optional label
-in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</li>
-</ul>
-<dl class="method">
-<dt id="widgets.Table.update">
-<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>update the table.</p>
-<p>This method should be called to update the widget when the data of
-the table have changed. If autowidth is True, this will also
-adjust the column widths.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.Tabs">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Tabs</tt><big>(</big><em>items</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Tabs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Present a list of widgets as a single tabbed widget.</p>
-<ul class="simple">
-<li><cite>items</cite>: a list of (header,widget) tuples.</li>
-<li><cite>caption</cite>:</li>
-<li><cite>parent</cite>:</li>
-</ul>
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.TableDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data, chead=None, rhead=None, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
-<p>A convenience class representing a Table within a dialog.</p>
 </dd></dl>
 
 <dl class="class">
@@ -1715,29 +1892,17 @@ be called is if the widget is destructed before the timer has finished.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="widgets.compatInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">compatInputItem</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype=None</em>, <em>kargs={}</em><big>)</big><a class="headerlink" href="#widgets.compatInputItem" title="Permalink to this definition">¶</a></dt>
-<dd><p>A convenience function to create an InputItem dictionary</p>
-<p>This function accepts InputItem data in the old format:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="p">[</span> <span class="n">itemtype</span><span class="p">,</span> <span class="p">[</span> <span class="n">optionsdict</span> <span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
-</pre></div>
-</div>
-<p>and turns them into a dictionary as required by the new
-InputItem format.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="widgets.convertInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#widgets.convertInputItem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert InputItem data to a proper dict.</p>
-<p>This function tries to convert some old style or sloppy InputItem data
-to a proper InputItem data dict.</p>
+<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.convertInputItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert InputItem item to a dict or a widget.</p>
+<p>This function tries to convert some old style or sloppy InputItem item
+to a proper InputItem item dict.</p>
 <p>The conversion does the following:</p>
 <ul class="simple">
-<li>if <cite>data</cite> is a dict, it is considered proper data and returned as is.</li>
-<li>if <cite>data</cite> is a tuple or a list, first conversion with simpleInputItem
-is tried, then conversion with compatInputItem, using the data items
-as arguments.</li>
+<li>if <cite>item</cite> is a dict, it is considered a proper item and returned as is.</li>
+<li>if <cite>item</cite> is a QWidget, it is also returned as is.</li>
+<li>if <cite>item</cite> is a tuple or a list, conversion with simpleInputItem
+is tried, using the item items as arguments.</li>
 <li>if neither succeeds, an error is raised.</li>
 </ul>
 </dd></dl>
@@ -1802,12 +1967,12 @@ tried. Currently available formats are: <tt class="docutils literal"><span class
 <tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText).</li>
 </ul>
 <p>This function allows to display other text formats besides the
-plain text and html supported by the widget. 
+plain text and html supported by the widget.
 Any format other than <tt class="docutils literal"><span class="pre">plain</span></tt> or <tt class="docutils literal"><span class="pre">html</span></tt> will be converted to one
 of these before sending it to the widget. Currently, we convert the
 following formats:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText): 
+<li><tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText):
 If the :mod:docutils is available, <cite>rest</cite> text is converted to <cite>html</cite>,
 otherwise it will be displayed as plain text.
 A text is autorecognized as reStructuredText if its first
@@ -1858,7 +2023,7 @@ is given, it is set to the LAST button.</p>
         <li class="right" >
           <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.9 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1866,9 +2031,9 @@ is given, it is set to the LAST button.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Nov 09, 2012.
+      Last updated on Jan 22, 2013.
     <span class="right">
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
     </div>
   </body>

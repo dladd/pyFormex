@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -110,7 +110,7 @@ def do_module(filename):
     #print names
 
     # Shipout
-    
+
     ship_start()
     ship_module(modname,module.__doc__)
     #print names
@@ -120,10 +120,10 @@ def do_module(filename):
         do_class(*c)
     ship_functions_init(modname)
     ship_end()
-    
+
     sys.__stdout__.write(out)
 
-       
+
 
 ############# Output formatting ##########################
 
@@ -148,7 +148,7 @@ def sanitize(s):
     ##     s = s.replace(c,'\\'+c)
     return s
 
-    
+
 
 out = ''
 
@@ -160,7 +160,7 @@ def ship(s):
     global out
     out += s
     out += '\n'
-    
+
 
 def debug(s):
     if options.debug:
@@ -186,7 +186,7 @@ def ship_module(name,docstring):
 
 def ship_end():
     ship("""
-   
+
 .. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
@@ -208,7 +208,7 @@ def ship_class_init(name):
 
 def ship_functions_init(name):
     ship("""
-   ``Functions defined in module %s`` 
+   ``Functions defined in module %s``
 """ % name)
 
 
@@ -216,7 +216,7 @@ def main(argv):
     global options,source
 
     sys.stdout = sys.stderr
-    
+
     from optparse import OptionParser,make_option
     parser = OptionParser(
         usage = """usage: %prog [Options] PYTHONFILE
@@ -230,7 +230,7 @@ defined in PYTHONFILE.""",
                     action="store_false", dest="error", default=True),
         ])
     options, args = parser.parse_args(argv)
-    
+
     for source in args:
         do_module(source)
 
@@ -238,7 +238,7 @@ defined in PYTHONFILE.""",
 if __name__ == "__main__":
 
     import sys
-    
+
     main(sys.argv[1:])
 
 # End

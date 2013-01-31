@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -119,10 +119,10 @@ def run():
 
     res = askItems([
         _I('filename',dfilename,text='Image file',itemtype='button',func=selectImage),
-        _I('viewer',wviewer,itemtype='widget'),  # the image previewing widget
+        wviewer,
         _I('px',4,text='Number of patches in x-direction'),
         _I('py',6,text='Number of patches in y-direction'),
-        _I('kx',30,text='Width of a patch in pixels'), 
+        _I('kx',30,text='Width of a patch in pixels'),
         _I('ky',30,text='Height of a patch in pixels'),
         _I('scale',1.0,text='Scale factor'),
         _I('trl',[-0.4,-0.1,2.],itemtype='point',text='Translation'),
@@ -175,7 +175,7 @@ def run():
 
     if method == 'projection':
         pts = mH0.coords.projectOnSurface(T,[0.,0.,1.],'-f')
-        dg1 = d1 = [] # to allow dummy undraw 
+        dg1 = d1 = [] # to allow dummy undraw
 
 
     else:
@@ -214,7 +214,7 @@ def run():
     undraw(dg1);
     view('front')
     zoomAll()
-    pause(1)
+    sleep(1)
     transparent()
 
 if __name__ == 'draw':

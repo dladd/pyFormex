@@ -32,7 +32,7 @@ import pyformex as pf
 from plugins.curve import PolyLine
 import simple
 from gui.draw import *
-
+from arraytools import isInt
 
 def connectPoints(F,close=False):
     """Return a Formex with straight segments connecting subsequent points.
@@ -91,7 +91,7 @@ def createSegments(F,ns=None,th=None):
         if res:
             ns = int(res['number of sections'])
             th = float(res['relative thickness'])
-    if type(ns) == int and type(th) == float:
+    if isInt(ns) and type(th) == float:
         xmin,ymin,zmin = bb[0]
         xmax,ymax,zmax = bb[1]
         xgem,ygem,zgem = F.center()

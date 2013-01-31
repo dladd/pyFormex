@@ -1,13 +1,28 @@
-# backups
-#########
+# backups and logs
+##################
 *~
 *.tmp
 *#
 *.#*
+*.log
+*.out
 
 # compiled files
 ################
 *.[oa]
 *.so
 *.py[oc]
+*.1
+MANIFEST
 
+# compiled docs
+###############
+sphinx/ref/*.rst
+sphinx/_build/
+sphinx/*.help
+
+# foreign directories
+#####################
+dist/
+build/
+www/

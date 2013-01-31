@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -35,7 +35,7 @@ from __future__ import print_function
 import pyformex as pf
 
 from OpenGL import GL
-from PyQt4 import QtCore,QtGui,QtOpenGL
+from gui import QtCore,QtGui,QtOpenGL
 import utils
 import os
 
@@ -51,7 +51,7 @@ def imageFormats(type='w'):
         return image_formats_qtr
     else:
         return image_formats_qt + image_formats_gl2ps + image_formats_fromeps
-        
+
 
 # global parameters for multisave mode
 multisave = None
@@ -62,9 +62,9 @@ gl2ps = None
 def initialize():
     """Initialize the image module."""
     global image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps,gl2ps,_producer,_gl2ps_types
-    
+
     # Find interesting supporting software
-    utils.hasExternal('ImageMagick')
+    utils.hasExternal('imagemagick')
     # Set some globals
     pf.debug("Loading Image Formats",pf.DEBUG.IMAGE)
     image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
@@ -96,8 +96,8 @@ Qt image types for saving: %s
 Qt image types for input: %s
 gl2ps image types: %s
 image types converted from EPS: %s""" % (image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps),pf.DEBUG.IMAGE|pf.DEBUG.INFO)
-             
- 
+
+
 def imageFormats():
     """Return a list of the valid image formats.
 
@@ -158,7 +158,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
     canvas.raise_()
     canvas.display()
     pf.app.processEvents()
-    
+
     if fmt in image_formats_qt:
         pf.debug("Image format can be saved by Qt",pf.DEBUG.IMAGE)
         wc,hc = canvas.getSize()
@@ -213,7 +213,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
 initialize()
 
 if gl2ps:
-    
+
     def save_PS(canvas,filename,filetype=None,title='',producer='',viewport=None):
         """ Export OpenGL rendering to PostScript/PDF/TeX format.
 
@@ -335,7 +335,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
     If the supplied filename (after removing the extension) has a trailing
     numeric part, subsequent images will be numbered continuing from this
     number. Otherwise a numeric part '-000' will be added to the filename.
-    
+
     If window is True, the full pyFormex window is saved.
     If window and border are True, the window decorations will be included.
     If window is False, only the current canvas viewport is saved.
@@ -348,10 +348,10 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
 
     If no format is specified, it is derived from the filename extension.
     fmt should be one of the valid formats as returned by imageFormats()
-  
+
     If verbose=True, error/warnings are activated. This is usually done when
     this function is called from the GUI.
-    
+
     """
     #print "SAVE: quality=%s" % quality
     global multisave
@@ -407,7 +407,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
 # Keep the old name for compatibility
 saveImage = save
 
-    
+
 def saveNext():
     """In multisave mode, saves the next image.
 
@@ -450,11 +450,11 @@ def changeBackgroundColorXPM(fn,color):
     f = open(fn,'w')
     f.writelines(t)
     f.close()
-    
+
 
 def saveIcon(fn,size=32,transparent=True):
     """Save the current rendering as an icon."""
-    
+
     if not fn.endswith('.xpm'):
         fn += '.xpm'
     save_canvas(pf.canvas,fn,fmt='xpm',size=(size,size))
@@ -468,7 +468,7 @@ def autoSaveOn():
     Use this function instead of directly accessing the autosave variable.
     """
     return multisave and multisave[-2]
-    
+
 
 def createMovie(files,encoder='ffmpeg',**kargs):
     """Create a movie from a saved sequence of images.

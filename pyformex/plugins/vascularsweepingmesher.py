@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -141,7 +141,7 @@ def cpQuarterLumen(lumb, centp, edgesq=0.75, diag=0.6*2**0.5, verbos=False):
     ncold=grid16[[0, 12, 15, 3]]#old coord
     fx=arcsh/6
     sc=array([1./fx, 1./fx, 0.])
-    grid16=Formex([grid16]).replic2(fx, fx, 1., 1.).scale(sc)[:]  
+    grid16=Formex([grid16]).replic2(fx, fx, 1., 1.).scale(sc)[:]
     gridint= Isopar('quad4',nc0,ncold).transform(grid16)#4 internal grids
     xa0=Coords.interpolate(Coords(ncold[[3]]), Coords(ncold[[2]]),div=3*fx)
     xa1=Coords.interpolate(Coords(ncold[[2]]), Coords(ncold[[1]]),div=3*fx)
@@ -158,7 +158,6 @@ def cpQuarterLumen(lumb, centp, edgesq=0.75, diag=0.6*2**0.5, verbos=False):
 #    for i in gridG:
 #        di= [drawNumbers(Formex(i))]
 #        zoomAll()
-#        sleep(0.2)
 #        undraw(di)
 #    exit()
     return gridint, gridext
@@ -179,7 +178,8 @@ def visualizeSubmappingQuadRegion(sqr, timewait=None):
         di= [drawNumbers(Formex(f))]
         zoomAll()
         ###here check quality of G0: if it is not good enough, change the parameters of the cpQuarterLumen(quartsec[0], oc, edgesq= ..., diag= ...)
-        if timewait!=None:sleep(timewait)
+        if timewait!=None:
+            sleep(timewait)
         undraw(di)
 #clear()
 ##draw(Formex([0., 0., 0.]))
@@ -209,24 +209,24 @@ def visualizeSubmappingQuadRegion(sqr, timewait=None):
 
 def cpOneSection(hc, oc=None,isBranchingSection=False, verbos=False ):
     """hc is a numbers of points on the boundary line of 1 almost circular section. oc is the center point of the section. It returns 3 groups of control points: for the inner part, for the transitional part and for the boundary layer of one single section"""
-    
+
     ##if the center is not given, it is calculated from the first and the half points of the section
     if oc==None:oc=(hc[0]+hc[hc.shape[0]/2])*0.5
-    
+
     ##create control points for the boundary layer of 1 full section.
     if verbos:
         if isBranchingSection:print("--BRANCHING SECTION:section located at the center of the bifurcation")
     cpbl, hlum=cpBoundaryLayer(hc,  centr=oc, issection0=isBranchingSection)
-    
+
     ##split the inner lumen in quarters and check if the isop can be applied
     sectype= hlum.shape[0]/24.
     if sectype!=float(int(sectype)): raise ValueError,"BE CAREFUL: the number of points along each circular section need to be 24*int in order to allow mapping!"
-    else: 
+    else:
         if verbos:print("----the number of points on 1 slice is suitable for ISOP MESHING----")
     npq= sectype*6
     hlum1=concatenate([hlum, [hlum[0]]], axis=0)
     quartsec=[hlum1[npq*i:npq*(i+1)+1] for i in range(4)]#split in quarters
-    
+
     ##created control points of each quarter
     cpis, cpts=[], []
     for q in quartsec:
@@ -255,7 +255,7 @@ def cpAllSections(HC, OC, start_end_branching=[False, False]):
     #[visualizeSubmappingQuadRegion(i) for i in cpatr]
     #[visualizeSubmappingQuadRegion(i) for i in cpabl]
     return cpain, cpatr, cpabl
-    
+
 ##FIRST STEP ----- FROM SPLINE-PTS to CONTROL-POINTS-QUAD16-------------------------
 #cpAin, cpAtr, cpAbl=cpAllSections(HC, OC, [False, False])#control points of all sections grouped in inner, trans and boundary layer. Each contains number of long_slice, number of hex-reg, 16, 3.
 ##[visualizeSubmappingQuadRegion(i) for i in cpAin]

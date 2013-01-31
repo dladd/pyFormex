@@ -29,6 +29,7 @@ Properties can be attributed to a set of geometrical elements.
 """
 from __future__ import print_function
 
+import pyformex as pf
 from flatkeydb import FlatDB
 from mydict import Dict,CDict
 from arraytools import *
@@ -36,6 +37,36 @@ from arraytools import *
 #################################################################
 # This first part still needs to be changed.
 # It should probably be moved to a separate module
+
+_matDB = None
+_secDB = None
+
+def setMaterialDB(mat):
+    """Set the global materials database.
+
+    If mat is a MaterialDB, it will be used as the global MaterialDB.
+    Else, a new global MaterialDB will be created, initialized from
+    the argument mat.
+    """
+    global _matDB
+    if isinstance(mat,MaterialDB) or mat is None:
+        _matDB = mat
+    else:
+        _matDB = MaterialDB(mat)
+
+def setSectionDB(sec):
+    """Set the global sections database.
+
+    If sec is a SectionDB, it will be used as the global SectionDB.
+    Else, a new global SectionDB will be created, initialized from
+    the argument sec.
+    """
+    global _secDB
+    if isinstance(sec,SectionDB) or sec is None:
+        _secDB = sec
+    else:
+        _secDB = SectionDB(sec)
+
 
 class Database(Dict):
     """A class for storing properties in a database."""
@@ -69,9 +100,12 @@ class MaterialDB(Database):
 
         If data is a dict, it contains the database.
         If data is a string, it specifies a filename where the
-        database can be read.
+        database can be read. If it is an empty string, the
+        configured database name will be used.
         """
         Database.__init__(self,{})
+        if data == '':
+            data = pf.cfg.get('prop/matdb',{})
         if type(data) == str:
             self.readDatabase(data,['name'],beginrec='material',endrec='endmaterial')
         elif type(data) == dict:
@@ -88,9 +122,12 @@ class SectionDB(Database):
 
         If data is a dict, it contains the database.
         If data is a string, it specifies a filename where the
-        database can be read.
+        database can be read. If it is an empty string, the
+        configured database name will be used.
         """
         Database.__init__(self,{})
+        if data == '':
+            data = pf.cfg.get('prop/secdb',{})
         if type(data) == str:
             self.readDatabase(data,['name'],beginrec='section',endrec='endsection')
         elif type(data) == dict:
@@ -107,11 +144,11 @@ class ElemSection(CDict):
     section
       the geometric properties of the section. This can be a dict
       or a string. If it is a string, its value is looked up in the global
-      section database. The required data in the dict depend on the
-      sectiontype. Currently the following keys are used by fe_abq.py:
+      section database. The section dict should at least have a key
+      'sectiontype', defining the type of section. 
 
-    sectiontype
-        the type of section: should be one of following:
+      Currently the following sectiontype values are known by module
+      :mod:`fe_abq` for export to Abaqus/Calculix:
 
         - 'solid'   : a solid 2D or 3D section,
         - 'circ'    : a plain circular section,
@@ -122,13 +159,16 @@ class ElemSection(CDict):
         - 'general' : anything else (automatically set if not specified).
         - 'rigid'   : a rigid body
 
-        .. note: Currently only 'solid', 'general' and 'rigid' are allowed.
-
-      - for sectiontype 'solid' : thickness
-      - the sectiontype 'general': cross_section, moment_inertia_11,
-        moment_inertia_12, moment_inertia_22, torsional_constant
-      - for sectiontype 'circ': radius
-      - for sectiontype 'rigid': refnode, density, thickness
+      .. note: Currently only 'solid', 'general' and 'rigid' are allowed.
+        
+      The other possible (useful) keys in the section dict depend on the
+      sectiontype. Again for :mod:`fe_abq`: 
+      
+        - for sectiontype 'solid' : thickness
+        - the sectiontype 'general': cross_section, moment_inertia_11,
+          moment_inertia_12, moment_inertia_22, torsional_constant
+        - for sectiontype 'circ': radius
+        - for sectiontype 'rigid': refnode, density, thickness
 
     material
       the element material. This can be a dict or a string.
@@ -140,54 +180,39 @@ class ElemSection(CDict):
       - a Dict, or
       - a list of 3 direction cosines of the first beam section axis.
 
-    behavior
-      the behavior of a connector
     """
-
-    # All the instances use the same databases
-    matDB = None #MaterialDB()
-    secDB = None #SectionDB()
-
-    def __init__(self,section=None,material=None,orientation=None,behavior=None,**kargs):
-        ### sectiontype is now an attribute of section ###
+    def __init__(self,section=None,material=None,orientation=None,**kargs):
         """Create a new element section property. Empty by default."""
-        self._class_init()
+        if _matDB is None:
+            setMaterialDB({})
+        if _secDB is None:
+            setSectionDB({})
         CDict.__init__(self,kargs)
         self.addMaterial(material)
         self.addSection(section)
-##         if sectiontype is not None:
-##             self.sectiontype = sectiontype
         if orientation is not None:
             self.orientation = orientation
-##         self.behavior = behavior
 
-
-    @classmethod
-    def _class_init(clas):
-        if clas.matDB is None:
-            clas.matDB = MaterialDB()
-        if clas.secDB is None:
-            clas.secDB = SectionDB()
 
     
     def addSection(self, section):
         """Create or replace the section properties of the element.
 
-        If 'section' is a dict, it will be added to 'self.secDB'.
+        If 'section' is a dict, it will be added to the global SectionDB.
         If 'section' is a string, this string will be used as a key to
-        search in 'self.secDB'.
+        search in the global SectionDB.
         """
         if isinstance(section, str):
-            if section in self.secDB:
-                self.section = self.secDB[section]
+            if section in _secDB:
+                self.section = _secDB[section]
             else:
-                warning("Section '%s' is not in the database" % section)
+                pf.warning("Section '%s' is not in the database" % section)
         elif isinstance(section,dict):
             # WE COULD ADD AUTOMATIC CALCULATION OF SECTION PROPERTIES
             #self.computeSection(section)
             #print(section)
-            self.secDB[section['name']] = CDict(section)
-            self.section = self.secDB[section['name']]
+            _secDB[section['name']] = CDict(section)
+            self.section = _secDB[section['name']]
         elif section==None:
             self.section = section
         else: 
@@ -215,18 +240,18 @@ class ElemSection(CDict):
     def addMaterial(self, material):
         """Create or replace the material properties of the element.
 
-        If the argument is a dict, it will be added to 'self.matDB'.
+        If the argument is a dict, it will be added to the global MaterialDB.
         If the argument is a string, this string will be used as a key to
-        search in 'self.matDB'.
+        search in the global MaterialDB.
         """
         if isinstance(material, str) :
-            if material in self.matDB:
-                self.material = self.matDB[material] 
+            if material in _matDB:
+                self.material = _matDB[material] 
             else:
-                warning("Material '%s'  is not in the database" % material)
+                pf.warning("Material '%s'  is not in the database" % material)
         elif isinstance(material, dict):
-            self.matDB[material['name']] = CDict(material)
-            self.material = self.matDB[material['name']]
+            _matDB[material['name']] = CDict(material)
+            self.material = _matDB[material['name']]
         elif material==None:
             self.material=material
         else:
@@ -440,38 +465,43 @@ class PropertyDB(Dict):
     - node properties
     - elem properties
     - model properties (current unused: use unnamed properties)
+
+    Materials and sections use their own database for storing. They can be
+    specified on creating the property database. If not specified, default
+    ones are created from the files distributed with pyFormex.
     """
 
     bound_strings = [ 'XSYMM', 'YSYMM', 'ZSYMM', 'ENCASTRE', 'PINNED' ]
 
-    def __init__(self):
+    def __init__(self,mat='',sec=''):
         """Create a new properties database."""
+        setMaterialDB(mat)
+        setSectionDB(sec)
         Dict.__init__(self)
-        self.mats = MaterialDB()
-        self.sect = SectionDB()
         self.prop = []
         self.nprop = []
         self.eprop = []
         #self.mprop = []
         
+    @staticmethod
+    def matDB():
+        return _matDB
+        
+    @staticmethod
+    def secDB():
+        return _secDB
 
     @classmethod
     def autoName(clas,kind,*args):
         return autoName((kind+'set').capitalize(),*args)
 
-
     def setMaterialDB(self,aDict):
         """Set the materials database to an external source"""
-        if isinstance(aDict,MaterialDB):
-            self.mats = aDict
-            ElemSection.matDB = aDict
-
+        setMaterialDB(aDict)
 
     def setSectionDB(self,aDict):
         """Set the sections database to an external source"""
-        if isinstance(aDict,SectionDB):
-            self.sect = aDict
-            ElemSection.secDB = aDict
+        setSectionDB(aDict)
 
     def print(self):
         """Print the property database"""
@@ -518,8 +548,7 @@ class PropertyDB(Dict):
             d.tag = str(tag)
         if name is None and 'setname' in kargs:
             # allow for backwards compatibility
-            import warnings
-            warnings.warn("!! 'setname' is deprecated, please use 'name'")
+            pf.utils.warn("!! 'setname' is deprecated, please use 'name'")
             name = setname
         if name is None and type(set) is str:
             ### convenience to allow set='name' as alias for name='name'
@@ -700,7 +729,7 @@ class PropertyDB(Dict):
             return self.Prop(kind='e',prop=prop,tag=tag,set=set,name=name,**d)
         except:
             raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,name=%s,eltype=%s,section=%s,dload=%s,eload=%s" % (tag,set,name,eltype,section,dload,eload)
-
+    
 
 ##################################### Test ###########################
 
@@ -777,11 +806,6 @@ if __name__ == "script" or  __name__ == "draw":
     values = square(times)
     amp = Amplitude(column_stack([times,values]))
     P.Prop(amplitude=amp,name='amp1')
-    
-    Mat = MaterialDB(getcfg('datadir')+'/materials.db')
-    Sec = SectionDB(getcfg('datadir')+'/sections.db')
-    P.setMaterialDB(Mat)
-    P.setSectionDB(Sec)
 
     P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
@@ -815,10 +839,6 @@ if __name__ == "script" or  __name__ == "draw":
     print("cload attributes")
     for p in P.getProp('n',attr=['cload']):
         print(p)
-
-    # materials and sections
-    ElemSection.matDB = Mat
-    ElemSection.secDB = Sec
     
     vert = ElemSection('IPEA100', 'steel')
     hor = ElemSection({'name':'IPEM800','A':951247,'I':CDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})

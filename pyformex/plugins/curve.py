@@ -197,7 +197,7 @@ class Curve(Geometry):
         If the curve is closed, the extend parameter is disregarded. 
         """
         # Subspline parts (without end point)
-        if type(div) == int:
+        if isInt(div):
             u = arange(div) / float(div)
 
         else:
@@ -559,7 +559,7 @@ class PolyLine(Curve):
         """
         lens = self.lengths().cumsum()
         rlen = concatenate([[0.], lens/lens[-1]]) # relative length
-        if type(div) == int:
+        if isInt(div):
             div = arange(div+1) / float(div)
         z = rlen.searchsorted(div)
         # we need interpolation

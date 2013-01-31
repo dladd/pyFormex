@@ -1,5 +1,5 @@
 .. $Id$
-  
+
 ..
   This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,22 +8,22 @@
   Project page:  http://savannah.nongnu.org/projects/pyformex/
   Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 .. include:: defines.inc
 .. include:: gui.inc
@@ -41,7 +41,7 @@ pyFormex tutorial
    concepts of the pyFormex scripting language and the pyFormex Graphical
    User Interface (GUI). It is intended for first time users, giving explicit
    details of what to do and what to expect as result.
-   
+
 
 .. _sec:intro-tut:
 
@@ -58,14 +58,14 @@ postprocessing, or just for creating some nice pictures.
 
 By writing a simple script, a large and complex geometry can be created by
 copying, translating, rotating, or otherwise transforming geometrical entities.
-pyFormex will interpret the script and draw what you have created. 
+pyFormex will interpret the script and draw what you have created.
 This is clearly very different from the traditional (mostly interactive) way
 of creating a geometrical model, like is done in most CAD packages.
 There are some huge advantages in using pyFormex:
 
 * It is especially suited for the automated design of spatial frame structures.
   A dome, an arc, a hypar shell, ..., when constructed as a space frame, can be
-  rather difficult and tedious to draw with a general CAD program; 
+  rather difficult and tedious to draw with a general CAD program;
   using scripted mathematical transformations however, it may become a
   trivial task.
 
@@ -73,7 +73,7 @@ There are some huge advantages in using pyFormex:
   you simply modify the script and re-execute it. You can easily
   change the value of a geometrical parameter in any way you want:
   set it directly, interactively ask it from the user, calculate it from some
-  formula, read it from a file, etcetera. 
+  formula, read it from a file, etcetera.
   Using CAD, you would have often have to
   completely redo your drawing work. The power of scripted geometry
   building is illustrated in figure :ref:`fig:scallopdomes`: all these
@@ -94,7 +94,7 @@ There are some huge advantages in using pyFormex:
   will benefit from it. As everything else in pyFormex, the GUI is completely
   open and can be modified at will by the user's application scripts,
   to provide an interface with either extended or restricted
-  functionality. 
+  functionality.
 
 * \pyformex scripts are written in the `Python`_ programming language.
   This implies that the scripts are also Python-based. It is a very
@@ -119,7 +119,7 @@ Getting started
   terminal.
 
 * Create a new pyFormex script using the
-  :menuselection:`File-->Create new script` option. This will open a file 
+  :menuselection:`File-->Create new script` option. This will open a file
   dialog: enter a filename ``example0.py`` (be sure to be in a directory
   where you have write permissions). Pressing the ``Save`` button will open
   up your favorite editor with a pyFormex script template like the one below.
@@ -138,11 +138,11 @@ Getting started
   - The script starts with some comment lines (all lines starting with a '#').
     For the sake of this tutorial, you can just disregard the comments. But
     this section typical displays a file identification, the copyright notice
-    and the license conditions. 
-  - Then comes a multiline documentation string, contained between two ``"""`` 
-    delimiters. By preference, this docstring is composed of a short first 
+    and the license conditions.
+  - Then comes a multiline documentation string, contained between two ``"""``
+    delimiters. By preference, this docstring is composed of a short first
     line, then a blank line and finally one or more lines explaining the
-    intention of the script. 
+    intention of the script.
   - Next are the pyFormex instructions.
   - The script ends with a comment line ``# End``. We recommend you to do this
     also. It serves as a warning for inadvertent truncation of your file.
@@ -156,19 +156,19 @@ Getting started
   on the two application models in pyFormex. For this tutorial we will however
   stick to the simpler *script* model. Therefore, replace the whole code section  between
   the ``from __future__`` line and ``# End`` with just this single line::
-     
+
      print("This is a pyFormex script")
 
 .. note:: The ``from __future__ import print_function`` line makes Python
    import a feature from the future Python3 language, turning the ``print``
-   statement into a function. This means that you have to write 
-   ``print(something)`` instead of ``print something``. If you are 
-   acquainted with Python and it hinders you, remove that line (but 
+   statement into a function. This means that you have to write
+   ``print(something)`` instead of ``print something``. If you are
+   acquainted with Python and it hinders you, remove that line (but
    remember that you will have to learn the newer syntax sooner or later).
    If you are a starting Python user, leave it there and learn to use
    the future syntax right from the start.
 
-* Save your changes to the script (in your editor), and execute it in 
+* Save your changes to the script (in your editor), and execute it in
   pyFormex by selecting the :menuselection:`File --> Play` menu option,
   or by just pushing the |button-play| button in the
   toolbar. In the message area (just above the bottom status bar), a line is
@@ -180,14 +180,14 @@ Getting started
 * Now change the text of the string in the print statement, but do not save
   your changes yet.
   Execute the script again, and notice that the printed text has not changed!
-  This is because the editor is an external program to pyFormex, and *the 
+  This is because the editor is an external program to pyFormex, and *the
   executed script is always the text as read from file*, not necessarily equal
   to what is displayed in your editor.
 
   Save the script, run it again, and you will see the output has changed.
 
 * Next, change the text of the script to look like the one below, and save it as
-  ``example1.py``. Again, note that the editor and pyFormex are separate 
+  ``example1.py``. Again, note that the editor and pyFormex are separate
   programs, and saving the script does not change the name of the current
   script in pyFormex.
 
@@ -216,7 +216,7 @@ Getting started
 Now that you know how to load, change and execute scripts in pyFormex, we're
 all set for exploring its power. But first, let's introduce you to
 some basic Python and NumPy concepts. If you are already familiar with
-them, you can just skip these sections. 
+them, you can just skip these sections.
 
 
 .. _sec:intro-python:
@@ -250,7 +250,7 @@ some of the most important Python concepts, hopefully enabling you to
 continue with this tutorial.
 
 Here is a small example Python script.
-    
+
 .. literalinclude:: static/scripts/python_intro.py
    :linenos:
 
@@ -278,7 +278,7 @@ Here is a small example Python script.
   indented consistently.
   We advice you not to use tabs for indenting. A good practice
   commonly followed by most Python programmers is to indent with 4
-  spaces. 
+  spaces.
 
   The indentation makes Python code easy to read for humans. Most modern
   editors will recognize Python code and help you with the indentation.
@@ -288,7 +288,7 @@ Here is a small example Python script.
   fact, Python has no variables, only typed objects. An assignment is
   just the binding of a name to an object. That binding can be changed
   at each moment by a new assignment to the same name.
-   
+
 * Sequences of objects can be grouped in tuples or lists, and
   individual items of them are accessed by an index starting from 0.
 
@@ -337,7 +337,7 @@ To do: Introduce the (for users) most important NumPy concepts.
 
 .. index:: single: ndarray
 
-pyFormex uses the NumPy :class:`ndarray` as implementation of fast 
+pyFormex uses the NumPy :class:`ndarray` as implementation of fast
 numerical arrays in Python.
 
 
@@ -407,7 +407,7 @@ In the following sections of this tutorial, we will first learn you
 how to create simple geometry using the Formex data model and how to
 use the basic pyFormex interface functions. The real power of the
 :class:`Formex` class will then be established starting from the section :ref:`sec:transform`.
- 
+
 
 .. _sec:create_formex:
 
@@ -459,11 +459,11 @@ Plexitude      Geometrical interpretation
 ============== ===============================
 1              Points
 2              Straight line segments
-3              Triangles 
-4 or higher    Polygons (possibly nonplanar) 
+3              Triangles
+4 or higher    Polygons (possibly nonplanar)
 ============== ===============================
 
-  
+
 We will see later how to override this default. For now, let's draw Formices
 with the default. Go back to the ``example1.py`` script in your editor, containing the line above, and add the ``draw(F)`` instruction to make it look like::
 
@@ -489,7 +489,7 @@ Now let's remove the two central ']' and '[' brackets in the first line::
 
 With the same data we have now created a 4-plex Formex with only one element.
 Execute the script again (do not forget to save it first) and you will see
-a square. Note that the draw command allows you to specify a color.  
+a square. Note that the draw command allows you to specify a color.
 
 .. _`fig:square`:
 
@@ -500,7 +500,7 @@ a square. Note that the draw command allows you to specify a color.
    A square.
 
 But wait a minute! Does this represent a square surface, or just the four lines constituting the circumference of the square? Actually, it is a square surface, but since the pyFormex GUI by default displays in wireframe mode, unless you have changed it, you will only see the border of the square. You can make surfaces and solids get fully rendered by selecting the :menuselection:`Viewport --> Render Mode --> Flat` option or using the shortcut |button-flat| button in the toolbar.
-You will then see 
+You will then see
 
 .. _`fig:square-filled`:
 
@@ -520,14 +520,14 @@ lines of the square, and not the surface inside that
 border. Obviously, you need a 4 element 2-plex Formex, using data
 structured like this::
 
-    F = Formex([[[0.,0.],[0.,1.]], 
+    F = Formex([[[0.,0.],[0.,1.]],
                 [[0.,1.],[1.,1.]],
                 [[1.,1.],[1.,0.]],
                 [[1.,0.],[0.,0.]]])
     draw(F,color=blue,clear=True)
 
 Try it, and you will see an image identical to the earlier figure
-:ref:`fig:square`. 
+:ref:`fig:square`.
 But now this image represents four straight lines, while the same
 image formerly represented a square plane surface.
 
@@ -545,9 +545,13 @@ often help you to find out what the image is really representing.
 But interrogating the Formex data itself is the definite way to make sure::
 
     F = Formex([[[0.,0.],[1.,0.],[1.,1.],[0.,1.]]])
-    print(F.shape())
+    print(F.shape)
     F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
-    print(F.shape())
+    print(F.shape)
+
+.. warning: In older versions of pyFormex (pre 0.9.0) `shape` was a method,
+   and you had to write `F.shape()` instead of `F.shape`.
+
 
 This will print the length of the three axes of the coordinate array. In
 the first case you get ``(1, 4, 3)`` (1 element of plexitude 4),
@@ -576,7 +580,7 @@ like one of the following:
 
 .. figure:: images/tetraeder.png
    :align: center
-   :alt: The tetrahedron in wireframe and smoothwire rendering 
+   :alt: The tetrahedron in wireframe and smoothwire rendering
 
    The tetrahedron in wireframe and smoothwire (transparent) rendering
 
@@ -594,7 +598,7 @@ they do.
 All these mouse operations do not change the coordinates of the
 structure: they just change the way you're looking at it. You can
 restore the default view with the :menuselection:`Views --> Front`
-menu or the |button-front| button. 
+menu or the |button-front| button.
 
 The default installation of pyFormex provides seven default views:
 ``Front``, ``Back``, ``Left``, ``Right``, ``Top``, ``Bottom`` and
@@ -619,14 +623,14 @@ specifying the coordinate data. That is fine for small structures, but
 quickly becomes cumbersome when the structures get larger.
 The :func:`pattern` function can reduce the amount of
 input needed to create a Formex from scratch.
-   
+
 This function creates a series of points that lie on a regular grid
 with unit step. These points can then be used to create some
 geometry. Do not worry about the regularity of the grid: pyFormex has
-many ways to transform it afterwards. 
+many ways to transform it afterwards.
 
 The points are created from a string input, interpreting each character
-as a code specifying how to move from the previous point to the new point. 
+as a code specifying how to move from the previous point to the new point.
 The start position on entry is the origin [0.,0.,0.].
 
 Currently the following codes are defined:
@@ -637,29 +641,29 @@ Currently the following codes are defined:
 - A..I: same as 1..9 plus step +1. in z-direction
 - a..i: same as 1..9 plus step -1. in z-direction
 - /: do not insert the next point
-    
+
 When looking at the x,y-plane with the x-axis to the right and the
 y-axis up, we have the following basic moves:
 1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
-    
+
 Adding 16 to the ordinal of the character causes an extra move of +1. in
 the z-direction. Adding 48 causes an extra move of -1. This means that
 'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
 z +/-= 1. This gives the following schema::
-      
+
              z+=1             z unchanged            z -= 1
-        
-         F    B    E          6    2    5         f    b    e 
-              |                    |                   |     
-              |                    |                   |     
-         C----I----A          3----9----1         c----i----a  
-              |                    |                   |     
-              |                    |                   |     
+
+         F    B    E          6    2    5         f    b    e
+              |                    |                   |
+              |                    |                   |
+         C----I----A          3----9----1         c----i----a
+              |                    |                   |
+              |                    |                   |
          G    D    H          7    4    8         g    d    h
 
 The special character '/' can be put before any character to make the
 move without inserting the new point. You need to start
-the string with a '0' or '9' to include the origin in the output.    
+the string with a '0' or '9' to include the origin in the output.
 
 For example, the string '0123' will result in the following four points,
 on the corners of a unit square::
@@ -668,7 +672,7 @@ on the corners of a unit square::
      [ 1.  0.  0.]
      [ 1.  1.  0.]
      [ 0.  1.  0.]]
-     
+
 
 Run the following simple script to check it::
 
@@ -681,9 +685,9 @@ Now you can use these points to initialize a Formex ::
     draw(F)
 
 This draws the four points. But the Formex class allows a lot more.
-You can directly initialize a Formex with the pattern input string, 
+You can directly initialize a Formex with the pattern input string,
 preceded by a modifier field. The modifier specifies how the list
-of points should be grouped into multipoint elements. It normally consists 
+of points should be grouped into multipoint elements. It normally consists
 of a number specifying the plexitude of the elements, followed by a ':'
 character. Thus, after the following definitions::
 
@@ -691,7 +695,7 @@ character. Thus, after the following definitions::
     G = Formex('2:0123')
     H = Formex('4:0123')
 
-F will be a set of 4 points (plexitude 1), G will be 2 line segments 
+F will be a set of 4 points (plexitude 1), G will be 2 line segments
 (plexitude 2) and H will a single square (plexitude 4).
 
 Furthermore, the special modifier 'l:' can be used to create line elements
@@ -703,19 +707,19 @@ Here's an example::
     draw(F)
 
 It creates the same circumference of a unit square as above (see
-figure :ref:`fig:square`), but is much simpler than the explicit 
+figure :ref:`fig:square`), but is much simpler than the explicit
 specification of the coordinates we used before. Notice that we have
 used here '1234' instead of '0123' to get the four corners of the unit
 square. Check what happens if you use '0123', and try to explain why.
 
 .. note:: Because the creation
-   of line segments between subsequent points is such a common task, 
+   of line segments between subsequent points is such a common task,
    the Formex class even allows you to drop the 'l:' modifier. If a
    Formex is initialized by a string without modifier field, the 'l:'
    is silently added.
 
 
-Figure :ref:`fig:patterns` shows some more examples. 
+Figure :ref:`fig:patterns` shows some more examples.
 
 .. _`fig:patterns`:
 
@@ -724,7 +728,7 @@ Figure :ref:`fig:patterns` shows some more examples.
    :alt: Images generated from patterns
 
    Images generated from the patterns '127', '11722' and '22584433553388'
- 
+
 
 Some simple wireframe patterns are defined in :mod:`simple.py` and are
 ready for use.  These pattern strings are stacked in a dictionary called
@@ -733,21 +737,21 @@ ready for use.  These pattern strings are stacked in a dictionary called
 
     from simple import Pattern
     F = Formex(Pattern['cube'])
-    print(F.shape())
+    print(F.shape)
     draw(F,color=blue,view='iso')
 
 .. _`fig:cube`:
 
 .. figure:: images/cube.png
    :align: center
-   :alt: A wireframe cube 
+   :alt: A wireframe cube
 
    A wireframe cube
 
 The printed out shape of the Formex is ``(12,2,3)``, confirming that
 what we have created here is not a 3D solid cube, nor the planes bounding
 that cube, but merely twelve straight line segments forming the edges
-of a cube. 
+of a cube.
 
 The ``view='iso'`` option in the draw statement rotates the camera so
 that it looks in the [-1,-1,-1] direction. This is one of the
@@ -758,10 +762,10 @@ predefined viewing directions and can also be set from the
 While the :func:`pattern` function can
 only generate points lying on a regular cartesian grid, pyFormex provides
 a wealth of transformation functions to move the points to other
-locations after they were created. 
+locations after they were created.
 Also, the :mod:`Turtle` plugin module provides a more general mechanism to
 create planar wireframe structures.
-  
+
 
 .. _subsec:reading_from_file_or_string:
 
@@ -788,7 +792,7 @@ Then create and execute the following script. ::
     F = Formex.fromfile('square.txt',sep=',',nplex=4)
     draw(F)
 
-It will generate two squares, as shown in the figure :ref:`fig:twosquares`. 
+It will generate two squares, as shown in the figure :ref:`fig:twosquares`.
 
 .. _`fig:twosquares`:
 
@@ -807,12 +811,12 @@ plexitude (4). The grouping of coordinates on a line is irrelevant:
 all data could just as well be given on a single line, or with just one value
 per line. The separator character can be accompanied by extra
 whitespace. Use a space character if your data are only separated by
-whitespace. 
+whitespace.
 
 There is a similar :meth:`Formex.fromstring` method, which reads
-coordinates directly from a string in the script. 
+coordinates directly from a string in the script.
 If you have a lot of coordinates to specify, this may be far more easy
-than using the list formatting. 
+than using the list formatting.
 The following script yields the same result as the above one::
 
     F = Formex.fromstring("""
@@ -872,7 +876,7 @@ center point of the square (G: plexitude 1), both in red.
 
 .. figure:: images/square_center.png
    :align: center
-   :alt: A square and its center point 
+   :alt: A square and its center point
 
    A square and its center point.
 
@@ -909,7 +913,7 @@ number of the Formex element it was generated from.
 To add properties to a Formex, use the
 :meth:`setProp` method. It ensures that the property array is generated with
 the correct type and shape. If needed, the supplied values are repeated to
-match the number of elements in the Formex. 
+match the number of elements in the Formex.
 The following script creates four triangles, the first and third get
 property number 1, the second and fourth get property 3. ::
 
@@ -931,13 +935,13 @@ individual values by directly accessing the :attr:`prop` attribute. ::
 When you draw a Formex with property numbers using the default draw
 options (i.e. no color specified), pyFormex will use the property
 numbers as indices in a color table, so different properties are shown
-in different colors. The default color table has eight colors: 
+in different colors. The default color table has eight colors:
 ``[black, red, green, blue, cyan, magenta, yellow, white]`` and will wrap
 around if a property value larger than 7 is used. You can however
 specify any other and larger colorset to be used for drawing the
 property colors. The following figure shows different renderings
 of the structure created by the above script. The :func:`drawNumbers`
-function draws the element numbers (starting from 0).  
+function draws the element numbers (starting from 0).
 
 .. _`fig:props`:
 
@@ -951,7 +955,7 @@ function draws the element numbers (starting from 0).
 In flat rendering mode, the element numbers may be obscured by the
 faces. In such case, you can make the numbers visible by using the
 transparent mode, which can be toggled
-with the |button-transparent| button. 
+with the |button-transparent| button.
 
 Adding properties to a Formex is often done with the sole purpose of
 drawing with multiple colors. But remember you are free to use the properties
@@ -972,7 +976,7 @@ geometry on a 2D screen can at times even be very misleading. The most
 reliable source for checking your geometry will always be the Formex
 data itself. We have already seen that you can print the coordinates
 of the Formex ``F``
-just by printing the Formex itself: ``print(F)``. 
+just by printing the Formex itself: ``print(F)``.
 Likewise you can see the property numbers from a ``print(F.prop)`` instruction.
 
 But once you start using large data structures, this information may become difficult to handle.
@@ -994,7 +998,7 @@ The following table lists the most interesting ones.
 +--------------------+----------------------------------------------+
 | :meth:`F.sizes()`  | The size of the bbox of the Formex           |
 +--------------------+----------------------------------------------+
- 
+
 
 .. _sec:saving_geometry:
 
@@ -1003,10 +1007,10 @@ Saving geometry
 
 Sometimes you want to save the created geometry to a file, e.g. to reread
 it in a next session without having to create it again, or to pass it to
-someone else. While pyFormex can export geometry in a large number of 
-formats, the best and easiest way is to use the :func:`writeGeomFile` 
-function. This ensures a fast and problem free saving and read back of 
-the geometry. The geometry is saved in pyFormex's own file format, in a 
+someone else. While pyFormex can export geometry in a large number of
+formats, the best and easiest way is to use the :func:`writeGeomFile`
+function. This ensures a fast and problem free saving and read back of
+the geometry. The geometry is saved in pyFormex's own file format, in a
 file with extension '.pgf'. This format is well documented (see
 :doc:`file_format`) and thus accessible
 for other programs. ::
@@ -1016,7 +1020,7 @@ for other programs. ::
     draw(B)
     writeGeomFile('saved.pgf',[A,B])
 
-When reading back such a file, the objects end up in a dictionary. 
+When reading back such a file, the objects end up in a dictionary.
 Quit pyFormex, restart it and read back the just saved file. ::
 
     D = readGeomFile('saved.pgf')
@@ -1031,7 +1035,7 @@ of the objects to save. ::
     writeGeomFile('saved.pgf',{'two_triangles':A,'a_square':B})
     D = readGeomFile('saved.pgf')
     print(D.keys())
-    
+
 
 .. _sec:saving_images:
 
@@ -1041,17 +1045,17 @@ Saving images
 Often you will want to save an image of the created geometry to a
 file, e.g. to include it in some document. This can readily be done
 from the :menuselection:`File --> Save Image` menu. You just have to
-fill in the file name and click the :guilabel:`Save` buttton. 
+fill in the file name and click the :guilabel:`Save` buttton.
 You can specify the file format by using the appropriate extension in
 the file name. The default and recommended format is ``png``, but
 pyFormex can save in commonly used bitmap formats like ``jpg`` or
-``gif`` as well. 
+``gif`` as well.
 If you have installed ``gl2ps`` (see :ref:`subsec:development-version`), you can even save in a number of
 vector formats, such as ``eps`` or ``svg``.
 
 But you can also create the images from inside your script. Just
 import the ``image`` module and call the ``image.save()`` function::
-   
+
     import gui.image
     image.save("my_image.png")
 
@@ -1059,8 +1063,8 @@ Often you will want to change some settings, like rendering mode or
 background color, to get a better looking picture.
 Since the main goal of pyFormex is to automate the creation and
 transformation of geometrical models, all these settings can be
-changed from inside your script as well. 
-The following code was used to create the four images in 
+changed from inside your script as well.
+The following code was used to create the four images in
 figure :ref:`fig:props` above.
 
 ::
@@ -1107,7 +1111,7 @@ change some of the most common rendering settings.
 +--------------------+------------------------+------------------------------------------------+
 
 
- 
+
 
 .. _sec:transform:
 
@@ -1120,7 +1124,7 @@ mathematical transformations. After creating a initial Formex, you can
 transform it by creating copies, translations, rotations, projections,...
 
 The :class:`Formex` class has an wide range of powerful transformation methods
-available, and this is not the place to treat them all. The reference manual 
+available, and this is not the place to treat them all. The reference manual
 :doc:`refman` describes them in detail.
 
 We will illustrate the power of the :class:`Formex` transformations by
@@ -1141,7 +1145,7 @@ helical frame structure:
 
 .. figure:: images/helix.png
    :align: center
-   :alt: A helical frame structure 
+   :alt: A helical frame structure
 
    A helical frame structure (Helix example)
 
@@ -1152,7 +1156,7 @@ script` to load it in your editor.
 .. literalinclude:: static/scripts/Helix.py
    :linenos:
 
-The script shows all steps in the building of the helical structure. 
+The script shows all steps in the building of the helical structure.
 We will explain and illustrate them one by one.
 If you want to see the intermediate results in pyFormex during
 execution of the script, you can set a wait time between
@@ -1160,7 +1164,7 @@ subsequent drawing operations with :menuselection:`Settings --> Draw
 Wait Time`. Or alternatively, you can start the script with the
 |button-step| button: pyFormex will then halt before each ``draw``
 function and wait until you push the |button-step| again.
- 
+
 The script starts (lines 26-27) with setting the two parameters ``m`` and ``n``. It is
 always a good idea to put constants in a variable. That makes it easy to
 change the values in a single place when you want to create another
@@ -1172,7 +1176,7 @@ Setting the ``clear=True`` option in line 29 makes sure the subsequent drawing i
 
 In line 30 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
 
-    F = Formex('l:164',[1,2,3]) 
+    F = Formex('l:164',[1,2,3])
 
 .. _`fig:helix-000`:
 
@@ -1313,7 +1317,7 @@ pyFormex contains other geometry models besides the Formex. The
 :class:`Mesh` model e.g. is important in exporting the geometry to finite
 element (FE) programs. A Formex often contains many points with (nearly) the
 same coordinates. In a Finite Element model, these points have to be merged
-into a single node, to express the continuity of the material. 
+into a single node, to express the continuity of the material.
 The :meth:`toMesh` method of a :class:`Formex`
 performs exactly that. It returns a  :class:`Mesh` instance, which has
 two import array attributes 'coords' and 'elems':

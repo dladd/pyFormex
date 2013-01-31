@@ -86,8 +86,6 @@ def run():
     draw(e,alpha=0.8)
 
     if export and checkWorkdir():
-        from plugins import trisurface
-        f = open('novation.stl','w')
         F = e # + b
         # Create triangles
         G = F.selectNodes([0,1,2])
@@ -96,8 +94,8 @@ def run():
             G += F.selectNodes([0,i-1,i])
         clear()
         draw(G)
-        surface.write_stla(f,G.coords)
-        f.close()
+        from filewrite import writeSTL
+        writeSTL('novation.stl',G.coords)
 
 if __name__ == 'draw':
     run()
