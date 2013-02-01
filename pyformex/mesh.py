@@ -1152,7 +1152,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         """
         nodes = unique(self.elems)
         if nodes.size == 0:
-            return self.__class__([],[])
+            ret = self.__class__([],[],eltype=self.elType())
 
         elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
@@ -1160,10 +1160,12 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
                 elems = inverseUniqueIndex(nodes)[self.elems]
             else:
                 elems = self.elems
-            return self.__class__(coords,elems,prop=self.prop,eltype=self.elType())
+            ret = self.__class__(coords,elems,prop=self.prop,eltype=self.elType())
 
         else:
-            return self
+            ret = self
+
+        return ret
 
 
     def select(self,selected,compact=True):
@@ -2005,7 +2007,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         The result will be of the same class as self (either a Mesh or a
         subclass thereof).
         """
-        return self.__class__.concatenate([self,other])
+        return self.concatenate([self,other])
 
 
     @classmethod
