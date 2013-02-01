@@ -547,7 +547,7 @@ _activate_settings = {
     'gui/modebar':updateToolbars,
     'canvas/bgmode':updateBackground,
     'canvas/bgcolor':updateBackground,
-    'canvas/bgcolor2':updateBackground,
+    'canvas/bgimage':updateBackground,
     'appdirs':updateAppdirs,
     'draw/wait':updateDrawWait,
     }
