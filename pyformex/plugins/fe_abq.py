@@ -506,6 +506,9 @@ def fmtBeamSection(el,setname):
             out += ", %s" % el.intpoints2
         out += "\n"
 
+    if el.transverseshearstiffness != None:
+        out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
+
     return out
 
 
@@ -2058,8 +2061,8 @@ Script: %s
                 gl,gr = self.model.splitElems(set)
                 elems = self.model.getElems(gr)
                 for i,elnrs,els in zip(range(len(gl)),gl,elems):
-                    grpname = Eset('grp',i)
-                    subsetname = Eset(p.nr,'grp',i,)
+                    grpname = Eset('grp',i,setname)
+                    subsetname = Eset(p.nr,'grp',i,setname)
                     nels = len(els)
                     if nels > 0:
                         pf.message("Writing %s elements from group %s" % (nels,i))
