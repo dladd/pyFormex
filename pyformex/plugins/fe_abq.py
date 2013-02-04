@@ -850,6 +850,7 @@ def fmtConstraint(prop):
     Optional:
 
     -type (surf2surf, node2surf)
+    -positiontolerance
     -no rotation
     
     Example:
@@ -862,6 +863,8 @@ def fmtConstraint(prop):
         out +="*Tie, name=%s, adjust=%s" % (p.name, p.adjust)
         if p.type is not None:
             out+=",type = %s" % p.type
+        if p.positiontolerance is not None:
+            out+=", position tolerance = %s" % (float(p.positiontolerance))
         if p.norotation == True:
             out+=", NO ROTATION"
         out +="\n"
@@ -1207,7 +1210,7 @@ def writeSection(fil,prop):
     ## UNSUPPORTED elements
     ##########################
     else:
-        pf.warning('Sorry, elementtype %s is not yet supported' % eltype)
+        pf.warning('Sorry, element type %s is not yet supported' % eltype)
 
 #~ FI  writeDisplacements  has been included in writeBoundaries
 # the previous one didnt allow to add option like 'USER' for disp subroutine
