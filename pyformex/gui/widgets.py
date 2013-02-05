@@ -687,9 +687,8 @@ class InputCombo(InputItem):
     down list.
 
     choices is a list/tuple of possible values.
-    default is the initial/default choice.
-    If default is not in the choices list, it is prepended.
-    If default is None, the first item of choices is taken as the default.
+    value is the initial/default choice.
+    If value is not in the choices list, it is prepended.
 
     The choices are presented to the user as a combobox, which will
     initially be set to the default value.
@@ -698,14 +697,12 @@ class InputCombo(InputItem):
     whenever the current selection changes.
     """
 
-    def __init__(self,name,default,choices=[],onselect=None,func=None,*args,**kargs):
+    def __init__(self,name,value,choices=[],onselect=None,func=None,*args,**kargs):
         """Initialize the input item."""
         if len(choices) == 0:
             raise ValueError,"Selection expected choices!"
-        if default is None:
-            default = choices[0]
-        elif default not in choices:
-            choices[0:0] = [ default ]
+        if value not in choices:
+            choices[0:0] = [ value ]
         self.input = QtGui.QComboBox()
         InputItem.__init__(self,name,*args,**kargs)
         self._choices_ = []
@@ -715,7 +712,7 @@ class InputCombo(InputItem):
 # BV REMOVED BECAUSE NOT DOCUMENTED
 #        if callable(func):
 #            self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
-        self.setValue(default)
+        self.setValue(value)
         self.layout().insertWidget(1,self.input)
 
     def value(self):
@@ -750,21 +747,21 @@ class InputRadio(InputItem):
     Radio buttons are a set of buttons used to select a value from a list.
 
     choices is a list/tuple of possible values.
-    default is the initial/default choice.
-    If default is not in the choices list, it is prepended.
-    If default is None, the first item of choices is taken as the default.
+    value is the initial/default choice.
+    If value is not in the choices list, it is prepended.
+    If value is None, the first item of choices is taken as the default.
 
     The choices are presented to the user as a hbox with radio buttons,
     of which the default will initially be pressed.
     If direction == 'v', the options are in a vbox.
     """
 
-    def __init__(self,name,default,choices=[],direction='h',*args,**kargs):
+    def __init__(self,name,value,choices=[],direction='h',*args,**kargs):
         """Initialize the input item."""
-        if default is None:
-            default = choices[0]
-        elif default not in choices:
-            choices[0:0] = [ default ]
+        if value is None:
+            value = choices[0]
+        elif value not in choices:
+            choices[0:0] = [ value ]
         self.input = QtGui.QGroupBox()
         InputItem.__init__(self,name,*args,**kargs)
         if direction == 'v':
@@ -781,7 +778,7 @@ class InputRadio(InputItem):
             self.hbox.addWidget(rb)
             self.rb.append(rb)
 
-        self.rb[choices.index(default)].setChecked(True)
+        self.rb[choices.index(value)].setChecked(True)
         self.input.setLayout(self.hbox)
         self.layout().insertWidget(1,self.input)
 
@@ -810,21 +807,21 @@ class InputPush(InputItem):
     Creates pushbuttons for the selection of a value from a list.
 
     choices is a list/tuple of possible values.
-    default is the initial/default choice.
-    If default is not in the choices list, it is prepended.
-    If default is None, the first item of choices is taken as the default.
+    value is the initial/default choice.
+    If value is not in the choices list, it is prepended.
+    If value is None, the first item of choices is taken as the default.
 
     The choices are presented to the user as a hbox with radio buttons,
     of which the default will initially be selected.
     If direction == 'v', the options are in a vbox.
     """
 
-    def __init__(self,name,default=None,choices=[],direction='h',*args,**kargs):
+    def __init__(self,name,value=None,choices=[],direction='h',*args,**kargs):
         """Initialize the input item."""
-        if default is None:
-            default = choices[0]
-        elif default not in choices:
-            choices[0:0] = [ default ]
+        if value is None:
+            value = choices[0]
+        elif value not in choices:
+            choices[0:0] = [ value ]
         self.input = QtGui.QGroupBox()
         InputItem.__init__(self,name,*args,**kargs)
         self.input.setFlat(True)
@@ -843,7 +840,7 @@ class InputPush(InputItem):
             self.hbox.addWidget(rb)
             self.rb.append(rb)
 
-        self.rb[choices.index(default)].setDown(True)
+        self.rb[choices.index(value)].setDown(True)
         self.input.setLayout(self.hbox)
         self.layout().insertWidget(1,self.input)
 
@@ -1153,6 +1150,8 @@ class InputColor(InputItem):
 
     def __init__(self,name,value,*args,**kargs):
         """Initialize the input item."""
+        if value is None:
+            value = 'black'
         color = colors.colorName(value)
         self.input = QtGui.QPushButton(color)
         InputItem.__init__(self,name,*args,**kargs)

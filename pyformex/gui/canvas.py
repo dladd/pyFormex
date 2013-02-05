@@ -344,6 +344,7 @@ class LightProfile(object):
 #  The Canvas Settings
 #
 
+
 class CanvasSettings(Dict):
     """A collection of settings for an OpenGL Canvas.
 
@@ -359,6 +360,7 @@ class CanvasSettings(Dict):
 
     Currently the following mode settings are defined:
 
+    - bgmode: the viewport background color mode
     - bgcolor: the viewport background color: a single color or a list of
       colors (max. 4 are used).
     - bgimage: background image filename
@@ -444,6 +446,7 @@ class CanvasSettings(Dict):
             'avgnormals': False,
             }),
         }
+    bgcolormodes = [ 'solid', 'vertical', 'horizontal', 'full' ]
     edge_options = [ 'none','feature','all' ]
 
     def __init__(self,**kargs):
@@ -493,6 +496,10 @@ class CanvasSettings(Dict):
                     v = map(int,v)
                 elif k == 'transparency':
                     v = max(min(float(v),1.0),0.0)
+                elif k == 'bgmode':
+                    v = str(v).lower()
+                    if not v in clas.bgcolormodes:
+                        raise
                 elif k == 'edges':
                     v = str(v).lower()
                     if not v in clas.edge_options:

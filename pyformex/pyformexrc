@@ -168,6 +168,7 @@ wireframe_mode = 'smart'    # set to 'gl' for old behavior
 # This should only contain the keys that are also in CanvasSettings
 # Other canvas related settings can be added to the [draw] section
 [canvas]
+bgmode = 'solid'        # one of 'solid', 'vert', 'hor', 'full'
 bgcolor = 'grey90'      # background color (single color or list of 2 or 4)
 bgimage = ''            # background image, filename
 fgcolor = 'black'       # default drawing color

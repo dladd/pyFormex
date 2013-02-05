@@ -506,6 +506,9 @@ def fmtBeamSection(el,setname):
             out += ", %s" % el.intpoints2
         out += "\n"
 
+    if el.transverseshearstiffness != None:
+        out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
+
     return out
 
 
@@ -847,6 +850,7 @@ def fmtConstraint(prop):
     Optional:
 
     -type (surf2surf, node2surf)
+    -positiontolerance
     -no rotation
     
     Example:
@@ -859,6 +863,8 @@ def fmtConstraint(prop):
         out +="*Tie, name=%s, adjust=%s" % (p.name, p.adjust)
         if p.type is not None:
             out+=",type = %s" % p.type
+        if p.positiontolerance is not None:
+            out+=", position tolerance = %s" % (float(p.positiontolerance))
         if p.norotation == True:
             out+=", NO ROTATION"
         out +="\n"
@@ -1204,7 +1210,7 @@ def writeSection(fil,prop):
     ## UNSUPPORTED elements
     ##########################
     else:
-        pf.warning('Sorry, elementtype %s is not yet supported' % eltype)
+        pf.warning('Sorry, element type %s is not yet supported' % eltype)
 
 #~ FI  writeDisplacements  has been included in writeBoundaries
 # the previous one didnt allow to add option like 'USER' for disp subroutine
@@ -2058,8 +2064,8 @@ Script: %s
                 gl,gr = self.model.splitElems(set)
                 elems = self.model.getElems(gr)
                 for i,elnrs,els in zip(range(len(gl)),gl,elems):
-                    grpname = Eset('grp',i)
-                    subsetname = Eset(p.nr,'grp',i,)
+                    grpname = Eset('grp',i,setname)
+                    subsetname = Eset(p.nr,'grp',i,setname)
                     nels = len(els)
                     if nels > 0:
                         pf.message("Writing %s elements from group %s" % (nels,i))
