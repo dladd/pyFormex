@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -50,7 +50,7 @@ _name_ = '_surface_menu_'
 def draw_edge_numbers(n):
     """Draw the edge numbers of the named surface."""
     S = named(n)
-    F = Formex(S.coords[S.getEdges()]) 
+    F = Formex(S.coords[S.getEdges()])
     return drawNumbers(F,color='green')
 
 def draw_normals(n,avg=False):
@@ -137,7 +137,7 @@ Shall I proceed with the drawing now?
 """):
                     selection.draw()
     return fn
-    
+
 
 def printSize():
     for s in selection.names:
@@ -197,7 +197,7 @@ def toFormex(suffix=''):
     formex_menu.selection.set(newnames)
     clear()
     formex_menu.selection.draw()
-    
+
 
 def fromFormex(suffix=''):
     """Transform the Formex selection to TriSurfaces.
@@ -254,7 +254,7 @@ def toMesh(suffix=''):
     geometry_menu.selection.set(newnames)
     clear()
     geometry_menu.selection.draw()
-    
+
 
 def fromMesh(suffix=''):
     """Transform the Mesh selection to TriSurfaces.
@@ -336,14 +336,23 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
     F = selection.check(single=True)
     if F:
         if type(types) == str:
+            ftype = types
             types = [ types ]
+        else:
+            ftype = None
         types = map(utils.fileDescription,types)
         fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
-            pf.message("Exporting surface model to %s" % fn)
+            if ftype is None:
+                ftype = utils.fileTypeFromExt(fn)
+            pf.message("Exporting surface model to %s (%s)" % (fn,ftype.upper()))
             pf.GUI.setBusy()
-            F.write(fn)   
+            F.write(fn,ftype)
             pf.GUI.setBusy(False)
+
+
+def write_bin_stl():
+    write_surface('stlb')
 
 
 def export_webgl():
@@ -354,7 +363,7 @@ def export_webgl():
         if fn:
             pf.message("Exporting surface model to %s" % fn)
             pf.GUI.setBusy()
-            F.webgl(fn)   
+            F.webgl(fn)
             pf.GUI.setBusy(False)
 
 #
@@ -399,7 +408,7 @@ def fillBorders():
         res = dia.getResults()
         if res:
             pf.PF[_data_] = res
-        
+
             if res['Fill which borders'] == 'One':
                 B = B[:1]
             fills = [ fillBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
@@ -415,7 +424,7 @@ def fillBorders():
                 draw(fills)
                 export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
 
-        
+
 def deleteTriangles():
     S = selection.check(single=True)
     if S:
@@ -486,7 +495,7 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=None,vmin=
 
         # !! THIS SHOULD BE IMPLEMENTED AS A GENERAL VALUE CLIPPER
         # !! e.g popping up when clicking the legend
-        # !! and the values should be changeable 
+        # !! and the values should be changeable
 
         if clip:
             clip = clip.lower()
@@ -495,7 +504,7 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=None,vmin=
                     from scipy.stats.stats import scoreatpercentile
                 except:
                     warning("""..
-                
+
 **The **percentile** clipping option is not available.
 Most likely because 'python-scipy' is not installed on your system.""")
                     return
@@ -507,7 +516,7 @@ Most likely because 'python-scipy' is not installed on your system.""")
                     vmin = Q1-factor*(Q3-Q1)
                 if vmax:
                     vmax = Q3+factor*(Q3-Q1)
-                
+
             if clip == 'top':
                 val = val.clip(max=vmax)
             elif clip == 'bottom':
@@ -553,12 +562,12 @@ def _close_stats_dia():
         _stat_dia.close()
         _stat_dia = None
 
-    
+
 def showStatisticsDialog():
     global _stat_dia
     if _stat_dia:
         _close_stats_dia()
-        
+
     dispmodes = ['On Domain','Histogram','Cumulative Histogram']
     keys = SelectableStatsValues.keys()
     _stat_dia = widgets.InputDialog(
@@ -582,8 +591,8 @@ def showStatisticsDialog():
         default='Show on domain'
         )
     _stat_dia.show()
-    
-            
+
+
 
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
@@ -604,7 +613,7 @@ def showSurfaceValue(S,txt,val,onEdges):
     else:
         draw(S,color=cval)
     CL = ColorLegend(CS,100)
-    CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
+    CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec)
     pf.canvas.addDecoration(CLA)
     drawText(txt,10,230,font='hv18')
 
@@ -664,8 +673,8 @@ def partitionByAngle():
             for p in S.propSet():
                 print(" p: %s; n: %s" % (p,(S.prop==p).sum()))
             selection.draw()
-         
- 
+
+
 def showFeatureEdges():
     S = selection.check(single=True)
     if S:
@@ -679,7 +688,7 @@ def showFeatureEdges():
             p = S.featureEdges(angle=res['angle'])
             M = Mesh(S.coords,S.edges[p])
             draw(M,color='red',linewidth=3,bbox='last',nolight=True,ontop=res['ontop'])
-        
+
 
 #############################################################################
 # Transformation of the vertex coordinates (based on Coords)
@@ -689,7 +698,7 @@ def showFeatureEdges():
 # !! (and thus could be unified) if the surface transfromations were not done
 # !! inplace but returned a new surface instance instead.
 #
-            
+
 def scaleSelection():
     """Scale the selection."""
     FL = selection.check()
@@ -702,7 +711,7 @@ def scaleSelection():
             selection.changeValues([F.scale(scale) for F in FL])
             selection.drawChanges()
 
-            
+
 def scale3Selection():
     """Scale the selection with 3 scale values."""
     FL = selection.check()
@@ -825,7 +834,7 @@ def rollAxes():
 
 def clipSelection():
     """Clip the selection.
-    
+
     The coords list is not changed.
     """
     FL = selection.check()
@@ -852,7 +861,7 @@ def clipAtPlane():
     FL = selection.check()
     if not FL:
         return
-    
+
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
@@ -887,7 +896,7 @@ def cutWithPlane():
     FL = selection.check()
     if not FL:
         return
-    
+
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
@@ -930,11 +939,11 @@ def cutSelectionByPlanes():
     if len(planes) == 0:
         warning("You have to define some planes first.")
         return
-        
+
     res1 = widgets.ListSelection(planes,caption='Known %sobjects' % selection.object_type(),sort=True).getResult()
     if res1:
         res2 = askItems([_I('Tolerance',0.),
-                         _I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
+                         _I('Color by','side',itemtype='radio',choices=['side', 'element type']),
                          _I('Side','both',itemtype='radio',choices=['positive','negative','both']),
                          ],caption = 'Cutting parameters')
         if res2:
@@ -991,7 +1000,7 @@ def intersectWithPlane():
         M = [ S.intersectionWithPlane(P,N) for S in FL ]
         draw(M,color='red')
         export(dict([('%s/%s' % (n,suffix), m) for (n,m) in zip(selection,M)]))
-            
+
 
 def slicer():
     """Slice the surface to a sequence of cross sections."""
@@ -1011,7 +1020,7 @@ def slicer():
         pf.GUI.setBusy(False)
         print([ s.nelems() for s in slices ])
         draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
-        export({'%s/slices' % selection[0]:slices}) 
+        export({'%s/slices' % selection[0]:slices})
 
 
 def spliner():
@@ -1039,11 +1048,11 @@ def spliner():
         print(hasnan)
         print(sum(hasnan))
         #print [s.closed for s in split]
-        export({'%s/split' % selection[0]:split}) 
+        export({'%s/split' % selection[0]:split})
         draw(split,color='blue',bbox='last',view=None)
         splines = [ BezierSpline(s.coords[s.elems[:,0]],closed=True) for s in split ]
         draw(splines,color='red',bbox='last',view=None)
-        export({'%s/splines' % selection[0]:splines}) 
+        export({'%s/splines' % selection[0]:splines})
 
 
 ##################  Smooth the selected surface #############################
@@ -1111,7 +1120,7 @@ def create_volume():
         import tetgen
         M = tetgen.meshInsideSurface(S,quality=True)
         export({'tetmesh':M})
-        
+
 
 def export_surface():
     S = selection.check(single=True)
@@ -1167,7 +1176,7 @@ def trim_border(elems,nodes,nb,visual=False):
         F = Formex(nodes[elems],prop)
         clear()
         draw(F,view='left')
-        
+
     return elems[keep]
 
 
@@ -1225,8 +1234,8 @@ def scale_volume():
         return
     nodes,elems = PF['volume']
     nodes *= 0.01
-    PF['volume'] = (nodes,elems) 
-    
+    PF['volume'] = (nodes,elems)
+
 
 
 
@@ -1318,7 +1327,7 @@ def boolean():
     if len(surfs) == 0:
         warning("You currently have no exported surfaces!")
         return
-    
+
     ops = ['+ (Union)','- (Difference)','* (Intersection)']
     res = askItems([_I('surface 1',choices=surfs),
                     _I('surface 2',choices=surfs),
@@ -1343,7 +1352,7 @@ def intersection():
     if len(surfs) == 0:
         warning("You currently have no exported surfaces!")
         return
-    
+
     res = askItems([_I('surface 1',choices=surfs),
                     _I('surface 2',choices=surfs),
                     _I('check self intersection',False),
@@ -1374,7 +1383,7 @@ def centerline():
         export({'centerline':CL})
         draw(CL,color=red,ontop=True,nolight=True)
 
-    
+
 ################### menu #################
 
 _menu = 'Surface'
@@ -1389,7 +1398,8 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("&Convert from Mesh",fromMesh),
-        ("&Write Surface Model",write_surface),
+        ("&Export Surface Model",write_surface),
+        ("&Export as binary STL",write_bin_stl),
         ("&Export as WebGL Model",export_webgl),
         ("---",None),
         ("&Create surface",

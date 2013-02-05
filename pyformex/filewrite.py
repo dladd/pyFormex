@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -42,6 +42,11 @@ import utils
 import os
 
 
+#
+# DEVS: Do not use Int and Float here, but np.int32 and np.float32
+#
+
+
 def writeData(data,fil,fmt=' '):
     """Write an array of numerical data to an open file.
 
@@ -57,14 +62,14 @@ def writeData(data,fil,fmt=' '):
       - ' ': a single space: in this case the data are written in text
         mode, separated by a space, also using the function numpy.tofile.
         At the end, a newline is added. All the data of the array thus appear
-        on a single line. 
+        on a single line.
       - a format string compatible with the array data type. In this case
         float arrays will be forced to float32 and int arrays to int32.
         The format string should contain a valid format converter for a
         a single data item in both Python and C. They should also contain
         the necessary spacing or separator. Examples are '%5i ' for int data
         and '%f,' or '%10.3e' for float data. The array will be converted
-        to a 2D array, keeping the lengt of the last axis. The all elements
+        to a 2D array, keeping the length of the last axis. Then all elements
         will be written row by row using the specified format string, and a
         newline character will be written after each row.
         This mode is written by pyFormex function misc.tofile_int32 or
@@ -90,7 +95,7 @@ def writeIData(data,fil,fmt,ind=1):
     """Write an indexed array of numerical data to an open file.
 
     ind = i: autoindex from i
-          array: use these indices  
+          array: use these indices
     """
     kind = data.dtype.kind
     val = data.reshape(-1,data.shape[-1])
@@ -101,7 +106,7 @@ def writeIData(data,fil,fmt,ind=1):
         ind = ind.reshape(-1)
         if ind.shape[0] != nrows:
             raise ValueError,"Index should have same length as data"
-        
+
     if kind == 'i':
         raise ImplementationError
         misc.tofile_int32(val.astype(np.int32),fil,fmt)
@@ -126,7 +131,7 @@ def writeOFF(fn,coords,elems):
     """
     if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or elems.dtype.kind != 'i' or elems.ndim != 2:
         raise runtimeError, "Invalid type or shape of argument(s)"
-    
+
     fil = open(fn,'w')
     fil.write("OFF\n")
     fil.write("%d %d 0\n" % (coords.shape[0],elems.shape[0]))
@@ -167,7 +172,7 @@ def writeGTS(fn,coords,edges,faces):
 
 # Output of surface file formats
 
-def writeSTL(f,x,binary=False):
+def writeSTL(f,x,n=None,binary=False):
     """Write a collection of triangles to an STL file.
 
     Parameters:
@@ -175,24 +180,55 @@ def writeSTL(f,x,binary=False):
     - `fn`: file name, by preference ending with '.stl' or '.stla'
     - `x`: (ntriangles,3,3) shaped array with the vertices of the
       triangles
+    - `n`: (ntriangles,3) shaped array with the normals of the
+      triangles. If not specified, they will be calculated.
     - `binary`: if True, the output file format  will be a binary STL.
       The default is an ascii STL. Note that creation of a binary STL
       requires the extermal program 'admesh'.
     """
+    if not x.shape[1:] == (3,3):
+        raise ValueError,"Expected an (ntri,3,3) array, got %s" % x.shape
+
+    if n is None:
+        import geomtools
+        a,n = geomtools.areaNormals(x)
+        degen = geomtools.degenerate(a,n)
+        print("The model contains %d degenerate triangles" % degen.shape[0])
+        x = np.column_stack([n.reshape(-1,1,3),x])
+
     if binary:
-        from plugins.trisurface import stlConvert
-        tmp = utils.tempFile(suffix='.stl').name
-        writeSTLA(tmp,x)
-        stlConvert(tmp,f,binary=True)
-        os.remove(tmp)
+        write_stl_bin(f,x)
     else:
-        writeSTLA(f,x)
-        
-#
-# TODO: should we remove the 'own' feature here, or instead extend this
-# feature to the other functions
-#
-def writeSTLA(f,x):
+        write_stl_asc(f,x)
+
+
+def write_stl_bin(fn,x):
+    """Write a binary stl.
+
+    Returns a Coords with shape (ntri,4,3). The first item of each
+    triangle is the normal, the other three are the vertices.
+    """
+    if not x.shape[1:] == (4,3):
+        raise ValueError,"Expected an (ntri,4,3) array, got %s" % x.shape
+
+    def addTriangle(i):
+        x[i].tofile(fil)
+        fil.write('\x00\x00')
+
+    pf.message("Writing binary STL %s" % fn)
+    with open(fn,'wb') as fil:
+
+        head = "%-80s" % pf.fullVersion()
+        fil.write(head)
+        ntri = x.shape[0]
+        pf.message("Number of triangles: %s" % ntri)
+        np.array(ntri).astype(np.int32).tofile(fil)
+        x = x.astype(np.float32)
+        [ addTriangle(i) for i in range(ntri) ]
+    pf.message("Finished writing binary STL, %s bytes" % utils.fileSize(fn))
+
+
+def write_stl_asc(fn,x):
     """Write a collection of triangles to an ascii .stl file.
 
     Parameters:
@@ -201,24 +237,22 @@ def writeSTLA(f,x):
     - `x`: (ntriangles,3,3) shaped array with the vertices of the
       triangles
     """
-    import geomtools
-    own = type(f) == str
-    if own:
-        f = open(f,'w')
-    f.write("solid  Created by %s\n" % pf.Version)
-    area,norm = geomtools.areaNormals(x)
-    degen = geomtools.degenerate(area,norm)
-    print("The model contains %d degenerate triangles" % degen.shape[0])
-    for e,n in zip(x,norm):
-        f.write("  facet normal %s %s %s\n" % tuple(n))
-        f.write("    outer loop\n")
-        for p in e:
-            f.write("      vertex %s %s %s\n" % tuple(p))
-        f.write("    endloop\n")
-        f.write("  endfacet\n")
-    f.write("endsolid\n")
-    if own:
-        f.close()
+    if not x.shape[1:] == (4,3):
+        raise ValueError,"Expected an (ntri,4,3) array, got %s" % x.shape
+
+    pf.message("Writing ascii STL %s" % fn)
+    with open(fn,'wb') as fil:
+
+        fil.write("solid  Created by %s\n" % pf.fullVersion())
+        for e in x:
+            fil.write("  facet normal %s %s %s\n" % tuple(e[0]))
+            fil.write("    outer loop\n")
+            for p in e[1:]:
+                fil.write("      vertex %s %s %s\n" % tuple(p))
+            fil.write("    endloop\n")
+            fil.write("  endfacet\n")
+        fil.write("endsolid\n")
+    pf.message("Finished writing ascii STL, %s bytes" % utils.fileSize(fn))
 
 
 # End

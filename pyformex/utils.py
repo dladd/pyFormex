@@ -638,6 +638,7 @@ file_description = {
     'pyf': 'pyFormex projects (*.pyf)',
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'stl': 'STL files (*.stl)',
+    'stlb': 'Binary STL files (*.stl)',  # Use only for output
     'surface': 'Surface model (*.off *.gts *.stl *.off.gz *.gts.gz *.stl.gz *.neu *.smesh)',
     'tetgen': 'Tetgen file (*.poly *.smesh *.ele *.face *.edge *.node *.neigh)',
 }
@@ -708,6 +709,11 @@ def fileTypeFromExt(fname):
         if ext1:
             ext = '.'.join([ext1,ext])
     return ext
+
+
+def fileSize(fn):
+    """Return the size in bytes of the file fn"""
+    return os.path.getsize(fn)
 
 
 def findIcon(name):
