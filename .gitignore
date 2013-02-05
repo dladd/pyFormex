@@ -26,3 +26,4 @@ sphinx/*.help
 dist/
 build/
 www/
+test/

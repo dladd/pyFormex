@@ -50,6 +50,8 @@ from utils import deprecation
 
 # Conversion of surface file formats
 
+read_off = fileread.read_off
+
 def stlConvert(stlname,outname=None,binary=False,options='-d'):
     """Transform an .stl file to .off or .gts or binary .stl format.
 
@@ -127,26 +129,6 @@ def read_gts(fn):
        faces.shape[0] != nfaces:
         pf.message("Error while reading GTS file: the file is probably incorrect!")
     return coords,edges,faces
-
-
-def read_off(fn):
-    """Read an OFF surface mesh.
-
-    The mesh should consist of only triangles!
-    Returns a nodes,elems tuple.
-    """
-    pf.message("Reading .OFF %s" % fn)
-    fil = open(fn,'r')
-    head = fil.readline().strip()
-    if head != "OFF":
-        print("%s is not an OFF file!" % fn)
-        return None,None
-    nnodes,nelems,nedges = map(int,fil.readline().split())
-    nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
-    # elems have number of vertices + 3 vertex numbers
-    elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
-    pf.message("Read %d nodes and %d elems" % (nnodes,nelems))
-    return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
 def read_stl(fn,intermediate=None):
@@ -635,20 +617,25 @@ class TriSurface(Mesh):
             ftype = ftype[:-3]
             print(fn)
         if ftype == 'off':
-            surf = TriSurface(*read_off(fn))
+            data = read_off(fn)
         elif ftype == 'gts':
-            surf = TriSurface(*read_gts(fn))
+            data = read_gts(fn)
         elif ftype == 'stl':
-            surf = TriSurface(*read_stl(fn))
+            try:
+                # first try binary format
+                data = (fileread.read_stl_bin(fn)[:,1:],)
+            except:
+                # no succes: use conversion
+                data = read_stl(fn)
         elif ftype == 'neu':
-            surf = TriSurface(*fileread.read_gambit_neutral(fn))
+            data = fileread.read_gambit_neutral(fn)
         elif ftype == 'smesh':
-            surf = TriSurface(*tetgen.readSurface(fn))
+            data = tetgen.readSurface(fn)
         else:
             raise "Unknown TriSurface type, cannot read file %s" % fn
         if gzip:
             utils.removeFile(fn)
-        return surf
+        return TriSurface(*data)
 
 
     def write(self,fname,ftype=None):

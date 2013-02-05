@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -58,8 +58,8 @@ def readNodes(fil):
 
 def readElems(fil,nplex):
     """Read a set of elems of plexitude nplex from an open mesh file"""
-    print("Reading elements of plexitude %s" % nplex)
-    e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex) 
+    pf.message("Reading elements of plexitude %s" % nplex)
+    e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex)
     e = Connectivity(e)
     return e
 
@@ -72,7 +72,7 @@ def readEsets(fil):
         if len(s) == 4:
             data.append(s[:1]+map(int,s[1:]))
     return data
-            
+
 
 def readMeshFile(fn):
     """Read a nodes/elems model from file.
@@ -99,11 +99,11 @@ def readMeshFile(fn):
         elif mode == 'esets':
             d['esets'] = readEsets(dfil)
         else:
-            print("Skipping unrecognized line: %s" % line)
+            pf.message("Skipping unrecognized line: %s" % line)
         dfil.close()
 
     fil.close()
-    return d                    
+    return d
 
 
 def extractMeshes(d):
@@ -141,26 +141,73 @@ def readInpFile(filename):
     from plugins import ccxinp,fe
     ccxinp.skip_unknown_eltype = True
     model = ccxinp.readInput(filename)
-    print("Number of parts: %s" % len(model.parts))
+    pf.message("Number of parts: %s" % len(model.parts))
     fem = {}
     for part in model.parts:
         try:
             coords = Coords(part['coords'])
             nodid = part['nodid']
             nodpos = inverseUniqueIndex(nodid)
-            print("nnodes = %s" % coords.shape[0])
-            print("nodid: %s" % nodid)
-            print("nodpos: %s" % nodpos)
+            pf.message("nnodes = %s" % coords.shape[0])
+            pf.message("nodid: %s" % nodid)
+            pf.message("nodpos: %s" % nodpos)
             for e in part['elems']:
-                print("Orig els %s" % e[1])
-                print("Trl els %s" % nodpos[e[1]])
+                pf.message("Orig els %s" % e[1])
+                pf.message("Trl els %s" % nodpos[e[1]])
             elems = [ Connectivity(nodpos[e],eltype=t) for (t,e) in part['elems'] ]
-            print('ELEM TYPES: %s' % [e.eltype for e in elems])
+            pf.message('ELEM TYPES: %s' % [e.eltype for e in elems])
             fem[part['name']] = fe.Model(coords,elems)
         except:
-            print("Skipping part %s" % part['name'])
+            pf.message("Skipping part %s" % part['name'])
     return fem
-    
+
+
+def read_off(fn):
+    """Read an OFF surface mesh.
+
+    The mesh should consist of only triangles!
+    Returns a nodes,elems tuple.
+    """
+    pf.message("Reading .OFF %s" % fn)
+    fil = open(fn,'r')
+    head = fil.readline().strip()
+    if head != "OFF":
+        pf.message("%s is not an OFF file!" % fn)
+        return None,None
+    nnodes,nelems,nedges = map(int,fil.readline().split())
+    nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
+    # elems have number of vertices + 3 vertex numbers
+    elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
+    pf.message("Read %d nodes and %d elems" % (nnodes,nelems))
+    return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
+
+
+def read_stl_bin(fn):
+    """Read a binary stl.
+
+    Returns a Coords with shape (ntri,4,3). The first item of each
+    triangle is the normal, the other three are the vertices.
+.    """
+    def addTriangle(i):
+        x[i] = fromfile(file=fil,dtype=Float,count=12).reshape(4,3)
+        fil.read(2)
+
+    pf.message("Reading binary .STL %s" % fn)
+    fil = open(fn,'rb')
+    head = fil.read(80)
+    if head[:5] == 'solid':
+        raise ValueError("%s looks like an ASCII STL file!" % fn)
+
+    ntri = fromfile(file=fil,dtype=Int,count=1)[0]
+    pf.message("Number of triangles: %s" % ntri)
+    x = zeros((ntri,4,3),dtype=Float)
+    nbytes = 12*4 + 2
+    #pf.message("Reading per %s bytes" % nbytes)
+    [ addTriangle(i) for i in range(ntri) ]
+    pf.message("Finished reading binary stl")
+    return Coords(x)
+
+
 
 def read_gambit_neutral(fn):
     """Read a triangular surface mesh in Gambit neutral format.
@@ -184,7 +231,7 @@ def read_gambit_neutral_hex(fn):
     Returns a nodes,elems tuple.
     """
     scr = os.path.join(pf.cfg['bindir'],'gambit-neu-hex ')
-    print("%s '%s'" % (scr,fn))
+    pf.message("%s '%s'" % (scr,fn))
     utils.runCommand("%s '%s'" % (scr,fn))
     nodesf = utils.changeExt(fn,'.nodes')
     elemsf = utils.changeExt(fn,'.elems')
