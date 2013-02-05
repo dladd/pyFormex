@@ -34,16 +34,29 @@ import os,re,sys,tempfile,time
 from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
-# Some regular expressions
-digits = re.compile(r'(\d+)')
 
-# versions of detected modules
-the_version = {
-    'pyformex':pf.__version__,
-    'python':sys.version.split()[0],
-    }
-# versions of detected external commands
-the_external = {}
+# Python modules we know how to use
+# Do not include pyformex or python here: they are predefined
+# and could be erased by the detection
+# The value is a sequence of:
+#   - module name
+#   - module name to load the version
+#   - a sequence of attributes to get the version
+# If empty, the attribute is supposed to be '__version__'
+known_modules = {
+    'calpy'     : (),
+    'dicom'     : (),
+    'docutils'  : (),
+    'gdcm'      : ('','','GDCM_VERSION'),
+    'gl2ps'     : ('','','GL2PS_VERSION'),
+    'gnuplot'   : ('Gnuplot'),
+    'matplotlib': (),
+    'numpy'     : (),
+    'pyopengl'  : ('OpenGL',),
+    'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
+    'pyqt4gl'   : ('PyQt4','','QtOpenGL'),
+    'vtk'       : ('','','VTK_VERSION'),
+     }
 
 known_externals = {
     'abaqus': ('abaqus info=sys|head -n2|tail -n1', 'Abaqus (\S+)'),
@@ -62,6 +75,17 @@ known_externals = {
     'units': ('units --version','GNU Units version (\S+)'),
     'vmtk': ('vmtk --help','Usage: 	vmtk(\S+).*'),
     }
+
+# Some regular expressions
+digits = re.compile(r'(\d+)')
+
+# versions of detected modules
+the_version = {
+    'pyformex':pf.__version__,
+    'python':sys.version.split()[0],
+    }
+# versions of detected external commands
+the_external = {}
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
@@ -132,25 +156,6 @@ def requireModule(name):
 
 
 
-# Python modules we know how to use
-# Do not include pyformex or python here: they are predefined
-# and could be erased by the detection
-# The value is a chain of attributes to get the version
-# If empty, the attribute is supposed to be '__version__'
-known_modules = {
-    'numpy'     : (),
-    'pyopengl'  : ('OpenGL',),
-    'docutils'  : (),
-    'calpy'     : (),
-    'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
-    'pyqt4gl'   : ('PyQt4','','QtOpenGL'),
-    'matplotlib': (),
-    'gnuplot'   : ('Gnuplot'),
-    'gl2ps'     : ('','','GL2PS_VERSION'),
-    'vtk'       : ('','','VTK_VERSION'),
-     }
-
-
 def checkAllModules():
     """Check the existing of all known modules.
 
@@ -198,6 +203,8 @@ def checkModule(name,ver=(),fatal=False,quiet=False):
 
     except:
         # failure: unexisting or unregistered modules
+        if fatal:
+            raise
         m = ''
 
     #print("Module %s: Version %s" % (name,m))
