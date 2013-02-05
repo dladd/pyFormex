@@ -36,7 +36,7 @@ import os,sys
 import cPickle
 import gzip
 
-_signature_ = pf.FullVersion()
+_signature_ = pf.fullVersion()
 
 module_relocations = {
     'plugins.mesh' : 'mesh',

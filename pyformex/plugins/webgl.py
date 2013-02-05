@@ -174,7 +174,7 @@ window.onload = function() {
 var r = new X.renderer3D();
 r.init();
 
-""" % pf.FullVersion()
+""" % pf.fullVersion()
         s += '\n'.join([self.format_object(o) for o in self ])
 
         if self.camera:
@@ -200,7 +200,7 @@ r.render();
 <meta name="generator" content="%s">
 <meta name="description" content="%s">
 <meta name="keywords" content="%s">
-""" % (pf.FullVersion(),description,keywords)
+""" % (pf.fullVersion(),description,keywords)
         if author:
             s += '<meta name="author" content="%s">\n' % author
         s += """<title>%s</title>

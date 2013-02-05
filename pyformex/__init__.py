@@ -37,7 +37,7 @@ __revision__ = __version__
 Version = 'pyFormex %s' % __version__
 
 
-def FullVersion():
+def fullVersion():
     return "%s (%s)" % (Version,__revision__)
 
 Copyright = 'Copyright (C) 2004-2013 Benedict Verhegghe'

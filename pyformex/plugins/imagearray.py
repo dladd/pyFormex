@@ -264,29 +264,112 @@ def imagefile2string(filename):
 
 
 # Import images using dicom
-
 _dicom_spacing = None
 
-def readDicom(filename):
-    """Read a DICOM image file.
+if utils.checkModule('dicom'):
 
-    Parameters:
+    def loadImage_dicom(filename):
+        """Load a DICOM image into a numpy array.
 
-    - `file`: the name of a DICOM image file
+        This function uses the python-dicom module to load a DICOM image
+        into a numpy array. See also :func:`loadImage_gdcm` for an
+        equivalent using python-gdcm.
 
-    Returns a 3D array with the pixel data of all the images. The first
-      axis is the `z` value, the last the `x`.
+        Parameters:
 
-    As a side effect, this function sets the global variable `_dicom_spacing`
-    to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).
-    """
-    import dicom
-    global _dicom_spacing
-    _dicom_spacing = None
-    dcm = dicom.read_file(filename)
-    pix = dcm.pixel_array
-    _dicom_spacing = np.array(dcm.PixelSpacing + [dcm.SliceThickness])
-    return pix
+        - `file`: the name of a DICOM image file
+
+        Returns a 3D array with the pixel data of all the images. The first
+          axis is the `z` value, the last the `x`.
+
+        As a side effect, this function sets the global variable `_dicom_spacing`
+        to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).
+        """
+        import dicom
+        global _dicom_spacing
+        _dicom_spacing = None
+        dcm = dicom.read_file(filename)
+        pix = dcm.pixel_array
+        _dicom_spacing = np.array(dcm.PixelSpacing + [dcm.SliceThickness])
+        return pix
+
+    readDicom = loadImage_dicom
+
+
+if utils.checkModule('gdcm'):
+
+
+    def loadImage_gdcm(filename):
+        """Load a DICOM image into a numpy array.
+
+        This function uses the python-gdcm module to load a DICOM image
+        into a numpy array. See also :func:`loadImage_dicom` for an
+        equivalent using python-dicom.
+
+        Parameters:
+
+        - `file`: the name of a DICOM image file
+
+        Returns a 3D array with the pixel data of all the images. The first
+          axis is the `z` value, the last the `x`.
+
+        As a side effect, this function sets the global variable `_dicom_spacing`
+        to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).
+        """
+        import gdcm
+
+        def get_gdcm_to_numpy_typemap():
+            """Returns the GDCM Pixel Format to numpy array type mapping."""
+            _gdcm_np = {gdcm.PixelFormat.UINT8  :np.int8,
+                        gdcm.PixelFormat.INT8   :np.uint8,
+                        #gdcm.PixelFormat.UINT12 :np.uint12,
+                        #gdcm.PixelFormat.INT12  :np.int12,
+                        gdcm.PixelFormat.UINT16 :np.uint16,
+                        gdcm.PixelFormat.INT16  :np.int16,
+                        gdcm.PixelFormat.UINT32 :np.uint32,
+                        gdcm.PixelFormat.INT32  :np.int32,
+                        #gdcm.PixelFormat.FLOAT16:np.float16,
+                        gdcm.PixelFormat.FLOAT32:np.float32,
+                        gdcm.PixelFormat.FLOAT64:np.float64 }
+            return _gdcm_np
+
+
+        def get_numpy_array_type(gdcm_pixel_format):
+            """Returns a numpy array typecode given a GDCM Pixel Format."""
+            return get_gdcm_to_numpy_typemap()[gdcm_pixel_format]
+
+
+        def gdcm_to_numpy(image):
+            """Convert a GDCM image to a numpy array.
+
+            """
+            fmt = image.GetPixelFormat()
+
+            if fmt.GetScalarType() not in get_gdcm_to_numpy_typemap().keys():
+                raise ValueError,"Unsupported Pixel Format\n%s"%fmt
+
+            shape = (image.GetDimension(0),image.GetDimension(1))
+            if image.GetNumberOfDimensions() == 3:
+              shape = shape + (image.GetDimension(2),)
+            if fmt.GetSamplesPerPixel() != 1:
+                raise ValueError,"Can not read images with multiple samples per pixel."
+
+            dtype = get_numpy_array_type(fmt.GetScalarType())
+            gdcm_array = image.GetBuffer()
+            data = np.frombuffer(gdcm_array,dtype=dtype).reshape(shape)
+            spacing = np.array(image.GetSpacing())
+            return data,spacing
+
+
+        global _dicom_spacing
+        r = gdcm.ImageReader()
+        r.SetFileName(filename)
+        if not r.Read():
+            raise ValueError,"Could not read image file '%s'" % filename
+        pix,_dicom_spacing = gdcm_to_numpy(r.GetImage())
+        return pix
+
+    readDicom = loadImage_gdcm
 
 
 def dicom2numpy(files):
@@ -307,6 +390,8 @@ def dicom2numpy(files):
     if type(files) is str:
         files = utils.listTree(fp,listdirs=False,includefiles="*.dcm")
     # read and stack the images
+    print("Using %s to read DICOM files" % readDicom.__name__)
+
     pixar = np.dstack([ readDicom(f) for f in files ])
     scale = _dicom_spacing
     return pixar,scale

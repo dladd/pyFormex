@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -39,7 +39,7 @@ from plugins import isosurface as sf
 import elements
 import plugins.imagearray as ia
 
-    
+
 def loadImage(file,grey=True):
     """Load a grey image into a numpy array"""
     im = ia.image2numpy(file,order='RGB',indexed=False)
@@ -47,6 +47,7 @@ def loadImage(file,grey=True):
         # Do type conversion because auto conversion produces float64
         im = im.sum(axis=-1).astype(Float) / 3.
     return im
+
 
 def loadImages(files,glmode=True):
     images = [ loadImage(f) for f in files ]
@@ -82,8 +83,7 @@ def run():
             files = utils.NameSequence(fn[0]).files()
 
         print(files)
-        return
-    
+
         if ans == 1:
             data = loadImages(files)
             scale = ones(3)
@@ -92,7 +92,7 @@ def run():
             print("Spacing: %s" % scale)
             # normalize
             dmin,dmax = data.min(),data.max()
-            data = (data-dmin).astype(float32)/(dmax-dmin) 
+            data = (data-dmin).astype(float32)/(dmax-dmin)
 
         # level at which the isosurface is computed
         res = askItems([('isolevel',0.5)])
@@ -120,12 +120,13 @@ def run():
         level = 0.5*data.max()
 
     print("IMAGE DATA: %s, %s" % (data.shape,data.dtype))
+    print("Pixel Spacing: %s" % str(scale))
     print("levels: min = %s, max = %s" % (data.min(),data.max()))
     print("isolevel: %s" % level)
 
     fast = True
-    
-    # Compute the isosurface    
+
+    # Compute the isosurface
     from timer import Timer
     pf.GUI.setBusy()
     timer = Timer()

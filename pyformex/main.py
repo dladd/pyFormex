@@ -353,7 +353,7 @@ def run(argv=[]):
         # THE Qapp options are removed, because it does not seem to work !!!
         # SEE the comments in the gui.startGUI function
         usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
-        version = pf.FullVersion(),
+        version = pf.fullVersion(),
         description = pf.Description,
         formatter = optparse.TitledHelpFormatter(),
         option_list=[

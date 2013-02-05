@@ -80,7 +80,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default=None):
     access = res.acc
     compression = res.cpr
     convert = res.cvt
-    signature = pf.FullVersion()
+    signature = pf.fullVersion()
 
     # OK, we have all data, now create/open the project
     pf.message("Opening project %s" % fn)

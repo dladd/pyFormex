@@ -2420,13 +2420,19 @@ class FileSelection(QtGui.QFileDialog):
       current directory.
     - `pattern`: a string or a list of strings: specifies one or more UNIX
       glob patterns, used to limit the set of displayed filenames to those
-      matching the glob. Each string can
-      contain multiple globs, and an explanation string can be place in front::
+      matching the glob. Each string can contain multiple globs, and an
+      explanation string can be place in front::
 
         'Image files (*.png *.jpg)'
 
       The function :func:`utils.fileDescription` can be used to create some
       strings for common classes of files.
+
+      As a convenience, if a string starts with a '.', the remainder of the
+      string will be used as a lookup key in utils.fileDescription to get
+      the actual string to be used. Thus, pattern='.png' will filter all
+      '.png' files, and pattern='.img' will filter all image files in any
+      of the supported formats.
 
       If a list of multiple strings is given, a combo box will allow the
       user to select between one of them.

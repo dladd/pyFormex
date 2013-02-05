@@ -280,7 +280,7 @@ def Libraries():
 
 def reportDetected():
     notfound = '** Not Found **'
-    s = "%s\n" % pf.FullVersion()
+    s = "%s\n" % pf.fullVersion()
     s += "\nInstall type: %s\n" % pf.installtype
     s += "\npyFormex C libraries: %s\n" % Libraries()
     s += "\nPython version: %s\n" % sys.version
