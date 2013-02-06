@@ -106,7 +106,7 @@ class WebGL(List):
                 return
             if obj:
                 if not 'file' in kargs:
-                    kargs['file'] = '%s.stl' % kargs['name'] 
+                    kargs['file'] = '%s.stl' % kargs['name']
                 obj.write(kargs['file'],'stlb')
         if 'file' in kargs:
             self.append(Dict(kargs))
@@ -229,7 +229,7 @@ def surface2webgl(S,name,caption=None):
     - `caption`: text to use as caption
     """
     W = WebGL()
-    W.add(obj=S)
+    W.add(obj=S,file=name)
     s = S.dsize()
     W.view(position=[0.,0.,s])
     W.export(name,caption)
