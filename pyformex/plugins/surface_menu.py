@@ -89,9 +89,13 @@ class SurfaceObjects(DrawableObjects):
         self.toggleAnnotation(draw_normals,onoff)
     def toggleAvgNormals(self,onoff=None):
         self.toggleAnnotation(draw_avg_normals,onoff)
+    def set(self,names):
+        import geometry_menu as gm
+        DrawableObjects.set(self,names)
+        pf.GUI.selection['geometry'].set(names)
+
 
 selection = SurfaceObjects()
-
 
 ##################### select, read and write ##########################
 
@@ -122,8 +126,9 @@ def readSelection(select=True,draw=True,multi=True):
         names = map(utils.projectName,fn)
         pf.GUI.setBusy()
         surfaces = [ read_Surface(f,False) for f in fn ]
-        for i,S in enumerate(surfaces):
-            S.setProp(i)
+        if len(surfaces) > 1:
+            for i,S in enumerate(surfaces):
+                S.setProp(i)
         pf.GUI.setBusy(False)
         export(dict(zip(names,surfaces)))
         if select:
@@ -332,7 +337,7 @@ def merge():
     selection.draw()
 
 
-def write_surface(types=['surface','gts','stl','off','neu','smesh']):
+def export_surface(types=['surface','gts','stl','off','neu','smesh']):
     F = selection.check(single=True)
     if F:
         if type(types) == str:
@@ -350,9 +355,32 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
             F.write(fn,ftype)
             pf.GUI.setBusy(False)
 
+# TODO: this should be merged with export_surface
 
-def write_bin_stl():
-    write_surface('stlb')
+def export_stl():
+    F = selection.check(single=True)
+    if F:
+        res = askItems([
+            _I('filename',pf.cfg['workdir'],itemtype='file',filter=utils.fileDescription('stl'),text=''),
+            _I('binary',True),
+            _I('color','red',itemtype='color'),
+            _I('alpha',0.5),
+            ])
+        if not res:
+            return
+
+        fn = res['filename']
+        ftype = utils.fileTypeFromExt(fn)
+        if res['binary']:
+            ftype = 'stlb'
+            color = colors.RGBAcolor(res['color'],res['alpha'])
+        else:
+            color = None
+        print("Stored color is %s" % color)
+        pf.message("Exporting surface model to %s (%s)" % (fn,ftype.upper()))
+        pf.GUI.setBusy()
+        F.write(fn,ftype,color)
+        pf.GUI.setBusy(False)
 
 
 def export_webgl():
@@ -417,7 +445,6 @@ def fillBorders():
                 S = named(name)
                 for f in fills:
                     S += f
-                #print "MERGE",type(S)
                 export({name:S})
                 selection.draw()
             else:
@@ -1398,9 +1425,9 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("&Convert from Mesh",fromMesh),
-        ("&Export Surface Model",write_surface),
-        ("&Export as binary STL",write_bin_stl),
-        ("&Export as WebGL Model",export_webgl),
+        ("&Export Surface Model",export_surface),
+        ("&Export as STL",export_stl),
+        ("&Export as WebGL",export_webgl),
         ("---",None),
         ("&Create surface",
          [('&Cube',createCube),

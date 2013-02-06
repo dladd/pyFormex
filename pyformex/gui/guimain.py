@@ -1170,7 +1170,7 @@ def startGUI(args):
     pf.app = Application(args)
     #
     pf.debug("Arguments left after constructing the QApplication: %s" % args,pf.DEBUG.INFO)
-    pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'),pf.DEBUG.INFO)
+    pf.debug("Arguments left after constructing the QApplication: %s" % '\n'.join(pf.app.arguments()),pf.DEBUG.INFO)
     #pf.options.debug = 0
     # As far as I have been testing this, the args passed to the Qt application are
     # NOT acknowledged and neither are they removed!!

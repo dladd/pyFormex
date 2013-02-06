@@ -1,11 +1,11 @@
-# $Id$   pyformex
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -207,7 +207,7 @@ def meshToPolyLine2(m2):
     m2=m2.fuse().compact()
     ##m2 = Mesh(m2.coords,m2.elems.removeDegenerate().removeDoubles())
     m2 = Mesh(m2.coords,m2.elems.removeDegenerate().removeDuplicate())
-    # Split in connected loops 
+    # Split in connected loops
     parts = connectedLineElems(m2.elems)
     prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
     elems = concatenate(parts,axis=0)
@@ -257,7 +257,7 @@ def slicer(S,s0,s1,cutat=-1,visual=False):
         if s.coords[0,2] < s.coords[-1,2]:
             #print "Reversing PL %s" % i
             sections[i] = s.reverse()
-    
+
     #[draw([s.coords[-1] for s in sections], marksize=1) ]
 
     return sections
@@ -266,12 +266,12 @@ def slicer(S,s0,s1,cutat=-1,visual=False):
 def sliceBranch(S,cp,s0,s1,cl,nslices):
     """Slice a single branch of the bifurcation
 
-    - `S`: the bifurcation surface, oriented parallel to xy. 
-    - `cp` : the center of the bifurcation. 
-    - `s0`, `s1`: the control polylines along the branch. 
+    - `S`: the bifurcation surface, oriented parallel to xy.
+    - `cp` : the center of the bifurcation.
+    - `s0`, `s1`: the control polylines along the branch.
     - `cl`: the centerline of the branch.
     - `nslices`: the number of slices used to approximate the branch
-      surface. 
+      surface.
     """
     visual = drawOption('visual')
 
@@ -321,8 +321,8 @@ def sliceIt():
     t1= array([ h[ibr][sbr][0].coords[-1] for ibr in [0, 1, 2] for sbr in [0, 1]]).mean(axis=0)
     for ibr in [0, 1, 2]:
         for sbr in [0, 1]:
-            h[ibr][sbr][0].coords[0]=t0 
-            h[ibr][sbr][0].coords[-1]=t1 
+            h[ibr][sbr][0].coords[0]=t0
+            h[ibr][sbr][0].coords[-1]=t1
 
     export({'cross_sections':olist.flatten(h)})
     export({'cross_sections_backup':olist.flatten(h)})#to recover from overwriting when creating the outer cross sections
@@ -342,11 +342,11 @@ def splineIt():
 #
 #    niso= (res['niso'])
 #    smoothconnections=res['with_tangence']
-    
+
     niso=12
     smoothconnections=True
 #
-    
+
     nslice =  sliceData('nslice')
     cs = getData('cross_sections')
 
@@ -382,7 +382,7 @@ def splineIt():
 
 
                 sct=1.# factor to move the last control point=amount of tangence between contiguous splines
-                coordb[0, 1]=(coordb[0, 1]-coordb[0, 0])*sct+coordb[0, 0]       
+                coordb[0, 1]=(coordb[0, 1]-coordb[0, 0])*sct+coordb[0, 0]
                 smspl=smspl+[BezierSpline(coords=coordb[:, 0], control=coordb[:-1, [1, 2]])]
             spl.append(smspl)
     else: ##without continuity
@@ -398,7 +398,7 @@ or div=4. If closed =='closed' the last point has to be coincident to the 1st on
     if type(div)==int:
         at = Pts.atLength(div)
         if closed=='closed':return Pts.pointsAt(at)[:-1]
-        return Pts.pointsAt(at)  
+        return Pts.pointsAt(at)
     if type(div)==ndarray:
         At= Pts.atLength(div)
         if closed=='closed':return Pts.pointsAt(At) [:-1]
@@ -409,7 +409,7 @@ or div=4. If closed =='closed' the last point has to be coincident to the 1st on
 def seeding3zones(nseeds=[10, 10],zonesizes=[0.3, 0.3]):
     """it creates a 1D array of floats between 0.0 and 1.0 splitting this range in 3 zones: the first and the last have sizes determined in zonesizes and are populated with the numbers in nseeds. A trnasitional zone is calculated approximating a geometrical series (the next segment is as long as the previous*power)."""
     #nseeds = number of seeds in zone0 and zone1
-    #sizesizes are the zone sizes in percentages   
+    #sizesizes are the zone sizes in percentages
     #transition zone is seeded using an approximated geometrical series
 
     if sum(zonesizes)>1.:raise 'the sum of zone lengths has to be < 1.'
@@ -427,7 +427,7 @@ def seeding3zones(nseeds=[10, 10],zonesizes=[0.3, 0.3]):
     xtrans= cumsum(xtrans)
     xtrans=xtrans[:-1]*transzone/xtrans[-1]
     #if  len(xtrans)==0: warning('There is not enough space to fit a transition zone!')
-    seedingarray=[seed0,xtrans+seed0[-1], seed1 ]  
+    seedingarray=[seed0,xtrans+seed0[-1], seed1 ]
     return seedingarray#concatenate(seedingarray)
 
 
@@ -446,7 +446,7 @@ def inputLongitudinalSeeds():
 
     """
     global dialog
-    
+
     def show():
         """Show the current seeds"""
         global dialog,SA
@@ -469,7 +469,7 @@ def inputLongitudinalSeeds():
 
     def help():
         showInfo("Set the seeding parameters for the 3 branches. Each branch is divided in 3 parts: close to the bifurcation, far from the bifurcation and the central part between these two. Only the data for the first two need to be entered. The 3rd (central) is calculated as transition.")
-        
+
     clear()
     long_splines=named('long_splines')
     draw(long_splines, linewidth=1, color='gray' ,flat=True, alpha=1)
@@ -525,7 +525,7 @@ def seedLongSplines (H, at,  curvedSection=True, nPushedSections=6, napproxlong=
         hsh=int(ssh/2)#half point
         s12=(sideA[0]+ sideB[0])*0.5
         cutProfilePts=array([sideA[hsh], s12, s12, sideB[hsh]])
-        
+
         #[draw(BezierCurve(cutProfilePts[:, i]), alpha=1, flat=True) for i in range(1, sideA[0].shape[0]-1)]
         cutProfile2D=array([BezierCurve(cutProfilePts[:, i]).subPoints(npb)[:, :2] for i in range(1, sideA[0].shape[0]-1)])
         #cuts long splines with curved profiles
@@ -563,8 +563,8 @@ def seedLongSplines (H, at,  curvedSection=True, nPushedSections=6, napproxlong=
 def seedLongitudinalSplines():
 #    res= askItems([
 #    ('curvedSection', True),
-#    ['nPushedSections', 3], 
-#    ['napprox', 60],     
+#    ['nPushedSections', 3],
+#    ['napprox', 60],
 #    ])
 #    curvedsecs=res['curvedSection']
 #    numpushed=res['nPushedSections']
@@ -579,7 +579,7 @@ def seedLongitudinalSplines():
     except:
         warning("You need to set the longitudinal seeds first")
         return
-    
+
     seededBif = seedLongSplines (named('long_splines'),seeds,  curvedSection=curvedsecs, nPushedSections=numpushed, napproxlong=splineapprox, napproxcut=splineapprox)
     export({'seededBif':seededBif})
     [ drawSeededBranch(seededBif[i][0], seededBif[i][1], propbranch=i+1) for i in range(3) ]
@@ -600,7 +600,7 @@ def meshBranch(HC,OC,nlong,ncirc,ntr,nbl):
     #crate quad mesh on the external surface
     nq,eq = vsm.structuredQuadMeshGrid(nlong,ncirc)
     nq = Coords(column_stack([nq,ones([len(nq)])]) )
-    gnq,eq = vsm.mapHexLong([nq,eq,bl_block[2] ],hex_cp[2])#group of nodes 
+    gnq,eq = vsm.mapHexLong([nq,eq,bl_block[2] ],hex_cp[2])#group of nodes
     xsurf = gnq[:, eq].reshape(-1,4,3)
     return M,xsurf
 
@@ -792,7 +792,7 @@ except:
 
 def inputSlicingParameters():
     """Input the slicing parameters"""
-    
+
     res = askItems(_slice_data, caption='long cuts')
 
     if res:
@@ -807,7 +807,7 @@ def createBranches(branch):
     # reverse the uneven branches
     for i in range(1,6,2):
         branch[i] = branch[i].reverse()
-    
+
     print("Branch control lines:")
     for i in range(6):
         print(" %s, %s" % divmod(i,2))
@@ -839,7 +839,7 @@ def inputControlLines():
             branch.append(obj)
         else:
             break
-        
+
     if len(branch) == 6:
         undraw(BA)
         createBranches(branch)
@@ -883,7 +883,7 @@ def drawCrossSections():
     #draw(cs[1:6:2],color='blue')
     draw(Mesh.concatenate([i.toMesh() for i in olist.flatten(cs[0:6:2]) ]),color='red',flat=True, alpha=1, linewidth=3)
     draw(Mesh.concatenate([i.toMesh() for i in olist.flatten(cs[1:6:2]) ]),color='blue',flat=True, alpha=1, linewidth=3)
-    
+
 def drawSeededBranch(branchsections, branchcl, propbranch=0):
     [draw(PolyLine(sec, closed=True), flat=True, alpha=1, linewidth=3) for sec in branchsections]
     #draw(PolyLine(branchcl))
@@ -897,7 +897,7 @@ def drawOuterCrossSections():
 
 def drawSurfaceMesh():
     [draw(Formex(smesh), linewidth=3, color='green') for smesh in named('inner_surface_mesh') ]
-    
+
 def drawLumenMesh():
     lumen_model=named('CFD_lumen_model')
     n, el=lumen_model.coords, lumen_model.elems
@@ -907,7 +907,7 @@ def drawLumenMesh():
 def drawCrossSplines():
     sp = getData('cross_splines')
     if drawOption('fill_cross'):
-        [draw(Formex([si.coords for si in s]),color='black' ,flat=True, alpha=1) for s in sp] 
+        [draw(Formex([si.coords for si in s]),color='black' ,flat=True, alpha=1) for s in sp]
     else:
         [draw(s,color=c,flat=True, alpha=1) for s,c in zip(sp,color_half_branch)]
         if drawOption('numbers'):
@@ -973,12 +973,12 @@ def example():
     view('front')
     if not nextStep("This example guides you through the subsequent steps to create a hexahedral mesh in a bifurcation. At each step you can opt to execute a single step, continue the whole procedure, or quit the example.\n\n1. Input the bifurcation surface model"):
         return
-    
+
     examplefile = os.path.join(getcfg('datadir'),'bifurcation.off')
     print(examplefile)
     export({'surface':TriSurface.read(examplefile)})
     drawSurface()
-    
+
     if not nextStep('2. Create the central point of the bifurcation'):
         return
     cp = Coords([-1.92753589,  0.94010758, -0.1379855])
@@ -1070,10 +1070,10 @@ def create_menu():
         ("&5a. Input Slicing Parameters",inputSlicingParameters),
         ("&5b. Slice the bifurcation",sliceIt),
         ("&6.  Create Spline Mesh",splineIt),
-        ("&7a. Input Longitudinal Seeds",inputLongitudinalSeeds), 
+        ("&7a. Input Longitudinal Seeds",inputLongitudinalSeeds),
         ("&7b. Seed Longitudinal Splines",seedLongitudinalSplines),
-        ("&8a. Input Meshing Parameters",inputMeshingParameters), 
-        ("&8b. Sweeping Mesher",sweepingMesher), 
+        ("&8a. Input Meshing Parameters",inputMeshingParameters),
+        ("&8b. Sweeping Mesher",sweepingMesher),
         ("---",None),
         ("&Create Surface Mesh",surfMesh),
         ("---",None),
@@ -1084,7 +1084,7 @@ def create_menu():
             ("&Control Lines",drawControlLines),
             ("&Central Point",drawCentralPoint),
             ("&Center Lines2D",drawCenterLines),
-            ("&Center Lines3D",drawAxisSplines), 
+            ("&Center Lines3D",drawAxisSplines),
             ("&Cross Sections",drawCrossSections),
             ("&Cross Splines",drawCrossSplines),
             ("&Long Splines",drawLongSplines),

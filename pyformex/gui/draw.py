@@ -1203,6 +1203,21 @@ def colormap(color=None):
     return pf.canvas.settings.colormap
 
 
+def colorindex(color):
+    """Return the index of a color in the current colormap"""
+    cmap = pf.canvas.settings.colormap
+    color=array(color)
+    i = where((cmap==color).all(axis=1))[0]
+    if len(i) > 0:
+        return i[0]
+    else:
+        i = len(cmap)
+        pf.message("Add color %s = %s to viewport colormap" % (i,color))
+        color = color.reshape(1,3)
+        pf.canvas.settings.colormap = concatenate([cmap,color],axis=0)
+    return i
+
+
 def renderModes():
     """Return a list of predefined render profiles."""
     return canvas.CanvasSettings.RenderProfiles.keys()

@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -28,7 +28,7 @@
 from __future__ import print_function
 
 from gui import QtCore,QtGui
-from arraytools import array,isInt,Int
+from arraytools import array,isInt,Int,concatenate
 
 
 def GLcolor(color):
@@ -39,7 +39,7 @@ def GLcolor(color):
 
     - a QColor
     - a string specifying the Xwindow name of the color
-    - a hex string '#RGB' with 1 to 4 hexadecimal digits per color 
+    - a hex string '#RGB' with 1 to 4 hexadecimal digits per color
     - a tuple or list of 3 integer values in the range 0..255
     - a tuple or list of 3 float values in the range 0.0..1.0
 
@@ -74,7 +74,7 @@ def GLcolor(color):
     # QColor: convert to (r,g,b) tuple (0..255)
     if isinstance(col,QtGui.QColor):
         col = (col.red(),col.green(),col.blue())
-        
+
     # Convert to a list and check length
     try:
         col = tuple(col)
@@ -99,6 +99,16 @@ def RGBcolor(color):
     Returns the corresponding RGB tuple.
     """
     col = array(GLcolor(color))*255
+    return col.round().astype(Int)
+
+
+def RGBAcolor(color,alpha):
+    """Return an RGBA (0-255) tuple for a color and alpha value.
+
+    color can be anything that is accepted by GLcolor.
+    Returns the corresponding RGBA tuple.
+    """
+    col = concatenate([array(GLcolor(color)),[alpha]])*255
     return col.round().astype(Int)
 
 

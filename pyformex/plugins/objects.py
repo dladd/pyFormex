@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Selection of objects from the global dictionary. 
+"""Selection of objects from the global dictionary.
 
 This is a support module for other pyFormex plugins.
 """
@@ -48,7 +48,7 @@ class Objects(object):
     objects can be changed and the changes can be undone.
     """
 
-    def __init__(self,clas=None,like=None,filter=None,namelist=[]): 
+    def __init__(self,clas=None,like=None,filter=None,namelist=[]):
         """Create a new selection of objects.
 
         If a filter is given, only objects passing it will be accepted.
@@ -73,7 +73,7 @@ class Objects(object):
             return self.clas.__name__+' '
         else:
             return ''
-    
+
 
     def set(self,names):
         """Set the selection to a list of names.
@@ -104,12 +104,12 @@ class Objects(object):
     def clear(self):
         """Clear the selection."""
         self.set([])
-        
+
 
     def __getitem__(self,i):
         """Return selection item i"""
         return self.names[i]
-    
+
 
     def listAll(self):
         """Return a list with all selectable objects.
@@ -132,8 +132,8 @@ class Objects(object):
         """
         self.values = map(named,self.names)
         if copy:
-            self.values = map(deepcopy,self.values) 
-        
+            self.values = map(deepcopy,self.values)
+
 
     def changeValues(self,newvalues):
         """Replace the current values of selection by new ones.
@@ -183,7 +183,7 @@ class Objects(object):
         of the selection.names.
         """
         return odict.ODict(zip(self.names,self.check(warn=False)))
-    
+
 
     def ask(self,mode='multi'):
         """Show the names of known objects and let the user select one or more.
@@ -253,7 +253,7 @@ class Objects(object):
         """Write objects to a geometry file."""
         objects = self.odict()
         if objects:
-            writeGeomFile(filename,objects) 
+            writeGeomFile(filename,objects)
 
 
     def readFromFile(self,filename):
@@ -268,7 +268,7 @@ class Objects(object):
 from gui.draw import *
 
 # Default Annotations
-            
+
 def draw_object_name(n):
     """Draw the name of an object at its center."""
     return drawText3D(named(n).center(),n)
@@ -292,14 +292,14 @@ def draw_free_edges(n):
 def draw_bbox(n):
     """Draw the bbox of an object."""
     return drawBbox(named(n))
-   
+
 
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
 
     This is a subclass of Objects. The constructor has the same arguments
     as the Objects class, plus the following:
-    
+
     - `annotations`: a set of functions that draw annotations of the objects.
       Each function should take an object name as argument, and draw the
       requested annotation for the named object. If the object does not have
@@ -360,8 +360,8 @@ class DrawableObjects(Objects):
     def toggleAnnotation(self,f,onoff=None):
         """Toggle the display of an annotation On or Off.
 
-        If given, onoff is True or False. 
-        If no onoff is given, this works as a toggle. 
+        If given, onoff is True or False.
+        If no onoff is given, this works as a toggle.
         """
         if onoff is None:
             # toggle
@@ -398,12 +398,12 @@ class DrawableObjects(Objects):
         Currently only changes the ontop attribute for all drawn
         annotations. Values: True, False or '' (toggle).
         Other values have no effect.
-        
+
         """
         for f in self._annotations.values():
             if ontop in [ True, False, '' ]:
                 if not isinstance(f,list):
-                   f = [f] 
+                   f = [f]
                 for a in f:
                     if ontop == '':
                         ontop = not a.ontop
@@ -426,7 +426,7 @@ class DrawableObjects(Objects):
         return self.hasAnnotation(draw_nodes)
     def hasBbox(self):
         return self.hasAnnotation(draw_bbox)
-        
+
     def toggleNames(self,onoff=None):
         self.toggleAnnotation(draw_object_name,onoff)
     def toggleNumbers(self,onoff=None):
@@ -439,7 +439,7 @@ class DrawableObjects(Objects):
         self.toggleAnnotation(draw_nodes,onoff)
     def toggleBbox(self,onoff=None):
         self.toggleAnnotation(draw_bbox,onoff)
-        
+
 
     def setProp(self,prop=None):
         """Set the property of the current selection.
@@ -478,12 +478,12 @@ class DrawableObjects(Objects):
             self.draw()
 
 
-    
+
 
 if __name__ == "draw":
     # If executed as a pyformex script
     pf.debug('Reloading module %s' % __file__)
-    
+
 elif __name__ == "__main__":
     print(__doc__)
 

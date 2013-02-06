@@ -608,14 +608,11 @@ class TriSurface(Mesh):
         uncompressed on the fly during the reading and the uncompressed
         versions are deleted after reading.
         """
-        print(fn)
         ftype = utils.fileTypeFromExt(fn)
-        print("FTYPE %s" % ftype)
         gzip = ftype.endswith('.gz')
         if gzip:
             fn = utils.gunzip(fn,unzipped='',remove=False)
             ftype = ftype[:-3]
-            print(fn)
         if ftype == 'off':
             data = read_off(fn)
         elif ftype == 'gts':
@@ -623,8 +620,15 @@ class TriSurface(Mesh):
         elif ftype == 'stl':
             try:
                 # first try binary format
-                data = (fileread.read_stl_bin(fn)[:,1:],)
+                data,color = fileread.read_stl_bin(fn)
+                S = TriSurface(data[:,1:])
+                if color:
+                    from gui.draw import colorindex
+                    p = colorindex(color)
+                    S.setProp(p)
+                return S
             except:
+                print("Could not read as binary stl, will try conversion")
                 # no succes: use conversion
                 data = read_stl(fn)
         elif ftype == 'neu':
@@ -638,13 +642,14 @@ class TriSurface(Mesh):
         return TriSurface(*data)
 
 
-    def write(self,fname,ftype=None):
+    def write(self,fname,ftype=None,color=None):
         """Write the surface to file.
 
         If no filetype is given, it is deduced from the filename extension.
         If the filename has no extension, the 'off' file type is used.
         For a file with extension 'stl', the ftype may be 'stla' or 'stlb'
         to force ascii or binary STL format.
+        The color is only useful for 'stlb' format.
         """
         if ftype is None:
             ftype = os.path.splitext(fname)[1]
@@ -663,7 +668,7 @@ class TriSurface(Mesh):
             if ftype in ['stl','stla']:
                 filewrite.writeSTL(fname,self.coords[self.elems],binary=False)
             elif ftype == 'stlb':
-                filewrite.writeSTL(fname,self.coords[self.elems],binary=True)
+                filewrite.writeSTL(fname,self.coords[self.elems],binary=True,color=color)
             elif ftype == 'off':
                 filewrite.writeOFF(fname,self.coords,self.elems)
             elif ftype == 'smesh':

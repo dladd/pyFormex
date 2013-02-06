@@ -1141,7 +1141,8 @@ def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
                 if canvas:
                     colormap = canvas.settings.colormap
                 else:
-                    colormap = pf.cfg['canvas/colormap']
+                    colormap = pf.canvas.settings.colormap
+                    #cfg['canvas/colormap']
             colormap = saneColor(colormap)
             colormap = saneColorArray(colormap,(ncolors,))
         else:

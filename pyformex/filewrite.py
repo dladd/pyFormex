@@ -38,6 +38,7 @@ from __future__ import print_function
 import pyformex as pf
 import numpy as np
 from lib import misc
+from arraytools import checkArray
 import utils
 import os
 
@@ -172,7 +173,7 @@ def writeGTS(fn,coords,edges,faces):
 
 # Output of surface file formats
 
-def writeSTL(f,x,n=None,binary=False):
+def writeSTL(f,x,n=None,binary=False,color=None):
     """Write a collection of triangles to an STL file.
 
     Parameters:
@@ -185,6 +186,8 @@ def writeSTL(f,x,n=None,binary=False):
     - `binary`: if True, the output file format  will be a binary STL.
       The default is an ascii STL. Note that creation of a binary STL
       requires the extermal program 'admesh'.
+    - `color`: a single color can be passed to a binary STL and will be
+      stpored in the header.
     """
     if not x.shape[1:] == (3,3):
         raise ValueError,"Expected an (ntri,3,3) array, got %s" % x.shape
@@ -197,28 +200,44 @@ def writeSTL(f,x,n=None,binary=False):
         x = np.column_stack([n.reshape(-1,1,3),x])
 
     if binary:
-        write_stl_bin(f,x)
+        write_stl_bin(f,x,color)
     else:
         write_stl_asc(f,x)
 
 
-def write_stl_bin(fn,x):
+def write_stl_bin(fn,x,color=None):
     """Write a binary stl.
 
-    Returns a Coords with shape (ntri,4,3). The first item of each
-    triangle is the normal, the other three are the vertices.
+    Parameters:
+
+    - `x`: (ntri,4,3) float array describin ntri triangles.
+      The first item of each triangle is the normal, the other
+      three are the vertices.
+    - `color`: (4,) int array with values in the range 0..255. These are
+      the red, green, blue and alpha components of the color. This is a
+      single color for all the triangles, and will be stored in the header
+      of the STL file.
     """
-    if not x.shape[1:] == (4,3):
-        raise ValueError,"Expected an (ntri,4,3) array, got %s" % x.shape
+    x = checkArray(x,shape=(-1,4,3),kind='f')
+    if color is not None:
+        color = checkArray(color,shape=(4,),kind='i').astype(np.uint8)
 
     def addTriangle(i):
         x[i].tofile(fil)
         fil.write('\x00\x00')
 
     pf.message("Writing binary STL %s" % fn)
-    with open(fn,'wb') as fil:
+    ver = pf.fullVersion()
+    if len(ver) > 50:
+        ver = ver[:50]
+    if color is None:
+        color = ''
+    else:
+        color = "COLOR=%4s" % color.tostring()
+        pf.message("Adding %s to the header" % color)
 
-        head = "%-80s" % pf.fullVersion()
+    with open(fn,'wb') as fil:
+        head = "%-50s%-30s" % (ver,color)
         fil.write(head)
         ntri = x.shape[0]
         pf.message("Number of triangles: %s" % ntri)

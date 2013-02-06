@@ -195,17 +195,26 @@ def read_stl_bin(fn):
     pf.message("Reading binary .STL %s" % fn)
     fil = open(fn,'rb')
     head = fil.read(80)
+    #print("HEAD:%s" % head)
     if head[:5] == 'solid':
         raise ValueError("%s looks like an ASCII STL file!" % fn)
+    i = head.find('COLOR=')
+    if i >= 0 and i <= 70:
+        color = fromstring(head[i+6:i+10],dtype=uint8,count=4)
+    else:
+        color = None
 
     ntri = fromfile(file=fil,dtype=Int,count=1)[0]
     pf.message("Number of triangles: %s" % ntri)
     x = zeros((ntri,4,3),dtype=Float)
     nbytes = 12*4 + 2
-    #pf.message("Reading per %s bytes" % nbytes)
     [ addTriangle(i) for i in range(ntri) ]
     pf.message("Finished reading binary stl")
-    return Coords(x)
+    x = Coords(x)
+    if color is not None:
+        from gui.colors import GLcolor
+        color = GLcolor(color[:3])
+    return x,color
 
 
 

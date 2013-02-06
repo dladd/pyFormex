@@ -1,5 +1,5 @@
 .. TODO file for the pyFormex project            -*- rst -*-
-  
+
 ..
   This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,28 +8,28 @@
   Project page:  http://savannah.nongnu.org/projects/pyformex/
   Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 pyFormex TODO list
 ==================
 
 Here is a list of the planned new features, enhancements and changes that we
-want to implement in future releases. 
+want to implement in future releases.
 There is no guarantee that the tasks mentioned here will indeed be completed
 in due time (if ever!). It is mainly intended for the developers, to see who is
 working on what.
@@ -43,7 +43,7 @@ Each task can have the following keys:
 
 :sta(tus): In what status is the task: idea, proof of concept,
    partially implemented, done, rejected
- 
+
 :rem(arks): Anything about the task that is worthwile sharing with others.
 
 
@@ -83,61 +83,51 @@ Release 0.9
     largest cross dimension in the shortest viewport direction,
     and use angle zooming to increase the image if the cross
     section is not square and aligned with the viewport.
-      
-**Faster loading of large STL models (possibly in C)**
-  :dev: bverheg
-  :sta: PARTIAL
-  :rem: Done via external 'addmesh': transform to OFF format.
-    Should be implemented as C function.
 
 **Export models to FEA/CFD simulation codes**
   :dev: bverheg, pmortier, francio
   :sta: There is already wide support for exporting to Abaqus input format.
-    Some exporting to Fluent has been done in user applications. Other 
+    Some exporting to Fluent has been done in user applications. Other
     target codes of interest are: ANSYS,Code-Aster.
-      
+
 **Display camera settings**
   :rem:  This could be made part of a generalized 'Camera handling'
     plugin which could provide also things like move a camera
-    along a path. 
+    along a path.
   :sta: PARTIAL
-      
-**Provide a formian to pyformex translator**
-  :rem: There is a formian plugin, allowing to run formian scripts with minor
-    changes. At this moment we feel no need to provide a translator.
-      
+
 **Derive BBoxActor from GridActor**
-      
+
 **Merge the Formex, Surface and Mesh plugin menus**
   :sta: PARTIAL
   :rem: These should be merged into a single Geometry menu.
 
 **Add a GRID option to the canvas**
-      
+
 **Create PLANE objects**
   :dev: bverheg
   :sta: PARTIAL
-      
+
 **Add an interactive command window to the GUI**
   :dev: bverheg
   :sta: PARTIAL
-  :rem: A single command line is available. 
+  :rem: A single command line is available.
 
 **Replace the timeout functions with a TIMEOUT signal/slot**
-    
+
 **Copy viewport defaults to newly added viewports**
   :sta: TODO
 
 **Complete the Coords.fromfile and Formex.fromfile arguments**
 
-      
+
 Release 0.9.1
 -------------
 
 **Finish the tutorial and user guide**
 
 **Set up procedures to follow up submitted bugs/questions**
-     
+
 Release 1.0
 -----------
 
