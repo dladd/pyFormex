@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -53,10 +53,10 @@ class GeometryFile(object):
     Else, `file` should be an already open file.
     For files opened in write mode,
 
-    Geometry classes can provide the facility 
+    Geometry classes can provide the facility
     """
 
-    _version_ = '1.5'
+    _version_ = '1.6'
 
     def __init__(self,fil,mode=None,sep=' ',ifmt=' ',ffmt=' '):
         """Create the GeometryFile object."""
@@ -79,7 +79,7 @@ class GeometryFile(object):
                 self.writeHeader()
             elif mode[0] == 'r':
                 self.readHeader()
-            
+
 
     def reopen(self,mode='r'):
         """Reopen the file, possibly changing the mode.
@@ -103,7 +103,7 @@ class GeometryFile(object):
     def checkWritable(self):
         if not self.writing:
             raise RuntimeError,"File is not opened for writing"
-        
+
 
     def writeHeader(self):
         """Write the header of a pyFormex geometry file.
@@ -122,30 +122,17 @@ class GeometryFile(object):
         """Write an array of data to a pyFormex geometry file.
 
         If fmt is None, the data are written using numpy.tofile, with
-        the specified separator.
-        If fmt is specified,
+        the specified separator. If sep is an empty string, the data block
+        is written in binary mode, leading to smaller files.
+        If fmt is specified, each
         """
         if not self.writing:
             raise RuntimeError,"File is not opened for writing"
         kind = data.dtype.kind
-        if fmt is None:
-            fmt = self.fmt[kind]
+        #if fmt is None:
+        #    fmt = self.fmt[kind]
+        filewrite.writeData(self.fil,data,sep)
 
-        filewrite.writeData(data,self.fil,fmt)
-            
-        ## if fmt is None:
-        ##     data.tofile(self.fil,sep)
-        ##     self.fil.write('\n')
-        ## else:
-        ##     from lib.misc import tofile_int32,tofile_float32
-        ##     val = data.reshape(-1,data.shape[-1])
-        ##     if kind == 'i':
-        ##         val = val.astype(int32)
-        ##         tofile_int32(val,self.fil,'%i ')
-        ##     elif kind == 'f':
-        ##         val = val.astype(float32)
-        ##         tofile_float32(val,self.fil,'%f ')
-            
 
     def write(self,geom,name=None,sep=None):
         """Write any geometry object to the geometry file.
@@ -170,7 +157,7 @@ class GeometryFile(object):
                 name = utils.NameSequence(name)
                 for obj in geom:
                     self.write(obj,name.next(),sep)
-                    
+
         elif hasattr(geom,'write_geom'):
             geom.write_geom(self,name,sep)
         else:
@@ -197,7 +184,7 @@ class GeometryFile(object):
         hasprop = F.prop is not None
         head = "# objtype='Formex'; nelems=%r; nplex=%r; props=%r; eltype=%r; sep=%r" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
-            head += "; name='%s'" % name 
+            head += "; name='%s'" % name
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
         if hasprop:
@@ -221,7 +208,7 @@ class GeometryFile(object):
         hasprop = F.prop is not None
         head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),sep)
         if name:
-            head += "; name='%s'" % name 
+            head += "; name='%s'" % name
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
         self.writeData(F.elems,sep)
@@ -242,7 +229,7 @@ class GeometryFile(object):
 
         This function writes any curve type to the geometry file.
         The `objtype` is automatically detected but can be overridden.
-        
+
         The following attributes and arguments are written in the header:
         ncoords, closed, name, sep.
         The following attributes are written as arrays: coords
@@ -278,7 +265,7 @@ class GeometryFile(object):
         """Write a NurbsCurve to a pyFormex geometry file.
 
         This function writes a NurbsCurve instance to the geometry file.
-        
+
         The following attributes and arguments are written in the header:
         ncoords, nknots, closed, name, sep.
         The following attributes are written as arrays: coords, knots
@@ -299,7 +286,7 @@ class GeometryFile(object):
         """Write a NurbsSurface to a pyFormex geometry file.
 
         This function writes a NurbsSurface instance to the geometry file.
-        
+
         The following attributes and arguments are written in the header:
         ncoords, nknotsu, nknotsv, closedu, closedv, name, sep.
         The following attributes are written as arrays: coords, knotsu, knotsv
@@ -331,7 +318,7 @@ class GeometryFile(object):
         else:
             version = None
             raise RuntimeError,"This does not look like a pyFormex geometry file, or it is a very old version."
-            
+
         self._version_ = version
         self.sep = sep
         self.objname = utils.NameSequence('%s_000' % utils.projectName(self.fil.name))
@@ -361,7 +348,7 @@ class GeometryFile(object):
             sep = self.sep
             name = None
             s = self.fil.readline()
-            
+
             if len(s) == 0:   # end of file
                 break
 
@@ -378,7 +365,7 @@ class GeometryFile(object):
             except:
                 continue  # not a legal header: skip
 
-            debug("Reading object of type %s" % objtype,DEBUG.INFO) 
+            debug("Reading object of type %s" % objtype,DEBUG.INFO)
 
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':
@@ -417,7 +404,7 @@ class GeometryFile(object):
             self.fil.close()
 
         return self.results
-        
+
 
     def readFormex(self,nelems,nplex,props,eltype,sep):
         """Read a Formex from a pyFormex geometry file.
@@ -433,7 +420,7 @@ class GeometryFile(object):
         else:
             p = None
         return Formex(f,p,eltype)
- 
+
 
     def readMesh(self,ncoords,nelems,nplex,props,eltype,sep,objtype='Mesh'):
         """Read a Mesh from a pyFormex geometry file.
@@ -448,7 +435,7 @@ class GeometryFile(object):
         """
         # Make sure to import the Mesh subclasses that can be read
         from plugins.trisurface import TriSurface
-        
+
         ndim = 3
         x = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         e = readArray(self.fil,Float,(nelems,nplex),sep=sep)
@@ -464,7 +451,7 @@ class GeometryFile(object):
                 clas = globals()[objtype]
             M = clas(M)
         return M
- 
+
 
     def readPolyLine(self,ncoords,closed,sep):
         """Read a Curve from a pyFormex geometry file.
@@ -476,7 +463,7 @@ class GeometryFile(object):
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         return PolyLine(control=coords,closed=closed)
- 
+
 
     def readBezierSpline(self,ncoords,closed,degree,sep):
         """Read a BezierSpline from a pyFormex geometry file.
@@ -488,7 +475,7 @@ class GeometryFile(object):
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         return BezierSpline(control=coords,closed=closed,degree=degree)
- 
+
 
     def readNurbsCurve(self,ncoords,nknots,closed,sep):
         """Read a NurbsCurve from a pyFormex geometry file.
@@ -502,7 +489,7 @@ class GeometryFile(object):
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         knots = readArray(self.fil,Float,(nknots,),sep=sep)
         return NurbsCurve(control=coords,knots=knots,closed=closed)
- 
+
 
     def readNurbsSurface(self,ncoords,nuknots,nvknots,uclosed,vclosed,sep):
         """Read a NurbsSurface from a pyFormex geometry file.
@@ -536,7 +523,7 @@ class GeometryFile(object):
 
     def rewrite(self):
         """Convert the geometry file to the latest format.
-       
+
         The conversion is done by reading all objects from the geometry file
         and writing them back. Parts that could not be succesfully read will
         be skipped.

@@ -48,40 +48,41 @@ import os
 #
 
 
-def writeData(data,fil,fmt=' '):
+def writeData(fil,data,sep='',fmt=None,end='\n'):
     """Write an array of numerical data to an open file.
 
     Parameters:
 
-    - `data`: a numerical array of int or float type
     - `fil`: an open file object
-    - `fmt`: a format string defining how a single data item is written.
-      It should be one of:
+    - `data`: a numerical array of int or float type
+    - `sep`: a string to be used as separator in case no `fmt` is specified.
+      If an empty string, the data are written in binary mode. This is the
+      default. For any other string, the data are written in ascii mode with
+      the specified string inserted as separator between any two items, and a
+      newline appended at the end.
+      In both cases, the data are written using the `numpy.tofile`
+      function.
+    - `fmt`: a format string compatible with the array data type.
+      If specified, the `sep` argument is ignored and the data are written
+      according to the specified format. This uses the pyFormex functions
+      `misc.tofile_int32` or `misc.tofile_float32`, which have accelerated
+      versions in the pyFormex C library. This also means that the data arrays
+      will be force to type `float32` or `int32` before writing.
 
-      - '': an empty string: in this case the data are written in binary
-        mode, using the function numpy.tofile.
-      - ' ': a single space: in this case the data are written in text
-        mode, separated by a space, also using the function numpy.tofile.
-        At the end, a newline is added. All the data of the array thus appear
-        on a single line.
-      - a format string compatible with the array data type. In this case
-        float arrays will be forced to float32 and int arrays to int32.
-        The format string should contain a valid format converter for a
-        a single data item in both Python and C. They should also contain
-        the necessary spacing or separator. Examples are '%5i ' for int data
-        and '%f,' or '%10.3e' for float data. The array will be converted
-        to a 2D array, keeping the length of the last axis. Then all elements
-        will be written row by row using the specified format string, and a
-        newline character will be written after each row.
-        This mode is written by pyFormex function misc.tofile_int32 or
-        misc.tofile_float32, which have accelerated versions in the pyFormex
-        C library.
+      The format string should contain a valid format converter for a
+      a single data item in both Python and C. They should also contain
+      the necessary spacing or separator. Examples are '%5i ' for int data
+      and '%f,' or '%10.3e' for float data. The array will be converted
+      to a 2D array, keeping the length of the last axis. Then all elements
+      will be written row by row using the specified format string, and the
+      `end` string will be added after each row.
+    -`end`: a string to be written at the end of the data block (if no `fmt`)
+      or at the end of each row (with `fmt`). The default
+      value is a newline character.
     """
     kind = data.dtype.kind
-    if fmt == '' or fmt == ' ':
-        data.tofile(fil,sep=fmt)
-        if fmt == ' ':
-            fil.write('\n')
+    if fmt is None:
+        data.tofile(fil,sep)
     else:
         val = data.reshape(-1,data.shape[-1])
         if kind == 'i':
@@ -90,6 +91,8 @@ def writeData(data,fil,fmt=' '):
             misc.tofile_float32(val.astype(np.float32),fil,fmt)
         else:
             raise ValueError,"Can not write data fo type %s" % data.dtype
+    if end:
+        fil.write(end)
 
 
 def writeIData(data,fil,fmt,ind=1):
@@ -136,11 +139,11 @@ def writeOFF(fn,coords,elems):
     fil = open(fn,'w')
     fil.write("OFF\n")
     fil.write("%d %d 0\n" % (coords.shape[0],elems.shape[0]))
-    writeData(coords,fil,'%f ')
+    writeData(fil,coords,fmt='%f ')
     nelems = np.zeros_like(elems[:,:1])
     nelems.fill(elems.shape[1])
     elemdata = np.column_stack([nelems,elems])
-    writeData(elemdata,fil,'%i ')
+    writeData(fil,elemdata,fmt='%i ')
     fil.close()
 
 
@@ -164,9 +167,9 @@ def writeGTS(fn,coords,edges,faces):
 
     fil = open(fn,'w')
     fil.write("%d %d %d\n" % (coords.shape[0],edges.shape[0],faces.shape[0]))
-    writeData(coords,fil,'%f ')
-    writeData(edges+1,fil,'%i ')
-    writeData(faces+1,fil,'%i ')
+    writeData(fil,coords,fmt='%f ')
+    writeData(fil,edges+1,fmt='%i ')
+    writeData(fil,faces+1,fmt='%i ')
     fil.write("#GTS file written by %s\n" % pf.Version)
     fil.close()
 
@@ -275,6 +278,3 @@ def write_stl_asc(fn,x):
 
 
 # End
-
-
-
