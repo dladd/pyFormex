@@ -701,6 +701,8 @@ class InputCombo(InputItem):
         """Initialize the input item."""
         if len(choices) == 0:
             raise ValueError,"Selection expected choices!"
+        if value is None:
+            value = choices[0]
         if value not in choices:
             choices[0:0] = [ value ]
         self.input = QtGui.QComboBox()
