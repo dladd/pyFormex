@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>37. dxf — Read/write geometry in DXF format. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>41. dxf — Read/write geometry in DXF format. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="38. export — Classes and functions for exporting geometry in various formats." href="export.html" />
-    <link rel="prev" title="36. datareader — Numerical data reader" href="datareader.html" />
+    <link rel="next" title="43. export — Classes and functions for exporting geometry in various formats." href="export.html" />
+    <link rel="prev" title="39. datareader — Numerical data reader" href="datareader.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="export.html" title="38. export — Classes and functions for exporting geometry in various formats."
+          <a href="export.html" title="43. export — Classes and functions for exporting geometry in various formats."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="datareader.html" title="36. datareader — Numerical data reader"
+          <a href="datareader.html" title="39. datareader — Numerical data reader"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">41. <tt class="docutils literal"><span class="pre">dxf</span></tt> &#8212; Read/write geometry in DXF format.</a></li>
+<li><a class="reference internal" href="#id53">42. <tt class="docutils literal"><span class="pre">dxf</span></tt> &#8212; Read/write geometry in DXF format.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="datareader.html"
-                        title="previous chapter">36. <tt class="docutils literal docutils literal docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
+                        title="previous chapter">39. <tt class="docutils literal docutils literal docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="export.html"
-                        title="next chapter">38. <tt class="docutils literal"><span class="pre">export</span></tt> &#8212; Classes and functions for exporting geometry in various formats.</a></p>
+                        title="next chapter">43. <tt class="docutils literal"><span class="pre">export</span></tt> &#8212; Classes and functions for exporting geometry in various formats.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-dxf">
-<span id="dxf-read-write-geometry-in-dxf-format"></span><span id="sec-ref-dxf"></span><h1>37. <a class="reference internal" href="#module-dxf" title="dxf: Read/write geometry in DXF format."><tt class="xref py py-mod docutils literal"><span class="pre">dxf</span></tt></a> &#8212; Read/write geometry in DXF format.<a class="headerlink" href="#module-dxf" title="Permalink to this headline">¶</a></h1>
+<span id="dxf-read-write-geometry-in-dxf-format"></span><span id="sec-ref-dxf"></span><h1>41. <a class="reference internal" href="#module-dxf" title="dxf: Read/write geometry in DXF format."><tt class="xref py py-mod docutils literal"><span class="pre">dxf</span></tt></a> &#8212; Read/write geometry in DXF format.<a class="headerlink" href="#module-dxf" title="Permalink to this headline">¶</a></h1>
 <p>This module allows to import and export some simple geometrical items
 in DXF format.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">dxf</span></tt></p>
@@ -326,6 +332,192 @@ the accuracy for the approximation of the Arc by line segments.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>42. <a class="reference internal" href="#module-dxf" title="dxf: Read/write geometry in DXF format."><tt class="xref py py-mod docutils literal"><span class="pre">dxf</span></tt></a> &#8212; Read/write geometry in DXF format.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dxf"></span><p>This module allows to import and export some simple geometrical items
+in DXF format.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">dxf</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">dxf.</tt><tt class="descname">DxfExporter</tt><big>(</big><em>filename</em>, <em>terminator='n'</em><big>)</big></dt>
+<dd><p>Export geometry in DXF format.</p>
+<p>While we certainly do not want to promote proprietary software,
+some of our users occasionally needed to export some model in
+DXF format.
+This class provides a minimum of functionality.</p>
+<dl class="method">
+<dt>
+<tt class="descname">write</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Write a string to the dxf file.</p>
+<p>The string does not include the line terminator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">out</tt><big>(</big><em>code</em>, <em>data</em><big>)</big></dt>
+<dd><p>Output a string data item to the dxf file.</p>
+<p>code is the group code,
+data holds the data</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">close</tt><big>(</big><big>)</big></dt>
+<dd><p>Finalize and close the DXF file</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">section</tt><big>(</big><em>name</em><big>)</big></dt>
+<dd><p>Start a new section</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">endSection</tt><big>(</big><big>)</big></dt>
+<dd><p>End the current section</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">entities</tt><big>(</big><big>)</big></dt>
+<dd><p>Start the ENTITIES section</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">layer</tt><big>(</big><em>layer</em><big>)</big></dt>
+<dd><p>Export the layer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">line</tt><big>(</big><em>x</em>, <em>layer=0</em><big>)</big></dt>
+<dd><p>Export a line.</p>
+<p>x is a (2,3) shaped array</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">dxf</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">importDXF</tt><big>(</big><em>filename</em><big>)</big></dt>
+<dd><p>Import (parts of) a DXF file into pyFormex.</p>
+<p>This function scans a DXF file for recognized entities and imports
+those entities as pyFormex objects. It is only a very partial importer,
+but has proven to be already very valuable for many users.</p>
+<p><cite>filename</cite>: name of a DXF file.
+The return value is a list of pyFormex objects.</p>
+<p>Importing a DXF file is done in two steps:</p>
+<ul class="simple">
+<li>First the DXF file is scanned and the recognized entities are
+formatted into a text with standard function calling syntax.
+See <a class="reference internal" href="#dxf.readDXF" title="dxf.readDXF"><tt class="xref py py-func docutils literal"><span class="pre">readDXF()</span></tt></a>.</li>
+<li>Then the created text is executed as a Python script, producing
+equivalent pyFormex objects.
+See <a class="reference internal" href="#dxf.convertDXF" title="dxf.convertDXF"><tt class="xref py py-func docutils literal"><span class="pre">convertDXF()</span></tt></a>.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">readDXF</tt><big>(</big><em>filename</em><big>)</big></dt>
+<dd><p>Read a DXF file and extract the recognized entities.</p>
+<p><cite>filename</cite>: name of a .DXF file.</p>
+<p>Returns a multiline string with one line for each recognized entity,
+in a format that can directly be used by <a class="reference internal" href="#dxf.convertDXF" title="dxf.convertDXF"><tt class="xref py py-func docutils literal"><span class="pre">convertDXF()</span></tt></a>.</p>
+<p>This function requires the external program <cite>dxfparser</cite> which comes
+with the pyFormex distribution. It currently recognizes entities of
+type &#8216;Arc&#8217;, &#8216;Line&#8217;, &#8216;Polyline&#8217;, &#8216;Vertex&#8217;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">convertDXF</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Convert a textual representation of a DXF format to pyFormex objects.</p>
+<dl class="docutils">
+<dt><cite>text</cite> <span class="classifier-delimiter">:</span> <span class="classifier">a multiline text representation of the contents of a DXF file.</span></dt>
+<dd><p class="first">This text representation can e.g. be obtained by the function
+<a class="reference internal" href="#dxf.readDXF" title="dxf.readDXF"><tt class="xref py py-func docutils literal"><span class="pre">readDXF()</span></tt></a>. It contains lines defining DXF entities. A small
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Arc</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span><span class="mf">90.</span><span class="p">)</span>
+<span class="n">Arc</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span><span class="mf">90.</span><span class="p">)</span>
+<span class="n">Line</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">Polyline</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Vertex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">Vertex</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">Vertex</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">7.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">Vertex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">7.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">Vertex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">Each line of the text defines a single entity or starts a multiple
+component entity. The text should be well aligned to constitute a
+proper Python script. Currently, the only defined entities are
+&#8216;Arc&#8217;, &#8216;Line&#8217;, &#8216;Polyline&#8217;, &#8216;Vertex&#8217;.</p>
+</dd>
+</dl>
+<p>Returns a list of pyFormex objects corresponding to the text. The
+returned objects are of the following type:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">function name</th>
+<th class="head">object</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Arc</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">plugins.curve.Arc</span></tt></td>
+</tr>
+<tr class="row-odd"><td>Line</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">plugins.curve.Line</span></tt></td>
+</tr>
+<tr class="row-even"><td>Polyline</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">plugins.curve.PolyLine</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>No object is returned for the <cite>Vertex</cite> function: they define the
+vertices of a PolyLine.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">collectByType</tt><big>(</big><em>entities</em><big>)</big></dt>
+<dd><p>Collect the dxf entities by type.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">toLines</tt><big>(</big><em>coll</em>, <em>chordal=0.01</em>, <em>arcdiv=None</em><big>)</big></dt>
+<dd><p>Convert the dxf entities in a dxf collection to a plex-2 Formex</p>
+<p>This converts Lines, Arcs and PolyLines to plex-2 elements and collects
+them in a single Formex.
+The chordal and arcdiv parameters are passed to <tt class="xref py py-meth docutils literal"><span class="pre">Arc.approx()</span></tt> to set
+the accuracy for the approximation of the Arc by line segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">exportDXF</tt><big>(</big><em>filename</em>, <em>F</em><big>)</big></dt>
+<dd><p>Export a Formex to a DXF file</p>
+<p>Currently, only plex-2 Formices can be exported to DXF.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">dxf.</tt><tt class="descname">exportDxfText</tt><big>(</big><em>filename</em>, <em>parts</em><big>)</big></dt>
+<dd><p>Export a set of dxf entities to a .dxftext file.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -343,10 +535,10 @@ the accuracy for the approximation of the Arc by line segments.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="export.html" title="38. export — Classes and functions for exporting geometry in various formats."
+          <a href="export.html" title="43. export — Classes and functions for exporting geometry in various formats."
              >next</a> |</li>
         <li class="right" >
-          <a href="datareader.html" title="36. datareader — Numerical data reader"
+          <a href="datareader.html" title="39. datareader — Numerical data reader"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -356,7 +548,7 @@ the accuracy for the approximation of the Arc by line segments.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

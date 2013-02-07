@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>25. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>33. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
-    <link rel="prev" title="24. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
+    <link rel="next" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
+    <link rel="prev" title="31. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="31. gluttext — 2D text decorations using GLUT fonts"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">33. <tt class="docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></li>
+<li><a class="reference internal" href="#id53">34. <tt class="docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></li>
+<li><a class="reference internal" href="#id107">35. <tt class="docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="gluttext.html"
-                        title="previous chapter">24. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
+                        title="previous chapter">31. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="viewport.html"
-                        title="next chapter">26. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+                        title="next chapter">36. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +148,7 @@
           <div class="body">
             
   <div class="section" id="module-canvas">
-<span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>25. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
+<span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>33. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
 <dl class="class">
 <dt id="canvas.ActorList">
@@ -189,6 +196,7 @@ draw instruction.</li>
 </ul>
 <p>Currently the following mode settings are defined:</p>
 <ul class="simple">
+<li>bgmode: the viewport background color mode</li>
 <li>bgcolor: the viewport background color: a single color or a list of
 colors (max. 4 are used).</li>
 <li>bgimage: background image filename</li>
@@ -444,7 +452,7 @@ or after changing  camera position/orientation or lens.</p>
 <dt id="canvas.Canvas.begin_2D_drawing">
 <tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
-<p>The 2D drawing operation should be ended by calling end_2D_drawing. 
+<p>The 2D drawing operation should be ended by calling end_2D_drawing.
 It is assumed that you will not try to change/refresh the normal
 3D drawing cycle during this operation.</p>
 </dd></dl>
@@ -703,6 +711,1134 @@ that are canvas settings, the second one the rest.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>34. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-canvas"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">ActorList</tt><big>(</big><em>canvas</em><big>)</big></dt>
+<dd><p>A list of drawn objects of the same kind.</p>
+<p>This is used to collect the Actors, Decorations and Annotations
+in a scene.
+Currently the implementation does not check that the objects are of
+the proper type.</p>
+<dl class="method">
+<dt>
+<tt class="descname">add</tt><big>(</big><em>actor</em><big>)</big></dt>
+<dd><p>Add an actor or a list thereof to a ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">delete</tt><big>(</big><em>actor</em><big>)</big></dt>
+<dd><p>Remove an actor or a list thereof from an ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">redraw</tt><big>(</big><big>)</big></dt>
+<dd><p>Redraw all actors in the list.</p>
+<p>This redraws the specified actors (recreating their display list).
+This could e.g. be used after changing an actor&#8217;s properties.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>A collection of settings for an OpenGL Canvas.</p>
+<p>The canvas settings are a collection of settings and default values
+affecting the rendering in an individual viewport. There are two type of
+settings:</p>
+<ul class="simple">
+<li>mode settings are set during the initialization of the canvas and
+can/should not be changed during the drawing of actors and decorations;</li>
+<li>default settings can be used as default values but may be changed during
+the drawing of actors/decorations: they are reset before each individual
+draw instruction.</li>
+</ul>
+<p>Currently the following mode settings are defined:</p>
+<ul class="simple">
+<li>bgmode: the viewport background color mode</li>
+<li>bgcolor: the viewport background color: a single color or a list of
+colors (max. 4 are used).</li>
+<li>bgimage: background image filename</li>
+<li>slcolor: the highlight color</li>
+<li>alphablend: boolean (transparency on/off)</li>
+</ul>
+<p>The list of default settings includes:</p>
+<ul class="simple">
+<li>fgcolor: the default drawing color</li>
+<li>bkcolor: the default backface color</li>
+<li>colormap: the default color map to be used if color is an index</li>
+<li>bklormap: the default color map to be used if bkcolor is an index</li>
+<li>smooth: boolean (smooth/flat shading)</li>
+<li>lighting: boolean (lights on/off)</li>
+<li>culling: boolean</li>
+<li>transparency: float (0.0..1.0)</li>
+<li>avgnormals: boolean</li>
+<li>edges: &#8216;none&#8217;, &#8216;feature&#8217; or &#8216;all&#8217;</li>
+<li>pointsize: the default size for drawing points</li>
+<li>marksize: the default size for drawing markers</li>
+<li>linewidth: the default width for drawing lines</li>
+</ul>
+<p>Any of these values can be set in the constructor using a keyword argument.
+All items that are not set, will get their value from the configuration
+file(s).</p>
+<dl class="method">
+<dt>
+<tt class="descname">reset</tt><big>(</big><em>d={}</em><big>)</big></dt>
+<dd><p>Reset the CanvasSettings to its defaults.</p>
+<p>The default values are taken from the configuration files.
+An optional dictionary may be specified to override (some of) these defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><em>d</em>, <em>strict=True</em><big>)</big></dt>
+<dd><p>Update current values with the specified settings</p>
+<p>Returns the sanitized update values.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">checkDict</tt><big>(</big><em>clas</em>, <em>dict</em>, <em>strict=True</em><big>)</big></dt>
+<dd><p>Transform a dict to acceptable settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setMode</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the mode canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">activate</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the default canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><big>(</big><em>settings={}</em><big>)</big></dt>
+<dd><p>A canvas for OpenGL rendering.</p>
+<p>The Canvas is a class holding all global data of an OpenGL scene rendering.
+This includes colors, line types, rendering mode.
+It also keeps lists of the actors and decorations in the scene.
+The canvas has a Camera object holding important viewing parameters.
+Finally, it stores the lighting information.</p>
+<p>It does not however contain the viewport size and position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">enable_lighting</tt><big>(</big><em>state</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">has_lighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the status of the lighting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big></dt>
+<dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big></dt>
+<dd><p>Set the global ambient lighting for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big></dt>
+<dd><p>Set the default material light properties for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Change the light parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big></dt>
+<dd><p>Set the rendering mode.</p>
+<p>This sets or changes the rendermode and lighting attributes.
+If lighting is not specified, it is set depending on the rendermode.</p>
+<p>If the canvas has not been initialized, this merely sets the
+attributes self.rendermode and self.settings.lighting.
+If the canvas was already initialized (it has a camera), and one of
+the specified settings is fdifferent from the existing, the new mode
+is set, the canvas is re-initialized according to the newly set mode,
+and everything is redrawn with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setToggle</tt><big>(</big><em>attr</em>, <em>state</em><big>)</big></dt>
+<dd><p>Set or toggle a boolean settings attribute</p>
+<p>Furthermore, if a Canvas method do_ATTR is defined, it will be called
+with the old and new toggle state as a parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_lighting</tt><big>(</big><em>state</em>, <em>oldstate=None</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big></dt>
+<dd><p>Set the linewidth for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the linestipple for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big></dt>
+<dd><p>Set the size for point drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBackground</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big></dt>
+<dd><p>Set the color(s) and image.</p>
+<p>Change the background settings according to the specified parameters
+and set the canvas background accordingly. Only (and all) the specified
+parameters get a new value.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: either a single color, a list of two colors or a list of
+four colors.</li>
+<li><cite>image</cite>: an image to be set.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">createBackground</tt><big>(</big><big>)</big></dt>
+<dd><p>Create the background object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, a triade of global axes is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">clear</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas to the background color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">overrideMode</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Override some settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glinit</tt><big>(</big><big>)</big></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to self.settings:
+- self.rendermode: one of
+- self.lighting</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glupdate</tt><big>(</big><big>)</big></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">display</tt><big>(</big><big>)</big></dt>
+<dd><p>(Re)display all the actors in the scene.</p>
+<p>This should e.g. be used when actors are added to the scene,
+or after changing  camera position/orientation or lens.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
+<p>The 2D drawing operation should be ended by calling end_2D_drawing.
+It is assumed that you will not try to change/refresh the normal
+3D drawing cycle during this operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big></dt>
+<dd><p>Set the bounding box of the scene you want to be visible.</p>
+<p>bbox is a (2,3) shaped array specifying a bounding box.
+If no bbox is given, the bounding box of all the actors in the
+scene is used, or if the scene is empty, a default unit bounding box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addActor</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 3D actor or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addHighlight</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a highlight or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAnnotation</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add an annotation or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addDecoration</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 2D decoration or a list thereof to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Add any  item or list.</p>
+<p>This will add any actor/annotation/decoration item or a list
+of any such items  to the canvas. This is the prefered method to add
+an item to the canvas, because it makes sure that each item is added
+to the proper list. It can however not be used to add highlights.</p>
+<p>If you have a long list of a single type, it is more efficient to
+use one of the type specific add methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeActor</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 3D actor or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all actors from the scene.
+This also resets the bounding box for the canvas autozoom.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeHighlight</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a highlight or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all highlights from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove an annotation or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all annotations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeDecoration</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 2D decoration or a list thereof from the canvas.</p>
+<p>Without argument, removes all decorations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
+<p>This will remove the items from any of the canvas lists in which the
+item appears.
+itemlist can also be a single item instead of a list.
+If None is specified, all items from all lists will be removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Redraw all actors in the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big></dt>
+<dd><p>Sets the camera looking under angles at bbox.</p>
+<p>This function sets the camera parameters to view the specified
+bbox volume from the specified viewing direction.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>bbox</cite>: the bbox of the volume looked at</li>
+<li><cite>angles</cite>: the camera angles specifying the viewing direction.
+It can also be a string, the key of one of the predefined
+camera directions</li>
+</ul>
+<p>If no angles are specified, the viewing direction remains constant.
+The scene center (camera focus point), camera distance, fovy and
+clipping planes are adjusted to make the whole bbox viewed from the
+specified direction fit into the screen.</p>
+<p>If no bbox is specified, the following remain constant:
+the center of the scene, the camera distance, the lens opening
+and aspect ratio, the clipping planes. In other words the camera
+is moving on a spherical surface and keeps focusing on the same
+point.</p>
+<p>If both are specified, then first the scene center is set,
+then the camera angles, and finally the camera distance.</p>
+<p>In the current implementation, the lens fovy and aspect are not
+changed by this function. Zoom adjusting is performed solely by
+changing the camera distance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big></dt>
+<dd><p>Dolly zooming.</p>
+<p>Zooms in with a factor <cite>f</cite> by moving the camera closer
+to the scene. This does noet change the camera&#8217;s FOV setting.
+It will change the perspective view though.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big></dt>
+<dd><p>Rectangle zooming.</p>
+<p>Zooms in/out by changing the area and position of the visible
+part of the lens.
+Unlike zoom(), this does not change the perspective view.</p>
+<p><cite>x0,y0,x1,y1</cite> are pixel coordinates of the lower left and upper right
+corners of the area of the lens that will be mapped on the
+canvas viewport.
+Specifying values that lead to smaller width/height will zoom in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomCentered</tt><big>(</big><em>w</em>, <em>h</em>, <em>x=None</em>, <em>y=None</em><big>)</big></dt>
+<dd><p>Rectangle zooming with specified center.</p>
+<p>This is like zoomRectangle, but the zoom rectangle is specified
+by its center and size, which may be more appropriate when using
+off-center zooming.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Rectangle zoom to make full scene visible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Save the current OpenGL buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Show the saved buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>ofs=0</em>, <em>color=(1.0</em>, <em>0.2</em>, <em>0.4)</em><big>)</big></dt>
+<dd><p>Draw the focus rectangle.</p>
+<p>The specified width is HALF of the line width</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
+<dd><p>draw the cursor</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">gl_pickbuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list of the 2nd numbers in the openGL pick buffer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glLineStipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the line stipple pattern.</p>
+<p>When drawing lines, OpenGl can use a stipple pattern. The stipple
+is defined by two values: a pattern (on/off) of maximum 16 bits,
+used on the pixel level, and a multiplier factor for each bit.</p>
+<p>If factor &lt;= 0, the stippling is disabled.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glSmooth</tt><big>(</big><em>smooth=True</em><big>)</big></dt>
+<dd><p>Enable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glFlat</tt><big>(</big><big>)</big></dt>
+<dd><p>Disable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">onOff</tt><big>(</big><em>onoff</em><big>)</big></dt>
+<dd><p>Convert On/Off strings to a boolean</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glEnable</tt><big>(</big><em>facility</em>, <em>onoff</em><big>)</big></dt>
+<dd><p>Enable/Disable an OpenGL facility, depending on onoff value</p>
+<p>facility is an OpenGL facility.
+onoff can be True or False to enable, resp. disable the facility, or
+None to leave it unchanged.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">extractCanvasSettings</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Split a dict in canvas settings and other items.</p>
+<p>Returns a tuple of two dicts: the first one contains the items
+that are canvas settings, the second one the rest.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>35. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-canvas"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">ActorList</tt><big>(</big><em>canvas</em><big>)</big></dt>
+<dd><p>A list of drawn objects of the same kind.</p>
+<p>This is used to collect the Actors, Decorations and Annotations
+in a scene.
+Currently the implementation does not check that the objects are of
+the proper type.</p>
+<dl class="method">
+<dt>
+<tt class="descname">add</tt><big>(</big><em>actor</em><big>)</big></dt>
+<dd><p>Add an actor or a list thereof to a ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">delete</tt><big>(</big><em>actor</em><big>)</big></dt>
+<dd><p>Remove an actor or a list thereof from an ActorList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">redraw</tt><big>(</big><big>)</big></dt>
+<dd><p>Redraw all actors in the list.</p>
+<p>This redraws the specified actors (recreating their display list).
+This could e.g. be used after changing an actor&#8217;s properties.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>A collection of settings for an OpenGL Canvas.</p>
+<p>The canvas settings are a collection of settings and default values
+affecting the rendering in an individual viewport. There are two type of
+settings:</p>
+<ul class="simple">
+<li>mode settings are set during the initialization of the canvas and
+can/should not be changed during the drawing of actors and decorations;</li>
+<li>default settings can be used as default values but may be changed during
+the drawing of actors/decorations: they are reset before each individual
+draw instruction.</li>
+</ul>
+<p>Currently the following mode settings are defined:</p>
+<ul class="simple">
+<li>bgmode: the viewport background color mode</li>
+<li>bgcolor: the viewport background color: a single color or a list of
+colors (max. 4 are used).</li>
+<li>bgimage: background image filename</li>
+<li>slcolor: the highlight color</li>
+<li>alphablend: boolean (transparency on/off)</li>
+</ul>
+<p>The list of default settings includes:</p>
+<ul class="simple">
+<li>fgcolor: the default drawing color</li>
+<li>bkcolor: the default backface color</li>
+<li>colormap: the default color map to be used if color is an index</li>
+<li>bklormap: the default color map to be used if bkcolor is an index</li>
+<li>smooth: boolean (smooth/flat shading)</li>
+<li>lighting: boolean (lights on/off)</li>
+<li>culling: boolean</li>
+<li>transparency: float (0.0..1.0)</li>
+<li>avgnormals: boolean</li>
+<li>edges: &#8216;none&#8217;, &#8216;feature&#8217; or &#8216;all&#8217;</li>
+<li>pointsize: the default size for drawing points</li>
+<li>marksize: the default size for drawing markers</li>
+<li>linewidth: the default width for drawing lines</li>
+</ul>
+<p>Any of these values can be set in the constructor using a keyword argument.
+All items that are not set, will get their value from the configuration
+file(s).</p>
+<dl class="method">
+<dt>
+<tt class="descname">reset</tt><big>(</big><em>d={}</em><big>)</big></dt>
+<dd><p>Reset the CanvasSettings to its defaults.</p>
+<p>The default values are taken from the configuration files.
+An optional dictionary may be specified to override (some of) these defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><em>d</em>, <em>strict=True</em><big>)</big></dt>
+<dd><p>Update current values with the specified settings</p>
+<p>Returns the sanitized update values.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">checkDict</tt><big>(</big><em>clas</em>, <em>dict</em>, <em>strict=True</em><big>)</big></dt>
+<dd><p>Transform a dict to acceptable settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setMode</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the mode canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">activate</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the default canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><big>(</big><em>settings={}</em><big>)</big></dt>
+<dd><p>A canvas for OpenGL rendering.</p>
+<p>The Canvas is a class holding all global data of an OpenGL scene rendering.
+This includes colors, line types, rendering mode.
+It also keeps lists of the actors and decorations in the scene.
+The canvas has a Camera object holding important viewing parameters.
+Finally, it stores the lighting information.</p>
+<p>It does not however contain the viewport size and position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">enable_lighting</tt><big>(</big><em>state</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">has_lighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the status of the lighting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big></dt>
+<dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big></dt>
+<dd><p>Set the global ambient lighting for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big></dt>
+<dd><p>Set the default material light properties for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Change the light parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big></dt>
+<dd><p>Set the rendering mode.</p>
+<p>This sets or changes the rendermode and lighting attributes.
+If lighting is not specified, it is set depending on the rendermode.</p>
+<p>If the canvas has not been initialized, this merely sets the
+attributes self.rendermode and self.settings.lighting.
+If the canvas was already initialized (it has a camera), and one of
+the specified settings is fdifferent from the existing, the new mode
+is set, the canvas is re-initialized according to the newly set mode,
+and everything is redrawn with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setToggle</tt><big>(</big><em>attr</em>, <em>state</em><big>)</big></dt>
+<dd><p>Set or toggle a boolean settings attribute</p>
+<p>Furthermore, if a Canvas method do_ATTR is defined, it will be called
+with the old and new toggle state as a parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_lighting</tt><big>(</big><em>state</em>, <em>oldstate=None</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big></dt>
+<dd><p>Set the linewidth for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the linestipple for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big></dt>
+<dd><p>Set the size for point drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBackground</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big></dt>
+<dd><p>Set the color(s) and image.</p>
+<p>Change the background settings according to the specified parameters
+and set the canvas background accordingly. Only (and all) the specified
+parameters get a new value.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: either a single color, a list of two colors or a list of
+four colors.</li>
+<li><cite>image</cite>: an image to be set.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">createBackground</tt><big>(</big><big>)</big></dt>
+<dd><p>Create the background object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, a triade of global axes is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">clear</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas to the background color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">overrideMode</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Override some settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glinit</tt><big>(</big><big>)</big></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to self.settings:
+- self.rendermode: one of
+- self.lighting</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glupdate</tt><big>(</big><big>)</big></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">display</tt><big>(</big><big>)</big></dt>
+<dd><p>(Re)display all the actors in the scene.</p>
+<p>This should e.g. be used when actors are added to the scene,
+or after changing  camera position/orientation or lens.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
+<p>The 2D drawing operation should be ended by calling end_2D_drawing.
+It is assumed that you will not try to change/refresh the normal
+3D drawing cycle during this operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big></dt>
+<dd><p>Set the bounding box of the scene you want to be visible.</p>
+<p>bbox is a (2,3) shaped array specifying a bounding box.
+If no bbox is given, the bounding box of all the actors in the
+scene is used, or if the scene is empty, a default unit bounding box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addActor</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 3D actor or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addHighlight</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a highlight or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAnnotation</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add an annotation or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addDecoration</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 2D decoration or a list thereof to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Add any  item or list.</p>
+<p>This will add any actor/annotation/decoration item or a list
+of any such items  to the canvas. This is the prefered method to add
+an item to the canvas, because it makes sure that each item is added
+to the proper list. It can however not be used to add highlights.</p>
+<p>If you have a long list of a single type, it is more efficient to
+use one of the type specific add methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeActor</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 3D actor or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all actors from the scene.
+This also resets the bounding box for the canvas autozoom.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeHighlight</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a highlight or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all highlights from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove an annotation or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all annotations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeDecoration</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 2D decoration or a list thereof from the canvas.</p>
+<p>Without argument, removes all decorations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
+<p>This will remove the items from any of the canvas lists in which the
+item appears.
+itemlist can also be a single item instead of a list.
+If None is specified, all items from all lists will be removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Redraw all actors in the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big></dt>
+<dd><p>Sets the camera looking under angles at bbox.</p>
+<p>This function sets the camera parameters to view the specified
+bbox volume from the specified viewing direction.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>bbox</cite>: the bbox of the volume looked at</li>
+<li><cite>angles</cite>: the camera angles specifying the viewing direction.
+It can also be a string, the key of one of the predefined
+camera directions</li>
+</ul>
+<p>If no angles are specified, the viewing direction remains constant.
+The scene center (camera focus point), camera distance, fovy and
+clipping planes are adjusted to make the whole bbox viewed from the
+specified direction fit into the screen.</p>
+<p>If no bbox is specified, the following remain constant:
+the center of the scene, the camera distance, the lens opening
+and aspect ratio, the clipping planes. In other words the camera
+is moving on a spherical surface and keeps focusing on the same
+point.</p>
+<p>If both are specified, then first the scene center is set,
+then the camera angles, and finally the camera distance.</p>
+<p>In the current implementation, the lens fovy and aspect are not
+changed by this function. Zoom adjusting is performed solely by
+changing the camera distance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big></dt>
+<dd><p>Dolly zooming.</p>
+<p>Zooms in with a factor <cite>f</cite> by moving the camera closer
+to the scene. This does noet change the camera&#8217;s FOV setting.
+It will change the perspective view though.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big></dt>
+<dd><p>Rectangle zooming.</p>
+<p>Zooms in/out by changing the area and position of the visible
+part of the lens.
+Unlike zoom(), this does not change the perspective view.</p>
+<p><cite>x0,y0,x1,y1</cite> are pixel coordinates of the lower left and upper right
+corners of the area of the lens that will be mapped on the
+canvas viewport.
+Specifying values that lead to smaller width/height will zoom in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomCentered</tt><big>(</big><em>w</em>, <em>h</em>, <em>x=None</em>, <em>y=None</em><big>)</big></dt>
+<dd><p>Rectangle zooming with specified center.</p>
+<p>This is like zoomRectangle, but the zoom rectangle is specified
+by its center and size, which may be more appropriate when using
+off-center zooming.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Rectangle zoom to make full scene visible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Save the current OpenGL buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Show the saved buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>ofs=0</em>, <em>color=(1.0</em>, <em>0.2</em>, <em>0.4)</em><big>)</big></dt>
+<dd><p>Draw the focus rectangle.</p>
+<p>The specified width is HALF of the line width</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
+<dd><p>draw the cursor</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">gl_pickbuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list of the 2nd numbers in the openGL pick buffer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glLineStipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the line stipple pattern.</p>
+<p>When drawing lines, OpenGl can use a stipple pattern. The stipple
+is defined by two values: a pattern (on/off) of maximum 16 bits,
+used on the pixel level, and a multiplier factor for each bit.</p>
+<p>If factor &lt;= 0, the stippling is disabled.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glSmooth</tt><big>(</big><em>smooth=True</em><big>)</big></dt>
+<dd><p>Enable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glFlat</tt><big>(</big><big>)</big></dt>
+<dd><p>Disable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">onOff</tt><big>(</big><em>onoff</em><big>)</big></dt>
+<dd><p>Convert On/Off strings to a boolean</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glEnable</tt><big>(</big><em>facility</em>, <em>onoff</em><big>)</big></dt>
+<dd><p>Enable/Disable an OpenGL facility, depending on onoff value</p>
+<p>facility is an OpenGL facility.
+onoff can be True or False to enable, resp. disable the facility, or
+None to leave it unchanged.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">extractCanvasSettings</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Split a dict in canvas settings and other items.</p>
+<p>Returns a tuple of two dicts: the first one contains the items
+that are canvas settings, the second one the rest.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -720,10 +1856,10 @@ that are canvas settings, the second one the rest.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              >next</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="31. gluttext — 2D text decorations using GLUT fonts"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -733,7 +1869,7 @@ that are canvas settings, the second one the rest.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

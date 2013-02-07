@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="19. menu — Menus for the pyFormex GUI." href="menu.html" />
-    <link rel="prev" title="17. filewrite — Write geometry to file in a whole number of formats." href="filewrite.html" />
+    <link rel="next" title="21. menu — Menus for the pyFormex GUI." href="menu.html" />
+    <link rel="prev" title="31. filewrite — Write geometry to file in a whole number of formats." href="filewrite.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="menu.html" title="19. menu — Menus for the pyFormex GUI."
+          <a href="menu.html" title="21. menu — Menus for the pyFormex GUI."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
+          <a href="filewrite.html" title="31. filewrite — Write geometry to file in a whole number of formats."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">18. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></li>
+<li><a class="reference internal" href="#id53">19. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></li>
+<li><a class="reference internal" href="#id107">20. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="filewrite.html"
-                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></p>
+                        title="previous chapter">31. <tt class="docutils literal docutils literal docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="menu.html"
-                        title="next chapter">19. <tt class="docutils literal docutils literal docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
+                        title="next chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -518,14 +525,13 @@ are returned. This option sets single==False.</p>
 
 <dl class="class">
 <dt id="widgets.InputCombo">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
 <dd><p>A combobox InputItem.</p>
 <p>A combobox is a widget allowing the selection of an item from a drop
 down list.</p>
 <p>choices is a list/tuple of possible values.
-default is the initial/default choice.
-If default is not in the choices list, it is prepended.
-If default is None, the first item of choices is taken as the default.</p>
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.</p>
 <p>The choices are presented to the user as a combobox, which will
 initially be set to the default value.</p>
 <p>An optional <cite>onselect</cite> function may be specified, which will be called
@@ -565,13 +571,13 @@ whenever the current selection changes.</p>
 
 <dl class="class">
 <dt id="widgets.InputRadio">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
 <dd><p>A radiobuttons InputItem.</p>
 <p>Radio buttons are a set of buttons used to select a value from a list.</p>
 <p>choices is a list/tuple of possible values.
-default is the initial/default choice.
-If default is not in the choices list, it is prepended.
-If default is None, the first item of choices is taken as the default.</p>
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be pressed.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
@@ -603,13 +609,13 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputPush">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
 <dd><p>A pushbuttons InputItem.</p>
 <p>Creates pushbuttons for the selection of a value from a list.</p>
 <p>choices is a list/tuple of possible values.
-default is the initial/default choice.
-If default is not in the choices list, it is prepended.
-If default is None, the first item of choices is taken as the default.</p>
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be selected.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
@@ -976,6 +982,12 @@ Creates a new color input field with a label in front.</p>
 Clicking on the button opens a color dialog, and the returned
 value is set in the button.</p>
 <dl class="method">
+<dt id="widgets.InputColor.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputColor.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="widgets.InputColor.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#widgets.InputColor.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
@@ -991,12 +1003,6 @@ value is set in the button.</p>
 <dt id="widgets.InputColor.text">
 <tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputColor.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the displayed text of the InputItem.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.InputColor.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputColor.value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1488,18 +1494,49 @@ adjust the column widths.</p>
 
 <dl class="class">
 <dt id="widgets.FileSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>button=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>button=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog.</p>
-<p>You can specify a default path/filename that will be suggested initially.
-If a pattern is specified, only matching files will be shown.
-A pattern can be something like <tt class="docutils literal"><span class="pre">Images</span> <span class="pre">(*.png</span> <span class="pre">*.jpg)</span></tt> or a list
-of such strings.
-Default mode is to accept any filename. You can specify exist=True
-to accept only existing files. Or set exist=True and multi=True to
-accept multiple files.</p>
-<p>If dir is True, only directories can be selected. If dir evaluates to
-True, but is not the value True, either a directory or a filename can be
-selected.</p>
+<p>The FileSelection dialog is a special purpose complex dialog widget
+that allows to interactively select a file or directory from the file
+system, possibly even multiple files, create new files or directories.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>path</cite>: the path shown on initial display of the dialog. It should
+be an existing path in the file system. The default is &#8216;.&#8217; for the
+current directory.</p>
+</li>
+<li><p class="first"><cite>pattern</cite>: a string or a list of strings: specifies one or more UNIX
+glob patterns, used to limit the set of displayed filenames to those
+matching the glob. Each string can contain multiple globs, and an
+explanation string can be place in front:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;Image files (*.png *.jpg)&#39;</span>
+</pre></div>
+</div>
+<p>The function <a class="reference internal" href="utils.html#utils.fileDescription" title="utils.fileDescription"><tt class="xref py py-func docutils literal"><span class="pre">utils.fileDescription()</span></tt></a> can be used to create some
+strings for common classes of files.</p>
+<p>As a convenience, if a string starts with a &#8216;.&#8217;, the remainder of the
+string will be used as a lookup key in utils.fileDescription to get
+the actual string to be used. Thus, pattern=&#8217;.png&#8217; will filter all
+&#8216;.png&#8217; files, and pattern=&#8217;.img&#8217; will filter all image files in any
+of the supported formats.</p>
+<p>If a list of multiple strings is given, a combo box will allow the
+user to select between one of them.</p>
+</li>
+<li><p class="first"><cite>exist</cite>: bool: if True, the filename must exist. The default will
+allow any new filename to be created.</p>
+</li>
+<li><p class="first"><cite>multi</cite>: bool: if True, multiple files can be selected. The default is
+to allow only a single file.</p>
+</li>
+<li><p class="first"><cite>dir</cite>: bool: if True, only directories can be selected. If dir evaluates
+to True, but is not the value True, either a directory or a filename can
+be selected.</p>
+</li>
+<li><p class="first"><cite>button</cite>: string: the label to be displayed on the accept button. The
+default is set to &#8216;Save&#8217; if new files are allowed or &#8216;Open&#8217; if only
+existing files can be selected.</p>
+</li>
+</ul>
 <dl class="method">
 <dt id="widgets.FileSelection.getFilename">
 <tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
@@ -2001,6 +2038,3832 @@ is given, it is set to the LAST button.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>19. <a class="reference internal" href="#module-widgets" title="widgets: A collection of custom widgets used in the pyFormex GUI"><tt class="xref py py-mod docutils literal"><span class="pre">widgets</span></tt></a> &#8212; A collection of custom widgets used in the pyFormex GUI<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-widgets"></span><p>The widgets in this module were primarily created in function of the
+pyFormex GUI. The user can apply them to change the GUI or to add
+interactive widgets to his scripts. Of course he can also use all the
+Qt widgets directly.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputItem</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A single input item.</p>
+<p>This is the base class for widgets holding a single input item.
+A single input item is any item that is treated as a unit and
+refered to by a single name.</p>
+<p>This base class is rarely used directly. Most of the components
+of an InputDialog are subclasses of hereof, each specialized in
+some form of input data or representation. There is e.g. an
+InputInteger class to input an integer number and an InputString
+for the input of a string.
+The base class groups the functionality that is common to the
+different input widgets.</p>
+<p>The InputItem widget holds a horizontal layout box (QHBoxLayout)
+to group its its components. In most cases there are just two components:
+a label with the name of the field, and the actual input field.
+Other components, such as buttons or sliders, may be added. This is
+often done in subclasses.</p>
+<p>The constructor has one required argument: <cite>name</cite>. Other
+(optional) positional parameters are passed to the QtGui.QWidget
+constructor. The remaining keyword parameters are options that
+somehow change the default behavior of the InputItem class.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>name</cite>: the name used to identify the item. It should be unique for
+all InputItems in the same InputDialog. It will be used as a key in
+the dictionary that returns all the input values in the dialog. It will
+also be used as the label to display in front of the input field, in
+case no <cite>text</cite> value was specified.</li>
+<li><cite>text</cite>: if specified, this text will be displayed in the label in front
+of the input field. This allows for showing descriptive texts for the
+input fields in the dialog, while keeping short and simple names for
+the items in the programming.
+<cite>text</cite> can be set to an empty string to suppress the creation of a label
+in front of the input field. This is useful if the input field
+widget itself already provides a label (see e.g. InputBool).
+<cite>text</cite> can also be a QtGui.QPixmap, allowing for icons to be used
+as labels.</li>
+<li><cite>buttons</cite>: a list of (label,function) tuples. For each tuple a button
+will be added after the input field. The button displays the text and
+when pressed, the specified function will be executed. The function
+takes no arguments.</li>
+<li><cite>data</cite>: any extra data that you want to be stored into the widget.
+These data are not displayed, but can be useful in the functioning of
+the widget.</li>
+<li><cite>enabled</cite>: boolean. If False, the InputItem will not be enabled, meaning
+that the user can not enter any values there. Disabled fields are usually
+displayed in a greyed-out fashion.</li>
+<li><cite>readonly</cite>: boolean. If True, the data are read-only and can not be
+changed by the user. Unlike disabled items, they are displayed in a
+normal fashion.</li>
+<li><cite>tooltip</cite>: A descriptive text which is only shown when the user pauses
+the cursor for some time on the widget. It can be used to give
+more comprehensive explanation to first time users.</li>
+<li><cite>spacer</cite>: string. Only the characters &#8216;l&#8217;, &#8216;r&#8217; and &#8216;c&#8217; are relevant.
+If the string contains an &#8216;l&#8217;, a spacer in inserted before the label.
+If the string contains an &#8216;r&#8217;, a spacer in inserted after the input field.
+If the string contains a &#8216;c&#8217;, a spacer in inserted between the label and
+the input filed.</li>
+</ul>
+<p>Subclasses should have an <tt class="docutils literal"><span class="pre">__init__()</span></tt> method which first constructs
+a proper widget for the input field, and stores it in the attribute
+<tt class="docutils literal"><span class="pre">self.input</span></tt>. Then the baseclass should be properly initialized, passing
+any optional parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">SomeInputWidget</span><span class="p">()</span>
+<span class="n">InputItem</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Subclasses should also override the following default methods of
+the InputItem base class:</p>
+<ul class="simple">
+<li>text(): if the subclass calls the superclass __init__() method with
+a value <tt class="docutils literal"><span class="pre">text=''</span></tt>. This method should return the value of the
+displayed text.</li>
+<li>value(): if the value of the input field is not given by
+<tt class="docutils literal"><span class="pre">self.input.text()</span></tt>, i.e. in most cases. This method should
+return the value of the input field.</li>
+<li>setValue(val): always, unless the field is readonly. This method should
+change the value of the input widget to the specified value.</li>
+</ul>
+<p>Subclasses are allowed to NOT have a <tt class="docutils literal"><span class="pre">self.input</span></tt> attribute, IFF they
+redefine both the value() and the setValue() methods.</p>
+<p>Subclasses can set validators on the input, like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIntValidator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Subclasses can define a show() method e.g. to select the data in the
+input field on display of the dialog.</p>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInfo</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An unchangeable input field with a label in front.</p>
+<p>It is just like an InputString, but the text can not be edited.
+The value should be a simple string without newlines.</p>
+<p>There are no specific options.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputLabel</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An unchangeable information field.</p>
+<p>The value is displayed as a string, but may contain more complex texts.</p>
+<p>By default, the text format will be guessed to be either plain text,
+ReStructuredText ot html. Specify plain=True to display in plain text.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputString</tt><big>(</big><em>name</em>, <em>value</em>, <em>max=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A string input field with a label in front.</p>
+<p>If the type of value is not a string, the input string
+will be eval&#8217;ed before returning.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>max</cite>: the maximum number of characters in the string.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputText</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A scrollable text input field with a label in front.</p>
+<p>By default, the text format will be guessed to be either plain text,
+ReStructuredText ot html.</p>
+<p>Specify plain=True to display in plain text.</p>
+<p>If the type of value is not a string, the input text will be eval&#8217;ed
+before returning.</p>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A boolean input item.</p>
+<p>Creates a new checkbox for the input of a boolean value.</p>
+<p>Displays the name next to a checkbox, which will initially be set
+if value evaluates to True. (Does not use the label)
+The value is either True or False,depending on the setting
+of the checkbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>maxh=-1</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A list selection InputItem.</p>
+<p>A list selection is a widget allowing the selection of zero, one or more
+items from a list.</p>
+<p>choices is a list/tuple of possible values.
+default is the initial/default list of selected items.
+Values in default that are not in the choices list, are ignored.
+If default is None or an empty list, nothing is selected initially.</p>
+<p>By default, the user can select multiple items and the return value is
+a list of all currently selected items.
+If single is True, only a single item can be selected.</p>
+<p>If maxh==-1, the widget gets a fixed height to precisely take the number of
+items in the list. If maxh&gt;=0, the widget will get scrollbars when the
+height is not sufficient to show all items. With maxh&gt;0, the item will
+get the specified height (in pixels), while maxh==0 will try to give the
+widget the required height to show all items</p>
+<p>If check is True, all items have a checkbox and only the checked items
+are returned. This option sets single==False.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big></dt>
+<dd><p>Mark the specified items as selected or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setChecked</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big></dt>
+<dd><p>Mark the specified items as checked or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Mark all items as selected/checked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setNone</tt><big>(</big><big>)</big></dt>
+<dd><p>Mark all items as not selected/checked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A combobox InputItem.</p>
+<p>A combobox is a widget allowing the selection of an item from a drop
+down list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.</p>
+<p>The choices are presented to the user as a combobox, which will
+initially be set to the default value.</p>
+<p>An optional <cite>onselect</cite> function may be specified, which will be called
+whenever the current selection changes.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s current value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setChoices</tt><big>(</big><em>choices</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s choices.</p>
+<p>This also sets the current value to the first in the list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A radiobuttons InputItem.</p>
+<p>Radio buttons are a set of buttons used to select a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be pressed.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A pushbuttons InputItem.</p>
+<p>Creates pushbuttons for the selection of a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be selected.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the text on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the icon on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInteger</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An integer input item.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A float input item.</p>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>autowidth=True</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item for tabular data.</p>
+<ul>
+<li><p class="first"><cite>value</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>value</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all keyword parameters of the TableModel or ArrayModel
+may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An integer input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+<li><cite>ticks</cite>: step for the tick marks (default range length / 10)</li>
+<li><cite>func</cite>: an optional function to be called whenever the value is
+changed. The function takes a float/integer argument.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A float input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+<li><cite>scale</cite>: scale factor to compute the float value</li>
+<li><cite>ticks</cite>: step for the tick marks (default range length / 10)</li>
+<li><cite>func</cite>: an optional function to be called whenever the value is
+changed. The function receives the input field as argument. With
+this argument, the fields attirbutes like name, value, text, can
+be retrieved.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPoint</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A 3D point/vector input item.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputIVector</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A vector of int values.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputButton</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A button input item.</p>
+<p>The button input field is a button displaying the current value.
+Clicking on the button executes a function responsible for changing
+the value.</p>
+<p>Extra parameters:</p>
+<ul class="simple">
+<li><cite>func</cite>: the function to call when the button is clicked. The current
+input value is passed as an argument. The function should return the
+value to be set, or None if it is to be unchanged.
+If no function is specified, the value can not be changed.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">doFunc</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the value by calling the button&#8217;s func</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A color input item.
+Creates a new color input field with a label in front.</p>
+<p>The color input field is a button displaying the current color.
+Clicking on the button opens a color dialog, and the returned
+value is set in the button.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item to select a font.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputWidget</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item containing any other widget.</p>
+<p>The widget should have:</p>
+<ul class="simple">
+<li>a results attribute that is set to a dict with the resulting input
+values when the widget&#8217;s acceptData() is called.</li>
+<li>an acceptData() method, that sets the widgets results dict.</li>
+<li>a setValue(dict) method that sets the widgets values to those
+specified in the dict.</li>
+</ul>
+<p>The return value of this item is an ODict.</p>
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputForm</tt></dt>
+<dd><p>An input form.</p>
+<p>The input form is a layout box in which the items are layed out
+vertically. The layout can also contain any number of tab widgets
+in which items can be layed out using tab pages.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ScrollForm</tt></dt>
+<dd><p>An scrolling input form.</p>
+<p>The input form is a layout box in which the items are layed out
+vertically. The layout can also contain any number of tab widgets
+in which items can be layed out using tab pages.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A boxed group of InputItems.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTab</tt><big>(</big><em>name</em>, <em>tab</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A tab page in an input form.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span>, <em>scroll=False</em>, <em>size=None</em>, <em>align_right=False</em><big>)</big></dt>
+<dd><p>A dialog widget to interactively set the value of one or more items.</p>
+<p>Overview</p>
+<p>The pyFormex user has full access to the Qt4 framework on which the
+GUI was built. Therefore he can built input dialogs as complex and
+powerful as he can imagine. However, directly dealing with the
+Qt4 libraries requires some skills and, for simple input widgets,
+more effort than needed.</p>
+<p>The InputDialog class presents a unified system for quick and easy
+creation of common dialog types. The provided dialog can become
+quite sophisticated with tabbed pages, groupboxes and custom widgets.
+Both modal and modeless (non-modal) dialogs can be created.</p>
+<p>Items</p>
+<p>Each basic input item is a dictionary, where the fields have the
+following meaning:</p>
+<ul class="simple">
+<li>name:  the name of the field,</li>
+<li>value: the initial or default value of the field,</li>
+<li>itemtype: the type of values the field can accept,</li>
+<li>options: a dict with options for the field.</li>
+<li>text: if specified, the text value will be displayed instead of
+the name. The name value will remain the key in the return dict.
+Use this field to display a more descriptive text for the user,
+while using a short name for handling the value in your script.</li>
+<li>buttons:</li>
+<li>tooltip:</li>
+<li>min:</li>
+<li>max:</li>
+<li>scale:</li>
+<li>func:</li>
+</ul>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
+<p>Other arguments</p>
+<ul class="simple">
+<li>caption: the window title to be shown in the window decoration</li>
+<li>actions: a list of action buttons to be added at the bottom of the
+input form. By default, a Cancel and Ok button will be added, to either
+reject or accept the input values.</li>
+<li>default: the default action</li>
+<li>parent: the parent widget (by default, this is the pyFormex main window)</li>
+<li>autoprefix: if True, the names of items inside tabs and group boxes will
+get prefixed with the tab and group names, separated with a &#8216;/&#8217;.</li>
+<li>flat: if True, the results are returned in a single (flat) dictionary,
+with keys being the specified or autoprefixed ones. If False, the results
+will be structured: the value of a tab or a group is a dictionary with
+the results of its fields. The default value is equal to the value of
+autoprefix.</li>
+<li>flags:</li>
+<li>modal:</li>
+<li><cite>enablers</cite>: a list of tuples (key,value,key1,...) where the first two
+items indicate the key and value of the enabler, and the next items
+are keys of fields that are enabled when the field key has the specified
+value. Currentley, key should be a field of type boolean, [radio],
+combo or group. Also, any input field should only have one enabler!</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big></dt>
+<dd><p>Add input items to form.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a Tab page of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a group of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big></dt>
+<dd><p>Add a single input item to the form.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timeout</tt><big>(</big><big>)</big></dt>
+<dd><p>Hide the dialog and set the result code to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the result code was set to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog.
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListWidget</tt><big>(</big><em>maxh=0</em><big>)</big></dt>
+<dd><p>A customized QListWidget with ability to compute its required size.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em><big>)</big></dt>
+<dd><p>A model representing a two-dimensional array of items.</p>
+<ul class="simple">
+<li><cite>data</cite>: any tabular data organized in a fixed number of rows and colums.
+This means that an item at row i and column j can be addressed as
+data[i][j]. Thus it can be a list of lists, or a list of tuples or
+a 2D numpy array. The data will always be returned as a list of lists
+though.
+Unless otherwise specified by the use of a <cite>celltype</cite>, <cite>coltype</cite> or
+<cite>rowtype</cite> argument, all items are converted to strings and will be
+returned as strings.
+Item storage order is row by row.</li>
+<li><cite>chead</cite>: optional list of (ncols) column headers</li>
+<li><cite>rhead</cite>: optional list of (nrows) row headers</li>
+<li><cite>celltype</cite>: callable: if specified, it is used to map all items.
+This is only used if neither <cite>rowtype</cite> nor <cite>coltype</cite> are specified.
+If unspecified, it will be set to &#8216;str&#8217;, unless <cite>data</cite> is a numpy array,
+in which case it will be set to the datatype of the array.</li>
+<li><cite>rowtype</cite>: list of nrows callables: if specified, the items of each row
+are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and is only used if <cite>coltype</cite> ais not specified.</li>
+<li><cite>coltype</cite>: list of ncols callables: if specified, the items of each
+column are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and <cite>rowtype</cite>.</li>
+<li><cite>edit</cite>: bool: if True (default), the table is editable. Set to False
+to make the data readonly.</li>
+<li><cite>resize</cite>: bool: if True, the table can be resized: rows and columns can be
+added or removed. If False, the size of the table can not be changed.
+The default value is equal to the value of <cite>edit</cite>.
+If <cite>coltype</cite> is specified, the number of columns can not be changed.
+If <cite>rowtype</cite> is specified, the number of rows can not be changed.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em>, <em>resize=None</em><big>)</big></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+<li><cite>resize</cite>: bool: makes the table resizable or not. If unspecified,
+it is set equal to the <cite>edit</cite>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">data</tt><big>(</big><em>index</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the data at the specified index</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCellData</tt><big>(</big><em>r</em>, <em>c</em>, <em>value</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+<p>This changes the stored data, not the interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insertRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big></dt>
+<dd><p>Insert row(s) in table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big></dt>
+<dd><p>Remove row(s) from table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big></dt>
+<dd><p>A model representing a two-dimensional numpy array.</p>
+<ul class="simple">
+<li><cite>data</cite>: a numpy array with two dimensions.</li>
+<li><cite>chead</cite>, <cite>rhead</cite>: column and row headers. The default will show column
+and row numbers.</li>
+<li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
+the data readonly.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em><big>)</big></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>parent=None</em>, <em>autowidth=True</em><big>)</big></dt>
+<dd><p>A widget to show/edit a two-dimensional array of items.</p>
+<ul>
+<li><p class="first"><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>data</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>label</cite>: currently unused (intended to display an optional label
+in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</p>
+</li>
+<li><p class="first"><cite>parent</cite>:</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all other parameters for the initialization of the
+TableModel or ArrayModel may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">colWidths</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the width of the columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowHeights</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the height of the rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><big>)</big></dt>
+<dd><p>Update the table.</p>
+<p>This method should be called to update the widget when the data of
+the table have changed. If autowidth is True, this will also
+adjust the column widths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the Table&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>button=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A file selection dialog.</p>
+<p>The FileSelection dialog is a special purpose complex dialog widget
+that allows to interactively select a file or directory from the file
+system, possibly even multiple files, create new files or directories.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>path</cite>: the path shown on initial display of the dialog. It should
+be an existing path in the file system. The default is &#8216;.&#8217; for the
+current directory.</p>
+</li>
+<li><p class="first"><cite>pattern</cite>: a string or a list of strings: specifies one or more UNIX
+glob patterns, used to limit the set of displayed filenames to those
+matching the glob. Each string can contain multiple globs, and an
+explanation string can be place in front:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;Image files (*.png *.jpg)&#39;</span>
+</pre></div>
+</div>
+<p>The function <a class="reference internal" href="utils.html#utils.fileDescription" title="utils.fileDescription"><tt class="xref py py-func docutils literal"><span class="pre">utils.fileDescription()</span></tt></a> can be used to create some
+strings for common classes of files.</p>
+<p>As a convenience, if a string starts with a &#8216;.&#8217;, the remainder of the
+string will be used as a lookup key in utils.fileDescription to get
+the actual string to be used. Thus, pattern=&#8217;.png&#8217; will filter all
+&#8216;.png&#8217; files, and pattern=&#8217;.img&#8217; will filter all image files in any
+of the supported formats.</p>
+<p>If a list of multiple strings is given, a combo box will allow the
+user to select between one of them.</p>
+</li>
+<li><p class="first"><cite>exist</cite>: bool: if True, the filename must exist. The default will
+allow any new filename to be created.</p>
+</li>
+<li><p class="first"><cite>multi</cite>: bool: if True, multiple files can be selected. The default is
+to allow only a single file.</p>
+</li>
+<li><p class="first"><cite>dir</cite>: bool: if True, only directories can be selected. If dir evaluates
+to True, but is not the value True, either a directory or a filename can
+be selected.</p>
+</li>
+<li><p class="first"><cite>button</cite>: string: the label to be displayed on the accept button. The
+default is set to &#8216;Save&#8217; if new files are allowed or &#8216;Open&#8217; if only
+existing files can be selected.</p>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>access=None</em>, <em>default=None</em>, <em>convert=True</em><big>)</big></dt>
+<dd><p>A file selection dialog specialized for opening projects.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">SaveImageDialog</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>multi=False</em><big>)</big></dt>
+<dd><p>A dialog for saving to an image file.</p>
+<p>The dialog contains the normal file selection widget plus some
+extra fields to set the Save Image parameters:</p>
+<ul class="simple">
+<li><cite>Whole Window</cite>: If checked, the whole pyFormex main window will be
+saved. If unchecked, only the current OpenGL viewport is saved.</li>
+<li><cite>Crop Root</cite>: If checked, the window will be cropped from the root
+window. This mode is required if you want to include the window
+decorations.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListSelection</tt><big>(</big><em>choices</em>, <em>caption='ListSelection'</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>single=False</em>, <em>check=False</em>, <em>sort=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A dialog for selecting one or more items from a list.</p>
+<p>This is a convenient class which constructs an input dialog with a single
+input item: an InputList. It allows the user to select one or more items
+from a list. The constructor supports all arguments of the InputDialog and
+the InputList classes. The return value is the value of the InputList,
+not the result of the InputDialog.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>selected</em><big>)</big></dt>
+<dd><p>Mark the specified items as selected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the selected items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big></dt>
+<dd><p>Show the modal dialog and return the list of selected values.</p>
+<p>If the user cancels the selection operation, the return value is None.
+Else, the result is always a list, possibly empty or with a single
+value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big></dt>
+<dd><p>Add input items to form.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a Tab page of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a group of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big></dt>
+<dd><p>Add a single input item to the form.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timeout</tt><big>(</big><big>)</big></dt>
+<dd><p>Hide the dialog and set the result code to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the result code was set to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog.
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">GenericDialog</tt><big>(</big><em>widgets, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big></dt>
+<dd><p>A generic dialog widget.</p>
+<p>The dialog is formed by a number of widgets stacked in a vertical box
+layout. At the bottom is a horizontal button box with possible actions.</p>
+<ul class="simple">
+<li><cite>widgets</cite>: a list of widgets to include in the dialog</li>
+<li><cite>title</cite>: the window title for the dialog</li>
+<li><cite>parent</cite>: the parent widget. If None, it is set to pf.GUI.</li>
+<li><cite>actions</cite>: the actions to include in the bottom button box. By default,
+an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
+to avoid creation of a button box.</li>
+<li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MessageBox</tt><big>(</big><em>text, format='', level='info', actions=['OK'], default=None, timeout=None, modal=None, parent=None, check=None</em><big>)</big></dt>
+<dd><p>A message box is a widget displaying a short text for the user.</p>
+<p>The message box displays a text, an optional icon depending on the level
+and a number of push buttons.</p>
+<ul class="simple">
+<li><cite>text</cite>: the text to be shown. This can be either plain text or html
+or reStructuredText.</li>
+<li><cite>format</cite>: the text format: either &#8216;plain&#8217;, &#8216;html&#8217; or &#8216;rest&#8217;.
+Any other value will try automatic recognition.
+Recognition of plain text and html is automatic.
+A text is autorecognized to be reStructuredText if its first
+line starts with &#8216;..&#8217; and is followed by a blank line.</li>
+<li><cite>level</cite>: defines the icon that will be shown together with the text.
+If one of &#8216;question&#8217;, &#8216;info&#8217;, &#8216;warning&#8217; or &#8216;error&#8217;, a matching icon
+will be shown to hint the user about the type of message. Any other
+value will suppress the icon.</li>
+<li><cite>actions</cite>: a list of strings. For each string a pushbutton will be
+created which can be used to exit the dialog and remove the message.
+By default there is a single button labeled &#8216;OK&#8217;.</li>
+</ul>
+<p>When the MessageBox is displayed with the <a class="reference internal" href="#widgets.MessageBox.getResult" title="widgets.MessageBox.getResult"><tt class="xref py py-meth docutils literal"><span class="pre">getResult()</span></tt></a> method,
+a modal dialog is created, i.e. the user will have to click a button
+or hit the ESC key before he can continue.</p>
+<p>If you want a modeless dialog, allowing the user to continue while the
+message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
+<dl class="method">
+<dt>
+<tt class="descname">addCheck</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Add a check field at the bottom of the layout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big></dt>
+<dd><p>Display the message box and wait for user to click a button.</p>
+<p>This will show the message box as a modal dialog, so that the
+user has to click a button (or hit the ESC key) before he can continue.
+Returns the text of the button that was clicked or
+an empty string if ESC was hit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">WarningBox</tt></dt>
+<dd><p>A message box is a widget displaying a short text for the user.</p>
+<p>The message box displays a text, an optional icon depending on the level
+and a number of push buttons.</p>
+<ul class="simple">
+<li><cite>text</cite>: the text to be shown. This can be either plain text or html
+or reStructuredText.</li>
+<li><cite>format</cite>: the text format: either &#8216;plain&#8217;, &#8216;html&#8217; or &#8216;rest&#8217;.
+Any other value will try automatic recognition.
+Recognition of plain text and html is automatic.
+A text is autorecognized to be reStructuredText if its first
+line starts with &#8216;..&#8217; and is followed by a blank line.</li>
+<li><cite>level</cite>: defines the icon that will be shown together with the text.
+If one of &#8216;question&#8217;, &#8216;info&#8217;, &#8216;warning&#8217; or &#8216;error&#8217;, a matching icon
+will be shown to hint the user about the type of message. Any other
+value will suppress the icon.</li>
+<li><cite>actions</cite>: a list of strings. For each string a pushbutton will be
+created which can be used to exit the dialog and remove the message.
+By default there is a single button labeled &#8216;OK&#8217;.</li>
+</ul>
+<p>When the MessageBox is displayed with the <tt class="xref py py-meth docutils literal"><span class="pre">getResult()</span></tt> method,
+a modal
+dialog is created, i.e. the user will have to click a button or hit the
+ESC key before he can continue.</p>
+<p>If you want a modeless dialog, allowing the user to continue while the
+message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=[('OK',)], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big></dt>
+<dd><p>Display a text and wait for user response.</p>
+<p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
+The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
+was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pressed.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name='', actions=None, default=None, parent=None, spacer=False, stretch=[-1, -1], cmargin=(2, 2, 2, 2)</em><big>)</big></dt>
+<dd><p>A box with action buttons.</p>
+<ul class="simple">
+<li><cite>name</cite>: a label to be displayed in front of the button box. An empty
+string will suppress it.</li>
+<li><cite>actions</cite>: a list of (button label, button function) tuples. The button
+function can be a normal callable function, or one of the values
+widgets.ACCEPTED or widgets.REJECTED. In the latter case, <cite>parent</cite>
+should be specified.</li>
+<li><cite>default</cite>: name of the action to set as the default. If no default
+is given, it will be set to the LAST button.</li>
+<li><cite>parent</cite>: the parent dialog holding this button box. It should be
+specified if one of the buttons actions is not specified or is
+widgets.ACCEPTED or widgets.REJECTED.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the text on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the icon on button index.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>readonly=False</em>, <em>*args</em><big>)</big></dt>
+<dd><p>A widget displaying the coordinates of a point.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getValues</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the current x,y,z values as a list of floats.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big></dt>
+<dd><p>Set the three values of the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageView</tt><big>(</big><em>image=None</em>, <em>maxheight=None</em>, <em>parent=None</em><big>)</big></dt>
+<dd><p>A widget displaying an image.</p>
+<dl class="method">
+<dt>
+<tt class="descname">showImage</tt><big>(</big><em>image</em>, <em>maxheight=None</em><big>)</big></dt>
+<dd><p>Show an image in the viewer.</p>
+<p>image: either a filename or an existing QImage instance. If a filename,
+it should be an image file that can be read by the QImage constructor.
+Most image formats are understood by QImage. The variable
+gui.image.image_formats_qtr provides a list.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">objSize</tt><big>(</big><em>object</em><big>)</big></dt>
+<dd><p>Return the width and height of an object.</p>
+<p>Returns a tuple w,h for any object that has width and height methods.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">maxWinSize</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the maximum widget size.</p>
+<p>The maximum widget size is the maximum size for a window on the screen.
+The available size may be smaller than the physical screen size (e.g.
+it may exclude the space for docking panels).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">addTimeOut</tt><big>(</big><em>widget</em>, <em>timeout=None</em>, <em>timeoutfunc=None</em><big>)</big></dt>
+<dd><p>Add a timeout to a widget.</p>
+<ul class="simple">
+<li><cite>timeoutfunc</cite> is a callable. If None it will be set to the widget&#8217;s
+<cite>timeout</cite> method if one exists.</li>
+<li><cite>timeout</cite> is a float value. If None, it will be set to to the global
+<cite>input_timeout</cite>.</li>
+</ul>
+<p>If timeout is positive, a timer will be installed into the widget which
+will call the <cite>timeoutfunc</cite> after <cite>timeout</cite> seconds have elapsed.
+The <cite>timeoutfunc</cite> can be any callable, but usually will emit a signal
+to make the widget accept or reject the input. The timeoutfunc will not
+be called is if the widget is destructed before the timer has finished.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">defaultItemType</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Guess the InputItem type from the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">groupInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">tabInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Convert InputItem item to a dict or a widget.</p>
+<p>This function tries to convert some old style or sloppy InputItem item
+to a proper InputItem item dict.</p>
+<p>The conversion does the following:</p>
+<ul class="simple">
+<li>if <cite>item</cite> is a dict, it is considered a proper item and returned as is.</li>
+<li>if <cite>item</cite> is a QWidget, it is also returned as is.</li>
+<li>if <cite>item</cite> is a tuple or a list, conversion with simpleInputItem
+is tried, using the item items as arguments.</li>
+<li>if neither succeeds, an error is raised.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">inputAny</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype</em>, <em>**options</em><big>)</big></dt>
+<dd><p>Create an InputItem of any type, depending on the arguments.</p>
+<p>Arguments: only name, value and itemtype are required</p>
+<ul class="simple">
+<li>name: name of the item, also the key for the return value</li>
+<li>value: initial value,</li>
+<li>itemtype: one of the available itemtypes</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateDialogItems</tt><big>(</big><em>data</em>, <em>newdata</em><big>)</big></dt>
+<dd><p>Update the input data fields with new data values</p>
+<ul class="simple">
+<li>data: a list of dialog items, as required by an InputDialog.</li>
+<li>newdata: a dictionary with new values for (some of) the items.</li>
+</ul>
+<p>The data items with a name occurring as a key in newdata will have
+their value replaced with the corresponding value in newdata, unless
+this value is None.</p>
+<p>The user should make sure to set only values of the proper type!</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">selectFont</tt><big>(</big><big>)</big></dt>
+<dd><p>Ask the user to select a font.</p>
+<p>A font selection dialog widget is displayed and the user is requested
+to select a font.
+Returns a font if the user exited the dialog with the <em class="guilabel">OK</em>
+button.
+Returns None if the user clicked <em class="guilabel">CANCEL</em>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">getColor</tt><big>(</big><em>col=None</em>, <em>caption=None</em><big>)</big></dt>
+<dd><p>Create a color selection dialog and return the selected color.</p>
+<p>col is the initial selection.
+If a valid color is selected, its string name is returned, usually as
+a hex #RRGGBB string. If the dialog is canceled, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateText</tt><big>(</big><em>widget</em>, <em>text</em>, <em>format=''</em><big>)</big></dt>
+<dd><p>Update the text of a text display widget.</p>
+<ul class="simple">
+<li><cite>widget</cite>: a widget that has the <tt class="xref py py-meth docutils literal"><span class="pre">setText()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">setPlainText()</span></tt>
+and <tt class="xref py py-meth docutils literal"><span class="pre">setHtml()</span></tt> methods to set the widget&#8217;s text.
+Examples are <tt class="xref py py-class docutils literal"><span class="pre">QMessageBox</span></tt> and <tt class="xref py py-class docutils literal"><span class="pre">QTextEdit</span></tt>.</li>
+<li><cite>text</cite>: a multiline string with the text to be displayed.</li>
+<li><cite>format</cite>: the format of the text. If empty, autorecognition will be
+tried. Currently available formats are: <tt class="docutils literal"><span class="pre">plain</span></tt>, <tt class="docutils literal"><span class="pre">html</span></tt> and
+<tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText).</li>
+</ul>
+<p>This function allows to display other text formats besides the
+plain text and html supported by the widget.
+Any format other than <tt class="docutils literal"><span class="pre">plain</span></tt> or <tt class="docutils literal"><span class="pre">html</span></tt> will be converted to one
+of these before sending it to the widget. Currently, we convert the
+following formats:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText):
+If the :mod:docutils is available, <cite>rest</cite> text is converted to <cite>html</cite>,
+otherwise it will be displayed as plain text.
+A text is autorecognized as reStructuredText if its first
+line starts with &#8216;..&#8217;. Note: If you add a &#8216;..&#8217; line to your text to
+have it autorecognized as reST, be sure to have it followed with a
+blank line, or your first paragraph could be turned into comments.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">addActionButtons</tt><big>(</big><em>layout, actions=[('Cancel',), ('OK',)], default=None, parent=None</em><big>)</big></dt>
+<dd><p>Add a set of action buttons to a layout</p>
+<p>layout is a QLayout</p>
+<p>actions is a list of tuples (name,) or (name,function).
+If a function is specified, it will be executed on pressing the button.
+If no function is specified, and name is one of &#8216;ok&#8217; or &#8216;cancel&#8217; (case
+is ignored), the button will be bound to the dialog&#8217;s &#8216;accept&#8217;
+or &#8216;reject&#8217; slot.
+If actions==None (default), it will be set to the default
+<tt class="docutils literal"><span class="pre">[('Cancel',),('OK',)]</span></tt>.</p>
+<p>Specify actions=[] if you want an empty dialogDuttons.
+default is the name of the action to set as the default. If no default
+is given, it is set to the LAST button.</p>
+<p>Returns a horizontal box layout with the buttons.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>20. <a class="reference internal" href="#module-widgets" title="widgets: A collection of custom widgets used in the pyFormex GUI"><tt class="xref py py-mod docutils literal"><span class="pre">widgets</span></tt></a> &#8212; A collection of custom widgets used in the pyFormex GUI<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-widgets"></span><p>The widgets in this module were primarily created in function of the
+pyFormex GUI. The user can apply them to change the GUI or to add
+interactive widgets to his scripts. Of course he can also use all the
+Qt widgets directly.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputItem</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A single input item.</p>
+<p>This is the base class for widgets holding a single input item.
+A single input item is any item that is treated as a unit and
+refered to by a single name.</p>
+<p>This base class is rarely used directly. Most of the components
+of an InputDialog are subclasses of hereof, each specialized in
+some form of input data or representation. There is e.g. an
+InputInteger class to input an integer number and an InputString
+for the input of a string.
+The base class groups the functionality that is common to the
+different input widgets.</p>
+<p>The InputItem widget holds a horizontal layout box (QHBoxLayout)
+to group its its components. In most cases there are just two components:
+a label with the name of the field, and the actual input field.
+Other components, such as buttons or sliders, may be added. This is
+often done in subclasses.</p>
+<p>The constructor has one required argument: <cite>name</cite>. Other
+(optional) positional parameters are passed to the QtGui.QWidget
+constructor. The remaining keyword parameters are options that
+somehow change the default behavior of the InputItem class.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>name</cite>: the name used to identify the item. It should be unique for
+all InputItems in the same InputDialog. It will be used as a key in
+the dictionary that returns all the input values in the dialog. It will
+also be used as the label to display in front of the input field, in
+case no <cite>text</cite> value was specified.</li>
+<li><cite>text</cite>: if specified, this text will be displayed in the label in front
+of the input field. This allows for showing descriptive texts for the
+input fields in the dialog, while keeping short and simple names for
+the items in the programming.
+<cite>text</cite> can be set to an empty string to suppress the creation of a label
+in front of the input field. This is useful if the input field
+widget itself already provides a label (see e.g. InputBool).
+<cite>text</cite> can also be a QtGui.QPixmap, allowing for icons to be used
+as labels.</li>
+<li><cite>buttons</cite>: a list of (label,function) tuples. For each tuple a button
+will be added after the input field. The button displays the text and
+when pressed, the specified function will be executed. The function
+takes no arguments.</li>
+<li><cite>data</cite>: any extra data that you want to be stored into the widget.
+These data are not displayed, but can be useful in the functioning of
+the widget.</li>
+<li><cite>enabled</cite>: boolean. If False, the InputItem will not be enabled, meaning
+that the user can not enter any values there. Disabled fields are usually
+displayed in a greyed-out fashion.</li>
+<li><cite>readonly</cite>: boolean. If True, the data are read-only and can not be
+changed by the user. Unlike disabled items, they are displayed in a
+normal fashion.</li>
+<li><cite>tooltip</cite>: A descriptive text which is only shown when the user pauses
+the cursor for some time on the widget. It can be used to give
+more comprehensive explanation to first time users.</li>
+<li><cite>spacer</cite>: string. Only the characters &#8216;l&#8217;, &#8216;r&#8217; and &#8216;c&#8217; are relevant.
+If the string contains an &#8216;l&#8217;, a spacer in inserted before the label.
+If the string contains an &#8216;r&#8217;, a spacer in inserted after the input field.
+If the string contains a &#8216;c&#8217;, a spacer in inserted between the label and
+the input filed.</li>
+</ul>
+<p>Subclasses should have an <tt class="docutils literal"><span class="pre">__init__()</span></tt> method which first constructs
+a proper widget for the input field, and stores it in the attribute
+<tt class="docutils literal"><span class="pre">self.input</span></tt>. Then the baseclass should be properly initialized, passing
+any optional parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">SomeInputWidget</span><span class="p">()</span>
+<span class="n">InputItem</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Subclasses should also override the following default methods of
+the InputItem base class:</p>
+<ul class="simple">
+<li>text(): if the subclass calls the superclass __init__() method with
+a value <tt class="docutils literal"><span class="pre">text=''</span></tt>. This method should return the value of the
+displayed text.</li>
+<li>value(): if the value of the input field is not given by
+<tt class="docutils literal"><span class="pre">self.input.text()</span></tt>, i.e. in most cases. This method should
+return the value of the input field.</li>
+<li>setValue(val): always, unless the field is readonly. This method should
+change the value of the input widget to the specified value.</li>
+</ul>
+<p>Subclasses are allowed to NOT have a <tt class="docutils literal"><span class="pre">self.input</span></tt> attribute, IFF they
+redefine both the value() and the setValue() methods.</p>
+<p>Subclasses can set validators on the input, like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIntValidator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Subclasses can define a show() method e.g. to select the data in the
+input field on display of the dialog.</p>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInfo</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An unchangeable input field with a label in front.</p>
+<p>It is just like an InputString, but the text can not be edited.
+The value should be a simple string without newlines.</p>
+<p>There are no specific options.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputLabel</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An unchangeable information field.</p>
+<p>The value is displayed as a string, but may contain more complex texts.</p>
+<p>By default, the text format will be guessed to be either plain text,
+ReStructuredText ot html. Specify plain=True to display in plain text.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputString</tt><big>(</big><em>name</em>, <em>value</em>, <em>max=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A string input field with a label in front.</p>
+<p>If the type of value is not a string, the input string
+will be eval&#8217;ed before returning.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>max</cite>: the maximum number of characters in the string.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputText</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A scrollable text input field with a label in front.</p>
+<p>By default, the text format will be guessed to be either plain text,
+ReStructuredText ot html.</p>
+<p>Specify plain=True to display in plain text.</p>
+<p>If the type of value is not a string, the input text will be eval&#8217;ed
+before returning.</p>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A boolean input item.</p>
+<p>Creates a new checkbox for the input of a boolean value.</p>
+<p>Displays the name next to a checkbox, which will initially be set
+if value evaluates to True. (Does not use the label)
+The value is either True or False,depending on the setting
+of the checkbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>maxh=-1</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A list selection InputItem.</p>
+<p>A list selection is a widget allowing the selection of zero, one or more
+items from a list.</p>
+<p>choices is a list/tuple of possible values.
+default is the initial/default list of selected items.
+Values in default that are not in the choices list, are ignored.
+If default is None or an empty list, nothing is selected initially.</p>
+<p>By default, the user can select multiple items and the return value is
+a list of all currently selected items.
+If single is True, only a single item can be selected.</p>
+<p>If maxh==-1, the widget gets a fixed height to precisely take the number of
+items in the list. If maxh&gt;=0, the widget will get scrollbars when the
+height is not sufficient to show all items. With maxh&gt;0, the item will
+get the specified height (in pixels), while maxh==0 will try to give the
+widget the required height to show all items</p>
+<p>If check is True, all items have a checkbox and only the checked items
+are returned. This option sets single==False.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big></dt>
+<dd><p>Mark the specified items as selected or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setChecked</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big></dt>
+<dd><p>Mark the specified items as checked or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Mark all items as selected/checked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setNone</tt><big>(</big><big>)</big></dt>
+<dd><p>Mark all items as not selected/checked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A combobox InputItem.</p>
+<p>A combobox is a widget allowing the selection of an item from a drop
+down list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.</p>
+<p>The choices are presented to the user as a combobox, which will
+initially be set to the default value.</p>
+<p>An optional <cite>onselect</cite> function may be specified, which will be called
+whenever the current selection changes.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s current value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setChoices</tt><big>(</big><em>choices</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s choices.</p>
+<p>This also sets the current value to the first in the list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>value</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A radiobuttons InputItem.</p>
+<p>Radio buttons are a set of buttons used to select a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be pressed.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A pushbuttons InputItem.</p>
+<p>Creates pushbuttons for the selection of a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+value is the initial/default choice.
+If value is not in the choices list, it is prepended.
+If value is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be selected.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the text on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the icon on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInteger</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An integer input item.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A float input item.</p>
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>autowidth=True</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item for tabular data.</p>
+<ul>
+<li><p class="first"><cite>value</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>value</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all keyword parameters of the TableModel or ArrayModel
+may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An integer input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+<li><cite>ticks</cite>: step for the tick marks (default range length / 10)</li>
+<li><cite>func</cite>: an optional function to be called whenever the value is
+changed. The function takes a float/integer argument.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A float input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
+<li><cite>scale</cite>: scale factor to compute the float value</li>
+<li><cite>ticks</cite>: step for the tick marks (default range length / 10)</li>
+<li><cite>func</cite>: an optional function to be called whenever the value is
+changed. The function receives the input field as argument. With
+this argument, the fields attirbutes like name, value, text, can
+be retrieved.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><big>)</big></dt>
+<dd><p>Select all text on first display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPoint</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A 3D point/vector input item.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputIVector</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A vector of int values.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputButton</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A button input item.</p>
+<p>The button input field is a button displaying the current value.
+Clicking on the button executes a function responsible for changing
+the value.</p>
+<p>Extra parameters:</p>
+<ul class="simple">
+<li><cite>func</cite>: the function to call when the button is clicked. The current
+input value is passed as an argument. The function should return the
+value to be set, or None if it is to be unchanged.
+If no function is specified, the value can not be changed.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">doFunc</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the value by calling the button&#8217;s func</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A color input item.
+Creates a new color input field with a label in front.</p>
+<p>The color input field is a button displaying the current color.
+Clicking on the button opens a color dialog, and the returned
+value is set in the button.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item to select a font.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputFile">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFile</tt><big>(</big><em>name</em>, <em>value</em>, <em>pattern='*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>An input item to select a file.</p>
+<p>The following arguments are passed to the FileSelection widget:
+path,pattern,exist,multi,dir.</p>
+<dl class="method">
+<dt id="widgets.InputFile.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFile.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFile.name">
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFile.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFile.text">
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFile.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the displayed text of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputWidget</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An input item containing any other widget.</p>
+<p>The widget should have:</p>
+<ul class="simple">
+<li>a results attribute that is set to a dict with the resulting input
+values when the widget&#8217;s acceptData() is called.</li>
+<li>an acceptData() method, that sets the widgets results dict.</li>
+<li>a setValue(dict) method that sets the widgets values to those
+specified in the dict.</li>
+</ul>
+<p>The return value of this item is an ODict.</p>
+<dl class="method">
+<dt>
+<tt class="descname">text</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the displayed text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the name of the InputItem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputForm</tt></dt>
+<dd><p>An input form.</p>
+<p>The input form is a layout box in which the items are layed out
+vertically. The layout can also contain any number of tab widgets
+in which items can be layed out using tab pages.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ScrollForm</tt></dt>
+<dd><p>An scrolling input form.</p>
+<p>The input form is a layout box in which the items are layed out
+vertically. The layout can also contain any number of tab widgets
+in which items can be layed out using tab pages.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A boxed group of InputItems.</p>
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTab</tt><big>(</big><em>name</em>, <em>tab</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A tab page in an input form.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span>, <em>scroll=False</em>, <em>size=None</em>, <em>align_right=False</em><big>)</big></dt>
+<dd><p>A dialog widget to interactively set the value of one or more items.</p>
+<p>Overview</p>
+<p>The pyFormex user has full access to the Qt4 framework on which the
+GUI was built. Therefore he can built input dialogs as complex and
+powerful as he can imagine. However, directly dealing with the
+Qt4 libraries requires some skills and, for simple input widgets,
+more effort than needed.</p>
+<p>The InputDialog class presents a unified system for quick and easy
+creation of common dialog types. The provided dialog can become
+quite sophisticated with tabbed pages, groupboxes and custom widgets.
+Both modal and modeless (non-modal) dialogs can be created.</p>
+<p>Items</p>
+<p>Each basic input item is a dictionary, where the fields have the
+following meaning:</p>
+<ul class="simple">
+<li>name:  the name of the field,</li>
+<li>value: the initial or default value of the field,</li>
+<li>itemtype: the type of values the field can accept,</li>
+<li>options: a dict with options for the field.</li>
+<li>text: if specified, the text value will be displayed instead of
+the name. The name value will remain the key in the return dict.
+Use this field to display a more descriptive text for the user,
+while using a short name for handling the value in your script.</li>
+<li>buttons:</li>
+<li>tooltip:</li>
+<li>min:</li>
+<li>max:</li>
+<li>scale:</li>
+<li>func:</li>
+</ul>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
+<p>Other arguments</p>
+<ul class="simple">
+<li>caption: the window title to be shown in the window decoration</li>
+<li>actions: a list of action buttons to be added at the bottom of the
+input form. By default, a Cancel and Ok button will be added, to either
+reject or accept the input values.</li>
+<li>default: the default action</li>
+<li>parent: the parent widget (by default, this is the pyFormex main window)</li>
+<li>autoprefix: if True, the names of items inside tabs and group boxes will
+get prefixed with the tab and group names, separated with a &#8216;/&#8217;.</li>
+<li>flat: if True, the results are returned in a single (flat) dictionary,
+with keys being the specified or autoprefixed ones. If False, the results
+will be structured: the value of a tab or a group is a dictionary with
+the results of its fields. The default value is equal to the value of
+autoprefix.</li>
+<li>flags:</li>
+<li>modal:</li>
+<li><cite>enablers</cite>: a list of tuples (key,value,key1,...) where the first two
+items indicate the key and value of the enabler, and the next items
+are keys of fields that are enabled when the field key has the specified
+value. Currentley, key should be a field of type boolean, [radio],
+combo or group. Also, any input field should only have one enabler!</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big></dt>
+<dd><p>Add input items to form.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a Tab page of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a group of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big></dt>
+<dd><p>Add a single input item to the form.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timeout</tt><big>(</big><big>)</big></dt>
+<dd><p>Hide the dialog and set the result code to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the result code was set to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog.
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListWidget</tt><big>(</big><em>maxh=0</em><big>)</big></dt>
+<dd><p>A customized QListWidget with ability to compute its required size.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em><big>)</big></dt>
+<dd><p>A model representing a two-dimensional array of items.</p>
+<ul class="simple">
+<li><cite>data</cite>: any tabular data organized in a fixed number of rows and colums.
+This means that an item at row i and column j can be addressed as
+data[i][j]. Thus it can be a list of lists, or a list of tuples or
+a 2D numpy array. The data will always be returned as a list of lists
+though.
+Unless otherwise specified by the use of a <cite>celltype</cite>, <cite>coltype</cite> or
+<cite>rowtype</cite> argument, all items are converted to strings and will be
+returned as strings.
+Item storage order is row by row.</li>
+<li><cite>chead</cite>: optional list of (ncols) column headers</li>
+<li><cite>rhead</cite>: optional list of (nrows) row headers</li>
+<li><cite>celltype</cite>: callable: if specified, it is used to map all items.
+This is only used if neither <cite>rowtype</cite> nor <cite>coltype</cite> are specified.
+If unspecified, it will be set to &#8216;str&#8217;, unless <cite>data</cite> is a numpy array,
+in which case it will be set to the datatype of the array.</li>
+<li><cite>rowtype</cite>: list of nrows callables: if specified, the items of each row
+are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and is only used if <cite>coltype</cite> ais not specified.</li>
+<li><cite>coltype</cite>: list of ncols callables: if specified, the items of each
+column are mapped by the corresponding callable.
+This overrides <cite>celltype</cite> and <cite>rowtype</cite>.</li>
+<li><cite>edit</cite>: bool: if True (default), the table is editable. Set to False
+to make the data readonly.</li>
+<li><cite>resize</cite>: bool: if True, the table can be resized: rows and columns can be
+added or removed. If False, the size of the table can not be changed.
+The default value is equal to the value of <cite>edit</cite>.
+If <cite>coltype</cite> is specified, the number of columns can not be changed.
+If <cite>rowtype</cite> is specified, the number of rows can not be changed.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em>, <em>resize=None</em><big>)</big></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+<li><cite>resize</cite>: bool: makes the table resizable or not. If unspecified,
+it is set equal to the <cite>edit</cite>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">data</tt><big>(</big><em>index</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the data at the specified index</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCellData</tt><big>(</big><em>r</em>, <em>c</em>, <em>value</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+<p>This changes the stored data, not the interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insertRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big></dt>
+<dd><p>Insert row(s) in table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big></dt>
+<dd><p>Remove row(s) from table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big></dt>
+<dd><p>A model representing a two-dimensional numpy array.</p>
+<ul class="simple">
+<li><cite>data</cite>: a numpy array with two dimensions.</li>
+<li><cite>chead</cite>, <cite>rhead</cite>: column and row headers. The default will show column
+and row numbers.</li>
+<li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
+the data readonly.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em><big>)</big></dt>
+<dd><p>Make the table editable or not.</p>
+<ul class="simple">
+<li><cite>edit</cite>: bool: makes the items in the table editable or not.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>Return number of columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cellType</tt><big>(</big><em>r</em>, <em>c</em><big>)</big></dt>
+<dd><p>Return the type of the item at the specified position</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=2</em><big>)</big></dt>
+<dd><p>Set the value of an individual table element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big></dt>
+<dd><p>Return the header data for the sepcified row or column</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big></dt>
+<dd><p>Return the TableModel flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>celltype=None</em>, <em>rowtype=None</em>, <em>coltype=None</em>, <em>edit=True</em>, <em>resize=None</em>, <em>parent=None</em>, <em>autowidth=True</em><big>)</big></dt>
+<dd><p>A widget to show/edit a two-dimensional array of items.</p>
+<ul>
+<li><p class="first"><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns.</p>
+<p>If <cite>data</cite> is an numpy array, the Table will use the ArrayModel:
+editing the data will directly change the input data array; all
+items are of the same type; the size of the table can not be changed.</p>
+<p>Else a TableModel is used. Rows and columns can be added to or removed
+from the table. Item type can be set per row or per column or for the
+whole table.</p>
+</li>
+<li><p class="first"><cite>label</cite>: currently unused (intended to display an optional label
+in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</p>
+</li>
+<li><p class="first"><cite>parent</cite>:</p>
+</li>
+<li><p class="first"><cite>autowidth</cite>:</p>
+</li>
+<li><p class="first">additionally, all other parameters for the initialization of the
+TableModel or ArrayModel may be passed</p>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">colWidths</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the width of the columns in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rowHeights</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the height of the rows in the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><big>)</big></dt>
+<dd><p>Update the table.</p>
+<p>This method should be called to update the widget when the data of
+the table have changed. If autowidth is True, this will also
+adjust the column widths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the Table&#8217;s value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em>, <em>button=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A file selection dialog.</p>
+<p>The FileSelection dialog is a special purpose complex dialog widget
+that allows to interactively select a file or directory from the file
+system, possibly even multiple files, create new files or directories.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>path</cite>: the path shown on initial display of the dialog. It should
+be an existing path in the file system. The default is &#8216;.&#8217; for the
+current directory.</p>
+</li>
+<li><p class="first"><cite>pattern</cite>: a string or a list of strings: specifies one or more UNIX
+glob patterns, used to limit the set of displayed filenames to those
+matching the glob. Each string can contain multiple globs, and an
+explanation string can be place in front:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;Image files (*.png *.jpg)&#39;</span>
+</pre></div>
+</div>
+<p>The function <a class="reference internal" href="utils.html#utils.fileDescription" title="utils.fileDescription"><tt class="xref py py-func docutils literal"><span class="pre">utils.fileDescription()</span></tt></a> can be used to create some
+strings for common classes of files.</p>
+<p>As a convenience, if a string starts with a &#8216;.&#8217;, the remainder of the
+string will be used as a lookup key in utils.fileDescription to get
+the actual string to be used. Thus, pattern=&#8217;.png&#8217; will filter all
+&#8216;.png&#8217; files, and pattern=&#8217;.img&#8217; will filter all image files in any
+of the supported formats.</p>
+<p>If a list of multiple strings is given, a combo box will allow the
+user to select between one of them.</p>
+</li>
+<li><p class="first"><cite>exist</cite>: bool: if True, the filename must exist. The default will
+allow any new filename to be created.</p>
+</li>
+<li><p class="first"><cite>multi</cite>: bool: if True, multiple files can be selected. The default is
+to allow only a single file.</p>
+</li>
+<li><p class="first"><cite>dir</cite>: bool: if True, only directories can be selected. If dir evaluates
+to True, but is not the value True, either a directory or a filename can
+be selected.</p>
+</li>
+<li><p class="first"><cite>button</cite>: string: the label to be displayed on the accept button. The
+default is set to &#8216;Save&#8217; if new files are allowed or &#8216;Open&#8217; if only
+existing files can be selected.</p>
+</li>
+</ul>
+<dl class="method">
+<dt id="widgets.FileSelection.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.FileSelection.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the selected value</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>access=None</em>, <em>default=None</em>, <em>convert=True</em><big>)</big></dt>
+<dd><p>A file selection dialog specialized for opening projects.</p>
+<dl class="method">
+<dt id="widgets.ProjectSelection.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ProjectSelection.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the selected value</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">SaveImageDialog</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>multi=False</em><big>)</big></dt>
+<dd><p>A dialog for saving to an image file.</p>
+<p>The dialog contains the normal file selection widget plus some
+extra fields to set the Save Image parameters:</p>
+<ul class="simple">
+<li><cite>Whole Window</cite>: If checked, the whole pyFormex main window will be
+saved. If unchecked, only the current OpenGL viewport is saved.</li>
+<li><cite>Crop Root</cite>: If checked, the window will be cropped from the root
+window. This mode is required if you want to include the window
+decorations.</li>
+</ul>
+<dl class="method">
+<dt id="widgets.SaveImageDialog.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.SaveImageDialog.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the selected value</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListSelection</tt><big>(</big><em>choices</em>, <em>caption='ListSelection'</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>single=False</em>, <em>check=False</em>, <em>sort=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A dialog for selecting one or more items from a list.</p>
+<p>This is a convenient class which constructs an input dialog with a single
+input item: an InputList. It allows the user to select one or more items
+from a list. The constructor supports all arguments of the InputDialog and
+the InputList classes. The return value is the value of the InputList,
+not the result of the InputDialog.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setValue</tt><big>(</big><em>selected</em><big>)</big></dt>
+<dd><p>Mark the specified items as selected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">value</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the selected items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big></dt>
+<dd><p>Show the modal dialog and return the list of selected values.</p>
+<p>If the user cancels the selection operation, the return value is None.
+Else, the result is always a list, possibly empty or with a single
+value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big></dt>
+<dd><p>Add input items to form.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a Tab page of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big></dt>
+<dd><p>Add a group of input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big></dt>
+<dd><p>Add a single input item to the form.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timeout</tt><big>(</big><big>)</big></dt>
+<dd><p>Hide the dialog and set the result code to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">timedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the result code was set to TIMEOUT</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog.
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">GenericDialog</tt><big>(</big><em>widgets, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big></dt>
+<dd><p>A generic dialog widget.</p>
+<p>The dialog is formed by a number of widgets stacked in a vertical box
+layout. At the bottom is a horizontal button box with possible actions.</p>
+<ul class="simple">
+<li><cite>widgets</cite>: a list of widgets to include in the dialog</li>
+<li><cite>title</cite>: the window title for the dialog</li>
+<li><cite>parent</cite>: the parent widget. If None, it is set to pf.GUI.</li>
+<li><cite>actions</cite>: the actions to include in the bottom button box. By default,
+an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
+to avoid creation of a button box.</li>
+<li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MessageBox</tt><big>(</big><em>text, format='', level='info', actions=['OK'], default=None, timeout=None, modal=None, parent=None, check=None</em><big>)</big></dt>
+<dd><p>A message box is a widget displaying a short text for the user.</p>
+<p>The message box displays a text, an optional icon depending on the level
+and a number of push buttons.</p>
+<ul class="simple">
+<li><cite>text</cite>: the text to be shown. This can be either plain text or html
+or reStructuredText.</li>
+<li><cite>format</cite>: the text format: either &#8216;plain&#8217;, &#8216;html&#8217; or &#8216;rest&#8217;.
+Any other value will try automatic recognition.
+Recognition of plain text and html is automatic.
+A text is autorecognized to be reStructuredText if its first
+line starts with &#8216;..&#8217; and is followed by a blank line.</li>
+<li><cite>level</cite>: defines the icon that will be shown together with the text.
+If one of &#8216;question&#8217;, &#8216;info&#8217;, &#8216;warning&#8217; or &#8216;error&#8217;, a matching icon
+will be shown to hint the user about the type of message. Any other
+value will suppress the icon.</li>
+<li><cite>actions</cite>: a list of strings. For each string a pushbutton will be
+created which can be used to exit the dialog and remove the message.
+By default there is a single button labeled &#8216;OK&#8217;.</li>
+</ul>
+<p>When the MessageBox is displayed with the <a class="reference internal" href="#widgets.MessageBox.getResult" title="widgets.MessageBox.getResult"><tt class="xref py py-meth docutils literal"><span class="pre">getResult()</span></tt></a> method,
+a modal dialog is created, i.e. the user will have to click a button
+or hit the ESC key before he can continue.</p>
+<p>If you want a modeless dialog, allowing the user to continue while the
+message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
+<dl class="method">
+<dt>
+<tt class="descname">addCheck</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Add a check field at the bottom of the layout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big></dt>
+<dd><p>Display the message box and wait for user to click a button.</p>
+<p>This will show the message box as a modal dialog, so that the
+user has to click a button (or hit the ESC key) before he can continue.
+Returns the text of the button that was clicked or
+an empty string if ESC was hit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">WarningBox</tt></dt>
+<dd><p>A message box is a widget displaying a short text for the user.</p>
+<p>The message box displays a text, an optional icon depending on the level
+and a number of push buttons.</p>
+<ul class="simple">
+<li><cite>text</cite>: the text to be shown. This can be either plain text or html
+or reStructuredText.</li>
+<li><cite>format</cite>: the text format: either &#8216;plain&#8217;, &#8216;html&#8217; or &#8216;rest&#8217;.
+Any other value will try automatic recognition.
+Recognition of plain text and html is automatic.
+A text is autorecognized to be reStructuredText if its first
+line starts with &#8216;..&#8217; and is followed by a blank line.</li>
+<li><cite>level</cite>: defines the icon that will be shown together with the text.
+If one of &#8216;question&#8217;, &#8216;info&#8217;, &#8216;warning&#8217; or &#8216;error&#8217;, a matching icon
+will be shown to hint the user about the type of message. Any other
+value will suppress the icon.</li>
+<li><cite>actions</cite>: a list of strings. For each string a pushbutton will be
+created which can be used to exit the dialog and remove the message.
+By default there is a single button labeled &#8216;OK&#8217;.</li>
+</ul>
+<p>When the MessageBox is displayed with the <tt class="xref py py-meth docutils literal"><span class="pre">getResult()</span></tt> method,
+a modal
+dialog is created, i.e. the user will have to click a button or hit the
+ESC key before he can continue.</p>
+<p>If you want a modeless dialog, allowing the user to continue while the
+message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=[('OK',)], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big></dt>
+<dd><p>Display a text and wait for user response.</p>
+<p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
+The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
+was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pressed.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name='', actions=None, default=None, parent=None, spacer=False, stretch=[-1, -1], cmargin=(2, 2, 2, 2)</em><big>)</big></dt>
+<dd><p>A box with action buttons.</p>
+<ul class="simple">
+<li><cite>name</cite>: a label to be displayed in front of the button box. An empty
+string will suppress it.</li>
+<li><cite>actions</cite>: a list of (button label, button function) tuples. The button
+function can be a normal callable function, or one of the values
+widgets.ACCEPTED or widgets.REJECTED. In the latter case, <cite>parent</cite>
+should be specified.</li>
+<li><cite>default</cite>: name of the action to set as the default. If no default
+is given, it will be set to the LAST button.</li>
+<li><cite>parent</cite>: the parent dialog holding this button box. It should be
+specified if one of the buttons actions is not specified or is
+widgets.ACCEPTED or widgets.REJECTED.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the text on button index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big></dt>
+<dd><p>Change the icon on button index.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>readonly=False</em>, <em>*args</em><big>)</big></dt>
+<dd><p>A widget displaying the coordinates of a point.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getValues</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the current x,y,z values as a list of floats.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big></dt>
+<dd><p>Set the three values of the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageView</tt><big>(</big><em>image=None</em>, <em>maxheight=None</em>, <em>parent=None</em><big>)</big></dt>
+<dd><p>A widget displaying an image.</p>
+<dl class="method">
+<dt>
+<tt class="descname">showImage</tt><big>(</big><em>image</em>, <em>maxheight=None</em><big>)</big></dt>
+<dd><p>Show an image in the viewer.</p>
+<p>image: either a filename or an existing QImage instance. If a filename,
+it should be an image file that can be read by the QImage constructor.
+Most image formats are understood by QImage. The variable
+gui.image.image_formats_qtr provides a list.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">objSize</tt><big>(</big><em>object</em><big>)</big></dt>
+<dd><p>Return the width and height of an object.</p>
+<p>Returns a tuple w,h for any object that has width and height methods.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">maxWinSize</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the maximum widget size.</p>
+<p>The maximum widget size is the maximum size for a window on the screen.
+The available size may be smaller than the physical screen size (e.g.
+it may exclude the space for docking panels).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">addTimeOut</tt><big>(</big><em>widget</em>, <em>timeout=None</em>, <em>timeoutfunc=None</em><big>)</big></dt>
+<dd><p>Add a timeout to a widget.</p>
+<ul class="simple">
+<li><cite>timeoutfunc</cite> is a callable. If None it will be set to the widget&#8217;s
+<cite>timeout</cite> method if one exists.</li>
+<li><cite>timeout</cite> is a float value. If None, it will be set to to the global
+<cite>input_timeout</cite>.</li>
+</ul>
+<p>If timeout is positive, a timer will be installed into the widget which
+will call the <cite>timeoutfunc</cite> after <cite>timeout</cite> seconds have elapsed.
+The <cite>timeoutfunc</cite> can be any callable, but usually will emit a signal
+to make the widget accept or reject the input. The timeoutfunc will not
+be called is if the widget is destructed before the timer has finished.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">defaultItemType</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Guess the InputItem type from the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">groupInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">tabInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Convert InputItem item to a dict or a widget.</p>
+<p>This function tries to convert some old style or sloppy InputItem item
+to a proper InputItem item dict.</p>
+<p>The conversion does the following:</p>
+<ul class="simple">
+<li>if <cite>item</cite> is a dict, it is considered a proper item and returned as is.</li>
+<li>if <cite>item</cite> is a QWidget, it is also returned as is.</li>
+<li>if <cite>item</cite> is a tuple or a list, conversion with simpleInputItem
+is tried, using the item items as arguments.</li>
+<li>if neither succeeds, an error is raised.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">inputAny</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype</em>, <em>**options</em><big>)</big></dt>
+<dd><p>Create an InputItem of any type, depending on the arguments.</p>
+<p>Arguments: only name, value and itemtype are required</p>
+<ul class="simple">
+<li>name: name of the item, also the key for the return value</li>
+<li>value: initial value,</li>
+<li>itemtype: one of the available itemtypes</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateDialogItems</tt><big>(</big><em>data</em>, <em>newdata</em><big>)</big></dt>
+<dd><p>Update the input data fields with new data values</p>
+<ul class="simple">
+<li>data: a list of dialog items, as required by an InputDialog.</li>
+<li>newdata: a dictionary with new values for (some of) the items.</li>
+</ul>
+<p>The data items with a name occurring as a key in newdata will have
+their value replaced with the corresponding value in newdata, unless
+this value is None.</p>
+<p>The user should make sure to set only values of the proper type!</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">selectFont</tt><big>(</big><big>)</big></dt>
+<dd><p>Ask the user to select a font.</p>
+<p>A font selection dialog widget is displayed and the user is requested
+to select a font.
+Returns a font if the user exited the dialog with the <em class="guilabel">OK</em>
+button.
+Returns None if the user clicked <em class="guilabel">CANCEL</em>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">getColor</tt><big>(</big><em>col=None</em>, <em>caption=None</em><big>)</big></dt>
+<dd><p>Create a color selection dialog and return the selected color.</p>
+<p>col is the initial selection.
+If a valid color is selected, its string name is returned, usually as
+a hex #RRGGBB string. If the dialog is canceled, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateText</tt><big>(</big><em>widget</em>, <em>text</em>, <em>format=''</em><big>)</big></dt>
+<dd><p>Update the text of a text display widget.</p>
+<ul class="simple">
+<li><cite>widget</cite>: a widget that has the <tt class="xref py py-meth docutils literal"><span class="pre">setText()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">setPlainText()</span></tt>
+and <tt class="xref py py-meth docutils literal"><span class="pre">setHtml()</span></tt> methods to set the widget&#8217;s text.
+Examples are <tt class="xref py py-class docutils literal"><span class="pre">QMessageBox</span></tt> and <tt class="xref py py-class docutils literal"><span class="pre">QTextEdit</span></tt>.</li>
+<li><cite>text</cite>: a multiline string with the text to be displayed.</li>
+<li><cite>format</cite>: the format of the text. If empty, autorecognition will be
+tried. Currently available formats are: <tt class="docutils literal"><span class="pre">plain</span></tt>, <tt class="docutils literal"><span class="pre">html</span></tt> and
+<tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText).</li>
+</ul>
+<p>This function allows to display other text formats besides the
+plain text and html supported by the widget.
+Any format other than <tt class="docutils literal"><span class="pre">plain</span></tt> or <tt class="docutils literal"><span class="pre">html</span></tt> will be converted to one
+of these before sending it to the widget. Currently, we convert the
+following formats:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText):
+If the :mod:docutils is available, <cite>rest</cite> text is converted to <cite>html</cite>,
+otherwise it will be displayed as plain text.
+A text is autorecognized as reStructuredText if its first
+line starts with &#8216;..&#8217;. Note: If you add a &#8216;..&#8217; line to your text to
+have it autorecognized as reST, be sure to have it followed with a
+blank line, or your first paragraph could be turned into comments.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">addActionButtons</tt><big>(</big><em>layout, actions=[('Cancel',), ('OK',)], default=None, parent=None</em><big>)</big></dt>
+<dd><p>Add a set of action buttons to a layout</p>
+<p>layout is a QLayout</p>
+<p>actions is a list of tuples (name,) or (name,function).
+If a function is specified, it will be executed on pressing the button.
+If no function is specified, and name is one of &#8216;ok&#8217; or &#8216;cancel&#8217; (case
+is ignored), the button will be bound to the dialog&#8217;s &#8216;accept&#8217;
+or &#8216;reject&#8217; slot.
+If actions==None (default), it will be set to the default
+<tt class="docutils literal"><span class="pre">[('Cancel',),('OK',)]</span></tt>.</p>
+<p>Specify actions=[] if you want an empty dialogDuttons.
+default is the name of the action to set as the default. If no default
+is given, it is set to the LAST button.</p>
+<p>Returns a horizontal box layout with the buttons.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -2018,10 +5881,10 @@ is given, it is set to the LAST button.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="menu.html" title="19. menu — Menus for the pyFormex GUI."
+          <a href="menu.html" title="21. menu — Menus for the pyFormex GUI."
              >next</a> |</li>
         <li class="right" >
-          <a href="filewrite.html" title="17. filewrite — Write geometry to file in a whole number of formats."
+          <a href="filewrite.html" title="31. filewrite — Write geometry to file in a whole number of formats."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -2031,7 +5894,7 @@ is given, it is set to the LAST button.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

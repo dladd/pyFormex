@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>10. draw — Create 3D graphical representations. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
-    <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
+    <link rel="next" title="13. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
+    <link rel="prev" title="8. script — Basic pyFormex script functions" href="script.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+          <a href="colors.html" title="13. colors — Definition of some RGB colors and color conversion functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="script.html" title="4. script — Basic pyFormex script functions"
+          <a href="script.html" title="8. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">10. <tt class="docutils literal"><span class="pre">draw</span></tt> &#8212; Create 3D graphical representations.</a></li>
+<li><a class="reference internal" href="#id53">11. <tt class="docutils literal"><span class="pre">draw</span></tt> &#8212; Create 3D graphical representations.</a></li>
+<li><a class="reference internal" href="#id107">12. <tt class="docutils literal"><span class="pre">draw</span></tt> &#8212; Create 3D graphical representations.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="script.html"
-                        title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+                        title="previous chapter">8. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="next chapter">13. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -140,9 +147,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-draw">
-<span id="draw-create-3d-graphical-representations"></span><span id="sec-ref-draw"></span><h1>5. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#module-draw" title="Permalink to this headline">¶</a></h1>
-<p>The draw module provides the basic user interface to the OpenGL
+  <div class="section" id="draw-create-3d-graphical-representations">
+<span id="sec-ref-draw"></span><h1>10. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#draw-create-3d-graphical-representations" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-draw"></span><p>The draw module provides the basic user interface to the OpenGL
 rendering capabilities of pyFormex. The full contents of this module
 is available to scripts running in the pyFormex GUI without the need
 to import it.</p>
@@ -214,7 +221,7 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 <dd><p>Display a text in a dialog window.</p>
 <p>Creates a dialog window displaying some text. The dialog can be modal
 (blocking user input to the main window) or modeless.
-Scrollbars aree added if the text is too large to display at once.
+Scrollbars are added if the text is too large to display at once.
 By default, the dialog has a single button to close the dialog.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -247,7 +254,7 @@ be a changed text.</td>
 
 <dl class="function">
 <dt id="draw.showFile">
-<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text file.</p>
 <p>This will use the <a class="reference internal" href="#draw.showText" title="draw.showText"><tt class="xref py py-func docutils literal"><span class="pre">showText()</span></tt></a> function to display a text read
 from a file.
@@ -289,7 +296,7 @@ to load the files in a running copy of Emacs.</p>
 
 <dl class="function">
 <dt id="draw.askItems">
-<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the value of some items to the user.</p>
 <p>Create an interactive widget to let the user set the value of some items.
 The items are specified as a list of dictionaries. Each dictionary
@@ -302,10 +309,10 @@ A tuple (key,value) will be transformed to a dict
 {&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
 <p>See the widgets.InputDialog class for complete description of the
 available input items.</p>
+<p>A timeout (in seconds) can be specified to have the input dialog
+interrupted automatically and return the default values.</p>
 <p>The remaining arguments are keyword arguments that are passed to the
-widgets.InputDialog.getResult method.
-A timeout (in seconds) can be specified to have the input dialog
-interrupted automatically.</p>
+widgets.InputDialog.getResult method.</p>
 <p>Returns a dictionary with the results: for each input item there is a
 (key,value) pair. Returns an empty dictionary if the dialog was canceled.
 Sets the dialog timeout and accepted status in global variables.</p>
@@ -340,7 +347,7 @@ or if the user already closed the dialog, None is returned.</p>
 
 <dl class="function">
 <dt id="draw.askFilename">
-<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askFilename" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.askFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask for a file name or multiple file names using a file dialog.</p>
 <p>cur is a directory or filename. All the files matching the filter in that
 directory (or that file&#8217;s directory) will be shown.
@@ -352,7 +359,7 @@ working directory.</p>
 
 <dl class="function">
 <dt id="draw.askNewFilename">
-<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em><big>)</big><a class="headerlink" href="#draw.askNewFilename" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.askNewFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask a single new filename.</p>
 <p>This is a convenience function for calling askFilename with the
 arguments exist=False.</p>
@@ -423,66 +430,162 @@ converted,</li>
 
 <dl class="function">
 <dt id="draw.draw">
-<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>shrink=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>alpha=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>bkalpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>view=None</em>, <em>bbox=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw object(s) with specified settings and direct camera to it.</p>
-<p>The first argument is an object to be drawn. All other arguments are
-settings that influence how  the object is being drawn.</p>
-<p>F is one of:</p>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>alpha=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>bkalpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>view=None</em>, <em>bbox=None</em>, <em>shrink=None</em>, <em>clear=None</em>, <em>wait=True</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw object(s) with specified settings and options.</p>
+<p>This is the main drawing function to get geometry rendered on the OpenGL
+canvas. It has a whole slew of arguments, but in most cases you will only
+need to use a few of them. We divide the arguments in three groups:
+geometry, settings, options.</p>
+<p>Geometry: specifies what objects will be drawn.</p>
+<ul>
+<li><p class="first"><cite>F</cite>: all geometry to be drawn is specified in this single argument.
+It can be one of the following:</p>
 <ul class="simple">
-<li>a drawable object (a geometry object like Formex, Mesh or TriSurface),</li>
+<li>a drawable object (a Geometry object like Formex, Mesh or TriSurface,
+or another object having a proper <cite>actor</cite> method),</li>
 <li>the name of a global pyFormex variable refering to such an object,</li>
-<li>a list of any of these three items.</li>
+<li>a list or nested list of any of the above items.</li>
 </ul>
-<p>The variables are replaced with their value and the lists are flattened,
-to create a single list of objects. This then filtered for the drawable
-objects, and the resulting list of drawables is drawn using the remaining
-arguments.</p>
-<p>The remaining arguments are drawing options. If None, they are filled in
-from the current viewport drawing options.</p>
-<p>view is either the name of a defined view or &#8216;last&#8217; or None.
-Predefined views are &#8216;front&#8217;,&#8217;back&#8217;,&#8217;top&#8217;,&#8217;bottom&#8217;,&#8217;left&#8217;,&#8217;right&#8217;,&#8217;iso&#8217;.
-With view=None the camera settings remain unchanged (but might be changed
-interactively through the user interface). This may make the drawn object
-out of view!
-With view=&#8217;last&#8217;, the camera angles will be set to the same camera angles
-as in the last draw operation, undoing any interactive changes.
-The initial default view is &#8216;front&#8217; (looking in the -z direction).</p>
-<p>bbox specifies the 3D volume at which the camera will be aimed (using the
-angles set by view). The camera position wil be set so that the volume
-comes in view using the current lens (default 45 degrees).
-bbox is a list of two points or compatible (array with shape (2,3)).
-Setting the bbox to a volume not enclosing the object may make the object
-invisible on the canvas.
-The special value bbox=&#8217;auto&#8217; will use the bounding box of the objects
-getting drawn (object.bbox()), thus ensuring that the camera will focus
-on these objects.
-The special value bbox=None will use the bounding box of the previous
-drawing operation, thus ensuring that the camera&#8217;s target volume remains
-unchanged.</p>
-<p>color,colormap,linewidth,alpha,marksize are passed to the
-creation of the 3D actor.</p>
-<p>if color is None, it is drawn with the color specified on creation.
-if color is &#8216;prop&#8217; and a colormap was installed, props define color.
-else, color should be an array of RGB values, either with shape
-(3,) for a single color, or (nelems,3) for differently colored
-elements</p>
-<p>shrink is a floating point shrink factor that will be applied to object
-before drawing it.</p>
-<p>If the Formex has properties and a color list is specified, then the
-the properties will be used as an index in the color list and each member
-will be drawn with the resulting color.
-If color is one color value, the whole Formex will be drawn with
-that color.
-Finally, if color=None is specified, the whole Formex is drawn in black.</p>
-<p>Each draw action activates a locking mechanism for the next draw action,
-which will only be allowed after drawdelay seconds have elapsed. This
-makes it easier to see subsequent images and is far more elegant that an
-explicit sleep() operation, because all script processing will continue
-up to the next drawing instruction.
-The value of drawdelay is set in the config, or 2 seconds by default.
-The user can disable the wait cycle for the next draw operation by
-specifying wait=False. Setting drawdelay=0 will disable the waiting
-mechanism for all subsequent draw statements (until set &gt;0 again).</p>
+<p>The possibility of a nested list means that any complex collections
+of geometry can be drawn in a single operations. The (nested) list
+is recursively flattened, replacing string values by the corresponding
+value from the pyFormex global variables dictionary, until a single list
+of drawable objects results. Next the undrawable items are removed
+from the list. The resulting list of drawable objects will then be
+drawn using the remaining settings and options arguments.</p>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Settings: specify how the geometry will be drawn. These arguments will</dt>
+<dd><p class="first">be passed to the corresponding Actor for the object. The Actor is the
+graphical representation of the geometry. Not all Actors use all of
+the settings that can be specified here. But they all accept specifying
+any setting even if unused. The settings hereafter are thus a
+superset of the settings used by the different Actors.
+Settings have a default value per viewport, and if unspecified, most
+Actors will use the viewport default for that value.</p>
+<ul class="last simple">
+<li><cite>color</cite>, <cite>colormap</cite>: specifies the color of the object (see below)</li>
+<li><cite>alpha</cite>: float (0.0..1.0): alpha value to use in transparent mode</li>
+<li><cite>bkcolor</cite>, <cite>bkcolormap</cite>: color for the backside of surfaces, if
+different from the front side. Specification as for front color.</li>
+<li><cite>bkalpha</cite>: float (0.0..1.0): alpha value for back side.</li>
+<li><cite>linewidth</cite>: float, thickness of line drawing</li>
+<li><cite>linestipple</cite>: stipple pattern for line drawing</li>
+<li><cite>marksize</cite>: float: point size for dot drawing</li>
+<li><cite>nolight</cite>: bool: render object as unlighted in modes with lights on</li>
+<li><cite>ontop</cite>: bool: render object as if it is on top.
+This will make the object fully visible, even when it is hidden by
+other objects. If more than one objects is drawn with <cite>ontop=True</cite>
+the visibility of the object will depend on the order of drawing.</li>
+</ul>
+</dd>
+<dt>Options: these arguments modify the working of the draw functions.</dt>
+<dd><p class="first">If None, they are filled in from the current viewport drawing options.
+These can be changed with the <a class="reference internal" href="#draw.setDrawOptions" title="draw.setDrawOptions"><tt class="xref py py-func docutils literal"><span class="pre">setDrawOptions()</span></tt></a> function.
+The initial defaults are: view=&#8217;last&#8217;, bbox=&#8217;auto&#8217;, shrink=False,
+clear=False, shrinkfactor=0.8.</p>
+<ul class="last simple">
+<li><cite>view</cite>: is either the name of a defined view or &#8216;last&#8217; or
+None.  Predefined views are &#8216;front&#8217;, &#8216;back&#8217;, &#8216;top&#8217;, &#8216;bottom&#8217;,
+&#8216;left&#8217;, &#8216;right&#8217;, &#8216;iso&#8217;.  With view=None the camera settings
+remain unchanged (but might be changed interactively through
+the user interface). This may make the drawn object out of
+view!  With view=&#8217;last&#8217;, the camera angles will be set to the
+same camera angles as in the last draw operation, undoing any
+interactive changes.  On creation of a viewport, the initial
+default view is &#8216;front&#8217; (looking in the -z direction).</li>
+<li><cite>bbox</cite>: specifies the 3D volume at which the camera will be
+aimed (using the angles set by <cite>view</cite>). The camera position will
+be set so that the volume comes in view using the current lens
+(default 45 degrees).  bbox is a list of two points or
+compatible (array with shape (2,3)).  Setting the bbox to a
+volume not enclosing the object may make the object invisible
+on the canvas.  The special value bbox=&#8217;auto&#8217; will use the
+bounding box of the objects getting drawn (object.bbox()),
+thus ensuring that the camera will focus on these objects.
+The special value bbox=None will use the bounding box of the
+previous drawing operation, thus ensuring that the camera&#8217;s
+target volume remains unchanged.</li>
+<li><cite>shrink</cite>: bool: if specified, each object will be transformed
+by the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.shrink()</span></tt> transformation (with the current
+set shrinkfactor as a parameter), thus showing all the elements
+of the object separately.  (Some other softwares call this an
+&#8216;exploded&#8217; view).</li>
+<li><cite>clear</cite>: bool. By default each new draw operation adds the newly
+drawn objects to the shown scene. Using <cite>clear=True</cite> will clear the
+scene before drawing and thus only show the objects of the current
+draw action.</li>
+<li><cite>wait</cite>: bool. If True (default) the draw action activates a
+locking mechanism for the next draw action, which will only be
+allowed after <cite>drawdelay</cite> seconds have
+elapsed. This makes it easier to see subsequent renderings and
+is far more efficient than adding an explicit sleep()
+operation, because the script processing can continue up to
+the next drawing instruction. The value of drawdelay can be changed
+in the user settings or using the <a class="reference internal" href="#draw.delay" title="draw.delay"><tt class="xref py py-func docutils literal"><span class="pre">delay()</span></tt></a> function.
+Setting this value to 0 will disable the waiting mechanism for all
+subsequent draw statements (until set &gt; 0 again). But often the user
+wants to specifically disable the waiting lock for some draw
+operation(s). This can be done without changing the <cite>drawdelay</cite>
+setting by specifyin <cite>wait=False</cite>. This means that the <em>next</em> draw
+operation does not have to wait.</li>
+<li><cite>allviews</cite>: currently not used</li>
+<li><cite>highlight</cite>: bool. If True, the object(s) will not be drawn as
+normal geometry, but as highlights (usually on top of other geometry),
+making them removeable by the remove highlight functions</li>
+<li><cite>silent</cite>: bool. If True (default), non-drawable objects will be
+silently ignored. If set False, an error is raised if an object
+is not drawable.</li>
+<li><cite>**kargs</cite>: any not-recognized keyword parameters are passed to the
+object&#8217;s Actor constructor. This allows the user to create
+customized Actors with new parameters.</li>
+</ul>
+</dd>
+</dl>
+<p>Color specification can take many different forms. Some Actors recognize
+up to six different color modes and the draw function adds even another
+mode (property color)</p>
+<ul class="simple">
+<li>no color: <cite>color=None</cite>. The object will be drawn in the current
+viewport foreground color.</li>
+<li>single color: the whole object is drawn with the specified color.</li>
+<li>element color: each element of the object has its own color. The
+specified color will normally contain precisely <cite>nelems</cite> colors,
+but will be resized to the required size if not.</li>
+<li>vertex color: each vertex of each element of the object has its color.
+In smooth shading modes intermediate points will get an interpolated
+color.</li>
+<li>element index color: like element color, but the color values are not
+specified directly, but as indices in a color table (the <cite>colormap</cite>
+argument).</li>
+<li>vertex index color: like vertex color, but the colors are indices in a
+color table (the <cite>colormap</cite> argument).</li>
+<li>property color: as an extra mode in the draw function, if <cite>color=&#8217;prop&#8217;</cite>
+is specified, and the object has an attribute &#8216;prop&#8217;, that attribute
+will be used as a color index and the object will be drawn in
+element index color mode. If the object has no such attribute, the
+object is drawn in no color mode.</li>
+</ul>
+<p>Element and vertex color modes are usually only used with a single object
+in the <cite>F</cite> parameter, because they require a matching set of colors.
+Though the color set will be automatically resized if not matching, the
+result will seldomly be what the user expects.
+If single colors are specified as a tuple of three float values
+(see below), the correct size of a color array for an object with
+<cite>nelems</cite> elements of plexitude <cite>nplex</cite> would be: (nelems,3) in element
+color mode, and (nelems,nplex,3) in vertex color mode. In the index modes,
+color would then be an integer array with shape respectively (nelems,) and
+(nelems,nplex). Their values are indices in the colormap array, which
+could then have shape (ncolors,3), where ncolors would be larger than the
+highest used value in the index. If the colormap is insufficiently large,
+it will again be wrapped around. If no colormap is specified, the current
+viewport colormap is used. The default contains eight colors: black=0,
+red=1, green=2, blue=3, cyan=4, magenta=5, yellow=6, white=7.</p>
+<p>A color value can be specified in multiple ways, but should be convertible
+to a normalized OpenGL color using the <a class="reference internal" href="colors.html#colors.GLcolor" title="colors.GLcolor"><tt class="xref py py-func docutils literal"><span class="pre">colors.GLcolor()</span></tt></a> function.
+The normalized color value is a tuple of three values in the range 0.0..1.0.
+The values are the contributions of the red, green and blue components.</p>
 </dd></dl>
 
 <dl class="function">
@@ -888,7 +991,7 @@ to save that value to restore it later.</p>
 <p>This uses the drawing lock mechanism to pause. The drawing lock
 ensures that subsequent draws are retarded to give the user the time
 to view. The use of this function is prefered over that of
-<a class="reference internal" href="#draw.pause" title="draw.pause"><tt class="xref py py-func docutils literal"><span class="pre">pause()</span></tt></a> or <a class="reference internal" href="#draw.sleep" title="draw.sleep"><tt class="xref py py-func docutils literal"><span class="pre">sleep()</span></tt></a>, because it allows your script to
+<a class="reference internal" href="#draw.pause" title="draw.pause"><tt class="xref py py-func docutils literal"><span class="pre">pause()</span></tt></a> or <tt class="xref py py-func docutils literal"><span class="pre">sleep()</span></tt>, because it allows your script to
 continue the numerical computations while waiting to draw the next
 screen.</p>
 <p>This function can be used to retard other functions than <cite>draw</cite> and <cite>view</cite>.</p>
@@ -927,21 +1030,6 @@ be set again and your script will execute till the end.</p>
 <p>When the pause statement is executed, execution of the pyformex script
 is suspended until some external event forces it to proceed again.
 Clicking the PLAY, STEP or CONTINUE button will produce such an event.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="draw.sleep">
-<tt class="descclassname">draw.</tt><tt class="descname">sleep</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.sleep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sleep until key/mouse press in the canvas or until timeout</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="draw.wakeup">
-<tt class="descclassname">draw.</tt><tt class="descname">wakeup</tt><big>(</big><em>mode=0</em><big>)</big><a class="headerlink" href="#draw.wakeup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wake up from the sleep function.</p>
-<p>This is the only way to exit the sleep() function.
-Default is to wake up from the current sleep. A mode &gt; 0
-forces wakeup for longer period.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1144,6 +1232,2182 @@ to their default operating mode.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>11. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-draw"></span><p>The draw module provides the basic user interface to the OpenGL
+rendering capabilities of pyFormex. The full contents of this module
+is available to scripts running in the pyFormex GUI without the need
+to import it.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeGui</tt><big>(</big><big>)</big></dt>
+<dd><p>Close the GUI.</p>
+<p>Calling this function from a script closes the GUI and terminates
+pyFormex.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeDialog</tt><big>(</big><em>name</em><big>)</big></dt>
+<dd><p>Close the named dialog.</p>
+<p>Closes the InputDialog with the given name. If multiple dialogs are
+open with the same name, all these dialogs are closed.</p>
+<p>This only works for dialogs owned by the pyFormex GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, align='00', **kargs</em><big>)</big></dt>
+<dd><p>Show a short message widget and wait for user acknowledgement.</p>
+<p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
+They differ only in the icon that is shown next to the test.
+By default, the message widget has a single button with the text &#8216;OK&#8217;.
+The dialog is closed if the user clicks a button.
+The return value is the button text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text, actions=['OK'], modal=True</em><big>)</big></dt>
+<dd><p>Show an informational message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text, actions=['OK']</em><big>)</big></dt>
+<dd><p>Show a warning message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text, actions=['OK']</em><big>)</big></dt>
+<dd><p>Show an error message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Ask a question and present possible answers.</p>
+<p>Return answer if accepted or default if rejected.
+The remaining arguments are passed to the InputDialog getResult method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Show a Yes/No question and return True/False depending on answer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, itemtype='text', actions=[('OK', None)], modal=True, mono=False</em><big>)</big></dt>
+<dd><p>Display a text in a dialog window.</p>
+<p>Creates a dialog window displaying some text. The dialog can be modal
+(blocking user input to the main window) or modeless.
+Scrollbars are added if the text is too large to display at once.
+By default, the dialog has a single button to close the dialog.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>text</cite>: a multiline text to be displayed. It can be plain text or html
+or reStructuredText (starts with &#8216;..&#8217;).</li>
+<li><cite>itemtype</cite>: an InputItem type that can be used for text display. This
+should be either &#8216;text&#8217; of &#8216;info&#8217;.</li>
+<li><cite>actions</cite>: a list of action button definitions.</li>
+<li><cite>modal</cite>: bool: if True, a modal dialog is constructed. Else, the dialog
+is modeless.</li>
+<li><cite>mono</cite>: if True, a monospace font will be used. This is only useful for
+plain text, e.g. to show the output of an external command.</li>
+</ul>
+<p>Returns:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Modal dialog:</th><td class="field-body">the result of the dialog after closing.
+The result is a dictionary with a single key: &#8216;text&#8217; having the
+displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
+be a changed text.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Display a text file.</p>
+<p>This will use the <a class="reference internal" href="#draw.showText" title="draw.showText"><tt class="xref py py-func docutils literal"><span class="pre">showText()</span></tt></a> function to display a text read
+from a file.
+By default this uses a monospaced font.
+Other arguments may also be passed to ShowText.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showDoc</tt><big>(</big><em>obj=None</em>, <em>rst=True</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the docstring of an object.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>obj</cite>: any object (module, class, method, function) that has a
+__doc__ attribute. If None is specified, the docstring of the current
+application is shown.</li>
+<li><cite>rst</cite>: bool. If True (default) the docstring is treated as being
+reStructuredText and will be nicely formatted accordingly.
+If False, the docstring is shown as plain text.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">editFile</tt><big>(</big><em>fn</em>, <em>exist=False</em><big>)</big></dt>
+<dd><p>Load a file into the editor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fn</cite>: filename. The corresponding file is loaded into the editor.</li>
+<li><cite>exist</cite>: bool. If True, only existing filenames will be accepted.</li>
+</ul>
+<p>Loading a file in the editor is done by executing an external command with
+the filename as argument. The command to be used can be set in the
+configuration. If none is set, pyFormex will try to lok at the <cite>EDITOR</cite>
+and <cite>VISUAL</cite> environment settings.</p>
+<p>The main author of pyFormex uses &#8216;emacsclient&#8217; as editor command,
+to load the files in a running copy of Emacs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Ask the value of some items to the user.</p>
+<p>Create an interactive widget to let the user set the value of some items.
+The items are specified as a list of dictionaries. Each dictionary
+contains the input arguments for a widgets.InputItem. It is often
+convenient to use one of the _I, _G, ot _T functions to create these
+dictionaries. These will respectively create the input for a
+simpleInputItem, a groupInputItem or a tabInputItem.</p>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
+<p>See the widgets.InputDialog class for complete description of the
+available input items.</p>
+<p>A timeout (in seconds) can be specified to have the input dialog
+interrupted automatically and return the default values.</p>
+<p>The remaining arguments are keyword arguments that are passed to the
+widgets.InputDialog.getResult method.</p>
+<p>Returns a dictionary with the results: for each input item there is a
+(key,value) pair. Returns an empty dictionary if the dialog was canceled.
+Sets the dialog timeout and accepted status in global variables.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">currentDialog</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns the current dialog widget.</p>
+<p>This returns the dialog widget created by the askItems() function,
+while the dialog is still active. If no askItems() has been called
+or if the user already closed the dialog, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogAccepted</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog was accepted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogRejected</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog was rejected.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogTimedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog timed out.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em>, <em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a file name or multiple file names using a file dialog.</p>
+<p>cur is a directory or filename. All the files matching the filter in that
+directory (or that file&#8217;s directory) will be shown.
+If cur is a file, it will be selected as the current filename.</p>
+<p>Unless the user cancels the operation, or the change parameter was set to
+False, the parent directory of the selected file will become the new
+working directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask a single new filename.</p>
+<p>This is a convenience function for calling askFilename with the
+arguments exist=False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em>, <em>byfile=False</em><big>)</big></dt>
+<dd><p>Interactively select a directory and change the current workdir.</p>
+<p>The user is asked to select a directory through the standard file
+dialog. Initially, the dialog shows all the subdirectories in the
+specified path, or by default in the current working directory.</p>
+<p>The selected directory becomes the new working directory, unless the
+user canceled the operation, or the change parameter was set to False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">checkWorkdir</tt><big>(</big><big>)</big></dt>
+<dd><p>Ask the user to change the current workdir if it is not writable.</p>
+<p>Returns True if the new workdir is writable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">message</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">flatten</tt><big>(</big><em>objects</em>, <em>recurse=True</em><big>)</big></dt>
+<dd><p>Flatten a list of geometric objects.</p>
+<p>Each item in the list should be either:</p>
+<ul class="simple">
+<li>a drawable object,</li>
+<li>a string with the name of such an object,</li>
+<li>a list of any of these three.</li>
+</ul>
+<p>This function will flatten the lists and replace the string items with
+the object they point to. The result is a single list of drawable
+objects. This function does not enforce the objects to be drawable.
+That should be done by the caller.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawable</tt><big>(</big><em>objects</em><big>)</big></dt>
+<dd><p>Filters the drawable objects from a list.</p>
+<p>The input is a list, usually of drawable objects. For each item in the
+list, the following is done:</p>
+<ul class="simple">
+<li>if the item is drawable, it is kept as is,</li>
+<li>if the item is not drawable but can be converted to a Formex, it is
+converted,</li>
+<li>if it is neither drawable nor convertible to Formex, it is removed.</li>
+</ul>
+<p>The result is a list of drawable objects (since a Formex is drawable).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>alpha=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>bkalpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>view=None</em>, <em>bbox=None</em>, <em>shrink=None</em>, <em>clear=None</em>, <em>wait=True</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw object(s) with specified settings and options.</p>
+<p>This is the main drawing function to get geometry rendered on the OpenGL
+canvas. It has a whole slew of arguments, but in most cases you will only
+need to use a few of them. We divide the arguments in three groups:
+geometry, settings, options.</p>
+<p>Geometry: specifies what objects will be drawn.</p>
+<ul>
+<li><p class="first"><cite>F</cite>: all geometry to be drawn is specified in this single argument.
+It can be one of the following:</p>
+<ul class="simple">
+<li>a drawable object (a Geometry object like Formex, Mesh or TriSurface,
+or another object having a proper <cite>actor</cite> method),</li>
+<li>the name of a global pyFormex variable refering to such an object,</li>
+<li>a list or nested list of any of the above items.</li>
+</ul>
+<p>The possibility of a nested list means that any complex collections
+of geometry can be drawn in a single operations. The (nested) list
+is recursively flattened, replacing string values by the corresponding
+value from the pyFormex global variables dictionary, until a single list
+of drawable objects results. Next the undrawable items are removed
+from the list. The resulting list of drawable objects will then be
+drawn using the remaining settings and options arguments.</p>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Settings: specify how the geometry will be drawn. These arguments will</dt>
+<dd><p class="first">be passed to the corresponding Actor for the object. The Actor is the
+graphical representation of the geometry. Not all Actors use all of
+the settings that can be specified here. But they all accept specifying
+any setting even if unused. The settings hereafter are thus a
+superset of the settings used by the different Actors.
+Settings have a default value per viewport, and if unspecified, most
+Actors will use the viewport default for that value.</p>
+<ul class="last simple">
+<li><cite>color</cite>, <cite>colormap</cite>: specifies the color of the object (see below)</li>
+<li><cite>alpha</cite>: float (0.0..1.0): alpha value to use in transparent mode</li>
+<li><cite>bkcolor</cite>, <cite>bkcolormap</cite>: color for the backside of surfaces, if
+different from the front side. Specification as for front color.</li>
+<li><cite>bkalpha</cite>: float (0.0..1.0): alpha value for back side.</li>
+<li><cite>linewidth</cite>: float, thickness of line drawing</li>
+<li><cite>linestipple</cite>: stipple pattern for line drawing</li>
+<li><cite>marksize</cite>: float: point size for dot drawing</li>
+<li><cite>nolight</cite>: bool: render object as unlighted in modes with lights on</li>
+<li><cite>ontop</cite>: bool: render object as if it is on top.
+This will make the object fully visible, even when it is hidden by
+other objects. If more than one objects is drawn with <cite>ontop=True</cite>
+the visibility of the object will depend on the order of drawing.</li>
+</ul>
+</dd>
+<dt>Options: these arguments modify the working of the draw functions.</dt>
+<dd><p class="first">If None, they are filled in from the current viewport drawing options.
+These can be changed with the <a class="reference internal" href="#draw.setDrawOptions" title="draw.setDrawOptions"><tt class="xref py py-func docutils literal"><span class="pre">setDrawOptions()</span></tt></a> function.
+The initial defaults are: view=&#8217;last&#8217;, bbox=&#8217;auto&#8217;, shrink=False,
+clear=False, shrinkfactor=0.8.</p>
+<ul class="last simple">
+<li><cite>view</cite>: is either the name of a defined view or &#8216;last&#8217; or
+None.  Predefined views are &#8216;front&#8217;, &#8216;back&#8217;, &#8216;top&#8217;, &#8216;bottom&#8217;,
+&#8216;left&#8217;, &#8216;right&#8217;, &#8216;iso&#8217;.  With view=None the camera settings
+remain unchanged (but might be changed interactively through
+the user interface). This may make the drawn object out of
+view!  With view=&#8217;last&#8217;, the camera angles will be set to the
+same camera angles as in the last draw operation, undoing any
+interactive changes.  On creation of a viewport, the initial
+default view is &#8216;front&#8217; (looking in the -z direction).</li>
+<li><cite>bbox</cite>: specifies the 3D volume at which the camera will be
+aimed (using the angles set by <cite>view</cite>). The camera position will
+be set so that the volume comes in view using the current lens
+(default 45 degrees).  bbox is a list of two points or
+compatible (array with shape (2,3)).  Setting the bbox to a
+volume not enclosing the object may make the object invisible
+on the canvas.  The special value bbox=&#8217;auto&#8217; will use the
+bounding box of the objects getting drawn (object.bbox()),
+thus ensuring that the camera will focus on these objects.
+The special value bbox=None will use the bounding box of the
+previous drawing operation, thus ensuring that the camera&#8217;s
+target volume remains unchanged.</li>
+<li><cite>shrink</cite>: bool: if specified, each object will be transformed
+by the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.shrink()</span></tt> transformation (with the current
+set shrinkfactor as a parameter), thus showing all the elements
+of the object separately.  (Some other softwares call this an
+&#8216;exploded&#8217; view).</li>
+<li><cite>clear</cite>: bool. By default each new draw operation adds the newly
+drawn objects to the shown scene. Using <cite>clear=True</cite> will clear the
+scene before drawing and thus only show the objects of the current
+draw action.</li>
+<li><cite>wait</cite>: bool. If True (default) the draw action activates a
+locking mechanism for the next draw action, which will only be
+allowed after <cite>drawdelay</cite> seconds have
+elapsed. This makes it easier to see subsequent renderings and
+is far more efficient than adding an explicit sleep()
+operation, because the script processing can continue up to
+the next drawing instruction. The value of drawdelay can be changed
+in the user settings or using the <a class="reference internal" href="#draw.delay" title="draw.delay"><tt class="xref py py-func docutils literal"><span class="pre">delay()</span></tt></a> function.
+Setting this value to 0 will disable the waiting mechanism for all
+subsequent draw statements (until set &gt; 0 again). But often the user
+wants to specifically disable the waiting lock for some draw
+operation(s). This can be done without changing the <cite>drawdelay</cite>
+setting by specifyin <cite>wait=False</cite>. This means that the <em>next</em> draw
+operation does not have to wait.</li>
+<li><cite>allviews</cite>: currently not used</li>
+<li><cite>highlight</cite>: bool. If True, the object(s) will not be drawn as
+normal geometry, but as highlights (usually on top of other geometry),
+making them removeable by the remove highlight functions</li>
+<li><cite>silent</cite>: bool. If True (default), non-drawable objects will be
+silently ignored. If set False, an error is raised if an object
+is not drawable.</li>
+<li><cite>**kargs</cite>: any not-recognized keyword parameters are passed to the
+object&#8217;s Actor constructor. This allows the user to create
+customized Actors with new parameters.</li>
+</ul>
+</dd>
+</dl>
+<p>Color specification can take many different forms. Some Actors recognize
+up to six different color modes and the draw function adds even another
+mode (property color)</p>
+<ul class="simple">
+<li>no color: <cite>color=None</cite>. The object will be drawn in the current
+viewport foreground color.</li>
+<li>single color: the whole object is drawn with the specified color.</li>
+<li>element color: each element of the object has its own color. The
+specified color will normally contain precisely <cite>nelems</cite> colors,
+but will be resized to the required size if not.</li>
+<li>vertex color: each vertex of each element of the object has its color.
+In smooth shading modes intermediate points will get an interpolated
+color.</li>
+<li>element index color: like element color, but the color values are not
+specified directly, but as indices in a color table (the <cite>colormap</cite>
+argument).</li>
+<li>vertex index color: like vertex color, but the colors are indices in a
+color table (the <cite>colormap</cite> argument).</li>
+<li>property color: as an extra mode in the draw function, if <cite>color=&#8217;prop&#8217;</cite>
+is specified, and the object has an attribute &#8216;prop&#8217;, that attribute
+will be used as a color index and the object will be drawn in
+element index color mode. If the object has no such attribute, the
+object is drawn in no color mode.</li>
+</ul>
+<p>Element and vertex color modes are usually only used with a single object
+in the <cite>F</cite> parameter, because they require a matching set of colors.
+Though the color set will be automatically resized if not matching, the
+result will seldomly be what the user expects.
+If single colors are specified as a tuple of three float values
+(see below), the correct size of a color array for an object with
+<cite>nelems</cite> elements of plexitude <cite>nplex</cite> would be: (nelems,3) in element
+color mode, and (nelems,nplex,3) in vertex color mode. In the index modes,
+color would then be an integer array with shape respectively (nelems,) and
+(nelems,nplex). Their values are indices in the colormap array, which
+could then have shape (ncolors,3), where ncolors would be larger than the
+highest used value in the index. If the colormap is insufficiently large,
+it will again be wrapped around. If no colormap is specified, the current
+viewport colormap is used. The default contains eight colors: black=0,
+red=1, green=2, blue=3, cyan=4, magenta=5, yellow=6, white=7.</p>
+<p>A color value can be specified in multiple ways, but should be convertible
+to a normalized OpenGL color using the <a class="reference internal" href="colors.html#colors.GLcolor" title="colors.GLcolor"><tt class="xref py py-func docutils literal"><span class="pre">colors.GLcolor()</span></tt></a> function.
+The normalized color value is a tuple of three values in the range 0.0..1.0.
+The values are the contributions of the red, green and blue components.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">focus</tt><big>(</big><em>object</em><big>)</big></dt>
+<dd><p>Move the camera thus that object comes fully into view.</p>
+<p>object can be anything having a bbox() method or a list thereof.
+if no view is given, the default is used.</p>
+<p>The camera is moved with fixed axis directions to a place
+where the whole object can be viewed using a 45. degrees lens opening.
+This technique may change in future!</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setDrawOptions</tt><big>(</big><em>kargs0={}</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Set default values for the draw options.</p>
+<p>Draw options are a set of options that hold default values for the
+draw() function arguments and for some canvas settings.
+The draw options can be specified either as a dictionary, or as
+keyword arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">reset</tt><big>(</big><big>)</big></dt>
+<dd><p>reset the canvas</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">shrink</tt><big>(</big><em>onoff</em>, <em>factor=None</em><big>)</big></dt>
+<dd><p>Set shrinking on or off, and optionally set shrink factor</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>nolight=True</em>, <em>**drawOptions</em><big>)</big></dt>
+<dd><p>Draw a set of vectors.</p>
+<p>If size==None, draws the vectors v at the points P.
+If size is specified, draws the vectors size*normalize(v)
+P, v and size are single points
+or sets of points. If sets, they should be of the same size.</p>
+<p>Other drawoptions can be specified and will be passed to the draw function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawMarks</tt><big>(</big><em>X</em>, <em>M</em>, <em>color='black'</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big></dt>
+<dd><p>Draw a list of marks at points X.</p>
+<p>X is a Coords array.
+M is a list with the same length as X.
+The string representation of the marks are drawn at the corresponding
+3D coordinate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawFreeEdges</tt><big>(</big><em>M</em>, <em>color='black'</em><big>)</big></dt>
+<dd><p>Draw the feature edges of a Mesh</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>numbers=None</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=None</em><big>)</big></dt>
+<dd><p>Draw numbers on all elements of F.</p>
+<p>numbers is an array with F.nelems() integer numbers.
+If no numbers are given, the range from 0 to nelems()-1 is used.
+Normally, the numbers are drawn at the centroids of the elements.
+A translation may be given to put the numbers out of the centroids,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the centroids.
+If an offset is specified, it is added to the shown numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawPropNumbers</tt><big>(</big><em>F</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw property numbers on all elements of F.</p>
+<p>This calls drawNumbers to draw the property numbers on the elements.
+All arguments of drawNumbers except <cite>numbers</cite> may be passed.
+If the object F thus not have property numbers, -1 values are drawn.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVertexNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>ontop=False</em><big>)</big></dt>
+<dd><p>Draw (local) numbers on all vertices of F.</p>
+<p>Normally, the numbers are drawn at the location of the vertices.
+A translation may be given to put the numbers out of the location,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>F</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big></dt>
+<dd><p>Draw the bounding box of the geometric object F.</p>
+<p>F is any object that has a <cite>bbox</cite> method.
+Returns the drawn Annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawPrincipal</tt><big>(</big><em>F</em>, <em>weight=None</em><big>)</big></dt>
+<dd><p>Draw the principal axes of the geometric object F.</p>
+<p>F is any object that has a <cite>coords</cite> attribute.
+If specified, weight is an array of weights attributed to the points
+of F. It should have the same length as <cite>F.coords</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>ontop=True</em><big>)</big></dt>
+<dd><p>Draw a text at a 3D point P.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>CS=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the axes of a CoordinateSystem.</p>
+<p>CS is a CoordinateSystem. If not specified, the global coordinate system
+is used. Other arguments can be added just like in the
+<tt class="xref py py-class docutils literal"><span class="pre">AxesActor</span></tt> class.</p>
+<p>While you can draw a CoordinateSystem using the <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> function,
+this function gives a better result because it has specialized color
+and annotation settings and provides reasonable deafults.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage3D</tt><big>(</big><em>image</em>, <em>nx=0</em>, <em>ny=0</em>, <em>pixel='dot'</em><big>)</big></dt>
+<dd><p>Draw an image as a colored Formex</p>
+<p>Draws a raster image as a colored Formex. While there are other and
+better ways to display an image in pyFormex (such as using the imageView
+widget), this function allows for interactive handling the image using
+the OpenGL infrastructure.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file.</li>
+<li><cite>nx</cite>,`ny`: width and height (in cells) of the Formex grid.
+If the supplied image has a different size, it will be rescaled.
+Values &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+<li><cite>pixel</cite>: the Formex representing a single pixel. It should be either
+a single element Formex, or one of the strings &#8216;dot&#8217; or &#8216;quad&#8217;. If &#8216;dot&#8217;
+a single point will be used, if &#8216;quad&#8217; a unit square. The difference
+will be important when zooming in. The default is &#8216;dot&#8217;.</li>
+</ul>
+<p>Returns the drawn Actor.</p>
+<p>See also <a class="reference internal" href="#draw.drawImage" title="draw.drawImage"><tt class="xref py py-func docutils literal"><span class="pre">drawImage()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em>, <em>x=-1</em>, <em>y=-1</em>, <em>color=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>ontop=False</em><big>)</big></dt>
+<dd><p>Draws an image as a viewport decoration.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file. See also the <tt class="xref py py-func docutils literal"><span class="pre">loadImage()</span></tt>
+function.</li>
+<li><cite>w</cite>,`h`: width and height (in pixels) of the displayed image.
+If the supplied image has a different size, it will be rescaled.
+A value &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+<li><cite>x</cite>,`y`: position of the lower left corner of the image. If negative,
+the image will be centered on the current viewport.</li>
+<li><cite>color</cite>: the color to mix in (AND) with the image. The default (white)
+will make all pixels appear as in the image.</li>
+<li><cite>ontop</cite>: determines whether the image will appear as a background
+(default) or at the front of the 3D scene (as on the camera glass).</li>
+</ul>
+<p>Returns the Decoration drawn.</p>
+<p>Note that the Decoration has a fixed size (and position) on the canvas
+and will not scale when the viewport size is changed.
+The <a class="reference internal" href="#draw.bgcolor" title="draw.bgcolor"><tt class="xref py py-func docutils literal"><span class="pre">bgcolor()</span></tt></a> function can be used to draw an image that completely
+fills the background.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big></dt>
+<dd><p>Draw two viewport axes at a 3D position.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big></dt>
+<dd><p>Draw an actor and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAny</tt><big>(</big><em>A</em><big>)</big></dt>
+<dd><p>Draw an Actor/Annotation/Decoration and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">undraw</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Remove an item or a number of items from the canvas.</p>
+<p>Use the return value from one of the draw... functions to remove
+the item that was drawn from the canvas.
+A single item or a list of items may be specified.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">view</tt><big>(</big><em>v</em>, <em>wait=True</em><big>)</big></dt>
+<dd><p>Show a named view, either a builtin or a user defined.</p>
+<p>This shows the current scene from another viewing angle.
+Switching views of a scene is much faster than redrawing a scene.
+Therefore this function is prefered over <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> when the actors
+in the scene remain unchanged and only the camera viewpoint changes.</p>
+<p>Just like <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a>, this function obeys the drawing lock mechanism,
+and by default it will restart the lock to retard the next draing operation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, the axes triade is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity='E'</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big></dt>
+<dd><p>Show a text at position x,y using font.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">annotate</tt><big>(</big><em>annot</em><big>)</big></dt>
+<dd><p>Draw an annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">decorate</tt><big>(</big><em>decor</em><big>)</big></dt>
+<dd><p>Draw a decoration.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">createView</tt><big>(</big><em>name</em>, <em>angles</em>, <em>addtogui=False</em><big>)</big></dt>
+<dd><p>Create a new named view (or redefine an old).</p>
+<p>The angles are (longitude, latitude, twist).
+By default, the view is local to the script&#8217;s viewport.
+If gui is True, it is also added to the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setView</tt><big>(</big><em>name</em>, <em>angles=None</em><big>)</big></dt>
+<dd><p>Set the default view for future drawing operations.</p>
+<p>If no angles are specified, the name should be an existing view, or
+the predefined value &#8216;last&#8217;.
+If angles are specified, this is equivalent to createView(name,angles)
+followed by setView(name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big></dt>
+<dd><p>Change the background color and image.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: a single color or a list of 4 colors. A single color sets a
+solid background color. A list of four colors specifies a gradient.
+These 4 colors are those of the Bottom Left, Bottom Right, Top Right
+and Top Left corners respectively.</li>
+<li><cite>image</cite>: the name of an image file. If specified, the image will be
+overlayed on the background colors. Specify a solid white background
+color to sea the image unaltered.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fgcolor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">hicolor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">colormap</tt><big>(</big><em>color=None</em><big>)</big></dt>
+<dd><p>Gets/Sets the current canvas color map</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">renderModes</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list of predefined render profiles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">renderMode</tt><big>(</big><em>mode</em>, <em>light=None</em><big>)</big></dt>
+<dd><p>Change the rendering profile to a predefined mode.</p>
+<p>Currently the following modes are defined:</p>
+<ul class="simple">
+<li>wireframe</li>
+<li>smooth</li>
+<li>smoothwire</li>
+<li>flat</li>
+<li>flatwire</li>
+<li>smooth_avg</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">lights</tt><big>(</big><em>state=True</em><big>)</big></dt>
+<dd><p>Set the lights on or off</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">transparent</tt><big>(</big><em>state=True</em><big>)</big></dt>
+<dd><p>Set the transparency mode on or off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_material_value</tt><big>(</big><em>typ</em>, <em>val</em><big>)</big></dt>
+<dd><p>Set the value of one of the material lighting parameters</p>
+<p>typ is one of &#8216;ambient&#8217;,&#8217;specular&#8217;,&#8217;emission&#8217;,&#8217;shininess&#8217;
+val is a value between 0.0 and 1.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linewidth</tt><big>(</big><em>wid</em><big>)</big></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linestipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pointsize</tt><big>(</big><em>siz</em><big>)</big></dt>
+<dd><p>Set the size to be used in point drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big></dt>
+<dd><p>Resize the canvas to (width x height).</p>
+<p>If a negative value is given for either width or height,
+the corresponding size is set equal to the maximum visible size
+(the size of the central widget of the main window).</p>
+<p>Note that changing the canvas size when multiple viewports are
+active is not approved.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear_canvas</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas.</p>
+<p>This is a low level function not intended for the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas.</p>
+<p>Removes everything from the current scene and displays an empty
+background.</p>
+<p>This function waits for the drawing lock to be released, but will
+not reset it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">delay</tt><big>(</big><em>s=None</em><big>)</big></dt>
+<dd><p>Get/Set the draw delay time.</p>
+<p>Returns the current setting of the draw wait time (in seconds).
+This drawing delay is obeyed by drawing and viewing operations.</p>
+<p>A parameter may be given to set the delay time to a new value.
+It should be convertable to a float.
+The function still returns the old setting. This may be practical
+to save that value to restore it later.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">wait</tt><big>(</big><em>relock=True</em><big>)</big></dt>
+<dd><p>Wait until the drawing lock is released.</p>
+<p>This uses the drawing lock mechanism to pause. The drawing lock
+ensures that subsequent draws are retarded to give the user the time
+to view. The use of this function is prefered over that of
+<a class="reference internal" href="#draw.pause" title="draw.pause"><tt class="xref py py-func docutils literal"><span class="pre">pause()</span></tt></a> or <tt class="xref py py-func docutils literal"><span class="pre">sleep()</span></tt>, because it allows your script to
+continue the numerical computations while waiting to draw the next
+screen.</p>
+<p>This function can be used to retard other functions than <cite>draw</cite> and <cite>view</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>refresh=False</em><big>)</big></dt>
+<dd><p>Start the current script or if already running, continue it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">replay</tt><big>(</big><big>)</big></dt>
+<dd><p>Replay the current app.</p>
+<p>This works pretty much like the play() function, but will
+reload the current application prior to running it.
+This function is especially interesting during development
+of an application.
+If the current application is a script, then it is equivalent with
+play().</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big></dt>
+<dd><p>Releases the drawing lock mechanism indefinely.</p>
+<p>Releasing the drawing lock indefinely means that the lock will not
+be set again and your script will execute till the end.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>timeout=None</em>, <em>msg=None</em><big>)</big></dt>
+<dd><p>Pause the execution until an external event occurs or timeout.</p>
+<p>When the pause statement is executed, execution of the pyformex script
+is suspended until some external event forces it to proceed again.
+Clicking the PLAY, STEP or CONTINUE button will produce such an event.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomRectangle</tt><big>(</big><big>)</big></dt>
+<dd><p>Zoom a rectangle selected by the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomBbox</tt><big>(</big><em>bb</em><big>)</big></dt>
+<dd><p>Zoom thus that the specified bbox becomes visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Zoom thus that all actors become visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big></dt>
+<dd><p>Fly through the current scene along the specified path.</p>
+<ul class="simple">
+<li><cite>path</cite>: a plex-2 or plex-3 Formex (or convertibel to such Formex)
+specifying the paths of camera eye and center (and upvector).</li>
+<li><cite>upvector</cite>: the direction of the vertical axis of the camera, in case
+of a 2-plex camera path.</li>
+<li><cite>sleeptime</cite>: a delay between subsequent images, to slow down
+the camera movement.</li>
+</ul>
+<p>This function moves the camera through the subsequent elements of the
+Formex. For each element the first point is used as the center of the
+camera and the second point as the eye (the center of the scene looked at).
+For a 3-plex Formex, the third point is used to define the upvector
+(i.e. the vertical axis of the image) of the camera. For a 2-plex
+Formex, the upvector is constant as specified in the arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">viewport</tt><big>(</big><em>n=None</em><big>)</big></dt>
+<dd><p>Select the current viewport.</p>
+<p>n is an integer number in the range of the number of viewports,
+or is one of the viewport objects in pyformex.GUI.viewports</p>
+<p>if n is None, selects the current GUI viewport for drawing</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">nViewports</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the number of viewports.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big></dt>
+<dd><p>Set the viewports layout.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">addViewport</tt><big>(</big><big>)</big></dt>
+<dd><p>Add a new viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big></dt>
+<dd><p>Remove the last viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linkViewport</tt><big>(</big><em>vp</em>, <em>tovp</em><big>)</big></dt>
+<dd><p>Link viewport vp to viewport tovp.</p>
+<p>Both vp and tovp should be numbers of viewports.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big></dt>
+<dd><p>Update the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActor</tt><big>(</big><em>i</em><big>)</big></dt>
+<dd><p>Highlight the i-th actor in the scene.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActors</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actors on the canvas.</p>
+<p>K is Collection of actors as returned by the pick() method.
+colormap is a list of two colors, for the actors not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightElements</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.
+colormap is a list of two colors, for the elements not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightEdges</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor edges on the canvas.</p>
+<p>K is Collection of TriSurface actor edges as returned by the pick() method.
+colormap is a list of two colors, for the edges not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPoints</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPartitions</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of partitions on the canvas.</p>
+<p>K is a Collection of actor elements, where each actor element is
+connected to a collection of property numbers, as returned by the
+partitionCollection() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeHighlight</tt><big>(</big><big>)</big></dt>
+<dd><p>Remove the highlights from the current viewport</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filter=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big></dt>
+<dd><p>Enter interactive picking mode and return selection.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default highlighting
+during the picking operation, a button to stop the selection operation</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mode</cite>: one of the pick modes</li>
+<li><cite>filter</cite>: one of the <cite>selection_filters</cite>. The default picking filter
+activated on entering the pick mode. All available filters are
+presented in a combobox.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlight</tt><big>(</big><em>K</em>, <em>mode</em><big>)</big></dt>
+<dd><p>Highlight a Collection of actor/elements.</p>
+<p>K is usually the return value of a pick operation, but might also
+be set by the user.
+mode is one of the pick modes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Set the drawing edit mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big></dt>
+<dd><p>Enter interactive drawing mode and return the line drawing.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default displaying
+during the drawing operation and a button to stop the drawing operation.</p>
+<p>The drawing can be edited using the methods &#8216;undo&#8217;, &#8216;clear&#8217; and &#8216;close&#8217;, which
+are presented in a combobox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showLineDrawing</tt><big>(</big><em>L</em><big>)</big></dt>
+<dd><p>Show a line drawing.</p>
+<p>L is usually the return value of an interactive draw operation, but
+might also be set by the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">resetGUI</tt><big>(</big><big>)</big></dt>
+<dd><p>Reset the GUI to its default operating mode.</p>
+<p>When an exception is raised during the execution of a script, the GUI
+may be left in a non-consistent state.
+This function may be called to reset most of the GUI components
+to their default operating mode.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>12. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-draw"></span><p>The draw module provides the basic user interface to the OpenGL
+rendering capabilities of pyFormex. The full contents of this module
+is available to scripts running in the pyFormex GUI without the need
+to import it.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeGui</tt><big>(</big><big>)</big></dt>
+<dd><p>Close the GUI.</p>
+<p>Calling this function from a script closes the GUI and terminates
+pyFormex.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeDialog</tt><big>(</big><em>name</em><big>)</big></dt>
+<dd><p>Close the named dialog.</p>
+<p>Closes the InputDialog with the given name. If multiple dialogs are
+open with the same name, all these dialogs are closed.</p>
+<p>This only works for dialogs owned by the pyFormex GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, align='00', **kargs</em><big>)</big></dt>
+<dd><p>Show a short message widget and wait for user acknowledgement.</p>
+<p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
+They differ only in the icon that is shown next to the test.
+By default, the message widget has a single button with the text &#8216;OK&#8217;.
+The dialog is closed if the user clicks a button.
+The return value is the button text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text, actions=['OK'], modal=True</em><big>)</big></dt>
+<dd><p>Show an informational message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text, actions=['OK']</em><big>)</big></dt>
+<dd><p>Show a warning message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text, actions=['OK']</em><big>)</big></dt>
+<dd><p>Show an error message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Ask a question and present possible answers.</p>
+<p>Return answer if accepted or default if rejected.
+The remaining arguments are passed to the InputDialog getResult method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Show a Yes/No question and return True/False depending on answer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, itemtype='text', actions=[('OK', None)], modal=True, mono=False</em><big>)</big></dt>
+<dd><p>Display a text in a dialog window.</p>
+<p>Creates a dialog window displaying some text. The dialog can be modal
+(blocking user input to the main window) or modeless.
+Scrollbars are added if the text is too large to display at once.
+By default, the dialog has a single button to close the dialog.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>text</cite>: a multiline text to be displayed. It can be plain text or html
+or reStructuredText (starts with &#8216;..&#8217;).</li>
+<li><cite>itemtype</cite>: an InputItem type that can be used for text display. This
+should be either &#8216;text&#8217; of &#8216;info&#8217;.</li>
+<li><cite>actions</cite>: a list of action button definitions.</li>
+<li><cite>modal</cite>: bool: if True, a modal dialog is constructed. Else, the dialog
+is modeless.</li>
+<li><cite>mono</cite>: if True, a monospace font will be used. This is only useful for
+plain text, e.g. to show the output of an external command.</li>
+</ul>
+<p>Returns:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Modal dialog:</th><td class="field-body">the result of the dialog after closing.
+The result is a dictionary with a single key: &#8216;text&#8217; having the
+displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
+be a changed text.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Modeless dialog:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the open dialog window itself.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Display a text file.</p>
+<p>This will use the <a class="reference internal" href="#draw.showText" title="draw.showText"><tt class="xref py py-func docutils literal"><span class="pre">showText()</span></tt></a> function to display a text read
+from a file.
+By default this uses a monospaced font.
+Other arguments may also be passed to ShowText.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showDoc</tt><big>(</big><em>obj=None</em>, <em>rst=True</em>, <em>modal=False</em><big>)</big></dt>
+<dd><p>Show the docstring of an object.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>obj</cite>: any object (module, class, method, function) that has a
+__doc__ attribute. If None is specified, the docstring of the current
+application is shown.</li>
+<li><cite>rst</cite>: bool. If True (default) the docstring is treated as being
+reStructuredText and will be nicely formatted accordingly.
+If False, the docstring is shown as plain text.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">editFile</tt><big>(</big><em>fn</em>, <em>exist=False</em><big>)</big></dt>
+<dd><p>Load a file into the editor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fn</cite>: filename. The corresponding file is loaded into the editor.</li>
+<li><cite>exist</cite>: bool. If True, only existing filenames will be accepted.</li>
+</ul>
+<p>Loading a file in the editor is done by executing an external command with
+the filename as argument. The command to be used can be set in the
+configuration. If none is set, pyFormex will try to lok at the <cite>EDITOR</cite>
+and <cite>VISUAL</cite> environment settings.</p>
+<p>The main author of pyFormex uses &#8216;emacsclient&#8217; as editor command,
+to load the files in a running copy of Emacs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Ask the value of some items to the user.</p>
+<p>Create an interactive widget to let the user set the value of some items.
+The items are specified as a list of dictionaries. Each dictionary
+contains the input arguments for a widgets.InputItem. It is often
+convenient to use one of the _I, _G, ot _T functions to create these
+dictionaries. These will respectively create the input for a
+simpleInputItem, a groupInputItem or a tabInputItem.</p>
+<p>For convenience, simple items can also be specified as a tuple.
+A tuple (key,value) will be transformed to a dict
+{&#8216;key&#8217;:key, &#8216;value&#8217;:value}.</p>
+<p>See the widgets.InputDialog class for complete description of the
+available input items.</p>
+<p>A timeout (in seconds) can be specified to have the input dialog
+interrupted automatically and return the default values.</p>
+<p>The remaining arguments are keyword arguments that are passed to the
+widgets.InputDialog.getResult method.</p>
+<p>Returns a dictionary with the results: for each input item there is a
+(key,value) pair. Returns an empty dictionary if the dialog was canceled.
+Sets the dialog timeout and accepted status in global variables.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">currentDialog</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns the current dialog widget.</p>
+<p>This returns the dialog widget created by the askItems() function,
+while the dialog is still active. If no askItems() has been called
+or if the user already closed the dialog, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogAccepted</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog was accepted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogRejected</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog was rejected.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogTimedOut</tt><big>(</big><big>)</big></dt>
+<dd><p>Returns True if the last askItems() dialog timed out.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em>, <em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask for a file name or multiple file names using a file dialog.</p>
+<p>cur is a directory or filename. All the files matching the filter in that
+directory (or that file&#8217;s directory) will be shown.
+If cur is a file, it will be selected as the current filename.</p>
+<p>Unless the user cancels the operation, or the change parameter was set to
+False, the parent directory of the selected file will become the new
+working directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>timeout=None</em><big>)</big></dt>
+<dd><p>Ask a single new filename.</p>
+<p>This is a convenience function for calling askFilename with the
+arguments exist=False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em>, <em>byfile=False</em><big>)</big></dt>
+<dd><p>Interactively select a directory and change the current workdir.</p>
+<p>The user is asked to select a directory through the standard file
+dialog. Initially, the dialog shows all the subdirectories in the
+specified path, or by default in the current working directory.</p>
+<p>The selected directory becomes the new working directory, unless the
+user canceled the operation, or the change parameter was set to False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">checkWorkdir</tt><big>(</big><big>)</big></dt>
+<dd><p>Ask the user to change the current workdir if it is not writable.</p>
+<p>Returns True if the new workdir is writable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">message</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">flatten</tt><big>(</big><em>objects</em>, <em>recurse=True</em><big>)</big></dt>
+<dd><p>Flatten a list of geometric objects.</p>
+<p>Each item in the list should be either:</p>
+<ul class="simple">
+<li>a drawable object,</li>
+<li>a string with the name of such an object,</li>
+<li>a list of any of these three.</li>
+</ul>
+<p>This function will flatten the lists and replace the string items with
+the object they point to. The result is a single list of drawable
+objects. This function does not enforce the objects to be drawable.
+That should be done by the caller.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawable</tt><big>(</big><em>objects</em><big>)</big></dt>
+<dd><p>Filters the drawable objects from a list.</p>
+<p>The input is a list, usually of drawable objects. For each item in the
+list, the following is done:</p>
+<ul class="simple">
+<li>if the item is drawable, it is kept as is,</li>
+<li>if the item is not drawable but can be converted to a Formex, it is
+converted,</li>
+<li>if it is neither drawable nor convertible to Formex, it is removed.</li>
+</ul>
+<p>The result is a list of drawable objects (since a Formex is drawable).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>alpha=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>bkalpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>view=None</em>, <em>bbox=None</em>, <em>shrink=None</em>, <em>clear=None</em>, <em>wait=True</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw object(s) with specified settings and options.</p>
+<p>This is the main drawing function to get geometry rendered on the OpenGL
+canvas. It has a whole slew of arguments, but in most cases you will only
+need to use a few of them. We divide the arguments in three groups:
+geometry, settings, options.</p>
+<p>Geometry: specifies what objects will be drawn.</p>
+<ul>
+<li><p class="first"><cite>F</cite>: all geometry to be drawn is specified in this single argument.
+It can be one of the following:</p>
+<ul class="simple">
+<li>a drawable object (a Geometry object like Formex, Mesh or TriSurface,
+or another object having a proper <cite>actor</cite> method),</li>
+<li>the name of a global pyFormex variable refering to such an object,</li>
+<li>a list or nested list of any of the above items.</li>
+</ul>
+<p>The possibility of a nested list means that any complex collections
+of geometry can be drawn in a single operations. The (nested) list
+is recursively flattened, replacing string values by the corresponding
+value from the pyFormex global variables dictionary, until a single list
+of drawable objects results. Next the undrawable items are removed
+from the list. The resulting list of drawable objects will then be
+drawn using the remaining settings and options arguments.</p>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Settings: specify how the geometry will be drawn. These arguments will</dt>
+<dd><p class="first">be passed to the corresponding Actor for the object. The Actor is the
+graphical representation of the geometry. Not all Actors use all of
+the settings that can be specified here. But they all accept specifying
+any setting even if unused. The settings hereafter are thus a
+superset of the settings used by the different Actors.
+Settings have a default value per viewport, and if unspecified, most
+Actors will use the viewport default for that value.</p>
+<ul class="last simple">
+<li><cite>color</cite>, <cite>colormap</cite>: specifies the color of the object (see below)</li>
+<li><cite>alpha</cite>: float (0.0..1.0): alpha value to use in transparent mode</li>
+<li><cite>bkcolor</cite>, <cite>bkcolormap</cite>: color for the backside of surfaces, if
+different from the front side. Specification as for front color.</li>
+<li><cite>bkalpha</cite>: float (0.0..1.0): alpha value for back side.</li>
+<li><cite>linewidth</cite>: float, thickness of line drawing</li>
+<li><cite>linestipple</cite>: stipple pattern for line drawing</li>
+<li><cite>marksize</cite>: float: point size for dot drawing</li>
+<li><cite>nolight</cite>: bool: render object as unlighted in modes with lights on</li>
+<li><cite>ontop</cite>: bool: render object as if it is on top.
+This will make the object fully visible, even when it is hidden by
+other objects. If more than one objects is drawn with <cite>ontop=True</cite>
+the visibility of the object will depend on the order of drawing.</li>
+</ul>
+</dd>
+<dt>Options: these arguments modify the working of the draw functions.</dt>
+<dd><p class="first">If None, they are filled in from the current viewport drawing options.
+These can be changed with the <a class="reference internal" href="#draw.setDrawOptions" title="draw.setDrawOptions"><tt class="xref py py-func docutils literal"><span class="pre">setDrawOptions()</span></tt></a> function.
+The initial defaults are: view=&#8217;last&#8217;, bbox=&#8217;auto&#8217;, shrink=False,
+clear=False, shrinkfactor=0.8.</p>
+<ul class="last simple">
+<li><cite>view</cite>: is either the name of a defined view or &#8216;last&#8217; or
+None.  Predefined views are &#8216;front&#8217;, &#8216;back&#8217;, &#8216;top&#8217;, &#8216;bottom&#8217;,
+&#8216;left&#8217;, &#8216;right&#8217;, &#8216;iso&#8217;.  With view=None the camera settings
+remain unchanged (but might be changed interactively through
+the user interface). This may make the drawn object out of
+view!  With view=&#8217;last&#8217;, the camera angles will be set to the
+same camera angles as in the last draw operation, undoing any
+interactive changes.  On creation of a viewport, the initial
+default view is &#8216;front&#8217; (looking in the -z direction).</li>
+<li><cite>bbox</cite>: specifies the 3D volume at which the camera will be
+aimed (using the angles set by <cite>view</cite>). The camera position will
+be set so that the volume comes in view using the current lens
+(default 45 degrees).  bbox is a list of two points or
+compatible (array with shape (2,3)).  Setting the bbox to a
+volume not enclosing the object may make the object invisible
+on the canvas.  The special value bbox=&#8217;auto&#8217; will use the
+bounding box of the objects getting drawn (object.bbox()),
+thus ensuring that the camera will focus on these objects.
+The special value bbox=None will use the bounding box of the
+previous drawing operation, thus ensuring that the camera&#8217;s
+target volume remains unchanged.</li>
+<li><cite>shrink</cite>: bool: if specified, each object will be transformed
+by the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.shrink()</span></tt> transformation (with the current
+set shrinkfactor as a parameter), thus showing all the elements
+of the object separately.  (Some other softwares call this an
+&#8216;exploded&#8217; view).</li>
+<li><cite>clear</cite>: bool. By default each new draw operation adds the newly
+drawn objects to the shown scene. Using <cite>clear=True</cite> will clear the
+scene before drawing and thus only show the objects of the current
+draw action.</li>
+<li><cite>wait</cite>: bool. If True (default) the draw action activates a
+locking mechanism for the next draw action, which will only be
+allowed after <cite>drawdelay</cite> seconds have
+elapsed. This makes it easier to see subsequent renderings and
+is far more efficient than adding an explicit sleep()
+operation, because the script processing can continue up to
+the next drawing instruction. The value of drawdelay can be changed
+in the user settings or using the <a class="reference internal" href="#draw.delay" title="draw.delay"><tt class="xref py py-func docutils literal"><span class="pre">delay()</span></tt></a> function.
+Setting this value to 0 will disable the waiting mechanism for all
+subsequent draw statements (until set &gt; 0 again). But often the user
+wants to specifically disable the waiting lock for some draw
+operation(s). This can be done without changing the <cite>drawdelay</cite>
+setting by specifyin <cite>wait=False</cite>. This means that the <em>next</em> draw
+operation does not have to wait.</li>
+<li><cite>allviews</cite>: currently not used</li>
+<li><cite>highlight</cite>: bool. If True, the object(s) will not be drawn as
+normal geometry, but as highlights (usually on top of other geometry),
+making them removeable by the remove highlight functions</li>
+<li><cite>silent</cite>: bool. If True (default), non-drawable objects will be
+silently ignored. If set False, an error is raised if an object
+is not drawable.</li>
+<li><cite>**kargs</cite>: any not-recognized keyword parameters are passed to the
+object&#8217;s Actor constructor. This allows the user to create
+customized Actors with new parameters.</li>
+</ul>
+</dd>
+</dl>
+<p>Color specification can take many different forms. Some Actors recognize
+up to six different color modes and the draw function adds even another
+mode (property color)</p>
+<ul class="simple">
+<li>no color: <cite>color=None</cite>. The object will be drawn in the current
+viewport foreground color.</li>
+<li>single color: the whole object is drawn with the specified color.</li>
+<li>element color: each element of the object has its own color. The
+specified color will normally contain precisely <cite>nelems</cite> colors,
+but will be resized to the required size if not.</li>
+<li>vertex color: each vertex of each element of the object has its color.
+In smooth shading modes intermediate points will get an interpolated
+color.</li>
+<li>element index color: like element color, but the color values are not
+specified directly, but as indices in a color table (the <cite>colormap</cite>
+argument).</li>
+<li>vertex index color: like vertex color, but the colors are indices in a
+color table (the <cite>colormap</cite> argument).</li>
+<li>property color: as an extra mode in the draw function, if <cite>color=&#8217;prop&#8217;</cite>
+is specified, and the object has an attribute &#8216;prop&#8217;, that attribute
+will be used as a color index and the object will be drawn in
+element index color mode. If the object has no such attribute, the
+object is drawn in no color mode.</li>
+</ul>
+<p>Element and vertex color modes are usually only used with a single object
+in the <cite>F</cite> parameter, because they require a matching set of colors.
+Though the color set will be automatically resized if not matching, the
+result will seldomly be what the user expects.
+If single colors are specified as a tuple of three float values
+(see below), the correct size of a color array for an object with
+<cite>nelems</cite> elements of plexitude <cite>nplex</cite> would be: (nelems,3) in element
+color mode, and (nelems,nplex,3) in vertex color mode. In the index modes,
+color would then be an integer array with shape respectively (nelems,) and
+(nelems,nplex). Their values are indices in the colormap array, which
+could then have shape (ncolors,3), where ncolors would be larger than the
+highest used value in the index. If the colormap is insufficiently large,
+it will again be wrapped around. If no colormap is specified, the current
+viewport colormap is used. The default contains eight colors: black=0,
+red=1, green=2, blue=3, cyan=4, magenta=5, yellow=6, white=7.</p>
+<p>A color value can be specified in multiple ways, but should be convertible
+to a normalized OpenGL color using the <a class="reference internal" href="colors.html#colors.GLcolor" title="colors.GLcolor"><tt class="xref py py-func docutils literal"><span class="pre">colors.GLcolor()</span></tt></a> function.
+The normalized color value is a tuple of three values in the range 0.0..1.0.
+The values are the contributions of the red, green and blue components.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">focus</tt><big>(</big><em>object</em><big>)</big></dt>
+<dd><p>Move the camera thus that object comes fully into view.</p>
+<p>object can be anything having a bbox() method or a list thereof.
+if no view is given, the default is used.</p>
+<p>The camera is moved with fixed axis directions to a place
+where the whole object can be viewed using a 45. degrees lens opening.
+This technique may change in future!</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setDrawOptions</tt><big>(</big><em>kargs0={}</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Set default values for the draw options.</p>
+<p>Draw options are a set of options that hold default values for the
+draw() function arguments and for some canvas settings.
+The draw options can be specified either as a dictionary, or as
+keyword arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">reset</tt><big>(</big><big>)</big></dt>
+<dd><p>reset the canvas</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">shrink</tt><big>(</big><em>onoff</em>, <em>factor=None</em><big>)</big></dt>
+<dd><p>Set shrinking on or off, and optionally set shrink factor</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>nolight=True</em>, <em>**drawOptions</em><big>)</big></dt>
+<dd><p>Draw a set of vectors.</p>
+<p>If size==None, draws the vectors v at the points P.
+If size is specified, draws the vectors size*normalize(v)
+P, v and size are single points
+or sets of points. If sets, they should be of the same size.</p>
+<p>Other drawoptions can be specified and will be passed to the draw function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawMarks</tt><big>(</big><em>X</em>, <em>M</em>, <em>color='black'</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big></dt>
+<dd><p>Draw a list of marks at points X.</p>
+<p>X is a Coords array.
+M is a list with the same length as X.
+The string representation of the marks are drawn at the corresponding
+3D coordinate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawFreeEdges</tt><big>(</big><em>M</em>, <em>color='black'</em><big>)</big></dt>
+<dd><p>Draw the feature edges of a Mesh</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>numbers=None</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=None</em><big>)</big></dt>
+<dd><p>Draw numbers on all elements of F.</p>
+<p>numbers is an array with F.nelems() integer numbers.
+If no numbers are given, the range from 0 to nelems()-1 is used.
+Normally, the numbers are drawn at the centroids of the elements.
+A translation may be given to put the numbers out of the centroids,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the centroids.
+If an offset is specified, it is added to the shown numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawPropNumbers</tt><big>(</big><em>F</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw property numbers on all elements of F.</p>
+<p>This calls drawNumbers to draw the property numbers on the elements.
+All arguments of drawNumbers except <cite>numbers</cite> may be passed.
+If the object F thus not have property numbers, -1 values are drawn.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVertexNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>ontop=False</em><big>)</big></dt>
+<dd><p>Draw (local) numbers on all vertices of F.</p>
+<p>Normally, the numbers are drawn at the location of the vertices.
+A translation may be given to put the numbers out of the location,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>F</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big></dt>
+<dd><p>Draw the bounding box of the geometric object F.</p>
+<p>F is any object that has a <cite>bbox</cite> method.
+Returns the drawn Annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawPrincipal</tt><big>(</big><em>F</em>, <em>weight=None</em><big>)</big></dt>
+<dd><p>Draw the principal axes of the geometric object F.</p>
+<p>F is any object that has a <cite>coords</cite> attribute.
+If specified, weight is an array of weights attributed to the points
+of F. It should have the same length as <cite>F.coords</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>ontop=True</em><big>)</big></dt>
+<dd><p>Draw a text at a 3D point P.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>CS=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the axes of a CoordinateSystem.</p>
+<p>CS is a CoordinateSystem. If not specified, the global coordinate system
+is used. Other arguments can be added just like in the
+<tt class="xref py py-class docutils literal"><span class="pre">AxesActor</span></tt> class.</p>
+<p>While you can draw a CoordinateSystem using the <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> function,
+this function gives a better result because it has specialized color
+and annotation settings and provides reasonable deafults.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage3D</tt><big>(</big><em>image</em>, <em>nx=0</em>, <em>ny=0</em>, <em>pixel='dot'</em><big>)</big></dt>
+<dd><p>Draw an image as a colored Formex</p>
+<p>Draws a raster image as a colored Formex. While there are other and
+better ways to display an image in pyFormex (such as using the imageView
+widget), this function allows for interactive handling the image using
+the OpenGL infrastructure.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file.</li>
+<li><cite>nx</cite>,`ny`: width and height (in cells) of the Formex grid.
+If the supplied image has a different size, it will be rescaled.
+Values &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+<li><cite>pixel</cite>: the Formex representing a single pixel. It should be either
+a single element Formex, or one of the strings &#8216;dot&#8217; or &#8216;quad&#8217;. If &#8216;dot&#8217;
+a single point will be used, if &#8216;quad&#8217; a unit square. The difference
+will be important when zooming in. The default is &#8216;dot&#8217;.</li>
+</ul>
+<p>Returns the drawn Actor.</p>
+<p>See also <a class="reference internal" href="#draw.drawImage" title="draw.drawImage"><tt class="xref py py-func docutils literal"><span class="pre">drawImage()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em>, <em>x=-1</em>, <em>y=-1</em>, <em>color=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>ontop=False</em><big>)</big></dt>
+<dd><p>Draws an image as a viewport decoration.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of a raster image file. See also the <tt class="xref py py-func docutils literal"><span class="pre">loadImage()</span></tt>
+function.</li>
+<li><cite>w</cite>,`h`: width and height (in pixels) of the displayed image.
+If the supplied image has a different size, it will be rescaled.
+A value &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+<li><cite>x</cite>,`y`: position of the lower left corner of the image. If negative,
+the image will be centered on the current viewport.</li>
+<li><cite>color</cite>: the color to mix in (AND) with the image. The default (white)
+will make all pixels appear as in the image.</li>
+<li><cite>ontop</cite>: determines whether the image will appear as a background
+(default) or at the front of the 3D scene (as on the camera glass).</li>
+</ul>
+<p>Returns the Decoration drawn.</p>
+<p>Note that the Decoration has a fixed size (and position) on the canvas
+and will not scale when the viewport size is changed.
+The <a class="reference internal" href="#draw.bgcolor" title="draw.bgcolor"><tt class="xref py py-func docutils literal"><span class="pre">bgcolor()</span></tt></a> function can be used to draw an image that completely
+fills the background.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big></dt>
+<dd><p>Draw two viewport axes at a 3D position.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big></dt>
+<dd><p>Draw an actor and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAny</tt><big>(</big><em>A</em><big>)</big></dt>
+<dd><p>Draw an Actor/Annotation/Decoration and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">undraw</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Remove an item or a number of items from the canvas.</p>
+<p>Use the return value from one of the draw... functions to remove
+the item that was drawn from the canvas.
+A single item or a list of items may be specified.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">view</tt><big>(</big><em>v</em>, <em>wait=True</em><big>)</big></dt>
+<dd><p>Show a named view, either a builtin or a user defined.</p>
+<p>This shows the current scene from another viewing angle.
+Switching views of a scene is much faster than redrawing a scene.
+Therefore this function is prefered over <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> when the actors
+in the scene remain unchanged and only the camera viewpoint changes.</p>
+<p>Just like <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a>, this function obeys the drawing lock mechanism,
+and by default it will restart the lock to retard the next draing operation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, the axes triade is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity='E'</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big></dt>
+<dd><p>Show a text at position x,y using font.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">annotate</tt><big>(</big><em>annot</em><big>)</big></dt>
+<dd><p>Draw an annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">decorate</tt><big>(</big><em>decor</em><big>)</big></dt>
+<dd><p>Draw a decoration.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">createView</tt><big>(</big><em>name</em>, <em>angles</em>, <em>addtogui=False</em><big>)</big></dt>
+<dd><p>Create a new named view (or redefine an old).</p>
+<p>The angles are (longitude, latitude, twist).
+By default, the view is local to the script&#8217;s viewport.
+If gui is True, it is also added to the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setView</tt><big>(</big><em>name</em>, <em>angles=None</em><big>)</big></dt>
+<dd><p>Set the default view for future drawing operations.</p>
+<p>If no angles are specified, the name should be an existing view, or
+the predefined value &#8216;last&#8217;.
+If angles are specified, this is equivalent to createView(name,angles)
+followed by setView(name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big></dt>
+<dd><p>Change the background color and image.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: a single color or a list of 4 colors. A single color sets a
+solid background color. A list of four colors specifies a gradient.
+These 4 colors are those of the Bottom Left, Bottom Right, Top Right
+and Top Left corners respectively.</li>
+<li><cite>image</cite>: the name of an image file. If specified, the image will be
+overlayed on the background colors. Specify a solid white background
+color to sea the image unaltered.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fgcolor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">hicolor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">colormap</tt><big>(</big><em>color=None</em><big>)</big></dt>
+<dd><p>Gets/Sets the current canvas color map</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.colorindex">
+<tt class="descclassname">draw.</tt><tt class="descname">colorindex</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#draw.colorindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of a color in the current colormap</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">renderModes</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list of predefined render profiles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">renderMode</tt><big>(</big><em>mode</em>, <em>light=None</em><big>)</big></dt>
+<dd><p>Change the rendering profile to a predefined mode.</p>
+<p>Currently the following modes are defined:</p>
+<ul class="simple">
+<li>wireframe</li>
+<li>smooth</li>
+<li>smoothwire</li>
+<li>flat</li>
+<li>flatwire</li>
+<li>smooth_avg</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">lights</tt><big>(</big><em>state=True</em><big>)</big></dt>
+<dd><p>Set the lights on or off</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">transparent</tt><big>(</big><em>state=True</em><big>)</big></dt>
+<dd><p>Set the transparency mode on or off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_material_value</tt><big>(</big><em>typ</em>, <em>val</em><big>)</big></dt>
+<dd><p>Set the value of one of the material lighting parameters</p>
+<p>typ is one of &#8216;ambient&#8217;,&#8217;specular&#8217;,&#8217;emission&#8217;,&#8217;shininess&#8217;
+val is a value between 0.0 and 1.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linewidth</tt><big>(</big><em>wid</em><big>)</big></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linestipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pointsize</tt><big>(</big><em>siz</em><big>)</big></dt>
+<dd><p>Set the size to be used in point drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big></dt>
+<dd><p>Resize the canvas to (width x height).</p>
+<p>If a negative value is given for either width or height,
+the corresponding size is set equal to the maximum visible size
+(the size of the central widget of the main window).</p>
+<p>Note that changing the canvas size when multiple viewports are
+active is not approved.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear_canvas</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas.</p>
+<p>This is a low level function not intended for the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas.</p>
+<p>Removes everything from the current scene and displays an empty
+background.</p>
+<p>This function waits for the drawing lock to be released, but will
+not reset it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">delay</tt><big>(</big><em>s=None</em><big>)</big></dt>
+<dd><p>Get/Set the draw delay time.</p>
+<p>Returns the current setting of the draw wait time (in seconds).
+This drawing delay is obeyed by drawing and viewing operations.</p>
+<p>A parameter may be given to set the delay time to a new value.
+It should be convertable to a float.
+The function still returns the old setting. This may be practical
+to save that value to restore it later.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">wait</tt><big>(</big><em>relock=True</em><big>)</big></dt>
+<dd><p>Wait until the drawing lock is released.</p>
+<p>This uses the drawing lock mechanism to pause. The drawing lock
+ensures that subsequent draws are retarded to give the user the time
+to view. The use of this function is prefered over that of
+<a class="reference internal" href="#draw.pause" title="draw.pause"><tt class="xref py py-func docutils literal"><span class="pre">pause()</span></tt></a> or <tt class="xref py py-func docutils literal"><span class="pre">sleep()</span></tt>, because it allows your script to
+continue the numerical computations while waiting to draw the next
+screen.</p>
+<p>This function can be used to retard other functions than <cite>draw</cite> and <cite>view</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>refresh=False</em><big>)</big></dt>
+<dd><p>Start the current script or if already running, continue it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">replay</tt><big>(</big><big>)</big></dt>
+<dd><p>Replay the current app.</p>
+<p>This works pretty much like the play() function, but will
+reload the current application prior to running it.
+This function is especially interesting during development
+of an application.
+If the current application is a script, then it is equivalent with
+play().</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big></dt>
+<dd><p>Releases the drawing lock mechanism indefinely.</p>
+<p>Releasing the drawing lock indefinely means that the lock will not
+be set again and your script will execute till the end.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>timeout=None</em>, <em>msg=None</em><big>)</big></dt>
+<dd><p>Pause the execution until an external event occurs or timeout.</p>
+<p>When the pause statement is executed, execution of the pyformex script
+is suspended until some external event forces it to proceed again.
+Clicking the PLAY, STEP or CONTINUE button will produce such an event.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomRectangle</tt><big>(</big><big>)</big></dt>
+<dd><p>Zoom a rectangle selected by the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomBbox</tt><big>(</big><em>bb</em><big>)</big></dt>
+<dd><p>Zoom thus that the specified bbox becomes visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Zoom thus that all actors become visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big></dt>
+<dd><p>Fly through the current scene along the specified path.</p>
+<ul class="simple">
+<li><cite>path</cite>: a plex-2 or plex-3 Formex (or convertibel to such Formex)
+specifying the paths of camera eye and center (and upvector).</li>
+<li><cite>upvector</cite>: the direction of the vertical axis of the camera, in case
+of a 2-plex camera path.</li>
+<li><cite>sleeptime</cite>: a delay between subsequent images, to slow down
+the camera movement.</li>
+</ul>
+<p>This function moves the camera through the subsequent elements of the
+Formex. For each element the first point is used as the center of the
+camera and the second point as the eye (the center of the scene looked at).
+For a 3-plex Formex, the third point is used to define the upvector
+(i.e. the vertical axis of the image) of the camera. For a 2-plex
+Formex, the upvector is constant as specified in the arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">viewport</tt><big>(</big><em>n=None</em><big>)</big></dt>
+<dd><p>Select the current viewport.</p>
+<p>n is an integer number in the range of the number of viewports,
+or is one of the viewport objects in pyformex.GUI.viewports</p>
+<p>if n is None, selects the current GUI viewport for drawing</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">nViewports</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the number of viewports.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big></dt>
+<dd><p>Set the viewports layout.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">addViewport</tt><big>(</big><big>)</big></dt>
+<dd><p>Add a new viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big></dt>
+<dd><p>Remove the last viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linkViewport</tt><big>(</big><em>vp</em>, <em>tovp</em><big>)</big></dt>
+<dd><p>Link viewport vp to viewport tovp.</p>
+<p>Both vp and tovp should be numbers of viewports.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big></dt>
+<dd><p>Update the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActor</tt><big>(</big><em>i</em><big>)</big></dt>
+<dd><p>Highlight the i-th actor in the scene.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActors</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actors on the canvas.</p>
+<p>K is Collection of actors as returned by the pick() method.
+colormap is a list of two colors, for the actors not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightElements</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.
+colormap is a list of two colors, for the elements not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightEdges</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor edges on the canvas.</p>
+<p>K is Collection of TriSurface actor edges as returned by the pick() method.
+colormap is a list of two colors, for the edges not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPoints</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPartitions</tt><big>(</big><em>K</em><big>)</big></dt>
+<dd><p>Highlight a selection of partitions on the canvas.</p>
+<p>K is a Collection of actor elements, where each actor element is
+connected to a collection of property numbers, as returned by the
+partitionCollection() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeHighlight</tt><big>(</big><big>)</big></dt>
+<dd><p>Remove the highlights from the current viewport</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filter=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big></dt>
+<dd><p>Enter interactive picking mode and return selection.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default highlighting
+during the picking operation, a button to stop the selection operation</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mode</cite>: one of the pick modes</li>
+<li><cite>filter</cite>: one of the <cite>selection_filters</cite>. The default picking filter
+activated on entering the pick mode. All available filters are
+presented in a combobox.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlight</tt><big>(</big><em>K</em>, <em>mode</em><big>)</big></dt>
+<dd><p>Highlight a Collection of actor/elements.</p>
+<p>K is usually the return value of a pick operation, but might also
+be set by the user.
+mode is one of the pick modes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>s</em><big>)</big></dt>
+<dd><p>Set the drawing edit mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big></dt>
+<dd><p>Enter interactive drawing mode and return the line drawing.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default displaying
+during the drawing operation and a button to stop the drawing operation.</p>
+<p>The drawing can be edited using the methods &#8216;undo&#8217;, &#8216;clear&#8217; and &#8216;close&#8217;, which
+are presented in a combobox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showLineDrawing</tt><big>(</big><em>L</em><big>)</big></dt>
+<dd><p>Show a line drawing.</p>
+<p>L is usually the return value of an interactive draw operation, but
+might also be set by the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">draw.</tt><tt class="descname">resetGUI</tt><big>(</big><big>)</big></dt>
+<dd><p>Reset the GUI to its default operating mode.</p>
+<p>When an exception is raised during the execution of a script, the GUI
+may be left in a non-consistent state.
+This function may be called to reset most of the GUI components
+to their default operating mode.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -1161,10 +3425,10 @@ to their default operating mode.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+          <a href="colors.html" title="13. colors — Definition of some RGB colors and color conversion functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="script.html" title="4. script — Basic pyFormex script functions"
+          <a href="script.html" title="8. script — Basic pyFormex script functions"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -1174,7 +3438,7 @@ to their default operating mode.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

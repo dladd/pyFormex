@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>44. isopar — Isoparametric transformations &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>56. isopar — Isoparametric transformations &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="45. lima — Lindenmayer Systems" href="lima.html" />
-    <link rel="prev" title="43. inertia — inertia.py" href="inertia.html" />
+    <link rel="next" title="58. lima — Lindenmayer Systems" href="lima.html" />
+    <link rel="prev" title="54. inertia — inertia.py" href="inertia.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="lima.html" title="45. lima — Lindenmayer Systems"
+          <a href="lima.html" title="58. lima — Lindenmayer Systems"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="inertia.html" title="43. inertia — inertia.py"
+          <a href="inertia.html" title="54. inertia — inertia.py"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">56. <tt class="docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></li>
+<li><a class="reference internal" href="#id53">57. <tt class="docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="inertia.html"
-                        title="previous chapter">43. <tt class="docutils literal docutils literal docutils literal"><span class="pre">inertia</span></tt> &#8212; inertia.py</a></p>
+                        title="previous chapter">54. <tt class="docutils literal docutils literal docutils literal"><span class="pre">inertia</span></tt> &#8212; inertia.py</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="lima.html"
-                        title="next chapter">45. <tt class="docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
+                        title="next chapter">58. <tt class="docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-isopar">
-<span id="isopar-isoparametric-transformations"></span><span id="sec-ref-isopar"></span><h1>44. <a class="reference internal" href="#module-isopar" title="isopar: Isoparametric transformations"><tt class="xref py py-mod docutils literal"><span class="pre">isopar</span></tt></a> &#8212; Isoparametric transformations<a class="headerlink" href="#module-isopar" title="Permalink to this headline">¶</a></h1>
+<span id="isopar-isoparametric-transformations"></span><span id="sec-ref-isopar"></span><h1>56. <a class="reference internal" href="#module-isopar" title="isopar: Isoparametric transformations"><tt class="xref py py-mod docutils literal"><span class="pre">isopar</span></tt></a> &#8212; Isoparametric transformations<a class="headerlink" href="#module-isopar" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">isopar</span></tt></p>
 <dl class="class">
 <dt id="isopar.Isopar">
@@ -186,6 +192,52 @@ specified transformation type</div></blockquote>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>57. <a class="reference internal" href="#module-isopar" title="isopar: Isoparametric transformations"><tt class="xref py py-mod docutils literal"><span class="pre">isopar</span></tt></a> &#8212; Isoparametric transformations<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-isopar"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">isopar</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">isopar.</tt><tt class="descname">Isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big></dt>
+<dd><p>A class representing an isoparametric transformation</p>
+<blockquote>
+<div>type is one of the keys in Isopar.isodata
+coords and oldcoords can be either arrays, Coords or Formex instances,
+but should be of equal shape, and match the number of atoms in the
+specified transformation type</div></blockquote>
+<p>The following three formulations are equivalent</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">trf</span> <span class="o">=</span> <span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="n">trf</span><span class="p">)</span>
+
+<span class="n">trf</span> <span class="o">=</span> <span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">trf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">isopar</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt>
+<tt class="descname">transform</tt><big>(</big><em>X</em><big>)</big></dt>
+<dd><p>Apply isoparametric transform to a set of coordinates.</p>
+<p>Returns a Coords array with same shape as X</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">isopar</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">isopar.</tt><tt class="descname">evaluate</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big></dt>
+<dd><p>Build a matrix of functions of coords.</p>
+<ul class="simple">
+<li><cite>atoms</cite>: a list of text strings representing a mathematical function of
+<cite>x</cite>, and possibly of <cite>y</cite> and <cite>z</cite>.</li>
+<li><cite>x</cite>, <cite>y</cite>, <cite>z</cite>: a list of x- (and optionally y-, z-) values at which the
+<cite>atoms</cite> will be evaluated. The lists should have the same length.</li>
+</ul>
+<p>Returns a matrix with <cite>nvalues</cite> rows and <cite>natoms</cite> colums.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -203,10 +255,10 @@ specified transformation type</div></blockquote>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="lima.html" title="45. lima — Lindenmayer Systems"
+          <a href="lima.html" title="58. lima — Lindenmayer Systems"
              >next</a> |</li>
         <li class="right" >
-          <a href="inertia.html" title="43. inertia — inertia.py"
+          <a href="inertia.html" title="54. inertia — inertia.py"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -216,7 +268,7 @@ specified transformation type</div></blockquote>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

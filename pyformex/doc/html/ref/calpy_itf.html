@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="34. cameratools — Camera tools" href="cameratools.html" />
-    <link rel="prev" title="32. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
+    <link rel="next" title="35. cameratools — Camera tools" href="cameratools.html" />
+    <link rel="prev" title="51. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cameratools.html" title="34. cameratools — Camera tools"
+          <a href="cameratools.html" title="35. cameratools — Camera tools"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="32. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="51. toolbar — Toolbars for the pyFormex GUI."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">33. <tt class="docutils literal"><span class="pre">calpy_itf</span></tt> &#8212; Calpy interface for pyFormex.</a></li>
+<li><a class="reference internal" href="#id53">34. <tt class="docutils literal"><span class="pre">calpy_itf</span></tt> &#8212; Calpy interface for pyFormex.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="toolbar.html"
-                        title="previous chapter">32. <tt class="docutils literal docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+                        title="previous chapter">51. <tt class="docutils literal docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="cameratools.html"
-                        title="next chapter">34. <tt class="docutils literal"><span class="pre">cameratools</span></tt> &#8212; Camera tools</a></p>
+                        title="next chapter">35. <tt class="docutils literal"><span class="pre">cameratools</span></tt> &#8212; Camera tools</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -161,6 +167,134 @@ and set the sys.path accordingly.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>34. <a class="reference internal" href="#module-calpy_itf" title="calpy_itf: Calpy interface for pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">calpy_itf</span></tt></a> &#8212; Calpy interface for pyFormex.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-calpy_itf"></span><p>Currently this is only used to detect the installation of calpy and
+add the path of the calpy module to sys.path.</p>
+<p>Importing this module will automatically check the availabilty of calpy
+and set the sys.path accordingly.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">calpy_itf</span></tt></p>
+<dl class="class">
+<dt id="calpy_itf.QuadInterpolator">
+<em class="property">class </em><tt class="descclassname">calpy_itf.</tt><tt class="descname">QuadInterpolator</tt><big>(</big><em>nelems</em>, <em>nplex</em>, <em>gprule</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to interface with calpy&#8217;s Quad class.</p>
+<p>We want to use the calpy interpolation facilities without
+having to set up a full model for calpy processing.
+This class just sets the necessary data to make the
+interpolation mehtods (GP2NOdes, NodalAcc, NodalAvg) work.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nelems</cite>: number of elements</li>
+<li><cite>nplex</cite>: plexitude of the elements (supported is 4 to 9)</li>
+<li><cite>gprule</cite>: gauss integration rule</li>
+</ul>
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.AddElements">
+<tt class="descname">AddElements</tt><big>(</big><em>nodes</em>, <em>matnr</em>, <em>emat</em>, <em>coord</em>, <em>dofid</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.AddElements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add elements to group and store interpolation matrices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.InterpolationMatrix">
+<tt class="descname">InterpolationMatrix</tt><big>(</big><em>elnod</em>, <em>xyz</em>, <em>gpx</em>, <em>gpw</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.InterpolationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form interpolation matrix for QUAD/4-9 element</p>
+<p>The input gives a node set with either 4, 8 or 9 nodes.
+The 8 and 9 node versions may contain zeros to suppress
+higher order nodes. xyz[nnod,2] contains the coordinates
+of the actually existing nodes!
+gpx and gpw are the coordinates and weights of the Gauss
+integration points (gpx has 2 rows)
+The procedure returns two matrices: hall[3,nnod,ng] holds
+the values at all gauss points, of the interpolation function
+and its natural derivatives corresponding with each node.
+w[ng] holds the 2D weight of the gauss points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.Assemble">
+<tt class="descname">Assemble</tt><big>(</big><em>s</em>, <em>emat</em>, <em>model</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.Assemble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assemble all elements of this group</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.StressGP">
+<tt class="descname">StressGP</tt><big>(</big><em>v</em>, <em>emat</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.StressGP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute stress at GP for all elements of this group</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.GP2Nodes">
+<tt class="descname">GP2Nodes</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.GP2Nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrapolate a set of data at GP to 9 nodal points</p>
+<p>data has shape (ndata,ngp,nelems)
+result has shape (ndata,nnodel,nelems)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.NodalAcc">
+<tt class="descname">NodalAcc</tt><big>(</big><em>nodes</em>, <em>endata</em>, <em>nnod=0</em>, <em>nodata=None</em>, <em>nodn=None</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.NodalAcc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store element data in nodes and compute averages</p>
+<p>If matching nodal arrays nodata and nodn are specified, data are
+added to it.
+If not, nnod should be specified.
+By default, new nodata and nodn arrays are created and zeroed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.NodalAvg">
+<tt class="descname">NodalAvg</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.NodalAvg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the nodal average from the accumulated data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.AddBoundaryLoads">
+<tt class="descname">AddBoundaryLoads</tt><big>(</big><em>f</em>, <em>model</em>, <em>idloads</em>, <em>dloads</em>, <em>nodes</em>, <em>matnr</em>, <em>coord</em>, <em>dofid</em>, <em>emat</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.AddBoundaryLoads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assemble distributed boundary loads into the load vector</p>
+<p>This procedures adds the distributed loads acting on the boundaries
+of the elements of this group to the global load vector f.
+The loads are specified by idloads and dloads, in the format
+as returned by fe_util.ReadBoundaryLoads()
+idloads contains : element number, side number, load case
+dloads contains : load components qx, qy
+Side number is the number of the first node of this side.
+We mod it with 4, to have an offset in the sidenode numbers array
+nodes,matnr is the node/mat numbers of the underlying element group
+coords contains the coordinates of the nodes
+dofid contains the numbering of the nodal dofs
+emat is the properties matrix of the underlying group</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="calpy_itf.QuadInterpolator.BoundaryInterpolationMatrix">
+<tt class="descname">BoundaryInterpolationMatrix</tt><big>(</big><em>elnod</em>, <em>xyz</em>, <em>gpx</em>, <em>gpw</em>, <em>localnodes</em><big>)</big><a class="headerlink" href="#calpy_itf.QuadInterpolator.BoundaryInterpolationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form interpolation matrix for QUAD/4-9 boundary</p>
+<p>The input gives a node set with either 2 or 3 nodes.
+The 3 node version may contain a zero to suppress the
+higher order node. xyz[nnod,2] contains the coordinates
+of the actually existing nodes!
+gpx, gpw are the (2D)-coordinates and weights of the GPs
+The procedure returns two matrices: hall[3,nnod,ng] holds
+the values at all gauss points, of the interpolation function
+and its natural derivatives corresponding with each node.
+w[ng] holds the 2D weight of the gauss points.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">calpy_itf</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">calpy_itf.</tt><tt class="descname">detect</tt><big>(</big><em>trypaths=None</em><big>)</big></dt>
+<dd><p>Check if we have calpy and if so, add its path to sys.path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">calpy_itf.</tt><tt class="descname">check</tt><big>(</big><em>trypaths=None</em><big>)</big></dt>
+<dd><p>Warn the user that calpy was not found.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -178,10 +312,10 @@ and set the sys.path accordingly.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cameratools.html" title="34. cameratools — Camera tools"
+          <a href="cameratools.html" title="35. cameratools — Camera tools"
              >next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="32. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="51. toolbar — Toolbars for the pyFormex GUI."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -191,7 +325,7 @@ and set the sys.path accordingly.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

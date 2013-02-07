@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>65. config — A general yet simple configuration class. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>69. config — A general yet simple configuration class. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="66. flatkeydb — Flat Text File Database." href="flatkeydb.html" />
-    <link rel="prev" title="64. collection — Tools for handling collections of elements belonging to multiple parts." href="collection.html" />
+    <link rel="next" title="71. flatkeydb — Flat Text File Database." href="flatkeydb.html" />
+    <link rel="prev" title="67. collection — Tools for handling collections of elements belonging to multiple parts." href="collection.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="flatkeydb.html" title="66. flatkeydb — Flat Text File Database."
+          <a href="flatkeydb.html" title="71. flatkeydb — Flat Text File Database."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="collection.html" title="64. collection — Tools for handling collections of elements belonging to multiple parts."
+          <a href="collection.html" title="67. collection — Tools for handling collections of elements belonging to multiple parts."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">69. <tt class="docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.</a></li>
+<li><a class="reference internal" href="#id53">70. <tt class="docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="collection.html"
-                        title="previous chapter">64. <tt class="docutils literal docutils literal"><span class="pre">collection</span></tt> &#8212; Tools for handling collections of elements belonging to multiple parts.</a></p>
+                        title="previous chapter">67. <tt class="docutils literal docutils literal"><span class="pre">collection</span></tt> &#8212; Tools for handling collections of elements belonging to multiple parts.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="flatkeydb.html"
-                        title="next chapter">66. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></p>
+                        title="next chapter">71. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-config">
-<span id="config-a-general-yet-simple-configuration-class"></span><span id="sec-ref-config"></span><h1>65. <a class="reference internal" href="#module-config" title="config: A general yet simple configuration class."><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt></a> &#8212; A general yet simple configuration class.<a class="headerlink" href="#module-config" title="Permalink to this headline">¶</a></h1>
+<span id="config-a-general-yet-simple-configuration-class"></span><span id="sec-ref-config"></span><h1>69. <a class="reference internal" href="#module-config" title="config: A general yet simple configuration class."><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt></a> &#8212; A general yet simple configuration class.<a class="headerlink" href="#module-config" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line">(C) 2005 Benedict Verhegghe</div>
 <div class="line">Distributed under the GNU GPL version 3 or later</div>
@@ -312,6 +318,178 @@ dict.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>70. <a class="reference internal" href="#module-config" title="config: A general yet simple configuration class."><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt></a> &#8212; A general yet simple configuration class.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-config"></span><div class="line-block">
+<div class="line">(C) 2005 Benedict Verhegghe</div>
+<div class="line">Distributed under the GNU GPL version 3 or later</div>
+</div>
+<dl class="docutils">
+<dt>Why</dt>
+<dd>I wrote this simple class because I wanted to use Python
+expressions in my configuration files. This is so much more fun
+than using .INI style config files.  While there are some other
+Python config modules available on the web, I couldn&#8217;t find one
+that suited my needs and my taste: either they are intended for
+more complex configuration needs than mine, or they do not work
+with the simple Python syntax I expected.</dd>
+<dt>What</dt>
+<dd>Our Config class is just a normal Python dictionary which can hold
+anything.  Fields can be accessed either as dictionary lookup
+(config[&#8216;foo&#8217;]) or as object attributes (config.foo).  The class
+provides a function for reading the dictionary from a flat text
+(multiline string or file). I will always use the word &#8216;file&#8217;
+hereafter, because that is what you usually will read the
+configuration from.  Your configuration file can have named
+sections. Sections are stored as other Python dicts inside the top
+Config dictionary. The current version is limited to one level of
+sectioning.</dd>
+</dl>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">config</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">config.</tt><tt class="descname">Config</tt><big>(</big><em>data={}</em>, <em>default=None</em><big>)</big></dt>
+<dd><p>A configuration class allowing Python expressions in the input.</p>
+<p>The configuration settings are stored in the __dict__ of a Python
+object.  An item &#8216;foo&#8217; in the configuration &#8216;config&#8217; can be accessed
+either as dictionary lookup (<tt class="docutils literal"><span class="pre">config['foo']</span></tt>) or as object attribute
+(<tt class="docutils literal"><span class="pre">config.foo</span></tt>).</p>
+<p>The configuration object can be initialized from a multiline string or
+a text file (or any other object that allows iterating over strings).</p>
+<p>The format of the config file/text is described hereafter.</p>
+<p>All config lines should have the format: key = value, where key is a
+string and value is a Python expression The first &#8216;=&#8217; character on the
+line is the delimiter between key and value.  Blanks around both the
+key and the value are stripped.  The value is then evaluated as a
+Python expression and stored in a variable with name specified by the
+key. This variable is available for use in subsequent configuration
+lines. It is an error to use a variable before it is defined.  The
+key,value pair is also stored in the config dictionary, unless the key
+starts with an underscore (&#8216;_&#8217;): this provides for local variables.</p>
+<p>Lines starting with &#8216;#&#8217; are comments and are ignored, as are empty
+and blank lines.  Lines ending with &#8216;&#8217; are continued on the next
+line.  A line starting with &#8216;[&#8216; starts a new section. A section is
+nothing more than a Python dictionary inside the config
+dictionary. The section name is delimited by &#8216;[&#8216;and &#8216;]&#8217;. All
+subsequent lines will be stored in the section dictionary instead
+of the toplevel dictionary.</p>
+<p>All other lines are executed as python statements. This allows
+e.g. for importing modules.</p>
+<p>Whole dictionaries can be inserted at once in the config with the
+update() function.</p>
+<p>All defined variables while reading config files remain available
+for use in the config file statements, even over multiple calls to
+the read() function. Variables inserted with addSection() will not
+be available as individual variables though, but can be access as
+<tt class="docutils literal"><span class="pre">self['name']</span></tt>.</p>
+<p>As an example, if your config file looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">aa</span> <span class="o">=</span> <span class="s">&#39;bb&#39;</span>
+<span class="n">bb</span> <span class="o">=</span> <span class="n">aa</span>
+<span class="p">[</span><span class="n">cc</span><span class="p">]</span>
+<span class="n">aa</span> <span class="o">=</span> <span class="s">&#39;aa&#39;</span>
+<span class="n">_n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">_n</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the resulting configuration dictionary is
+<tt class="docutils literal"><span class="pre">{'aa':</span> <span class="pre">'bb',</span> <span class="pre">'bb':</span> <span class="pre">'bb',</span> <span class="pre">'cc':</span> <span class="pre">{'aa':</span> <span class="pre">'aa',</span> <span class="pre">'rng':</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2]}}</span></tt></p>
+<p>As far as the resulting Config contents is concerned, the following are
+equivalent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">C</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;key&#39;</span><span class="p">:</span><span class="s">&#39;value&#39;</span><span class="p">})</span>
+<span class="n">C</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;key=&#39;value&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There is an important difference though: the second line will make a
+variable key (with value &#8216;value&#8217;) available in subsequent Config read()
+method calls.</p>
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><em>data={}</em>, <em>name=None</em>, <em>removeLocals=False</em><big>)</big></dt>
+<dd><p>Add a dictionary to the Config object.</p>
+<p>The data, if specified, should be a valid Python dict.
+If no name is specified, the data are added to the top dictionary
+and will become attributes.
+If a name is specified, the data are added to the named attribute,
+which should be a dictionary. If the name does not specify a
+dictionary, an empty one is created, deleting the existing attribute.</p>
+<p>If a name is specified, but no data, the effect is to add a new
+empty dictionary (section) with that name.</p>
+<p>If removeLocals is set, keys starting with &#8216;_&#8217; are removed from the
+data before updating the dictionary and not
+included in the config. This behaviour can be changed by setting
+removeLocals to false.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">read</tt><big>(</big><em>fil</em>, <em>debug=False</em><big>)</big></dt>
+<dd><p>Read a configuration from a file or text</p>
+<p><cite>fil</cite> is a sequence of strings. Any type that allows a loop like 
+<tt class="docutils literal"><span class="pre">for</span> <span class="pre">line</span> <span class="pre">in</span> <span class="pre">fil:</span></tt>
+to iterate over its text lines will do. This could be a file type, or
+a multiline text after splitting on &#8216;n&#8217;.</p>
+<p>The function will try to react intelligently if a string is passed as
+argument. If the string contains at least one &#8216;n&#8217;, it will be
+interpreted as a multiline string and be splitted on &#8216;n&#8217;.
+Else, the string will be considered and a file with that name will
+be opened. It is an error if the file does not exist or can not be
+opened.</p>
+<p>The function returns self, so that you can write: cfg = Config().</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">write</tt><big>(</big><em>filename</em>, <em>header='# Config written by pyFormex    -*- PYTHON -*-nn'</em>, <em>trailer='n# End of confign'</em><big>)</big></dt>
+<dd><p>Write the config to the given file</p>
+<p>The configuration data will be written to the file with the given name
+in a text format that is both readable by humans and by the
+Config.read() method.</p>
+<p>The header and trailer arguments are strings that will be added at
+the start and end of the outputfile. Make sure they are valid
+Python statements (or comments) and that they contain the needed
+line separators, if you want to be able to read it back.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">keys</tt><big>(</big><em>descend=True</em><big>)</big></dt>
+<dd><p>Return the keys in the config.</p>
+<p>By default this descends one level of Dicts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">config</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">config.</tt><tt class="descname">formatDict</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Format a dict in Python source representation.</p>
+<p>Each (key,value) pair is formatted on a line of the form:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">key</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>The resulting text is a legal Python script to define the items in the
+dict.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -329,10 +507,10 @@ dict.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="flatkeydb.html" title="66. flatkeydb — Flat Text File Database."
+          <a href="flatkeydb.html" title="71. flatkeydb — Flat Text File Database."
              >next</a> |</li>
         <li class="right" >
-          <a href="collection.html" title="64. collection — Tools for handling collections of elements belonging to multiple parts."
+          <a href="collection.html" title="67. collection — Tools for handling collections of elements belonging to multiple parts."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -342,7 +520,7 @@ dict.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>68. timer — A timer class. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>75. timer — A timer class. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -55,7 +55,7 @@
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="pyFormex FAQ ‘n TRICKS" href="../faq.html" />
-    <link rel="prev" title="67. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" />
+    <link rel="prev" title="73. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -81,7 +81,7 @@
           <a href="../faq.html" title="pyFormex FAQ ‘n TRICKS"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="sendmail.html" title="67. sendmail — sendmail.py: a simple program to send an email message"
+          <a href="sendmail.html" title="73. sendmail — sendmail.py: a simple program to send an email message"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,10 +100,16 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">75. <tt class="docutils literal"><span class="pre">timer</span></tt> &#8212; A timer class.</a></li>
+<li><a class="reference internal" href="#id53">76. <tt class="docutils literal"><span class="pre">timer</span></tt> &#8212; A timer class.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="sendmail.html"
-                        title="previous chapter">67. <tt class="docutils literal docutils literal docutils literal"><span class="pre">sendmail</span></tt> &#8212; sendmail.py: a simple program to send an email message</a></p>
+                        title="previous chapter">73. <tt class="docutils literal docutils literal docutils literal"><span class="pre">sendmail</span></tt> &#8212; sendmail.py: a simple program to send an email message</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../faq.html"
                         title="next chapter">pyFormex FAQ &#8216;n TRICKS</a></p>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-timer">
-<span id="timer-a-timer-class"></span><span id="sec-ref-timer"></span><h1>68. <a class="reference internal" href="#module-timer" title="timer: A timer class."><tt class="xref py py-mod docutils literal"><span class="pre">timer</span></tt></a> &#8212; A timer class.<a class="headerlink" href="#module-timer" title="Permalink to this headline">¶</a></h1>
+<span id="timer-a-timer-class"></span><span id="sec-ref-timer"></span><h1>75. <a class="reference internal" href="#module-timer" title="timer: A timer class."><tt class="xref py py-mod docutils literal"><span class="pre">timer</span></tt></a> &#8212; A timer class.<a class="headerlink" href="#module-timer" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">timer</span></tt></p>
 <dl class="class">
 <dt id="timer.Timer">
@@ -190,6 +196,56 @@ With <tt class="docutils literal"><span class="pre">rounded</span> <span class="
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">timer</span></tt></p>
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>76. <a class="reference internal" href="#module-timer" title="timer: A timer class."><tt class="xref py py-mod docutils literal"><span class="pre">timer</span></tt></a> &#8212; A timer class.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-timer"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">timer</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">timer.</tt><tt class="descname">Timer</tt><big>(</big><em>start=None</em><big>)</big></dt>
+<dd><p>A class for measuring elapsed time.</p>
+<p>A Timer object measures elapsed real time since a specified time, which
+by default is the time of the creation of the Timer.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>start</cite>: a datetime object. If not specified, the time of the creation
+of the Timer is used.</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">reset</tt><big>(</big><em>start=None</em><big>)</big></dt>
+<dd><p>(Re)Start the timer.</p>
+<p>Sets the start time of the timer to the specified value, or to
+the current time by default.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>start</cite>: a datetime object. If not specified, the current time as
+returned by datetime.now() is used.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">read</tt><big>(</big><em>reset=False</em><big>)</big></dt>
+<dd><p>Read the timer.</p>
+<p>Returns the elapsed time since the last reset (or the creation
+of the timer) as a datetime.timedelta object.</p>
+<p>If reset=True, the timer is reset to the time of reading.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">seconds</tt><big>(</big><em>reset=False</em>, <em>rounded=True</em><big>)</big></dt>
+<dd><p>Return the timer readings in seconds.</p>
+<p>The default return value is a rounded integer number of seconds.
+With <tt class="docutils literal"><span class="pre">rounded</span> <span class="pre">==</span> <span class="pre">False</span></tt>, a floating point value with granularity of
+1 microsecond is returned.</p>
+<p>If reset=True, the timer is reset at the time of reading.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">timer</span></tt></p>
+</div>
 
 
           </div>
@@ -210,7 +266,7 @@ With <tt class="docutils literal"><span class="pre">rounded</span> <span class="
           <a href="../faq.html" title="pyFormex FAQ ‘n TRICKS"
              >next</a> |</li>
         <li class="right" >
-          <a href="sendmail.html" title="67. sendmail — sendmail.py: a simple program to send an email message"
+          <a href="sendmail.html" title="73. sendmail — sendmail.py: a simple program to send an email message"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -220,7 +276,7 @@ With <tt class="docutils literal"><span class="pre">rounded</span> <span class="
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

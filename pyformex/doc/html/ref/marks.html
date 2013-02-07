@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>23. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>29. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="24. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
-    <link rel="prev" title="22. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
+    <link rel="next" title="31. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
+    <link rel="prev" title="27. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="31. gluttext — 2D text decorations using GLUT fonts"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="22. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="27. decors — 2D decorations for the OpenGL canvas."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">29. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></li>
+<li><a class="reference internal" href="#id53">30. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="decors.html"
-                        title="previous chapter">22. <tt class="docutils literal docutils literal docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
+                        title="previous chapter">27. <tt class="docutils literal docutils literal docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="gluttext.html"
-                        title="next chapter">24. <tt class="docutils literal docutils literal docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
+                        title="next chapter">31. <tt class="docutils literal docutils literal docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-marks">
-<span id="marks-opengl-marks-for-annotating-3d-actors"></span><span id="sec-ref-marks"></span><h1>23. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#module-marks" title="Permalink to this headline">¶</a></h1>
+<span id="marks-opengl-marks-for-annotating-3d-actors"></span><span id="sec-ref-marks"></span><h1>29. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#module-marks" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
 <dl class="class">
 <dt id="marks.Mark">
@@ -306,6 +312,172 @@
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>30. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-marks"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">Mark</tt><big>(</big><em>pos</em>, <em>nolight=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A 2D drawing inserted at a 3D position of the scene.</p>
+<p>The minimum attributes and methods are:</p>
+<ul class="simple">
+<li><cite>pos</cite> : 3D point where the mark will be drawn</li>
+<li><cite>draw()</cite> : method to draw the mark</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Two viewport axes drawn at a 3D position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A text drawn at a 3D position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">MarkList</tt><big>(</big><em>pos</em>, <em>val</em>, <em>color=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>font='sans'</em>, <em>size=18</em>, <em>leader=''</em>, <em>gravity=''</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A list of numbers drawn at 3D positions.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawpick</tt><big>(</big><big>)</big></dt>
+<dd><p>This functions mimicks the drawing of a number list for picking.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
+</div>
 
 
           </div>
@@ -323,10 +495,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="24. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="31. gluttext — 2D text decorations using GLUT fonts"
              >next</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="22. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="27. decors — 2D decorations for the OpenGL canvas."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -336,7 +508,7 @@
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

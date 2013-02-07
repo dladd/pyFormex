@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>10. elements — Definition of elements. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>13. elements — Definition of elements. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="11. mesh — Finite element meshes in pyFormex." href="mesh.html" />
-    <link rel="prev" title="9. adjacency — A class for storing and handling adjacency tables." href="adjacency.html" />
+    <link rel="next" title="15. mesh — Finite element meshes in pyFormex." href="mesh.html" />
+    <link rel="prev" title="11. adjacency — A class for storing and handling adjacency tables." href="adjacency.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
+          <a href="mesh.html" title="15. mesh — Finite element meshes in pyFormex."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="adjacency.html" title="9. adjacency — A class for storing and handling adjacency tables."
+          <a href="adjacency.html" title="11. adjacency — A class for storing and handling adjacency tables."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">13. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></li>
+<li><a class="reference internal" href="#id53">14. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="adjacency.html"
-                        title="previous chapter">9. <tt class="docutils literal docutils literal docutils literal"><span class="pre">adjacency</span></tt> &#8212; A class for storing and handling adjacency tables.</a></p>
+                        title="previous chapter">11. <tt class="docutils literal docutils literal docutils literal"><span class="pre">adjacency</span></tt> &#8212; A class for storing and handling adjacency tables.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mesh.html"
-                        title="next chapter">11. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
+                        title="next chapter">15. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-elements">
-<span id="elements-definition-of-elements"></span><span id="sec-ref-elements"></span><h1>10. <a class="reference internal" href="#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Definition of elements.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
+<span id="elements-definition-of-elements"></span><span id="sec-ref-elements"></span><h1>13. <a class="reference internal" href="#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Definition of elements.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
 <p>This modules allows for a consistent local numbering scheme of element
 connectivities throughout pyFormex.
 When interfacing with other programs, one should be aware
@@ -248,7 +254,7 @@ If it is positive, it is taken absolute.</p>
 while for a 2D element type, it returns the edges.
 For both types however, getLowerEntities(+1) returns the edges.</p>
 <p>The return value is a dict where the keys are element types
-and the values are connectivity tables. 
+and the values are connectivity tables.
 If reduce == False: there will be only one connectivity table
 and it may include degenerate elements.
 If reduce == True, an attempt is made to reduce the degenerate
@@ -317,7 +323,7 @@ an error is raised.</div></blockquote>
 
 <dl class="function">
 <dt id="elements.elementTypes">
-<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em><big>)</big><a class="headerlink" href="#elements.elementTypes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em>, <em>lower=True</em><big>)</big><a class="headerlink" href="#elements.elementTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the names of available elements.</p>
 <p>If a value is specified for ndim, only the elements with the matching
 dimensionality are returned.</p>
@@ -325,7 +331,199 @@ dimensionality are returned.</p>
 
 <dl class="function">
 <dt id="elements.printElementTypes">
-<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><em>lower=False</em><big>)</big><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print all available element types.</p>
+<p>Prints a list of the names of all available element types,
+grouped by their dimensionality.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>14. <a class="reference internal" href="#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Definition of elements.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-elements"></span><p>This modules allows for a consistent local numbering scheme of element
+connectivities throughout pyFormex.
+When interfacing with other programs, one should be aware
+that conversions may be necessary. Conversions to/from external programs
+should be done by the interface modules.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">ElementType</tt></dt>
+<dd><p>Base class for element type classes.</p>
+<p>Element type data are stored in a class derived from ElementType.
+The derived element type classes contain only static data. No instances
+of these classes should be created. The base class defines the access
+methods, which are all class methods.</p>
+<p>Derived classes should be created by calling the function
+<tt class="xref py py-func docutils literal"><span class="pre">createElementType()</span></tt>.</p>
+<p>Each element is defined by the following attributes:</p>
+<ul class="simple">
+<li><cite>name</cite>: a string. It is capitalized before use, thus all ElementType
+subclasses have a name starting with an uppercase letter. Usually the
+name has a numeric last part, equal to the plexitude of the element.</li>
+<li><cite>vertices</cite>: the natural coordinates of its vertices,</li>
+<li><cite>edges</cite>: a list of edges, each defined by 2 or 3 node numbers,</li>
+<li><cite>faces</cite>: a list of faces, each defined by a list of minimum 3 node
+numbers,</li>
+<li><cite>element</cite>: a list of all node numbers</li>
+<li><cite>drawfaces</cite>: a list of faces to be drawn, if different from faces. This
+is an optional attribute. If defined, it will be used instead of the
+<cite>faces</cite> attribute to draw the element. This can e.g. be used to draw
+approximate representations for higher order elements for which there
+is no correct drawing function.</li>
+</ul>
+<p>The vertices of the elements are defined in a unit space [0,1] in each
+axis direction.</p>
+<p>The elements guarantee a fixed local numbering scheme of the vertices.
+One should however not rely on a specific numbering scheme of edges, faces
+or elements.</p>
+<p>For solid elements, it is guaranteed that the vertices of all faces are
+numbered in a consecutive order spinning positively around the outward
+normal on the face.</p>
+<p>The list of available element types can be found from:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">printElementTypes</span><span class="p">()</span>
+<span class="go">Available Element Types:</span>
+<span class="go">  0-dimensional elements: [&#39;Point&#39;]</span>
+<span class="go">  1-dimensional elements: [&#39;Line2&#39;, &#39;Line3&#39;]</span>
+<span class="go">  2-dimensional elements: [&#39;Tri3&#39;, &#39;Tri6&#39;, &#39;Quad4&#39;, &#39;Quad6&#39;, &#39;Quad8&#39;, &#39;Quad9&#39;]</span>
+<span class="go">  3-dimensional elements: [&#39;Tet4&#39;, &#39;Tet10&#39;, &#39;Tet14&#39;, &#39;Tet15&#39;, &#39;Wedge6&#39;, &#39;Hex8&#39;, &#39;Hex16&#39;, &#39;Hex20&#39;, &#39;Hex27&#39;, &#39;Icosa&#39;]</span>
+</pre></div>
+</div>
+<p>Optional attributes:</p>
+<ul class="simple">
+<li><cite>conversions</cite>: Defines possible strategies for conversion of the element
+to other element types. It is a dictionary with the target element name
+as key, and a list of actions as value. Each action in the list consists
+of a tuple ( action, data ), where action is one of the action identifier
+characters defined below, and data are the data needed for this action.</li>
+</ul>
+<p>Conversion actions:</p>
+<ul class="simple">
+<li>&#8216;m&#8217;: add new nodes to the element by taking the mean values of existing
+nodes. data is a list of tuples containing the nodes numbers whose
+coorrdinates have to be averaged.</li>
+<li>&#8216;s&#8217;: select nodes from the existing ones. data is a list of the node
+numbers to retain in the new element. This can be used to reduce the
+plexitude but also just to reorder the existing nodes.</li>
+<li>&#8216;v&#8217;: perform a conversion via an intermediate type. data is the name of
+the intermediate element type. The current element will first be converted
+to the intermediate type, and then conversion from that type to the
+target will be attempted.</li>
+<li>&#8216;r&#8217;: randomly choose one of the possible conversions. data is a list of
+element names. This can e.g. be used to select randomly between
+different but equivalent conversion paths.</li>
+</ul>
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">nplex</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">nvertices</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">nnodes</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the plexitude of the element</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big></dt>
+<dd><p>Return the type and connectivity table of some element entities.</p>
+<p>The full list of entities with increasing dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to the highest dimensionality (.i.e., that of the element).
+If it is positive, it is taken absolute.</p>
+<p>Thus, for a 3D element type, getEntities(-1) returns the faces,
+while for a 2D element type, it returns the edges.
+For both types however, getLowerEntities(+1) returns the edges.</p>
+<p>The return value is a dict where the keys are element types
+and the values are connectivity tables.
+If reduce == False: there will be only one connectivity table
+and it may include degenerate elements.
+If reduce == True, an attempt is made to reduce the degenerate
+elements. The returned dict may then have multiple entries.</p>
+<p>If the requested entity level is outside the range 0..ndim,
+the return value is None.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">getDrawFaces</tt><big>(</big><em>quadratic=False</em><big>)</big></dt>
+<dd><p>Returns the local connectivity for drawing the element&#8217;s faces</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">toMesh</tt><big>(</big><big>)</big></dt>
+<dd><p>Convert the element type to a Mesh.</p>
+<p>Returns a Mesh with a single element of natural size.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">toFormex</tt><big>(</big><big>)</big></dt>
+<dd><p>Convert the element type to a Formex.</p>
+<p>Returns a Formex with a single element of natural size.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">name</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the lowercase name of the element.</p>
+<p>For compatibility, name() returns the lower case version of the
+ElementType&#8217;s name. To get the real name, use the attribute
+<cite>__name__</cite> or format the ElementType as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">elements.</tt><tt class="descname">elementType</tt><big>(</big><em>name=None</em>, <em>nplex=-1</em><big>)</big></dt>
+<dd><p>Return the requested element type</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>name</cite>: a string (case ignored) with the name of an element.
+If not specified, or the named element does not exist, the default
+element for the specified plexitude is returned.</li>
+<li><cite>nplex</cite>: plexitude of the element. If specified and no element name
+was given, the default element type for this plexitude is returned.</li>
+</ul>
+<p>Returns a subclass of <a class="reference internal" href="#elements.ElementType" title="elements.ElementType"><tt class="xref py py-class docutils literal"><span class="pre">ElementType</span></tt></a>.</p>
+<p>Errors:</p>
+<blockquote>
+<div>If neither <cite>name</cite> nor <cite>nplex</cite> can resolve into an element type,
+an error is raised.</div></blockquote>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="s">&#39;tri3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;tri3&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="n">nplex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;line2&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em>, <em>lower=True</em><big>)</big></dt>
+<dd><p>Return the names of available elements.</p>
+<p>If a value is specified for ndim, only the elements with the matching
+dimensionality are returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><em>lower=False</em><big>)</big></dt>
 <dd><p>Print all available element types.</p>
 <p>Prints a list of the names of all available element types,
 grouped by their dimensionality.</p>
@@ -349,10 +547,10 @@ grouped by their dimensionality.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
+          <a href="mesh.html" title="15. mesh — Finite element meshes in pyFormex."
              >next</a> |</li>
         <li class="right" >
-          <a href="adjacency.html" title="9. adjacency — A class for storing and handling adjacency tables."
+          <a href="adjacency.html" title="11. adjacency — A class for storing and handling adjacency tables."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -362,7 +560,7 @@ grouped by their dimensionality.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

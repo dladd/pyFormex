@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>27. camera — OpenGL camera handling &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>38. camera — OpenGL camera handling &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="28. image — Saving OpenGL renderings to image files." href="image.html" />
-    <link rel="prev" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
+    <link rel="next" title="40. image — Saving OpenGL renderings to image files." href="image.html" />
+    <link rel="prev" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="40. image — Saving OpenGL renderings to image files."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">38. <tt class="docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></li>
+<li><a class="reference internal" href="#id53">39. <tt class="docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="viewport.html"
-                        title="previous chapter">26. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+                        title="previous chapter">36. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="image.html"
-                        title="next chapter">28. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
+                        title="next chapter">40. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-camera">
-<span id="camera-opengl-camera-handling"></span><span id="sec-ref-camera"></span><h1>27. <a class="reference internal" href="#module-camera" title="camera: OpenGL camera handling"><tt class="xref py py-mod docutils literal"><span class="pre">camera</span></tt></a> &#8212; OpenGL camera handling<a class="headerlink" href="#module-camera" title="Permalink to this headline">¶</a></h1>
+<span id="camera-opengl-camera-handling"></span><span id="sec-ref-camera"></span><h1>38. <a class="reference internal" href="#module-camera" title="camera: OpenGL camera handling"><tt class="xref py py-mod docutils literal"><span class="pre">camera</span></tt></a> &#8212; OpenGL camera handling<a class="headerlink" href="#module-camera" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">camera</span></tt></p>
 <dl class="class">
 <dt id="camera.ViewAngles">
@@ -486,6 +492,352 @@ detected. You can optionally force loading the matrix.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>39. <a class="reference internal" href="#module-camera" title="camera: OpenGL camera handling"><tt class="xref py py-mod docutils literal"><span class="pre">camera</span></tt></a> &#8212; OpenGL camera handling<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-camera"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">camera</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">ViewAngles</tt><big>(</big><em>data={'right': (90.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'back': (180.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'iso1': (45.0</em>, <em>135.0</em>, <em>0.0)</em>, <em>'iso0': (45.0</em>, <em>45.0</em>, <em>0.0)</em>, <em>'iso3': (45.0</em>, <em>315.0</em>, <em>0.0)</em>, <em>'iso2': (45.0</em>, <em>225.0</em>, <em>0.0)</em>, <em>'iso5': (-45.0</em>, <em>135.0</em>, <em>0.0)</em>, <em>'iso4': (-45.0</em>, <em>45.0</em>, <em>0.0)</em>, <em>'iso7': (-45.0</em>, <em>315.0</em>, <em>0.0)</em>, <em>'iso6': (-45.0</em>, <em>225.0</em>, <em>0.0)</em>, <em>'front': (0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'bottom': (0.0</em>, <em>-90.0</em>, <em>0.0)</em>, <em>'top': (0.0</em>, <em>90.0</em>, <em>0.0)</em>, <em>'left': (270.0</em>, <em>0.0</em>, <em>0.0)}</em><big>)</big></dt>
+<dd><p>A dict to keep named camera angle settings.</p>
+<p>This class keeps a dictionary of named angle settings. Each value is
+a tuple of (longitude, latitude, twist) camera angles.
+This is a static class which should not need to be instantiated.</p>
+<p>There are seven predefined values: six for looking along global
+coordinate axes, one isometric view.</p>
+<dl class="method">
+<dt>
+<tt class="descname">get</tt><big>(</big><em>name</em><big>)</big></dt>
+<dd><p>Get the angles for a named view.</p>
+<p>Returns a tuple of angles (longitude, latitude, twist) if the
+named view was defined, or None otherwise</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">Camera</tt><big>(</big><em>center=[0.0, 0.0, 0.0], long=0.0, lat=0.0, twist=0.0, dist=1.0</em><big>)</big></dt>
+<dd><p>A camera for OpenGL rendering.</p>
+<p>The Camera class holds all the camera related settings related to
+the rendering of a scene in OpenGL. These include camera position,
+the viewing direction of the camera, and the lens parameters (opening
+angle, front and back clipping planes).
+This class also provides convenient methods to change the settings so as
+to get smooth camera manipulation.</p>
+<p>Camera position and orientation:</p>
+<blockquote>
+<div><p>The camera viewing line is defined by two points: the position of
+the camera and the center of the scene the camera is looking at.
+We use the center of the scene as the origin of a local coordinate
+system to define the camera position. For convenience, this could be
+stored in spherical coordinates, as a distance value and two angles:
+longitude and latitude. Furthermore, the camera can also rotate around
+its viewing line. We can define this by a third angle, the twist.
+From these four values, the needed translation vector and rotation
+matrix for the scene rendering may be calculated.</p>
+<p>Inversely however, we can not compute a unique set of angles from
+a given rotation matrix (this is known as &#8216;gimball lock&#8217;).
+As a result, continuous (smooth) camera rotation by e.g. mouse control
+requires that the camera orientation be stored as the full rotation
+matrix, rather than as three angles. Therefore we store the camera
+position and orientation as follows:</p>
+<ul class="simple">
+<li><cite>ctr</cite>: <cite>[ x,y,z ]</cite> : the reference point of the camera:
+this is always a point on the viewing axis. Usually, it is set to
+the center of the scene you are looking at.</li>
+<li><cite>dist</cite>: distance of the camera to the reference point.</li>
+<li><cite>rot</cite>: a 3x3 rotation matrix, rotating the global coordinate system
+thus that the z-direction is oriented from center to camera.</li>
+</ul>
+<p>These values have influence on the ModelView matrix.</p>
+</div></blockquote>
+<p>Camera lens settings:</p>
+<blockquote>
+<div><p>The lens parameters define the volume that is seen by the camera.
+It is described by the following parameters:</p>
+<ul class="simple">
+<li><cite>fovy</cite>: the vertical lens opening angle (Field Of View Y),</li>
+<li><cite>aspect</cite>: the aspect ratio (width/height) of the lens. The product
+<cite>fovy * aspect</cite> is the horizontal field of view.</li>
+<li><cite>near, far</cite>: the position of the front and back clipping planes.
+They are given as distances from the camera and should both be
+strictly positive. Anything that is closer to the camera than
+the <cite>near</cite> plane or further away than the <cite>far</cite> plane, will not be
+shown on the canvas.</li>
+</ul>
+<p>Camera methods that change these values will not directly change
+the ModelView matrix. The <a class="reference internal" href="#camera.Camera.loadModelView" title="camera.Camera.loadModelView"><tt class="xref py py-meth docutils literal"><span class="pre">loadModelView()</span></tt></a> method has to be called
+explicitely to make the settings active.</p>
+<p>These values have influence on the Projection matrix.</p>
+</div></blockquote>
+<p>Methods that change the camera position, orientation or lens parameters
+will not directly change the related ModelView or Projection matrix.
+They will just flag a change in the camera settings. The changes are
+only activated by a call to the <a class="reference internal" href="#camera.Camera.loadModelView" title="camera.Camera.loadModelView"><tt class="xref py py-meth docutils literal"><span class="pre">loadModelView()</span></tt></a> or
+<a class="reference internal" href="#camera.Camera.loadProjection" title="camera.Camera.loadProjection"><tt class="xref py py-meth docutils literal"><span class="pre">loadProjection()</span></tt></a> method, which will test the flags to see whether
+the corresponding matrix needs a rebuild.</p>
+<p>The default camera is at distance 1.0 of the center point [0.,0.,0.] and
+looking in the -z direction.
+Near and far clipping planes are by default set to 0.1, resp 10 times
+the camera distance.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getCenter</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the camera reference point (the scene center).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getRot</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the camera rotation matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getDist</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the camera distance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">lock</tt><big>(</big><em>onoff=True</em><big>)</big></dt>
+<dd><p>Lock/unlock a camera.</p>
+<p>When a camera is locked, its position and lens parameters can not be
+changed.
+This can e.g. be used in multiple viewports layouts to create fixed
+views from different angles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCenter</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big></dt>
+<dd><p>Set the center of the camera in global cartesian coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAngles</tt><big>(</big><em>angles</em><big>)</big></dt>
+<dd><p>Set the rotation angles.</p>
+<p>angles is either:</p>
+<ul class="simple">
+<li>a tuple of angles (long,lat,twist)</li>
+<li>a named view corresponding to angles in view_angles</li>
+<li>None</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setRotation</tt><big>(</big><em>long</em>, <em>lat</em>, <em>twist=0</em><big>)</big></dt>
+<dd><p>Set the rotation matrix of the camera from three angles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setDist</tt><big>(</big><em>dist</em><big>)</big></dt>
+<dd><p>Set the distance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">report</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a report of the current camera settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">dolly</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Move the camera eye towards/away from the scene center.</p>
+<p>This has the effect of zooming. A value &gt; 1 zooms out,
+a value &lt; 1 zooms in. The resulting enlargement of the view
+will approximately be 1/val.
+A zero value will move the camera to the center of the scene.
+The front and back clipping planes may need adjustment after
+a dolly operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pan</tt><big>(</big><em>val</em>, <em>axis=0</em><big>)</big></dt>
+<dd><p>Rotate the camera around axis through its eye.</p>
+<p>The camera is rotated around an axis through the eye point.
+For axes 0 and 1, this will move the center, creating a panning
+effect. The default axis is parallel to the y-axis, resulting in
+horizontal panning. For vertical panning (axis=1) a convenience
+alias tilt is created.
+For axis = 2 the operation is equivalent to the rotate operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">tilt</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Rotate the camera up/down around its own horizontal axis.</p>
+<p>The camera is rotated around and perpendicular to the plane of the
+y-axis and the viewing axis. This has the effect of a vertical pan.
+A positive value tilts the camera up, shifting the scene down.
+The value is specified in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">move</tt><big>(</big><em>dx</em>, <em>dy</em>, <em>dz</em><big>)</big></dt>
+<dd><p>Move the camera over translation (dx,dy,dz) in global coordinates.</p>
+<p>The center of the camera is moved over the specified translation
+vector. This has the effect of moving the scene in opposite direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rotate</tt><big>(</big><em>val</em>, <em>vx</em>, <em>vy</em>, <em>vz</em><big>)</big></dt>
+<dd><p>Rotate the camera around current camera axes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">saveModelView</tt><big>(</big><big>)</big></dt>
+<dd><p>Save the ModelView matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setModelView</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the ModelView matrix from camera parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">loadModelView</tt><big>(</big><em>m=None</em><big>)</big></dt>
+<dd><p>Load the ModelView matrix.</p>
+<p>There are three uses of this function:</p>
+<ul class="simple">
+<li>Without argument and if the viewing parameters have not changed
+since the last save of the ModelView matrix, this will just reload
+the ModelView matrix from the saved value.</li>
+<li>If an argument is supplied, it should be a legal ModelView matrix
+and that matrix will be loaded (and saved) as the new ModelView
+matrix.</li>
+<li>Else, a new ModelView matrix is set up from the camera parameters,
+and it is loaded and saved.</li>
+</ul>
+<p>In the latter two cases, the new ModelView matrix is saved, and if
+a camera attribute <cite>modelview_callback</cite> has been set, a call to
+this function is done, passing the camera instance as parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">loadCurrentRotation</tt><big>(</big><big>)</big></dt>
+<dd><p>Load the current ModelView matrix with translations canceled out.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">transform</tt><big>(</big><em>v</em><big>)</big></dt>
+<dd><p>Transform a vertex using the currently saved Modelview matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">toWorld</tt><big>(</big><em>v</em>, <em>trl=False</em><big>)</big></dt>
+<dd><p>Transform a vertex from camera to world coordinates.</p>
+<p>The specified vector can have 3 or 4 (homogoneous) components.
+This uses the currently saved rotation matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLens</tt><big>(</big><em>fovy=None</em>, <em>aspect=None</em><big>)</big></dt>
+<dd><p>Set the field of view of the camera.</p>
+<p>We set the field of view by the vertical opening angle fovy
+and the aspect ratio (width/height) of the viewing volume.
+A parameter that is not specified is left unchanged.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetArea</tt><big>(</big><big>)</big></dt>
+<dd><p>Set maximal camera area.</p>
+<p>Resets the camera window area to its maximum values corresponding
+to the fovy setting, symmetrical about the camera axes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setArea</tt><big>(</big><em>hmin</em>, <em>vmin</em>, <em>hmax</em>, <em>vmax</em>, <em>relative=True</em>, <em>center=False</em>, <em>clip=True</em><big>)</big></dt>
+<dd><p>Set the viewable area of the camera.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomArea</tt><big>(</big><em>val=0.5</em>, <em>area=None</em><big>)</big></dt>
+<dd><p>Zoom in/out by shrinking/enlarging the camera view area.</p>
+<p>The zoom factor is relative to the current setting.
+Values smaller than 1.0 zoom in, larger values zoom out.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">transArea</tt><big>(</big><em>dx</em>, <em>dy</em><big>)</big></dt>
+<dd><p>Pan by moving the vamera area.</p>
+<p>dx and dy are relative movements in fractions of the
+current area size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setClip</tt><big>(</big><em>near</em>, <em>far</em><big>)</big></dt>
+<dd><p>Set the near and far clipping planes</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setPerspective</tt><big>(</big><em>on=True</em><big>)</big></dt>
+<dd><p>Set perspective on or off</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">loadProjection</tt><big>(</big><em>force=False</em>, <em>pick=None</em>, <em>keepmode=False</em><big>)</big></dt>
+<dd><p>Load the projection/perspective matrix.</p>
+<p>The caller will have to setup the correct GL environment beforehand.
+No need to set matrix mode though. This function will switch to
+GL_PROJECTION mode before loading the matrix</p>
+<p>If keepmode=True, does not switch back to GL_MODELVIEW mode.</p>
+<p>A pick region can be defined to use the camera in picking mode.
+pick defines the picking region center and size (x,y,w,h).</p>
+<p>This function does it best at autodetecting changes in the lens
+settings, and will only reload the matrix if such changes are
+detected. You can optionally force loading the matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTracking</tt><big>(</big><em>onoff=True</em><big>)</big></dt>
+<dd><p>Enable/disable coordinate tracking using the camera</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">camera</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">camera.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em><big>)</big></dt>
+<dd><p>Return the tan of an angle in degrees.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -503,10 +855,10 @@ detected. You can optionally force loading the matrix.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="40. image — Saving OpenGL renderings to image files."
              >next</a> |</li>
         <li class="right" >
-          <a href="viewport.html" title="26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+          <a href="viewport.html" title="36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -516,7 +868,7 @@ detected. You can optionally force loading the matrix.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

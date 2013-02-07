@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>26. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>36. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="27. camera — OpenGL camera handling" href="camera.html" />
-    <link rel="prev" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
+    <link rel="next" title="38. camera — OpenGL camera handling" href="camera.html" />
+    <link rel="prev" title="33. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="27. camera — OpenGL camera handling"
+          <a href="camera.html" title="38. camera — OpenGL camera handling"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
+          <a href="canvas.html" title="33. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">36. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></li>
+<li><a class="reference internal" href="#id53">37. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="canvas.html"
-                        title="previous chapter">25. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
+                        title="previous chapter">33. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="camera.html"
-                        title="next chapter">27. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+                        title="next chapter">38. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-viewport">
-<span id="viewport-interactive-opengl-canvas-embedded-in-a-qt4-widget"></span><span id="sec-ref-viewport"></span><h1>26. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#module-viewport" title="Permalink to this headline">¶</a></h1>
+<span id="viewport-interactive-opengl-canvas-embedded-in-a-qt4-widget"></span><span id="sec-ref-viewport"></span><h1>36. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#module-viewport" title="Permalink to this headline">¶</a></h1>
 <p>This module implements user interaction with the OpenGL canvas defined in
 module <a class="reference internal" href="canvas.html#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a>.
 <cite>QtCanvas</cite> is a single interactive OpenGL canvas, while <cite>MultiCanvas</cite>
@@ -764,7 +770,7 @@ or after changing  camera position/orientation or lens.</p>
 <dt id="viewport.QtCanvas.begin_2D_drawing">
 <tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
-<p>The 2D drawing operation should be ended by calling end_2D_drawing. 
+<p>The 2D drawing operation should be ended by calling end_2D_drawing.
 It is assumed that you will not try to change/refresh the normal
 3D drawing cycle during this operation.</p>
 </dd></dl>
@@ -1166,6 +1172,1032 @@ The default OpenGL format can be changed by command line options:</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>37. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-viewport"></span><p>This module implements user interaction with the OpenGL canvas defined in
+module <a class="reference internal" href="canvas.html#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a>.
+<cite>QtCanvas</cite> is a single interactive OpenGL canvas, while <cite>MultiCanvas</cite>
+implements a dynamic array of multiple canvases.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">viewport</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CursorShapeHandler</tt><big>(</big><em>widget</em><big>)</big></dt>
+<dd><p>A class for handling the mouse cursor shape on the Canvas.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big></dt>
+<dd><p>Set the cursor shape to shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big></dt>
+<dd><p>Set the cursor shape to shape</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt></dt>
+<dd><p>A class for handling the mouse events on the Canvas.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the mouse function bound to self.button and self.mod</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">QtCanvas</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A canvas for OpenGL rendering.</p>
+<p>This class provides interactive functionality for the OpenGL canvas
+provided by the <a class="reference internal" href="canvas.html#canvas.Canvas" title="canvas.Canvas"><tt class="xref py py-class docutils literal"><span class="pre">canvas.Canvas</span></tt></a> class.</p>
+<p>Interactivity is highly dependent on Qt4. Putting the interactive
+functions in a separate class makes it esier to use the Canvas class
+in non-interactive situations or combining it with other GUI toolsets.</p>
+<p>The QtCanvas constructor may have positional and keyword arguments. The
+positional arguments are passed to the QtOpenGL.QGLWidget constructor,
+while the keyword arguments are passed to the canvas.Canvas constructor.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getSize</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the size of this canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">changeSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big></dt>
+<dd><p>Resize the canvas to (width x height).</p>
+<p>If a negative value is given for either width or height,
+the corresponding size is set equal to the maximum visible size
+(the size of the central widget of the main window).</p>
+<p>Note that this may not have the expected result when multiple
+viewports are used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetOptions</tt><big>(</big><big>)</big></dt>
+<dd><p>Reset the Drawing options to some defaults</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setOptions</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Set the Drawing options to some values</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big></dt>
+<dd><p>Set the cursor shape to shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big></dt>
+<dd><p>Set the cursor shape to shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the mouse function bound to self.button and self.mod</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouse_rectangle_zoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Process mouse events during interactive rectangle zooming.</p>
+<p>On PRESS, record the mouse position.
+On MOVE, create a rectangular zoom window.
+On RELEASE, zoom to the picked rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setPickable</tt><big>(</big><em>nrs=None</em><big>)</big></dt>
+<dd><p>Set the list of pickable actors</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">start_selection</tt><big>(</big><em>mode</em>, <em>filter</em><big>)</big></dt>
+<dd><p>Start an interactive picking mode.</p>
+<p>If selection mode was already started, mode is disregarded and
+this can be used to change the filter method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">wait_selection</tt><big>(</big><big>)</big></dt>
+<dd><p>Wait for the user to interactively make a selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">finish_selection</tt><big>(</big><big>)</big></dt>
+<dd><p>End an interactive picking mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">accept_selection</tt><big>(</big><em>clear=False</em><big>)</big></dt>
+<dd><p>Accept or cancel an interactive picking mode.</p>
+<p>If clear == True, the current selection is cleared.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cancel_selection</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel an interactive picking mode and clear the selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>oneshot=False</em>, <em>func=None</em>, <em>filter=None</em><big>)</big></dt>
+<dd><p>Interactively pick objects from the viewport.</p>
+<ul>
+<li><p class="first"><cite>mode</cite>: defines what to pick : one of
+<tt class="docutils literal"><span class="pre">['actor','element','point','number','edge']</span></tt></p>
+</li>
+<li><p class="first"><cite>oneshot</cite>: if True, the function returns as soon as the user ends
+a picking operation. The default is to let the user
+modify his selection and only to return after an explicit
+cancel (ESC or right mouse button).</p>
+</li>
+<li><p class="first"><cite>func</cite>: if specified, this function will be called after each
+atomic pick operation. The Collection with the currently selected
+objects is passed as an argument. This can e.g. be used to highlight
+the selected objects during picking.</p>
+</li>
+<li><p class="first"><cite>filter</cite>: defines what elements to retain from the selection: one of
+<tt class="docutils literal"><span class="pre">[None,'single','closest,'connected']</span></tt>.</p>
+<ul>
+<li><p class="first">None (default) will return the complete selection.</p>
+</li>
+<li><p class="first">&#8216;closest&#8217; will only keep the element closest to the user.</p>
+</li>
+<li><p class="first">&#8216;connected&#8217; will only keep elements connected to
+- the closest element (set picked)
+- what is already in the selection (add picked).</p>
+<p>Currently this only works when picking mode is &#8216;element&#8217; and
+for Actors having a partitionByConnection method.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>When the picking operation is finished, the selection is returned.
+The return value is always a Collection object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pickNumbers</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Go into number picking mode and return the selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">idraw</tt><big>(</big><em>mode='point'</em>, <em>npoints=-1</em>, <em>zplane=0.0</em>, <em>func=None</em>, <em>coords=None</em>, <em>preview=False</em><big>)</big></dt>
+<dd><p>Interactively draw on the canvas.</p>
+<p>This function allows the user to interactively create points in 3D
+space and collects the subsequent points in a Coords object. The
+interpretation of these points is left to the caller.</p>
+<ul class="simple">
+<li><cite>mode</cite>: one of the drawing modes, specifying the kind of objects you
+want to draw. This is passed to the specified <cite>func</cite>.</li>
+<li><cite>npoints</cite>: If -1, the user can create any number of points. When &gt;=0,
+the function will return when the total number of points in the
+collection reaches the specified value.</li>
+<li><cite>zplane</cite>: the depth of the z-plane on which the 2D drawing is done.</li>
+<li><cite>func</cite>: a function that is called after each atomic drawing
+operation. It is typically used to draw a preview using the current
+set of points. The function is passed the current Coords and the
+<cite>mode</cite> as arguments.</li>
+<li><cite>coords</cite>: an initial set of coordinates to which the newly created
+points should be added. If specified, <cite>npoints</cite> also counts these
+initial points.</li>
+<li><cite>preview</cite>: <strong>Experimental</strong> If True, the preview funcion will also
+be called during mouse movement with a pressed button, allowing to
+preview the result before a point is created.</li>
+</ul>
+<p>The drawing operation is finished when the number of requested points
+has been reached, or when the user clicks the right mouse button or
+hits &#8216;ENTER&#8217;.
+The return value is a (n,3) shaped Coords array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">start_draw</tt><big>(</big><em>mode</em>, <em>zplane</em>, <em>coords</em><big>)</big></dt>
+<dd><p>Start an interactive drawing mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">finish_draw</tt><big>(</big><big>)</big></dt>
+<dd><p>End an interactive drawing mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">accept_draw</tt><big>(</big><em>clear=False</em><big>)</big></dt>
+<dd><p>Cancel an interactive drawing mode.</p>
+<p>If clear == True, the current drawing is cleared.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cancel_draw</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel an interactive drawing mode and clear the drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouse_draw</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Process mouse events during interactive drawing.</p>
+<p>On PRESS, do nothing.
+On MOVE, do nothing.
+On RELEASE, add the point to the point list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">start_drawing</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Start an interactive line drawing mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">wait_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Wait for the user to interactively draw a line.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">finish_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>End an interactive drawing mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">accept_drawing</tt><big>(</big><em>clear=False</em><big>)</big></dt>
+<dd><p>Cancel an interactive drawing mode.</p>
+<p>If clear == True, the current drawing is cleared.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">cancel_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel an interactive drawing mode and clear the drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">edit_drawing</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Edit an interactive drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big></dt>
+<dd><p>Interactively draw lines on the canvas.</p>
+<ul class="simple">
+<li>oneshot: if True, the function returns as soon as the user ends
+a drawing operation. The default is to let the user
+draw multiple lines and only to return after an explicit
+cancel (ESC or right mouse button).</li>
+<li>func: if specified, this function will be called after each
+atomic drawing operation. The current drawing is passed as
+an argument. This can e.g. be used to show the drawing.</li>
+</ul>
+<p>When the drawing operation is finished, the drawing is returned.
+The return value is a (n,2,2) shaped array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">dynarot</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Perform dynamic rotation operation.</p>
+<p>This function processes mouse button events controlling a dynamic
+rotation operation. The action is one of PRESS, MOVE or RELEASE.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">dynapan</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Perform dynamic pan operation.</p>
+<p>This function processes mouse button events controlling a dynamic
+pan operation. The action is one of PRESS, MOVE or RELEASE.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">dynazoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Perform dynamic zoom operation.</p>
+<p>This function processes mouse button events controlling a dynamic
+zoom operation. The action is one of PRESS, MOVE or RELEASE.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">wheel_zoom</tt><big>(</big><em>delta</em><big>)</big></dt>
+<dd><p>Zoom by rotating a wheel over an angle delta</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">emit_done</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Emit a DONE event by clicking the mouse.</p>
+<p>This is equivalent to pressing the ENTER button.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">emit_cancel</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Emit a CANCEL event by clicking the mouse.</p>
+<p>This is equivalent to pressing the ESC button.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_state_rect</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
+<dd><p>Store the pos and draw a rectangle to it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouse_pick</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Process mouse events during interactive picking.</p>
+<p>On PRESS, record the mouse position.
+On MOVE, create a rectangular picking window.
+On RELEASE, pick the objects inside the rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_actors</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the list of actors inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_parts</tt><big>(</big><em>obj_type</em>, <em>max_objects</em>, <em>store_closest=False</em><big>)</big></dt>
+<dd><p>Set the list of actor parts inside the pick_window.</p>
+<p>obj_type can be &#8216;element&#8217;, &#8216;face&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;.
+&#8216;face&#8217; and &#8216;edge&#8217; are only available for Mesh type geometry.
+max_objects specifies the maximum number of objects</p>
+<p>The picked object numbers are stored in self.picked.
+If store_closest==True, the closest picked object is stored in as a
+tuple ( [actor,object] ,distance) in self.picked_closest</p>
+<p>A list of actors from which can be picked may be given.
+If so, the resulting keys are indices in this list.
+By default, the full actor list is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_elements</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the list of actor elements inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_points</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the list of actor points inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_edges</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the list of actor edges inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_faces</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the list of actor faces inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pick_numbers</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the numbers inside the pick_window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_state_line</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
+<dd><p>Store the pos and draw a line to it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouse_draw_line</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big></dt>
+<dd><p>Process mouse events during interactive drawing.</p>
+<p>On PRESS, record the mouse position.
+On MOVE, draw a line.
+On RELEASE, add the line to the drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mousePressEvent</tt><big>(</big><em>e</em><big>)</big></dt>
+<dd><p>Process a mouse press event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouseMoveEvent</tt><big>(</big><em>e</em><big>)</big></dt>
+<dd><p>Process a mouse move event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mouseReleaseEvent</tt><big>(</big><em>e</em><big>)</big></dt>
+<dd><p>Process a mouse release event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">wheelEvent</tt><big>(</big><em>e</em><big>)</big></dt>
+<dd><p>Process a wheel event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">enable_lighting</tt><big>(</big><em>state</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">has_lighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the status of the lighting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big></dt>
+<dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big></dt>
+<dd><p>Set the global ambient lighting for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big></dt>
+<dd><p>Set the default material light properties for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big></dt>
+<dd><p>Change the light parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big></dt>
+<dd><p>Set the rendering mode.</p>
+<p>This sets or changes the rendermode and lighting attributes.
+If lighting is not specified, it is set depending on the rendermode.</p>
+<p>If the canvas has not been initialized, this merely sets the
+attributes self.rendermode and self.settings.lighting.
+If the canvas was already initialized (it has a camera), and one of
+the specified settings is fdifferent from the existing, the new mode
+is set, the canvas is re-initialized according to the newly set mode,
+and everything is redrawn with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setToggle</tt><big>(</big><em>attr</em>, <em>state</em><big>)</big></dt>
+<dd><p>Set or toggle a boolean settings attribute</p>
+<p>Furthermore, if a Canvas method do_ATTR is defined, it will be called
+with the old and new toggle state as a parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_lighting</tt><big>(</big><em>state</em>, <em>oldstate=None</em><big>)</big></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big></dt>
+<dd><p>Set the linewidth for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big></dt>
+<dd><p>Set the linestipple for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big></dt>
+<dd><p>Set the size for point drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBackground</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big></dt>
+<dd><p>Set the color(s) and image.</p>
+<p>Change the background settings according to the specified parameters
+and set the canvas background accordingly. Only (and all) the specified
+parameters get a new value.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: either a single color, a list of two colors or a list of
+four colors.</li>
+<li><cite>image</cite>: an image to be set.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">createBackground</tt><big>(</big><big>)</big></dt>
+<dd><p>Create the background object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, a triade of global axes is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">clear</tt><big>(</big><big>)</big></dt>
+<dd><p>Clear the canvas to the background color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big></dt>
+<dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">overrideMode</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Override some settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glinit</tt><big>(</big><big>)</big></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to self.settings:
+- self.rendermode: one of
+- self.lighting</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">glupdate</tt><big>(</big><big>)</big></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">display</tt><big>(</big><big>)</big></dt>
+<dd><p>(Re)display all the actors in the scene.</p>
+<p>This should e.g. be used when actors are added to the scene,
+or after changing  camera position/orientation or lens.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
+<p>The 2D drawing operation should be ended by calling end_2D_drawing.
+It is assumed that you will not try to change/refresh the normal
+3D drawing cycle during this operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big></dt>
+<dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big></dt>
+<dd><p>Set the bounding box of the scene you want to be visible.</p>
+<p>bbox is a (2,3) shaped array specifying a bounding box.
+If no bbox is given, the bounding box of all the actors in the
+scene is used, or if the scene is empty, a default unit bounding box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addActor</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 3D actor or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addHighlight</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a highlight or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAnnotation</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add an annotation or a list thereof to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addDecoration</tt><big>(</big><em>itemlist</em><big>)</big></dt>
+<dd><p>Add a 2D decoration or a list thereof to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Add any  item or list.</p>
+<p>This will add any actor/annotation/decoration item or a list
+of any such items  to the canvas. This is the prefered method to add
+an item to the canvas, because it makes sure that each item is added
+to the proper list. It can however not be used to add highlights.</p>
+<p>If you have a long list of a single type, it is more efficient to
+use one of the type specific add methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeActor</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 3D actor or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all actors from the scene.
+This also resets the bounding box for the canvas autozoom.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeHighlight</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a highlight or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all highlights from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove an annotation or a list thereof from the 3D scene.</p>
+<p>Without argument, removes all annotations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeDecoration</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a 2D decoration or a list thereof from the canvas.</p>
+<p>Without argument, removes all decorations from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeAny</tt><big>(</big><em>itemlist=None</em><big>)</big></dt>
+<dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
+<p>This will remove the items from any of the canvas lists in which the
+item appears.
+itemlist can also be a single item instead of a list.
+If None is specified, all items from all lists will be removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Redraw all actors in the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big></dt>
+<dd><p>Sets the camera looking under angles at bbox.</p>
+<p>This function sets the camera parameters to view the specified
+bbox volume from the specified viewing direction.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>bbox</cite>: the bbox of the volume looked at</li>
+<li><cite>angles</cite>: the camera angles specifying the viewing direction.
+It can also be a string, the key of one of the predefined
+camera directions</li>
+</ul>
+<p>If no angles are specified, the viewing direction remains constant.
+The scene center (camera focus point), camera distance, fovy and
+clipping planes are adjusted to make the whole bbox viewed from the
+specified direction fit into the screen.</p>
+<p>If no bbox is specified, the following remain constant:
+the center of the scene, the camera distance, the lens opening
+and aspect ratio, the clipping planes. In other words the camera
+is moving on a spherical surface and keeps focusing on the same
+point.</p>
+<p>If both are specified, then first the scene center is set,
+then the camera angles, and finally the camera distance.</p>
+<p>In the current implementation, the lens fovy and aspect are not
+changed by this function. Zoom adjusting is performed solely by
+changing the camera distance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big></dt>
+<dd><p>Dolly zooming.</p>
+<p>Zooms in with a factor <cite>f</cite> by moving the camera closer
+to the scene. This does noet change the camera&#8217;s FOV setting.
+It will change the perspective view though.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big></dt>
+<dd><p>Rectangle zooming.</p>
+<p>Zooms in/out by changing the area and position of the visible
+part of the lens.
+Unlike zoom(), this does not change the perspective view.</p>
+<p><cite>x0,y0,x1,y1</cite> are pixel coordinates of the lower left and upper right
+corners of the area of the lens that will be mapped on the
+canvas viewport.
+Specifying values that lead to smaller width/height will zoom in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomCentered</tt><big>(</big><em>w</em>, <em>h</em>, <em>x=None</em>, <em>y=None</em><big>)</big></dt>
+<dd><p>Rectangle zooming with specified center.</p>
+<p>This is like zoomRectangle, but the zoom rectangle is specified
+by its center and size, which may be more appropriate when using
+off-center zooming.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big></dt>
+<dd><p>Rectangle zoom to make full scene visible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Save the current OpenGL buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big></dt>
+<dd><p>Show the saved buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>ofs=0</em>, <em>color=(1.0</em>, <em>0.2</em>, <em>0.4)</em><big>)</big></dt>
+<dd><p>Draw the focus rectangle.</p>
+<p>The specified width is HALF of the line width</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
+<dd><p>draw the cursor</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">NewiMultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
+<p>The MultiCanvas implements a central QT widget containing one or more
+QtCanvas widgets.</p>
+<dl class="method">
+<dt>
+<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big></dt>
+<dd><p>Change the lay-out of the viewports on the OpenGL widget.</p>
+<p>nvps: number of viewports
+ncols: number of columns
+nrows: number of rows
+pos: list holding the position and span of each viewport
+[[row,col,rowspan,colspan],...]
+rstretch: list holding the stretch factor for each row
+cstretch: list holding the stretch factor for each column
+(rows/columns with a higher stretch factor take more of the
+available space)
+Each of this parameters is optional.</p>
+<p>If pos is given, it specifies all viewports and nvps, nrows and ncols
+are disregarded.</p>
+<p>Else:</p>
+<p>If nvps is given, it specifies the number of viewports in the layout.
+Else, nvps will be set to the current number of viewports.</p>
+<p>If ncols is an int, viewports are laid out rowwise over ncols
+columns and nrows is ignored. If ncols is None and nrows is an int,
+viewports are laid out columnwise over nrows rows.</p>
+<p>If nvps is not equal to the current number of viewports, viewports
+will be added or removed to match the requested number.</p>
+<p>By default they are laid out rowwise over two columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">createView</tt><big>(</big><em>shared=None</em><big>)</big></dt>
+<dd><p>Create a new viewport</p>
+<p>If another QtCanvas instance is passed, both will share the same
+display lists and textures.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addView</tt><big>(</big><em>view</em>, <em>row</em>, <em>col</em>, <em>rowspan=1</em>, <em>colspan=1</em><big>)</big></dt>
+<dd><p>Add a new viewport and make it visible</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeView</tt><big>(</big><em>view=None</em><big>)</big></dt>
+<dd><p>Remove a view from the canvas</p>
+<p>If view is None, the last one is removed.
+You can not remove a view when there is only one left.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCurrent</tt><big>(</big><em>view</em><big>)</big></dt>
+<dd><p>Make the specified viewport the current one.</p>
+<p>view can be either a viewport or viewport number.
+The current viewport is the one that will be used for drawing
+operations. This may be different from the viewport having GUI
+focus (pf.canvas).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setStretch</tt><big>(</big><em>rowstretch</em>, <em>colstretch</em><big>)</big></dt>
+<dd><p>Set the row and column stretch factors.</p>
+<p>rowstretch and colstretch are lists of stretch factors to be applied
+on the subsequent rows/columns. If the lists are shorter than the
+number of rows/columns, the</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big></dt>
+<dd><p>Link viewport vp to to</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">FramedGridLayout</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>A QtGui.QGridLayout where each added widget is framed.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">MultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big></dt>
+<dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
+<p>The MultiCanvas implements a central QT widget containing one or more
+QtCanvas widgets.</p>
+<dl class="method">
+<dt>
+<tt class="descname">newView</tt><big>(</big><em>shared=None</em>, <em>settings=None</em><big>)</big></dt>
+<dd><p>Create a new viewport</p>
+<p>If another QtCanvas instance is passed, both will share the same
+display lists and textures.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">addView</tt><big>(</big><big>)</big></dt>
+<dd><p>Add a new viewport to the widget</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setCurrent</tt><big>(</big><em>canv</em><big>)</big></dt>
+<dd><p>Make the specified viewport the current one.</p>
+<p>canv can be either a viewport or viewport number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">viewIndex</tt><big>(</big><em>view</em><big>)</big></dt>
+<dd><p>Return the index of the specified view</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">showWidget</tt><big>(</big><em>w</em><big>)</big></dt>
+<dd><p>Show the view w.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big></dt>
+<dd><p>Change the lay-out of the viewports on the OpenGL widget.</p>
+<p>nvps: number of viewports
+ncols: number of columns
+nrows: number of rows
+pos: list holding the position and span of each viewport
+[[row,col,rowspan,colspan],...]
+rstretch: list holding the stretch factor for each row
+cstretch: list holding the stretch factor for each column
+(rows/columns with a higher stretch factor take more of the
+available space)
+Each of this parameters is optional.</p>
+<p>If a number of viewports is given, viewports will be added
+or removed to match the requested number.
+By default they are laid out rowwise over two columns.</p>
+<p>If ncols is an int, viewports are laid out rowwise over ncols
+columns and nrows is ignored. If ncols is None and nrows is an int,
+viewports are laid out columnwise over nrows rows. Alternatively,
+the pos argument can be used to specify the layout of the viewports.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big></dt>
+<dd><p>Link viewport vp to to</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">viewport</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">dotpr</tt><big>(</big><em>v</em>, <em>w</em><big>)</big></dt>
+<dd><p>Return the dot product of vectors v and w</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">length</tt><big>(</big><em>v</em><big>)</big></dt>
+<dd><p>Return the length of the vector v</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">projection</tt><big>(</big><em>v</em>, <em>w</em><big>)</big></dt>
+<dd><p>Return the (signed) length of the projection of vector v on vector w.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">setOpenGLFormat</tt><big>(</big><big>)</big></dt>
+<dd><p>Set the correct OpenGL format.</p>
+<p>On a correctly installed system, the default should do well.
+The default OpenGL format can be changed by command line options:</p>
+<div class="highlight-python"><pre>--dri   : use the Direct Rendering Infrastructure, if available
+--nodri : do not use the DRI
+--alpha : enable the alpha buffer </pre>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">OpenGLFormat</tt><big>(</big><em>fmt=None</em><big>)</big></dt>
+<dd><p>Some information about the OpenGL format.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -1183,10 +2215,10 @@ The default OpenGL format can be changed by command line options:</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="27. camera — OpenGL camera handling"
+          <a href="camera.html" title="38. camera — OpenGL camera handling"
              >next</a> |</li>
         <li class="right" >
-          <a href="canvas.html" title="25. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
+          <a href="canvas.html" title="33. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -1196,7 +2228,7 @@ The default OpenGL format can be changed by command line options:</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

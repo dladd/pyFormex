@@ -103,6 +103,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Using Widgets</a><ul>
+<li><a class="reference internal" href="#the-askitems-functions">The askItems functions</a></li>
 <li><a class="reference internal" href="#the-input-dialog">The input dialog</a></li>
 <li><a class="reference internal" href="#the-user-menu">The user menu</a></li>
 <li><a class="reference internal" href="#other-widgets">Other widgets</a></li>
@@ -162,6 +163,23 @@
 pyFormex and how to use them to quickly create a specialized
 graphical interface for you application.</p>
 </div>
+<p>The pyFormex Graphical User Interface (GUI) is built on the QT4 toolkit,
+accessed from Python by PyQt4. Since the user has full access to all
+underlying libraries, he can use any part from QT4 to construct the
+most sophisticated user interface and change the pyFormex GUI like
+he wants and sees fit. However, properly programming a user interface is
+a difficult and tedious task, and many normal users do not have the knowledge
+or time to do this. pyFormex provides a simplified framework to access the
+QT4 tools in a way that complex and sophisticated user dialogs can be built
+with a minimum effort. User dialogs are create automatically from a very
+limited input. Specialized input widgets are included dependent on the
+type of input asked from the user. And when this simplified framework falls
+short for your needs, you can always access the QT4 functions directly to
+add what you want.</p>
+<div class="section" id="the-askitems-functions">
+<span id="sec-input-askitems"></span><h2>The askItems functions<a class="headerlink" href="#the-askitems-functions" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-func docutils literal"><span class="pre">askItems()</span></tt> function reduces the effort needed to create an interactive dialog asking input data from the user.</p>
+</div>
 <div class="section" id="the-input-dialog">
 <span id="sec-input-dialog"></span><h2>The input dialog<a class="headerlink" href="#the-input-dialog" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -202,7 +220,7 @@ graphical interface for you application.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

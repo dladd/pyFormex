@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>56. tetgen — Interface with tetgen &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>81. tetgen — Interface with tetgen &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="57. tools — tools.py" href="tools.html" />
-    <link rel="prev" title="55. sectionize — sectionize.py" href="sectionize.html" />
+    <link rel="next" title="84. tools — tools.py" href="tools.html" />
+    <link rel="prev" title="79. sectionize — sectionize.py" href="sectionize.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tools.html" title="57. tools — tools.py"
+          <a href="tools.html" title="84. tools — tools.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="sectionize.html" title="55. sectionize — sectionize.py"
+          <a href="sectionize.html" title="79. sectionize — sectionize.py"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">81. <tt class="docutils literal"><span class="pre">tetgen</span></tt> &#8212; Interface with tetgen</a></li>
+<li><a class="reference internal" href="#id53">82. <tt class="docutils literal"><span class="pre">tetgen</span></tt> &#8212; Interface with tetgen</a></li>
+<li><a class="reference internal" href="#id107">83. <tt class="docutils literal"><span class="pre">tetgen</span></tt> &#8212; Interface with tetgen</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="sectionize.html"
-                        title="previous chapter">55. <tt class="docutils literal docutils literal docutils literal"><span class="pre">sectionize</span></tt> &#8212; sectionize.py</a></p>
+                        title="previous chapter">79. <tt class="docutils literal docutils literal docutils literal"><span class="pre">sectionize</span></tt> &#8212; sectionize.py</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="tools.html"
-                        title="next chapter">57. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
+                        title="next chapter">84. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +148,7 @@
           <div class="body">
             
   <div class="section" id="module-tetgen">
-<span id="tetgen-interface-with-tetgen"></span><span id="sec-ref-tetgen"></span><h1>56. <a class="reference internal" href="#module-tetgen" title="tetgen: Interface with tetgen"><tt class="xref py py-mod docutils literal"><span class="pre">tetgen</span></tt></a> &#8212; Interface with tetgen<a class="headerlink" href="#module-tetgen" title="Permalink to this headline">¶</a></h1>
+<span id="tetgen-interface-with-tetgen"></span><span id="sec-ref-tetgen"></span><h1>81. <a class="reference internal" href="#module-tetgen" title="tetgen: Interface with tetgen"><tt class="xref py py-mod docutils literal"><span class="pre">tetgen</span></tt></a> &#8212; Interface with tetgen<a class="headerlink" href="#module-tetgen" title="Permalink to this headline">¶</a></h1>
 <p>A collection of functions to read/write tetgen files and to run the
 tetgen program</p>
 <p>tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
@@ -331,6 +338,388 @@ and create a new approximation of the surface as a by-product.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>82. <a class="reference internal" href="#module-tetgen" title="tetgen: Interface with tetgen"><tt class="xref py py-mod docutils literal"><span class="pre">tetgen</span></tt></a> &#8212; Interface with tetgen<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-tetgen"></span><p>A collection of functions to read/write tetgen files and to run the
+tetgen program</p>
+<p>tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
+See <a class="reference external" href="http://tetgen.org">http://tetgen.org</a></p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNodeFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .node file.</p>
+<p>Returns a tuple as described in readNodesBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readEleFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .ele file.</p>
+<p>Returns a tuple as described in readElemsBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readFaceFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .face file.</p>
+<p>Returns a tuple as described in readFacesBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSmeshFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .smesh file.</p>
+<p>Returns an array of triangle elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readPolyFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .poly file.</p>
+<p>Returns an array of triangle elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSurface</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen surface from a .node/.face file pair.</p>
+<p>The given filename is either the .node or .face file.
+Returns a tuple of (nodes,elems).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">skipComments</tt><big>(</big><em>fil</em><big>)</big></dt>
+<dd><p>Skip comments and blank lines on a tetgen file.</p>
+<p>Reads from a file until the first non-comment and non-empty line.
+Then returns the non-empty, non-comment line, stripped from possible
+trailing comments.
+Returns None if end of file is reached.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">stripLine</tt><big>(</big><em>line</em><big>)</big></dt>
+<dd><p>Strip blanks, newline and comments from a line of text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">getInts</tt><big>(</big><em>line</em>, <em>nint</em><big>)</big></dt>
+<dd><p>Read a number of ints from a line, adding zero for omitted values.</p>
+<p>line is a string with b;anks separated integer values.
+Returns a list of nint integers. The trailing ones are set to zero
+if the strings contains less values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">addElem</tt><big>(</big><em>elems</em>, <em>nrs</em>, <em>e</em>, <em>n</em>, <em>nplex</em><big>)</big></dt>
+<dd><p>Add an element to a collection.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNodesBlock</tt><big>(</big><em>fil</em>, <em>npts</em>, <em>ndim</em>, <em>nattr</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen nodes block.</p>
+<p>Returns a tuple with:</p>
+<ul class="simple">
+<li>coords: Coords array with nodal coordinates</li>
+<li>nrs: node numbers</li>
+<li>attr: node attributes</li>
+<li>bmrk: node boundary marker</li>
+</ul>
+<p>The last two may be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readElemsBlock</tt><big>(</big><em>fil</em>, <em>nelems</em>, <em>nplex</em>, <em>nattr</em><big>)</big></dt>
+<dd><p>Read a tetgen elems block.</p>
+<p>Returns a tuple with:</p>
+<ul class="simple">
+<li>elems: Connectivity of type &#8216;tet4&#8217; or &#8216;tet10&#8217;</li>
+<li>nrs: the element numbers</li>
+<li>attr: the element attributes</li>
+</ul>
+<p>The last can be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readFacesBlock</tt><big>(</big><em>fil</em>, <em>nelems</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen faces block.</p>
+<p>Returns a a tuple with:</p>
+<ul class="simple">
+<li>elems: Connectivity of type &#8216;tri3&#8217;</li>
+<li>nrs: face numbers</li>
+<li>bmrk: face boundary marker</li>
+</ul>
+<p>The last can be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSmeshFacetsBlock</tt><big>(</big><em>fil</em>, <em>nfacets</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen .smesh facets bock.</p>
+<p>Returns a tuple of dictionaries with plexitudes as keys:</p>
+<ul class="simple">
+<li>elems: for each plexitude a Connectivity array</li>
+<li>nrs: for each plexitude a list of element numbers in corresponding elems</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNeigh</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .neigh file.</p>
+<p>Returns an arrays containing the tetrahedra neighbours:</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>offset=0</em><big>)</big></dt>
+<dd><p>Write a tetgen .node file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSmesh</tt><big>(</big><em>fn</em>, <em>facets</em>, <em>coords=None</em>, <em>holes=None</em>, <em>regions=None</em><big>)</big></dt>
+<dd><p>Write a tetgen .smesh file.</p>
+<p>Currently it only writes the facets of a triangular surface mesh.
+Coords should be written independently to a .node file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSurface</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big></dt>
+<dd><p>Write a tetgen surface model to .node and .smesh files.</p>
+<p>The provided file name is the .node or the .smesh filename.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">nextFilename</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Returns the next file name in a family of tetgen file names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">runTetgen</tt><big>(</big><em>fn</em>, <em>options=''</em><big>)</big></dt>
+<dd><p>Run tetgen mesher on the specified file.</p>
+<p>The input file is a closed triangulated surface.
+tetgen will generate a volume tetraeder mesh inside the surface,
+and create a new approximation of the surface as a by-product.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readTetgen</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read and draw a tetgen file.</p>
+<p>This is an experimental function for the geometry import menu.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">checkSelfIntersectionsWithTetgen</tt><big>(</big><em>self</em>, <em>verbose=False</em><big>)</big></dt>
+<dd><p>check self intersections using tetgen</p>
+<p>Returns couples of intersecting triangles</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>83. <a class="reference internal" href="#module-tetgen" title="tetgen: Interface with tetgen"><tt class="xref py py-mod docutils literal"><span class="pre">tetgen</span></tt></a> &#8212; Interface with tetgen<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-tetgen"></span><p>A collection of functions to read/write tetgen files and to run the
+tetgen program</p>
+<p>tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
+See <a class="reference external" href="http://tetgen.org">http://tetgen.org</a></p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNodeFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .node file.</p>
+<p>Returns a tuple as described in readNodesBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readEleFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .ele file.</p>
+<p>Returns a tuple as described in readElemsBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readFaceFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .face file.</p>
+<p>Returns a tuple as described in readFacesBlock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSmeshFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .smesh file.</p>
+<p>Returns an array of triangle elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readPolyFile</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .poly file.</p>
+<p>Returns an array of triangle elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSurface</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen surface from a .node/.face file pair.</p>
+<p>The given filename is either the .node or .face file.
+Returns a tuple of (nodes,elems).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">skipComments</tt><big>(</big><em>fil</em><big>)</big></dt>
+<dd><p>Skip comments and blank lines on a tetgen file.</p>
+<p>Reads from a file until the first non-comment and non-empty line.
+Then returns the non-empty, non-comment line, stripped from possible
+trailing comments.
+Returns None if end of file is reached.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">stripLine</tt><big>(</big><em>line</em><big>)</big></dt>
+<dd><p>Strip blanks, newline and comments from a line of text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">getInts</tt><big>(</big><em>line</em>, <em>nint</em><big>)</big></dt>
+<dd><p>Read a number of ints from a line, adding zero for omitted values.</p>
+<p>line is a string with b;anks separated integer values.
+Returns a list of nint integers. The trailing ones are set to zero
+if the strings contains less values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">addElem</tt><big>(</big><em>elems</em>, <em>nrs</em>, <em>e</em>, <em>n</em>, <em>nplex</em><big>)</big></dt>
+<dd><p>Add an element to a collection.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNodesBlock</tt><big>(</big><em>fil</em>, <em>npts</em>, <em>ndim</em>, <em>nattr</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen nodes block.</p>
+<p>Returns a tuple with:</p>
+<ul class="simple">
+<li>coords: Coords array with nodal coordinates</li>
+<li>nrs: node numbers</li>
+<li>attr: node attributes</li>
+<li>bmrk: node boundary marker</li>
+</ul>
+<p>The last two may be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readElemsBlock</tt><big>(</big><em>fil</em>, <em>nelems</em>, <em>nplex</em>, <em>nattr</em><big>)</big></dt>
+<dd><p>Read a tetgen elems block.</p>
+<p>Returns a tuple with:</p>
+<ul class="simple">
+<li>elems: Connectivity of type &#8216;tet4&#8217; or &#8216;tet10&#8217;</li>
+<li>nrs: the element numbers</li>
+<li>attr: the element attributes</li>
+</ul>
+<p>The last can be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readFacesBlock</tt><big>(</big><em>fil</em>, <em>nelems</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen faces block.</p>
+<p>Returns a a tuple with:</p>
+<ul class="simple">
+<li>elems: Connectivity of type &#8216;tri3&#8217;</li>
+<li>nrs: face numbers</li>
+<li>bmrk: face boundary marker</li>
+</ul>
+<p>The last can be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSmeshFacetsBlock</tt><big>(</big><em>fil</em>, <em>nfacets</em>, <em>nbmark</em><big>)</big></dt>
+<dd><p>Read a tetgen .smesh facets bock.</p>
+<p>Returns a tuple of dictionaries with plexitudes as keys:</p>
+<ul class="simple">
+<li>elems: for each plexitude a Connectivity array</li>
+<li>nrs: for each plexitude a list of element numbers in corresponding elems</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readNeigh</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read a tetgen .neigh file.</p>
+<p>Returns an arrays containing the tetrahedra neighbours:</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>offset=0</em><big>)</big></dt>
+<dd><p>Write a tetgen .node file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSmesh</tt><big>(</big><em>fn</em>, <em>facets</em>, <em>coords=None</em>, <em>holes=None</em>, <em>regions=None</em><big>)</big></dt>
+<dd><p>Write a tetgen .smesh file.</p>
+<p>Currently it only writes the facets of a triangular surface mesh.
+Coords should be written independently to a .node file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSurface</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big></dt>
+<dd><p>Write a tetgen surface model to .node and .smesh files.</p>
+<p>The provided file name is the .node or the .smesh filename.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">nextFilename</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Returns the next file name in a family of tetgen file names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">runTetgen</tt><big>(</big><em>fn</em>, <em>options=''</em><big>)</big></dt>
+<dd><p>Run tetgen mesher on the specified file.</p>
+<p>The input file is a closed triangulated surface.
+tetgen will generate a volume tetraeder mesh inside the surface,
+and create a new approximation of the surface as a by-product.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">readTetgen</tt><big>(</big><em>fn</em><big>)</big></dt>
+<dd><p>Read and draw a tetgen file.</p>
+<p>This is an experimental function for the geometry import menu.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">checkSelfIntersectionsWithTetgen</tt><big>(</big><em>self</em>, <em>verbose=False</em><big>)</big></dt>
+<dd><p>check self intersections using tetgen</p>
+<p>Returns couples of intersecting triangles</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -348,10 +737,10 @@ and create a new approximation of the surface as a by-product.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tools.html" title="57. tools — tools.py"
+          <a href="tools.html" title="84. tools — tools.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="sectionize.html" title="55. sectionize — sectionize.py"
+          <a href="sectionize.html" title="79. sectionize — sectionize.py"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -361,7 +750,7 @@ and create a new approximation of the surface as a by-product.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

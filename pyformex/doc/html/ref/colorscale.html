@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>20. colorscale — Color mapping of a range of values. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>23. colorscale — Color mapping of a range of values. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="21. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
-    <link rel="prev" title="19. menu — Menus for the pyFormex GUI." href="menu.html" />
+    <link rel="next" title="25. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
+    <link rel="prev" title="21. menu — Menus for the pyFormex GUI." href="menu.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="21. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="25. actors — OpenGL actors for populating the 3D scene."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="menu.html" title="19. menu — Menus for the pyFormex GUI."
+          <a href="menu.html" title="21. menu — Menus for the pyFormex GUI."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">23. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></li>
+<li><a class="reference internal" href="#id53">24. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="menu.html"
-                        title="previous chapter">19. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
+                        title="previous chapter">21. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="actors.html"
-                        title="next chapter">21. <tt class="docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+                        title="next chapter">25. <tt class="docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-colorscale">
-<span id="colorscale-color-mapping-of-a-range-of-values"></span><span id="sec-ref-colorscale"></span><h1>20. <a class="reference internal" href="#module-colorscale" title="colorscale: Color mapping of a range of values."><tt class="xref py py-mod docutils literal"><span class="pre">colorscale</span></tt></a> &#8212; Color mapping of a range of values.<a class="headerlink" href="#module-colorscale" title="Permalink to this headline">¶</a></h1>
+<span id="colorscale-color-mapping-of-a-range-of-values"></span><span id="sec-ref-colorscale"></span><h1>23. <a class="reference internal" href="#module-colorscale" title="colorscale: Color mapping of a range of values."><tt class="xref py py-mod docutils literal"><span class="pre">colorscale</span></tt></a> &#8212; Color mapping of a range of values.<a class="headerlink" href="#module-colorscale" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
 <dl class="class">
 <dt id="colorscale.ColorScale">
@@ -217,6 +223,83 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>24. <a class="reference internal" href="#module-colorscale" title="colorscale: Color mapping of a range of values."><tt class="xref py py-mod docutils literal"><span class="pre">colorscale</span></tt></a> &#8212; Color mapping of a range of values.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-colorscale"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorScale</tt><big>(</big><em>palet='RAINBOW'</em>, <em>minval=0.0</em>, <em>maxval=1.0</em>, <em>midval=None</em>, <em>exp=1.0</em>, <em>exp2=None</em><big>)</big></dt>
+<dd><p>Mapping floating point values into colors.</p>
+<p>A colorscale maps floating point values within a certain range
+into colors and can be used to provide visual representation
+of numerical values.
+This is e.g. quite useful in Finite Element postprocessing (see the
+postproc plugin).</p>
+<p>The ColorLegend class provides a way to make the ColorScale visible
+on the canvas.</p>
+<dl class="method">
+<dt>
+<tt class="descname">scale</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Scale a value to the range -1...1.</p>
+<p>If the ColorScale has only one exponent, values in the range
+mival..maxval are scaled to the range -1..+1.</p>
+<p>If two exponents were specified, scaling is done independently in
+the intervals minval..midval and midval..maxval, mapped resp. using
+exp2 and exp onto the intevals -1..0 and 0..1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Return the color representing a value val.</p>
+<p>The returned color is a tuple of three RGB values in the range 0-1.
+The color is obtained by first scaling the value to the -1..1 range
+using the &#8216;scale&#8217; method, and then using that result to pick a color
+value from the palet. A palet specifies the three colors corresponding
+to the -1, 0 and 1 values.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorscale</em>, <em>n</em><big>)</big></dt>
+<dd><p>A colorlegend divides a in a number of subranges.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>colorscale</cite>: a <a class="reference internal" href="#colorscale.ColorScale" title="colorscale.ColorScale"><tt class="xref py py-class docutils literal"><span class="pre">ColorScale</span></tt></a> instance</li>
+<li><cite>n</cite>: a positive integer</li>
+</ul>
+<p>For a <a class="reference internal" href="#colorscale.ColorScale" title="colorscale.ColorScale"><tt class="xref py py-class docutils literal"><span class="pre">ColorScale</span></tt></a> without <tt class="docutils literal"><span class="pre">midval</span></tt>, the full range is divided
+in <tt class="docutils literal"><span class="pre">n</span></tt> subranges; for a scale with <tt class="docutils literal"><span class="pre">midval</span></tt>, each of the two ranges
+is divided in <tt class="docutils literal"><span class="pre">n/2</span></tt> subranges. In each case the legend has <tt class="docutils literal"><span class="pre">n</span></tt>
+subranges limited by <tt class="docutils literal"><span class="pre">n+1</span></tt> values. The <tt class="docutils literal"><span class="pre">n</span></tt> colors of the legend
+correspond to the middle value of each subrange.</p>
+<dl class="method">
+<dt>
+<tt class="descname">overflow</tt><big>(</big><em>oflow=None</em><big>)</big></dt>
+<dd><p>Raise a runtime error if oflow == None, else return oflow.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big></dt>
+<dd><p>Return the color representing a value val.</p>
+<p>The color is that of the subrange holding the value. If the value
+matches a subrange limit, the lower range color is returned.
+If the value falls outside the colorscale range, a runtime error
+is raised, unless the corresponding underflowcolor or overflowcolor
+attribute has been set, in which case this attirbute is returned.
+Though these attributes can be set to any not None value, it will
+usually be set to some color value, that will be used to show
+overflow values.
+The returned color is a tuple of three RGB values in the range 0-1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
+</div>
 
 
           </div>
@@ -234,10 +317,10 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="21. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="25. actors — OpenGL actors for populating the 3D scene."
              >next</a> |</li>
         <li class="right" >
-          <a href="menu.html" title="19. menu — Menus for the pyFormex GUI."
+          <a href="menu.html" title="21. menu — Menus for the pyFormex GUI."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -247,7 +330,7 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

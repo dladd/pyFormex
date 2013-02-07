@@ -506,88 +506,178 @@ def drawable(objects):
     return [ i for i in r if i is not None ]
 
 
-def draw(F,shrink=None,
+def draw(F,
          color='prop',colormap=None,alpha=None,
          bkcolor=None,bkcolormap=None,bkalpha=None,
          mode=None,linewidth=None,linestipple=None,
          marksize=None,nolight=False,ontop=False,
-         view=None,bbox=None,
-         wait=True,clear=None,allviews=False,
-         highlight=False,silent=True, **kargs):
-    """Draw object(s) with specified settings and direct camera to it.
+         view=None,bbox=None,shrink=None,clear=None,
+         wait=True,allviews=False,highlight=False,silent=True,
+         **kargs):
+    """Draw object(s) with specified settings and options.
 
-    The first argument is an object to be drawn. All other arguments are
-    settings that influence how  the object is being drawn.
+    This is the main drawing function to get geometry rendered on the OpenGL
+    canvas. It has a whole slew of arguments, but in most cases you will only
+    need to use a few of them. We divide the arguments in three groups:
+    geometry, settings, options.
 
-    F is one of:
+    Geometry: specifies what objects will be drawn.
 
-    - a drawable object (a geometry object like Formex, Mesh or TriSurface),
-    - the name of a global pyFormex variable refering to such an object,
-    - a list of any of these three items.
+    - `F`: all geometry to be drawn is specified in this single argument.
+      It can be one of the following:
 
-    The variables are replaced with their value and the lists are flattened,
-    to create a single list of objects. This then filtered for the drawable
-    objects, and the resulting list of drawables is drawn using the remaining
-    arguments.
+      - a drawable object (a Geometry object like Formex, Mesh or TriSurface,
+        or another object having a proper `actor` method),
+      - the name of a global pyFormex variable refering to such an object,
+      - a list or nested list of any of the above items.
 
-    The remaining arguments are drawing options. If None, they are filled in
-    from the current viewport drawing options.
+      The possibility of a nested list means that any complex collections
+      of geometry can be drawn in a single operations. The (nested) list
+      is recursively flattened, replacing string values by the corresponding
+      value from the pyFormex global variables dictionary, until a single list
+      of drawable objects results. Next the undrawable items are removed
+      from the list. The resulting list of drawable objects will then be
+      drawn using the remaining settings and options arguments.
 
-    view is either the name of a defined view or 'last' or None.
-    Predefined views are 'front','back','top','bottom','left','right','iso'.
-    With view=None the camera settings remain unchanged (but might be changed
-    interactively through the user interface). This may make the drawn object
-    out of view!
-    With view='last', the camera angles will be set to the same camera angles
-    as in the last draw operation, undoing any interactive changes.
-    The initial default view is 'front' (looking in the -z direction).
+    Settings: specify how the geometry will be drawn. These arguments will
+      be passed to the corresponding Actor for the object. The Actor is the
+      graphical representation of the geometry. Not all Actors use all of
+      the settings that can be specified here. But they all accept specifying
+      any setting even if unused. The settings hereafter are thus a
+      superset of the settings used by the different Actors.
+      Settings have a default value per viewport, and if unspecified, most
+      Actors will use the viewport default for that value.
 
-    bbox specifies the 3D volume at which the camera will be aimed (using the
-    angles set by view). The camera position wil be set so that the volume
-    comes in view using the current lens (default 45 degrees).
-    bbox is a list of two points or compatible (array with shape (2,3)).
-    Setting the bbox to a volume not enclosing the object may make the object
-    invisible on the canvas.
-    The special value bbox='auto' will use the bounding box of the objects
-    getting drawn (object.bbox()), thus ensuring that the camera will focus
-    on these objects.
-    The special value bbox=None will use the bounding box of the previous
-    drawing operation, thus ensuring that the camera's target volume remains
-    unchanged.
+      - `color`, `colormap`: specifies the color of the object (see below)
+      - `alpha`: float (0.0..1.0): alpha value to use in transparent mode
+      - `bkcolor`, `bkcolormap`: color for the backside of surfaces, if
+        different from the front side. Specification as for front color.
+      - `bkalpha`: float (0.0..1.0): alpha value for back side.
+      - `linewidth`: float, thickness of line drawing
+      - `linestipple`: stipple pattern for line drawing
+      - `marksize`: float: point size for dot drawing
+      - `nolight`: bool: render object as unlighted in modes with lights on
+      - `ontop`: bool: render object as if it is on top.
+        This will make the object fully visible, even when it is hidden by
+        other objects. If more than one objects is drawn with `ontop=True`
+        the visibility of the object will depend on the order of drawing.
 
-    color,colormap,linewidth,alpha,marksize are passed to the
-    creation of the 3D actor.
+    Options: these arguments modify the working of the draw functions.
+      If None, they are filled in from the current viewport drawing options.
+      These can be changed with the :func:`setDrawOptions` function.
+      The initial defaults are: view='last', bbox='auto', shrink=False,
+      clear=False, shrinkfactor=0.8.
 
+      - `view`: is either the name of a defined view or 'last' or
+        None.  Predefined views are 'front', 'back', 'top', 'bottom',
+        'left', 'right', 'iso'.  With view=None the camera settings
+        remain unchanged (but might be changed interactively through
+        the user interface). This may make the drawn object out of
+        view!  With view='last', the camera angles will be set to the
+        same camera angles as in the last draw operation, undoing any
+        interactive changes.  On creation of a viewport, the initial
+        default view is 'front' (looking in the -z direction).
 
-    if color is None, it is drawn with the color specified on creation.
-    if color is 'prop' and a colormap was installed, props define color.
-    else, color should be an array of RGB values, either with shape
-    (3,) for a single color, or (nelems,3) for differently colored
-    elements
+      - `bbox`: specifies the 3D volume at which the camera will be
+        aimed (using the angles set by `view`). The camera position will
+        be set so that the volume comes in view using the current lens
+        (default 45 degrees).  bbox is a list of two points or
+        compatible (array with shape (2,3)).  Setting the bbox to a
+        volume not enclosing the object may make the object invisible
+        on the canvas.  The special value bbox='auto' will use the
+        bounding box of the objects getting drawn (object.bbox()),
+        thus ensuring that the camera will focus on these objects.
+        The special value bbox=None will use the bounding box of the
+        previous drawing operation, thus ensuring that the camera's
+        target volume remains unchanged.
 
+      - `shrink`: bool: if specified, each object will be transformed
+        by the :meth:`Coords.shrink` transformation (with the current
+        set shrinkfactor as a parameter), thus showing all the elements
+        of the object separately.  (Some other softwares call this an
+        'exploded' view).
 
-    shrink is a floating point shrink factor that will be applied to object
-    before drawing it.
+      - `clear`: bool. By default each new draw operation adds the newly
+        drawn objects to the shown scene. Using `clear=True` will clear the
+        scene before drawing and thus only show the objects of the current
+        draw action.
 
-    If the Formex has properties and a color list is specified, then the
-    the properties will be used as an index in the color list and each member
-    will be drawn with the resulting color.
-    If color is one color value, the whole Formex will be drawn with
-    that color.
-    Finally, if color=None is specified, the whole Formex is drawn in black.
+      - `wait`: bool. If True (default) the draw action activates a
+        locking mechanism for the next draw action, which will only be
+        allowed after `drawdelay` seconds have
+        elapsed. This makes it easier to see subsequent renderings and
+        is far more efficient than adding an explicit sleep()
+        operation, because the script processing can continue up to
+        the next drawing instruction. The value of drawdelay can be changed
+        in the user settings or using the :func:`delay` function.
+        Setting this value to 0 will disable the waiting mechanism for all
+        subsequent draw statements (until set > 0 again). But often the user
+        wants to specifically disable the waiting lock for some draw
+        operation(s). This can be done without changing the `drawdelay`
+        setting by specifyin `wait=False`. This means that the *next* draw
+        operation does not have to wait.
 
-    Each draw action activates a locking mechanism for the next draw action,
-    which will only be allowed after drawdelay seconds have elapsed. This
-    makes it easier to see subsequent images and is far more elegant that an
-    explicit sleep() operation, because all script processing will continue
-    up to the next drawing instruction.
-    The value of drawdelay is set in the config, or 2 seconds by default.
-    The user can disable the wait cycle for the next draw operation by
-    specifying wait=False. Setting drawdelay=0 will disable the waiting
-    mechanism for all subsequent draw statements (until set >0 again).
+      - `allviews`: currently not used
+
+      - `highlight`: bool. If True, the object(s) will not be drawn as
+        normal geometry, but as highlights (usually on top of other geometry),
+        making them removeable by the remove highlight functions
+
+      - `silent`: bool. If True (default), non-drawable objects will be
+        silently ignored. If set False, an error is raised if an object
+        is not drawable.
+
+      - `**kargs`: any not-recognized keyword parameters are passed to the
+        object's Actor constructor. This allows the user to create
+        customized Actors with new parameters.
+
+    Specifying color
+    ----------------
+    Color specification can take many different forms. Some Actors recognize
+    up to six different color modes and the draw function adds even another
+    mode (property color)
+
+    - no color: `color=None`. The object will be drawn in the current
+      viewport foreground color.
+    - single color: the whole object is drawn with the specified color.
+    - element color: each element of the object has its own color. The
+      specified color will normally contain precisely `nelems` colors,
+      but will be resized to the required size if not.
+    - vertex color: each vertex of each element of the object has its color.
+      In smooth shading modes intermediate points will get an interpolated
+      color.
+    - element index color: like element color, but the color values are not
+      specified directly, but as indices in a color table (the `colormap`
+      argument).
+    - vertex index color: like vertex color, but the colors are indices in a
+      color table (the `colormap` argument).
+    - property color: as an extra mode in the draw function, if `color='prop'`
+      is specified, and the object has an attribute 'prop', that attribute
+      will be used as a color index and the object will be drawn in
+      element index color mode. If the object has no such attribute, the
+      object is drawn in no color mode.
+
+    Element and vertex color modes are usually only used with a single object
+    in the `F` parameter, because they require a matching set of colors.
+    Though the color set will be automatically resized if not matching, the
+    result will seldomly be what the user expects.
+    If single colors are specified as a tuple of three float values
+    (see below), the correct size of a color array for an object with
+    `nelems` elements of plexitude `nplex` would be: (nelems,3) in element
+    color mode, and (nelems,nplex,3) in vertex color mode. In the index modes,
+    color would then be an integer array with shape respectively (nelems,) and
+    (nelems,nplex). Their values are indices in the colormap array, which
+    could then have shape (ncolors,3), where ncolors would be larger than the
+    highest used value in the index. If the colormap is insufficiently large,
+    it will again be wrapped around. If no colormap is specified, the current
+    viewport colormap is used. The default contains eight colors: black=0,
+    red=1, green=2, blue=3, cyan=4, magenta=5, yellow=6, white=7.
+
+    A color value can be specified in multiple ways, but should be convertible
+    to a normalized OpenGL color using the :func:`colors.GLcolor` function.
+    The normalized color value is a tuple of three values in the range 0.0..1.0.
+    The values are the contributions of the red, green and blue components.
     """
-    if 'flat' in kargs:
-        utils.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
 
     # For simplicity of the code, put objects to draw always in a list
     if isinstance(F,list):
@@ -614,8 +704,8 @@ def draw(F,shrink=None,
     if shrink is None:
         shrink = pf.canvas.options.get('shrink',None)
 
-    if marksize is None:
-        marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
+    ## if marksize is None:
+    ##     marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
     # Shrink the objects if requested
     if shrink:
@@ -747,7 +837,7 @@ def setDrawOptions(kargs0={},**kargs):
 
 def showDrawOptions():
     pf.message("Current Drawing Options: %s" % pf.canvas.options)
-    pf.message("Current Viewport Options: %s" % pf.canvas.settings)
+    pf.message("Current Viewport Settings: %s" % pf.canvas.settings)
 
 
 def reset():

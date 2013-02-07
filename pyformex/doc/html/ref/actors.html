@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>25. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="22. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
-    <link rel="prev" title="20. colorscale — Color mapping of a range of values." href="colorscale.html" />
+    <link rel="next" title="27. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
+    <link rel="prev" title="23. colorscale — Color mapping of a range of values." href="colorscale.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="22. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="27. decors — 2D decorations for the OpenGL canvas."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="20. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="23. colorscale — Color mapping of a range of values."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,19 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">25. <tt class="docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></li>
+<li><a class="reference internal" href="#id53">26. <tt class="docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="colorscale.html"
-                        title="previous chapter">20. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+                        title="previous chapter">23. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="decors.html"
-                        title="next chapter">22. <tt class="docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
+                        title="next chapter">27. <tt class="docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +147,7 @@
           <div class="body">
             
   <div class="section" id="module-actors">
-<span id="actors-opengl-actors-for-populating-the-3d-scene"></span><span id="sec-ref-actors"></span><h1>21. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
+<span id="actors-opengl-actors-for-populating-the-3d-scene"></span><span id="sec-ref-actors"></span><h1>25. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
 <dl class="class">
 <dt id="actors.Actor">
@@ -602,6 +608,486 @@ of its parent, but the eltype will be retained.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>26. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-actors"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">Actor</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>An Actor is anything that can be drawn in an OpenGL 3D Scene.</p>
+<p>The visualisation of the Scene Actors is dependent on camera position and
+angles, clipping planes, rendering mode and lighting.</p>
+<p>An Actor subclass should minimally reimplement the following methods:</p>
+<ul class="simple">
+<li><cite>bbox()</cite>: return the actors bounding box.</li>
+<li><cite>drawGL(mode)</cite>: to draw the actor. Takes a mode argument so the
+drawing function can act differently depending on the mode. There are
+currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
+drawGL should only contain OpenGL calls that are allowed inside a
+display list. This may include calling the display list of another
+actor but <em>not</em> creating a new display list.</li>
+</ul>
+<p>The interactive picking functionality requires the following methods,
+for which we provide do-nothing defaults here:</p>
+<ul class="simple">
+<li><cite>npoints()</cite>:</li>
+<li><cite>nelems()</cite>:</li>
+<li><cite>pickGL()</cite>:</li>
+</ul>
+<dl class="method">
+<dt>
+<tt class="descname">bbox</tt><big>(</big><big>)</big></dt>
+<dd><p>Default implementation for bbox().</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TranslatedActor</tt><big>(</big><em>A</em>, <em>trl=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An Actor translated to another position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">RotatedActor</tt><big>(</big><em>A</em>, <em>rot=(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>twist=0.0</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An Actor rotated to another position.</p>
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CubeActor</tt><big>(</big><em>size=1.0, color=[(1.0, 0.0, 0.0), (0.0, 1.0, 1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 1.0), (0.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big></dt>
+<dd><p>An OpenGL actor with cubic shape and 6 colored sides.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the cube.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">SphereActor</tt><big>(</big><em>size=1.0</em>, <em>color=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An OpenGL actor representing a sphere.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the cube.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">BboxActor</tt><big>(</big><em>bbox</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draws a bbox.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Always draws a wireframe model of the bbox.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">AxesActor</tt><big>(</big><em>cs=None, size=1.0, psize=0.5, color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)], colored_axes=True, draw_planes=True, draw_reverse=True, linewidth=2, alpha=0.5, **kargs</em><big>)</big></dt>
+<dd><p>An actor showing the three axes of a coordinate system.</p>
+<p>If no coordinate system is specified, the global coordinate system is drawn.</p>
+<p>The default actor consists of three colored lines of unit length along
+the unit vectors of the axes and three colored triangles representing the
+coordinate planes. This can be modified by the following parameters:</p>
+<p>size: scale factor for the unit vectors.
+color: a set of three colors to use for x,y,z axes.
+colored_axes = False: draw black axes.
+draw_planes = False: do not draw the coordinate planes.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the axes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GridActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.2</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draws a (set of) grid(s) in one of the coordinate planes.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CoordPlaneActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draws a set of 3 coordinate planes.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">PlaneActor</tt><big>(</big><em>nx=(2</em>, <em>2</em>, <em>2)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>size=((0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0))</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>A plane in a 3D scene.</p>
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>mode=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>bkalpha=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>texture=None</em>, <em>avgnormals=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>An OpenGL actor representing a geometrical model.</p>
+<p>The model can either be in Formex or Mesh format.</p>
+<dl class="method">
+<dt id="actors.GeomActor.nplex">
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.nplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plexitude of the elements in the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.nelems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of elements in the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.shape">
+<tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number and plexitude of the elements in the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">points</tt><big>(</big><big>)</big></dt>
+<dd><p>Return the vertices as a 2-dim array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setColor</tt><big>(</big><em>color</em>, <em>colormap=None</em><big>)</big></dt>
+<dd><p>Set the color of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setBkColor</tt><big>(</big><em>color</em>, <em>colormap=None</em><big>)</big></dt>
+<dd><p>Set the backside color of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setAlpha</tt><big>(</big><em>alpha</em>, <em>bkalpha</em><big>)</big></dt>
+<dd><p>Set the Actors alpha value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">drawGL</tt><big>(</big><em>canvas=None</em>, <em>mode=None</em>, <em>color=None</em>, <em>**kargs</em><big>)</big></dt>
+<dd><p>Draw the geometry on the specified canvas.</p>
+<p>The drawing parameters not provided by the Actor itself, are
+derived from the canvas defaults.</p>
+<p>mode and color can be overridden for the sole purpose of allowing
+the recursive use for modes ending on &#8216;wire&#8217; (&#8216;smoothwire&#8217; or
+&#8216;flatwire&#8217;). In these cases, two drawing operations are done:
+one with mode=&#8217;wireframe&#8217; and color=black, and one with mode=mode[:-4].</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">pickGL</tt><big>(</big><em>mode</em><big>)</big></dt>
+<dd><p>Allow picking of parts of the actor.</p>
+<p>mode can be &#8216;element&#8217;, &#8216;face&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">select</tt><big>(</big><em>sel</em><big>)</big></dt>
+<dd><p>Return a GeomActor with a selection of this actor&#8217;s elements</p>
+<p>Currently, the resulting Actor will not inherit the properties
+of its parent, but the eltype will be retained.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big></dt>
+<dd><p>Set the linewidth of the Drawable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">setTexture</tt><big>(</big><em>texture</em><big>)</big></dt>
+<dd><p>Set the texture data of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
+</div>
 
 
           </div>
@@ -619,10 +1105,10 @@ of its parent, but the eltype will be retained.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="22. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="27. decors — 2D decorations for the OpenGL canvas."
              >next</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="20. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="23. colorscale — Color mapping of a range of values."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -632,7 +1118,7 @@ of its parent, but the eltype will be retained.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. appMenu — Menu with pyFormex apps. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>48. appMenu — Menu with pyFormex apps. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="32. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
-    <link rel="prev" title="30. imageViewer — A general image viewer" href="imageViewer.html" />
+    <link rel="next" title="51. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
+    <link rel="prev" title="46. imageViewer — A general image viewer" href="imageViewer.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="32. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="51. toolbar — Toolbars for the pyFormex GUI."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="46. imageViewer — A general image viewer"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">48. <tt class="docutils literal"><span class="pre">appMenu</span></tt> &#8212; Menu with pyFormex apps.</a></li>
+<li><a class="reference internal" href="#id53">49. <tt class="docutils literal"><span class="pre">appMenu</span></tt> &#8212; Menu with pyFormex apps.</a></li>
+<li><a class="reference internal" href="#id107">50. <tt class="docutils literal"><span class="pre">appMenu</span></tt> &#8212; Menu with pyFormex apps.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="imageViewer.html"
-                        title="previous chapter">30. <tt class="docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
+                        title="previous chapter">46. <tt class="docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="toolbar.html"
-                        title="next chapter">32. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+                        title="next chapter">51. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,11 +148,11 @@
           <div class="body">
             
   <div class="section" id="module-appMenu">
-<span id="appmenu-menu-with-pyformex-apps"></span><span id="sec-ref-appmenu"></span><h1>31. <a class="reference internal" href="#module-appMenu" title="appMenu: Menu with pyFormex apps."><tt class="xref py py-mod docutils literal"><span class="pre">appMenu</span></tt></a> &#8212; Menu with pyFormex apps.<a class="headerlink" href="#module-appMenu" title="Permalink to this headline">¶</a></h1>
+<span id="appmenu-menu-with-pyformex-apps"></span><span id="sec-ref-appmenu"></span><h1>48. <a class="reference internal" href="#module-appMenu" title="appMenu: Menu with pyFormex apps."><tt class="xref py py-mod docutils literal"><span class="pre">appMenu</span></tt></a> &#8212; Menu with pyFormex apps.<a class="headerlink" href="#module-appMenu" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">appMenu</span></tt></p>
 <dl class="class">
 <dt id="appMenu.AppMenu">
-<em class="property">class </em><tt class="descclassname">appMenu.</tt><tt class="descname">AppMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>mode='app'</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em>, <em>parent=None</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">appMenu.</tt><tt class="descname">AppMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>mode='app'</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em>, <em>parent=None</em>, <em>before=None</em>, <em>runall=True</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu" title="Permalink to this definition">¶</a></dt>
 <dd><p>A menu of pyFormex applications in a directory or list.</p>
 <p>This class creates a menu of pyFormex applications or scripts
 collected from a directory or specified as a list of modules.
@@ -155,7 +162,7 @@ can then be run from the menu or from the button toolbar.
 The user may use this class to add his own apps/scripts
 into the pyFormex GUI.</p>
 <p>Apps are simply Python modules that have a &#8216;run&#8217; function.
-Only these modules will be added to the menu. 
+Only these modules will be added to the menu.
 Only files that are recognized by <a class="reference internal" href="utils.html#utils.is_pyFormex" title="utils.is_pyFormex"><tt class="xref py py-func docutils literal"><span class="pre">utils.is_pyFormex()</span></tt></a> as being
 pyFormex scripts will be added to the menu.</p>
 <p>The constructor takes the following arguments:</p>
@@ -180,7 +187,7 @@ extension is an empty string.</li>
 directory and below will be constructed. If only <cite>dir</cite> and no <cite>files</cite>
 are specified, the default is True</li>
 <li><cite>max</cite>: if specified, the list of files will be truncated to this number
-of items. Adding more files to the menu will then be done at the top and  
+of items. Adding more files to the menu will then be done at the top and
 the surplus number of files will be dropped from the bottom of the list.</li>
 </ul>
 <p>The defaults were thus chosen to be convenient for the three most frequent
@@ -203,18 +210,6 @@ files.</p>
 <p>With the resulting file list, a menu is created. Selecting a menu item
 will make the corresponding file the current script and unless the
 <cite>autoplay</cite> configuration variable was set to False, the script is executed.</p>
-<p>If the file specification was done by a directory path only,
-some extra options will be included in the menu.
-They are fairly self-explaining and mainly intended for the pyFormex
-developers, in order to test the functionality by running a sets of
-example scripts:</p>
-<ul class="simple">
-<li><em class="menuselection">Run next script</em></li>
-<li><em class="menuselection">Run all following scripts</em></li>
-<li><em class="menuselection">Run all scripts</em></li>
-<li><em class="menuselection">Run a random script</em></li>
-<li><em class="menuselection">Run all in random order</em></li>
-</ul>
 <p>Furthermore, if the menu is a toplevel one, it will have the following
 extra options:</p>
 <ul class="simple">
@@ -317,9 +312,12 @@ no files.</p>
 
 <dl class="method">
 <dt id="appMenu.AppMenu.add">
-<tt class="descname">add</tt><big>(</big><em>name</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu.add" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add</tt><big>(</big><em>name</em>, <em>strict=True</em>, <em>skipconfig=True</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new filename to the front of the menu.</p>
-<p>By default, only legal pyFormex apps can be added.</p>
+<p>This function is used to add app/scripts to the history menus.
+By default, only legal pyFormex apps or scripts can be added, and
+scripts from the user config will not be added.
+Setting strict and or skipconfig to False will skip the filter(s).</p>
 </dd></dl>
 
 <dl class="method">
@@ -397,7 +395,7 @@ If the item is the last, None is returned.</p>
 
 <dl class="method">
 <dt id="appMenu.AppMenu.create_insert_action">
-<tt class="descname">create_insert_action</tt><big>(</big><em>str</em>, <em>val</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu.create_insert_action" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#appMenu.AppMenu.create_insert_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and insert an action.</p>
 </dd></dl>
 
@@ -503,6 +501,714 @@ replaced.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>49. <a class="reference internal" href="#module-appMenu" title="appMenu: Menu with pyFormex apps."><tt class="xref py py-mod docutils literal"><span class="pre">appMenu</span></tt></a> &#8212; Menu with pyFormex apps.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-appMenu"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">appMenu</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">appMenu.</tt><tt class="descname">AppMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>mode='app'</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em>, <em>parent=None</em>, <em>before=None</em>, <em>runall=True</em><big>)</big></dt>
+<dd><p>A menu of pyFormex applications in a directory or list.</p>
+<p>This class creates a menu of pyFormex applications or scripts
+collected from a directory or specified as a list of modules.
+It is used in the pyFormex GUI to create
+the examples menu, and for the apps history. The pyFormex apps
+can then be run from the menu or from the button toolbar.
+The user may use this class to add his own apps/scripts
+into the pyFormex GUI.</p>
+<p>Apps are simply Python modules that have a &#8216;run&#8217; function.
+Only these modules will be added to the menu.
+Only files that are recognized by <a class="reference internal" href="utils.html#utils.is_pyFormex" title="utils.is_pyFormex"><tt class="xref py py-func docutils literal"><span class="pre">utils.is_pyFormex()</span></tt></a> as being
+pyFormex scripts will be added to the menu.</p>
+<p>The constructor takes the following arguments:</p>
+<ul class="simple">
+<li><cite>title</cite>: the top level label for the menu</li>
+<li><cite>dir</cite>: an optional directory path. If specified, and no <cite>files</cite> argument
+is specified, all Python files in <cite>dir</cite> that do not start with either
+&#8216;.&#8217; or &#8216;_&#8217;, will be considered for inclusion in the menu.
+If mode==&#8217;app&#8217;, they will only be included if
+they can be loaded as a module. If mode==&#8217;script&#8217;, they will only be
+included if they are considered a pyFormex script by utils.is_pyFormex.
+If <cite>files</cite> is specified, <cite>dir</cite> will just be prepended to each file in
+the list.</li>
+<li><cite>files</cite>: an explicit list of file names of pyFormex scripts.
+If no <cite>dir</cite> nor <cite>ext</cite> arguments are given, these should be the full path
+names to the script files. Otherwise, <cite>dir</cite> is prepended and <cite>ext</cite> is
+appended to each filename.</li>
+<li><cite>ext</cite>: an extension to be added to each filename. If <cite>dir</cite> was specified,
+the default extension is &#8216;.py&#8217;. If no <cite>dir</cite> was specified, the default
+extension is an empty string.</li>
+<li><cite>recursive</cite>: if True, a cascading menu of all pyFormex scripts in the
+directory and below will be constructed. If only <cite>dir</cite> and no <cite>files</cite>
+are specified, the default is True</li>
+<li><cite>max</cite>: if specified, the list of files will be truncated to this number
+of items. Adding more files to the menu will then be done at the top and
+the surplus number of files will be dropped from the bottom of the list.</li>
+</ul>
+<p>The defaults were thus chosen to be convenient for the three most frequent
+uses of this class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">AppMenu</span><span class="p">(</span><span class="s">&#39;My Apps&#39;</span><span class="p">,</span><span class="nb">dir</span><span class="o">=</span><span class="s">&quot;/path/to/my/appsdir&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a menu with all pyFormex apps in the specified path and its
+subdirectories.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ApptMenu</span><span class="p">(</span><span class="s">&#39;My Scripts&#39;</span><span class="p">,</span><span class="nb">dir</span><span class="o">=</span><span class="s">&quot;/path/to/my/sciptsdir&quot;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s">&#39;scripts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a menu with all pyFormex scripts in the specified path and its
+subdirectories.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">AppMenu</span><span class="p">(</span><span class="s">&#39;History&#39;</span><span class="p">,</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;/my/script1.py&quot;</span><span class="p">,</span><span class="s">&quot;/some/other/script.pye&quot;</span><span class="p">],</span>          <span class="n">mode</span><span class="o">=</span><span class="s">&#39;script&#39;</span><span class="p">,</span><span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>is typically used to create a history menu of previously visited script
+files.</p>
+<p>With the resulting file list, a menu is created. Selecting a menu item
+will make the corresponding file the current script and unless the
+<cite>autoplay</cite> configuration variable was set to False, the script is executed.</p>
+<p>Furthermore, if the menu is a toplevel one, it will have the following
+extra options:</p>
+<ul class="simple">
+<li><em class="menuselection">Classify scripts</em></li>
+<li><em class="menuselection">Remove catalog</em></li>
+<li><em class="menuselection">Reload scripts</em></li>
+</ul>
+<p>The first option uses the keyword specifications in the scripts docstring
+to make a classification of the scripts according to keywords.
+See the <tt class="xref py py-func docutils literal"><span class="pre">scriptKeywords()</span></tt> function for more info. The second option
+removes the classification. Both options are especially useful for the
+pyFormex examples.</p>
+<p>The last option reloads a ScriptMenu. This can be used to update the menu
+when you created a new script file.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getFiles</tt><big>(</big><big>)</big></dt>
+<dd><p>Get a list of scripts in self.dir</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">filterFiles</tt><big>(</big><em>files</em><big>)</big></dt>
+<dd><p>Filter a list of scripts</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">loadFiles</tt><big>(</big><em>files=None</em><big>)</big></dt>
+<dd><p>Load the app/script files in this menu</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">fileName</tt><big>(</big><em>script</em><big>)</big></dt>
+<dd><p>Return the full pathname for a script.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">fullAppName</tt><big>(</big><em>app</em><big>)</big></dt>
+<dd><p>Return the pkg.module name for an app.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">run</tt><big>(</big><em>action</em><big>)</big></dt>
+<dd><p>Run the selected app.</p>
+<p>This function is executed when the menu item is selected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runApp</tt><big>(</big><em>app</em>, <em>play=True</em><big>)</big></dt>
+<dd><p>Set/Run the specified app.</p>
+<p>Set the specified app as the current app,
+and run it if play==True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runAll</tt><big>(</big><em>first=0</em>, <em>last=None</em>, <em>random=True</em>, <em>count=-1</em>, <em>recursive=True</em><big>)</big></dt>
+<dd><p>Run all apps in the range [first,last].</p>
+<p>Runs the apps in the range first:last.
+If last is None, the length of the file list is used.
+If count is positive, at most count scripts per submenu are executed.
+Notice that the range is Python style.
+If rand is True, the files are shuffled before running.
+If recursive is True, also the files in submenu are played.
+The first and last arguments do not apply to the submenus.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runNext</tt><big>(</big><em>count=-1</em><big>)</big></dt>
+<dd><p>Run the current app and the following ones.</p>
+<p>If a positive count is specified, at most count scripts
+will be run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runCurrent</tt><big>(</big><big>)</big></dt>
+<dd><p>Run the current app, or the first if none was played yet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runRandom</tt><big>(</big><big>)</big></dt>
+<dd><p>Run a random script.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">reload</tt><big>(</big><big>)</big></dt>
+<dd><p>Reload the scripts from dir.</p>
+<p>This is only available if a directory path was specified and
+no files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add</tt><big>(</big><em>name</em>, <em>strict=True</em>, <em>skipconfig=True</em><big>)</big></dt>
+<dd><p>Add a new filename to the front of the menu.</p>
+<p>This function is used to add app/scripts to the history menus.
+By default, only legal pyFormex apps or scripts can be added, and
+scripts from the user config will not be added.
+Setting strict and or skipconfig to False will skip the filter(s).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">actionList</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list with the current actions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">actionsLike</tt><big>(</big><em>clas</em><big>)</big></dt>
+<dd><p>Return a list with the current actions of given class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">subMenus</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list with the submenus</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">index</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the index of the specified item in the actionlist.</p>
+<p>If the requested item is not in the actionlist, -1 is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">action</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the action with specified text.</p>
+<p>First, a normal action is tried. If none is found,
+a separator is tried.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the item with specified text.</p>
+<p>For a normal action or a separator, an action is returned.
+For a menu action, a menu is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">nextitem</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Returns the name of the next item.</p>
+<p>This can be used to replace the current item with another menu.
+If the item is the last, None is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeItem</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Remove an item from this menu.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big></dt>
+<dd><p>Create and insert a separator</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Insert an existing menu.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Insert an action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Create and insert an action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em>, <em>debug=False</em><big>)</big></dt>
+<dd><p>Insert a list of items in the menu.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>items</cite>: a list of menuitem tuples. Each item is a tuple of two
+or three elements: (text, action, options):<ul>
+<li><cite>text</cite>: the text that will be displayed in the menu item.
+It is stored in a normalized way: all lower case and with
+&#8216;&amp;&#8217; removed.</li>
+<li><cite>action</cite>: can be any of the following:<ul>
+<li>a Python function or instance method : it will be called when the
+item is selected,</li>
+<li>a string with the name of a function/method,</li>
+<li>a list of Menu Items: a popup Menu will be created that will
+appear when the item is selected,</li>
+<li>an existing Menu,</li>
+<li>None : this will create a separator item with no action.</li>
+</ul>
+</li>
+<li><cite>options</cite>: optional dictionary with following honoured fields:<ul>
+<li><cite>icon</cite>: the name of an icon to be displayed with the item text.
+This name should be that of one of the icons in the pyFormex
+icondir.</li>
+<li><cite>shortcut</cite>: is an optional key combination to select the item.</li>
+<li><cite>tooltip</cite>: a text that is displayed as popup help.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><cite>before</cite>: if specified, should be the text <em>or</em> the action of one
+of the items in the Menu (not the items list!): the new list of
+items will be inserted before the specified item.</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">appMenu</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">sortSets</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Turn the set values in d into sorted lists.</p>
+<ul class="simple">
+<li><cite>d</cite>: a Python dictionary</li>
+</ul>
+<p>All the values in the dictionary are checked. Those that are of type
+<cite>set</cite> are converted to a sorted list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">classify</tt><big>(</big><em>appdir</em>, <em>pkg</em>, <em>nmax=0</em><big>)</big></dt>
+<dd><p>Classify the files in submenus according to keywords.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">splitAlpha</tt><big>(</big><em>strings</em>, <em>n</em>, <em>ignorecase=True</em><big>)</big></dt>
+<dd><p>Split a series of strings in alphabetic collections.</p>
+<p>The strings are split over a series of bins in alphabetical order.
+Each bin can contain strings starting with multiple successive
+characters, but not more than n items. Items starting with the same
+character are always in the same bin. If any starting character
+occurs more than n times, the maximum will be exceeded.</p>
+<ul class="simple">
+<li><cite>files</cite>: a list of strings start with an upper case letter (&#8216;A&#8217;-&#8216;Z&#8217;)</li>
+<li><cite>n</cite>: the desired maximum number of items in a bin.</li>
+</ul>
+<p>Returns: a tuple of</p>
+<ul class="simple">
+<li><cite>labels</cite>: a list of strings specifying the range of start characters
+(or the single start character) for the bins</li>
+<li><cite>groups</cite>: a list with the contents of the bins. Each item is a list
+of sorted strings starting with one of the characters in the
+corresponding label</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">createAppMenu</tt><big>(</big><em>mode='app'</em>, <em>parent=None</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Create the menu(s) with pyFormex apps</p>
+<p>This creates a menu with all examples distributed with pyFormex.
+By default, this menu is put in the top menu bar with menu label &#8216;Examples&#8217;.</p>
+<p>The user can add his own app directories through the configuration
+settings. In that case the &#8216;Examples&#8217; menu and menus for all the
+configured app paths will be gathered in a top level popup menu labeled
+&#8216;Apps&#8217;.</p>
+<p>The menu will be placed in the top menu bar before the specified item.
+If a menu item named &#8216;Examples&#8217; or &#8216;Apps&#8217; already exists, it is
+replaced.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">reloadMenu</tt><big>(</big><em>mode='app'</em><big>)</big></dt>
+<dd><p>Reload the named menu.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>50. <a class="reference internal" href="#module-appMenu" title="appMenu: Menu with pyFormex apps."><tt class="xref py py-mod docutils literal"><span class="pre">appMenu</span></tt></a> &#8212; Menu with pyFormex apps.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-appMenu"></span><p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">appMenu</span></tt></p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">appMenu.</tt><tt class="descname">AppMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>mode='app'</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em>, <em>parent=None</em>, <em>before=None</em>, <em>runall=True</em><big>)</big></dt>
+<dd><p>A menu of pyFormex applications in a directory or list.</p>
+<p>This class creates a menu of pyFormex applications or scripts
+collected from a directory or specified as a list of modules.
+It is used in the pyFormex GUI to create
+the examples menu, and for the apps history. The pyFormex apps
+can then be run from the menu or from the button toolbar.
+The user may use this class to add his own apps/scripts
+into the pyFormex GUI.</p>
+<p>Apps are simply Python modules that have a &#8216;run&#8217; function.
+Only these modules will be added to the menu.
+Only files that are recognized by <a class="reference internal" href="utils.html#utils.is_pyFormex" title="utils.is_pyFormex"><tt class="xref py py-func docutils literal"><span class="pre">utils.is_pyFormex()</span></tt></a> as being
+pyFormex scripts will be added to the menu.</p>
+<p>The constructor takes the following arguments:</p>
+<ul class="simple">
+<li><cite>title</cite>: the top level label for the menu</li>
+<li><cite>dir</cite>: an optional directory path. If specified, and no <cite>files</cite> argument
+is specified, all Python files in <cite>dir</cite> that do not start with either
+&#8216;.&#8217; or &#8216;_&#8217;, will be considered for inclusion in the menu.
+If mode==&#8217;app&#8217;, they will only be included if
+they can be loaded as a module. If mode==&#8217;script&#8217;, they will only be
+included if they are considered a pyFormex script by utils.is_pyFormex.
+If <cite>files</cite> is specified, <cite>dir</cite> will just be prepended to each file in
+the list.</li>
+<li><cite>files</cite>: an explicit list of file names of pyFormex scripts.
+If no <cite>dir</cite> nor <cite>ext</cite> arguments are given, these should be the full path
+names to the script files. Otherwise, <cite>dir</cite> is prepended and <cite>ext</cite> is
+appended to each filename.</li>
+<li><cite>ext</cite>: an extension to be added to each filename. If <cite>dir</cite> was specified,
+the default extension is &#8216;.py&#8217;. If no <cite>dir</cite> was specified, the default
+extension is an empty string.</li>
+<li><cite>recursive</cite>: if True, a cascading menu of all pyFormex scripts in the
+directory and below will be constructed. If only <cite>dir</cite> and no <cite>files</cite>
+are specified, the default is True</li>
+<li><cite>max</cite>: if specified, the list of files will be truncated to this number
+of items. Adding more files to the menu will then be done at the top and
+the surplus number of files will be dropped from the bottom of the list.</li>
+</ul>
+<p>The defaults were thus chosen to be convenient for the three most frequent
+uses of this class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">AppMenu</span><span class="p">(</span><span class="s">&#39;My Apps&#39;</span><span class="p">,</span><span class="nb">dir</span><span class="o">=</span><span class="s">&quot;/path/to/my/appsdir&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a menu with all pyFormex apps in the specified path and its
+subdirectories.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ApptMenu</span><span class="p">(</span><span class="s">&#39;My Scripts&#39;</span><span class="p">,</span><span class="nb">dir</span><span class="o">=</span><span class="s">&quot;/path/to/my/sciptsdir&quot;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s">&#39;scripts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a menu with all pyFormex scripts in the specified path and its
+subdirectories.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">AppMenu</span><span class="p">(</span><span class="s">&#39;History&#39;</span><span class="p">,</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;/my/script1.py&quot;</span><span class="p">,</span><span class="s">&quot;/some/other/script.pye&quot;</span><span class="p">],</span>          <span class="n">mode</span><span class="o">=</span><span class="s">&#39;script&#39;</span><span class="p">,</span><span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>is typically used to create a history menu of previously visited script
+files.</p>
+<p>With the resulting file list, a menu is created. Selecting a menu item
+will make the corresponding file the current script and unless the
+<cite>autoplay</cite> configuration variable was set to False, the script is executed.</p>
+<p>Furthermore, if the menu is a toplevel one, it will have the following
+extra options:</p>
+<ul class="simple">
+<li><em class="menuselection">Classify scripts</em></li>
+<li><em class="menuselection">Remove catalog</em></li>
+<li><em class="menuselection">Reload scripts</em></li>
+</ul>
+<p>The first option uses the keyword specifications in the scripts docstring
+to make a classification of the scripts according to keywords.
+See the <tt class="xref py py-func docutils literal"><span class="pre">scriptKeywords()</span></tt> function for more info. The second option
+removes the classification. Both options are especially useful for the
+pyFormex examples.</p>
+<p>The last option reloads a ScriptMenu. This can be used to update the menu
+when you created a new script file.</p>
+<dl class="method">
+<dt>
+<tt class="descname">getFiles</tt><big>(</big><big>)</big></dt>
+<dd><p>Get a list of scripts in self.dir</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">filterFiles</tt><big>(</big><em>files</em><big>)</big></dt>
+<dd><p>Filter a list of scripts</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">loadFiles</tt><big>(</big><em>files=None</em><big>)</big></dt>
+<dd><p>Load the app/script files in this menu</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">fileName</tt><big>(</big><em>script</em><big>)</big></dt>
+<dd><p>Return the full pathname for a script.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">fullAppName</tt><big>(</big><em>app</em><big>)</big></dt>
+<dd><p>Return the pkg.module name for an app.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">run</tt><big>(</big><em>action</em><big>)</big></dt>
+<dd><p>Run the selected app.</p>
+<p>This function is executed when the menu item is selected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runApp</tt><big>(</big><em>app</em>, <em>play=True</em><big>)</big></dt>
+<dd><p>Set/Run the specified app.</p>
+<p>Set the specified app as the current app,
+and run it if play==True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runAll</tt><big>(</big><em>first=0</em>, <em>last=None</em>, <em>random=True</em>, <em>count=-1</em>, <em>recursive=True</em><big>)</big></dt>
+<dd><p>Run all apps in the range [first,last].</p>
+<p>Runs the apps in the range first:last.
+If last is None, the length of the file list is used.
+If count is positive, at most count scripts per submenu are executed.
+Notice that the range is Python style.
+If rand is True, the files are shuffled before running.
+If recursive is True, also the files in submenu are played.
+The first and last arguments do not apply to the submenus.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runNext</tt><big>(</big><em>count=-1</em><big>)</big></dt>
+<dd><p>Run the current app and the following ones.</p>
+<p>If a positive count is specified, at most count scripts
+will be run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runCurrent</tt><big>(</big><big>)</big></dt>
+<dd><p>Run the current app, or the first if none was played yet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">runRandom</tt><big>(</big><big>)</big></dt>
+<dd><p>Run a random script.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">reload</tt><big>(</big><big>)</big></dt>
+<dd><p>Reload the scripts from dir.</p>
+<p>This is only available if a directory path was specified and
+no files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">add</tt><big>(</big><em>name</em>, <em>strict=True</em>, <em>skipconfig=True</em><big>)</big></dt>
+<dd><p>Add a new filename to the front of the menu.</p>
+<p>This function is used to add app/scripts to the history menus.
+By default, only legal pyFormex apps or scripts can be added, and
+scripts from the user config will not be added.
+Setting strict and or skipconfig to False will skip the filter(s).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">actionList</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list with the current actions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">actionsLike</tt><big>(</big><em>clas</em><big>)</big></dt>
+<dd><p>Return a list with the current actions of given class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">subMenus</tt><big>(</big><big>)</big></dt>
+<dd><p>Return a list with the submenus</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">index</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the index of the specified item in the actionlist.</p>
+<p>If the requested item is not in the actionlist, -1 is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">action</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the action with specified text.</p>
+<p>First, a normal action is tried. If none is found,
+a separator is tried.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Return the item with specified text.</p>
+<p>For a normal action or a separator, an action is returned.
+For a menu action, a menu is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">nextitem</tt><big>(</big><em>text</em><big>)</big></dt>
+<dd><p>Returns the name of the next item.</p>
+<p>This can be used to replace the current item with another menu.
+If the item is the last, None is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">removeItem</tt><big>(</big><em>item</em><big>)</big></dt>
+<dd><p>Remove an item from this menu.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big></dt>
+<dd><p>Create and insert a separator</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Insert an existing menu.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Insert an action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Create and insert an action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em>, <em>debug=False</em><big>)</big></dt>
+<dd><p>Insert a list of items in the menu.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>items</cite>: a list of menuitem tuples. Each item is a tuple of two
+or three elements: (text, action, options):<ul>
+<li><cite>text</cite>: the text that will be displayed in the menu item.
+It is stored in a normalized way: all lower case and with
+&#8216;&amp;&#8217; removed.</li>
+<li><cite>action</cite>: can be any of the following:<ul>
+<li>a Python function or instance method : it will be called when the
+item is selected,</li>
+<li>a string with the name of a function/method,</li>
+<li>a list of Menu Items: a popup Menu will be created that will
+appear when the item is selected,</li>
+<li>an existing Menu,</li>
+<li>None : this will create a separator item with no action.</li>
+</ul>
+</li>
+<li><cite>options</cite>: optional dictionary with following honoured fields:<ul>
+<li><cite>icon</cite>: the name of an icon to be displayed with the item text.
+This name should be that of one of the icons in the pyFormex
+icondir.</li>
+<li><cite>shortcut</cite>: is an optional key combination to select the item.</li>
+<li><cite>tooltip</cite>: a text that is displayed as popup help.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><cite>before</cite>: if specified, should be the text <em>or</em> the action of one
+of the items in the Menu (not the items list!): the new list of
+items will be inserted before the specified item.</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">appMenu</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">sortSets</tt><big>(</big><em>d</em><big>)</big></dt>
+<dd><p>Turn the set values in d into sorted lists.</p>
+<ul class="simple">
+<li><cite>d</cite>: a Python dictionary</li>
+</ul>
+<p>All the values in the dictionary are checked. Those that are of type
+<cite>set</cite> are converted to a sorted list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">classify</tt><big>(</big><em>appdir</em>, <em>pkg</em>, <em>nmax=0</em><big>)</big></dt>
+<dd><p>Classify the files in submenus according to keywords.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">splitAlpha</tt><big>(</big><em>strings</em>, <em>n</em>, <em>ignorecase=True</em><big>)</big></dt>
+<dd><p>Split a series of strings in alphabetic collections.</p>
+<p>The strings are split over a series of bins in alphabetical order.
+Each bin can contain strings starting with multiple successive
+characters, but not more than n items. Items starting with the same
+character are always in the same bin. If any starting character
+occurs more than n times, the maximum will be exceeded.</p>
+<ul class="simple">
+<li><cite>files</cite>: a list of strings start with an upper case letter (&#8216;A&#8217;-&#8216;Z&#8217;)</li>
+<li><cite>n</cite>: the desired maximum number of items in a bin.</li>
+</ul>
+<p>Returns: a tuple of</p>
+<ul class="simple">
+<li><cite>labels</cite>: a list of strings specifying the range of start characters
+(or the single start character) for the bins</li>
+<li><cite>groups</cite>: a list with the contents of the bins. Each item is a list
+of sorted strings starting with one of the characters in the
+corresponding label</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">createAppMenu</tt><big>(</big><em>mode='app'</em>, <em>parent=None</em>, <em>before=None</em><big>)</big></dt>
+<dd><p>Create the menu(s) with pyFormex apps</p>
+<p>This creates a menu with all examples distributed with pyFormex.
+By default, this menu is put in the top menu bar with menu label &#8216;Examples&#8217;.</p>
+<p>The user can add his own app directories through the configuration
+settings. In that case the &#8216;Examples&#8217; menu and menus for all the
+configured app paths will be gathered in a top level popup menu labeled
+&#8216;Apps&#8217;.</p>
+<p>The menu will be placed in the top menu bar before the specified item.
+If a menu item named &#8216;Examples&#8217; or &#8216;Apps&#8217; already exists, it is
+replaced.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">appMenu.</tt><tt class="descname">reloadMenu</tt><big>(</big><em>mode='app'</em><big>)</big></dt>
+<dd><p>Reload the named menu.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -520,10 +1226,10 @@ replaced.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="32. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="51. toolbar — Toolbars for the pyFormex GUI."
              >next</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="46. imageViewer — A general image viewer"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -533,7 +1239,7 @@ replaced.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

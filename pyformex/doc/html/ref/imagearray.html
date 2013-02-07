@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. imagearray — Convert bitmap images into numpy arrays. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>43. imagearray — Convert bitmap images into numpy arrays. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="30. imageViewer — A general image viewer" href="imageViewer.html" />
-    <link rel="prev" title="28. image — Saving OpenGL renderings to image files." href="image.html" />
+    <link rel="next" title="46. imageViewer — A general image viewer" href="imageViewer.html" />
+    <link rel="prev" title="40. image — Saving OpenGL renderings to image files." href="image.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="46. imageViewer — A general image viewer"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="40. image — Saving OpenGL renderings to image files."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,13 +100,20 @@
 
 </div>
    
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">43. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></li>
+<li><a class="reference internal" href="#id53">44. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></li>
+<li><a class="reference internal" href="#id107">45. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></li>
+</ul>
+
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="image.html"
-                        title="previous chapter">28. <tt class="docutils literal docutils literal docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
+                        title="previous chapter">40. <tt class="docutils literal docutils literal docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="imageViewer.html"
-                        title="next chapter">30. <tt class="docutils literal docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
+                        title="next chapter">46. <tt class="docutils literal docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,7 +148,7 @@
           <div class="body">
             
   <div class="section" id="module-imagearray">
-<span id="imagearray-convert-bitmap-images-into-numpy-arrays"></span><span id="sec-ref-imagearray"></span><h1>29. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#module-imagearray" title="Permalink to this headline">¶</a></h1>
+<span id="imagearray-convert-bitmap-images-into-numpy-arrays"></span><span id="sec-ref-imagearray"></span><h1>43. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#module-imagearray" title="Permalink to this headline">¶</a></h1>
 <p>This module contains functions to convert bitmap images into numpy
 arrays and vice versa.</p>
 <p>This code was based on ideas found on the PyQwt mailing list.</p>
@@ -254,7 +261,10 @@ OpenGL axis points upwards, while bitmap images are stored downwards.</p>
 <dl class="function">
 <dt id="imagearray.readDicom">
 <tt class="descclassname">imagearray.</tt><tt class="descname">readDicom</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#imagearray.readDicom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a DICOM image file.</p>
+<dd><p>Load a DICOM image into a numpy array.</p>
+<p>This function uses the python-gdcm module to load a DICOM image
+into a numpy array. See also <a class="reference internal" href="#imagearray.loadImage_dicom" title="imagearray.loadImage_dicom"><tt class="xref py py-func docutils literal"><span class="pre">loadImage_dicom()</span></tt></a> for an
+equivalent using python-dicom.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>file</cite>: the name of a DICOM image file</li>
@@ -270,6 +280,342 @@ to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).</p>
 <dl class="function">
 <dt id="imagearray.dicom2numpy">
 <tt class="descclassname">imagearray.</tt><tt class="descname">dicom2numpy</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#imagearray.dicom2numpy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a set of DICOM image files.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>files</cite>: a list of file names of dicom images of the same size,
+or a directory containing such images. In the latter case, all the
+DICOM images in the directory will be read.</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>pixar</cite>: a 3D array with the pixel data of all the images. The first
+axis is the <cite>z</cite> value, the last the <cite>x</cite>.</li>
+<li><cite>scale</cite>: a (3,) array with the scaling factors, in order (x,y,z).</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="id53">
+<span id="id54"></span><h1>44. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-imagearray"></span><p>This module contains functions to convert bitmap images into numpy
+arrays and vice versa.</p>
+<p>This code was based on ideas found on the PyQwt mailing list.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">resizeImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em><big>)</big></dt>
+<dd><p>Load and optionally resize an image.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage, or any data that can be converted to a QImage,
+e.g. the name of a raster image file.</li>
+<li><cite>w</cite>, <cite>h</cite>: requested size in pixels of the image.
+A value &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+</ul>
+<p>Returns a QImage with the requested size.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2numpy</tt><big>(</big><em>image</em>, <em>resize=(0</em>, <em>0)</em>, <em>order='RGBA'</em>, <em>flip=True</em>, <em>indexed=None</em>, <em>expand=None</em><big>)</big></dt>
+<dd><p>Transform an image to a Numpy array.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of an image file, in any of the formats supported by Qt.
+The image can be a full color image or an indexed type. Only 32bit
+and 8bit images are currently supported.</li>
+<li><cite>resize</cite>: a tuple of two integers (width,height). Positive value will
+force the image to be resized to this value.</li>
+<li><cite>order</cite>: string with a permutation of the characters &#8216;RGBA&#8217;, defining
+the order in which the colors are returned. Default is RGBA, so that
+result[...,0] gives the red component. Note however that QImage stores
+in ARGB order. You may also specify a subset of the &#8216;RGBA&#8217; characters,
+in which case you will only get some of the color components. An often
+used value is &#8216;RGB&#8217; to get the colors without the alpha value.</li>
+<li><cite>flip</cite>: boolean: if True, the image scanlines are flipped upside down.
+This is practical because image files are usually stored in top down
+order, while OpenGL uses an upwards positive direction, requiring a
+flip to show the image upright.</li>
+<li><cite>indexed</cite>: True, False or None.<ul>
+<li>If True, the result will be an indexed image where each pixel color
+is an index into a color table. Non-indexed image data will be
+converted.</li>
+<li>If False, the result will be a full color array specifying the color
+of each pixel. Indexed images will be converted.</li>
+<li>If None (default), no conversion is done and the resulting data are
+dependent on the image format. In all cases both a color and a
+colortable will be returned, but the latter will be None for
+non-indexed images.</li>
+</ul>
+</li>
+<li><cite>expand</cite>: deprecated, retained for compatibility</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li>if <cite>indexed</cite> is False: an int8 array with shape (height,width,4), holding
+the 4 components of the color of each pixel. Order of the components
+is as specified by the <cite>order</cite> argument. Indexed image formats will
+be expanded to a full color array.</li>
+<li>if <cite>indexed</cite> is True: a tuple (colors,colortable) where colors is an
+(height,width) shaped int array of indices into the colortable,
+which is an int8 array with shape (ncolors,4).</li>
+<li>if <cite>indexed</cite> is None (default), a tuple (colors,colortable) is returned,
+the type of which depend on the original image format:<ul>
+<li>for indexed formats, colors is an int (height,width) array of indices
+into the colortable, which is an int8 array with shape (ncolors,4).</li>
+<li>for non-indexed formats, colors is a full (height,width,4) array
+and colortable is None.</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">gray2qimage</tt><big>(</big><em>gray</em><big>)</big></dt>
+<dd><p>Convert the 2D numpy array <cite>gray</cite> into a 8-bit QImage with a gray
+colormap.  The first dimension represents the vertical image axis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">rgb2qimage</tt><big>(</big><em>rgb</em><big>)</big></dt>
+<dd><p>Convert the 3D numpy array <cite>rgb</cite> into a 32-bit QImage.  <cite>rgb</cite> must
+have three dimensions with the vertical, horizontal and RGB image axes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2glcolor</tt><big>(</big><em>image</em>, <em>resize=(0</em>, <em>0)</em><big>)</big></dt>
+<dd><p>Convert a bitmap image to corresponding OpenGL colors.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of an image file, in any of the formats supported by Qt.
+The image can be a full color image or an indexed type. Only 32bit
+and 8bit images are currently supported.</li>
+<li><cite>resize</cite>: a tuple of two integers (width,height). Positive value will
+force the image to be resized to this value.</li>
+</ul>
+<p>Returns a (w,h,3) shaped array of float values in the range 0.0 to 1.0,
+containing the OpenGL colors corresponding to the image RGB colors.
+By default the image is flipped upside-down because the vertical
+OpenGL axis points upwards, while bitmap images are stored downwards.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">readDicom</tt><big>(</big><em>filename</em><big>)</big></dt>
+<dd><p>Load a DICOM image into a numpy array.</p>
+<p>This function uses the python-gdcm module to load a DICOM image
+into a numpy array. See also <a class="reference internal" href="#imagearray.loadImage_dicom" title="imagearray.loadImage_dicom"><tt class="xref py py-func docutils literal"><span class="pre">loadImage_dicom()</span></tt></a> for an
+equivalent using python-dicom.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>file</cite>: the name of a DICOM image file</li>
+</ul>
+<dl class="docutils">
+<dt>Returns a 3D array with the pixel data of all the images. The first</dt>
+<dd>axis is the <cite>z</cite> value, the last the <cite>x</cite>.</dd>
+</dl>
+<p>As a side effect, this function sets the global variable <cite>_dicom_spacing</cite>
+to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">dicom2numpy</tt><big>(</big><em>files</em><big>)</big></dt>
+<dd><p>Read a set of DICOM image files.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>files</cite>: a list of file names of dicom images of the same size,
+or a directory containing such images. In the latter case, all the
+DICOM images in the directory will be read.</li>
+</ul>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li><cite>pixar</cite>: a 3D array with the pixel data of all the images. The first
+axis is the <cite>z</cite> value, the last the <cite>x</cite>.</li>
+<li><cite>scale</cite>: a (3,) array with the scaling factors, in order (x,y,z).</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="id107">
+<span id="id108"></span><h1>45. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-imagearray"></span><p>This module contains functions to convert bitmap images into numpy
+arrays and vice versa.</p>
+<p>This code was based on ideas found on the PyQwt mailing list.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">resizeImage</tt><big>(</big><em>image</em>, <em>w=0</em>, <em>h=0</em><big>)</big></dt>
+<dd><p>Load and optionally resize an image.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage, or any data that can be converted to a QImage,
+e.g. the name of a raster image file.</li>
+<li><cite>w</cite>, <cite>h</cite>: requested size in pixels of the image.
+A value &lt;= 0 will be replaced with the corresponding actual size of
+the image.</li>
+</ul>
+<p>Returns a QImage with the requested size.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2numpy</tt><big>(</big><em>image</em>, <em>resize=(0</em>, <em>0)</em>, <em>order='RGBA'</em>, <em>flip=True</em>, <em>indexed=None</em>, <em>expand=None</em><big>)</big></dt>
+<dd><p>Transform an image to a Numpy array.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of an image file, in any of the formats supported by Qt.
+The image can be a full color image or an indexed type. Only 32bit
+and 8bit images are currently supported.</li>
+<li><cite>resize</cite>: a tuple of two integers (width,height). Positive value will
+force the image to be resized to this value.</li>
+<li><cite>order</cite>: string with a permutation of the characters &#8216;RGBA&#8217;, defining
+the order in which the colors are returned. Default is RGBA, so that
+result[...,0] gives the red component. Note however that QImage stores
+in ARGB order. You may also specify a subset of the &#8216;RGBA&#8217; characters,
+in which case you will only get some of the color components. An often
+used value is &#8216;RGB&#8217; to get the colors without the alpha value.</li>
+<li><cite>flip</cite>: boolean: if True, the image scanlines are flipped upside down.
+This is practical because image files are usually stored in top down
+order, while OpenGL uses an upwards positive direction, requiring a
+flip to show the image upright.</li>
+<li><cite>indexed</cite>: True, False or None.<ul>
+<li>If True, the result will be an indexed image where each pixel color
+is an index into a color table. Non-indexed image data will be
+converted.</li>
+<li>If False, the result will be a full color array specifying the color
+of each pixel. Indexed images will be converted.</li>
+<li>If None (default), no conversion is done and the resulting data are
+dependent on the image format. In all cases both a color and a
+colortable will be returned, but the latter will be None for
+non-indexed images.</li>
+</ul>
+</li>
+<li><cite>expand</cite>: deprecated, retained for compatibility</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li>if <cite>indexed</cite> is False: an int8 array with shape (height,width,4), holding
+the 4 components of the color of each pixel. Order of the components
+is as specified by the <cite>order</cite> argument. Indexed image formats will
+be expanded to a full color array.</li>
+<li>if <cite>indexed</cite> is True: a tuple (colors,colortable) where colors is an
+(height,width) shaped int array of indices into the colortable,
+which is an int8 array with shape (ncolors,4).</li>
+<li>if <cite>indexed</cite> is None (default), a tuple (colors,colortable) is returned,
+the type of which depend on the original image format:<ul>
+<li>for indexed formats, colors is an int (height,width) array of indices
+into the colortable, which is an int8 array with shape (ncolors,4).</li>
+<li>for non-indexed formats, colors is a full (height,width,4) array
+and colortable is None.</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">gray2qimage</tt><big>(</big><em>gray</em><big>)</big></dt>
+<dd><p>Convert the 2D numpy array <cite>gray</cite> into a 8-bit QImage with a gray
+colormap.  The first dimension represents the vertical image axis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">rgb2qimage</tt><big>(</big><em>rgb</em><big>)</big></dt>
+<dd><p>Convert the 3D numpy array <cite>rgb</cite> into a 32-bit QImage.  <cite>rgb</cite> must
+have three dimensions with the vertical, horizontal and RGB image axes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2glcolor</tt><big>(</big><em>image</em>, <em>resize=(0</em>, <em>0)</em><big>)</big></dt>
+<dd><p>Convert a bitmap image to corresponding OpenGL colors.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage or any data that can be converted to a QImage,
+e.g. the name of an image file, in any of the formats supported by Qt.
+The image can be a full color image or an indexed type. Only 32bit
+and 8bit images are currently supported.</li>
+<li><cite>resize</cite>: a tuple of two integers (width,height). Positive value will
+force the image to be resized to this value.</li>
+</ul>
+<p>Returns a (w,h,3) shaped array of float values in the range 0.0 to 1.0,
+containing the OpenGL colors corresponding to the image RGB colors.
+By default the image is flipped upside-down because the vertical
+OpenGL axis points upwards, while bitmap images are stored downwards.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="imagearray.loadImage_dicom">
+<tt class="descclassname">imagearray.</tt><tt class="descname">loadImage_dicom</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#imagearray.loadImage_dicom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a DICOM image into a numpy array.</p>
+<p>This function uses the python-dicom module to load a DICOM image
+into a numpy array. See also <a class="reference internal" href="#imagearray.loadImage_gdcm" title="imagearray.loadImage_gdcm"><tt class="xref py py-func docutils literal"><span class="pre">loadImage_gdcm()</span></tt></a> for an
+equivalent using python-gdcm.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>file</cite>: the name of a DICOM image file</li>
+</ul>
+<dl class="docutils">
+<dt>Returns a 3D array with the pixel data of all the images. The first</dt>
+<dd>axis is the <cite>z</cite> value, the last the <cite>x</cite>.</dd>
+</dl>
+<p>As a side effect, this function sets the global variable <cite>_dicom_spacing</cite>
+to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="imagearray.loadImage_gdcm">
+<tt class="descclassname">imagearray.</tt><tt class="descname">loadImage_gdcm</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#imagearray.loadImage_gdcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a DICOM image into a numpy array.</p>
+<p>This function uses the python-gdcm module to load a DICOM image
+into a numpy array. See also <a class="reference internal" href="#imagearray.loadImage_dicom" title="imagearray.loadImage_dicom"><tt class="xref py py-func docutils literal"><span class="pre">loadImage_dicom()</span></tt></a> for an
+equivalent using python-dicom.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>file</cite>: the name of a DICOM image file</li>
+</ul>
+<dl class="docutils">
+<dt>Returns a 3D array with the pixel data of all the images. The first</dt>
+<dd>axis is the <cite>z</cite> value, the last the <cite>x</cite>.</dd>
+</dl>
+<p>As a side effect, this function sets the global variable <cite>_dicom_spacing</cite>
+to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">readDicom</tt><big>(</big><em>filename</em><big>)</big></dt>
+<dd><p>Load a DICOM image into a numpy array.</p>
+<p>This function uses the python-gdcm module to load a DICOM image
+into a numpy array. See also <a class="reference internal" href="#imagearray.loadImage_dicom" title="imagearray.loadImage_dicom"><tt class="xref py py-func docutils literal"><span class="pre">loadImage_dicom()</span></tt></a> for an
+equivalent using python-dicom.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>file</cite>: the name of a DICOM image file</li>
+</ul>
+<dl class="docutils">
+<dt>Returns a 3D array with the pixel data of all the images. The first</dt>
+<dd>axis is the <cite>z</cite> value, the last the <cite>x</cite>.</dd>
+</dl>
+<p>As a side effect, this function sets the global variable <cite>_dicom_spacing</cite>
+to a (3,) array with the pixel/slice spacing factors, in order (x,y,z).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">imagearray.</tt><tt class="descname">dicom2numpy</tt><big>(</big><em>files</em><big>)</big></dt>
 <dd><p>Read a set of DICOM image files.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -303,10 +649,10 @@ axis is the <cite>z</cite> value, the last the <cite>x</cite>.</li>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imageViewer.html" title="30. imageViewer — A general image viewer"
+          <a href="imageViewer.html" title="46. imageViewer — A general image viewer"
              >next</a> |</li>
         <li class="right" >
-          <a href="image.html" title="28. image — Saving OpenGL renderings to image files."
+          <a href="image.html" title="40. image — Saving OpenGL renderings to image files."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -316,7 +662,7 @@ axis is the <cite>z</cite> value, the last the <cite>x</cite>.</li>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Jan 22, 2013.
+      Last updated on Feb 07, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
