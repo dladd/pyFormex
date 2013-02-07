@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -32,7 +32,7 @@
 # !! the installation tree. All install paths specified hereafter will
 # !! then be relative to that installation path.
 # !! An environment variable SU can be set to execute a program with
-# !! root privileges. Examples are 'sudo' or 'gksu'. 
+# !! root privileges. Examples are 'sudo' or 'gksu'.
 
 # root of the installation tree: this is a reasonable default
 prefix:= /usr/local
@@ -42,6 +42,8 @@ bindir:= $(prefix)/bin
 libdir:= $(prefix)/lib
 # where to install the documentation
 docdir:= $(prefix)/share/doc
+# where to install the manpages
+docdir:= $(prefix)/share/man/man1
 
 #####################################################################
 
@@ -58,9 +60,8 @@ INSTALLBIN:= $(INSTALL) -m 0755
 INSTALLDATA:= $(INSTALL) -m 0644
 
 PRG= postabq
-PRGNAME= pyformex-$(PRG)    # name to use for installed binary
 SRC= $(PRG).c
-MAN= pyformex-$(PRG).1
+MAN= $(PRG).1
 
 
 .PHONY: all build install clean
@@ -72,16 +73,17 @@ all: install clean
 $(PRG): $(SRC)
 	$(CC) -o $@ $<
 
-install: $(PRG)
+install: $(PRG) $(MAN)
 	$(INSTALLDIR) $(BINDIR)
-	$(INSTALLBIN) $< $(BINDIR)/$(PRGNAME)
+	$(INSTALLBIN) $(PRG) $(BINDIR)/pyformex-$(PRG)
+	$(INSTALLDATA) $(MAN) $(MANDIR)/pyformex-$(MAN)
 
 manpages: $(MAN)
 
-pyformex-%.1: %.1.rst
+%.1: %.1.rst
 	rst2man $< > $@
 
 clean:
-	rm -f $(PRG) $(PRG).o
+	rm -f $(PRG) $(PRG).o $(MAN)
 
 # End

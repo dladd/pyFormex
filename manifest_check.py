@@ -39,7 +39,7 @@ def gitRepo(path='.'):
 def gitFileStatus(repo,files=None):
     status = {}
     st = repo.git.status(porcelain=True)
-    print st
+    #print st
     for line in st.split('\n'):
         st = line[:2]
         fn = line[3:]
@@ -75,8 +75,9 @@ def checkFileStatus(status):
         }
 
     for st in check:
-        print '\n'+check[st]+':'
-        printfiles(status[st])
+        if st in status:
+            print '\n'+check[st]+':'
+            printfiles(status[st])
 
 
 if __name__ == '__main__':
@@ -86,8 +87,8 @@ if __name__ == '__main__':
 
     repo = gitRepo()
     status = gitFileStatus(repo)
-    print status
-    #checkFileStatus(status)
+    #print status
+    checkFileStatus(status)
 
 
 # End

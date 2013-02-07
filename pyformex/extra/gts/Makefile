@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -26,7 +26,7 @@
 #
 # Makefile for 'gts*' commands used by pyFormex
 #
-# You need: libgts-dev, libglib2.0-dev, pkg-config 
+# You need: libgts-dev, libglib2.0-dev, pkg-config
 #
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
@@ -34,7 +34,7 @@
 # !! the installation tree. All install paths specified hereafter will
 # !! then be relative to that installation path.
 # !! An environment variable SU can be set to execute a program with
-# !! root privileges. Examples are 'sudo' or 'gksu'. 
+# !! root privileges. Examples are 'sudo' or 'gksu'.
 
 # root of the installation tree: this is a reasonable default
 prefix:= /usr/local
@@ -44,6 +44,8 @@ bindir:= $(prefix)/bin
 libdir:= $(prefix)/lib
 # where to install the documentation
 docdir:= $(prefix)/share/doc
+# where to install the manpages
+docdir:= $(prefix)/share/man/man1
 
 #####################################################################
 
@@ -79,9 +81,10 @@ all: install clean
 gts%: %.c
 	$(CC) $(FLAGS) $< -o $@
 
-install: $(PRG)
+install: $(PRG) $(MAN)
 	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $(PRG) $(BINDIR)
+	$(INSTALLDATA) $(MAN) $(MANDIR)/$(MAN)
 
 manpages: $(MAN)
 

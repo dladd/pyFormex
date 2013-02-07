@@ -134,6 +134,7 @@ default:
 
 clean:
 	alldirs . "rm -f *~"
+	make -C pyformex/extra clean
 
 distclean: clean
 	alldirs . "rm -f *.pyc *.so"
@@ -223,7 +224,7 @@ stampstaticdirs: Stamp.staticdir
 	${STAMP} -t$< -i ${STATICDIRS}
 
 # Create the distribution
-dist: manpages ${PKGDIR}/${LATEST}
+dist: manpages ${PKGDIR}/${LATEST} clean
 
 ${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
@@ -240,7 +241,6 @@ ${PKGDIR}/${PKGVER}.sig: ${PKGDIR}/${PKGVER}
 manpages:
 	make -C pyformex/doc manpages
 	make -C pyformex/extra manpages
-
 
 # Publish the distribution to our ftp server
 

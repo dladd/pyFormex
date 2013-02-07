@@ -1,47 +1,34 @@
-#
-# Makefile for compiling Calculix on Debian GNU/Linux
-#
-# Adapted from the original Calculix Makefile by B. Verhegghe
-# (benedict.verhegghe@ugent.be)
-#
-# The default Makefile provided with Calculix (www.dhondt.de) instructs
-# you to compile the spooles and arpack libraries from sources.
-# This adapted Makefile makes use of the spooles and arpack libraries
-# as provided by Debian.
-# To install these:  apt-get install libspooles-dev libarpack2-dev
-#
-# This is for Calculix 2.5
-#
+# $Id$
 
-CFLAGS = -Wall -O -I /usr/include/spooles -DARCH="Linux" -DSPOOLES -DARPACK -DMATRIXSTORAGE
-FFLAGS = -Wall -O -fopenmp
+# Makefile for pyFormex extras
 
-CC=cc
-FC=gfortran
+DIRS = dxfparser gts postabq
 
-.c.o :
-	$(CC) $(CFLAGS) -c $<
-.f.o :
-	$(FC) $(FFLAGS) -c $<
+# the sets of directories to do various things in
+BUILDDIRS = $(DIRS:%=build-%)
+INSTALLDIRS = $(DIRS:%=install-%)
+CLEANDIRS = $(DIRS:%=clean-%)
 
-include Makefile.inc
+build: $(BUILDDIRS)
+$(DIRS): $(BUILDDIRS)
+$(BUILDDIRS):
+	$(MAKE) -C $(@:build-%=%) build
 
-SCCXMAIN = ccx_2.5.c
+install: $(INSTALLDIRS) build
+$(INSTALLDIRS):
+	$(MAKE) -C $(@:install-%=%) install
 
-OCCXF = $(SCCXF:.f=.o)
-OCCXC = $(SCCXC:.c=.o)
-OCCXMAIN = $(SCCXMAIN:.c=.o)
+clean: $(CLEANDIRS)
+$(CLEANDIRS):
+	$(MAKE) -C $(@:clean-%=%) clean
 
-LIBS =  -L/usr/lib \
-	-lspooles \
-	-larpack \
-	-llapack \
-	-lblas \
-	-lpthread -lm -lc
+manpages:
+	@for d in $(DIRS); do make -C $$d manpages; done
 
-ccx_2.5: $(OCCXMAIN) ccx_2.5.a
-	./date.pl; $(CC) $(CFLAGS) -c ccx_2.5.c; $(FC) -Wall -O -o $@ $(OCCXMAIN) ccx_2.5.a $(LIBS)
+all: build install clean
 
-ccx_2.5.a: $(OCCXF) $(OCCXC)
-	ar vr $@ $?
-                                                                               
+.PHONY: subdirs $(DIRS)
+.PHONY: subdirs $(BUILDDIRS)
+.PHONY: subdirs $(INSTALLDIRS)
+.PHONY: subdirs $(CLEANDIRS)
+.PHONY: all install clean test manpages
