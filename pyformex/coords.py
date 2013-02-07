@@ -454,7 +454,7 @@ class Coords(ndarray):
         n = asarray(n).reshape((3))
         n = normalize(n)
         d = inner(self,n) - inner(p,n)
-        return d
+        return asarray(d)
 
 
     def distanceFromLine(self,p,n):
@@ -482,7 +482,7 @@ class Coords(ndarray):
         n = asarray(n)#.reshape((3))
         t = cross(n,p-self)
         d = sqrt(sum(t*t,-1)) / length(n)
-        return d
+        return asarray(d)
 
 
     def distanceFromPoint(self,p):
@@ -503,7 +503,8 @@ class Coords(ndarray):
         """
         p = asarray(p).reshape((3))
         d = self-p
-        return sqrt(sum(d*d,-1))
+        d = sqrt(sum(d*d,-1))
+        return asarray(d)
 
 
     def closestToPoint(self,p):

@@ -195,7 +195,6 @@ def read_stl_bin(fn):
     pf.message("Reading binary .STL %s" % fn)
     fil = open(fn,'rb')
     head = fil.read(80)
-    #print("HEAD:%s" % head)
     if head[:5] == 'solid':
         raise ValueError("%s looks like an ASCII STL file!" % fn)
     i = head.find('COLOR=')
@@ -215,7 +214,6 @@ def read_stl_bin(fn):
         from gui.colors import GLcolor
         color = GLcolor(color[:3])
     return x,color
-
 
 
 def read_gambit_neutral(fn):
