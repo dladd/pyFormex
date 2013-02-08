@@ -730,25 +730,65 @@ def isWritable(path):
     return os.access(path,os.W_OK)
 
 
-def chdir(fn):
+def chdir(path,create=False):
     """Change the current working directory.
 
-    If fn is a directory name, the current directory is set to fn.
-    If fn is a file name, the current directory is set to the directory
-    holding fn.
-    In either case, the current directory is stored in the user's preferences
+    Parameters:
+
+    - `path`: pathname of the directory or file. If it is a file, the name of
+      the directory holding the file is used. The path can be an absolute
+      or a relative pathname. A '~' character at the start of the pathname will
+      be expanded to the user's home directory.
+
+    - `create`: bool. If True and the specified path does not exist, it will
+      be created. The default is to do nothing if the specified path does
+      not exist.
+
+    The changed to current directory is stored in the user's preferences
     for persistence between pyFormex invocations.
 
-    If fn does not exist, nothing is done.
     """
-    if os.path.exists(fn):
-        if not os.path.isdir(fn):
-            fn = os.path.dirname(os.path.abspath(fn))
-        os.chdir(fn)
-        setPrefs({'workdir':fn},save=True)
-        if pf.GUI:
-            pf.GUI.setcurdir()
-        pf.message("Your current workdir is %s" % os.getcwd())
+    path = utils.tildeExpand(path)
+    if not os.path.exists(path) and create:
+        mkdir(path)
+    if not os.path.exists(path):
+        raise ValueError,"The directory %s does not exist" % path
+    if not os.path.isdir(path):
+        path = os.path.dirname(os.path.abspath(path))
+    os.chdir(path)
+    setPrefs({'workdir':path},save=True)
+    if pf.GUI:
+        pf.GUI.setcurdir()
+    pwdir()
+
+
+def pwdir():
+    """Print the current working directory.
+
+    """
+    pf.message("Current workdir is %s" % os.getcwd())
+
+
+def mkdir(path):
+    """Create a new directory.
+
+    Create a new directory, including any needed parent directories.
+
+    - `path`: pathname of the directory to create, either an absolute
+      or relative path. A '~' character at the start of the pathname will
+      be expanded to the user's home directory. If the path exists, the
+      function returns True without doing anything.
+
+    Returns True if the pathname exists (before or after).
+    """
+    path = utils.tildeExpand(path)
+    if not path or os.path.exists(path) and os.path.isdir(path):
+        return True
+    if os.path.exists(path):
+        raise ValueError,"The path %s does exists already" % path
+    mkdir(os.path.dirname(path))
+    os.mkdir(path)
+    return os.path.exists(path)
 
 
 def runtime():

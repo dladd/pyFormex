@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -62,12 +62,12 @@ access to the host system.
 def configure():
     from gui.prefMenu import updateSettings
     from gui.widgets import simpleInputItem as I, groupInputItem as G, tabInputItem as T
-    
+
     dia = None
 
     def close():
         dia.close()
-        
+
     def accept(save=False):
         dia.acceptData()
         res = dia.results
@@ -193,11 +193,11 @@ def runLocalProcessor(filename='',processor='abaqus'):
         print(cmd)
         sta,out = utils.runCommand(cmd)
         print(out)
-        
-        
+
+
 def runLocalAbaqus(filename=''):
     runLocalProcessor(filename,processor='abaqus')
-        
+
 def runLocalCalculix(filename=''):
     runLocalProcessor(filename,processor='calculix')
 
@@ -227,7 +227,7 @@ def submitToCluster(filename=None):
             print(ret)
             ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
             print(ret)
-        
+
 
 def killClusterJob(jobname=None):
     """Kill a job to the cluster."""
@@ -241,7 +241,7 @@ def killClusterJob(jobname=None):
         print(cmd)
         ret = call(['ssh',host,"%s" % cmd])
         print(ret)
-       
+
 
 the_host = None
 the_userdir = None
@@ -275,7 +275,7 @@ def checkResultsOnServer(host=None,userdir=None):
             userdir = 'bumper/%s/' % status
         else:
             userdir = res['userdir']
-        
+
     jobnames = getRemoteDirs(host,userdir)
     if jobnames:
         the_host = host
@@ -286,12 +286,12 @@ def checkResultsOnServer(host=None,userdir=None):
         the_userdir = None
         the_jobnames = None
     pf.message(the_jobnames)
-       
+
 
 def changeTargetDir(fn):
     from gui import draw
     return draw.askDirname(fn)
-    
+
 
 def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     """Get results back from cluster."""
@@ -327,11 +327,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
             targetdir = res['target dir']
             if res['create subdir']:
                 targetdir = os.path.join(targetdir,jobname)
-                print("Create targetdir %s" % targetdir)
-                try:
-                    os.mkdir(targetdir)
-                except:
-                    False
+                mkdir(targetdir)
             ext = [ e for e in ['.fil','.post','.odb'] if res[e] ]
             res += [ e for e in res['other'] if e.startswith('.') ]
     if jobname and ext:
@@ -343,7 +339,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
             pf.message("Files succesfully transfered")
         pf.GUI.setBusy(False)
 
-        
+
 
 ####################################################################
 ######### MENU #############

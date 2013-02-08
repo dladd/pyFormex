@@ -496,7 +496,7 @@ paths.
   and after that the pull (or checkout) command will work. You then get your
   changes back with::
 
-    git stash apply
+    git stash pop
 
 
 
