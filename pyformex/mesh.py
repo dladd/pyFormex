@@ -1929,7 +1929,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return self.connect(seq,eltype=eltype)
 
 
-    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclnod=[], exclelem=[]):
+    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True, exclnod=[], exclelem=[],weight=None):
         """Return a smoothed mesh.
 
         Smoothing algorithm based on lowpass filters.
@@ -1987,8 +1987,16 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             else:
                 message('Failed to recognize external points.\nShrinkage may be considerable.')
         w = ones(adj.shape,dtype=float)
+        
+        if weight == 'inversedistance':
+            dist = length(self.coords[adj]-self.coords.reshape(-1,1,3))
+            w[dist!=0] /= dist[dist!=0]
+            
+        if weight == 'distance':
+            w = length(self.coords[adj]-self.coords.reshape(-1,1,3))
+            
         w[adj<0] = 0.
-        w /= (adj>=0).sum(-1).reshape(-1,1)
+        w /= w.sum(-1).reshape(-1,1)
         w = w.reshape(adj.shape[0],adj.shape[1],1)
         c = self.coords.copy()
         for i in range(iterations):
