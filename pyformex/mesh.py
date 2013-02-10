@@ -1057,27 +1057,38 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
 
     # BV: name is way too complex
     # should not be a mesh method, but of some MeshValue class? Field?
-    def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
+    def avgNodalScalarOnAdjacentNodes(self, val, iter=1, ival=None,includeself=False):
         """_Smooth nodal scalar values by averaging over adjacent nodes iter times.
-
+            
         Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
         are averaged over adjacent nodes an number of time (iter)
         in order to provide a smoothed mapping.
+
+        Parameters:
+            
+            -'ival' : boolean of shape (self.coords(), 1 ) to select the nodes on which to average.
+            The default value ivar=None selects all the nodes
+            
+            -'includeself' : include also the scalar value on the node to be average
+        
         """
-
+        
         if iter==0: return val
-        nadjn=self.getEdges().adjacency(kind='n')
-        nadjn=[x[x>=0] for x in nadjn]
-        lnadjn=[len(i) for i in nadjn]
-        lmax= max( lnadjn )
-        adjmatrix=zeros([self.ncoords(), lmax], float)
-        avgval=val
-        for i in range(iter):
-            for i in range( self.ncoords()  ):
-                adjmatrix[i, :len( nadjn[i]) ]=avgval[ nadjn[i]  ]
-            avgval= sum(adjmatrix, axis=1)/lnadjn
-        return avgval
+        nadj = self.getEdges().adjacency(kind='n')
+        if includeself:
+            nadj = concatenate([nadj,arange(alen(nadj)).reshape(-1,1)],axis=1)
 
+        inadj = nadj>=0
+        lnadj = inadj.sum(axis=1)
+        avgval = val
+
+        for j in range(iter):
+            print(j)
+            avgval = sum(avgval[nadj]*inadj, axis=1)/lnadj # multiplying by inadj set to zero the values where nadj==-1
+            if ival!=None:
+                avgval[where(ival!=True)] = val[where(ival!=True)]
+        return avgval
+            
 
     def fuse(self,**kargs):
         """Fuse the nodes of a Meshes.
