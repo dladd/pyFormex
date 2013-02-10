@@ -1,11 +1,11 @@
-# $Id$ *** pyformex ***
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -85,5 +85,5 @@ def run():
 
 if __name__ == 'draw':
     run()
-  
+
 # End

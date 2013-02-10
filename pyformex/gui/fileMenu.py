@@ -536,6 +536,26 @@ def createMovieInteractive():
     pf.GUI.setBusy(False)
 
 
+def exportWebGL():
+    """Export the current scene to WebGL"""
+    from plugins.webgl import WebGL
+    types = [ utils.fileDescription('html') ]
+    fn = draw.askNewFilename(pf.cfg['workdir'],types)
+    if fn:
+        pf.message("Exporting surface model to %s" % fn)
+        pf.GUI.setBusy()
+        W = WebGL()
+        W.addScene()
+        fn = os.path.basename(fn)
+        W.export(fn,'Two spheres and a cone',createdby=50)
+        pf.GUI.setBusy(False)
+        if draw.ack("Show the scene in your browser?"):
+            fn = os.path.join(os.getcwd(),fn)
+            print(fn)
+            from gui.helpMenu import help
+            help('file:%s' % fn)
+
+
 _recording_pid = 0
 
 def recordSession(stop=0):
@@ -614,6 +634,7 @@ MenuData = [
     (_('&Stop MultiSave'),stopMultiSave),
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
+    (_('&Create WebGL'),exportWebGL),
     (_('&Record Session'),[
         (_('&Start Recording'),recordSession),
         (_('&Stop Recording'),stopRecording),

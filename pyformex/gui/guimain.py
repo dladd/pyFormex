@@ -1350,14 +1350,18 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # App menu
     pf.GUI.appmenu = appMenu.createAppMenu(parent=pf.GUI.menu,before='help')
 
-    # Link History Menus also in the File menu
-    parent = pf.GUI.menu.item('file')
-    before = parent.item('---1')
-    if pf.GUI.apphistory:
-        parent.insert_menu(pf.GUI.apphistory,before)
 
-    if pf.GUI.scripthistory:
-        parent.insert_menu(pf.GUI.scripthistory,before)
+    # BV: removed, because they are in the script/app menus,
+    # and the file menu is alredy very loaded
+
+    ## # Link History Menus also in the File menu
+    ## parent = pf.GUI.menu.item('file')
+    ## before = parent.item('---1')
+    ## if pf.GUI.apphistory:
+    ##     parent.insert_menu(pf.GUI.apphistory,before)
+
+    ## if pf.GUI.scripthistory:
+    ##     parent.insert_menu(pf.GUI.scripthistory,before)
 
     # Create databases
     createDatabases()

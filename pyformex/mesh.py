@@ -362,6 +362,16 @@ class Mesh(Geometry):
         return Formex(self.coords[self.elems],self.prop,self.elName())
 
 
+    def toMesh(self):
+        """Convert to a Mesh.
+
+        This just returns the Mesh object itself. It is provided as a
+        convenience for use in functions that want work on different Geometry
+        types.
+        """
+        return self
+
+
     def toSurface(self):
         """Convert a Mesh to a TriSurface.
 
@@ -1048,48 +1058,6 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return unique(concat(nm))
 
 
-    # BV: REMOVED node2nodeAdjacency:
-    #
-    # Either use
-    #  - self.elems.nodeAdjacency() (gives nodes connected by elements)
-    #  - self.getEdges().nodeAdjacency() (gives nodes connected by edges)
-
-
-    # BV: name is way too complex
-    # should not be a mesh method, but of some MeshValue class? Field?
-    def avgNodalScalarOnAdjacentNodes(self, val, iter=1, ival=None,includeself=False):
-        """_Smooth nodal scalar values by averaging over adjacent nodes iter times.
-            
-        Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
-        are averaged over adjacent nodes an number of time (iter)
-        in order to provide a smoothed mapping.
-
-        Parameters:
-            
-            -'ival' : boolean of shape (self.coords(), 1 ) to select the nodes on which to average.
-            The default value ivar=None selects all the nodes
-            
-            -'includeself' : include also the scalar value on the node to be average
-        
-        """
-        
-        if iter==0: return val
-        nadj = self.getEdges().adjacency(kind='n')
-        if includeself:
-            nadj = concatenate([nadj,arange(alen(nadj)).reshape(-1,1)],axis=1)
-
-        inadj = nadj>=0
-        lnadj = inadj.sum(axis=1)
-        avgval = val
-
-        for j in range(iter):
-            print(j)
-            avgval = sum(avgval[nadj]*inadj, axis=1)/lnadj # multiplying by inadj set to zero the values where nadj==-1
-            if ival!=None:
-                avgval[where(ival!=True)] = val[where(ival!=True)]
-        return avgval
-            
-
     def fuse(self,**kargs):
         """Fuse the nodes of a Meshes.
 
@@ -1552,12 +1520,12 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           along the edges of the elements. Accepted type and value depend
           on the element type of the Mesh. Currently implemented:
 
-        - 'tri3': ndiv is a single int value specifying the number of
-          divisions (of equal size) for each edge.
+          - 'tri3': ndiv is a single int value specifying the number of
+            divisions (of equal size) for each edge.
 
-        - 'quad4': ndiv is a sequence of two int values nx,ny, specifying
-          the number of divisions along the first, resp. second
-          parametric direction of the element
+          - 'quad4': ndiv is a sequence of two int values nx,ny, specifying
+            the number of divisions along the first, resp. second
+            parametric direction of the element
 
         - `fuse`: bool, if True (default), the resulting Mesh is completely
           fused. If False, the Mesh is only fused over each individual
@@ -1998,14 +1966,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
             else:
                 message('Failed to recognize external points.\nShrinkage may be considerable.')
         w = ones(adj.shape,dtype=float)
-        
+
         if weight == 'inversedistance':
             dist = length(self.coords[adj]-self.coords.reshape(-1,1,3))
             w[dist!=0] /= dist[dist!=0]
-            
+
         if weight == 'distance':
             w = length(self.coords[adj]-self.coords.reshape(-1,1,3))
-            
+
         w[adj<0] = 0.
         w /= w.sum(-1).reshape(-1,1)
         w = w.reshape(adj.shape[0],adj.shape[1],1)

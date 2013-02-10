@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -31,16 +31,29 @@ browser (see http://en.wikipedia.org/wiki/WebGL).
 A WebGL model typically consists out of an HTML file and a Javascript file,
 possibly also some geometry data files. The HTML file is loaded in the
 browser and starts the Javascript program, responsible for rendering the
-WebGL scene. 
+WebGL scene.
 """
 from __future__ import print_function
 
 import pyformex as pf
+from gui import colors
 import utils
 from olist import List
 from mydict import Dict
 import os
-    
+
+
+def saneSettings(k):
+    """Sanitize sloppy settings for JavaScript output"""
+    ok = {}
+    try:
+        color = k['color']
+        color = [color[0],color[1],color[2]]
+        ok['color'] = color
+    except:
+        pass
+    return ok
+
 
 class WebGL(List):
     """A 3D geometry model for export to WebGL.
@@ -52,6 +65,7 @@ class WebGL(List):
     Currently the following features are included:
 
     - create a new WebGL model
+    - add the current scene to the model
     - add Geometry to the model (including color and transparency)
     - set the camera position
     - export the model
@@ -60,13 +74,38 @@ class WebGL(List):
 
     The create model uses the XTK toolkit from http://www.goXTK.com.
     """
-    
+
     def __init__(self):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
         self.script = "http://get.goXTK.com/xtk_edge.js"
         self.camera = None
-        
+
+
+    def addScene(self):
+        """Add the current OpenGL scene to the WebGL model.
+
+        This method add all the geometry in the current viewport to
+        the WebGL model.
+        """
+        cv = pf.canvas
+        print("Exporting %s actors from current scene" % len(cv.actors))
+        for i,a in enumerate(cv.actors):
+            o = a.object
+            atype = type(a).__name__
+            otype = type(o).__name__
+            print("Actor %s: %s %s Shape=(%s,%s) Color=%s"% (i,atype,otype,o.nelems(),o.nplex(),a.color))
+            keys = [ k for k in sorted(dir(a)) if not k.startswith('_') and not callable(getattr(a,k)) ]
+
+            kargs = saneSettings(a.__dict__)
+            print("  Exporting with settings %s" % kargs)
+            self.add(obj=o,**kargs)
+        ca = cv.camera
+        import coords
+        pos = coords.Coords(ca.ctr)
+        pos += [0.,0.,ca.dist]
+        self.view(position=pos)
+
 
     def add(self,**kargs):
         """Add a geometry object to the model.
@@ -101,8 +140,15 @@ class WebGL(List):
             kargs['name'] = 'm%s' % len(self)
         if 'obj' in kargs:
             try:
-                obj = kargs['obj'].toSurface()
+                obj = kargs['obj']
+                obj = obj.toMesh()
+                print("LEVEL:%s" % obj.level())
+                if obj.level() == 3:
+                    print("TAKING BORDER")
+                    obj = obj.getBorderMesh()
+                obj = obj.toSurface()
             except:
+                print("Not added because not convertible to TriSurface : %s",obj)
                 return
             if obj:
                 if not 'file' in kargs:
@@ -127,6 +173,7 @@ class WebGL(List):
         """
         self.camera = Dict(kargs)
 
+
     def format_object(self,obj):
         """Export an object in XTK Javascript format"""
         if hasattr(obj,'name'):
@@ -146,6 +193,7 @@ class WebGL(List):
             s += "%s.magicmode = '%s';\n" % (name,str(bool(obj.magicmode)))
         s += "r.add(%s);\n" % name
         return s
+
 
     def export(self,name,title=None,description=None,keywords=None,author=None,createdby=False):
         """Export the WebGL scene.
@@ -176,13 +224,11 @@ r.init();
 
 """ % pf.fullVersion()
         s += '\n'.join([self.format_object(o) for o in self ])
-
         if self.camera:
             if 'position' in self.camera:
                 s +=  "r.camera.position = %s;\n" % list(self.camera.position)
             if 'up' in self.camera:
                 s +=  "r.camera.up = %s;\n" % list(self.camera.up)
-
         s += """
 r.render();
 };
@@ -209,9 +255,13 @@ r.render();
 </head>
 <body>""" % (title,self.script,jsname)
         if createdby:
+            if type(createdby) is int:
+                width = ' width="%s%%"' % createdby
+            else:
+                width = ''
             s += """<div id='pyformex' style='position:absolute;top:10px;left:10px;'>
-<a href='http://pyformex.org' target=_blank><img src='http://pyformex.org/images/pyformex_createdby.png' border=0></a>
-</div>"""
+<a href='http://pyformex.org' target=_blank><img src='http://pyformex.org/images/pyformex_createdby.png' border=0%s></a>
+</div>""" % width
         s += """</body>
 </html>
 """

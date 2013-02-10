@@ -733,6 +733,12 @@ def isWritable(path):
 def chdir(path,create=False):
     """Change the current working directory.
 
+    If path exists and it is a directory name, make it the current directory.
+    If path exists and it is a file name, make the containing directory the
+    current directory.
+    If path does not exist and create is True, create the path and make it the
+    current directory. If create is False, raise an Error.
+
     Parameters:
 
     - `path`: pathname of the directory or file. If it is a file, the name of
@@ -749,12 +755,12 @@ def chdir(path,create=False):
 
     """
     path = utils.tildeExpand(path)
-    if not os.path.exists(path) and create:
-        mkdir(path)
-    if not os.path.exists(path):
-        raise ValueError,"The directory %s does not exist" % path
-    if not os.path.isdir(path):
-        path = os.path.dirname(os.path.abspath(path))
+    if os.path.exists(path):
+        if not os.path.isdir(path):
+            path = os.path.dirname(os.path.abspath(path))
+    else:
+        if not create or not mkdir(path):
+            raise ValueError,"The path %s does not exist" % path
     os.chdir(path)
     setPrefs({'workdir':path},save=True)
     if pf.GUI:
@@ -789,6 +795,14 @@ def mkdir(path):
     mkdir(os.path.dirname(path))
     os.mkdir(path)
     return os.path.exists(path)
+
+
+def mkpdir(path):
+    """Make sure the parent directory of path exists.
+
+    """
+    return mkdir(os.path.dirname(path))
+
 
 
 def runtime():

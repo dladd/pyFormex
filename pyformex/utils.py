@@ -626,6 +626,7 @@ file_description = {
     'dxftext': 'Converted AutoCAD files (*.dxftext)',
     'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
     'gts': 'GTS files (*.gts)',
+    'html': 'Web pages (*.html)',
     'icon': 'Icons (*.xpm)',
     'img': 'Images (*.png *.jpg *.eps *.gif *.bmp)',
     'inp': 'Abaqus or CalCuliX input files (*.inp)',

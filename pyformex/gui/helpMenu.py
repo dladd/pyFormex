@@ -50,7 +50,7 @@ def help(page=None):
     """
     if not page:
         page = pf.cfg['help/manual']
-    if page.startswith('http'):
+    if page.startswith('http:') or page.startswith('file:'):
         browser = pf.cfg['browser']
     else:
         browser = pf.cfg['viewer']

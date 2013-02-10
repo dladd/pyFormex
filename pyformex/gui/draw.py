@@ -364,9 +364,11 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     fn = w.getFilename(timeout)
     if fn and change:
         if multi:
-            chdir(fn[0])
+            cur = fn[0]
         else:
-            chdir(fn)
+            cur = fn
+        cur = os.path.dirname(cur)
+        chdir(cur)
     pf.GUI.update()
     pf.app.processEvents()
     return fn

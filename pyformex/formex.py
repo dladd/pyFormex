@@ -1195,14 +1195,19 @@ class Formex(Geometry):
     def toSurface(self):
         """Convert a Formex to a Surface.
 
-        If the plexitude of the Formex is 3, returns a TriSurface equivalent
-        with the Formex. Else, an error is raised.
+        Tries to convert the Formex to a TriSurface.
+        First the Formex is converted to a Mesh, and then the resulting Mesh
+        is converted to a TriSurface.
+
+        The conversion will only work if the Formex represents a surface and
+        its elements are triangles or quadrilaterals.
+
+        Returns a TriSurface if the conversion succeeds, else an error is
+        raised.
+        If the plexitude of the Formex is 3, the returned TriSurface is
+        equivalent with the Formex.
         """
-        from plugins.trisurface import TriSurface
-        if self.nplex() == 3:
-            return TriSurface(self)
-        else:
-            raise ValueError,"Only plexitude-3 Formices can be converted to TriSurface. Got plexitude %s" % self.nplex()
+        return self.toMesh().toSurface()
 
 
     def info(self):
