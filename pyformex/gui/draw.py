@@ -736,7 +736,10 @@ def draw(F,
         for F in FL:
 
             # Treat special case colors
-            #print "COLOR IN",color
+            if hasattr(F,'color'):
+                color = F.color
+            if hasattr(F,'alpha'):
+                alpha = F.alpha
             if type(color) is str:
                 if color == 'prop':
                     try:

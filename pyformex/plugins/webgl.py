@@ -41,6 +41,7 @@ import utils
 from olist import List
 from mydict import Dict
 import os
+from arraytools import checkFloat
 
 
 def saneSettings(k):
@@ -52,7 +53,25 @@ def saneSettings(k):
         ok['color'] = color
     except:
         pass
+    try:
+        ok['alpha'] = checkFloat(k['alpha'],0.,1.)
+    except:
+        pass
+    try:
+        ok['caption'] = str(k['caption'])
+    except:
+        pass
     return ok
+
+
+def properties(o):
+    """Return properties of an object
+
+    properties are public attributes (not starting with an '_') that
+    are not callable.
+    """
+    keys = [ k for k in sorted(dir(o)) if not k.startswith('_') and not callable(getattr(o,k)) ]
+    return utils.selectDict(o.__dict__,keys)
 
 
 class WebGL(List):
@@ -92,12 +111,13 @@ class WebGL(List):
         print("Exporting %s actors from current scene" % len(cv.actors))
         for i,a in enumerate(cv.actors):
             o = a.object
+            print("OBJDICT = %s" % sorted(dir(o)))
             atype = type(a).__name__
             otype = type(o).__name__
             print("Actor %s: %s %s Shape=(%s,%s) Color=%s"% (i,atype,otype,o.nelems(),o.nplex(),a.color))
-            keys = [ k for k in sorted(dir(a)) if not k.startswith('_') and not callable(getattr(a,k)) ]
-
-            kargs = saneSettings(a.__dict__)
+            kargs = properties(o)
+            kargs.update(properties(a))
+            kargs = saneSettings(kargs)
             print("  Exporting with settings %s" % kargs)
             self.add(obj=o,**kargs)
         ca = cv.camera
