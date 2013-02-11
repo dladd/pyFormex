@@ -398,7 +398,7 @@ def segmentOrientation(vertices,vertices2=None,point=None):
     return orient
 
 
-def rotationAngle(A,B,m=None,angle_spec=Deg):
+def rotationAngle(A,B,m=None,angle_spec=DEG):
     """Return rotation angles and vectors for rotations of A to B.
 
     A and B are (n,3) shaped arrays where each line represents a vector.
@@ -409,7 +409,7 @@ def rotationAngle(A,B,m=None,angle_spec=Deg):
     unit vectors along the rotation axis.
     If m is a (n,3) shaped array with vectors along the rotation axis, the
     return value is a (n,) shaped array with rotation angles.
-    Specify angle_spec=Rad to get the angles in radians.
+    Specify angle_spec=RAD to get the angles in radians.
     """
     A = asarray(A).reshape(-1,3)
     B = asarray(B).reshape(-1,3)

@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -81,7 +81,7 @@ def run():
         draw(pts)
         drawNumbers(pts)
         for d,c in zip(degrees,colors):
-            print("DEGREE %s, %s" % (d,closed))
+            print("Degree %s, %s" % (d,closed))
             B = BezierSpline(coords=pts,closed=closed,degree=d)
             collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
             draw(B,color=c)
@@ -97,7 +97,7 @@ def run():
     zoomAll()
     export(collection)
 
-        
+
 if __name__ == 'draw':
     run()
 # End

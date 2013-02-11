@@ -40,7 +40,7 @@ import simple,connectivity,mydict
 
 
 def showaxes(C,angle,size,color):
-    H = Formex(simple.Pattern['plus']).scale(0.6*size).rot(angle/Deg).trl(C)
+    H = Formex(simple.Pattern['plus']).scale(0.6*size).rot(angle/DEG).trl(C)
     draw(H,color=color)
 
 

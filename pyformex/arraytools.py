@@ -130,92 +130,92 @@ def isInt(obj):
 #########################
 
 # pi is defined in numpy
-# Deg is a multiplier to transform degrees to radians
-# Rad is a multiplier to transform radians to radians
-Deg = pi/180.
-Rad = 1.
+# DEG is a multiplier to transform degrees to radians
+# RAD is a multiplier to transform radians to radians
+DEG = pi/180.
+RAD = 1.
 golden_ratio = 0.5 * (1.0 + sqrt(5.))
 
 
 # Convenience functions: trigonometric functions with argument in degrees
 
-def sind(arg,angle_spec=Deg):
+def sind(arg,angle_spec=DEG):
     """Return the sine of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
-    by specifying `angle_spec=Rad`.
+    by specifying `angle_spec=RAD`.
 
-    >>> print(sind(30), sind(pi/6,Rad))
+    >>> print(sind(30), sind(pi/6,RAD))
     0.5 0.5
     """
     return sin(arg*angle_spec)
 
 
-def cosd(arg,angle_spec=Deg):
+def cosd(arg,angle_spec=DEG):
     """Return the cosine of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
-    by specifying ``angle_spec=Rad``.
+    by specifying ``angle_spec=RAD``.
 
-    >>> print(cosd(60), cosd(pi/3,Rad))
+    >>> print(cosd(60), cosd(pi/3,RAD))
     0.5 0.5
     """
     return cos(arg*angle_spec)
 
 
-def tand(arg,angle_spec=Deg):
+def tand(arg,angle_spec=DEG):
     """Return the tangens of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
-    by specifying ``angle_spec=Rad``.
+    by specifying ``angle_spec=RAD``.
     """
     return tan(arg*angle_spec)
 
 
-def arcsind(arg,angle_spec=Deg):
+def arcsind(arg,angle_spec=DEG):
     """Return the angle whose sine is equal to the argument.
 
     By default, the angle is returned in Degrees.
-    Specifying `angle_spec=Rad` will return the angle in radians.
+    Specifying `angle_spec=RAD` will return the angle in radians.
 
-    >>> print(arcsind(0.5), arcsind(1.0,Rad))
+    >>> print(arcsind(0.5), arcsind(1.0,RAD))
     30.0 1.57079632679
     """
     return arcsin(arg)/angle_spec
 
 
-def arccosd(arg,angle_spec=Deg):
+def arccosd(arg,angle_spec=DEG):
     """Return the angle whose cosine is equal to the argument.
 
     By default, the angle is returned in Degrees.
-    Specifying `angle_spec=Rad` will return the angle in radians.
+    Specifying `angle_spec=RAD` will return the angle in radians.
 
-    >>> print(arccosd(0.5), arccosd(-1.0,Rad))
+    >>> print(arccosd(0.5), arccosd(-1.0,RAD))
     60.0 3.14159265359
     """
     return arccos(arg)/angle_spec
 
 
-def arctand(arg,angle_spec=Deg):
+def arctand(arg,angle_spec=DEG):
     """Return the angle whose tangens is equal to the argument.
 
     By default, the angle is returned in Degrees.
-    Specifying `angle_spec=Rad` will return the angle in radians.
+    Specifying `angle_spec=RAD` will return the angle in radians.
 
-    >>> print(arctand(1.0), arctand(-1.0,Rad))
+    >>> print(arctand(1.0), arctand(-1.0,RAD))
     45.0 -0.785398163397
     """
     return arctan(arg)/angle_spec
 
 
-def arctand2(sin,cos,angle_spec=Deg):
+def arctand2(sin,cos,angle_spec=DEG):
     """Return the angle whose sine and cosine values are given.
 
     By default, the angle is returned in Degrees.
-    Specifying `angle_spec=Rad` will return the angle in radians.
+    Specifying `angle_spec=RAD` will return the angle in radians.
     This returns an angle in the range ]-180,180].
 
-    >>> print(arctand2(0.0,-1.0), arctand2(-sqrt(0.5),-sqrt(0.5),Rad))
+    >>> print(arctand2(0.0,-1.0), arctand2(-sqrt(0.5),-sqrt(0.5),RAD))
     180.0 -2.35619449019
     """
     return arctan2(sin,cos)/angle_spec
@@ -462,10 +462,10 @@ def unitVector(v):
     return u
 
 
-def rotationMatrix(angle,axis=None,angle_spec=Deg):
+def rotationMatrix(angle,axis=None,angle_spec=DEG):
     """Return a rotation matrix over angle, optionally around axis.
 
-    The angle is specified in degrees, unless angle_spec=Rad is specified.
+    The angle is specified in degrees, unless angle_spec=RAD is specified.
     If axis==None (default), a 2x2 rotation matrix is returned.
     Else, axis should specifying the rotation axis in a 3D world. It is either
     one of 0,1,2, specifying a global axis, or a vector with 3 components
@@ -580,11 +580,11 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
         return a
 
 # HOW DOES THIS DEAL WITH GIMBALL LOCK?
-def rotationAnglesFromMatrix(mat,angle_spec=Deg):
+def rotationAnglesFromMatrix(mat,angle_spec=DEG):
     """Return rotation angles from rotation matrix mat.
 
     This returns the three angles around the global axes 0, 1 and 2.
-    The angles are returned in degrees, unless angle_spec=Rad.
+    The angles are returned in degrees, unless angle_spec=RAD.
     """
     rx = arctan(mat[1,2]/mat[2,2])
     ry = -arcsin(mat[0,2])
@@ -592,7 +592,7 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     for rxi in [rx,pi+rx]:
         for ryi in [ry,pi-ry]:
             for rzi in [rz,pi+rz]:
-                R = dot(dot(rotationMatrix(rxi,0,Rad),rotationMatrix(ryi,1,Rad)),rotationMatrix(rzi,2,Rad))
+                R = dot(dot(rotationMatrix(rxi,0,RAD),rotationMatrix(ryi,1,RAD)),rotationMatrix(rzi,2,RAD))
                 T = isClose(mat,R,rtol=1.e-3,atol=1.e-3)
                 if T.all():
                     return rxi / angle_spec, ryi / angle_spec, rzi / angle_spec

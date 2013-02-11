@@ -57,7 +57,7 @@ def run():
 
     angle = 360.
     n = 120
-    da = angle*Deg/n
+    da = angle*DEG/n
 
     F.setProp(1)
     for i in range(n+1):

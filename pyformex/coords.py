@@ -904,7 +904,7 @@ class Coords(ndarray):
 #        Cylindrical, Spherical, Isoparametric
 #
 
-    def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg):
+    def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=DEG):
         """Converts from cylindrical to cartesian after scaling.
 
         Parameters:
@@ -927,7 +927,7 @@ class Coords(ndarray):
         return f
 
 
-    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle_spec=Deg):
+    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle_spec=DEG):
         if rfunc is None:
             rfunc = lambda x:1
         if zfunc is None:
@@ -941,7 +941,7 @@ class Coords(ndarray):
         return f
 
 
-    def toCylindrical(self,dir=[0,1,2],angle_spec=Deg):
+    def toCylindrical(self,dir=[0,1,2],angle_spec=DEG):
         """Converts from cartesian to cylindrical coordinates.
 
         Parameters:
@@ -960,7 +960,7 @@ class Coords(ndarray):
         return f
 
 
-    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg,colat=False):
+    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=DEG,colat=False):
         """Converts from spherical to cartesian after scaling.
 
         Parameters:
@@ -986,7 +986,7 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
-    def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg,colat=False):
+    def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],angle_spec=DEG,colat=False):
         """Performs a superspherical transformation.
 
         superSpherical is much like spherical, but adds some extra
@@ -1035,7 +1035,7 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
-    def toSpherical(self,dir=[0,1,2],angle_spec=Deg):
+    def toSpherical(self,dir=[0,1,2],angle_spec=DEG):
         """Converts from cartesian to spherical coordinates.
 
         Parameters:

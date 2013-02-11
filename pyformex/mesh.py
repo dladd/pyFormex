@@ -2329,8 +2329,8 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     #
     #### Currently reinstated in trisurface.py !
 
-    ## def getAngles(self, angle_spec=Deg):
-    ##     """_Returns the angles in Deg or Rad between the edges of a mesh.
+    ## def getAngles(self, angle_spec=DEG):
+    ##     """_Returns the angles in DEG or RAD between the edges of a mesh.
 
     ##     The returned angles are shaped  as (nelems, n1faces, n1vertices),
     ##     where n1faces are the number of faces in 1 element and the number
@@ -2356,7 +2356,7 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     ##   the worst angle in each element and the ideal angle (angle in the face
     ##   of an equiangular element, qe).
     ##   """
-    ##     eang=self.getAngles(Deg)
+    ##     eang=self.getAngles(DEG)
     ##     eangsh= eang.shape
     ##     eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
     ##     eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)

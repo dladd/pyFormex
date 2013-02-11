@@ -1426,7 +1426,7 @@ class Arc3(Curve):
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
-        X = X.scale(self.radius).rotate(self.angles[0]/Deg).translate(self.center)
+        X = X.scale(self.radius).rotate(self.angles[0]/DEG).translate(self.center)
         return X
 
 
@@ -1441,7 +1441,7 @@ class Arc(Curve):
     plane will be parallel to the z-axis.
     """
     
-    def __init__(self,coords=None,center=None,radius=None,angles=None,angle_spec=Deg):
+    def __init__(self,coords=None,center=None,radius=None,angles=None,angle_spec=DEG):
         """Create a circular arc."""
         # Internally, we store the coords 
         Curve.__init__(self)
@@ -1460,7 +1460,7 @@ class Arc(Curve):
             except:
                 pf.warning("The three points defining the Arc seem to be colinear: I will use a random orientation.")
                 self.normal = anyPerpendicularVector(v[0])
-            self._angles = rotationAngle(Coords([1.,0.,0.]).rotate(vectorRotation([0.,0.,1.],self.normal)),self.coords[[0,2]]-self._center,self.normal,Rad)
+            self._angles = rotationAngle(Coords([1.,0.,0.]).rotate(vectorRotation([0.,0.,1.],self.normal)),self.coords[[0,2]]-self._center,self.normal,RAD)
         else:
             if center is None:
                 center = [0.,0.,0.]
@@ -1486,10 +1486,10 @@ class Arc(Curve):
     def getCenter(self):
         return self._center
 
-    def getAngles(self,angle_spec=Deg):
+    def getAngles(self,angle_spec=DEG):
         return (self._angles[0]/angle_spec,self._angles[1]/angle_spec)
 
-    def getAngleRange(self,angle_spec=Deg):
+    def getAngleRange(self,angle_spec=DEG):
         return ((self._angles[1]-self._angles[0])/angle_spec)
                
 
@@ -1519,14 +1519,14 @@ class Arc(Curve):
     def sub_points(self,t,j):
         a = t*(self._angles[-1]-self._angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
-        X = X.scale(self.radius).rotate(self._angles[0]/Deg).rotate(vectorRotation([0.,0.,1.],self.normal)).translate(self._center)
+        X = X.scale(self.radius).rotate(self._angles[0]/DEG).rotate(vectorRotation([0.,0.,1.],self.normal)).translate(self._center)
         return X
 
 
     def sub_directions(self,t,j):
         a = t*(self._angles[-1]-self._angles[0])
         X = Coords(column_stack([-sin(a),cos(a),zeros_like(a)]))
-        X = X.rotate(self._angles[0]/Deg).rotate(vectorRotation([0.,0.,1.],self.normal))
+        X = X.rotate(self._angles[0]/DEG).rotate(vectorRotation([0.,0.,1.],self.normal))
         return X
 
 
