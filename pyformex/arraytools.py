@@ -820,6 +820,42 @@ def splitar(ar,nblk,close=False):
         return [ ar[i:j] for i,j in zip(ndata[:-1],ndata[1:]) ]
 
 
+def checkInt(value,min=None,max=None):
+    """Check that a value is an int in the range min..max
+
+    Range borders that are None are not checked upon.
+    Returns an int in the specified range.
+    Raises an exception if the value is invalid.
+    """
+    try:
+        a = int(value)
+        if min is not None and a < min:
+            raise
+        if max is not None and a > max:
+            raise
+        return a
+    except:
+        raise ValueError,"Expected an int in the range(%s, %s), got: %s" % (value)
+
+
+def checkFloat(value,min=None,max=None):
+    """Check that a value is a float in the range min..max
+
+    Range borders that are None are not checked upon.
+    Returns a float in the specified range.
+    Raises an exception if the value is invalid.
+    """
+    try:
+        a = float(value)
+        if min is not None and a < min:
+            raise
+        if max is not None and a > max:
+            raise
+        return a
+    except:
+        raise ValueError,"Expected a float in the range(%s, %s), got: %s" % (value)
+
+
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 
