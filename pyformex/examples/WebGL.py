@@ -59,7 +59,10 @@ def run():
     C = cylinder(1.2,1.5,24,4,diag='u').toSurface().trl([0.5,0.5,0.5])
 
     # Draw the geometry with given colors/opacity
-    draw(S,color=red,alpha=0.7)
+    S.color = red
+    S.alpha = 0.7
+    S.caption = 'Sphere'
+    draw(S)
     draw(T,color=blue,alpha=1.0)     #  1.0 means T is opaque !
     draw(C,color=yellow,alpha=0.7)
     zoomAll()

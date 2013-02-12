@@ -46,9 +46,9 @@ def setTriade():
         pos = 'lb'
         siz = 100
     res = draw.askItems([
-        ('triade',True),
-        ('pos',pos,'select',{'choices':['lt','lc','lb','ct','cc','cb','rt','rc','rb']}),
-        ('size',siz),
+        _I('triade',True),
+        _I('pos',pos,choices=['lt','lc','lb','ct','cc','cb','rt','rc','rb']),
+        _I('size',siz),
         ])
     if res:
         draw.setTriade(res['triade'],res['pos'],res['size'])

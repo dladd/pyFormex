@@ -467,7 +467,7 @@ def rotationMatrix(angle,axis=None,angle_spec=DEG):
 
     The angle is specified in degrees, unless angle_spec=RAD is specified.
     If axis==None (default), a 2x2 rotation matrix is returned.
-    Else, axis should specifying the rotation axis in a 3D world. It is either
+    Else, axis should specifyi the rotation axis in a 3D world. It is either
     one of 0,1,2, specifying a global axis, or a vector with 3 components
     specifying an axis through the origin.
     In either case a 3x3 rotation matrix is returned.
