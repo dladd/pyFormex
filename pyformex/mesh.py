@@ -1719,12 +1719,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           - 'random': number the elements in a random order.
           - 'reverse': number the elements in reverse order.
 
-        Returns a Mesh equivalent with self but with the elements ordered as specified.
+        Returns a Mesh equivalent with self but with the elements ordered as
+        specified.
 
         See also: :meth:`Connectivity.reorder`
         """
         order = self.elems.reorder(order)
-        return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.elType())
+        if self.prop is None:
+            prop = None
+        else:
+            prop = self.prop[order]
+        return self.__class__(self.coords,self.elems[order],prop=prop,eltype=self.elType())
 
 
     # for compatibility:
