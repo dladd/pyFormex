@@ -46,6 +46,7 @@ module_relocations = {
 class_relocations = {
     'coords.BoundVectors' : 'plugins.alt.BoundVectors',
     'coords.CoordinateSystem' : 'coordsys.CoordinateSystem',
+    'elements.Element':'elements.ElementType',
 }
 
 def find_global(module,name):
