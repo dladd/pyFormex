@@ -171,7 +171,7 @@ def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
         caption='pyFormex Text Display',
         )
     if modal:
-        return w.getResult()
+        return w.getResults()
     else:
         w.show()
         return w
@@ -312,7 +312,7 @@ def askItems(items,timeout=None,**kargs):
 
     _dialog_widget = w
     _dialog_result = None
-    res = w.getResult(timeout)
+    res = w.getResults(timeout)
     _dialog_widget = None
     _dialog_result = w.result()
     return res

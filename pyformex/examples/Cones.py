@@ -130,7 +130,7 @@ def run():
 
 
     while not dialog.result() == widgets.TIMEOUT:
-        res = dialog.getResult()
+        res = dialog.getResults()
         if not res:
             break
 

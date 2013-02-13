@@ -262,7 +262,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     itemlist = [ _I(i,store[i]) for i in items ] + [
         _I('_save_',True,text='Save changes')
         ]
-    res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResults()
     #pf.debug(res,pf.DEBUG.CONFIG)
     if res and store==pf.cfg:
         updateSettings(res)

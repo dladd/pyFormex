@@ -490,7 +490,7 @@ def inputLongitudinalSeeds():
         actions = [('Cancel',),('Show',show),('Accept',accept),('Help',help)],
         )
     dialog.move(100,100)
-    dialog.getResult()
+    dialog.getResults()
 
 
 def seedLongSplines (H, at,  curvedSection=True, nPushedSections=6, napproxlong=40, napproxcut=40 ):
@@ -631,7 +631,7 @@ def inputMeshingParameters():
             _I('s_boundary',tooltip="Number of hex elements radially in the boundary layer. It can be an integer or a list of seeds in the range 0.0 to 1.0"),
             ]
         )
-    res = dialog.getResult()
+    res = dialog.getResults()
     if res:
         export({'mesh_block_params':res})
 
@@ -649,7 +649,7 @@ def sweepingMesher():
             _I('domain','Lumen','radio',choices=['Lumen', ]),
             ]
         )
-    res = dialog.getResult()
+    res = dialog.getResults()
     if not res:
         return
     domain = res['domain']

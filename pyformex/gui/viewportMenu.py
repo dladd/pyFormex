@@ -93,7 +93,7 @@ def setBgColor():
             ('showimage',True,'image'),
             ]
         )
-    res = dialog.getResult()
+    res = dialog.getResults()
     pf.debug(res)
     if res:
         setBackground(**res)
