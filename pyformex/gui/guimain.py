@@ -991,7 +991,7 @@ def exitDialog():
         fileMenu.saveAsProject()
 
     if not res['reopen']:
-        fileMenu.closeProject(save=False,delet=False)
+        fileMenu.closeProject(save=False,clear=False)
 
     return True
 

@@ -121,6 +121,24 @@ def decode(code,n):
     i,j = q/n, q%n
     return i,j,k
 
+def write_neu_hex(fil, mesh, eofs=1, nofs=1):
+    """Write a hexahedral mesh to a .neu file (For use in Gambit)
+    
+    fil: file name
+    mesh: pyFormex Mesh
+    eofs, nofs: offsets for element and node numbers.
+    """
+    if not fil.endswith('.neu'):
+        fil += '.neu'
+    f = open(fil, 'w')
+    writeHeading(f, mesh.coords, mesh.elems)
+    print('Writing %s nodes to .neu file'% len(mesh.coords))
+    writeNodes(f, mesh.coords,  nofs=nofs)
+    print('Writing %s elements to .neu file'%len(mesh.elems))
+    writeElems(f, mesh.elems, eofs=eofs, nofs=nofs)
+    f.close()
+    print('Hexahedral mesh exported to  \"%s\"'%fil)
+
 def output_fluent(fil,nodes,elems):
     """Write a tetraeder mesh in Fluent format to fil.
 
