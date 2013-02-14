@@ -49,9 +49,11 @@ import olist
 
 import sys
 
-# global data
+# keys for global data
 
-_name_ = 'bifmesh_menu'
+_name_ = '_bifmesh_menu'
+_slice_data_name = _name_ + '_slice_data'
+_draw_options_name = _name_ + '_draw_options'
 
 _surface = None
 
@@ -771,23 +773,23 @@ _draw_options = [
     ['fill_surf',False],
     ]
 try:
-    updateData(_draw_options,named('draw_options'))
+    updateData(_draw_options,named(_draw_options_name))
 except:
-    export({'draw_options':dict(_draw_options)})
+    export({_draw_options_name:dict(_draw_options)})
 
 
 def inputDrawOptions():
     res = askItems(_draw_options)
     if res:
-        export({'draw_options':res})
+        export({_draw_options_name:res})
 
 _slice_data = [
     ['nslice', [10, 10, 10]],
     ]
 try:
-    updateData(_slice_data,named('slice_data'))
+    updateData(_slice_data,named(_slice_data_name))
 except:
-    export({'slice_data':dict(_slice_data)})
+    export({_slice_data_name:dict(_slice_data)})
 
 
 def inputSlicingParameters():
@@ -796,7 +798,7 @@ def inputSlicingParameters():
     res = askItems(_slice_data, caption='long cuts')
 
     if res:
-        export({'slice_data':res})
+        export({_slice_data_name:res})
 
 
 def createBranches(branch):

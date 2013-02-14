@@ -34,7 +34,8 @@ from pyformex.gui import signals
 
 import sys,utils
 
-utils.checkModule('pyqt4',fatal=True)
+# If we get here, either PyQt4 or PySide are imported
+#utils.checkModule('pyqt4',fatal=True)
 utils.checkModule('pyopengl',fatal=True)
 
 import os.path
@@ -1184,9 +1185,8 @@ def startGUI(args):
     ## pf.settings = QtCore.QSettings("pyformex.org", "pyFormex")
     ## pf.settings.setValue("testje","testvalue")
 
-    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
-    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
-    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
+    # Quit application if last window closed
+    pf.app.lastWindowClosed.connect(pf.app.quit)
 
     # Check if we have DRI
     pf.debug("Setting OpenGL format",pf.DEBUG.OPENGL)

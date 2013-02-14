@@ -30,9 +30,6 @@ from __future__ import print_function
 import pyformex as pf
 import apps
 
-from gui import QtCore
-SIGNAL = QtCore.SIGNAL
-
 import utils,olist
 import script,draw
 import menu
@@ -386,7 +383,7 @@ class AppMenu(menu.Menu):
         pf.debug("Found %ss in %s\n%s" % (self.mode.capitalize(),self.dir,self.files),pf.DEBUG.INFO)
 
         self.my_actions = [ self.insert_action(f) for f in self.files ]
-        self.connect(self,SIGNAL("triggered(QAction*)"),self.run)
+        self.triggered.connect(self.run)
 
         self.current = ""
 

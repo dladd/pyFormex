@@ -52,7 +52,17 @@ try:
 except ValueError, e:
     raise RuntimeError('Could not set PyQt4 API version (%s)' % e)
 
-from PyQt4 import QtCore, QtGui, QtOpenGL
+
+if pf.options.pyside:
+    from PySide import QtCore, QtGui, QtOpenGL
+    from PySide.QtCore import Signal
+    from PySide.QtCore import Slot
+
+else:
+    from PyQt4 import QtCore, QtGui, QtOpenGL
+    from PyQt4.QtCore import pyqtSignal as Signal
+    from PyQt4.QtCore import pyqtSlot as Slot
+
 
 try:
     QtGui.QColor.setAllowX11ColorNames(True)

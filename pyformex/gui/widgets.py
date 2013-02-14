@@ -125,7 +125,7 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
             if type(timeoutfunc) is str:
                 timer.connect(timer,QtCore.SIGNAL("timeout()"),widget,QtCore.SLOT(timeoutfunc))
             else:
-                timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
+                timer.timeout.connect(timeoutfunc)
             timer.setSingleShot(True)
             timeout = int(1000*timeout)
             timer.start(timeout)
@@ -694,7 +694,8 @@ class InputCombo(InputItem):
     initially be set to the default value.
 
     An optional `onselect` function may be specified, which will be called
-    whenever the current selection changes.
+    whenever the current selection changes. The function is passed the
+    selected option string
     """
 
     def __init__(self,name,value,choices=[],onselect=None,func=None,*args,**kargs):
@@ -710,10 +711,14 @@ class InputCombo(InputItem):
         self._choices_ = []
         self.setChoices(choices)
         if callable(onselect):
-            self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
-# BV REMOVED BECAUSE NOT DOCUMENTED
-#        if callable(func):
-#            self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
+            #
+            # BEWARE: onselect now returns index of selection instead of string
+            #
+            self.input.currentIndexChanged['QString'].connect(onselect)
+            #
+            # BV REMOVED THIS BECAUSE NOT DOCUMENTED WHAT IT SHOULD DO
+            # if callable(func):
+            #     self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
         self.setValue(value)
         self.layout().insertWidget(1,self.input)
 
@@ -999,9 +1004,10 @@ class InputSlider(InputInteger):
         self.slider.setSingleStep(1)
         #self.slider.setPageStep(5)
         self.slider.setTracking(1)
-        self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
+        self.slider.valueChanged.connect(self.set_value)
         if 'func' in kargs:
-            self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])
+            # We could also call this func from set_value, like in FSlider
+            self.slider.valueChanged.connect(kargs['func'])
         self.layout().addWidget(self.slider)
 
     def set_value(self,val):
@@ -1041,7 +1047,7 @@ class InputFSlider(InputFloat):
         self.slider.setSingleStep(1)
         #self.slider.setPageStep(5)
         self.slider.setTracking(1)
-        self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
+        self.slider.valueChanged.connect(self.set_value)
         self.layout().addWidget(self.slider)
 
     def set_value(self,val):
@@ -1130,7 +1136,7 @@ class InputButton(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         if self.func:
-            self.connect(self.input,QtCore.SIGNAL("clicked()"),self.doFunc)
+            self.input.clicked.connect(self.doFunc)
         self.layout().insertWidget(1,self.input)
 
 
@@ -1158,7 +1164,7 @@ class InputColor(InputItem):
         self.input = QtGui.QPushButton(color)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(color)
-        self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
+        self.input.clicked.connect(self.setColor)
         self.layout().insertWidget(1,self.input)
 
 
@@ -1184,7 +1190,7 @@ class InputFont(InputItem):
         self.input = QtGui.QPushButton(value)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
-        self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setFont)
+        self.input.clicked.connect(self.setFont)
         self.layout().insertWidget(1,self.input)
 
 
@@ -1565,8 +1571,7 @@ class InputDialog(QtGui.QDialog):
         self.form.addWidget(but)
 
         self.setLayout(self.form)
-        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
-
+        self.accepted.connect(self.acceptData)
 
         # add the enablers
         init_signals = []
@@ -2483,7 +2488,7 @@ class FileSelection(QtGui.QFileDialog):
                 c.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
                 b = self.findChild(QtGui.QPushButton)
                 b.clicked.disconnect()
-                b.connect(b,QtCore.SIGNAL("clicked()"),self.accept_any)
+                b.clicked.connect(self.accept_any)
         elif exist:
             if multi:
                 mode = QtGui.QFileDialog.ExistingFiles

@@ -55,6 +55,7 @@ known_modules = {
     'pyopengl'  : ('OpenGL',),
     'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
     'pyqt4gl'   : ('PyQt4','','QtOpenGL'),
+    'pyside'    : (),
     'vtk'       : ('','','VTK_VERSION'),
      }
 

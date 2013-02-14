@@ -93,11 +93,11 @@ class AnalogClock(object):
         """Run the clock for runtime seconds, updating every granularity."""
         if granularity > 0.0:
             self.timer = QtCore.QTimer()
-            self.timer.connect(self.timer,QtCore.SIGNAL("timeout()"),self.drawNow)
+            self.timer.timeout.connect(self.drawNow)
             self.timer.start(1000*granularity)
         if runtime > 0.0:
             self.timeout = QtCore.QTimer()
-            self.timeout.connect(self.timeout,QtCore.SIGNAL("timeout()"),self.stop)
+            self.timeout.timeout.connect(self.stop)
             self.timeout.setSingleShot(True)
             self.timeout.start(1000*runtime)
 

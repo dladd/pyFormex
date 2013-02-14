@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -83,18 +83,19 @@ def addButton(toolbar,tooltip,icon,func,repeat=False,toggle=False,checked=False,
     if toggle and icon0:
         icon_off = QtGui.QPixmap(utils.findIcon(icon0))
         iconset.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
-                                 
+
     a = toolbar.addAction(iconset,tooltip,func)
     b = toolbar.widgetForAction(a)
-    
+
     if repeat:
         b.setAutoRepeat(True)
         b.setAutoRepeatDelay(500)
-        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
+        #QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
+        b.clicked.connect(a.trigger)
 
     if toggle:
         b.setCheckable(True)
-        b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
+        b.clicked.connect(a.toggle)
         b.setChecked(checked)
 
     b.setToolTip(tooltip)
@@ -145,7 +146,7 @@ def addCameraButtons(toolbar):
         if len(but) >= 5:
             b.setCheckable(but[4])
             b.connect(b,QtCore.SIGNAL("released()"),QtCore.SLOT("toggle()"))
-            
+
         b.setToolTip(but[0])
 
 
@@ -190,7 +191,7 @@ class ViewportToggleButton(object):
 
 def toggleButton(attr,state=None):
     """Update the corresponding viewport attribute.
-    
+
     This does not update the button state.
     """
     vp = pf.GUI.viewports.current
@@ -218,7 +219,7 @@ def updateViewportButtons(vp):
         updateButton(light_button,'lighting')
         updateButton(normals_button,'avgnormals')
 
-    
+
 ################# Transparency Button ###############
 
 transparency_button = None # the toggle transparency button
@@ -227,7 +228,7 @@ def addTransparencyButton(toolbar):
     global transparency_button
     transparency_button = addButton(toolbar,'Toggle Transparent Mode',
                                     'transparent',toggleTransparency,
-                                    toggle=True)    
+                                    toggle=True)
 
 def toggleTransparency(state=None):
     toggleButton('alphablend',state)
@@ -235,7 +236,7 @@ def toggleTransparency(state=None):
 def updateTransparencyButton():
     """Update the transparency button to correct state."""
     updateButton(transparency_button,'alphablend')
-    
+
 
 ################# Lights Button ###############
 
@@ -245,9 +246,9 @@ def addLightButton(toolbar):
     global light_button
     light_button = addButton(toolbar,'Toggle Lights',
                              'lamp-on',toggleLight,icon0='lamp',
-                             toggle=True,checked=True)    
+                             toggle=True,checked=True)
 
-def toggleLight(state=None): 
+def toggleLight(state=None):
     toggleButton('lighting',state)
 
 def updateLightButton():
@@ -263,7 +264,7 @@ def addNormalsButton(toolbar):
     global normals_button
     normals_button = addButton(toolbar,'Toggle Normals',
                                'normals-avg',toggleNormals,icon0='normals-ind',
-                               toggle=True,checked=False)    
+                               toggle=True,checked=False)
 
 def toggleNormals(state=None):
     toggleButton('avgnormals',state)
@@ -290,7 +291,7 @@ def addPerspectiveButton(toolbar):
     global perspective_button
     perspective_button = addButton(toolbar,'Toggle Perspective/Projective Mode',
                                    'perspect',togglePerspective,
-                                   toggle=True,icon0='project',checked=True)    
+                                   toggle=True,icon0='project',checked=True)
 
 def updatePerspectiveButton():
     """Update the normals button to correct state."""
@@ -328,7 +329,7 @@ def addShrinkButton(toolbar):
     global shrink_button
     shrink_button = addButton(toolbar,'Toggle Shrink Mode',
                               'shrink',toggleShrink,
-                              toggle=True)    
+                              toggle=True)
 
 def setShrink(mode):
     draw.shrink(mode)
@@ -371,7 +372,7 @@ def addTimeoutButton(toolbar):
         if timeout_button is not None:
             removeButton(toolbar,timeout_button)
             timeout_button = None
-            
+
 
 def timeout(onoff=None):
     """Programmatically toggle the timeout button"""

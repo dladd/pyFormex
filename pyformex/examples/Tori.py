@@ -57,7 +57,7 @@ def series():
 def drawTorus(m,n):
     clear()
     print(m,n)
-    draw(torus(m,n),None)
+    draw(torus(m,n),view=None)
 
 def nice():
     drawTorus(72,36)
