@@ -306,7 +306,7 @@ def clearProject():
     """Clear the contents of the current project."""
     pf.PF.clear()
 
-def closeProject(save=None,delet=None):
+def closeProject(save=None,clear=None):
     """Close the current project, saving it or not.
 
     Parameters:
@@ -315,6 +315,7 @@ def closeProject(save=None,delet=None):
       saved prior to closing it. If None, it will be asked from the user.
       Note that this parameter is only used for named Projects. Temporary
       Projects are never saved implicitely.
+    - `clear`: None, True or False.
     """
     if pf.PF.filename is not None:
         if save is None:
@@ -324,10 +325,11 @@ def closeProject(save=None,delet=None):
             saveProject()
             if pf.PF:
                 listProject()
-                if delet is None:
-                    delet = draw.ask("What shall I do with the existing globals?",["Delete","Keep"]) == "Delete"
-                if delet:
-                    pf.PF.clear()
+                if clear is None:
+                    clear = draw.ask("What shall I do with the existing globals?",["Delete","Keep"]) == "Delete"
+
+    if clear:
+        pf.PF.clear()
 
     pf.PF.filename = None
     pf.GUI.setcurproj('None')
