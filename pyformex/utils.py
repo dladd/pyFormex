@@ -199,19 +199,23 @@ def checkModule(name,ver=(),fatal=False,quiet=False):
         modname = ver[0]
 
     try:
-        pf.debug(modname,pf.DEBUG.DETECT)
+        if not quiet:
+            pf.debug(modname,pf.DEBUG.DETECT)
         m = __import__(modname)
-        pf.debug(m,pf.DEBUG.DETECT)
+        if not quiet:
+            pf.debug(m,pf.DEBUG.DETECT)
         if len(ver) > 1 and len(ver[1]) > 0:
             modname = ver[1]
             m = __import__(modname)
-            pf.debug(m,pf.DEBUG.DETECT)
+            if not quiet:
+                pf.debug(m,pf.DEBUG.DETECT)
         ver = ver[2:]
         if len(ver) == 0:
             ver = ('__version__',)
         for a in ver:
             m = getattr(m,a)
-            pf.debug(m,pf.DEBUG.DETECT)
+            if not quiet:
+                pf.debug(m,pf.DEBUG.DETECT)
 
     except:
         # failure: unexisting or unregistered modules
