@@ -93,10 +93,8 @@ def addButton(toolbar,tooltip,icon,func,repeat=False,toggle=False,checked=False,
         b.clicked.connect(a.trigger)
 
     if toggle:
-        #print(b,a,icon)
         b.setCheckable(True)
-        #b.clicked.connect(a.toggle)
-        b.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("toggle()"))
+        b.clicked.connect(b.toggle)
         b.setChecked(checked)
 
     b.setToolTip(tooltip)
