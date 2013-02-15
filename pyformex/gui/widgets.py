@@ -249,7 +249,9 @@ class InputItem(QtGui.QWidget):
         QtGui.QWidget.__init__(self,*args)
         layout = QtGui.QHBoxLayout()
         #layout.setSpacing(0)
-        layout.setMargin(0)
+        if not pf.options.pyside:
+            # PySide does not have this setMargin
+            layout.setMargin(0)
         self.setLayout(layout)
         spacer = kargs.get('spacer','')
         if 'l' in spacer:

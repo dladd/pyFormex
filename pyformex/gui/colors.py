@@ -87,7 +87,7 @@ def GLcolor(color):
     except:
         pass
 
-    # No success: rais an error
+    # No success: raise an error
     raise ValueError,"GLcolor: unexpected input of type %s: %s" % (type(color),color)
 
 
