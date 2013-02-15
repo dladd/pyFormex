@@ -487,7 +487,10 @@ def fmtBeamSection(el,setname):
     out = ""
 
     sectiontype = el.sectiontype.upper()
-    out += "*BEAM SECTION, ELSET=%s, MATERIAL=%s, SECTION=%s\n" % (setname,el.material.name,sectiontype)
+    out += "*BEAM SECTION, ELSET=%s, MATERIAL=%s, SECTION=%s" % (setname,el.material.name,sectiontype)
+    if el.poisson != None:
+        out += ", POISSON=%s"% (float(el.poisson))
+    out += "\n"
     if sectiontype == 'GENERAL':
         out += "%s, %s, %s, %s, %s \n" % (float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
