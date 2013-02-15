@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -99,7 +99,7 @@ CTRL = QtCore.Qt.ControlModifier
 ALT = QtCore.Qt.AltModifier
 ALLMODS = SHIFT | CTRL | ALT
 _modifiers = [NONE,SHIFT,CTRL,ALT]
-_modifiername = ['NONE','SHIFT','CTRL','ALT'] 
+_modifiername = ['NONE','SHIFT','CTRL','ALT']
 
 def modifierName(mod):
     try:
@@ -107,7 +107,7 @@ def modifierName(mod):
     except:
         return 'UNKNOWN'
 
-    
+
 ############### OpenGL Format #################################
 
 opengl_format = None
@@ -117,10 +117,10 @@ def setOpenGLFormat():
 
     On a correctly installed system, the default should do well.
     The default OpenGL format can be changed by command line options::
-    
+
        --dri   : use the Direct Rendering Infrastructure, if available
        --nodri : do not use the DRI
-       --alpha : enable the alpha buffer 
+       --alpha : enable the alpha buffer
     """
     global opengl_format
     pf.debug("Get OpenGL Format",pf.DEBUG.OPENGL)
@@ -201,12 +201,12 @@ class CursorShapeHandler(object):
 
     """
     cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
-                     'pick'   : QtCore.Qt.CrossCursor, 
+                     'pick'   : QtCore.Qt.CrossCursor,
                      'busy'   : QtCore.Qt.BusyCursor,
                      }
 
     def __init__(self,widget):
-        """Create a CursorHandler for the specified widget.""" 
+        """Create a CursorHandler for the specified widget."""
         self.widget = widget
 
     def setCursorShape(self,shape):
@@ -224,7 +224,7 @@ class CursorShapeHandler(object):
             shape = 'default'
         self.setCursorShape(shape)
 
-    
+
 class CanvasMouseHandler(object):
     """A class for handling the mouse events on the Canvas.
 
@@ -249,7 +249,7 @@ class CanvasMouseHandler(object):
         self.setCursorShapeFromFunc(func)
         pf.debug("RESETMOUSE %s" % func,pf.DEBUG.MOUSE)
         pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button],pf.DEBUG.MOUSE)
-            
+
 
     def getMouseFunc(self):
         """Return the mouse function bound to self.button and self.mod"""
@@ -266,7 +266,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     This class provides interactive functionality for the OpenGL canvas
     provided by the :class:`canvas.Canvas` class.
-    
+
     Interactivity is highly dependent on Qt4. Putting the interactive
     functions in a separate class makes it esier to use the Canvas class
     in non-interactive situations or combining it with other GUI toolsets.
@@ -276,14 +276,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     while the keyword arguments are passed to the canvas.Canvas constructor.
     """
     cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
-                     'pick'   : QtCore.Qt.CrossCursor, 
-                     'draw'   : QtCore.Qt.CrossCursor, 
+                     'pick'   : QtCore.Qt.CrossCursor,
+                     'draw'   : QtCore.Qt.CrossCursor,
                      'busy'   : QtCore.Qt.BusyCursor,
                      }
 
     selection_filters = [ 'none', 'single', 'closest', 'connected', 'closest-connected' ]
 
-    
+
     def __init__(self,*args,**kargs):
         """Initialize an empty canvas."""
         QtOpenGL.QGLWidget.__init__(self,*args)
@@ -307,8 +307,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         # Initial mouse funcs are dynamic handling
         # ALT is initially same as NONE and should never be changed
         for mod in (NONE,ALT):
-            self.setMouse(LEFT,self.dynarot,mod) 
-            self.setMouse(MIDDLE,self.dynapan,mod) 
+            self.setMouse(LEFT,self.dynarot,mod)
+            self.setMouse(MIDDLE,self.dynapan,mod)
             self.setMouse(RIGHT,self.dynazoom,mod)
         self.selection_mode = None
         self.selection = Collection()
@@ -345,7 +345,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         (the size of the central widget of the main window).
 
         Note that this may not have the expected result when multiple
-        viewports are used. 
+        viewports are used.
         """
         if width < 0 or height < 0:
             w,h = pf.GUI.maxCanvasSize()
@@ -353,7 +353,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 width = w
             if height < 0:
                 height = h
-        self.resize(width,height)        
+        self.resize(width,height)
 
 
     def getPickModes(self):
@@ -368,13 +368,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             clear = False,     # Clear on each drawing action
             shrink = False,
             shrink_factor = 0.8,
-            marksize = 5.0,     
+            marksize = 5.0,
             )
 
     def setOptions(self,d):
         """Set the Drawing options to some values"""
         self.options.update(d)
-        
+
 
     def setCursorShape(self,shape):
         """Set the cursor shape to shape"""
@@ -413,7 +413,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if button == LEFT and mod == NONE:
             self.setCursorShapeFromFunc(func)
         #print self.mousefnc
-            
+
 
     def getMouseFunc(self):
         """Return the mouse function bound to self.button and self.mod"""
@@ -423,7 +423,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def start_rectangle_zoom(self):
         self.setMouse(LEFT,self.mouse_rectangle_zoom)
 
- 
+
     def finish_rectangle_zoom(self):
         self.update()
         self.resetMouse(LEFT)
@@ -449,7 +449,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.begin_2D_drawing()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
-            GL.glLogicOp(GL.GL_INVERT)        
+            GL.glLogicOp(GL.GL_INVERT)
             # Draw rectangle
             self.draw_state_rect(x,y)
             self.swapBuffers()
@@ -484,7 +484,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.pickable = None
         else:
             self.pickable = [ self.actors[i] for i in nrs if i in range(len(self.actors))]
-        
+
 
     def start_selection(self,mode,filter):
         """Start an interactive picking mode.
@@ -556,7 +556,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Cancel an interactive picking mode and clear the selection."""
         self.accept_selection(clear=True)
 
-    
+
     def pick(self,mode='actor',oneshot=False,func=None,filter=None):
         """Interactively pick objects from the viewport.
 
@@ -636,7 +636,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             func(self.selection)
         self.finish_selection()
         return self.selection
-    
+
 
     def pickNumbers(self,*args,**kargs):
         """Go into number picking mode and return the selection."""
@@ -650,7 +650,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         This function allows the user to interactively create points in 3D
         space and collects the subsequent points in a Coords object. The
         interpretation of these points is left to the caller.
-        
+
         - `mode`: one of the drawing modes, specifying the kind of objects you
           want to draw. This is passed to the specified `func`.
         - `npoints`: If -1, the user can create any number of points. When >=0,
@@ -667,7 +667,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         - `preview`: **Experimental** If True, the preview funcion will also
           be called during mouse movement with a pressed button, allowing to
           preview the result before a point is created.
-        
+
         The drawing operation is finished when the number of requested points
         has been reached, or when the user clicks the right mouse button or
         hits 'ENTER'.
@@ -689,7 +689,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     if func:
                         func(self.drawing,self.drawmode)
                 if npoints > 0 and len(self.drawing) >= npoints:
-                    self.accept_draw()                
+                    self.accept_draw()
             if func and not self.draw_accepted:
                 func(self.drawing,self.drawmode)
         finally:
@@ -760,7 +760,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 self.drawn = Coords(self.drawn).reshape(-1,3)
                 self.previewfunc(Coords.concatenate([self.drawing,self.drawn]),self.drawmode)
                 self.swapBuffers()
-            
+
         elif action == RELEASE:
             self.drawn = self.unProject(x,y,self.zplane)
             self.selection_busy = False
@@ -815,11 +815,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def cancel_drawing(self):
         """Cancel an interactive drawing mode and clear the drawing."""
         self.accept_drawing(clear=True)
-    
+
     def edit_drawing(self,mode):
         """Edit an interactive drawing."""
         self.edit_mode = mode
-        self.drawing_busy = False     
+        self.drawing_busy = False
 
     def drawLinesInter(self,mode='line',oneshot=False,func=None):
         """Interactively draw lines on the canvas.
@@ -854,7 +854,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 if func:
                     func(self.drawing)
             if oneshot:
-                self.accept_drawing()                
+                self.accept_drawing()
         if func and not self.drawing_accepted:
             func(self.drawing)
         self.finish_drawing()
@@ -862,7 +862,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
 ######## QtOpenGL interface ##############################
-        
+
     def initializeGL(self):
         if pf.options.debuglevel & pf.DEBUG.GUI:
             p = self.sizePolicy()
@@ -940,7 +940,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
             self.camera.saveModelView()
 
-            
+
     def dynapan(self,x,y,action):
         """Perform dynamic pan operation.
 
@@ -959,9 +959,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             self.update()
-            self.camera.saveModelView()          
+            self.camera.saveModelView()
 
-            
+
     def dynazoom(self,x,y,action):
         """Perform dynamic zoom operation.
 
@@ -984,7 +984,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     d = utils.stuur(value,[0,state,size],[5,1,0.2],1.2)
                     #pf.debug(d)
                     self.camera.setDist(d*self.state[0])
-                    
+
             self.update()
 
         elif action == RELEASE:
@@ -1008,7 +1008,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         This is equivalent to pressing the ENTER button."""
         if action == RELEASE:
             self.emit(DONE,())
-            
+
     def emit_cancel(self,x,y,action):
         """Emit a CANCEL event by clicking the mouse.
 
@@ -1214,7 +1214,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.swapBuffers()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
-            GL.glLogicOp(GL.GL_INVERT)        
+            GL.glLogicOp(GL.GL_INVERT)
             # Draw rectangle
             if self.drawing.size != 0:
                 self.statex,self.statey = self.drawing[-1,-1]
@@ -1241,7 +1241,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     @classmethod
     def has_modifier(clas,e,mod):
         return ( e.modifiers() & mod ) == mod
-        
+
     def mousePressEvent(self,e):
         """Process a mouse press event."""
         # Make the clicked viewport the current one
@@ -1255,7 +1255,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if func:
             func(self.statex,self.statey,PRESS)
         e.accept()
-        
+
     def mouseMoveEvent(self,e):
         """Process a mouse move event."""
         # the MOVE event does not identify a button, use the saved one
@@ -1278,15 +1278,17 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if func:
             func(e.delta())
         e.accept()
-        
 
 
-    # Any keypress with focus in the canvas generates a 'wakeup' signal.
+
+    # Any keypress with focus in the canvas generates a GUI WAKEUP signal.
     # This is used to break out of a wait status.
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        self.emit(WAKEUP,())
+        # pf.GUI.signals.WAKEUP.emit()
+        # Done byt the top level (GUI) ??
+        # Move all of these to GUI ??
         if e.key() == ESC:
             self.emit(CANCEL,())
             e.accept()
@@ -1465,7 +1467,7 @@ class NewiMultiCanvas(QtGui.QGridLayout):
 
         rowstretch and colstretch are lists of stretch factors to be applied
         on the subsequent rows/columns. If the lists are shorter than the
-        number of rows/columns, the 
+        number of rows/columns, the
         """
         if rowstretch:
             for i in range(min(len(rowstretch),self.nrows())):
@@ -1610,7 +1612,7 @@ class MultiCanvas(FramedGridLayout):
             self.current.focus = True
             self.current.updateGL()
             toolbar.updateViewportButtons(self.current)
-            
+
         pf.canvas = self.current
 
 
@@ -1780,5 +1782,5 @@ def _auto_initialize():
         pass
 
 _auto_initialize()
-                    
+
 # End

@@ -63,5 +63,34 @@ def offSignal(signal,function,widget=None):
         widget = pf.GUI
     QObject.disconnect(widget,signal,function)
 
+
+from gui import Signal
+
+class Signals(QtCore.QObject):
+    """A class with all custom signals in pyFormex.
+
+    Custom signals are instances of the gui.Signal function, and should
+    be defined inside a class derived from QtCore.QObject.
+
+    The following signals are currently defined:
+
+    - CANCEL: cancel the operation, undoing it
+    - DONE: accept and finish the operation
+    - REDRAW: redraw a preview state
+    - WAKEUP: wake up from a sleep state
+    - TIMEOUT: terminate what was going on
+    - SAVE: save current rendering
+    - FULLSCREEN: toggle fullscreen mode
+    """
+    CANCEL = Signal()
+    DONE   = Signal()
+    REDRAW = Signal()
+    WAKEUP = Signal()
+    TIMEOUT = Signal()
+    SAVE = Signal()
+    FULLSCREEN = Signal()
+
+
+
 # End
 

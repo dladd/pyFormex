@@ -208,6 +208,8 @@ class Gui(QtGui.QMainWindow):
                      'right': QtCore.Qt.RightToolBarArea,
                      }
 
+
+
     def __init__(self,windowname,size=(800,600),pos=(0,0),bdsize=(0,0)):
         """Constructs the GUI.
 
@@ -402,6 +404,17 @@ class Gui(QtGui.QMainWindow):
         # Modeless child dialogs
         self.doc_dialog = None
         pf.debug('Done initializing GUI',pf.DEBUG.GUI)
+
+        # Set up signal/slot connections
+        self.signals = signals.Signals()
+        self.signals.FULLSCREEN.connect(self.fullScreen)
+
+        # Set up hot keys: hitting the key will emit the corresponding signal
+        from signals import Qt
+        self.hotkey  = {
+#            Qt.Key_F2: SAVE,
+            Qt.Key_F5: self.signals.FULLSCREEN,
+            }
 
 
     def close_doc_dialog(self):
@@ -673,7 +686,6 @@ class Gui(QtGui.QMainWindow):
         self.processEvents()
 
 
-
     def keyPressEvent(self,e):
         """Top level key press event handler.
 
@@ -685,10 +697,10 @@ class Gui(QtGui.QMainWindow):
         """
         key = e.key()
         pf.debug('Key %s pressed' % key,pf.DEBUG.GUI)
-        self.emit(signals.WAKEUP,())
-        signal = signals.keypress_signal.get(key,None)
-        if signal:
-            self.emit(signal,())
+        self.signals.WAKEUP.emit()
+        signal = self.hotkey.get(key,None)
+        if signal is not None:
+            signal.emit()
         e.ignore()
 
 
@@ -1399,7 +1411,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
 
     # Activate F5 as fullscreen switcher
-    signals.onSignal(signals.FULLSCREEN,fullscreen)
+    #signals.onSignal(signals.FULLSCREEN,fullscreen)
 
     pf.GUI.update()
 

@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -48,7 +48,7 @@ import os,sys
 
 try:
     import fontforge
-    
+
 except ImportError:
     warning("You do not have fontforge and its Python bindings.\nPlease install python-fontforge and then try again.")
 
@@ -71,7 +71,7 @@ def partitionByContour(self,contour):
     """
     self.getElemEdges()
     edg = self.edges
-    
+
     feat = self.featureEdges(angle=angle)
     p = self.maskedEdgeFrontWalk(mask=~feat,frontinc=0)
 
@@ -119,15 +119,16 @@ def glyphCurve(c):
             P1 = PM
             P0 = P
             continue
-    
+
     return Coords(points),Coords(control)
 
-    
-            
+
+
 def contourCurve(c):
-    """Convert a fontforge contour to a pyFormex curve""" 
+    """Convert a fontforge contour to a pyFormex curve"""
     points,control = glyphCurve(c)
     return BezierSpline(coords=points[:-1],control=control,degree=2,closed=True)
+
 
 def charContours(fontfile,character):
     font = fontforge.open(fontfile,5)
@@ -164,9 +165,9 @@ def connect2curves(c0,c1):
     i,j,d = closestPoint(x0,x1)
     x = concatenate([roll(x0,-i,axis=0),roll(x1,-j,axis=0)])
     return BezierSpline(control=x,degree=2,closed=True)
-    
-    
-            
+
+
+
 def charCurves(fontfile,character):
     l = charContours(fontfile,character)
     c = [ contourCurve(li) for li in l ]
@@ -232,7 +233,7 @@ def show(fontname,character,fill=None):
     else:
         for c in curve:
             drawCurve(c,blue)
-    
+
     return
 
 
@@ -286,9 +287,9 @@ def run():
 
 
     print(res)
-    
+
     show(**res)
-    
+
 
 if __name__ == 'draw':
     run()

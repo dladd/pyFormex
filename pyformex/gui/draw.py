@@ -1546,75 +1546,6 @@ def fforward():
     pf.GUI.drawlock.free()
 
 
-## _repeat_timed_out = False
-## _repeat_exit_requested = False
-
-## def repeat(func,duration=-1,maxcount=-1,sleep=0,*args,**kargs):
-##     """Repeatedly execute a function.
-
-##     func(*args,**kargs) is repeatedly executed until one of the following
-##     conditions is met:
-##     - the function returns a value that evaluates to False
-##     - duration >= 0 and duration seconds have elapsed
-##     - maxcount >=0 and maxcount executions have been reached
-##     The default will indefinitely execute the function until it returns False.
-
-##     Between each execution of the function, application events are processed.
-##     If sleep > 0, an extra wait time of this length is executed on
-##     each step. This avoids high processor load when running idle.
-##     """
-##     pf.debug("REPEAT: %s, %s" % (duration,maxcount),pf.DEBUG.SCRIPT)
-##     global _repeat_timed_out, _repeat_exit_requested
-##     _repeat_timed_out = False
-##     _repeat_exit_requested = False
-##     _repeat_count_reached = False
-
-##     def timeOut():
-##         global _repeat_timed_out
-##         _repeat_timed_out = True
-
-##     if duration >= 0:
-##         timer = threading.Timer(duration,timeOut)
-##         timer.start()
-
-##     count = 0
-##     while True:
-##         pf.app.processEvents()
-##         if callable(func):
-##             res = func(*args,**kargs)
-##             _repeat_exit_requested = not(res)
-##         count += 1
-##         pf.debug("Count: %s"% count,pf.DEBUG.SCRIPT)
-##         if maxcount >= 0:
-##              _repeat_count_reached = count >= maxcount
-##         if _repeat_exit_requested or _repeat_timed_out or _repeat_count_reached:
-##             pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out),pf.DEBUG.SCRIPT)
-##             break
-##         if sleep > 0:
-##             time.sleep(sleep)
-
-##     pf.debug("EXIT FROM REPEAT",pf.DEBUG.SCRIPT)
-
-
-## def interrupt():
-##     """Interrupt a repeat"""
-##     global _repeat_exit_requested
-##     _repeat_exit_requested = True
-
-
-## def wakeup(mode=0):
-##     """Wake up from the sleep function.
-
-##     This is the only way to exit the sleep() function.
-##     Default is to wake up from the current sleep. A mode > 0
-##     forces wakeup for longer period.
-##     """
-##     global timer,sleeping,_wakeup_mode
-##     if timer:
-##         timer.cancel()
-##     sleeping = False
-##     _wakeup_mode = mode
-
 #
 # IDEA: The pause() could display a progress bar showing how much time
 # is left in the pause,
@@ -1654,53 +1585,6 @@ def pause(timeout=None,msg=None):
 def sleep(duration,granularity=0.01):
     from drawlock import Repeater
     R = Repeater(None,duration,sleep=granularity)
-    #R.start()
-
-
-## _wakeup_mode=0
-## sleeping = False
-## timer = None
-## def sleep1(timeout=None):
-##     """Sleep until key/mouse press in the canvas or until timeout"""
-##     utils.warn('warn_avoid_sleep')
-##     #
-##     global sleeping,_wakeup_mode,timer
-##     if _wakeup_mode > 0 or timeout == 0:  # don't bother
-##         return
-##     # prepare for getting wakeup event
-##     onSignal(WAKEUP,wakeup)
-##     # create a Timer to wakeup after timeout
-##     if timeout and timeout > 0:
-##         timer = threading.Timer(timeout,wakeup)
-##         timer.start()
-##     else:
-##         timer = None
-##     # go into sleep mode
-##     sleeping = True
-##     ## while sleeping, we have to process events
-##     ## (we could start another thread for this)
-##     while sleeping:
-##         pf.app.processEvents()
-##         # And we have to sleep in between, or we would be using to much
-##         # processor time idling. 0.1 is a good compromise to get some
-##         # responsitivity while not pegging the cpu
-##         time.sleep(0.01)
-##     # ignore further wakeup events
-##     offSignal(WAKEUP,wakeup)
-
-
-## def wakeup(mode=0):
-##     """Wake up from the sleep function.
-
-##     This is the only way to exit the sleep() function.
-##     Default is to wake up from the current sleep. A mode > 0
-##     forces wakeup for longer period.
-##     """
-##     global timer,sleeping,_wakeup_mode
-##     if timer:
-##         timer.cancel()
-##     sleeping = False
-##     _wakeup_mode = mode
 
 
 ########################## print information ################################

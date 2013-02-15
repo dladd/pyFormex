@@ -90,12 +90,13 @@ def addButton(toolbar,tooltip,icon,func,repeat=False,toggle=False,checked=False,
     if repeat:
         b.setAutoRepeat(True)
         b.setAutoRepeatDelay(500)
-        #QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
         b.clicked.connect(a.trigger)
 
     if toggle:
+        #print(b,a,icon)
         b.setCheckable(True)
-        b.clicked.connect(a.toggle)
+        #b.clicked.connect(a.toggle)
+        b.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("toggle()"))
         b.setChecked(checked)
 
     b.setToolTip(tooltip)
