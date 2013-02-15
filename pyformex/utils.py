@@ -32,6 +32,7 @@ import pyformex as pf
 import os,re,sys,tempfile,time
 
 from config import formatDict
+from odict import ODict
 from distutils.version import LooseVersion as SaneVersion
 
 
@@ -43,19 +44,20 @@ from distutils.version import LooseVersion as SaneVersion
 #   - module name to load the version
 #   - a sequence of attributes to get the version
 # If empty, the attribute is supposed to be '__version__'
+# If module name is an empty string, it is supposed to be equal to our alias
 known_modules = {
     'calpy'     : (),
     'dicom'     : (),
     'docutils'  : (),
     'gdcm'      : ('','','GDCM_VERSION'),
     'gl2ps'     : ('','','GL2PS_VERSION'),
-    'gnuplot'   : ('Gnuplot'),
+    'gnuplot'   : ('Gnuplot',),
     'matplotlib': (),
     'numpy'     : (),
     'pyopengl'  : ('OpenGL',),
     'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
-    'pyqt4gl'   : ('PyQt4','','QtOpenGL'),
-    'pyside'    : (),
+    'pyqt4gl'   : ('PyQt4.QtOpenGL','PyQt4','QtCore','QT_VERSION_STR'),
+    'pyside'    : ('PySide',),
     'vtk'       : ('','','VTK_VERSION'),
      }
 
@@ -81,12 +83,12 @@ known_externals = {
 digits = re.compile(r'(\d+)')
 
 # versions of detected modules
-the_version = {
+the_version = ODict({
     'pyformex':pf.__version__,
     'python':sys.version.split()[0],
-    }
+    })
 # versions of detected external commands
-the_external = {}
+the_external = ODict({})
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
@@ -151,15 +153,24 @@ def requireModule(name):
     If the module is not available, an error is raised.
     """
     if not hasModule(name):
-        errmsg = known_modules[name][0]
-        if errmsg:
-            pf.error(errmsg)
+        if name in known_modules:
+            # Get the correct name, if different from our alias
+            try:
+                name = known_modules[name][0]
+            except:
+                pass
+            attr = 'required'
+        else:
+            attr = 'unknown'
+        errmsg = "Could not load %s module '%s'" % (attr,name)
+        pf.error(errmsg)
 
 
 
 def checkAllModules():
-    """Check the existing of all known modules.
+    """Check the existence of all known modules.
 
+    This also sorts the modules alphabetically
     """
     [ checkModule(n,quiet=True) for n in known_modules ]
     return
@@ -188,19 +199,19 @@ def checkModule(name,ver=(),fatal=False,quiet=False):
         modname = ver[0]
 
     try:
-        #print(modname)
+        pf.debug(modname,pf.DEBUG.DETECT)
         m = __import__(modname)
-        #print(m)
+        pf.debug(m,pf.DEBUG.DETECT)
         if len(ver) > 1 and len(ver[1]) > 0:
             modname = ver[1]
             m = __import__(modname)
-            #print(m)
+            pf.debug(m,pf.DEBUG.DETECT)
         ver = ver[2:]
         if len(ver) == 0:
             ver = ('__version__',)
         for a in ver:
             m = getattr(m,a)
-            #print(m)
+            pf.debug(m,pf.DEBUG.DETECT)
 
     except:
         # failure: unexisting or unregistered modules
@@ -287,12 +298,16 @@ def reportDetected():
     s += "\nPython version: %s\n" % sys.version
     s += "\nOperating system: %s\n" % sys.platform
     s += "\nDetected Python Modules:\n"
-    for k,v in the_version.iteritems():
+    the_version.sort(sorted(the_version.keys()))
+    for k in the_version:
+        v = the_version[k]
         if not v:
             v = notfound
         s += "%s (%s)\n" % ( k,v)
     s += "\nDetected External Programs:\n"
-    for k,v in the_external.iteritems():
+    the_external.sort(sorted(the_external.keys()))
+    for k in the_external:
+        v = the_external[k]
         if not v:
             v = notfound
         s += "%s (%s)\n" % ( k,v)

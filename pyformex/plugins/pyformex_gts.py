@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -35,7 +35,6 @@ import os
 from plugins.trisurface import TriSurface,read_gts_intersectioncurve
 
 utils.hasExternal('gts')
-utils.hasModule('pygts')
 #
 # gts commands used:
 #   in Debian package: stl2gts gts2stl gtscheck
@@ -126,7 +125,7 @@ def gtsset(self,surf,op,filt='',ext='.tmp',curve=False,check=False,verbose=False
     if curve:
         res = read_gts_intersectioncurve(tmp2)
     else:
-        res = TriSurface.read(tmp2)        
+        res = TriSurface.read(tmp2)
     os.remove(tmp2)
     return res
 
@@ -193,7 +192,7 @@ def inside(self,pts):
 
     # Limit the points to the common part
     # Add point numbers as property, to allow return of original numbers
-    pts.setProp(arange(pts.nelems())) 
+    pts.setProp(arange(pts.nelems()))
     pts = pts.clip(testBbox(pts,bb))
 
     # Apply the gtsinside shooting algorithm in three directions
@@ -214,7 +213,7 @@ def inside(self,pts):
 def install_more_trisurface_methods():
 
     ###################################################
-    ## install these functions as TriSurface methods ## 
+    ## install these functions as TriSurface methods ##
 
     from trisurface import TriSurface
     TriSurface.boolean = boolean
@@ -223,6 +222,7 @@ def install_more_trisurface_methods():
 #    TriSurface.inside = inside
 
 
+#utils.requireModule('pygts')
 ## try:
 ##     import gts
 ##     print "You have pygts installed: pyFormex will try to use it instead of gts commands"
