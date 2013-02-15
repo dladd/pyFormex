@@ -62,9 +62,8 @@ def GLcolor(color):
     # as of Qt4.5, QtGui.Qcolor no longer raises an error if given
     # erroneous input. Therefore, we check it ourselves
 
-    # str, QString or QtCore.Globalcolor: convert to QColor
+    # str or QtCore.Globalcolor: convert to QColor
     if ( type(col) is str or
-         type(col) is QtCore.QString  or
          isinstance(col,QtCore.Qt.GlobalColor) ):
         try:
             col = QtGui.QColor(col)
