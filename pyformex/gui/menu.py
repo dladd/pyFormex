@@ -396,11 +396,11 @@ class DAction(QtGui.QAction):
         self.signal = signal
         if data is None:
             data = name
-        self.setData(QtCore.QVariant(data))
+        self.setData(data)
         self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
 
     def activated(self):
-        self.emit(QtCore.SIGNAL(self.signal), str(self.data().toString()))
+        self.emit(QtCore.SIGNAL(self.signal), str(self.data()))
 
 
 class ActionList(object):

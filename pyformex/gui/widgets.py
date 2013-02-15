@@ -2117,10 +2117,9 @@ class TableModel(QtCore.QAbstractTableModel):
         """Return the data at the specified index"""
         if index.isValid() and role == QtCore.Qt.DisplayRole:
             r,c = index.row(),index.column()
-            value = QtCore.QVariant(self._data[r][c])
+            return self._data[r][c]
         else:
-            value = QtCore.QVariant()
-        return value
+            return None
 
 
     def cellType(self,r,c):
@@ -2154,7 +2153,7 @@ class TableModel(QtCore.QAbstractTableModel):
         if self.edit and role == QtCore.Qt.EditRole:
             try:
                 r,c = [index.row(),index.column()]
-                self.setCellData(r,c,value.toString())
+                self.setCellData(r,c,value)
                 self.dataChanged.emit(index,index) #not sure if needed
                 return True
             except:
@@ -2169,8 +2168,8 @@ class TableModel(QtCore.QAbstractTableModel):
     def headerData(self,col,orientation,role):
         """Return the header data for the sepcified row or column"""
         if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.headerdata[orientation][col])
-        return QtCore.QVariant()
+            return self.headerdata[orientation][col]
+        return None
 
 
     def insertRows(self,row=None,count=None):
@@ -2259,11 +2258,9 @@ class ArrayModel(QtCore.QAbstractTableModel):
     def data(self,index,role):
         if index.isValid() and role == QtCore.Qt.DisplayRole:
             r,c = index.row(),index.column()
-            value = QtCore.QVariant(self.generictype(self._data[r,c]))
-            #print("DATA at %s,%s is %s" % (r,c,value))
+            return self.generictype(self._data[r,c])
         else:
-            value = QtCore.QVariant()
-        return value
+            return None
 
 
     def cellType(self,r,c):
@@ -2301,8 +2298,8 @@ class ArrayModel(QtCore.QAbstractTableModel):
     def headerData(self,col,orientation,role):
         """Return the header data for the sepcified row or column"""
         if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.headerdata[orientation][col])
-        return QtCore.QVariant()
+            return self.headerdata[orientation][col]
+        return None
 
 
     def flags(self,index):

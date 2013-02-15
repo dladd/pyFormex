@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -51,8 +51,8 @@ class AttributeModel(QtCore.QAbstractTableModel):
 
     """
     header = [ 'attribute', 'value', 'is a dict', 'has __dict__', '__class__' ]
-    def __init__(self,name,dic=None,parent=None,*args): 
-        QtCore.QAbstractItemModel.__init__(self,parent,*args) 
+    def __init__(self,name,dic=None,parent=None,*args):
+        QtCore.QAbstractItemModel.__init__(self,parent,*args)
         if dic is None:
             dic = gobals()
         self.dic = dic
@@ -64,33 +64,33 @@ class AttributeModel(QtCore.QAbstractTableModel):
         has_dict = [ hasattr(self.obj,'__dict__') for k in keys ]
         has_class = [ getattr(self.obj,'__class__') for k in keys ]
         self.items = zip(keys,vals,isdict,has_dict,has_class)
-                
-                 
-    def rowCount(self,parent): 
-        return len(self.items) 
- 
-    def columnCount(self,parent): 
-        return len(self.header) 
- 
-    def data(self,index,role=QtCore.Qt.DisplayRole): 
+
+
+    def rowCount(self,parent):
+        return len(self.items)
+
+    def columnCount(self,parent):
+        return len(self.header)
+
+    def data(self,index,role=QtCore.Qt.DisplayRole):
         if index.isValid() and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.items[index.row()][index.column()]) 
-        return QtCore.QVariant() 
+            return self.items[index.row()][index.column()]
+        return None
 
     def headerData(self,col,orientation=QtCore.Qt.Horizontal,role=QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(AttributeModel.header[col])
-        return QtCore.QVariant()
+            return AttributeModel.header[col]
+        return None
 
 
 class DictModel(QtCore.QAbstractTableModel):
     """A model representing a dictionary."""
-    
+
     header = [ 'key', 'type', 'value' ]
-    
+
     def __init__(self,dic,name,parent=None,*args):
-        
-        QtCore.QAbstractItemModel.__init__(self,parent,*args) 
+
+        QtCore.QAbstractItemModel.__init__(self,parent,*args)
         self.dic = dic
         self.name = name
         keys = dic.keys()
@@ -98,41 +98,41 @@ class DictModel(QtCore.QAbstractTableModel):
         typs = [ str(type(v)) for v in vals ]
         self.items = zip(keys,typs,vals)
         #print(self.items)
-                
-    def rowCount(self,parent): 
-        return len(self.items) 
- 
-    def columnCount(self,parent): 
-        return len(self.header) 
- 
-    def data(self,index,role=QtCore.Qt.DisplayRole): 
+
+    def rowCount(self,parent):
+        return len(self.items)
+
+    def columnCount(self,parent):
+        return len(self.header)
+
+    def data(self,index,role=QtCore.Qt.DisplayRole):
         if index.isValid() and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.items[index.row()][index.column()]) 
- 
-        return QtCore.QVariant() 
+            return self.items[index.row()][index.column()]
+
+        return None
 
     def headerData(self,col,orientation=QtCore.Qt.Horizontal,role=QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(DictModel.header[col])
-        return QtCore.QVariant()
+            return DictModel.header[col]
+        return None
 
 
 class Table(QtGui.QDialog):
     """A dialog widget to show two-dimensional arrays of items."""
-    
+
     def __init__(self,datamodel,caption="pyFormex - Table",parent=None,actions=[('OK',)],default='OK'):
         """Create the Table dialog.
-        
+
         data is a 2-D array of items, mith nrow rows and ncol columns.
         chead is an optional list of ncol column headers.
         rhead is an optional list of nrow row headers.
         """
         if parent is None:
             parent = pf.GUI
-        
+
         QtGui.QDialog.__init__(self,parent)
         self.setWindowTitle(str(caption))
-        
+
         form = QtGui.QVBoxLayout()
         table = QtGui.QTableView()
         table.setModel(datamodel)
@@ -167,7 +167,7 @@ def showfields():
     global tbl
     tbl = widgets.Table(result_types.items(),['acronym','description'],actions=[('Cancel',),('Ok',),('Print',tblIndex)])
     tbl.show()
-   
+
 
 
 def tblIndex():
@@ -278,7 +278,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         if val.shape != (nodes.shape[0],):
             warning("The values do not match the mesh: there are %s nodes in the mesh, and I got values with shape %s. I will continue without showing values." % (nodes.shape[0],val.shape))
             val = None
-            
+
     if val is not None:
         # create a colorscale and draw the colorlegend
         vmin,vmax = val.min(),val.max()
@@ -299,11 +299,11 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         if logma < 0:
             multiplier = 3 * ((2 - logma) / 3 )
             #print("MULTIPLIER %s" % multiplier)
-            
+
         CS = ColorScale('RAINBOW',vmin,vmax,vmid,1.,1.)
         cval = array(map(CS.color,val))
         CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,20,20,30,200,scale=multiplier) 
+        CLA = decors.ColorLegend(CL,20,20,30,200,scale=multiplier)
         pf.canvas.addDecoration(CLA)
 
     # the supplied text
@@ -355,7 +355,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         wait()
 
     zoomBbox(bbox(bboxes))
-    
+
     animateScenes(frames,count,sleeptime)
 
 
@@ -371,7 +371,7 @@ def animateScenes(scenes,count=1,sleeptime=None):
 
     # prepare to remove last scene
     FA,AA,TA = scenes[-1] # !! not None: that would remove everything !!
-    
+
     while count > 0:
         count -= 1
 
@@ -406,8 +406,8 @@ def animateScenes(scenes,count=1,sleeptime=None):
 ##         """Reset settings to defaults"""
 ##         self._show_model = True
 ##         self._show_elems = True
- 
-        
+
+
 ##     def postABQ(self,fn=None):
 ##         """Translate an Abaqus .fil file in a postproc script."""
 ##         types = [ 'Abaqus results file (*.fil)' ]
@@ -421,7 +421,7 @@ def animateScenes(scenes,count=1,sleeptime=None):
 ##             if sta:
 ##                 pf.message(out)
 
-    
+
 
 ################### menu #################
 
@@ -492,7 +492,7 @@ def animateScenes(scenes,count=1,sleeptime=None):
 ##             incs = self.DB.getIncs(step)
 ##             self.inc_combo = widgets.ComboBox('Inc:',incs,self.setInc)
 ##             pf.GUI.statusbar.addWidget(self.inc_combo)
-    
+
 
 ##     def hideStepInc(self):
 ##         """Hide the step/inc combo boxes"""
@@ -500,7 +500,7 @@ def animateScenes(scenes,count=1,sleeptime=None):
 ##             pf.GUI.statusbar.removeWidget(self._inc_combo)
 ##         if self._step_combo:
 ##             pf.GUI.statusbar.removeWidget(self._step_combo)
-             
+
 
 ##     def setStep(self,i):
 ##         print( "Current index: %s" % i)
@@ -561,7 +561,7 @@ def setDB(db):
         DB = None
     pf.PF['PostProcMenu_result'] = DB
 
-    
+
 def selectDB(db=None):
     """Select the result database to work upon.
 
@@ -570,7 +570,7 @@ def selectDB(db=None):
 
     If a database is succesfully selected, the screen is cleared and the
     geometry of the model is displayed.
-    
+
     Returns the database or None.
     """
     if not isinstance(db,FeResult):
@@ -586,14 +586,14 @@ def selectDB(db=None):
         showModel()
     return db
 
-    
+
 def importCalculix(fn=None):
     """Import a CalculiX results file and select it as the current results.
 
     CalculiX result files are the .dat files resulting from a run of the
     ccx program with an .inp file as input. This function will need both
     files and supposes that the names are the same except for the extension.
-    
+
     If no file name is specified, the user is asked to select one (either the
     .inp or .dat file), will then read both the mesh and corresponding results
     files, and store the results in a FeResult instance, which will be set as
@@ -629,7 +629,7 @@ def importCalculix(fn=None):
         selection.set([name])
         selectDB(DB)
 
-    
+
 def importFlavia(fn=None):
     """Import a flavia file and select it as the current results.
 
@@ -637,7 +637,7 @@ def importFlavia(fn=None):
     postprocessor, and can also be written by the FE program calix.
     There usually are two files named 'BASE.flavia.msh' and 'BASE.flavia.res'
     which hold the FE mesh and results, respectively.
-    
+
     This functions asks the user to select a flavia file (either mesh or
     results), will then read both the mesh and corrseponding results files,
     and store the results in a FeResult instance, which will be set as the
@@ -655,7 +655,7 @@ def importFlavia(fn=None):
         else:
             resfile = fn
             meshfile = utils.changeExt(fn,'msh')
-            
+
         db = readFlavia(meshfile,resfile)
         if not isinstance(db,FeResult):
             warning("!Something went wrong during the import of the flavia database %s" % fn)
@@ -667,15 +667,15 @@ def importFlavia(fn=None):
         db.printSteps()
         print(db.R)
         print(db.datasize)
-        
+
         selection.set([name])
         selectDB(db)
-        
 
-    
+
+
 def importDB(fn=None):
     """Import a _post.py database and select it as the current."""
-    
+
     if fn is None:
         types = utils.fileDescription('postproc')
         fn = askFilename(pf.cfg['workdir'],types)
@@ -695,19 +695,19 @@ I strongly recommend you to cancel the operation now.
         pf.GUI.setBusy(True)
         runScript(fn)
         pf.GUI.setBusy(False)
- 
+
         ### check whether the import succeeded
         name = FeResult._name_
         db = pf.PF[name]
         if not isinstance(db,FeResult):
             warning("!Something went wrong during the import of the database %s" % fn)
             return
-        
+
         ### ok: select the DB
         selection.set([name])
         selectDB(db)
 
-    
+
 def checkDB():
     """Make sure that a database is selected.
 
@@ -776,9 +776,9 @@ def show_results(data):
                 dscale = niceNumber(0.5/(siz1[w]/siz0[w]).max())
 
     if animate:
-        dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
+        dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape)
 
-    txt = "Step %S; Inc %I; " 
+    txt = "Step %S; Inc %I; "
 
     # Get the scalar element result values from the results.
     val = None
@@ -812,7 +812,7 @@ def show_DB_results():
             })
     # This shoud use show_results instead, with the stored data
     show()
-            
+
 
 def prev_step():
     DB.prevStep()
@@ -821,7 +821,7 @@ def prev_step():
 def prev_inc():
     DB.prevInc()
     show_DB_results()
-        
+
 def next_inc():
     DB.nextInc()
     show_DB_results()
@@ -829,7 +829,7 @@ def next_inc():
 def next_step():
     DB.nextStep()
     show_DB_results()
-    
+
 
 def open_dialog():
     global dialog
@@ -861,7 +861,7 @@ def open_dialog():
             _I('cycle',text='Animation cycle',value='updown',itemtype='radio',choices=['up','updown','revert']),
             _I('count',text='Number of cycles',value=5),
             _I('nframes',text='Number of frames',value=10),
-            _I('sleeptime',text='Animation sleeptime',value=0.1), 
+            _I('sleeptime',text='Animation sleeptime',value=0.1),
             ]),
         ]
 
@@ -984,4 +984,3 @@ if __name__ == "draw":
 
 
 # End
-
