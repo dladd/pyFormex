@@ -124,7 +124,8 @@ def run():
         return
 
     # Create the colors
-    print("Image size is %s" % image.size())
+    sz = image.size()
+    print("Image size is (%s,%s)" % (sz.width(),sz.height()))
     color,colortable = image2glcolor(image.scaled(nx,ny))
     print("Converting image to color array")
 

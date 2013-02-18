@@ -27,12 +27,15 @@
 """pyformexrc
 
 This is the global configuration file for pyFormex. It should always
-be present in the installation path and not be changed.
+be present in the installation path and never be changed from the
+installed defaults.
 
 Changes should go to /etc/pyformexrc (for site-wide changes)
 or to ~/.pyformex/pyformexrc (for personal settings).
 If your are missing these files, you can safely copy (parts of) this file
 as a start.
+Many of these settings can also be changed from the pyFormex GUI, using the
+Settings->Settings Dialog.
 
 Config settings are read from the following files in order:
 this file, /etc/pyformexrc, ~/.pyformex/pyformexrc.
@@ -97,6 +100,7 @@ popup = True
 filters = [('.*return_index.*','numpy')]
 
 [gui]
+bindings='pyqt4'
 #imagesfromeps = True
 fortune = False  # show a fortune cookie on startup
 redirect = True

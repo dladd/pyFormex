@@ -141,9 +141,12 @@ def settings():
     # Use _ to avoid adding these items in the config
     plugin_items = [ _I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
 
+    bindings_choices = ['PyQt4','PySide']
+    bindings_current =  bindings_choices[ 1 if pf.options.pyside else 0 ]
     appearance = [
         _I('gui/style',pf.app.currentStyle(),choices=pf.app.getStyles()),
         _I('gui/font',pf.app.font().toString(),'font'),
+        _I('gui/bindings',bindings_current,choices=bindings_choices,tooltip="The Python bindings with the Qt4 library. Your choice will only be honored after restarting pyFormex"),
         ]
 
     toolbartip = "Currently, changing the toolbar position will only be in effect when you restart pyFormex"

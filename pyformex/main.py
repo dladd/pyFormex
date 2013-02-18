@@ -436,8 +436,16 @@ def run(argv=[]):
            help="Test C library nurbs drawing: only for developers!",
            ),
         MO("--pyside",
-           action="store_true", dest="pyside", default=False,
-           help="Use the PySide bindings for QT4 libraries (default is PyQt4)",
+           action="store_true", dest="pyside", default=None,
+           help="Use the PySide bindings for QT4 libraries",
+           ),
+        MO("--pyqt4",
+           action="store_false", dest="pyside", default=None,
+           help="Use the PyQt4 bindings for QT4 libraries",
+           ),
+        MO("--opengl2",
+           action="store_true", dest="opengl2", default=False,
+           help="Use the new OpenGL rendering engine. This is an experimental feature only intended for developers.",
            ),
         MO("--listfiles",
            action="store_true", dest="listfiles", default=False,
@@ -574,6 +582,10 @@ def run(argv=[]):
                 os.system(cmd)
         return
 
+
+    # process other options dependent on config
+    if pf.options.pyside is None:
+        pf.options.pyside = pf.cfg['gui/bindings'].lower() == 'pyside'
 
     # process options that override the config
     if pf.options.redirect is not None:
