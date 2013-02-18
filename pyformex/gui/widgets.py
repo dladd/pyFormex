@@ -2953,7 +2953,10 @@ class MessageBox(QtGui.QMessageBox):
         if default is None:
             default = actions[-1]
         updateText(self,text,format)
-        self.setIcon(['noicon','info','warning','error','question'].index(level))
+        icon = self.getIcon(level) 
+        if icon:
+            self.setIcon(icon)
+
         for a in actions:
             b = self.addButton(a,QtGui.QMessageBox.AcceptRole)
             if a == default:
@@ -2963,6 +2966,16 @@ class MessageBox(QtGui.QMessageBox):
         self.checks = []
         if check:
             self.checks.append(self.addCheck(check))
+
+    def getIcon(self, level='noicon'):
+        if level == 'info':
+            return self.Information
+        elif level == 'warning':
+            return self.Warning    
+        elif level == 'error':
+            return self.Critical 
+        elif level == 'question':
+            return self.Question 
 
 
     def addCheck(self,text):
