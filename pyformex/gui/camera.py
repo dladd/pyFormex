@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
@@ -6,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -76,7 +75,7 @@ class ViewAngles(dict):
     def __init__(self,data = built_in_views):
        dict.__init__(self,data)
        self['iso'] = self['iso0']
-        
+
 
     def get(self,name):
         """Get the angles for a named view.
@@ -110,7 +109,7 @@ class Camera(object):
         longitude and latitude. Furthermore, the camera can also rotate around
         its viewing line. We can define this by a third angle, the twist.
         From these four values, the needed translation vector and rotation
-        matrix for the scene rendering may be calculated. 
+        matrix for the scene rendering may be calculated.
 
         Inversely however, we can not compute a unique set of angles from
         a given rotation matrix (this is known as 'gimball lock').
@@ -118,16 +117,16 @@ class Camera(object):
         requires that the camera orientation be stored as the full rotation
         matrix, rather than as three angles. Therefore we store the camera
         position and orientation as follows:
-    
+
         - `ctr`: `[ x,y,z ]` : the reference point of the camera:
           this is always a point on the viewing axis. Usually, it is set to
           the center of the scene you are looking at.
-        - `dist`: distance of the camera to the reference point. 
+        - `dist`: distance of the camera to the reference point.
         - `rot`: a 3x3 rotation matrix, rotating the global coordinate system
           thus that the z-direction is oriented from center to camera.
 
         These values have influence on the ModelView matrix.
-       
+
     Camera lens settings:
 
         The lens parameters define the volume that is seen by the camera.
@@ -154,7 +153,7 @@ class Camera(object):
     only activated by a call to the :meth:`loadModelView` or
     :meth:`loadProjection` method, which will test the flags to see whether
     the corresponding matrix needs a rebuild.
-        
+
     The default camera is at distance 1.0 of the center point [0.,0.,0.] and
     looking in the -z direction.
     Near and far clipping planes are by default set to 0.1, resp 10 times
@@ -184,16 +183,22 @@ class Camera(object):
         self.m = self.p = self.v = None
 
     # Use only these access functions to make implementation changes easier
-        
+
     def getCenter(self):
         """Return the camera reference point (the scene center)."""
         return self.ctr
+
     def getRot(self):
         """Return the camera rotation matrix."""
         return self.rot
+
     def getDist(self):
         """Return the camera distance."""
         return self.dist
+
+    def getPosition(self):
+        """Return the position of the camera."""
+        return self.trl+self.ctr
 
     def lock(self,onoff=True):
         """Lock/unlock a camera.
@@ -228,7 +233,7 @@ class Camera(object):
             if angles is None:
                 return
             self.setRotation(*angles)
-            
+
 
     def setRotation(self,long,lat,twist=0):
         """Set the rotation matrix of the camera from three angles."""
@@ -263,7 +268,7 @@ class Camera(object):
   Near/Far Clip: %s, %s
 """ % (self.ctr,self.dist,self.rot,self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
 
-        
+
     def dolly(self,val):
         """Move the camera eye towards/away from the scene center.
 
@@ -279,9 +284,9 @@ class Camera(object):
             #print("DIST %s" % self.dist)
             self.viewChanged = True
 
-        
+
     def pan(self,val,axis=0):
-        """Rotate the camera around axis through its eye. 
+        """Rotate the camera around axis through its eye.
 
         The camera is rotated around an axis through the eye point.
         For axes 0 and 1, this will move the center, creating a panning
@@ -292,9 +297,12 @@ class Camera(object):
         """
         if not self.locked:
             if axis==0 or axis ==1:
-                pos = self.getPosition()
-                self.eye[axis] = (self.eye[axis] + val) % 360
-                center = diff(pos,sphericalToCartesian(self.eye))
+
+                ## rot = rotationMatrix(val,axis)
+
+                ## eye = self.getPosition()
+                ## eye[axis] = (eye[axis] + val) % 360
+                ## center = diff(eye,sphericalToCartesian(eye))
                 self.setCenter(*center)
             elif axis==2:
                 self.twist = (self.twist + val) % 360
@@ -352,7 +360,7 @@ class Camera(object):
 
 
     def rotate(self,val,vx,vy,vz):
-        """Rotate the camera around current camera axes."""
+        """Rotate the camera around current axis (vx,vy,vz)."""
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
             self.saveModelView()
@@ -375,7 +383,7 @@ class Camera(object):
             self.rot[3,0:3] = [0.,0.,0.]
             #print "Rotation: %s" % self.rot
 
-        
+
     def setModelView(self):
         """Set the ModelView matrix from camera parameters.
 
@@ -428,7 +436,7 @@ class Camera(object):
                 except:
                     pass
                 self.viewChanged = False
-                
+
             else:
                 GL.glLoadMatrixf(self.m)
 
@@ -439,14 +447,14 @@ class Camera(object):
         rot[3,0:3] = [0.,0.,0.]
         GL.glLoadMatrixf(rot)
 
- 
+
     def translate(self,vx,vy,vz,local=True):
         if not self.locked:
             if local:
                 vx,vy,vz = self.toWorld([vx,vy,vz,1])
             self.move(-vx,-vy,-vz)
 
-      
+
     def transform(self,v):
         """Transform a vertex using the currently saved Modelview matrix."""
         if len(v) == 3:
@@ -486,7 +494,7 @@ class Camera(object):
         """Set maximal camera area.
 
         Resets the camera window area to its maximum values corresponding
-        to the fovy setting, symmetrical about the camera axes. 
+        to the fovy setting, symmetrical about the camera axes.
         """
         self.setArea(0.,0.,1.,1.,False)
 
@@ -500,7 +508,7 @@ class Camera(object):
             area = area.reshape(2,2)
             mean = (area[1]+area[0]) * 0.5
             diff = (area[1]-area[0]) * 0.5
-            
+
             if relative:
                 if center:
                     mean = zeros(2)
@@ -518,7 +526,7 @@ class Camera(object):
 
             #print("OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect))
             #print("NEW ZOOM AREA %s" % (area))
-                                                       
+
             self.area = area
             self.lensChanged = True
 
@@ -544,7 +552,7 @@ class Camera(object):
             #print("CAMERA AREA %s" % self.area.tolist())
             self.lensChanged = True
 
-            
+
     def transArea(self,dx,dy):
         """Pan by moving the vamera area.
 
@@ -557,9 +565,9 @@ class Camera(object):
         area += diff
         self.area = area
         self.lensChanged = True
-            
 
-        
+
+
     def setClip(self,near,far):
         """Set the near and far clipping planes"""
         if near > 0 and near < far:
@@ -568,7 +576,7 @@ class Camera(object):
         else:
             print("Error: Invalid Near/Far clipping values")
 
-        
+
     ## def setClipRel(self,near,far):
     ##     """Set the near and far clipping planes"""
     ##     if near > 0 and near < far:
@@ -615,7 +623,7 @@ class Camera(object):
             GL.glLoadIdentity()
             if pick:
                 GLU.gluPickMatrix(*pick)
-                
+
             fv = tand(self.fovy*0.5)
             if self.perspective:
                 fv *= self.near
@@ -633,7 +641,7 @@ class Camera(object):
             except:
                 pass
         if not keepmode:
-            GL.glMatrixMode(GL.GL_MODELVIEW)     
+            GL.glMatrixMode(GL.GL_MODELVIEW)
 
 
     #### global manipulation ###################
@@ -671,10 +679,10 @@ class Camera(object):
 #############################################################################
 
 if __name__ == "__main__":
-    
+
     from OpenGL.GLUT import *
     import sys
-   
+
     def init():
         GL.glClearColor (0.0, 0.0, 0.0, 0.0)
         GL.glShadeModel (GL.GL_FLAT)
@@ -753,21 +761,21 @@ if __name__ == "__main__":
         else:
             print(key)
         display()
-            
+
 
     def main():
         global cam
         glutInit(sys.argv)
         glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB)
-        glutInitWindowSize (500, 500) 
+        glutInitWindowSize (500, 500)
         #glutInitWindowPosition (100, 100)
         glutCreateWindow (sys.argv[0])
         init ()
-        
+
         cam = Camera(center=[0.,0.,0.],dist=5.)
         cam.setLens(45.,1.)
 
-        glutDisplayFunc(display) 
+        glutDisplayFunc(display)
         glutReshapeFunc(reshape)
         glutKeyboardFunc(keyboard)
         glutMainLoop()

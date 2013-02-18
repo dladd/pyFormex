@@ -305,6 +305,8 @@ def test_module(module):
     # Note that a non-empty fromlist is needed to make the
     # __import__ function always return the imported module
     # even if a dotted path is specified
+    import numpy as np
+    np.set_printoptions(precision=2)
     mod = __import__(module,fromlist=['a'])
     return doctest.testmod(mod)
 

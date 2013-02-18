@@ -670,7 +670,8 @@ class Gui(QtGui.QMainWindow):
 
     def setBusy(self,busy=True,force=False):
         if busy:
-            pf.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+            #pf.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+            pf.app.setOverrideCursor(QtCore.Qt.WaitCursor)
         else:
             pf.app.restoreOverrideCursor()
         self.processEvents()
@@ -1204,7 +1205,6 @@ def startGUI(args):
     pf.debug("Setting OpenGL format",pf.DEBUG.OPENGL)
     dri = hasDRI()
 
-
     # Check for existing pyFormex processes
     pf.debug("Checking for running pyFormex",pf.DEBUG.INFO)
     if pf.X11:
@@ -1304,6 +1304,7 @@ You should seriously consider to bail out now!!!
                  pf.cfg.get('gui/bdsize',(800,600)),
                  )
 
+
     # set the appearance
     pf.debug("Setting Appearence",pf.DEBUG.GUI)
     pf.GUI.setAppearence()
@@ -1317,6 +1318,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 """ % pf.fullVersion())
 
     # Set interaction functions
+
 
     def show_warning(message,category,filename,lineno,file=None,line=None):
         """Replace the default warnings.showwarning
@@ -1340,12 +1342,18 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.warning = draw.warning
     pf.error = draw.error
 
+
     # setup the canvas
     pf.debug("Setting the canvas",pf.DEBUG.GUI)
+    pf.GUI.processEvents()
     pf.GUI.viewports.changeLayout(1)
     pf.GUI.viewports.setCurrent(0)
     #pf.canvas = pf.GUI.viewports.current
     pf.canvas.setRenderMode(pf.cfg['draw/rendermode'])
+
+    #
+    # PYSIDE: raises (intercepted) exception on startup
+    #
     draw.reset()
 
     # setup the status bar

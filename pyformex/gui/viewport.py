@@ -213,7 +213,7 @@ class CursorShapeHandler(object):
         """Set the cursor shape to shape"""
         if shape not in QtCanvas.cursor_shape.keys():
             shape = 'default'
-        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[shape]))
+        self.setCursor(QtCanvas.cursor_shape[shape])
 
 
     def setCursorShapeFromFunc(self,func):
@@ -380,7 +380,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the cursor shape to shape"""
         if shape not in QtCanvas.cursor_shape.keys():
             shape = 'default'
-        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[shape]))
+        #self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[shape]))
+        self.setCursor(QtCanvas.cursor_shape[shape])
 
 
     def setCursorShapeFromFunc(self,func):
@@ -1527,7 +1528,7 @@ class FramedGridLayout(QtGui.QGridLayout):
         """Initialize the multicanvas."""
         QtGui.QGridLayout.__init__(self)
         self.setContentsMargins(0,0,0,0)
- #       self.frames = []
+#       self.frames = []
 
 
     def addWidget(*args):
@@ -1574,7 +1575,7 @@ class MultiCanvas(FramedGridLayout):
                 settings = {}
         pf.debug("Create new viewport with settings:\n%s"%settings,pf.DEBUG.CANVAS)
         ##
-        ## BEWARE: shared shouild be positional, settings should be keyword !
+        ## BEWARE: shared should be positional, settings should be keyword !
         canv = QtCanvas(self.parent,shared,settings=settings)
         #print(canv.settings)
         return(canv)
