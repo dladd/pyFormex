@@ -60,6 +60,7 @@ from formex import *
 # these are already imported in script
 #from mesh import Mesh
 #from plugins.trisurface import TriSurface
+from coordsys import CoordinateSystem
 
 #################### Interacting with the user ###############################
 
@@ -633,8 +634,8 @@ def draw(F,
         object's Actor constructor. This allows the user to create
         customized Actors with new parameters.
 
-    Specifying color
-    ----------------
+    Specifying color:
+
     Color specification can take many different forms. Some Actors recognize
     up to six different color modes and the draw function adds even another
     mode (property color)

@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. menu — Menus for the pyFormex GUI. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>19. menu — Menus for the pyFormex GUI. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,7 +54,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="23. colorscale — Color mapping of a range of values." href="colorscale.html" />
+    <link rel="next" title="20. colorscale — Color mapping of a range of values." href="colorscale.html" />
     <link rel="prev" title="18. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
@@ -78,7 +78,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="23. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="20. colorscale — Color mapping of a range of values."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">21. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></li>
-<li><a class="reference internal" href="#id53">22. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="widgets.html"
                         title="previous chapter">18. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="colorscale.html"
-                        title="next chapter">23. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+                        title="next chapter">20. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-menu">
-<span id="menu-menus-for-the-pyformex-gui"></span><span id="sec-ref-menu"></span><h1>21. <a class="reference internal" href="#module-menu" title="menu: Menus for the pyFormex GUI."><tt class="xref py py-mod docutils literal"><span class="pre">menu</span></tt></a> &#8212; Menus for the pyFormex GUI.<a class="headerlink" href="#module-menu" title="Permalink to this headline">¶</a></h1>
+<span id="menu-menus-for-the-pyformex-gui"></span><span id="sec-ref-menu"></span><h1>19. <a class="reference internal" href="#module-menu" title="menu: Menus for the pyFormex GUI."><tt class="xref py py-mod docutils literal"><span class="pre">menu</span></tt></a> &#8212; Menus for the pyFormex GUI.<a class="headerlink" href="#module-menu" title="Permalink to this headline">¶</a></h1>
 <p>This modules implements specialized classes and functions for building
 the pyFormex GUI menu system.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">menu</span></tt></p>
@@ -536,7 +530,7 @@ items will be inserted before the specified item.</li>
 <dt id="menu.DAction">
 <em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">DAction</tt><big>(</big><em>name</em>, <em>icon=None</em>, <em>data=None</em>, <em>signal=None</em><big>)</big><a class="headerlink" href="#menu.DAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>A DAction is a QAction that emits a signal with a string parameter.</p>
-<p>When triggered, this action sends a signal (default &#8216;Clicked&#8217;) with a
+<p>When triggered, this action sends a signal (default &#8216;CLICKED&#8217;) with a
 custom string as parameter. The connected slot can then act depending
 on this parameter.</p>
 </dd></dl>
@@ -583,443 +577,6 @@ If text is specified, it is displayed instead of the action&#8217;s name.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>22. <a class="reference internal" href="#module-menu" title="menu: Menus for the pyFormex GUI."><tt class="xref py py-mod docutils literal"><span class="pre">menu</span></tt></a> &#8212; Menus for the pyFormex GUI.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-menu"></span><p>This modules implements specialized classes and functions for building
-the pyFormex GUI menu system.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">menu</span></tt></p>
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">BaseMenu</tt><big>(</big><em>title='AMenu'</em>, <em>parent=None</em>, <em>before=None</em>, <em>items=None</em><big>)</big></dt>
-<dd><p>A general menu class.</p>
-<p>A hierarchical menu that keeps a list of its item names and actions.
-The item names are normalized by removing all &#8216;&amp;&#8217; characters and
-converting the result to lower case.
-It thus becomes easy to search for an existing item in a menu.</p>
-<p>This class is not intended for direct use, but through subclasses.
-Subclasses should implement at least the following methods:</p>
-<ul class="simple">
-<li>addSeparator()</li>
-<li>insertSeperator(before)</li>
-<li>addAction(text,action)</li>
-<li>insertAction(before,text,action)</li>
-<li>addMenu(text,menu)</li>
-<li>insertMenu(before,text,menu)</li>
-</ul>
-<p>QtGui.Menu and QtGui.MenuBar provide these methods.</p>
-<dl class="method">
-<dt>
-<tt class="descname">actionList</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the current actions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">actionsLike</tt><big>(</big><em>clas</em><big>)</big></dt>
-<dd><p>Return a list with the current actions of given class.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">subMenus</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the submenus</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">index</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the index of the specified item in the actionlist.</p>
-<p>If the requested item is not in the actionlist, -1 is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">action</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the action with specified text.</p>
-<p>First, a normal action is tried. If none is found,
-a separator is tried.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the item with specified text.</p>
-<p>For a normal action or a separator, an action is returned.
-For a menu action, a menu is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">nextitem</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Returns the name of the next item.</p>
-<p>This can be used to replace the current item with another menu.
-If the item is the last, None is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">removeItem</tt><big>(</big><em>item</em><big>)</big></dt>
-<dd><p>Remove an item from this menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert a separator</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an existing menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em>, <em>debug=False</em><big>)</big></dt>
-<dd><p>Insert a list of items in the menu.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>items</cite>: a list of menuitem tuples. Each item is a tuple of two
-or three elements: (text, action, options):<ul>
-<li><cite>text</cite>: the text that will be displayed in the menu item.
-It is stored in a normalized way: all lower case and with
-&#8216;&amp;&#8217; removed.</li>
-<li><cite>action</cite>: can be any of the following:<ul>
-<li>a Python function or instance method : it will be called when the
-item is selected,</li>
-<li>a string with the name of a function/method,</li>
-<li>a list of Menu Items: a popup Menu will be created that will
-appear when the item is selected,</li>
-<li>an existing Menu,</li>
-<li>None : this will create a separator item with no action.</li>
-</ul>
-</li>
-<li><cite>options</cite>: optional dictionary with following honoured fields:<ul>
-<li><cite>icon</cite>: the name of an icon to be displayed with the item text.
-This name should be that of one of the icons in the pyFormex
-icondir.</li>
-<li><cite>shortcut</cite>: is an optional key combination to select the item.</li>
-<li><cite>tooltip</cite>: a text that is displayed as popup help.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><cite>before</cite>: if specified, should be the text <em>or</em> the action of one
-of the items in the Menu (not the items list!): the new list of
-items will be inserted before the specified item.</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">Menu</tt><big>(</big><em>title='UserMenu'</em>, <em>parent=None</em>, <em>before=None</em>, <em>tearoff=False</em>, <em>items=None</em><big>)</big></dt>
-<dd><p>A popup/pulldown menu.</p>
-<dl class="method">
-<dt>
-<tt class="descname">actionList</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the current actions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">actionsLike</tt><big>(</big><em>clas</em><big>)</big></dt>
-<dd><p>Return a list with the current actions of given class.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">subMenus</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the submenus</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">index</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the index of the specified item in the actionlist.</p>
-<p>If the requested item is not in the actionlist, -1 is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">action</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the action with specified text.</p>
-<p>First, a normal action is tried. If none is found,
-a separator is tried.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the item with specified text.</p>
-<p>For a normal action or a separator, an action is returned.
-For a menu action, a menu is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">nextitem</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Returns the name of the next item.</p>
-<p>This can be used to replace the current item with another menu.
-If the item is the last, None is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">removeItem</tt><big>(</big><em>item</em><big>)</big></dt>
-<dd><p>Remove an item from this menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert a separator</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an existing menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em>, <em>debug=False</em><big>)</big></dt>
-<dd><p>Insert a list of items in the menu.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>items</cite>: a list of menuitem tuples. Each item is a tuple of two
-or three elements: (text, action, options):<ul>
-<li><cite>text</cite>: the text that will be displayed in the menu item.
-It is stored in a normalized way: all lower case and with
-&#8216;&amp;&#8217; removed.</li>
-<li><cite>action</cite>: can be any of the following:<ul>
-<li>a Python function or instance method : it will be called when the
-item is selected,</li>
-<li>a string with the name of a function/method,</li>
-<li>a list of Menu Items: a popup Menu will be created that will
-appear when the item is selected,</li>
-<li>an existing Menu,</li>
-<li>None : this will create a separator item with no action.</li>
-</ul>
-</li>
-<li><cite>options</cite>: optional dictionary with following honoured fields:<ul>
-<li><cite>icon</cite>: the name of an icon to be displayed with the item text.
-This name should be that of one of the icons in the pyFormex
-icondir.</li>
-<li><cite>shortcut</cite>: is an optional key combination to select the item.</li>
-<li><cite>tooltip</cite>: a text that is displayed as popup help.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><cite>before</cite>: if specified, should be the text <em>or</em> the action of one
-of the items in the Menu (not the items list!): the new list of
-items will be inserted before the specified item.</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">MenuBar</tt><big>(</big><em>title='TopMenuBar'</em><big>)</big></dt>
-<dd><p>A menu bar allowing easy menu creation.</p>
-<dl class="method">
-<dt>
-<tt class="descname">actionList</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the current actions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">actionsLike</tt><big>(</big><em>clas</em><big>)</big></dt>
-<dd><p>Return a list with the current actions of given class.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">subMenus</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list with the submenus</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">index</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the index of the specified item in the actionlist.</p>
-<p>If the requested item is not in the actionlist, -1 is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">action</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the action with specified text.</p>
-<p>First, a normal action is tried. If none is found,
-a separator is tried.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Return the item with specified text.</p>
-<p>For a normal action or a separator, an action is returned.
-For a menu action, a menu is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">nextitem</tt><big>(</big><em>text</em><big>)</big></dt>
-<dd><p>Returns the name of the next item.</p>
-<p>This can be used to replace the current item with another menu.
-If the item is the last, None is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">removeItem</tt><big>(</big><em>item</em><big>)</big></dt>
-<dd><p>Remove an item from this menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert a separator</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an existing menu.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">create_insert_action</tt><big>(</big><em>name</em>, <em>val</em>, <em>before=None</em><big>)</big></dt>
-<dd><p>Create and insert an action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em>, <em>debug=False</em><big>)</big></dt>
-<dd><p>Insert a list of items in the menu.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>items</cite>: a list of menuitem tuples. Each item is a tuple of two
-or three elements: (text, action, options):<ul>
-<li><cite>text</cite>: the text that will be displayed in the menu item.
-It is stored in a normalized way: all lower case and with
-&#8216;&amp;&#8217; removed.</li>
-<li><cite>action</cite>: can be any of the following:<ul>
-<li>a Python function or instance method : it will be called when the
-item is selected,</li>
-<li>a string with the name of a function/method,</li>
-<li>a list of Menu Items: a popup Menu will be created that will
-appear when the item is selected,</li>
-<li>an existing Menu,</li>
-<li>None : this will create a separator item with no action.</li>
-</ul>
-</li>
-<li><cite>options</cite>: optional dictionary with following honoured fields:<ul>
-<li><cite>icon</cite>: the name of an icon to be displayed with the item text.
-This name should be that of one of the icons in the pyFormex
-icondir.</li>
-<li><cite>shortcut</cite>: is an optional key combination to select the item.</li>
-<li><cite>tooltip</cite>: a text that is displayed as popup help.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><cite>before</cite>: if specified, should be the text <em>or</em> the action of one
-of the items in the Menu (not the items list!): the new list of
-items will be inserted before the specified item.</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">DAction</tt><big>(</big><em>name</em>, <em>icon=None</em>, <em>data=None</em>, <em>signal=None</em><big>)</big></dt>
-<dd><p>A DAction is a QAction that emits a signal with a string parameter.</p>
-<p>When triggered, this action sends a signal (default &#8216;Clicked&#8217;) with a
-custom string as parameter. The connected slot can then act depending
-on this parameter.</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">ActionList</tt><big>(</big><em>actions=</em><span class="optional">[</span><span class="optional">]</span>, <em>function=None</em>, <em>menu=None</em>, <em>toolbar=None</em>, <em>icons=None</em>, <em>text=None</em><big>)</big></dt>
-<dd><p>Menu and toolbar with named actions.</p>
-<p>An action list is a list of strings, each connected to some action.
-The actions can be presented in a menu and/or a toolbar.
-On activating one of the menu or toolbar buttons, a given signal is
-emitted with the button string as parameter. A fixed function can be
-connected to this signal to act dependent on the string value.</p>
-<dl class="method">
-<dt>
-<tt class="descname">add</tt><big>(</big><em>name</em>, <em>icon=None</em>, <em>text=None</em><big>)</big></dt>
-<dd><p>Add a new name to the actions list and create a matching DAction.</p>
-<p>If the actions list has an associated menu or toolbar,
-a matching button will be inserted in each of these.
-If an icon is specified, it will be used on the menu and toolbar.
-The icon is either a filename or a QIcon object.
-If text is specified, it is displayed instead of the action&#8217;s name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">names</tt><big>(</big><big>)</big></dt>
-<dd><p>Return an ordered list of names of the action items.</p>
-</dd></dl>
-
-</dd></dl>
-
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">menu</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">menu.</tt><tt class="descname">resetWarnings</tt><big>(</big><big>)</big></dt>
-<dd><p>Reset the warning filters to the default.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">menu.</tt><tt class="descname">createMenuData</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns the default pyFormex GUI menu data.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -1037,7 +594,7 @@ If text is specified, it is displayed instead of the action&#8217;s name.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="23. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="20. colorscale — Color mapping of a range of values."
              >next</a> |</li>
         <li class="right" >
           <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
@@ -1050,7 +607,7 @@ If text is specified, it is displayed instead of the action&#8217;s name.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

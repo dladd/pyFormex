@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>91. units — A Python wrapper for unit conversion of physical quantities. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>60. units — A Python wrapper for unit conversion of physical quantities. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -55,7 +55,7 @@
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="61. olist — Some convenient shortcuts for common list operations." href="olist.html" />
-    <link rel="prev" title="89. turtle — Turtle graphics for pyFormex" href="turtle.html" />
+    <link rel="prev" title="59. turtle — Turtle graphics for pyFormex" href="turtle.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -81,7 +81,7 @@
           <a href="olist.html" title="61. olist — Some convenient shortcuts for common list operations."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="turtle.html" title="89. turtle — Turtle graphics for pyFormex"
+          <a href="turtle.html" title="59. turtle — Turtle graphics for pyFormex"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,16 +100,10 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">91. <tt class="docutils literal"><span class="pre">units</span></tt> &#8212; A Python wrapper for unit conversion of physical quantities.</a></li>
-<li><a class="reference internal" href="#id53">92. <tt class="docutils literal"><span class="pre">units</span></tt> &#8212; A Python wrapper for unit conversion of physical quantities.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="turtle.html"
-                        title="previous chapter">89. <tt class="docutils literal docutils literal docutils literal"><span class="pre">turtle</span></tt> &#8212; Turtle graphics for pyFormex</a></p>
+                        title="previous chapter">59. <tt class="docutils literal docutils literal docutils literal"><span class="pre">turtle</span></tt> &#8212; Turtle graphics for pyFormex</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="olist.html"
                         title="next chapter">61. <tt class="docutils literal docutils literal docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-units">
-<span id="units-a-python-wrapper-for-unit-conversion-of-physical-quantities"></span><span id="sec-ref-units"></span><h1>91. <a class="reference internal" href="#module-units" title="units: A Python wrapper for unit conversion of physical quantities."><tt class="xref py py-mod docutils literal"><span class="pre">units</span></tt></a> &#8212; A Python wrapper for unit conversion of physical quantities.<a class="headerlink" href="#module-units" title="Permalink to this headline">¶</a></h1>
+<span id="units-a-python-wrapper-for-unit-conversion-of-physical-quantities"></span><span id="sec-ref-units"></span><h1>60. <a class="reference internal" href="#module-units" title="units: A Python wrapper for unit conversion of physical quantities."><tt class="xref py py-mod docutils literal"><span class="pre">units</span></tt></a> &#8212; A Python wrapper for unit conversion of physical quantities.<a class="headerlink" href="#module-units" title="Permalink to this headline">¶</a></h1>
 <p>This module uses the standard UNIX program &#8216;units&#8217; (available from
 <a class="reference external" href="http://www.gnu.org/software/units/units.html">http://www.gnu.org/software/units/units.html</a>) to do the actual conversions.
 Obviously, it will only work on systems that have this program available.</p>
@@ -244,104 +238,6 @@ should be installed for this function to work.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>92. <a class="reference internal" href="#module-units" title="units: A Python wrapper for unit conversion of physical quantities."><tt class="xref py py-mod docutils literal"><span class="pre">units</span></tt></a> &#8212; A Python wrapper for unit conversion of physical quantities.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-units"></span><p>This module uses the standard UNIX program &#8216;units&#8217; (available from
-<a class="reference external" href="http://www.gnu.org/software/units/units.html">http://www.gnu.org/software/units/units.html</a>) to do the actual conversions.
-Obviously, it will only work on systems that have this program available.</p>
-<p>If you really insist on running another OS lacking the units command,
-have a look at <a class="reference external" href="http://home.tiscali.be/be052320/Unum.html">http://home.tiscali.be/be052320/Unum.html</a> and make an
-implementation based on unum. If you GPL it and send it to me, I might
-include it in this distribution.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">units</span></tt></p>
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">units.</tt><tt class="descname">UnitsSystem</tt><big>(</big><em>system='international'</em><big>)</big></dt>
-<dd><p>A class for handling and converting units of physical quantities.</p>
-<p>The units class provides two built-in consistent units systems:
-International() and Engineering().
-International() returns the standard International Standard units.
-Engineering() returns a consistent engineering system,which is very
-practical for use in mechanical engineering. It uses &#8216;mm&#8217; for length
-and &#8216;MPa&#8217; for pressure and stress. To keep it consistent however,
-the density is rather unpractical: &#8216;t/mm^3&#8217;. If you want to use t/m^3,
-you can make a custom units system. Beware with non-consistent unit
-systems though!
-The better practice is to allow any unit to be specified at input
-(and eventually requested for output), and to convert everyting
-internally to a consistent system.
-Apart from the units for usual physical quantities, Units stores two
-special purpose values in its units dictionary:
-&#8216;model&#8217; : defines the length unit used in the geometrical model
-&#8216;problem&#8217; : defines the unit system to be used in the problem.
-Defaults are: model=&#8217;m&#8217;, problem=&#8217;international&#8217;.</p>
-<dl class="method">
-<dt>
-<tt class="descname">Add</tt><big>(</big><em>un</em><big>)</big></dt>
-<dd><p>Add the units from dictionary un to the units system</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">Predefined</tt><big>(</big><em>system</em><big>)</big></dt>
-<dd><p>Returns the predefined units for the specified system</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">International</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns the international units system.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">Engineering</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns a consistent engineering units system.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">Read</tt><big>(</big><em>filename</em><big>)</big></dt>
-<dd><p>Read units from file with specified name.</p>
-<p>The units file is an ascii file where each line contains a couple of
-words separated by a colon and a blank. The first word is the type of
-quantity, the second is the unit to be used for this quantity.
-Lines starting with &#8216;#&#8217; are ignored.
-A &#8216;problem: system&#8217; line sets all units to the corresponding value of
-the specified units system.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">Get</tt><big>(</big><em>ent</em><big>)</big></dt>
-<dd><p>Get units list for the specified entitities.</p>
-<p>If ent is a single entity, returns the corresponding unit if an entry
-ent exists in the current system or else returns ent unchanged.
-If ent is a list of entities, returns a list of corresponding units.
-Example: with the default units system:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Un</span> <span class="o">=</span> <span class="n">UnitsSystem</span><span class="p">()</span>
-<span class="n">Un</span><span class="o">.</span><span class="n">Get</span><span class="p">([</span><span class="s">&#39;length&#39;</span><span class="p">,</span><span class="s">&#39;mass&#39;</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>returns: <tt class="docutils literal"><span class="pre">['m',</span> <span class="pre">'kg',</span> <span class="pre">'float']</span></tt></p>
-</dd></dl>
-
-</dd></dl>
-
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">units</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">units.</tt><tt class="descname">convertUnits</tt><big>(</big><em>From</em>, <em>To</em><big>)</big></dt>
-<dd><p>Converts between conformable units.</p>
-<p>This function converts the units &#8216;From&#8217; to units &#8216;To&#8217;. The units should
-be conformable. The &#8216;From&#8217; argument can (and usually does) include a value.
-The return value is the converted value without units. Thus:
-convertUnits(&#8216;3.45 kg&#8217;,&#8217;g&#8217;) will return &#8216;3450&#8217;.
-This function is merely a wrapper around the GNU &#8216;units&#8217; command, which
-should be installed for this function to work.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -362,7 +258,7 @@ should be installed for this function to work.</p>
           <a href="olist.html" title="61. olist — Some convenient shortcuts for common list operations."
              >next</a> |</li>
         <li class="right" >
-          <a href="turtle.html" title="89. turtle — Turtle graphics for pyFormex"
+          <a href="turtle.html" title="59. turtle — Turtle graphics for pyFormex"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -372,7 +268,7 @@ should be installed for this function to work.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

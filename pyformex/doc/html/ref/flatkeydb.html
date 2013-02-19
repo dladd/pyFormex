@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>71. flatkeydb — Flat Text File Database. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>66. flatkeydb — Flat Text File Database. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="73. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" />
-    <link rel="prev" title="69. config — A general yet simple configuration class." href="config.html" />
+    <link rel="next" title="67. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" />
+    <link rel="prev" title="65. config — A general yet simple configuration class." href="config.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sendmail.html" title="73. sendmail — sendmail.py: a simple program to send an email message"
+          <a href="sendmail.html" title="67. sendmail — sendmail.py: a simple program to send an email message"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="config.html" title="69. config — A general yet simple configuration class."
+          <a href="config.html" title="65. config — A general yet simple configuration class."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">71. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></li>
-<li><a class="reference internal" href="#id53">72. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="config.html"
-                        title="previous chapter">69. <tt class="docutils literal docutils literal docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.</a></p>
+                        title="previous chapter">65. <tt class="docutils literal docutils literal docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="sendmail.html"
-                        title="next chapter">73. <tt class="docutils literal"><span class="pre">sendmail</span></tt> &#8212; sendmail.py: a simple program to send an email message</a></p>
+                        title="next chapter">67. <tt class="docutils literal"><span class="pre">sendmail</span></tt> &#8212; sendmail.py: a simple program to send an email message</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-flatkeydb">
-<span id="flatkeydb-flat-text-file-database"></span><span id="sec-ref-flatkeydb"></span><h1>71. <a class="reference internal" href="#module-flatkeydb" title="flatkeydb: Flat Text File Database."><tt class="xref py py-mod docutils literal"><span class="pre">flatkeydb</span></tt></a> &#8212; Flat Text File Database.<a class="headerlink" href="#module-flatkeydb" title="Permalink to this headline">¶</a></h1>
+<span id="flatkeydb-flat-text-file-database"></span><span id="sec-ref-flatkeydb"></span><h1>66. <a class="reference internal" href="#module-flatkeydb" title="flatkeydb: Flat Text File Database."><tt class="xref py py-mod docutils literal"><span class="pre">flatkeydb</span></tt></a> &#8212; Flat Text File Database.<a class="headerlink" href="#module-flatkeydb" title="Permalink to this headline">¶</a></h1>
 <p>A simple database stored as a flat text file.</p>
 <div class="line-block">
 <div class="line">(C) 2005 Benedict Verhegghe.</div>
@@ -384,244 +378,6 @@ and to not add the affected data to the database.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>72. <a class="reference internal" href="#module-flatkeydb" title="flatkeydb: Flat Text File Database."><tt class="xref py py-mod docutils literal"><span class="pre">flatkeydb</span></tt></a> &#8212; Flat Text File Database.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-flatkeydb"></span><p>A simple database stored as a flat text file.</p>
-<div class="line-block">
-<div class="line">(C) 2005 Benedict Verhegghe.</div>
-<div class="line">Distributed under the GNU GPL version 3 or later.</div>
-</div>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">flatkeydb</span></tt></p>
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">flatkeydb.</tt><tt class="descname">FlatDB</tt><big>(</big><em>req_keys=</em><span class="optional">[</span><span class="optional">]</span>, <em>comment='#'</em>, <em>key_sep='='</em>, <em>beginrec='beginrec'</em>, <em>endrec='endrec'</em>, <em>strip_blanks=True</em>, <em>strip_quotes=True</em>, <em>check_func=None</em><big>)</big></dt>
-<dd><p>A database stored as a dictionary of dictionaries.</p>
-<p>Each record is a dictionary where keys and values are just strings.
-The field names (keys) can be different for each record, but there is at
-least one field that exists for all records and will be used as the
-primary key. This field should have unique values for all records.</p>
-<p>The database itself is also a dictionary, with the value of the primary
-key as key and the full record as value.</p>
-<p>On constructing the database a list of keys must be specified that will be
-required for each record. The first key in this list will be used as the
-primary key. Obviously, the list must at least have one required key.</p>
-<p>The database is stored in a flat text file. Each field (key,value pair)
-is put on a line by itself. Records are delimited by a (beginrec,
-endrec) pair. The beginrec marker can be followed by a (key,value) pair
-on the same line. The endrec marker should be on a line by itself.
-If endrec is an empty string, each occurrence of beginrec will implicitly
-end the previous record.</p>
-<p>Lines starting with the comment string are ignored. They can occur anywhere
-between or inside records. Blank lines are also ignored (except they serve
-as record delimiter if endrec is empty)</p>
-<p>Thus, with the initialization:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">FlatDB</span><span class="p">(</span><span class="n">req_keys</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;key1&#39;</span><span class="p">],</span> <span class="n">comment</span> <span class="o">=</span> <span class="s">&#39;com&#39;</span><span class="p">,</span> <span class="n">key_sep</span> <span class="o">=</span> <span class="s">&#39;=&#39;</span><span class="p">,</span>
-<span class="n">beginrec</span> <span class="o">=</span> <span class="s">&#39;rec&#39;</span><span class="p">,</span> <span class="n">endrec</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>the following is a legal database:</p>
-<div class="highlight-python"><pre>com This is a comment
-com
-rec key1=val1
-   key2=val2
-rec
-com Yes, this starts another record
-   key1=val3
-   key3=val4</pre>
-</div>
-<p>The <cite>readFile</cite> function can even be instructed to ignore anything not
-between a (beginrec,endrec) pair. This allows for multiple databases
-being stored on the same file, even with records intermixed.</p>
-<p>Keys and values can be any strings, except that a key can not begin nor
-end with a blank, and can not be equal to any of the comment, beginrec
-or endrec markers.
-Whitespace around the key is always stripped. By default, this is also
-done for the value (though this can be switched off.)
-If strip_quotes is True (default), a single pair of matching quotes
-surrounding the value will be stripped off. Whitespace is stripped
-before stripping the quotes, so that by including the value in quotes,
-you can keep leading and trailing whitespace in the value.</p>
-<p>A record checking function can be specified. It takes a record as its
-argument. It is called whenever a new record is inserted in the database
-(or an existing one is replaced). Before calling this <tt class="docutils literal"><span class="pre">check_func</span></tt>, the
-system will already have checked that the record is a dictionary and
-that it has all the required keys.</p>
-<p>Two error handlers may be overridden by the user:</p>
-<ul class="simple">
-<li>record_error_handler(record) is called when the record does not pass the
-checks;</li>
-<li>key_error_handler(key) is called when a dunplicat key is encountered.</li>
-</ul>
-<p>The default for both is to raise an error.
-Overriding is done by changing the instance attibute.</p>
-<dl class="method">
-<dt>
-<tt class="descname">newRecord</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns a new (empty) record.</p>
-<p>The new record is a temporary storage. It should be added to the
-database by calling append(record).
-This method can be overriden in subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">checkKeys</tt><big>(</big><em>record</em><big>)</big></dt>
-<dd><p>Check that record has the required keys.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">checkRecord</tt><big>(</big><em>record</em><big>)</big></dt>
-<dd><p>Check a record.</p>
-<p>This function checks that the record is a dictionary type, that the
-record has the required keys, and that check_func(record) returns
-True (if a <cite>check_func</cite> was specified).
-If the record passes, just return True. If it does not, call the
-<cite>record_error_handler</cite> and (if it returns) return False.
-This method can safely be overriden in subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">record_error_handler</tt><big>(</big><em>record</em><big>)</big></dt>
-<dd><p>Error handler called when a check error on record is discovered.</p>
-<p>Default is to raise a runtime error.
-This method can safely be overriden in subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">key_error_handler</tt><big>(</big><em>key</em><big>)</big></dt>
-<dd><p>Error handler called when a duplicate key is found.</p>
-<p>Default is to raise a runtime error.
-This method can safely be overriden in subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">insert</tt><big>(</big><em>record</em><big>)</big></dt>
-<dd><p>Insert a record to the database, overwriting existing records.</p>
-<p>This is equivalent to <cite>__setitem__</cite> but using the value stored in the
-the primary key field of the record as key for storing the record.
-This is also similar to append(), but overwriting an old record with
-the same primary key.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">append</tt><big>(</big><em>record</em><big>)</big></dt>
-<dd><p>Add a record to the database.</p>
-<p>Since the database is a dictionary, keys are unique and appending a
-record with an existing key is not allowed.
-If you want to overwrite the old record, use insert() instead.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">splitKeyValue</tt><big>(</big><em>line</em><big>)</big></dt>
-<dd><p>Split a line in key,value pair.</p>
-<p>The field is split on the first occurrence of the <cite>key_sep</cite>.
-Key and value are then stripped of leading and trailing whitespace.
-If there is no key_sep, the whole line becomes the key and the
-value is an empty string. If the key_sep is the first character,
-the key becomes an empty string.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">parseLine</tt><big>(</big><em>line</em><big>)</big></dt>
-<dd><p>Parse a line of the flat database file.</p>
-<p>A line starting with the comment string is ignored.
-Leading whitespace on the remaining lines is ignored.
-Empty (blank) lines are ignored, unless the ENDREC mark was set
-to an empty string, in which case they count as an end of record
-if a record was started.
-Lines starting with a &#8216;BEGINREC&#8217; mark start a new record. The
-remainder of the line is then reparsed.
-Lines starting with an &#8216;ENDREC&#8217; mark close and store the record.
-All lines between the BEGINREC and ENDREC should be field definition
-lines of the type &#8216;KEY [ = VALUE ]&#8217;.
-This function returns 0 if the line was parsed correctly.
-Else, the variable self.error_msg is set.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">parse</tt><big>(</big><em>lines</em>, <em>ignore=False</em>, <em>filename=None</em><big>)</big></dt>
-<dd><p>Read a database from text.</p>
-<p>lines is an iterater over text lines (e.g. a text file or a
-multiline string splitted on &#8216;n&#8217;)
-Lines starting with a comment string are ignored.
-Every record is delimited by a (beginrec,endrec) pair.
-If ignore is True, all lines that are not between a (beginrec,endrec)
-pair are simply ignored. Default is to raise a RuntimeError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">readFile</tt><big>(</big><em>filename</em>, <em>ignore=False</em><big>)</big></dt>
-<dd><p>Read a database from file.</p>
-<p>Lines starting with a comment string are ignored.
-Every record is delimited by a (beginrec,endrec) pair.
-If ignore is True, all lines that are not between a (beginrec,endrec)
-pair are simply ignored. Default is to raise a RuntimeError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">writeFile</tt><big>(</big><em>filename</em>, <em>mode='w'</em>, <em>header=None</em><big>)</big></dt>
-<dd><p>Write the database to a text file.</p>
-<p>Default mode is &#8216;w&#8217;. Use &#8216;a&#8217; to append to the file.
-The header is written at the start of the database. Make sure to start
-each line with a comment marker if you want to read it back!</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">match</tt><big>(</big><em>key</em>, <em>value</em><big>)</big></dt>
-<dd><p>Return a list of records matching key=value.</p>
-<p>This returns a list of primary keys of the matching records.</p>
-</dd></dl>
-
-</dd></dl>
-
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">flatkeydb</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">firstWord</tt><big>(</big><em>s</em><big>)</big></dt>
-<dd><p>Return the first word of a string.</p>
-<p>Words are delimited by blanks. If the string does not contain a blank,
-the whole string is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">unQuote</tt><big>(</big><em>s</em><big>)</big></dt>
-<dd><p>Remove one level of quotes from a string.</p>
-<p>If the string starts with a quote character (either single or double)
-and ends with the SAME character, they are stripped of the string.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">splitKeyValue</tt><big>(</big><em>s</em>, <em>key_sep</em><big>)</big></dt>
-<dd><p>Split a string in a (key,value) on occurrence of key_sep.</p>
-<p>The string is split on the first occurrence of the substring key_sep.
-Key and value are then stripped of leading and trailing whitespace.
-If there is no key_sep, the whole string becomes the key and the
-value is an empty string. If the string starts with key_sep,
-the key becomes an empty string.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">ignore_error</tt><big>(</big><em>dummy</em><big>)</big></dt>
-<dd><p>This function can be used to override the default error handlers.</p>
-<p>The effect will be to ignore the error (duplicate key, invalid record)
-and to not add the affected data to the database.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -639,10 +395,10 @@ and to not add the affected data to the database.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sendmail.html" title="73. sendmail — sendmail.py: a simple program to send an email message"
+          <a href="sendmail.html" title="67. sendmail — sendmail.py: a simple program to send an email message"
              >next</a> |</li>
         <li class="right" >
-          <a href="config.html" title="69. config — A general yet simple configuration class."
+          <a href="config.html" title="65. config — A general yet simple configuration class."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -652,7 +408,7 @@ and to not add the affected data to the database.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

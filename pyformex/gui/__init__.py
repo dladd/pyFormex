@@ -39,26 +39,42 @@ For other systems, a warning will be printed that some things may not work.
 from __future__ import print_function
 
 import pyformex as pf
+import utils
 
-import sip
+
 try:
-    sip.setapi('QDate', 2)
-    sip.setapi('QDateTime', 2)
-    sip.setapi('QString', 2)
-    sip.setapi('QTextStream', 2)
-    sip.setapi('QTime', 2)
-    sip.setapi('QUrl', 2)
-    sip.setapi('QVariant', 2)
-except ValueError, e:
-    raise RuntimeError('Could not set PyQt4 API version (%s)' % e)
+    pyside = pf.options.pyside
+except:
+    pyside = False
 
 
-if pf.options.pyside:
+if pyside:
+    utils.requireModule('pyside')
+
+else:
+    utils.requireModule('pyqt4')
+
+
+if pyside:
+
     from PySide import QtCore, QtGui, QtOpenGL
     from PySide.QtCore import Signal
     from PySide.QtCore import Slot
 
 else:
+
+    import sip
+    try:
+        sip.setapi('QDate', 2)
+        sip.setapi('QDateTime', 2)
+        sip.setapi('QString', 2)
+        sip.setapi('QTextStream', 2)
+        sip.setapi('QTime', 2)
+        sip.setapi('QUrl', 2)
+        sip.setapi('QVariant', 2)
+    except ValueError, e:
+        raise RuntimeError('Could not set PyQt4 API version (%s)' % e)
+
     from PyQt4 import QtCore, QtGui, QtOpenGL
     from PyQt4.QtCore import pyqtSignal as Signal
     from PyQt4.QtCore import pyqtSlot as Slot

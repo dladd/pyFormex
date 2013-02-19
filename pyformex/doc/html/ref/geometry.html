@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="9. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
-    <link rel="prev" title="13. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
+    <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
+    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="connectivity.html" title="9. connectivity — A class and functions for handling nodal connectivity."
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="13. colors — Definition of some RGB colors and color conversion functions"
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">7. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></li>
-<li><a class="reference internal" href="#id53">8. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="previous chapter">13. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="connectivity.html"
-                        title="next chapter">9. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+                        title="next chapter">8. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -532,392 +526,6 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>8. <a class="reference internal" href="#module-geometry" title="geometry: A generic interface to the Coords transformation methods"><tt class="xref py py-mod docutils literal"><span class="pre">geometry</span></tt></a> &#8212; A generic interface to the Coords transformation methods<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-geometry"></span><p>This module defines a generic Geometry superclass which adds all the
-possibilities of coordinate transformations offered by the
-Coords class to the derived classes.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt></dt>
-<dd><p>A generic geometry object allowing transformation of coords sets.</p>
-<p>The Geometry class is a generic parent class for all geometric classes,
-intended to make the Coords transformations available without explicit
-declaration. This class is not intended to be used directly, only
-through derived classes. Examples of derived classes are <tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt>,
-<tt class="xref py py-class docutils literal"><span class="pre">Mesh</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">Curve</span></tt>.</p>
-<p>There is no initialization to be done when constructing a new instance of
-this class. The class just defines a set of methods which operate on
-the attribute <cite>coords</cite>, which should be a Coords object.
-Most of the transformation methods of the Coords class are thus exported
-through the Geometry class to its derived classes, and when called, will
-get executed on the <cite>coords</cite> attribute. 
-The derived class constructor should make sure that the <cite>coords</cite> attribute
-exists, has the proper type and contains the coordinates of all the points
-that should get transformed under a Coords transformation.</p>
-<p>Derived classes can (and in most cases should) declare a method
-<cite>_set_coords(coords)</cite> returning an object that is identical to the
-original, except for its coords being replaced by new ones with the
-same array shape.</p>
-<p>The Geometry class provides two possible default implementations:</p>
-<ul class="simple">
-<li><cite>_set_coords_inplace</cite> sets the coords attribute to the provided new
-coords, thus changing the object itself, and returns itself,</li>
-<li><cite>_set_coords_copy</cite> creates a deep copy of the object before setting
-the coords attribute. The original object is unchanged, the returned
-one is the changed copy.</li>
-</ul>
-<p>When using the first method, a statement like <tt class="docutils literal"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">A.scale(0.5)</span></tt>
-will result in both <cite>A</cite> and <cite>B</cite> pointing to the same scaled object,
-while with the second method, <cite>A</cite> would still be the untransformed
-object. Since the latter is in line with the design philosophy of
-pyFormex, it is set as the default <cite>_set_coords</cite> method.
-Most derived classes that are part of pyFormex however override this
-default and implement a more efficient copy method.</p>
-<p>The following <a class="reference internal" href="#geometry.Geometry" title="geometry.Geometry"><tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt></a> methods return the value of the same
-method applied on the <cite>coords</cite> attribute. Refer to the correponding
-<a class="reference internal" href="coords.html#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">coords.Coords</span></tt></a> method for their precise arguments.</p>
-<p><tt class="xref py py-meth docutils literal"><span class="pre">x()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">y()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">z()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">center()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">centroid()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">sizes()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">dsize()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">bsphere()</span></tt>,
-<a class="reference internal" href="inertia.html#module-inertia" title="inertia: inertia.py"><tt class="xref py py-meth docutils literal"><span class="pre">inertia()</span></tt></a>,
-<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromPlane()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromLine()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromPoint()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">directionalSize()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">directionalWidth()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">directionalExtremes()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">__str__()</span></tt>.</p>
-<p>The following <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> transformation methods can be directly applied
-to a <a class="reference internal" href="#geometry.Geometry" title="geometry.Geometry"><tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt></a> object or a derived class object. The return value
-is a new object identical to the original, except for the coordinates,
-which will have been transformed by the specified method.
-Refer to the correponding <a class="reference internal" href="coords.html#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">coords.Coords</span></tt></a> method in for the precise
-arguments of these methods:</p>
-<p><a class="reference internal" href="#geometry.Geometry.scale" title="geometry.Geometry.scale"><tt class="xref py py-meth docutils literal"><span class="pre">scale()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.translate" title="geometry.Geometry.translate"><tt class="xref py py-meth docutils literal"><span class="pre">translate()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.centered" title="geometry.Geometry.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.rotate" title="geometry.Geometry.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">rotate()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.shear" title="geometry.Geometry.shear"><tt class="xref py py-meth docutils literal"><span class="pre">shear()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.reflect" title="geometry.Geometry.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">reflect()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.affine" title="geometry.Geometry.affine"><tt class="xref py py-meth docutils literal"><span class="pre">affine()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.position" title="geometry.Geometry.position"><tt class="xref py py-meth docutils literal"><span class="pre">position()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.cylindrical" title="geometry.Geometry.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">cylindrical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.hyperCylindrical" title="geometry.Geometry.hyperCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">hyperCylindrical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.toCylindrical" title="geometry.Geometry.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">toCylindrical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.spherical" title="geometry.Geometry.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">spherical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.superSpherical" title="geometry.Geometry.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">superSpherical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.toSpherical" title="geometry.Geometry.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">toSpherical()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.bump" title="geometry.Geometry.bump"><tt class="xref py py-meth docutils literal"><span class="pre">bump()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.bump1" title="geometry.Geometry.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">bump1()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.bump2" title="geometry.Geometry.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">bump2()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.flare" title="geometry.Geometry.flare"><tt class="xref py py-meth docutils literal"><span class="pre">flare()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.map" title="geometry.Geometry.map"><tt class="xref py py-meth docutils literal"><span class="pre">map()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.map1" title="geometry.Geometry.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.mapd" title="geometry.Geometry.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">mapd()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.replace" title="geometry.Geometry.replace"><tt class="xref py py-meth docutils literal"><span class="pre">replace()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.swapAxes" title="geometry.Geometry.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">swapAxes()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.rollAxes" title="geometry.Geometry.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">rollAxes()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.projectOnPlane" title="geometry.Geometry.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnPlane()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.projectOnSphere" title="geometry.Geometry.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnSphere()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.projectOnCylinder" title="geometry.Geometry.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnCylinder()</span></tt></a>,
-<a class="reference internal" href="isopar.html#module-isopar" title="isopar: Isoparametric transformations"><tt class="xref py py-meth docutils literal"><span class="pre">isopar()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.transformCS" title="geometry.Geometry.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">transformCS()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.addNoise" title="geometry.Geometry.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">addNoise()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.rot" title="geometry.Geometry.rot"><tt class="xref py py-meth docutils literal"><span class="pre">rot()</span></tt></a>,
-<a class="reference internal" href="#geometry.Geometry.trl" title="geometry.Geometry.trl"><tt class="xref py py-meth docutils literal"><span class="pre">trl()</span></tt></a>.</p>
-<dl class="method">
-<dt>
-<tt class="descname">getCoords</tt><big>(</big><big>)</big></dt>
-<dd><p>Get the coords data.</p>
-<p>Returns the full array of coordinates stored in the Geometry object.
-Note that subclasses may store more points in this array than are used
-to define the geometry.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">level</tt><big>(</big><big>)</big></dt>
-<dd><p>Return the dimensionality of the Geometry, or -1 if unknown</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">copy</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a deep copy of the object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big></dt>
-<dd><p>Return a copy of the Geometry scaled to the given size.</p>
-<p>size can be a single value or a list of three values for the
-three coordinate directions. If it is a single value, all directions
-are scaled to the same size.
-Directions for which the geometry has a size smaller than tol times
-the maximum size are not rescaled.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">position</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;position&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.position" title="coords.Coords.position"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.position()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big></dt>
-<dd><p>Write a Geometry to a .pgf file.</p>
-<p>If fil is a string, a file with that name is opened. Else fil should
-be an open file.
-The Geometry is then written to that file in a native format, using
-sep as separator between the coordinates.
-If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-</dd></dl>
-
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
-</div>
 
 
           </div>
@@ -935,10 +543,10 @@ If fil is a string, the file is closed prior to returning.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="connectivity.html" title="9. connectivity — A class and functions for handling nodal connectivity."
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              >next</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="13. colors — Definition of some RGB colors and color conversion functions"
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -948,7 +556,7 @@ If fil is a string, the file is closed prior to returning.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

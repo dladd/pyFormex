@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>63. mydict — &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>62. mydict — &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,7 +54,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="65. odict — Specialized dictionary type structures." href="odict.html" />
+    <link rel="next" title="63. odict — Specialized dictionary type structures." href="odict.html" />
     <link rel="prev" title="61. olist — Some convenient shortcuts for common list operations." href="olist.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
@@ -78,7 +78,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="odict.html" title="65. odict — Specialized dictionary type structures."
+          <a href="odict.html" title="63. odict — Specialized dictionary type structures."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="olist.html" title="61. olist — Some convenient shortcuts for common list operations."
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">63. <tt class="docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></li>
-<li><a class="reference internal" href="#id53">64. <tt class="docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="olist.html"
                         title="previous chapter">61. <tt class="docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="odict.html"
-                        title="next chapter">65. <tt class="docutils literal docutils literal"><span class="pre">odict</span></tt> &#8212; Specialized dictionary type structures.</a></p>
+                        title="next chapter">63. <tt class="docutils literal docutils literal"><span class="pre">odict</span></tt> &#8212; Specialized dictionary type structures.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-mydict">
-<span id="mydict"></span><span id="sec-ref-mydict"></span><h1>63. <a class="reference internal" href="#module-mydict" title="mydict"><tt class="xref py py-mod docutils literal"><span class="pre">mydict</span></tt></a> &#8212;<a class="headerlink" href="#module-mydict" title="Permalink to this headline">¶</a></h1>
+<span id="mydict"></span><span id="sec-ref-mydict"></span><h1>62. <a class="reference internal" href="#module-mydict" title="mydict"><tt class="xref py py-mod docutils literal"><span class="pre">mydict</span></tt></a> &#8212;<a class="headerlink" href="#module-mydict" title="Permalink to this headline">¶</a></h1>
 <p>CDict is a Dict with lookup cascading into the next level Dict&#8217;s
 if the key is not found in the CDict itself.</p>
 <p>(C) 2005,2008 Benedict Verhegghe
@@ -230,7 +224,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="mydict.CDict">
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x3a09488&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x3093398&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cascading Dict: properties not in Dict are searched in all Dicts.</p>
 <p>This is equivalent to the Dict class, except that if a key is not found
 and the CDict has items with values that are themselves instances
@@ -289,149 +283,6 @@ and the first matching key found is returned.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>64. <a class="reference internal" href="#module-mydict" title="mydict"><tt class="xref py py-mod docutils literal"><span class="pre">mydict</span></tt></a> &#8212;<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-mydict"></span><p>CDict is a Dict with lookup cascading into the next level Dict&#8217;s
-if the key is not found in the CDict itself.</p>
-<p>(C) 2005,2008 Benedict Verhegghe
-Distributed under the GNU GPL version 3 or later</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mydict</span></tt></p>
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">Dict</tt><big>(</big><em>data={}</em>, <em>default=None</em><big>)</big></dt>
-<dd><p>A Python dictionary with default values and attribute syntax.</p>
-<p><a class="reference internal" href="#mydict.Dict" title="mydict.Dict"><tt class="xref py py-class docutils literal"><span class="pre">Dict</span></tt></a> is functionally nearly equivalent with the builtin Python
-<tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>, but provides the following extras:</p>
-<ul class="simple">
-<li>Items can be accessed with attribute syntax as well as dictionary
-syntax. Thus, if <tt class="docutils literal"><span class="pre">C</span></tt> is a <a class="reference internal" href="#mydict.Dict" title="mydict.Dict"><tt class="xref py py-class docutils literal"><span class="pre">Dict</span></tt></a>, <tt class="docutils literal"><span class="pre">C['foo']</span></tt> and <tt class="docutils literal"><span class="pre">C.foo</span></tt>
-are equivalent.
-This works as well for accessing values as for setting values.
-In the following, the terms <em>key</em> or <em>attribute</em> therefore have the
-same meaning.</li>
-<li>Lookup of a nonexisting key/attribute does not automatically raise an
-error, but calls a <tt class="docutils literal"><span class="pre">_default_</span></tt> lookup method which can be set by
-the user.
-The default is to raise a KeyError, but an alternative is to return
-None or some other default value.</li>
-</ul>
-<p>There are a few caveats though:</p>
-<ul>
-<li><p class="first">Keys that are also attributes of the builtin dict type, can not be used
-with the attribute syntax to get values from the Dict. You should use
-the dictionary syntax to access these items. It is possible to set
-such keys as attributes. Thus the following will work:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">C</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foo&#39;</span>
-<span class="n">C</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="s">&#39;foo&#39;</span>
-<span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>but this will not:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This is done so because we want all the dict attributes to be available
-with their normal binding. Thus,</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>will print <tt class="docutils literal"><span class="pre">foo</span></tt></p>
-</li>
-</ul>
-<p>To avoid name clashes with user defines, many Python internal names start
-and end with &#8216;__&#8217;. The user should avoid such names.
-The Python dict has the following attributes not enclosed between &#8216;__&#8217;,
-so these are the ones to watch out for:
-&#8216;clear&#8217;, &#8216;copy&#8217;, &#8216;fromkeys&#8217;, &#8216;get&#8217;, &#8216;has_key&#8217;, &#8216;items&#8217;, &#8216;iteritems&#8217;,
-&#8216;iterkeys&#8217;, &#8216;itervalues&#8217;, &#8216;keys&#8217;, &#8216;pop&#8217;, &#8216;popitem&#8217;, &#8216;setdefault&#8217;,
-&#8216;update&#8217;, &#8216;values&#8217;.</p>
-<dl class="method">
-<dt>
-<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big></dt>
-<dd><p>Add a dictionary to the Dict object.</p>
-<p>The data can be a dict or Dict type object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
-<dd><p>Return the value for key or a default.</p>
-<p>This is the equivalent of the dict get method, except that it
-returns only the default value if the key was not found in self,
-and there is no _default_ method or it raised a KeyError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
-<dd><p>Replaces the setdefault function of a normal dictionary.</p>
-<p>This is the same as the get method, except that it also sets the
-default value if get found a KeyError.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x3a09488&gt;</em><big>)</big></dt>
-<dd><p>A cascading Dict: properties not in Dict are searched in all Dicts.</p>
-<p>This is equivalent to the Dict class, except that if a key is not found
-and the CDict has items with values that are themselves instances
-of Dict or CDict, the key will be looked up in those Dicts as well.</p>
-<p>As you expect, this will make the lookup cascade into all lower levels
-of CDict&#8217;s. The cascade will stop if you use a Dict.
-There is no way to guarantee in which order the (Cascading)Dict&#8217;s are
-visited, so if multiple Dicts on the same level hold the same key,
-you should know yourself what you are doing.</p>
-<dl class="method">
-<dt>
-<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big></dt>
-<dd><p>Add a dictionary to the Dict object.</p>
-<p>The data can be a dict or Dict type object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
-<dd><p>Return the value for key or a default.</p>
-<p>This is the equivalent of the dict get method, except that it
-returns only the default value if the key was not found in self,
-and there is no _default_ method or it raised a KeyError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big></dt>
-<dd><p>Replaces the setdefault function of a normal dictionary.</p>
-<p>This is the same as the get method, except that it also sets the
-default value if get found a KeyError.</p>
-</dd></dl>
-
-</dd></dl>
-
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mydict</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">mydict.</tt><tt class="descname">cascade</tt><big>(</big><em>d</em>, <em>key</em><big>)</big></dt>
-<dd><p>Cascading lookup in a dictionary.</p>
-<p>This is equivalent to the dict lookup, except that when the key is
-not found, a cascading lookup through lower level dict&#8217;s is started
-and the first matching key found is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">mydict.</tt><tt class="descname">returnNone</tt><big>(</big><em>key</em><big>)</big></dt>
-<dd><p>Always returns None.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">mydict.</tt><tt class="descname">raiseKeyError</tt><big>(</big><em>key</em><big>)</big></dt>
-<dd><p>Raise a KeyError.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -449,7 +300,7 @@ and the first matching key found is returned.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="odict.html" title="65. odict — Specialized dictionary type structures."
+          <a href="odict.html" title="63. odict — Specialized dictionary type structures."
              >next</a> |</li>
         <li class="right" >
           <a href="olist.html" title="61. olist — Some convenient shortcuts for common list operations."
@@ -462,7 +313,7 @@ and the first matching key found is returned.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

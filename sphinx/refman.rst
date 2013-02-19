@@ -80,13 +80,13 @@ Autoloaded modules
 The definitions in these modules are always available to your scripts, without
 the need to explicitely import them.
 
-.. toctree::
-   :maxdepth: 2
-   :numbered: -1
+.. mytoctree::
+   :maxdepth: 1
+   :numbered:
+   :numberedfrom: -1
 
    ref/coords
    ref/formex
-
    ref/arraytools
    ref/script
    ref/draw
@@ -101,9 +101,10 @@ Other pyFormex core modules
 Together with the autoloaded modules, the following modules located under the
 main pyformex path are considered to belong to the pyformex core functionality.
 
-.. toctree::
-   :maxdepth: 2
-   :numbered: -1
+.. mytoctree::
+   :maxdepth: 1
+   :numbered:
+   :numberedfrom: -1
 
    ref/geometry
    ref/connectivity
@@ -125,9 +126,10 @@ pyFormex GUI modules
 
 These modules are located under pyformex/gui.
 
-.. toctree::
+.. mytoctree::
    :maxdepth: 1
-   :numbered: -1
+   :numbered:
+   :numberedfrom: -1
 
    ref/widgets
    ref/menu
@@ -155,9 +157,10 @@ Plugin modules extend the basic pyFormex functions to variety of
 specific applications. Apart from being located under the pyformex/plugins
 path, these modules are in no way different from other pyFormex modules.
 
-.. toctree::
+.. mytoctree::
    :maxdepth: 1
-   :numbered: -1
+   :numbered:
+   :numberedfrom: -1
 
    ref/calpy_itf
    ref/cameratools
@@ -233,9 +236,10 @@ considered to be part of the pyFormex core, but are rather tools that
 were used in the implementation of other modules, but can also be useful
 elsewhere.
 
-.. toctree::
+.. mytoctree::
    :maxdepth: 1
-   :numbered: -1
+   :numbered:
+   :numberedfrom: -1
 
    ref/olist
    ref/mydict

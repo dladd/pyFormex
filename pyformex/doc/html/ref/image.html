@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. image — Saving OpenGL renderings to image files. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>28. image — Saving OpenGL renderings to image files. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="43. imagearray — Convert bitmap images into numpy arrays." href="imagearray.html" />
-    <link rel="prev" title="38. camera — OpenGL camera handling" href="camera.html" />
+    <link rel="next" title="29. imagearray — Convert bitmap images into numpy arrays." href="imagearray.html" />
+    <link rel="prev" title="27. camera — OpenGL camera handling" href="camera.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imagearray.html" title="43. imagearray — Convert bitmap images into numpy arrays."
+          <a href="imagearray.html" title="29. imagearray — Convert bitmap images into numpy arrays."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="38. camera — OpenGL camera handling"
+          <a href="camera.html" title="27. camera — OpenGL camera handling"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,20 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">40. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></li>
-<li><a class="reference internal" href="#id53">41. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></li>
-<li><a class="reference internal" href="#id107">42. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="camera.html"
-                        title="previous chapter">38. <tt class="docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+                        title="previous chapter">27. <tt class="docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="imagearray.html"
-                        title="next chapter">43. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></p>
+                        title="next chapter">29. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -148,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-image">
-<span id="image-saving-opengl-renderings-to-image-files"></span><span id="sec-ref-image"></span><h1>40. <a class="reference internal" href="#module-image" title="image: Saving OpenGL renderings to image files."><tt class="xref py py-mod docutils literal"><span class="pre">image</span></tt></a> &#8212; Saving OpenGL renderings to image files.<a class="headerlink" href="#module-image" title="Permalink to this headline">¶</a></h1>
+<span id="image-saving-opengl-renderings-to-image-files"></span><span id="sec-ref-image"></span><h1>28. <a class="reference internal" href="#module-image" title="image: Saving OpenGL renderings to image files."><tt class="xref py py-mod docutils literal"><span class="pre">image</span></tt></a> &#8212; Saving OpenGL renderings to image files.<a class="headerlink" href="#module-image" title="Permalink to this headline">¶</a></h1>
 <p>This module defines some functions that can be used to save the
 OpenGL rendering and the pyFormex GUI to image files. There are even
 provisions for automatic saving to a series of files and creating
@@ -329,370 +322,6 @@ The current background color is selected from the lower left pixel.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>41. <a class="reference internal" href="#module-image" title="image: Saving OpenGL renderings to image files."><tt class="xref py py-mod docutils literal"><span class="pre">image</span></tt></a> &#8212; Saving OpenGL renderings to image files.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-image"></span><p>This module defines some functions that can be used to save the
-OpenGL rendering and the pyFormex GUI to image files. There are even
-provisions for automatic saving to a series of files and creating
-a movie from these images.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">image</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">image</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big></dt>
-<dd><p>Initialize the image module.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">imageFormats</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list of the valid image formats.</p>
-<p>image formats are lower case strings as &#8216;png&#8217;, &#8216;gif&#8217;, &#8216;ppm&#8217;, &#8216;eps&#8217;, etc.
-The available image formats are derived from the installed software.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=True</em><big>)</big></dt>
-<dd><p>Checks image format; if verbose, warn if it is not.</p>
-<p>Returns the image format, or None if it is not OK.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">imageFormatFromExt</tt><big>(</big><em>ext</em><big>)</big></dt>
-<dd><p>Determine the image format from an extension.</p>
-<p>The extension may or may not have an initial dot and may be in upper or
-lower case. The format is equal to the extension characters in lower case.
-If the supplied extension is empty, the default format &#8216;png&#8217; is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>quality=-1</em>, <em>size=None</em><big>)</big></dt>
-<dd><p>Save the rendering on canvas as an image file.</p>
-<p>canvas specifies the qtcanvas rendering window.
-fn is the name of the file
-fmt is the image file format</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>windowname=None</em><big>)</big></dt>
-<dd><p>Save a window as an image file.</p>
-<p>This function needs a filename AND format.
-If a window is specified, the named window is saved.
-Else, the main pyFormex window is saved.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>border=False</em><big>)</big></dt>
-<dd><p>Save the main pyFormex window as an image file.</p>
-<p>This function needs a filename AND format.
-This is an alternative for save_window, by grabbin it from the root
-window, using save_rect.
-This allows us to grab the border as well.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em>, <em>quality=-1</em><big>)</big></dt>
-<dd><p>Save a rectangular part of the screen to a an image file.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big></dt>
-<dd><p>Saves an image to file or Starts/stops multisave mode.</p>
-<p>With a filename and multi==False (default), the current viewport rendering
-is saved to the named file.</p>
-<p>With a filename and multi==True, multisave mode is started.
-Without a filename, multisave mode is turned off.
-Two subsequent calls starting multisave mode without an intermediate call
-to turn it off, do not cause an error. The first multisave mode will
-implicitely be ended before starting the second.</p>
-<p>In multisave mode, each call to saveNext() will save an image to the
-next generated file name.
-Filenames are generated by incrementing a numeric part of the name.
-If the supplied filename (after removing the extension) has a trailing
-numeric part, subsequent images will be numbered continuing from this
-number. Otherwise a numeric part &#8216;-000&#8217; will be added to the filename.</p>
-<p>If window is True, the full pyFormex window is saved.
-If window and border are True, the window decorations will be included.
-If window is False, only the current canvas viewport is saved.</p>
-<p>If hotkey is True, a new image will be saved by hitting the &#8216;S&#8217; key.
-If autosave is True, a new image will be saved on each execution of
-the &#8216;draw&#8217; function.
-If neither hotkey nor autosave are True, images can only be saved by
-executing the saveNext() function from a script.</p>
-<p>If no format is specified, it is derived from the filename extension.
-fmt should be one of the valid formats as returned by imageFormats()</p>
-<p>If verbose=True, error/warnings are activated. This is usually done when
-this function is called from the GUI.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveImage</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big></dt>
-<dd><p>Saves an image to file or Starts/stops multisave mode.</p>
-<p>With a filename and multi==False (default), the current viewport rendering
-is saved to the named file.</p>
-<p>With a filename and multi==True, multisave mode is started.
-Without a filename, multisave mode is turned off.
-Two subsequent calls starting multisave mode without an intermediate call
-to turn it off, do not cause an error. The first multisave mode will
-implicitely be ended before starting the second.</p>
-<p>In multisave mode, each call to saveNext() will save an image to the
-next generated file name.
-Filenames are generated by incrementing a numeric part of the name.
-If the supplied filename (after removing the extension) has a trailing
-numeric part, subsequent images will be numbered continuing from this
-number. Otherwise a numeric part &#8216;-000&#8217; will be added to the filename.</p>
-<p>If window is True, the full pyFormex window is saved.
-If window and border are True, the window decorations will be included.
-If window is False, only the current canvas viewport is saved.</p>
-<p>If hotkey is True, a new image will be saved by hitting the &#8216;S&#8217; key.
-If autosave is True, a new image will be saved on each execution of
-the &#8216;draw&#8217; function.
-If neither hotkey nor autosave are True, images can only be saved by
-executing the saveNext() function from a script.</p>
-<p>If no format is specified, it is derived from the filename extension.
-fmt should be one of the valid formats as returned by imageFormats()</p>
-<p>If verbose=True, error/warnings are activated. This is usually done when
-this function is called from the GUI.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveNext</tt><big>(</big><big>)</big></dt>
-<dd><p>In multisave mode, saves the next image.</p>
-<p>This is a quiet function that does nothing if multisave was not activated.
-It can thus safely be called on regular places in scripts where one would
-like to have a saved image and then either activate the multisave mode
-or not.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">changeBackgroundColorXPM</tt><big>(</big><em>fn</em>, <em>color</em><big>)</big></dt>
-<dd><p>Changes the background color of an .xpm image.</p>
-<p>This changes the background color of an .xpm image to the given value.
-fn is the filename of an .xpm image.
-color is a string with the new background color, e.g. in web format
-(&#8216;#FFF&#8217; or &#8216;#FFFFFF&#8217; is white). A special value &#8216;None&#8217; may be used
-to set a transparent background.
-The current background color is selected from the lower left pixel.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em>, <em>transparent=True</em><big>)</big></dt>
-<dd><p>Save the current rendering as an icon.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">autoSaveOn</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns True if autosave multisave mode is currently on.</p>
-<p>Use this function instead of directly accessing the autosave variable.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>files</em>, <em>encoder='ffmpeg'</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Create a movie from a saved sequence of images.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveMovie</tt><big>(</big><em>filename</em>, <em>format</em>, <em>windowname=None</em><big>)</big></dt>
-<dd><p>Create a movie from the pyFormex window.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="id107">
-<span id="id108"></span><h1>42. <a class="reference internal" href="#module-image" title="image: Saving OpenGL renderings to image files."><tt class="xref py py-mod docutils literal"><span class="pre">image</span></tt></a> &#8212; Saving OpenGL renderings to image files.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-image"></span><p>This module defines some functions that can be used to save the
-OpenGL rendering and the pyFormex GUI to image files. There are even
-provisions for automatic saving to a series of files and creating
-a movie from these images.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">image</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">image</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big></dt>
-<dd><p>Initialize the image module.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">imageFormats</tt><big>(</big><big>)</big></dt>
-<dd><p>Return a list of the valid image formats.</p>
-<p>image formats are lower case strings as &#8216;png&#8217;, &#8216;gif&#8217;, &#8216;ppm&#8217;, &#8216;eps&#8217;, etc.
-The available image formats are derived from the installed software.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=True</em><big>)</big></dt>
-<dd><p>Checks image format; if verbose, warn if it is not.</p>
-<p>Returns the image format, or None if it is not OK.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">imageFormatFromExt</tt><big>(</big><em>ext</em><big>)</big></dt>
-<dd><p>Determine the image format from an extension.</p>
-<p>The extension may or may not have an initial dot and may be in upper or
-lower case. The format is equal to the extension characters in lower case.
-If the supplied extension is empty, the default format &#8216;png&#8217; is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>quality=-1</em>, <em>size=None</em><big>)</big></dt>
-<dd><p>Save the rendering on canvas as an image file.</p>
-<p>canvas specifies the qtcanvas rendering window.
-fn is the name of the file
-fmt is the image file format</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>windowname=None</em><big>)</big></dt>
-<dd><p>Save a window as an image file.</p>
-<p>This function needs a filename AND format.
-If a window is specified, the named window is saved.
-Else, the main pyFormex window is saved.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>border=False</em><big>)</big></dt>
-<dd><p>Save the main pyFormex window as an image file.</p>
-<p>This function needs a filename AND format.
-This is an alternative for save_window, by grabbin it from the root
-window, using save_rect.
-This allows us to grab the border as well.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em>, <em>quality=-1</em><big>)</big></dt>
-<dd><p>Save a rectangular part of the screen to a an image file.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big></dt>
-<dd><p>Saves an image to file or Starts/stops multisave mode.</p>
-<p>With a filename and multi==False (default), the current viewport rendering
-is saved to the named file.</p>
-<p>With a filename and multi==True, multisave mode is started.
-Without a filename, multisave mode is turned off.
-Two subsequent calls starting multisave mode without an intermediate call
-to turn it off, do not cause an error. The first multisave mode will
-implicitely be ended before starting the second.</p>
-<p>In multisave mode, each call to saveNext() will save an image to the
-next generated file name.
-Filenames are generated by incrementing a numeric part of the name.
-If the supplied filename (after removing the extension) has a trailing
-numeric part, subsequent images will be numbered continuing from this
-number. Otherwise a numeric part &#8216;-000&#8217; will be added to the filename.</p>
-<p>If window is True, the full pyFormex window is saved.
-If window and border are True, the window decorations will be included.
-If window is False, only the current canvas viewport is saved.</p>
-<p>If hotkey is True, a new image will be saved by hitting the &#8216;S&#8217; key.
-If autosave is True, a new image will be saved on each execution of
-the &#8216;draw&#8217; function.
-If neither hotkey nor autosave are True, images can only be saved by
-executing the saveNext() function from a script.</p>
-<p>If no format is specified, it is derived from the filename extension.
-fmt should be one of the valid formats as returned by imageFormats()</p>
-<p>If verbose=True, error/warnings are activated. This is usually done when
-this function is called from the GUI.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveImage</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big></dt>
-<dd><p>Saves an image to file or Starts/stops multisave mode.</p>
-<p>With a filename and multi==False (default), the current viewport rendering
-is saved to the named file.</p>
-<p>With a filename and multi==True, multisave mode is started.
-Without a filename, multisave mode is turned off.
-Two subsequent calls starting multisave mode without an intermediate call
-to turn it off, do not cause an error. The first multisave mode will
-implicitely be ended before starting the second.</p>
-<p>In multisave mode, each call to saveNext() will save an image to the
-next generated file name.
-Filenames are generated by incrementing a numeric part of the name.
-If the supplied filename (after removing the extension) has a trailing
-numeric part, subsequent images will be numbered continuing from this
-number. Otherwise a numeric part &#8216;-000&#8217; will be added to the filename.</p>
-<p>If window is True, the full pyFormex window is saved.
-If window and border are True, the window decorations will be included.
-If window is False, only the current canvas viewport is saved.</p>
-<p>If hotkey is True, a new image will be saved by hitting the &#8216;S&#8217; key.
-If autosave is True, a new image will be saved on each execution of
-the &#8216;draw&#8217; function.
-If neither hotkey nor autosave are True, images can only be saved by
-executing the saveNext() function from a script.</p>
-<p>If no format is specified, it is derived from the filename extension.
-fmt should be one of the valid formats as returned by imageFormats()</p>
-<p>If verbose=True, error/warnings are activated. This is usually done when
-this function is called from the GUI.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveNext</tt><big>(</big><big>)</big></dt>
-<dd><p>In multisave mode, saves the next image.</p>
-<p>This is a quiet function that does nothing if multisave was not activated.
-It can thus safely be called on regular places in scripts where one would
-like to have a saved image and then either activate the multisave mode
-or not.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">changeBackgroundColorXPM</tt><big>(</big><em>fn</em>, <em>color</em><big>)</big></dt>
-<dd><p>Changes the background color of an .xpm image.</p>
-<p>This changes the background color of an .xpm image to the given value.
-fn is the filename of an .xpm image.
-color is a string with the new background color, e.g. in web format
-(&#8216;#FFF&#8217; or &#8216;#FFFFFF&#8217; is white). A special value &#8216;None&#8217; may be used
-to set a transparent background.
-The current background color is selected from the lower left pixel.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em>, <em>transparent=True</em><big>)</big></dt>
-<dd><p>Save the current rendering as an icon.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">autoSaveOn</tt><big>(</big><big>)</big></dt>
-<dd><p>Returns True if autosave multisave mode is currently on.</p>
-<p>Use this function instead of directly accessing the autosave variable.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>files</em>, <em>encoder='ffmpeg'</em>, <em>**kargs</em><big>)</big></dt>
-<dd><p>Create a movie from a saved sequence of images.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">image.</tt><tt class="descname">saveMovie</tt><big>(</big><em>filename</em>, <em>format</em>, <em>windowname=None</em><big>)</big></dt>
-<dd><p>Create a movie from the pyFormex window.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -710,10 +339,10 @@ The current background color is selected from the lower left pixel.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imagearray.html" title="43. imagearray — Convert bitmap images into numpy arrays."
+          <a href="imagearray.html" title="29. imagearray — Convert bitmap images into numpy arrays."
              >next</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="38. camera — OpenGL camera handling"
+          <a href="camera.html" title="27. camera — OpenGL camera handling"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -723,7 +352,7 @@ The current background color is selected from the lower left pixel.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

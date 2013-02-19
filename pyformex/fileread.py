@@ -187,7 +187,7 @@ def read_stl_bin(fn):
 
     Returns a Coords with shape (ntri,4,3). The first item of each
     triangle is the normal, the other three are the vertices.
-.    """
+    """
     def addTriangle(i):
         x[i] = fromfile(file=fil,dtype=Float,count=12).reshape(4,3)
         fil.read(2)

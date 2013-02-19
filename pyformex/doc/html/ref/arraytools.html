@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>6. arraytools — A collection of numerical array utilities. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="8. script — Basic pyFormex script functions" href="script.html" />
-    <link rel="prev" title="4. formex — Formex algebra in Python" href="formex.html" />
+    <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
+    <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="script.html" title="8. script — Basic pyFormex script functions"
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="formex.html" title="4. formex — Formex algebra in Python"
+          <a href="formex.html" title="2. formex — Formex algebra in Python"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">6. <tt class="docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></li>
-<li><a class="reference internal" href="#id53">7. <tt class="docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="formex.html"
-                        title="previous chapter">4. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+                        title="previous chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="script.html"
-                        title="next chapter">8. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+                        title="next chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-arraytools">
-<span id="arraytools-a-collection-of-numerical-array-utilities"></span><span id="sec-ref-arraytools"></span><h1>6. <a class="reference internal" href="#module-arraytools" title="arraytools: A collection of numerical array utilities."><tt class="xref py py-mod docutils literal"><span class="pre">arraytools</span></tt></a> &#8212; A collection of numerical array utilities.<a class="headerlink" href="#module-arraytools" title="Permalink to this headline">¶</a></h1>
+<span id="arraytools-a-collection-of-numerical-array-utilities"></span><span id="sec-ref-arraytools"></span><h1>3. <a class="reference internal" href="#module-arraytools" title="arraytools: A collection of numerical array utilities."><tt class="xref py py-mod docutils literal"><span class="pre">arraytools</span></tt></a> &#8212; A collection of numerical array utilities.<a class="headerlink" href="#module-arraytools" title="Permalink to this headline">¶</a></h1>
 <p>These are general utility functions that depend only on the <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt>
 array model. All pyformex modules needing <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> should import
 everything from this module:</p>
@@ -170,8 +164,8 @@ numpy integer.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.sind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
-by specifying <cite>angle_spec=Rad</cite>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sind</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">sind</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
+by specifying <cite>angle_spec=RAD</cite>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sind</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">sind</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">0.5 0.5</span>
 </pre></div>
 </div>
@@ -182,8 +176,8 @@ by specifying <cite>angle_spec=Rad</cite>.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.cosd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cosine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
-by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">cosd</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="n">cosd</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
+by specifying <tt class="docutils literal"><span class="pre">angle_spec=RAD</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">cosd</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="n">cosd</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">0.5 0.5</span>
 </pre></div>
 </div>
@@ -194,7 +188,7 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 <tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.tand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tangens of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
-by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
+by specifying <tt class="docutils literal"><span class="pre">angle_spec=RAD</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -202,8 +196,8 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 <tt class="descclassname">arraytools.</tt><tt class="descname">arcsind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arcsind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose sine is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arcsind</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arcsind</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
+Specifying <cite>angle_spec=RAD</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arcsind</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arcsind</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">30.0 1.57079632679</span>
 </pre></div>
 </div>
@@ -214,8 +208,8 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">arccosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arccosd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose cosine is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arccosd</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arccosd</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
+Specifying <cite>angle_spec=RAD</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arccosd</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arccosd</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">60.0 3.14159265359</span>
 </pre></div>
 </div>
@@ -226,8 +220,8 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">arctand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose tangens is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
+Specifying <cite>angle_spec=RAD</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">45.0 -0.785398163397</span>
 </pre></div>
 </div>
@@ -238,9 +232,9 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">arctand2</tt><big>(</big><em>sin</em>, <em>cos</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose sine and cosine values are given.</p>
 <p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.
+Specifying <cite>angle_spec=RAD</cite> will return the angle in radians.
 This returns an angle in the range ]-180,180].</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand2</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand2</span><span class="p">(</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">Rad</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand2</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand2</span><span class="p">(</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">RAD</span><span class="p">))</span>
 <span class="go">180.0 -2.35619449019</span>
 </pre></div>
 </div>
@@ -408,9 +402,9 @@ or a 3-element array or compatible.</li>
 <dt id="arraytools.rotationMatrix">
 <tt class="descclassname">arraytools.</tt><tt class="descname">rotationMatrix</tt><big>(</big><em>angle</em>, <em>axis=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a rotation matrix over angle, optionally around axis.</p>
-<p>The angle is specified in degrees, unless angle_spec=Rad is specified.
+<p>The angle is specified in degrees, unless angle_spec=RAD is specified.
 If axis==None (default), a 2x2 rotation matrix is returned.
-Else, axis should specifying the rotation axis in a 3D world. It is either
+Else, axis should specifyi the rotation axis in a 3D world. It is either
 one of 0,1,2, specifying a global axis, or a vector with 3 components
 specifying an axis through the origin.
 In either case a 3x3 rotation matrix is returned.
@@ -470,7 +464,7 @@ Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
 <tt class="descclassname">arraytools.</tt><tt class="descname">rotationAnglesFromMatrix</tt><big>(</big><em>mat</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationAnglesFromMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return rotation angles from rotation matrix mat.</p>
 <p>This returns the three angles around the global axes 0, 1 and 2.
-The angles are returned in degrees, unless angle_spec=Rad.</p>
+The angles are returned in degrees, unless angle_spec=RAD.</p>
 </dd></dl>
 
 <dl class="function">
@@ -621,6 +615,24 @@ blocks delimited by the element.</p>
 <span class="go">[array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkInt">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkInt</tt><big>(</big><em>value</em>, <em>min=None</em>, <em>max=None</em><big>)</big><a class="headerlink" href="#arraytools.checkInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a value is an int in the range min..max</p>
+<p>Range borders that are None are not checked upon.
+Returns an int in the specified range.
+Raises an exception if the value is invalid.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkFloat">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkFloat</tt><big>(</big><em>value</em>, <em>min=None</em>, <em>max=None</em><big>)</big><a class="headerlink" href="#arraytools.checkFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a value is a float in the range min..max</p>
+<p>Range borders that are None are not checked upon.
+Returns a float in the specified range.
+Raises an exception if the value is invalid.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1386,1247 +1398,6 @@ empty array is returned.</div></blockquote>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>7. <a class="reference internal" href="#module-arraytools" title="arraytools: A collection of numerical array utilities."><tt class="xref py py-mod docutils literal"><span class="pre">arraytools</span></tt></a> &#8212; A collection of numerical array utilities.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-arraytools"></span><p>These are general utility functions that depend only on the <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt>
-array model. All pyformex modules needing <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> should import
-everything from this module:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">arraytools</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-</div>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">arraytools</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">arraytools</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">isInt</tt><big>(</big><em>obj</em><big>)</big></dt>
-<dd><p>Test if an object is an integer number</p>
-<p>Returns True if the object is a single integer number, else False.
-The type of the object can be either a Python integer (int) or a
-numpy integer.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the sine of an angle in degrees.</p>
-<p>For convenience, this can also be used with an angle in radians,
-by specifying <cite>angle_spec=Rad</cite>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sind</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">sind</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">0.5 0.5</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the cosine of an angle in degrees.</p>
-<p>For convenience, this can also be used with an angle in radians,
-by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">cosd</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="n">cosd</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">0.5 0.5</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the tangens of an angle in degrees.</p>
-<p>For convenience, this can also be used with an angle in radians,
-by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">arcsind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the angle whose sine is equal to the argument.</p>
-<p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arcsind</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arcsind</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">30.0 1.57079632679</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">arccosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the angle whose cosine is equal to the argument.</p>
-<p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arccosd</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arccosd</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">60.0 3.14159265359</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">arctand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the angle whose tangens is equal to the argument.</p>
-<p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">45.0 -0.785398163397</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">arctand2</tt><big>(</big><em>sin</em>, <em>cos</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return the angle whose sine and cosine values are given.</p>
-<p>By default, the angle is returned in Degrees.
-Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.
-This returns an angle in the range ]-180,180].</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">arctand2</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand2</span><span class="p">(</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">Rad</span><span class="p">))</span>
-<span class="go">180.0 -2.35619449019</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">niceLogSize</tt><big>(</big><em>f</em><big>)</big></dt>
-<dd><p>Return the smallest integer e such that 10**e &gt; abs(f).</p>
-<p>This returns the number of digits before the decimal point.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">([</span> <span class="n">niceLogSize</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">35679.23</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.00045676</span><span class="p">]</span> <span class="p">])</span>
-<span class="go">[1, 5, 0, -3]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>below=False</em><big>)</big></dt>
-<dd><p>Return a nice number close to f.</p>
-<p>f is a float number, whose sign is disregarded.</p>
-<p>A number close to abs(f) but having only 1 significant digit is returned.
-By default, the value is above abs(f). Setting below=True returns a
-value above.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">numbers</span> <span class="p">]</span>
-<span class="go">[&#39;0.09&#39;, &#39;0.9&#39;, &#39;9.0&#39;, &#39;90.0&#39;, &#39;100.0&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">below</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">numbers</span> <span class="p">]</span>
-<span class="go">[&#39;0.08&#39;, &#39;0.8&#39;, &#39;8.0&#39;, &#39;80.0&#39;, &#39;90.0&#39;]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Return the dot product of vectors of A and B in the direction of axis.</p>
-<p>This multiplies the elements of the arrays A and B, and the sums the
-result in the direction of the specified axis. Default is the last axis.
-Thus, if A and B are sets of vectors in their last array direction, the
-result is the dot product of vectors of A with vectors of B.
-A and B should be broadcast compatible.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]]</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span> <span class="p">[[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.33</span><span class="p">,</span><span class="mf">2.0</span><span class="p">]]</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dotpr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">))</span>
-<span class="go">[  8.  -1.  10.]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Returns the length of the vectors of A in the direction of axis.</p>
-<p>The components of the vectors are stored along the specified array axis
-(default axis is the last).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Normalize the vectors of A in the direction of axis.</p>
-<p>The components of the vectors are stored along the specified array axis
-(default axis is the last).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Return the (signed) length of the projection of vector of A on B.</p>
-<p>The components of the vectors are stored along the specified array axis
-(default axis is the last).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">orthog</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Return the component of vector of A that is orthogonal to B.</p>
-<p>The components of the vectors are stored along the specified array axis
-(default axis is the last).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">norm</tt><big>(</big><em>v</em>, <em>n=2</em><big>)</big></dt>
-<dd><p>Return thr <cite>n</cite>-norm of the vector <cite>v</cite>.</p>
-<p>Default is the quadratic norm (vector length).
-<tt class="docutils literal"><span class="pre">n</span> <span class="pre">==</span> <span class="pre">1</span></tt> returns the sum.
-<tt class="docutils literal"><span class="pre">n&lt;=0</span></tt> returns the max absolute value.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">horner</tt><big>(</big><em>a</em>, <em>u</em><big>)</big></dt>
-<dd><p>Compute the value of a polynom using Horner&#8217;s rule.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite>: float(n+1,nd), <cite>nd</cite>-dimensional coefficients of the polynom of
-degree <cite>n</cite>, starting from lowest degree.</li>
-<li><cite>u</cite>: float(nu), parametric values where the polynom is evaluated</li>
-</ul>
-<p>Returns float(nu,nd), nd-dimensional values of the polynom.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">horner</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">]],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]))</span>
-<span class="go">[[ 1.5  2.   2.5]</span>
-<span class="go"> [ 2.   3.   4. ]]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em>, <em>direct=True</em><big>)</big></dt>
-<dd><p>Solve many systems of linear equations.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>A</cite>: (ndof,ndof,nsys) shaped float array.</li>
-<li><cite>b</cite>: (ndof,nrhs,nsys) shaped float array.</li>
-</ul>
-<p>Returns: a float array <cite>x</cite> with same shape as <cite>b</cite>, where <tt class="docutils literal"><span class="pre">x[:,i,j]</span></tt>
-solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].</p>
-<p>For ndof in [1,2,3], all solutions are by default computed directly and
-simultaneously. If <tt class="docutils literal"><span class="pre">direct=False</span></tt> is specified, a general linear
-equation solver is called for each system of equations. This is also the
-method used if <tt class="docutils literal"><span class="pre">ndof&gt;4</span></tt>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">inside</tt><big>(</big><em>p</em>, <em>mi</em>, <em>ma</em><big>)</big></dt>
-<dd><p>Return true if point p is inside bbox defined by points mi and ma</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">isClose</tt><big>(</big><em>values</em>, <em>target</em>, <em>rtol=1e-05</em>, <em>atol=1e-08</em><big>)</big></dt>
-<dd><p>Returns an array flagging the elements close to target.</p>
-<p><cite>values</cite> is a float array, <cite>target</cite> is a float value.
-<cite>values</cite> and <cite>target</cite> should be broadcastable to the same shape.</p>
-<p>The return value is a boolean array with shape of <cite>values</cite> flagging
-where the values are close to target.
-Two values <cite>a</cite> and <cite>b</cite> are considered close if
-<img class="math" src="../_images/math/111bff3a77cd73fc555142c0ffd7b4af849562f6.png" alt="| a - b | &lt; atol + rtol * | b |"/></p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">anyVector</tt><big>(</big><em>v</em><big>)</big></dt>
-<dd><p>Create a 3D vector.</p>
-<p>v is some data compatible with a (3)-shaped float array.
-Returns v as such an array.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">unitVector</tt><big>(</big><em>v</em><big>)</big></dt>
-<dd><p>Return a unit vector in the direction of v.</p>
-<ul class="simple">
-<li><cite>v</cite> is either an integer specifying one of the global axes (0,1,2),
-or a 3-element array or compatible.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotationMatrix</tt><big>(</big><em>angle</em>, <em>axis=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return a rotation matrix over angle, optionally around axis.</p>
-<p>The angle is specified in degrees, unless angle_spec=Rad is specified.
-If axis==None (default), a 2x2 rotation matrix is returned.
-Else, axis should specifying the rotation axis in a 3D world. It is either
-one of 0,1,2, specifying a global axis, or a vector with 3 components
-specifying an axis through the origin.
-In either case a 3x3 rotation matrix is returned.
-Note that:</p>
-<ul class="simple">
-<li>rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0)</li>
-<li>rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1)</li>
-<li>rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)</li>
-</ul>
-<p>but the latter functions calls are more efficient.
-The result is returned as an array.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotmat</tt><big>(</big><em>x</em><big>)</big></dt>
-<dd><p>Create a rotation matrix defined by 3 points in space.</p>
-<p>x is an array of 3 points.
-After applying the resulting rotation matrix to the global axes,
-the 0 axis becomes // to the vectors x0-x1,
-the 1 axis lies in the plane x0,x1,x2 and is orthogonal to x0-x1,
-and the 3 axis is orthogonal to the plane x0,x1,x2.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">trfMatrix</tt><big>(</big><em>x</em>, <em>y</em><big>)</big></dt>
-<dd><p>Find the transformation matrix from points x0 to x1.</p>
-<p>x and y are each arrays of 3 non-colinear points.
-The return value is a tuple of a translation vector and a rotation
-matrix.
-The returned translation trl and rotationmatrix rot transform the
-points x thus that:</p>
-<ul class="simple">
-<li>point x0 coincides with point y0,</li>
-<li>line x0,x1 coincides with line y0,y1</li>
-<li>plane x0,x1,x2 coincides with plane y0,y1,y2</li>
-</ul>
-<p>The rotation is to be applied first and should be around the first
-point x0. The full transformation of a Coords object is thus obtained
-by:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">coords</span><span class="o">-</span><span class="n">x0</span><span class="p">)</span><span class="o">*</span><span class="n">rot</span><span class="o">+</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span> <span class="o">=</span> <span class="n">coords</span><span class="o">*</span><span class="n">rot</span><span class="o">+</span><span class="p">(</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">rot</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotMatrix</tt><big>(</big><em>u, w=[0.0, 0.0, 1.0], n=3</em><big>)</big></dt>
-<dd><p>Create a rotation matrix that rotates axis 0 to the given vector.</p>
-<p>u is a vector representing the
-Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotationAnglesFromMatrix</tt><big>(</big><em>mat</em>, <em>angle_spec=0.017453292519943295</em><big>)</big></dt>
-<dd><p>Return rotation angles from rotation matrix mat.</p>
-<p>This returns the three angles around the global axes 0, 1 and 2.
-The angles are returned in degrees, unless angle_spec=Rad.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>upvec=None</em><big>)</big></dt>
-<dd><p>Return a rotation matrix for rotating vector vec1 to vec2.</p>
-<p>If upvec is specified, the rotation matrix will be such that the plane of
-vec2 and the rotated upvec will be parallel to the original upvec.</p>
-<p>This function is like <a class="reference internal" href="#arraytools.rotMatrix" title="arraytools.rotMatrix"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.rotMatrix()</span></tt></a>, but allows the
-specification of vec1.
-The returned matrix should be used in postmultiplication to the Coords.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>add</em>, <em>axis=-1</em>, <em>fill=0</em><big>)</big></dt>
-<dd><p>Increase the length of a single array axis.</p>
-<p>The specified axis of the array <cite>a</cite> is increased with a value <cite>add</cite> and
-the new elements all get the value <cite>fill</cite>.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite>: array.</li>
-<li><cite>add</cite>: int
-The value to add to the axis length. If&lt;=0, the unchanged array
-is returned.</li>
-<li><cite>axis</cite>: int
-The axis to change, default -1 (last).</li>
-<li><cite>fill</cite>: int or float
-The value to set the new elements to.</li>
-</ul>
-<p>Returns an array with same dimension and type as <cite>a</cite>, but with a length along
-<cite>axis</cite> equal to <tt class="docutils literal"><span class="pre">a.shape[axis]+add</span></tt>. The new elements all have the
-value <cite>fill</cite>.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">growAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">2</span><span class="p">)</span>
-<span class="go">array([[1, 2, 3, 0, 0],</span>
-<span class="go">       [4, 5, 6, 0, 0]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">reorderAxis</tt><big>(</big><em>a</em>, <em>order</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Reorder the planes of an array along the specified axis.</p>
-<p>The elements of the array are reordered along the specified axis
-according to the specified order.</p>
-<p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>a</cite>: array_like</p>
-</li>
-<li><p class="first"><cite>order</cite>: specifies how to reorder the elements. It is either one
-of the special string values defined below, or else it is an index
-holding a permutation of <cite>arange(self.nelems()</cite>. Each value specifies the
-index of the old element that should be placed at its position.
-Thus, the order values are the old index numbers at the position of the
-new index number.</p>
-<p><cite>order</cite> can also take one of the following predefined values,
-resulting in the corresponding renumbering scheme being generated:</p>
-<ul class="simple">
-<li>&#8216;reverse&#8217;: the elements along axis are placed in reverse order</li>
-<li>&#8216;random&#8217;: the elements along axis are placed in random order</li>
-</ul>
-</li>
-</ul>
-<p>Returns an array with the same elements of self, where only the order
-along the specified axis has been changed.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reorderAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="go">array([[3, 1, 2],</span>
-<span class="go">       [6, 4, 5]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big></dt>
-<dd><p>Reverse the elements along a computed axis.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reverseAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span>
-<span class="go">array([[4, 5, 6],</span>
-<span class="go">       [1, 2, 3]])</span>
-</pre></div>
-</div>
-<p>Note that if the axis is known in advance, it may be more efficient to use
-an indexing operation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">A</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="go">[[3 2 1]</span>
-<span class="go"> [6 5 4]]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">addAxis</tt><big>(</big><em>a</em>, <em>axis=0</em><big>)</big></dt>
-<dd><p>Add an additional axis with length 1 to an array.</p>
-<p>The new axis is inserted before the specified one. Default is to
-add it at the front.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">stack</tt><big>(</big><em>al</em>, <em>axis=0</em><big>)</big></dt>
-<dd><p>Stack a list of arrays along a new axis.</p>
-<p>al is a list of arrays all of the same shape.
-The return value is a new array with one extra axis, along which the
-input arrays are stacked. The position of the new axis can be specified,
-and is the first axis by default.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">concat</tt><big>(</big><em>al</em>, <em>axis=0</em><big>)</big></dt>
-<dd><p>Smart array concatenation ignoring empty arrays</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">splitrange</tt><big>(</big><em>n</em>, <em>nblk</em><big>)</big></dt>
-<dd><p>Split the range of integers 0..n in nblk almost equal sized slices.</p>
-<p>This divides the range of integer numbers 0..n in nblk slices of (almost)
-equal size. If n &gt; nblk, returns nblk+1 integers in the range 0..n.
-If n &lt;= nblk, returns range(n+1).</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">splitrange</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="go">array([0, 2, 5, 7])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">splitar</tt><big>(</big><em>ar</em>, <em>nblk</em>, <em>close=False</em><big>)</big></dt>
-<dd><p>Split an array in nblk subarrays along axis 0.</p>
-<p>Splits the array ar along its first axis in nblk blocks of (almost)
-equal size.</p>
-<p>Returns a list of nblk arrays, unless the size of the array is smaller
-than nblk, in which case a list with the original array is returned.</p>
-<p>If close==True, the elements where the array is split occur in both
-blocks delimited by the element.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">splitar</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span>
-<span class="go">[array([0, 1]), array([2, 3, 4]), array([5, 6])]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">splitar</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span><span class="mi">3</span><span class="p">,</span><span class="n">close</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">[array([0, 1, 2]), array([2, 3, 4]), array([4, 5, 6])]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray</tt><big>(</big><em>a</em>, <em>shape=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big></dt>
-<dd><p>Check that an array a has the correct shape and type.</p>
-<p>The input <cite>a</cite> is anything that can be converted into a numpy array.
-Either <cite>shape</cite> and/or <cite>kind</cite> can be specified. and will then be checked.
-The dimensions where <cite>shape</cite> contains a -1 value are not checked. The
-number of dimensions should match.
-If <cite>kind</cite> does not match, but the value is included in <cite>allow</cite>,
-conversion to the requested type is attempted.</p>
-<p>Returns the array if valid; else, an error is raised.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray1D</tt><big>(</big><em>a</em>, <em>size=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big></dt>
-<dd><p>Check that an array a has the correct size and type.</p>
-<p>Either size and or kind can be specified.
-If kind does not match, but is included in allow, conversion to the
-requested type is attempted.
-Returns the array if valid.
-Else, an error is raised.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArrayDim</tt><big>(</big><em>a</em>, <em>ndim=-1</em><big>)</big></dt>
-<dd><p>Check that an array has the correct dimensionality.</p>
-<p>Returns asarray(a) if ndim &lt; 0 or a.ndim == ndim
-Else, an error is raised.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em><big>)</big></dt>
-<dd><p>Check that an array contains a set of unique integers in a given range.</p>
-<p>This functions tests that all integer numbers in the array are within the
-range math:<cite>nmin &lt;= i &lt; nmax</cite></p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>nrs</cite>: an integer array of any shape.</li>
-<li><cite>nmin</cite>: minimum allowed value. If set to None, the test is skipped.</li>
-<li><cite>nmax</cite>: maximum allowed value + 1! If set to None, the test is skipped.</li>
-</ul>
-<p>Default range is [0,unlimited].</p>
-<p>If the numbers are no unique or one of the limits is passed, an error
-is raised. Else, the sorted list of unique values is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">readArray</tt><big>(</big><em>file</em>, <em>dtype</em>, <em>shape</em>, <em>sep=' '</em><big>)</big></dt>
-<dd><p>Read an array from an open file.</p>
-<p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromfile()</span></tt> to read an array with known shape and
-data type from an open file.
-The sep parameter can be specified as in fromfile.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">writeArray</tt><big>(</big><em>file</em>, <em>array</em>, <em>sep=' '</em><big>)</big></dt>
-<dd><p>Write an array to an open file.</p>
-<p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.tofile()</span></tt> to write an array to an open file.
-The sep parameter can be specified as in tofile.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">cubicEquation</tt><big>(</big><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><big>)</big></dt>
-<dd><p>Solve a cubiq equation using a direct method.</p>
-<p>a,b,c,d are the (floating point) coefficients of a third degree
-polynomial equation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">c</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">d</span><span class="o">=</span><span class="mi">0</span>
-</pre></div>
-</div>
-<p>This function computes the three roots (real and complex) of this equation
-and returns full information about their kind, sorting order, occurrence
-of double roots. It uses scaling of the variables to enhance the accuracy.</p>
-<p>The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
-float values and kind is an integer specifying the kind of roots.</p>
-<p>Depending on the value of <cite>kind</cite>, the roots are defined as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="9%" />
-<col width="91%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">kind</th>
-<th class="head">roots</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>0</td>
-<td>three real roots r1 &lt; r2 &lt; r3</td>
-</tr>
-<tr class="row-odd"><td>1</td>
-<td>three real roots r1 &lt; r2 = r3</td>
-</tr>
-<tr class="row-even"><td>2</td>
-<td>three real roots r1 = r2 &lt; r3</td>
-</tr>
-<tr class="row-odd"><td>3</td>
-<td>three real roots r1 = r2 = r3</td>
-</tr>
-<tr class="row-even"><td>4</td>
-<td>one real root r1 and two complex conjugate roots with real
-part r2 and imaginary part r3; the complex roots are thus:
-r2+i*r3 en r2-i*r3, where i=sqrt(-1).</td>
-</tr>
-</tbody>
-</table>
-<p>If the coefficient a==0, a ValueError is raised.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cubicEquation</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
-<span class="go">([1.0, 1.0, 1.0], 3)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueOrdered</tt><big>(</big><em>ar1</em>, <em>return_index=False</em>, <em>return_inverse=False</em><big>)</big></dt>
-<dd><p>Find the unique elements of an array.</p>
-<p>This works like numpy&#8217;s unique, but uses a stable sorting algorithm.
-The returned index may therefore hold other entries for multiply
-occurring values. In such case, uniqueOrdered returns the first
-occurrence in the flattened array.
-The unique elements and the inverse index are always the same as those
-returned by numpy&#8217;s unique.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>ar1</cite>: array_like
-This array will be flattened if it is not already 1-D.</li>
-<li><cite>return_index</cite>: bool, optional
-If True, also return the indices against <cite>ar1</cite> that result in the
-unique array.</li>
-<li><cite>return_inverse</cite>: bool, optional
-If True, also return the indices against the unique array that
-result in <cite>ar1</cite>.</li>
-</ul>
-<p>Returns:</p>
-<ul class="simple">
-<li><cite>unique</cite>: ndarray
-The unique values.</li>
-<li><cite>unique_indices</cite>: ndarray, optional
-The indices of the unique values. Only provided if <cite>return_index</cite> is
-True.</li>
-<li><cite>unique_inverse</cite>: ndarray, optional
-The indices to reconstruct the original array. Only provided if
-<cite>return_inverse</cite> is True.</li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniq</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">uniq</span><span class="p">)</span>
-<span class="go">[1 2 3 4 5 6 7 8]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
-<span class="go">[7 0 1 2 3 4 5 6]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
-<span class="go">[1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniq</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">uniq</span><span class="p">)</span>
-<span class="go">[1 2 3 4 5 6 7 8]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
-<span class="go">[7 0 1 2 3 4 5 6]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
-<span class="go">[1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]</span>
-</pre></div>
-</div>
-<p>Notice the difference in the fourth element of the <cite>ind</cite> array.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">renumberIndex</tt><big>(</big><em>index</em><big>)</big></dt>
-<dd><p>Renumber an index sequentially.</p>
-<p>Given a one-dimensional integer array with only non-negative values,
-and <cite>nval</cite> being the number of different values in it, and you want to
-replace its elements with values in the range <cite>0..nval</cite>, such that
-identical numbers are always replaced with the same number and the
-new values at their first occurrence form an increasing sequence <cite>0..nval</cite>.
-This function will give you the old numbers corresponding with each
-position <cite>0..nval</cite>.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>index</cite>: array_like, 1-D, integer
-An array with non-negative integer values</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>A 1-D integer array with length equal to <cite>nval</cite>, where <cite>nval</cite>
-is the number of different values in <cite>index</cite>, and holding the original
-values corresponding to the new value <cite>0..nval</cite>.</div></blockquote>
-<p>Remark:</p>
-<blockquote>
-<div>Use <a class="reference internal" href="#arraytools.inverseUniqueIndex" title="arraytools.inverseUniqueIndex"><tt class="xref py py-func docutils literal"><span class="pre">inverseUniqueIndex()</span></tt></a> to find the inverse mapping
-needed to replace the values in the index by the new ones.</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">renumberIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="go">array([0, 5, 2, 6])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">(</span><span class="n">renumberIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">]))[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
-<span class="go">array([0, 1, 2, 2, 3, 0])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">complement</tt><big>(</big><em>index</em>, <em>n=-1</em><big>)</big></dt>
-<dd><p>Return the complement of an index in a range(0,n).</p>
-<p>The complement is the list of numbers from the range(0,n) that are
-not included in the index.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>index</cite>: array_like, 1-D, int or bool. If integer, it is a list with
-the non-negative numbers to be excluded from the range(0,n).
-If boolean, it normally has the length of the range and flags the
-elements to be returned with a False value.</li>
-<li><cite>n</cite>: int: the upper limit for the range of numbers. If <cite>index</cite> is of
-type integer and <cite>n</cite> is not specified or is negative, it will be set
-equal to the largest number in <cite>index</cite> plus 1. If <cite>index</cite> is of type
-boolean and <cite>n</cite> is larger than the length of <cite>index</cite>, <cite>index</cite> will be
-padded with <cite>False</cite> values until length <cite>n</cite>.</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>If <cite>index</cite> is integer: a 1-D integer array with the numbers from
-range(0,n) that are not included in <cite>index</cite>. If <cite>index</cite> is boolean,
-the negated <cite>index</cite> padded to or cut at length <cite>n</cite>.</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">complement</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]))</span>
-<span class="go">[1 3 4]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">complement</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="mi">10</span><span class="p">))</span>
-<span class="go">[1 3 4 7 8 9]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">complement</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">],</span><span class="mi">6</span><span class="p">))</span>
-<span class="go">[ True False False False  True  True]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big></dt>
-<dd><p>Inverse an index.</p>
-<p>Given a 1-D integer array with <em>unique</em> non-negative values, and
-<cite>max</cite> being the highest value in it, this function returns the position
-in the array of the values <cite>0..max</cite>. Values not occurring in input index
-get a value -1 in the inverse index.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>index</cite>: array_like, 1-D, integer
-An array with non-negative values, which all have to be unique.</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>A 1-D integer array with length <cite>max+1</cite>, with the positions in
-<cite>index</cite> of the values <cite>0..max</cite>, or -1 if the value does not occur in
-<cite>index</cite>.</div></blockquote>
-<p>Remark:</p>
-<blockquote>
-<div>The inverse index translates the unique index numbers in a
-sequential index, so that
-<tt class="docutils literal"><span class="pre">inverseUniqueIndex(index)[index]</span> <span class="pre">==</span> <span class="pre">arange(1+index.max())</span></tt>.</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
-<span class="go">array([ 0, -1,  2, -1, -1,  1,  3])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span>
-<span class="go">array([0, 1, 2, 3])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">sortSubsets</tt><big>(</big><em>a</em>, <em>w=None</em><big>)</big></dt>
-<dd><p>Sort subsets of an integer array a.</p>
-<p>a is a 1-D integer array. Subsets of the array are the collections
-of equal values.
-w is a float array with same size of a, specifying a weight for each
-of the array elements in a.
-If no weight is specified, all elements have the same weight.</p>
-<p>The subsets of a are sorted in order of decreasing total weight of the
-subsets (or number of elements if weight is None).</p>
-<p>The return value is an integer array of the same size of a, specifying
-for each element the index of its subset in the sorted list of subsets.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortSubsets</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="go">array([3, 2, 1, 0, 2, 1, 0, 1, 0, 0])</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortSubsets</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">w</span><span class="o">=</span><span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="go">array([3, 1, 0, 2, 1, 0, 2, 0, 2, 2])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">sortByColumns</tt><big>(</big><em>a</em><big>)</big></dt>
-<dd><p>Sort an array on all its columns, from left to right.</p>
-<p>The rows of a 2-dimensional array are sorted, first on the first
-column, then on the second to resolve ties, etc..</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite>: array_like, 2-D</li>
-</ul>
-<dl class="docutils">
-<dt>Returns a 1-D integer array specifying the order in which the rows have to</dt>
-<dd>be taken to obtain an array sorted by columns.</dd>
-</dl>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortByColumns</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
-<span class="go">array([0, 3, 1, 4, 2])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em>, <em>permutations=False</em><big>)</big></dt>
-<dd><p>Find the unique rows of a 2-D array.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite>: array_like, 2-D</li>
-<li><cite>permutations</cite>: bool
-If True, rows which are permutations of the same data are considered
-equal. The default is to consider permutations as different.</li>
-</ul>
-<p>Returns:</p>
-<ul class="simple">
-<li><cite>uniq</cite>: a 1-D integer array with the numbers of the unique rows from <cite>a</cite>.
-The order of the elements in <cite>uniq</cite> is determined by the sorting
-procedure: in the current implementation this is <a class="reference internal" href="#arraytools.sortByColumns" title="arraytools.sortByColumns"><tt class="xref py py-func docutils literal"><span class="pre">sortByColumns()</span></tt></a>.
-If <cite>permutations==True</cite>, <cite>a</cite> is sorted along its axis -1 before calling
-this sorting function.</li>
-<li><cite>uniqid</cite>: a 1-D integer array with length equal to <cite>a.shape[0]</cite> with the
-numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>.</li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
-<span class="go">(array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">permutations</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([0, 3, 1]), array([0, 2, 2, 1, 2]))</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big></dt>
-<dd><p>Return the index of the item nearest to target.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>values</cite>: a list of float values</li>
-<li><cite>target</cite>: a float value</li>
-</ul>
-<p>Returns the position of the item in <cite>values</cite> that is
-nearest to <cite>target</cite>.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">argNearestValue</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span><span class="mf">0.7</span><span class="p">)</span>
-<span class="go">1</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big></dt>
-<dd><p>Return the item nearest to target.</p>
-<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
-<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
-<p>Returns the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
-nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em>, <em>maxcon=4</em><big>)</big></dt>
-<dd><p>Return an inverse index.</p>
-<p>An index is an array pointing at other items by their position.
-The inverse index is a collection of the reverse pointers.
-Negative values in the input index are disregarded.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>index</cite>: an array of integers, where only non-negative values are
-meaningful, and negative values are silently ignored. A Connectivity
-is a suitable argument.</li>
-<li><cite>maxcon</cite>: int: an initial estimate for the maximum number of rows a
-single element of index occurs at. The default will usually do well,
-because the procedure will automatically enlarge it when needed.</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div><p>An (mr,mc) shaped integer array where:</p>
-<ul class="simple">
-<li><cite>mr</cite> will be equal to the highest positive value in index, +1.</li>
-<li><cite>mc</cite> will be equal to the highest row-multiplicity of any number
-in <cite>index</cite>.</li>
-</ul>
-<p>Row <cite>i</cite> of the inverse index contains all the row numbers of <cite>index</cite>
-that contain the number <cite>i</cite>. Because the number of rows containing
-the number <cite>i</cite> is usually not a constant, the resulting array will have
-a number of columns <cite>mc</cite> corresponding to the highest row-occurrence of
-any single number. Shorter rows are padded with -1 values to flag
-non-existing entries.</p>
-</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseIndex</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
-<span class="go">array([[ 0,  1,  3],</span>
-<span class="go">       [-1,  0,  2],</span>
-<span class="go">       [-1,  1,  2],</span>
-<span class="go">       [-1, -1,  3]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">matchIndex</tt><big>(</big><em>target</em>, <em>values</em><big>)</big></dt>
-<dd><p>Find position of values in target.</p>
-<p>This function finds the position in the array <cite>target</cite> of the elements
-from the array <cite>values</cite>.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>target</cite>: an index array with all non-negative values. If not 1-D, it
-will be flattened.</li>
-<li><cite>values</cite>: an index array with all non-negative values. If not 1-D, it
-will be flattened.</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>An index array with the same size as <cite>values</cite>.
-For each number in <cite>values</cite>, the index contains the position of that value
-in the flattened <cite>target</cite>, or -1 if that number does not occur in <cite>target</cite>.
-If an element from <cite>values</cite> occurs more than once in <cite>target</cite>, it is
-currently undefined which of those positions is returned.</div></blockquote>
-<p>Remark that after <tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">matchIndex(target,values)</span></tt> the equality
-<tt class="docutils literal"><span class="pre">target[m]</span> <span class="pre">==</span> <span class="pre">values</span></tt> holds in all the non-negative positions of <cite>m</cite>.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">matchIndex</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
-<span class="go">array([-1, -1,  4,  0, -1])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">groupArgmin</tt><big>(</big><em>val</em>, <em>gid</em><big>)</big></dt>
-<dd><p>Compute the group minimum</p>
-<p>Computes the minimum value per group of a set of values tagged with
-a group number.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>val</cite>: (nval,) shaped array of values</li>
-<li><cite>gid</cite>: (nval,) shaped int array of group identifiers</li>
-</ul>
-<p>Returns:</p>
-<ul class="simple">
-<li><cite>ugid</cite>: (ngrp,) shaped int array with unique group identifiers</li>
-<li><cite>minpos</cite>: (ngrp,p) shape int array giving the position in <cite>val</cite> of
-the minimum of all values with the corresponding group identifier
-in <cite>ugid</cite>.</li>
-</ul>
-<p>After return, the minimum values corresponding to the groups in <cite>ugid</cite>
-are given by <tt class="docutils literal"><span class="pre">val[minpos]</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">val</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span> <span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gid</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span> <span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">groupArgmin</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="n">gid</span><span class="p">))</span>
-<span class="go">(array([1, 2, 6]), array([5, 0, 3]))</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorLength</tt><big>(</big><em>vec</em><big>)</big></dt>
-<dd><p>Return the lengths of a set of vectors.</p>
-<p>vec is an (n,3) shaped array holding a collection of vectors.
-The result is an (n,) shaped array with the length of each vector.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorNormalize</tt><big>(</big><em>vec</em><big>)</big></dt>
-<dd><p>Normalize a set of vectors.</p>
-<p>vec is a (n,3) shaped arrays holding a collection of vectors.
-The result is a tuple of two arrays:</p>
-<ul class="simple">
-<li>length (n): the length of the vectors vec</li>
-<li>normal (n,3): unit-length vectors along vec.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big></dt>
-<dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-As a convenience, single vectors may also be specified with shape (3,),
-and will be converted to (1,3).</p>
-<p>The result is a tuple of two arrays:</p>
-<ul class="simple">
-<li>area (n) : the area of the parallellogram formed by vec1 and vec2.</li>
-<li>normal (n,3) : (normalized) vectors normal to each couple (vec1,2).</li>
-</ul>
-<p>These are calculated from the cross product of vec1 and vec2, which indeed
-gives area * normal.</p>
-<p>Note that where two vectors are parallel, an area zero results and
-an axis with components NaN.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairArea</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big></dt>
-<dd><p>Compute area of the parallellogram formed by a vector pair vec1,vec2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is an (n) shaped array with the area of the parallellograms
-formed by each pair of vectors (vec1,vec2).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big></dt>
-<dd><p>Compute vectors normal to vec1 and vec2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is an (n,3) shaped array of unit length vectors normal to
-each couple (edg1,edg2).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorTripleProduct</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>vec3</em><big>)</big></dt>
-<dd><p>Compute triple product vec1 . (vec2 x vec3).</p>
-<p>vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
-The result is a (n,) shaped array with the triple product of each set
-of corresponding vectors from vec1,vec2,vec3.
-This is also the square of the volume of the parallellepid formex by
-the 3 vectors.
-If vec1 is a unit normal, the result is also the area of the parallellogram
-(vec2,vec3) projected in the direction vec1.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairCosAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big></dt>
-<dd><p>Return the cosinus of the angle between the vectors v1 and v2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is an (n) shaped array with the cosinus of the angle between
-each pair of vectors (vec1,vec2).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big></dt>
-<dd><p>Return the angle (in radians) between the vectors v1 and v2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is an (n) shaped array with the angle between
-each pair of vectors (vec1,vec2).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">multiplicity</tt><big>(</big><em>a</em><big>)</big></dt>
-<dd><p>Return the multiplicity of the numbers in a</p>
-<p>a is a 1-D integer array.</p>
-<p>Returns a tuple of:</p>
-<ul class="simple">
-<li>&#8216;mult&#8217;: the multiplicity of the unique values in a</li>
-<li>&#8216;uniq&#8217;: the sorted list of unique values in a</li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">multiplicity</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="go">(array([2, 3, 1, 1, 1, 1]), array([0, 1, 3, 4, 5, 7]))</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">histogram2</tt><big>(</big><em>a</em>, <em>bins</em>, <em>range=None</em><big>)</big></dt>
-<dd><p>Compute the histogram of a set of data.</p>
-<p>This function is like numpy&#8217;s histogram function, but also returns
-the bin index for each individual entry in the data set.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite>: array_like.
-Input data. The histogram is computed over the flattened array.</li>
-<li><cite>bins</cite>: int or sequence of scalars.
-If bins is an int, it defines the number of equal-width bins
-in the given range. If bins is a sequence, it defines the bin edges,
-allowing for non-uniform bin widths. Both the leftmost and rightmost
-edges are included, thus the number of bins is len(bins)-1.</li>
-<li><cite>range</cite>: (float, float), optional. The lower and upper range of the bins.
-If not provided, range is simply (a.min(), a.max()). Values outside the
-range are ignored. This parameter is ignored if bins is a sequence.</li>
-</ul>
-<p>Returns:</p>
-<ul class="simple">
-<li><cite>hist</cite>: integer array with length nbins, holding the number of elements
-in each bin,</li>
-<li><cite>ind</cite>: a sequence of nbins integer arrays, each holding the indices of
-the elements fitting in the respective bins,</li>
-<li><cite>xbins</cite>: array of same type as data and with length nbins+1:
-returns the bin edges.</li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">xbins</span> <span class="o">=</span> <span class="n">histogram2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
-<span class="go">[2 2 2 1]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<span class="go">[0 6]</span>
-<span class="go">[1 4]</span>
-<span class="go">[2 5]</span>
-<span class="go">[3]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">xbins</span><span class="p">)</span>
-<span class="go">[1 2 3 4 5]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">movingView</tt><big>(</big><em>a</em>, <em>size</em><big>)</big></dt>
-<dd><p>Create a moving view along the first axis of an array</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite> : array_like: array for wihch to create a moving view</li>
-<li><cite>size</cite> : int: size of the moving view</li>
-</ul>
-<dl class="docutils">
-<dt>Returns an array that is a view of the original array with an extra first</dt>
-<dd><p class="first">axis of length w.</p>
-<p class="last">Using swapaxes(0,axis) moving views over any axis can be created.</p>
-</dd>
-</dl>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">[[0 1]</span>
-<span class="go"> [2 3]</span>
-<span class="go"> [4 5]</span>
-<span class="go"> [6 7]</span>
-<span class="go"> [8 9]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">movingView</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="go">[[[0 1]</span>
-<span class="go">  [2 3]</span>
-<span class="go">  [4 5]]</span>
-
-<span class="go"> [[2 3]</span>
-<span class="go">  [4 5]</span>
-<span class="go">  [6 7]]</span>
-
-<span class="go"> [[4 5]</span>
-<span class="go">  [6 7]</span>
-<span class="go">  [8 9]]]</span>
-</pre></div>
-</div>
-<p>Calculate rolling sum of first axis:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">movingView</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="go">[[ 6  9]</span>
-<span class="go"> [12 15]</span>
-<span class="go"> [18 21]]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">movingAverage</tt><big>(</big><em>a</em>, <em>n</em>, <em>m0=None</em>, <em>m1=None</em><big>)</big></dt>
-<dd><p>Compute the moving average along the first axis of an array.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>a</cite> : array_like: array to be averaged</li>
-<li><cite>n</cite> : int: moving sample size</li>
-<li><cite>m0</cite> : optional, int: if specified, the first data set of a will
-be prepended this number of times</li>
-<li><cite>m1</cite> : optional, int: if specified, the last data set of a will
-be appended this number of times</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>An array with the moving average over n data sets along the first axis of a.
-The array has the same shape as a, except possibly for the length of the
-first axis.
-If neither m0 nor m1 are set, the first axis will have a length of
-a.shape[0] - (n-1).
-If both m0 and m1 are give, the first axis will have a length of
-a.shape[0] - (n-1) + m0 + m1.
-If either m0 or m1 are set and the other not, the missing value m0 or m1
-will be computed thus that the return array has a first axis with length
-a.shape[0].</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">movingAverage</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="go">[[ 2.  3.]</span>
-<span class="go"> [ 4.  5.]</span>
-<span class="go"> [ 6.  7.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">movingAverage</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="go">[[ 0.          1.        ]</span>
-<span class="go"> [ 0.66666667  1.66666667]</span>
-<span class="go"> [ 2.          3.        ]</span>
-<span class="go"> [ 4.          5.        ]</span>
-<span class="go"> [ 6.          7.        ]]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">randomNoise</tt><big>(</big><em>shape</em>, <em>min=0.0</em>, <em>max=1.0</em><big>)</big></dt>
-<dd><p>Create an array with random values between min and max</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">unitDivisor</tt><big>(</big><em>div</em>, <em>start=0</em><big>)</big></dt>
-<dd><p>Divide a unit interval in equal parts.</p>
-<p>This function is intended to be used by interpolation functions
-that accept an input as either an int or a list of floats.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>div</cite>: an integer, or a list of floating point values.
-If it is an integer, returns a list of floating point values
-dividing the interval 0.0 toi 1.0 in div equal parts.</li>
-<li><cite>start</cite>: Set to 1 to skip the start value (0.0) of the interval.</li>
-</ul>
-<p>Returns: If <cite>div</cite> is a an integer, returns the floating point values
-dividing the unit interval in div equal parts. If <cite>div</cite> is a list,
-just returns <cite>div</cite> as a 1D array.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniformParamValues</tt><big>(</big><em>n</em>, <em>umin=0.0</em>, <em>umax=1.0</em><big>)</big></dt>
-<dd><p>Create a set of uniformly distributed parameter values in a range.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>n</cite>: int: number of intervals in which the range should be divided.
-The number of values returned is <tt class="docutils literal"><span class="pre">n+1</span></tt>.</li>
-<li><cite>umin</cite>, <cite>umax</cite>: float: start and end value of the interval. Default
-interval is [0.0..1.0].</li>
-</ul>
-<p>Returns:</p>
-<blockquote>
-<div>A float array with n+1 equidistant values in the range umin..umax.
-For n &gt; 0, both of the endpoints are included. For n=0, a single
-value at the center of the interval will be returned. For n&lt;0, an
-empty array is returned.</div></blockquote>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="go">[0.0, 0.25, 0.5, 0.75, 1.0]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="go">[0.5]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="go">[]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="go">[1.5, 2.0, 2.5]</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="function">
 <dt id="arraytools.pprint">
 <tt class="descclassname">arraytools.</tt><tt class="descname">pprint</tt><big>(</big><em>a</em>, <em>label=''</em><big>)</big><a class="headerlink" href="#arraytools.pprint" title="Permalink to this definition">¶</a></dt>
@@ -2667,10 +1438,10 @@ that issue and prints the full array nicely aligned.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="script.html" title="8. script — Basic pyFormex script functions"
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="formex.html" title="4. formex — Formex algebra in Python"
+          <a href="formex.html" title="2. formex — Formex algebra in Python"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -2680,7 +1451,7 @@ that issue and prints the full array nicely aligned.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

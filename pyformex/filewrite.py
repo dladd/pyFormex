@@ -76,7 +76,7 @@ def writeData(fil,data,sep='',fmt=None,end='\n'):
       to a 2D array, keeping the length of the last axis. Then all elements
       will be written row by row using the specified format string, and the
       `end` string will be added after each row.
-    -`end`: a string to be written at the end of the data block (if no `fmt`)
+    - `end`: a string to be written at the end of the data block (if no `fmt`)
       or at the end of each row (with `fmt`). The default
       value is a newline character.
     """

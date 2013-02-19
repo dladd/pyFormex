@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. filewrite — Write geometry to file in a whole number of formats. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>17. filewrite — Write geometry to file in a whole number of formats. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -55,7 +55,7 @@
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="18. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
-    <link rel="prev" title="28. fileread — Read geometry from file in a whole number of formats." href="fileread.html" />
+    <link rel="prev" title="16. fileread — Read geometry from file in a whole number of formats." href="fileread.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -81,7 +81,7 @@
           <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fileread.html" title="28. fileread — Read geometry from file in a whole number of formats."
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,17 +100,10 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">31. <tt class="docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></li>
-<li><a class="reference internal" href="#id53">32. <tt class="docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></li>
-<li><a class="reference internal" href="#id107">33. <tt class="docutils literal"><span class="pre">filewrite</span></tt> &#8212; Write geometry to file in a whole number of formats.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="fileread.html"
-                        title="previous chapter">28. <tt class="docutils literal docutils literal"><span class="pre">fileread</span></tt> &#8212; Read geometry from file in a whole number of formats.</a></p>
+                        title="previous chapter">16. <tt class="docutils literal docutils literal"><span class="pre">fileread</span></tt> &#8212; Read geometry from file in a whole number of formats.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="widgets.html"
                         title="next chapter">18. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
@@ -147,9 +140,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="filewrite-write-geometry-to-file-in-a-whole-number-of-formats">
-<span id="sec-ref-filewrite"></span><h1>31. <a class="reference internal" href="#module-filewrite" title="filewrite: Write geometry to file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">filewrite</span></tt></a> &#8212; Write geometry to file in a whole number of formats.<a class="headerlink" href="#filewrite-write-geometry-to-file-in-a-whole-number-of-formats" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-filewrite"></span><p>This module defines bothe the basic routines to write geometrical data
+  <div class="section" id="module-filewrite">
+<span id="filewrite-write-geometry-to-file-in-a-whole-number-of-formats"></span><span id="sec-ref-filewrite"></span><h1>17. <a class="reference internal" href="#module-filewrite" title="filewrite: Write geometry to file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">filewrite</span></tt></a> &#8212; Write geometry to file in a whole number of formats.<a class="headerlink" href="#module-filewrite" title="Permalink to this headline">¶</a></h1>
+<p>This module defines bothe the basic routines to write geometrical data
 to a file and the specialized exporters to write files in a number of
 well known standardized formats.</p>
 <p>The basic routines are very versatile as well as optimized (using the version
@@ -189,12 +182,11 @@ to a 2D array, keeping the length of the last axis. Then all elements
 will be written row by row using the specified format string, and the
 <cite>end</cite> string will be added after each row.</p>
 </li>
+<li><p class="first"><cite>end</cite>: a string to be written at the end of the data block (if no <cite>fmt</cite>)
+or at the end of each row (with <cite>fmt</cite>). The default
+value is a newline character.</p>
+</li>
 </ul>
-<dl class="docutils">
-<dt>-<cite>end</cite>: a string to be written at the end of the data block (if no <cite>fmt</cite>)</dt>
-<dd>or at the end of each row (with <cite>fmt</cite>). The default
-value is a newline character.</dd>
-</dl>
 </dd></dl>
 
 <dl class="function">
@@ -240,226 +232,6 @@ value is a newline character.</dd>
 <dl class="function">
 <dt id="filewrite.writeSTL">
 <tt class="descclassname">filewrite.</tt><tt class="descname">writeSTL</tt><big>(</big><em>f</em>, <em>x</em>, <em>n=None</em>, <em>binary=False</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#filewrite.writeSTL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a collection of triangles to an STL file.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending with &#8216;.stl&#8217; or &#8216;.stla&#8217;</li>
-<li><cite>x</cite>: (ntriangles,3,3) shaped array with the vertices of the
-triangles</li>
-<li><cite>n</cite>: (ntriangles,3) shaped array with the normals of the
-triangles. If not specified, they will be calculated.</li>
-<li><cite>binary</cite>: if True, the output file format  will be a binary STL.
-The default is an ascii STL. Note that creation of a binary STL
-requires the extermal program &#8216;admesh&#8217;.</li>
-<li><cite>color</cite>: a single color can be passed to a binary STL and will be
-stpored in the header.</li>
-</ul>
-</dd></dl>
-
-</div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>32. <a class="reference internal" href="#module-filewrite" title="filewrite: Write geometry to file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">filewrite</span></tt></a> &#8212; Write geometry to file in a whole number of formats.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-filewrite"></span><p>This module defines bothe the basic routines to write geometrical data
-to a file and the specialized exporters to write files in a number of
-well known standardized formats.</p>
-<p>The basic routines are very versatile as well as optimized (using the version
-in the pyFormex C-library) and allow to easily create new exporters for
-other formats.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeData</tt><big>(</big><em>fil</em>, <em>data</em>, <em>sep=''</em>, <em>fmt=None</em>, <em>end='\n'</em><big>)</big></dt>
-<dd><p>Write an array of numerical data to an open file.</p>
-<p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>fil</cite>: an open file object</p>
-</li>
-<li><p class="first"><cite>data</cite>: a numerical array of int or float type</p>
-</li>
-<li><p class="first"><cite>sep</cite>: a string to be used as separator in case no <cite>fmt</cite> is specified.
-If an empty string, the data are written in binary mode. This is the
-default. For any other string, the data are written in ascii mode with
-the specified string inserted as separator between any two items, and a
-newline appended at the end.
-In both cases, the data are written using the <cite>numpy.tofile</cite>
-function.</p>
-</li>
-<li><p class="first"><cite>fmt</cite>: a format string compatible with the array data type.
-If specified, the <cite>sep</cite> argument is ignored and the data are written
-according to the specified format. This uses the pyFormex functions
-<cite>misc.tofile_int32</cite> or <cite>misc.tofile_float32</cite>, which have accelerated
-versions in the pyFormex C library. This also means that the data arrays
-will be force to type <cite>float32</cite> or <cite>int32</cite> before writing.</p>
-<p>The format string should contain a valid format converter for a
-a single data item in both Python and C. They should also contain
-the necessary spacing or separator. Examples are &#8216;%5i &#8216; for int data
-and &#8216;%f,&#8217; or &#8216;%10.3e&#8217; for float data. The array will be converted
-to a 2D array, keeping the length of the last axis. Then all elements
-will be written row by row using the specified format string, and the
-<cite>end</cite> string will be added after each row.</p>
-</li>
-</ul>
-<dl class="docutils">
-<dt>-<cite>end</cite>: a string to be written at the end of the data block (if no <cite>fmt</cite>)</dt>
-<dd>or at the end of each row (with <cite>fmt</cite>). The default
-value is a newline character.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeIData</tt><big>(</big><em>data</em>, <em>fil</em>, <em>fmt</em>, <em>ind=1</em><big>)</big></dt>
-<dd><p>Write an indexed array of numerical data to an open file.</p>
-<dl class="docutils">
-<dt>ind = i: autoindex from i</dt>
-<dd>array: use these indices</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeOFF</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big></dt>
-<dd><p>Write a mesh of polygons to a file in OFF format.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending on &#8216;.off&#8217;</li>
-<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
-<cite>ncoords</cite> vertices.</li>
-<li><cite>elems</cite>: int array with shape (nelems,nplex), with the definition of
-<cite>nelems</cite> polygon elements.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeGTS</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>edges</em>, <em>faces</em><big>)</big></dt>
-<dd><p>Write a mesh of triangles to a file in GTS format.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending on &#8216;.gts&#8217;</li>
-<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
-<cite>ncoords</cite> vertices</li>
-<li><cite>edges</cite>: int array with shape (nedges,2), with the definition of
-<cite>nedges</cite> edges in function of the vertex indices</li>
-<li><cite>faces</cite>: int array with shape (nfaces,3), with the definition of
-<cite>nfaces</cite> triangles in function of the edge indices</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeSTL</tt><big>(</big><em>f</em>, <em>x</em>, <em>n=None</em>, <em>binary=False</em>, <em>color=None</em><big>)</big></dt>
-<dd><p>Write a collection of triangles to an STL file.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending with &#8216;.stl&#8217; or &#8216;.stla&#8217;</li>
-<li><cite>x</cite>: (ntriangles,3,3) shaped array with the vertices of the
-triangles</li>
-<li><cite>n</cite>: (ntriangles,3) shaped array with the normals of the
-triangles. If not specified, they will be calculated.</li>
-<li><cite>binary</cite>: if True, the output file format  will be a binary STL.
-The default is an ascii STL. Note that creation of a binary STL
-requires the extermal program &#8216;admesh&#8217;.</li>
-<li><cite>color</cite>: a single color can be passed to a binary STL and will be
-stpored in the header.</li>
-</ul>
-</dd></dl>
-
-</div>
-<div class="section" id="id107">
-<span id="id108"></span><h1>33. <a class="reference internal" href="#module-filewrite" title="filewrite: Write geometry to file in a whole number of formats."><tt class="xref py py-mod docutils literal"><span class="pre">filewrite</span></tt></a> &#8212; Write geometry to file in a whole number of formats.<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-filewrite"></span><p>This module defines bothe the basic routines to write geometrical data
-to a file and the specialized exporters to write files in a number of
-well known standardized formats.</p>
-<p>The basic routines are very versatile as well as optimized (using the version
-in the pyFormex C-library) and allow to easily create new exporters for
-other formats.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">filewrite</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeData</tt><big>(</big><em>fil</em>, <em>data</em>, <em>sep=''</em>, <em>fmt=None</em>, <em>end='\n'</em><big>)</big></dt>
-<dd><p>Write an array of numerical data to an open file.</p>
-<p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>fil</cite>: an open file object</p>
-</li>
-<li><p class="first"><cite>data</cite>: a numerical array of int or float type</p>
-</li>
-<li><p class="first"><cite>sep</cite>: a string to be used as separator in case no <cite>fmt</cite> is specified.
-If an empty string, the data are written in binary mode. This is the
-default. For any other string, the data are written in ascii mode with
-the specified string inserted as separator between any two items, and a
-newline appended at the end.
-In both cases, the data are written using the <cite>numpy.tofile</cite>
-function.</p>
-</li>
-<li><p class="first"><cite>fmt</cite>: a format string compatible with the array data type.
-If specified, the <cite>sep</cite> argument is ignored and the data are written
-according to the specified format. This uses the pyFormex functions
-<cite>misc.tofile_int32</cite> or <cite>misc.tofile_float32</cite>, which have accelerated
-versions in the pyFormex C library. This also means that the data arrays
-will be force to type <cite>float32</cite> or <cite>int32</cite> before writing.</p>
-<p>The format string should contain a valid format converter for a
-a single data item in both Python and C. They should also contain
-the necessary spacing or separator. Examples are &#8216;%5i &#8216; for int data
-and &#8216;%f,&#8217; or &#8216;%10.3e&#8217; for float data. The array will be converted
-to a 2D array, keeping the length of the last axis. Then all elements
-will be written row by row using the specified format string, and the
-<cite>end</cite> string will be added after each row.</p>
-</li>
-</ul>
-<dl class="docutils">
-<dt>-<cite>end</cite>: a string to be written at the end of the data block (if no <cite>fmt</cite>)</dt>
-<dd>or at the end of each row (with <cite>fmt</cite>). The default
-value is a newline character.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeIData</tt><big>(</big><em>data</em>, <em>fil</em>, <em>fmt</em>, <em>ind=1</em><big>)</big></dt>
-<dd><p>Write an indexed array of numerical data to an open file.</p>
-<dl class="docutils">
-<dt>ind = i: autoindex from i</dt>
-<dd>array: use these indices</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeOFF</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big></dt>
-<dd><p>Write a mesh of polygons to a file in OFF format.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending on &#8216;.off&#8217;</li>
-<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
-<cite>ncoords</cite> vertices.</li>
-<li><cite>elems</cite>: int array with shape (nelems,nplex), with the definition of
-<cite>nelems</cite> polygon elements.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeGTS</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>edges</em>, <em>faces</em><big>)</big></dt>
-<dd><p>Write a mesh of triangles to a file in GTS format.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>fn</cite>: file name, by preference ending on &#8216;.gts&#8217;</li>
-<li><cite>coords</cite>: float array with shape (ncoords,3), with the coordinates of
-<cite>ncoords</cite> vertices</li>
-<li><cite>edges</cite>: int array with shape (nedges,2), with the definition of
-<cite>nedges</cite> edges in function of the vertex indices</li>
-<li><cite>faces</cite>: int array with shape (nfaces,3), with the definition of
-<cite>nfaces</cite> triangles in function of the edge indices</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">filewrite.</tt><tt class="descname">writeSTL</tt><big>(</big><em>f</em>, <em>x</em>, <em>n=None</em>, <em>binary=False</em>, <em>color=None</em><big>)</big></dt>
 <dd><p>Write a collection of triangles to an STL file.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -525,7 +297,7 @@ triangles</li>
           <a href="widgets.html" title="18. widgets — A collection of custom widgets used in the pyFormex GUI"
              >next</a> |</li>
         <li class="right" >
-          <a href="fileread.html" title="28. fileread — Read geometry from file in a whole number of formats."
+          <a href="fileread.html" title="16. fileread — Read geometry from file in a whole number of formats."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -535,7 +307,7 @@ triangles</li>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

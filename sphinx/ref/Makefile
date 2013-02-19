@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,7 +30,7 @@
 # This Makefile creates an autodoc Sphinx file from the pyFormex source.
 # It works using the py2rst.py script, because the autodoc functions
 # of Sphinx are not yet powerful enough.
-# 
+#
 
 COREMODULES= adjacency arraytools collection config connectivity coords \
   elements fileread filewrite \
@@ -38,12 +38,12 @@ COREMODULES= adjacency arraytools collection config connectivity coords \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
   image imageViewer imagearray marks menu\
-  appMenu toolbar viewport widgets 
+  appMenu toolbar viewport widgets
 PLUGINMODULES= calpy_itf cameratools curve datareader dxf export \
   fe fe_abq fe_post flavia \
   inertia isopar lima mesh_ext nurbs objects plot2d polygon \
   postproc properties pyformex_gts section2d sectionize \
-  tetgen tools trisurface turtle units 
+  tetgen tools trisurface turtle units
 #AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 AUTOREF= $(COREMODULES) $(GUIMODULES) $(PLUGINMODULES)
 AUTOSRC= $(addsuffix .rst, ${AUTOREF})
@@ -68,7 +68,7 @@ clean:
 	rm -f ${AUTOSRC}
 
 %.rst: %.py
-	@${PY2RST} $< >> $@
+	@${PY2RST} $< > $@
 
 
 # End

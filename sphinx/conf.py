@@ -47,6 +47,192 @@ sys.path.insert(0,os.path.abspath('..'))
 #sys.path.insert(0,os.path.abspath('.'))  # for our patched numpydoc
 print sys.path
 
+from sphinx.directives.other import *
+#TocTree.option_spec['numberedfrom'] = int
+#print TocTree.option_spec
+
+
+class MyTocTree(Directive):
+    """
+    Directive to notify Sphinx about the hierarchical structure of the docs,
+    and to include a table-of-contents like tree in the current document.
+    """
+    has_content = True
+    required_arguments = 0
+    optional_arguments = 0
+    final_argument_whitespace = False
+    option_spec = {
+        'maxdepth': int,
+        'glob': directives.flag,
+        'hidden': directives.flag,
+        'numbered': int_or_nothing,
+        'numberedfrom': int,
+        'titlesonly': directives.flag,
+    }
+
+    def run(self):
+        env = self.state.document.settings.env
+        suffix = env.config.source_suffix
+        glob = 'glob' in self.options
+
+        ret = []
+        # (title, ref) pairs, where ref may be a document, or an external link,
+        # and title may be None if the document's title is to be used
+        entries = []
+        includefiles = []
+        all_docnames = env.found_docs.copy()
+        # don't add the currently visited file in catch-all patterns
+        all_docnames.remove(env.docname)
+        for entry in self.content:
+            if not entry:
+                continue
+            if not glob:
+                # look for explicit titles ("Some Title <document>")
+                m = explicit_title_re.match(entry)
+                if m:
+                    ref = m.group(2)
+                    title = m.group(1)
+                    docname = ref
+                else:
+                    ref = docname = entry
+                    title = None
+                # remove suffixes (backwards compatibility)
+                if docname.endswith(suffix):
+                    docname = docname[:-len(suffix)]
+                # absolutize filenames
+                docname = docname_join(env.docname, docname)
+                if url_re.match(ref) or ref == 'self':
+                    entries.append((title, ref))
+                elif docname not in env.found_docs:
+                    ret.append(self.state.document.reporter.warning(
+                        'toctree contains reference to nonexisting '
+                        'document %r' % docname, line=self.lineno))
+                    env.note_reread()
+                else:
+                    entries.append((title, docname))
+                    includefiles.append(docname)
+            else:
+                patname = docname_join(env.docname, entry)
+                docnames = sorted(patfilter(all_docnames, patname))
+                for docname in docnames:
+                    all_docnames.remove(docname) # don't include it again
+                    entries.append((None, docname))
+                    includefiles.append(docname)
+                if not docnames:
+                    ret.append(self.state.document.reporter.warning(
+                        'toctree glob pattern %r didn\'t match any documents'
+                        % entry, line=self.lineno))
+        subnode = addnodes.toctree()
+        subnode['parent'] = env.docname
+        # entries contains all entries (self references, external links etc.)
+        subnode['entries'] = entries
+        # includefiles only entries that are documents
+        subnode['includefiles'] = includefiles
+        subnode['maxdepth'] = self.options.get('maxdepth', -1)
+        subnode['glob'] = glob
+        subnode['hidden'] = 'hidden' in self.options
+        subnode['numbered'] = self.options.get('numbered', 0)
+        subnode['numberedfrom'] = self.options.get('numberedfrom', 0)
+        print("DOCNAME %s" % docname)
+        print("NUMBEREDFROM = %s" % subnode['numberedfrom'])
+        subnode['titlesonly'] = 'titlesonly' in self.options
+        set_source_info(self, subnode)
+        wrappernode = nodes.compound(classes=['toctree-wrapper'])
+        wrappernode.append(subnode)
+        ret.append(wrappernode)
+        return ret
+
+directives.register_directive('mytoctree', MyTocTree)
+
+
+def assign_section_numbers(self):
+    """Assign a section number to each heading under a numbered toctree."""
+    # a list of all docnames whose section numbers changed
+    rewrite_needed = []
+
+    old_secnumbers = self.toc_secnumbers
+    self.toc_secnumbers = {}
+
+    def _walk_toc(node, secnums, depth, titlenode=None):
+        # titlenode is the title of the document, it will get assigned a
+        # secnumber too, so that it shows up in next/prev/parent rellinks
+        for subnode in node.children:
+            if isinstance(subnode, nodes.bullet_list):
+                numstack.append(0)
+                _walk_toc(subnode, secnums, depth-1, titlenode)
+                numstack.pop()
+                titlenode = None
+            elif isinstance(subnode, nodes.list_item):
+                _walk_toc(subnode, secnums, depth, titlenode)
+                titlenode = None
+            elif isinstance(subnode, addnodes.only):
+                # at this stage we don't know yet which sections are going
+                # to be included; just include all of them, even if it leads
+                # to gaps in the numbering
+                _walk_toc(subnode, secnums, depth, titlenode)
+                titlenode = None
+            elif isinstance(subnode, addnodes.compact_paragraph):
+                numstack[-1] += 1
+                if depth > 0:
+                    number = tuple(numstack)
+                else:
+                    number = None
+                secnums[subnode[0]['anchorname']] = \
+                    subnode[0]['secnumber'] = number
+                if titlenode:
+                    titlenode['secnumber'] = number
+                    titlenode = None
+            elif isinstance(subnode, addnodes.toctree):
+                _walk_toctree(subnode, depth)
+
+    def _walk_toctree(toctreenode, depth):
+        if depth == 0:
+            return
+        for (title, ref) in toctreenode['entries']:
+            if url_re.match(ref) or ref == 'self':
+                # don't mess with those
+                continue
+            if ref in self.tocs:
+                secnums = self.toc_secnumbers[ref] = {}
+                _walk_toc(self.tocs[ref], secnums, depth,
+                          self.titles.get(ref))
+                if secnums != old_secnumbers.get(ref):
+                    rewrite_needed.append(ref)
+
+    for docname in self.numbered_toctrees:
+        doctree = self.get_doctree(docname)
+
+        # Autonumber
+        if docname == "refman":
+            numberedfrom = 0
+            for node in doctree.traverse():
+                #print node.tagname
+                #if node.tagname == 'title':
+                #    print node
+                if node.tagname == 'toctree':
+                    att = node.attributes
+                    #print att.keys()
+                    if att.get('numberedfrom',0) < 0:
+                        att['numberedfrom'] = numberedfrom
+                    nentries = len(att['entries'])
+                    #print numberedfrom,nentries
+                    numberedfrom += nentries
+                    #print att
+
+        for toctreenode in doctree.traverse(addnodes.toctree):
+            depth = toctreenode.get('numbered', 0)
+            fromn = toctreenode.get('numberedfrom', 0)
+            #print("DEPTH %s, FROM %s" % (depth,fromn))
+            if depth:
+                # every numbered toctree gets new numbering
+                numstack = [fromn]
+                _walk_toctree(toctreenode, depth)
+
+    return rewrite_needed
+
+from sphinx.environment import BuildEnvironment
+BuildEnvironment.assign_section_numbers = assign_section_numbers
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -240,6 +426,7 @@ latex_logo = 'images/pyformex_logo_with_dome.png'
 # If false, no module index is generated.
 #latex_domain_indices = True
 
+
 def list_toctree(app, doctree, docname):
     """Change the numbering of the  multiple toctrees in a document"""
     if docname == "refman":
@@ -253,16 +440,17 @@ def list_toctree(app, doctree, docname):
             if node.tagname == 'toctree':
                 att = node.attributes
                 print att.keys()
-                if att['numberedfrom'] < 0:
+                if att.get('numberedfrom',0) < 0:
                     att['numberedfrom'] = numberedfrom
                 nentries = len(att['entries'])
                 print numberedfrom,nentries
                 numberedfrom += nentries
                 print att
 
+
 def setup(app):
     from sphinx.ext.autodoc import cut_lines
-#    app.connect("doctree-resolved", list_toctree)
+    app.connect("doctree-resolved", list_toctree)
     app.connect('autodoc-process-docstring', cut_lines(2, what=['module']))
 ##     app.connect('autodoc-skip-member', autodoc_skip_member1)
 

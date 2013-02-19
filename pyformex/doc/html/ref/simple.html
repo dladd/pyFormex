@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. simple — Predefined geometries with a simple shape. &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>12. simple — Predefined geometries with a simple shape. &mdash; pyFormex 0.9.0-a1 documentation</title>
 
     
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
@@ -54,8 +54,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="20. project — project.py" href="project.html" />
-    <link rel="prev" title="15. mesh — Finite element meshes in pyFormex." href="mesh.html" />
+    <link rel="next" title="13. project — project.py" href="project.html" />
+    <link rel="prev" title="11. mesh — Finite element meshes in pyFormex." href="mesh.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -78,10 +78,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="project.html" title="20. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="mesh.html" title="15. mesh — Finite element meshes in pyFormex."
+          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,19 +100,13 @@
 
 </div>
    
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">18. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></li>
-<li><a class="reference internal" href="#id53">19. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></li>
-</ul>
-
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="mesh.html"
-                        title="previous chapter">15. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
+                        title="previous chapter">11. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="project.html"
-                        title="next chapter">20. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+                        title="next chapter">13. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -147,7 +141,7 @@
           <div class="body">
             
   <div class="section" id="module-simple">
-<span id="simple-predefined-geometries-with-a-simple-shape"></span><span id="sec-ref-simple"></span><h1>18. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#module-simple" title="Permalink to this headline">¶</a></h1>
+<span id="simple-predefined-geometries-with-a-simple-shape"></span><span id="sec-ref-simple"></span><h1>12. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#module-simple" title="Permalink to this headline">¶</a></h1>
 <p>This module contains some functions, data and classes for generating
 Formex structures representing simple geometric shapes.
 You need to import this module in your scripts to have access to its
@@ -376,236 +370,6 @@ axes through the points xmin and xmax.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id53">
-<span id="id54"></span><h1>19. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-simple"></span><p>This module contains some functions, data and classes for generating
-Formex structures representing simple geometric shapes.
-You need to import this module in your scripts to have access to its
-contents.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">simple</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">simple</span></tt></p>
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">shape</tt><big>(</big><em>name</em><big>)</big></dt>
-<dd><p>Return a Formex with one of the predefined named shapes.</p>
-<p>This is a convenience function returning a plex-2 Formex constructed
-from one of the patterns defined in the simple.Pattern dictionary.
-Currently, the following pattern names are defined:
-&#8216;line&#8217;, &#8216;angle&#8217;, &#8216;square&#8217;, &#8216;plus&#8217;, &#8216;cross&#8217;, &#8216;diamond&#8217;, &#8216;rtriangle&#8217;, &#8216;cube&#8217;,
-&#8216;star&#8217;, &#8216;star3d&#8217;.
-See the Pattern example.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">regularGrid</tt><big>(</big><em>x0</em>, <em>x1</em>, <em>nx</em><big>)</big></dt>
-<dd><p>Create a regular grid between points x0 and x1.</p>
-<p>x0 and x1 are n-dimensional points (usually 1D, 2D or 3D).
-The space between x0 and x1 is divided in nx equal parts. nx should have
-the same dimension as x0 and x1.
-The result is a rectangular grid of coordinates in an array with
-shape ( nx[0]+1, nx[1]+1, ..., n ).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">point</tt><big>(</big><em>x=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><big>)</big></dt>
-<dd><p>Return a Formex which is a point, by default at the origin.</p>
-<p>Each of the coordinates can be specified and is zero by default.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">line</tt><big>(</big><em>p1=[0.0, 0.0, 0.0], p2=[1.0, 0.0, 0.0], n=1</em><big>)</big></dt>
-<dd><p>Return a Formex which is a line between two specified points.</p>
-<p>p1: first point, p2: second point
-The line is split up in n segments.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">rect</tt><big>(</big><em>p1=[0.0, 0.0, 0.0], p2=[1.0, 0.0, 0.0], nx=1, ny=1</em><big>)</big></dt>
-<dd><p>Return a Formex which is a the circumference of a rectangle.</p>
-<p>p1 and p2 are two opposite corner points of the rectangle.
-The edges of the rectangle are in planes parallel to the z-axis.
-There will always be two opposite edges that are parallel with the x-axis.
-The other two will only be parallel with the y-axis if both points
-have the same z-value, but in any case they will be parallel with the
-y-z plane.</p>
-<p>The edges parallel with the x-axis are divide in nx parts, the other
-ones in ny parts.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">rectangle</tt><big>(</big><em>nx=1</em>, <em>ny=1</em>, <em>b=None</em>, <em>h=None</em>, <em>bias=0.0</em>, <em>diag=None</em><big>)</big></dt>
-<dd><p>Return a Formex representing a rectangluar surface.</p>
-<p>The rectangle has a size(b,h) divided into (nx,ny) cells.</p>
-<p>The default b/h values are equal to nx/ny, resulting in a modular grid.
-The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
-By default, the elements are quads. By setting diag=&#8217;u&#8217;,&#8217;d&#8217; of &#8216;x&#8217;,
-diagonals are added in /, resp. and both directions, to form triangles.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">circle</tt><big>(</big><em>a1=2.0</em>, <em>a2=0.0</em>, <em>a3=360.0</em>, <em>r=None</em>, <em>n=None</em>, <em>c=None</em>, <em>eltype='line2'</em><big>)</big></dt>
-<dd><p>A polygonal approximation of a circle or arc.</p>
-<p>All points generated by this function lie on a circle with unit radius at
-the origin in the x-y-plane.</p>
-<ul class="simple">
-<li><cite>a1</cite>: the angle enclosed between the start and end points of each line
-segment (dash angle).</li>
-<li><cite>a2</cite>: the angle enclosed between the start points of two subsequent line
-segments (module angle). If <tt class="docutils literal"><span class="pre">a2==0.0</span></tt>, <cite>a2</cite> will be taken equal to <cite>a1</cite>.</li>
-<li><cite>a3</cite>: the total angle enclosed between the first point of the first
-segment and the end point of the last segment (arc angle).</li>
-</ul>
-<p>All angles are given in degrees and are measured in the direction from
-x- to y-axis. The first point of the first segment is always on the x-axis.</p>
-<p>The default values produce a full circle (approximately).
-If $a3 &lt; 360$, the result is an arc.
-Large values of <cite>a1</cite> and <cite>a2</cite> result in polygones. Thus
-<cite>circle(120.)</cite> is an equilateral triangle and <cite>circle(60.)</cite>
-is regular hexagon.</p>
-<p>Remark that the default a2 == a1 produces a continuous line,
-while a2 &gt; a1 results in a dashed line.</p>
-<p>Three optional arguments can be added to scale and position the circle
-in 3D space:</p>
-<ul class="simple">
-<li><cite>r</cite>: the radius of the circle</li>
-<li><cite>n</cite>: the normal on the plane of the circle</li>
-<li><cite>c</cite>: the center of the circle</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">polygon</tt><big>(</big><em>n</em><big>)</big></dt>
-<dd><p>A regular polygon with n sides.</p>
-<p>Creates the circumference of a regular polygon with $n$ sides,
-inscribed in a circle with radius 1 and center at the origin.
-The first point lies on the axis 0. All points are in the (0,1) plane. 
-The return value is a plex-2 Formex. 
-This function is equivalent to circle(360./n).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">triangle</tt><big>(</big><big>)</big></dt>
-<dd><p>An equilateral triangle with base [0,1] on axis 0.</p>
-<p>Returns an equilateral triangle with side length 1.
-The first point is the origin, the second points is on the axis 0.
-The return value is a plex-3 Formex.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">quadraticCurve</tt><big>(</big><em>x=None</em>, <em>n=8</em><big>)</big></dt>
-<dd><p>Create a collection of curves.</p>
-<p>x is a (3,3) shaped array of coordinates, specifying 3 points.</p>
-<p>Return an array with 2*n+1 points lying on the quadratic curve through
-the points x. Each of the intervals [x0,x1] and [x1,x2] will be divided
-in n segments.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">sphere</tt><big>(</big><em>ndiv=6</em><big>)</big></dt>
-<dd><p>Create a triangulated spherical surface.</p>
-<p>A high quality approximation of a spherical surface is constructed as
-follows. First an icosahedron is constructed. Its triangular facets are
-subdivided by dividing all edges in <cite>ndiv</cite> parts. The resulting mesh is
-then projected on a sphere with unit radius. The higher <cite>ndiv</cite> is taken,
-the better the approximation. <cite>ndiv=1</cite> results in an icosahedron.</p>
-<p>Returns:</p>
-<blockquote>
-<div>A TriSurface, representing a triangulated approximation of a
-spherical surface with radius 1 and center at the origin.</div></blockquote>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">sphere3</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big></dt>
-<dd><p>Return a sphere consisting of surface triangles</p>
-<p>A sphere with radius r is modeled by the triangles fromed by a regular
-grid of nx longitude circles, ny latitude circles and their diagonals.</p>
-<p>The two sets of triangles can be distinguished by their property number:
-1: horizontal at the bottom, 2: horizontal at the top.</p>
-<p>The sphere caps can be cut off by specifying top and bottom latitude
-angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big></dt>
-<dd><p>Return a sphere consisting of line elements.</p>
-<p>A sphere with radius r is modeled by a regular grid of nx
-longitude circles, ny latitude circles and their diagonals.</p>
-<p>The 3 sets of lines can be distinguished by their property number:
-1: diagonals, 2: meridionals, 3: horizontals.</p>
-<p>The sphere caps can be cut off by specifying top and bottom latitude
-angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">connectCurves</tt><big>(</big><em>curve1</em>, <em>curve2</em>, <em>n</em><big>)</big></dt>
-<dd><p>Connect two curves to form a surface.</p>
-<p>curve1, curve2 are plex-2 Formices with the same number of elements.
-The two curves are connected by a surface of quadrilaterals, with n
-elements in the direction between the curves.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">sector</tt><big>(</big><em>r</em>, <em>t</em>, <em>nr</em>, <em>nt</em>, <em>h=0.0</em>, <em>diag=None</em><big>)</big></dt>
-<dd><p>Constructs a Formex which is a sector of a circle/cone.</p>
-<p>A sector with radius r and angle t is modeled by dividing the
-radius in nr parts and the angle in nt parts and then creating
-straight line segments.
-If a nonzero value of h is given, a conical surface results with its
-top at the origin and the base circle of the cone at z=h.
-The default is for all points to be in the (x,y) plane.</p>
-<p>By default, a plex-4 Formex results. The central quads will collapse
-into triangles.
-If diag=&#8217;up&#8217; or diag = &#8216;down&#8217;, all quads are divided by an up directed
-diagonal and a plex-3 Formex results.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">cylinder</tt><big>(</big><em>D</em>, <em>L</em>, <em>nt</em>, <em>nl</em>, <em>D1=None</em>, <em>angle=360.0</em>, <em>bias=0.0</em>, <em>diag=None</em><big>)</big></dt>
-<dd><p>Create a cylindrical, conical or truncated conical surface.</p>
-<p>Returns a Formex representing (an approximation of) a cylindrical or
-(possibly truncated) conical surface with its axis along the z-axis.
-The resulting surface is actually a prism or pyramid, and only becomes
-a good approximation of a cylinder or cone for high values of <cite>nt</cite>.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>D</cite>: base diameter (at z=0) of the cylinder/cone,</li>
-<li><cite>L</cite>: length (along z-axis) of the cylinder/cone,</li>
-<li><cite>nt</cite>: number of elements along the circumference,</li>
-<li><cite>nl</cite>: number of elements along the length,</li>
-<li><cite>D1</cite>: diameter at the top (z=L) of the cylinder/cone: if unspecified,
-it is taken equal to <cite>D</cite> and a cylinder results.
-Setting either <cite>D1</cite> or <cite>D</cite> to zero results in a cone,
-other values will create a truncated cone.</li>
-<li><cite>diag</cite>: by default, the elements are quads. Setting <cite>diag</cite> to &#8216;u&#8217; or &#8216;d&#8217;
-will put in an &#8216;up&#8217; or &#8216;down&#8217; diagonal to create triangles.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descclassname">simple.</tt><tt class="descname">cuboid</tt><big>(</big><em>xmin=[0.0, 0.0, 0.0], xmax=[1.0, 1.0, 1.0]</em><big>)</big></dt>
-<dd><p>Create a rectangular prism</p>
-<p>Creates a rectangular prism with faces parallel to the global
-axes through the points xmin and xmax.</p>
-<p>Returns a single element Formex with eltype &#8216;hex8&#8217;.</p>
-</dd></dl>
-
-</div>
 
 
           </div>
@@ -623,10 +387,10 @@ axes through the points xmin and xmax.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="project.html" title="20. project — project.py"
+          <a href="project.html" title="13. project — project.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="mesh.html" title="15. mesh — Finite element meshes in pyFormex."
+          <a href="mesh.html" title="11. mesh — Finite element meshes in pyFormex."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -636,7 +400,7 @@ axes through the points xmin and xmax.</p>
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 07, 2013.
+      Last updated on Feb 19, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>
