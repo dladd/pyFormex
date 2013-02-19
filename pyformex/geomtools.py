@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -45,6 +45,7 @@ def areaNormals(x):
     Returns a tuple (areas,normals) with the areas and the normals of the
     triangles. The area is always positive. The normal vectors are normalized.
     """
+    x = x.reshape(-1,3,3)
     area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
     area *= 0.5
     return area,normals
@@ -54,19 +55,19 @@ def degenerate(area,normals):
     """Return a list of the degenerate faces according to area and normals.
 
     area,normals are equal sized arrays with the areas and normals of a
-    list of faces, such as the output of the :func:`areaNormals` function. 
-    
+    list of faces, such as the output of the :func:`areaNormals` function.
+
     A face is degenerate if its area is less or equal to zero or the
     normal has a nan (not-a-number) value.
 
-    Returns a list of the degenerate element numbers as a sorted array. 
+    Returns a list of the degenerate element numbers as a sorted array.
     """
     return unique(concatenate([where(area<=0)[0],where(isnan(normals))[0]]))
 
 
 def levelVolumes(x):
     """Compute the level volumes of a collection of elements.
-    
+
     x is an (nelems,nplex,3) array with the coordinates of the nplex vertices
     of nelems elements, with nplex equal to 2, 3 or 4.
 
@@ -156,18 +157,18 @@ def closestPoint(P0,P1):
         i = array([d[1] for d in di]).argmin()
         j,d = di[i]
     return i,j,d
-   
+
 
 def projectedArea(x,dir):
     """Compute projected area inside a polygon.
-    
+
     Parameters:
-    
+
     - `x`: (npoints,3) Coords with the ordered vertices of a
       (possibly nonplanar) polygonal contour.
     - `dir`: either a global axis number (0, 1 or 2) or a direction vector
       consisting of 3 floats, specifying the projection direction.
-     
+
     Returns a single float value with the area inside the polygon projected
     in the specified direction.
 
@@ -187,7 +188,7 @@ def projectedArea(x,dir):
     area = vectorTripleProduct(Coords(dir),x,x1)
 ##    print area.dtype
 ##    print area.sum() / 2
-    return 0.5 * area.sum() 
+    return 0.5 * area.sum()
 
 
 def polygonNormals(x):
@@ -195,7 +196,7 @@ def polygonNormals(x):
 
     x is an (nel,nplex,3) coordinate array representing nel (possibly nonplanar)
     polygons.
-    
+
     The return value is an (nel,nplex,3) array with the unit normals on the
     two edges ending in each point.
     """
@@ -204,7 +205,7 @@ def polygonNormals(x):
         n = zeros_like(x)
         n[:,:,2] = -1.
         return n
-    
+
     ni = arange(x.shape[1])
     nj = roll(ni,1)
     nk = roll(ni,-1)
@@ -221,7 +222,7 @@ def triangleInCircle(x):
     in the triangle.
 
     x is a Coords array with shape (ntri,3,3) representing ntri triangles.
-    
+
     Returns a tuple r,C,n with the radii, Center and unit normals of the
     incircles.
     """
@@ -246,7 +247,7 @@ def triangleCircumCircle(x,bounding=False):
     """Compute the circumcircles of the triangles x
 
     x is a Coords array with shape (ntri,3,3) representing ntri triangles.
-    
+
     Returns a tuple r,C,n with the radii, Center and unit normals of the
     circles going through the vertices of each triangle.
 
@@ -277,7 +278,7 @@ def triangleCircumCircle(x,bounding=False):
             obt = vv[:,i] >= vv[:,j]+vv[:,k]
             r[obt] = 0.5 * lv[obt,i]
             C[obt] = 0.5 * (x[obt,i] + x[obt,j])
-    
+
     return r,C,n
 
 
@@ -289,9 +290,9 @@ def triangleBoundingCircle(x):
     If the triangle is acute, this is equivalent to the triangle's
     circumcircle. It the triangle is obtuse, the longest edge is the
     diameter of the bounding circle.
-    
+
     x is a Coords array with shape (ntri,3,3) representing ntri triangles.
-    
+
     Returns a tuple r,C,n with the radii, Center and unit normals of the
     bounding circles.
     """
@@ -300,9 +301,9 @@ def triangleBoundingCircle(x):
 
 def triangleObtuse(x):
     """Checks for obtuse triangles
-    
+
     x is a Coords array with shape (ntri,3,3) representing ntri triangles.
-    
+
     Returns an (ntri) array of True/False values indicating whether the
     triangles are obtuse.
     """
@@ -385,7 +386,7 @@ def segmentOrientation(vertices,vertices2=None,point=None):
 
     The orientation algorithm checks whether the line segments turn
     positively around the point.
-    
+
     Returns an array with +1/-1 for positive/negative oriented segments.
     """
     if vertices2 is None:
@@ -439,7 +440,7 @@ def rotationAngle(A,B,m=None,angle_spec=DEG):
 
 def anyPerpendicularVector(A):
     """Return arbitrary vectors perpendicular to vectors of A.
-    
+
     A is a (n,3) shaped array of vectors.
     The return value is a (n,3) shaped array of perpendicular vectors.
 
@@ -459,7 +460,7 @@ def anyPerpendicularVector(A):
 def perpendicularVector(A,B):
     """Return vectors perpendicular on both A and B."""
     return cross(A,B)
-    
+
 
 def projectionVOV(A,B):
     """Return the projection of vector of A on vector of B."""
@@ -556,7 +557,7 @@ def intersectionPointsLWL(q1,m1,q2,m2,mode='all'):
     """Return the intersection points of lines (q1,m1) and lines (q2,m2)
 
     with the perpendiculars between them.
-    
+
     This is like intersectionTimesLWL but returns a tuple of (nq1,nq2,3)
     shaped (`mode=all`) arrays of intersection points instead of the
     parameter values.
@@ -586,7 +587,7 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
     such that the intersection points are given by q+t*m.
 
     Notice that the result will contain an INF value for lines that are
-    parallel to the plane. 
+    parallel to the plane.
     """
     if mode == 'all':
         res = (dotpr(p,n) - inner(q,n)) / inner(m,n)
@@ -650,15 +651,15 @@ def intersectionSWP(S,p,n,mode='all',return_all=False):
       on the segments.
 
     Return values if `return_all==True`:
-    
+
     - `t`: (nS,NP) parametric values of the intersection points along the line
-      segments. 
+      segments.
     - `x`: the intersection points themselves (nS,nP,3).
-    
+
     Return values if `return_all==False`:
-    
+
     - `t`: (n,) parametric values of the intersection points along the line
-      segments (n <= nS*nP) 
+      segments (n <= nS*nP)
     - `x`: the intersection points themselves (n,3).
     - `wl`: (n,) line indices corresponding with the returned intersections.
     - `wp`: (n,) plane indices corresponding with the returned intersections
@@ -745,7 +746,7 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
     - `return_all`: if True, all intersection points are returned. Default is
       to return only the points that lie inside the triangles.
 
-    Returns: 
+    Returns:
 
       If `return_all==True`, a (nq,nF,3) shaped (`mode=all`) array of
       intersection points, else, a tuple of intersection points with shape (n,3)
@@ -775,7 +776,7 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
     x = pointsAtLines(q,m,t)
     if not return_all:
         # Find points inside the faces
-        ok = insideTriangle(F,x[newaxis]).reshape(-1)        
+        ok = insideTriangle(F,x[newaxis]).reshape(-1)
         return x[ok],wl[ok],wt[ok]
     else:
         return x
@@ -810,28 +811,28 @@ def intersectionPointsSWT(S,F,mode='all',return_all=False):
       line segments.
     - `F`: (nF,3,3) shaped array, defining a single triangle or a set of
       triangles.
-    - `mode`: `all` to calculate the intersection points of each line segment S       
+    - `mode`: `all` to calculate the intersection points of each line segment S
       with all triangles F or `pair` for pairwise intersections.
     - `return_all`: if True, all intersection points are returned. Default is
       to return only the points that lie on the segments and inside the
       triangles.
 
-    Returns: 
+    Returns:
 
       If `return_all==True`, a (nS,nF,3) shaped (`mode=all`) array of
       intersection points, else, a tuple of intersection points with shape (n,3)
       and line and plane indices with shape (n), where n <= nS*nF.
     """
-    
+
     S = asanyarray(S).reshape(-1,2,3)
     F = asanyarray(F).reshape(-1,3,3)
     if not return_all:
         # Find lines passing through the bounding spheres of the triangles
-        r,c,n = triangleBoundingCircle(F)        
+        r,c,n = triangleBoundingCircle(F)
         if mode == 'all':
 ##            d = distancesPFS(c,S,mode).transpose() # this is much slower for large arrays
             mode = 'pair'
-            d = row_stack([ distancesPFS(c,S[i],mode) for i in range(S.shape[0]) ]) 
+            d = row_stack([ distancesPFS(c,S[i],mode) for i in range(S.shape[0]) ])
             wl,wt = where(d<=r)
         elif mode == 'pair':
             d = distancesPFS(c,S,mode)
@@ -845,7 +846,7 @@ def intersectionPointsSWT(S,F,mode='all',return_all=False):
     x = pointsAtSegments(S,t)
     if not return_all:
         # Find points inside the segments and faces
-        ok = (t >= 0.0) * (t <= 1.0) * insideTriangle(F,x[newaxis]).reshape(-1) 
+        ok = (t >= 0.0) * (t <= 1.0) * insideTriangle(F,x[newaxis]).reshape(-1)
         return x[ok],wl[ok],wt[ok]
     else:
         return x
@@ -965,7 +966,7 @@ def intersectionTimesPOL(X,q,m,mode='all'):
 
 def intersectionPointsPOL(X,q,m,mode='all'):
     """Return the intersection points of perpendiculars from points X on lines (q,m).
-    
+
     This is like intersectionTimesPOL but returns a (nX,nq,3) shaped (`mode=all`)
     array of intersection points instead of the parameter values.
     """
@@ -989,7 +990,7 @@ def intersectionSphereSphere(R,r,d):
     x = dd/d2
     y = sqrt(d2**2*R**2 - dd**2) / d2
     return x,y
-    
+
 
 #################### distance tools ###############
 
@@ -1067,7 +1068,7 @@ def faceDistance(X,Fp,return_points=False):
     of the facets.
 
     The return value is a tuple OKpid,OKdist,OKpoints where:
-    
+
     - OKpid is an array with the point numbers having a normal distance;
     - OKdist is an array with the shortest distances for these points;
     - OKpoints is an array with the closest footpoints for these points
@@ -1112,7 +1113,7 @@ def edgeDistance(X,Ep,return_points=False):
     of the edges.
 
     The return value is a tuple OKpid,OKdist,OKpoints where:
-    
+
     - OKpid is an array with the point numbers having a normal distance;
     - OKdist is an array with the shortest distances for these points;
     - OKpoints is an array with the closest footpoints for these points
@@ -1153,7 +1154,7 @@ def vertexDistance(X,Vp,return_points=False):
     Vp is a (nV,3) shaped array of vertices.
 
     The return value is a tuple OKdist,OKpoints where:
-    
+
     - OKdist is an array with the shortest distances for the points;
     - OKpoints is an array with the closest vertices for the points
       and is only returned if return_points = True.
@@ -1184,7 +1185,7 @@ def baryCoords(S,P):
     The return value is a (nplex,npts,nel) shaped array of barycentric coordinates.
     """
     if S.ndim != 3:
-        raise ValueError,"S should be a 3-dim array, got shape %s" % str(S.shape) 
+        raise ValueError,"S should be a 3-dim array, got shape %s" % str(S.shape)
     if P.ndim == 2:
         P = P.reshape(-1,1,3)
     elif P.shape[1] != S.shape[0] and P.shape[1] != 1:
@@ -1202,7 +1203,7 @@ def baryCoords(S,P):
     #tt = solveMany(A,b,False)
     #print "GENERAL SOLVER: %s" % T.seconds()
     #print "RESULTS MATCH: %s" % (tt-t).sum()
-    
+
     t0 = (1.-t.sum(0))
     t0 = addAxis(t0,0)
     t = row_stack([t0,t])
@@ -1211,7 +1212,7 @@ def baryCoords(S,P):
 
 def insideSimplex(BC,bound=True):
     """Check if points are in simplexes.
-    
+
     BC is an array of barycentric coordinates (along the first axis),
     which sum up to one.
     If bound = True, a point lying on the boundary is considered to

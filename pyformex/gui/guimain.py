@@ -525,31 +525,6 @@ class Gui(QtGui.QMainWindow):
         return toolbar
 
 
-    ## def activateToolBar(self,fullname,shortname):
-    ##     """Add a new toolbar to the GUI main window.
-
-    ##     The full name is the name as displayed to the user.
-    ##     The short name is the name as used in the config settings.
-
-    ##     The config setting for the toolbar determines its placement:
-    ##     - None: the toolbar is not created
-    ##     - 'left', 'right', 'top' or 'bottom': a separate toolbar is created
-    ##     - 'default': the default top toolbar is used and a separator is added.
-    ##     """
-    ##     area = pf.cfg['gui/%s' % shortname]
-    ##     if area:
-    ##         area = self.toolbar_area.get(area,0)
-    ##         if area:
-    ##             toolbar = QtGui.QToolBar(fullname,self)
-    ##             self.addToolBar(area,toolbar)
-    ##         else: # default
-    ##             toolbar = self.toolbar
-    ##             self.toolbar.addSeparator()
-    ##     else:
-    ##         toolbar = None
-    ##     return toolbar
-
-
     def addStatusBarButtons(self):
         self.statusbar.addWidget(self.curproj)
         self.statusbar.addWidget(self.curfile)
