@@ -31,7 +31,7 @@ from __future__ import print_function
 
 import pyformex as pf
 from pyformex.gui import *
-from gui import QtGui,QtCore # For Sphinx
+from gui import QtGui,QtCore,Signal
 import odict
 import utils
 
@@ -154,7 +154,6 @@ class BaseMenu(object):
         """
         itemlist = self.actionList()
         i = itemlist.index(utils.strNorm(text))
-        #print "POS = %s/%s" % (i,len(itemlist))
         if i >= 0 and i < len(itemlist)-1:
             return itemlist[i+1]
         else:
@@ -266,7 +265,7 @@ class BaseMenu(object):
                     if debug:
                         print("INSERTING DAction %s" % txt)
                     a = DAction(txt,data = options['data'])
-                    QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
+                    a.signal.connect(val)
                     self.insert_action(a,before)
                     # We need to store the DActions, or else they are
                     # destroyed. QActions are stroed by Qt
@@ -367,15 +366,17 @@ class MenuBar(BaseMenu,QtGui.QMenuBar):
 
 ###################### Action List ############################################
 
+class Communicate(QtCore.QObject):
+    CLICKED = Signal(str)
+
+
 class DAction(QtGui.QAction):
     """A DAction is a QAction that emits a signal with a string parameter.
 
-    When triggered, this action sends a signal (default 'Clicked') with a
+    When triggered, this action sends a signal (default 'CLICKED') with a
     custom string as parameter. The connected slot can then act depending
     on this parameter.
     """
-
-    signal = "Clicked"
 
     def __init__(self,name,icon=None,data=None,signal=None):
         """Create a new DAction with name, icon and string data.
@@ -383,7 +384,7 @@ class DAction(QtGui.QAction):
         If the DAction is used in a menu, a name is sufficient. For use
         in a toolbar, you will probably want to specify an icon.
         When the action is triggered, the data is sent as a parameter to
-        the SLOT function connected with the 'Clicked' signal.
+        the SLOT function connected with the CLICKED signal.
         If no data is specified, the name is used as data.
 
         See the views.py module for an example.
@@ -392,15 +393,18 @@ class DAction(QtGui.QAction):
         if icon:
             self.setIcon(icon)
         if signal is None:
-            signal = DAction.signal
+            self.c = Communicate()
+            signal = self.c.CLICKED
         self.signal = signal
         if data is None:
             data = name
         self.setData(data)
-        self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
+        # triggering an action will send the CLICKED(name) signal
+        self.triggered[bool].connect(self.activated)
 
-    def activated(self):
-        self.emit(QtCore.SIGNAL(self.signal), str(self.data()))
+
+    def activated(self,ok):
+        self.signal.emit(self.data())
 
 
 class ActionList(object):
@@ -457,7 +461,7 @@ class ActionList(object):
             text = name
         a = DAction(text,icon,name)
         if self.function:
-            QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),self.function)
+            a.signal.connect(self.function)
         self.actions.append([name,a])
         if self.menu:
             self.menu.addAction(a)
@@ -470,7 +474,7 @@ class ActionList(object):
         return [ i[0] for i in self.actions ]
 
 
-## ###########################################################################
+###########################################################################
 
 # pyFormex main menus
 
