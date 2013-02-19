@@ -55,7 +55,7 @@ known_modules = {
     'matplotlib': (),
     'numpy'     : (),
     'pyopengl'  : ('OpenGL',),
-    'pyqt4'     : ('PyQt4','','QtCore','QT_VERSION_STR'),
+    'pyqt4'     : ('PyQt4.QtCore','PyQt4','QtCore','QT_VERSION_STR'),
     'pyqt4gl'   : ('PyQt4.QtOpenGL','PyQt4','QtCore','QT_VERSION_STR'),
     'pyside'    : ('PySide',),
     'vtk'       : ('','','VTK_VERSION'),
@@ -132,21 +132,6 @@ def hasModule(name,check=False):
         return checkModule(name)
 
 
-def hasExternal(name,force=False):
-    """Test if we have the external command 'name' available.
-
-    Returns a nonzero string if the command is available,
-    or an empty string if it is not.
-
-    The external command is only checked on the first call.
-    The result is remembered in the the_external dict.
-    """
-    if name in the_external and not force:
-        return the_external[name]
-    else:
-        return checkExternal(name)
-
-
 def requireModule(name):
     """Ensure that the named Python module is available.
 
@@ -164,6 +149,7 @@ def requireModule(name):
             attr = 'unknown'
         errmsg = "Could not load %s module '%s'" % (attr,name)
         pf.error(errmsg)
+        sys.exit()
 
 
 
@@ -231,6 +217,21 @@ def checkModule(name,ver=(),fatal=False,quiet=False):
     #if version:
     the_version[name] = m
     return m
+
+
+def hasExternal(name,force=False):
+    """Test if we have the external command 'name' available.
+
+    Returns a nonzero string if the command is available,
+    or an empty string if it is not.
+
+    The external command is only checked on the first call.
+    The result is remembered in the the_external dict.
+    """
+    if name in the_external and not force:
+        return the_external[name]
+    else:
+        return checkExternal(name)
 
 
 def checkExternal(name=None,command=None,answer=None,quiet=False):
