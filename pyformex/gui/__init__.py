@@ -41,7 +41,8 @@ from __future__ import print_function
 import pyformex as pf
 import utils
 
-
+# We need this try to keep sphinx happy when building the docs
+# because pf.options is then not defined
 try:
     pyside = pf.options.pyside
 except:

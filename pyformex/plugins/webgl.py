@@ -38,10 +38,21 @@ from __future__ import print_function
 import pyformex as pf
 from gui import colors
 import utils
-from olist import List
+from olist import List, intersection
 from mydict import Dict
 import os
 from arraytools import checkFloat
+
+
+# Formatting a controller for an attribute
+#   %N will be replaced with name of object,
+#   %A will be replaced with name of attribute,
+
+controller_format = {
+    'visible': "add(%N,'%A')",
+    'opacity': "add(%N,'%A',0,1)",
+    'color': "addColor(%N,'%A')"
+}
 
 
 def saneSettings(k):
@@ -59,6 +70,10 @@ def saneSettings(k):
         pass
     try:
         ok['caption'] = str(k['caption'])
+    except:
+        pass
+    try:
+        ok['control'] = intersection(k['control'],controller_format.keys())
     except:
         pass
     return ok
@@ -98,7 +113,9 @@ class WebGL(List):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
         self.script = "http://get.goXTK.com/xtk_edge.js"
+        self.guiscript = "http://get.goXTK.com/xtk_xdat.gui.js"
         self.camera = None
+        self.gui = []
 
 
     def addScene(self):
@@ -155,6 +172,7 @@ class WebGL(List):
         - `magicmode=`: specify True or False. If magicmode is True, colors
           will be set from the normals of the object. This is incompatible
           with `color=`.
+        - `control=`: a list of attributes that get a gui controller
         """
         if not 'name' in kargs:
             kargs['name'] = 'm%s' % len(self)
@@ -176,8 +194,12 @@ class WebGL(List):
                 obj.write(kargs['file'],'stlb')
         if 'file' in kargs:
             self.append(Dict(kargs))
+            if 'control' in kargs:
+                self.gui.append((kargs['name'],kargs['control']))
+                del kargs['control']
         else:
             print("Not added because no file:",kargs)
+
 
     def view(self,**kargs):
         """Set the camera position and direction.
@@ -215,6 +237,36 @@ class WebGL(List):
         return s
 
 
+    def format_gui_controller(self,name,attr):
+        """Format a single controller"""
+        if attr in controller_format:
+            return controller_format[attr].replace('%N',name).replace('%A',attr)
+        else:
+            raise ValueError,"Controller for attribute '%s' not implemented"
+
+
+    def format_gui(self):
+        """Create the controller GUI script"""
+        s = """
+r.onShowtime = function() {
+var gui = new dat.GUI();
+"""
+        for name,attrs in self.gui:
+            guiname = "%sgui" % name
+            s += "var %s = gui.addFolder('%s');\n" % (guiname,name)
+            for attr in attrs:
+                s += "var %sController = %s.%s;\n" % (name,guiname,self.format_gui_controller(name,attr))
+            s += "%s.open();\n" % guiname
+
+        s += "}\n\n"
+        return s
+
+
+    def html_addscript(self,script):
+        """Add a script file to the html"""
+        return  '<script type="text/javascript" src="%s"></script>\n' % script
+
+
     def export(self,name,title=None,description=None,keywords=None,author=None,createdby=False):
         """Export the WebGL scene.
 
@@ -244,6 +296,8 @@ r.init();
 
 """ % pf.fullVersion()
         s += '\n'.join([self.format_object(o) for o in self ])
+        if self.gui:
+            s += self.format_gui()
         if self.camera:
             if 'position' in self.camera:
                 s +=  "r.camera.position = %s;\n" % list(self.camera.position)
@@ -269,11 +323,14 @@ r.render();
 """ % (pf.fullVersion(),description,keywords)
         if author:
             s += '<meta name="author" content="%s">\n' % author
-        s += """<title>%s</title>
-<script type="text/javascript" src="%s"></script>
-<script type="text/javascript" src="%s"></script>
+        s += "<title>%s</title>\n" % title
+        s += self.html_addscript(self.script)
+        if self.gui:
+            s += self.html_addscript(self.guiscript)
+        s += self.html_addscript(jsname)
+        s += """
 </head>
-<body>""" % (title,self.script,jsname)
+<body>"""
         if createdby:
             if type(createdby) is int:
                 width = ' width="%s%%"' % createdby

@@ -62,6 +62,7 @@ def run():
     S.color = red
     S.alpha = 0.7
     S.caption = 'Sphere'
+    S.control = ['visible','opacity']
     draw(S)
     draw(T,color=blue,alpha=1.0)     #  1.0 means T is opaque !
     draw(C,color=yellow,alpha=0.7)
@@ -79,8 +80,8 @@ def run():
     #
 
     W = WebGL()
-    W.add(file='sphere.stl',caption='A sphere',color=red,alpha=0.7)
-    W.add(file='cone.stl',name='cone',caption='A cone',color=blue)
+    W.add(file='sphere.stl',caption='A sphere',color=red,alpha=0.7,control = ['visible','opacity'])
+    W.add(file='cone.stl',name='cone',caption='A cone',color=blue,control=['visible','opacity','color'])
     W.add(obj=C,name='cylinder',caption='A cylinder',color=yellow,alpha=0.7)
     # set the camera viewpoint
     W.view(position=[6.,0.,3.])
