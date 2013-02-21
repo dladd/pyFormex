@@ -114,7 +114,7 @@ class WebGL(List):
         List.__init__(self)
         self.script = "http://get.goXTK.com/xtk_edge.js"
         self.guiscript = "http://get.goXTK.com/xtk_xdat.gui.js"
-        self.camera = None
+        self._camera = None
         self.gui = []
 
 
@@ -138,10 +138,10 @@ class WebGL(List):
             print("  Exporting with settings %s" % kargs)
             self.add(obj=o,**kargs)
         ca = cv.camera
-        import coords
-        pos = coords.Coords(ca.ctr)
-        pos += [0.,0.,ca.dist]
-        self.view(position=pos)
+        #import coords
+        #pos = coords.Coords(ca.ctr)
+        #pos += [0.,0.,ca.dist]
+        self.view(position=ca.getPosition(),focus=ca.getCenter())
 
 
     def add(self,**kargs):
@@ -195,7 +195,7 @@ class WebGL(List):
         if 'file' in kargs:
             self.append(Dict(kargs))
             if 'control' in kargs:
-                self.gui.append((kargs['name'],kargs['control']))
+                self.gui.append((kargs['name'],kargs.get('caption',''),kargs['control']))
                 del kargs['control']
         else:
             print("Not added because no file:",kargs)
@@ -213,7 +213,7 @@ class WebGL(List):
         - `upvector=': specify a list of 3 components of a vector indicating
           the upwards direction of the camera. The default is [0.,1.,0.].
         """
-        self.camera = Dict(kargs)
+        self._camera = Dict(kargs)
 
 
     def format_object(self,obj):
@@ -251,9 +251,11 @@ class WebGL(List):
 r.onShowtime = function() {
 var gui = new dat.GUI();
 """
-        for name,attrs in self.gui:
+        for name,caption,attrs in self.gui:
             guiname = "%sgui" % name
-            s += "var %s = gui.addFolder('%s');\n" % (guiname,name)
+            if not caption:
+                caption = name
+            s += "var %s = gui.addFolder('%s');\n" % (guiname,caption)
             for attr in attrs:
                 s += "var %sController = %s.%s;\n" % (name,guiname,self.format_gui_controller(name,attr))
             s += "%s.open();\n" % guiname
@@ -298,11 +300,13 @@ r.init();
         s += '\n'.join([self.format_object(o) for o in self ])
         if self.gui:
             s += self.format_gui()
-        if self.camera:
-            if 'position' in self.camera:
-                s +=  "r.camera.position = %s;\n" % list(self.camera.position)
-            if 'up' in self.camera:
-                s +=  "r.camera.up = %s;\n" % list(self.camera.up)
+        if self._camera:
+            if 'position' in self._camera:
+                s +=  "r.camera.position = %s;\n" % list(self._camera.position)
+            if 'focus' in self._camera:
+                s +=  "r.camera.focus = %s;\n" % list(self._camera.focus)
+            if 'up' in self._camera:
+                s +=  "r.camera.up = %s;\n" % list(self._camera.up)
         s += """
 r.render();
 };

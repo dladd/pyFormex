@@ -55,37 +55,38 @@ def run():
 
     # Create some geometry
     S = sphere()
-    T = sector(1.0,360.,6,36,h=1.0,diag='u').toSurface().scale(1.5)
-    C = cylinder(1.2,1.5,24,4,diag='u').toSurface().trl([0.5,0.5,0.5])
+    T = sector(1.0,360.,6,36,h=1.0,diag='u').toSurface().scale(1.5).reverse()
+    C = cylinder(1.2,1.5,24,4,diag='u').toSurface().trl([0.5,0.5,0.5]).reverse()
 
     # Draw the geometry with given colors/opacity
+    # Settings colors and opacity in this way makes the model
+    # directly ready to export as WebGL
     S.color = red
     S.alpha = 0.7
-    S.caption = 'Sphere'
+    S.caption = 'A sphere'
     S.control = ['visible','opacity']
-    draw(S)
-    draw(T,color=blue,alpha=1.0)     #  1.0 means T is opaque !
-    draw(C,color=yellow,alpha=0.7)
+
+    T.color = blue
+    T.caption = 'A cone'
+    T.alpha = 1.0
+    T.control = ['visible','opacity','color']
+
+    C.color = 'yellow'
+    C.caption = 'A cylinder'
+    T.alpha = 0.8
+    C.control = ['visible','opacity']
+
+    export({'sphere':S,'cone':T,'cylinder':C})
+
+    draw([S,T,C])
     zoomAll()
     rotRight(30.)
 
-    # Write some of the geometry to STL file
-    S.write('sphere.stl')
-    T.write('cone.stl')
-
-    if not checkWorkdir():
-        return
-    # Export everything to webgl
-    # We can add a Geometry object or an STL file
-    #
-
-    W = WebGL()
-    W.add(file='sphere.stl',caption='A sphere',color=red,alpha=0.7,control = ['visible','opacity'])
-    W.add(file='cone.stl',name='cone',caption='A cone',color=blue,control=['visible','opacity','color'])
-    W.add(obj=C,name='cylinder',caption='A cylinder',color=yellow,alpha=0.7)
-    # set the camera viewpoint
-    W.view(position=[6.,0.,3.])
-    W.export('scene1','Two spheres and a cone',createdby=True)
+    if checkWorkdir():
+        # Export everything to webgl
+        W = WebGL()
+        W.addScene()
+        W.export('Scene1','Two spheres and a cone',createdby=True)
 
 if __name__ == 'draw':
     run()

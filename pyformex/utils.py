@@ -486,6 +486,7 @@ def setSaneLocale(localestring=''):
     import locale
     locale.setlocale(locale.LC_ALL,localestring)
     locale.setlocale(locale.LC_NUMERIC, 'C')
+    locale.setlocale(locale.LC_COLLATE, 'C')
 
 ##########################################################################
 ## Text conversion  tools ##

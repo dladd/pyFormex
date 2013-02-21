@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -66,7 +66,7 @@ def abqInputNames(job):
 
     job can be either a jobname or input file name, with or without
     directory part, with or without extension (.inp)
-    
+
     The Abq jobname is the basename without the extension.
     The abq filename is the abspath of the job with extension '.inp'
     """
@@ -98,7 +98,7 @@ def esetName(p):
 ###########################################################
 ##   Output Formatting Following Abaqus Keywords Manual  ##
 ###########################################################
-    
+
 #
 #  !! This is only a very partial implementation
 #     of the Abaqus keyword specs.
@@ -142,7 +142,7 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
 
 def fmtOptions(options):
     """Format the options of an Abaqus command line.
-    
+
     - `options`: a dict with ABAQUS command keywords and values. If the keyword
       does not take any value, the value in the dict should be an empty string.
 
@@ -180,7 +180,7 @@ materialswritten=[]
 #FI   few lines of documentation about plastic and the damping needed
 def fmtMaterial(mat):
     """Write a material section.
-    
+
     `mat` is the property dict of the material. The following keys are
     recognized and output accordingly:
 
@@ -193,26 +193,26 @@ def fmtMaterial(mat):
       fields labeled (opt) are optional.
 
     - 'LINEAR':
-    
+
       - young_modulus
       - shear_modulus
       - (opt) poisson_ratio: it is calculated if None
 
     - 'HYERELASTIC':
-    
+
       required:
-      
+
       - model: one of 'ogden', 'polynomial' or 'reduced polynomial'
       - constants: list of all parameter required for the model
         (see Abaqus documentation)
-      
+
       optional:
-      
+
       - order: order of the model. If blank will be automatically calculated
         from the len of the constants list
-        
+
         example::
-        
+
           intimaMat = {
             'name': 'intima',
             'density': 0.1, # Not Used, but Abaqus does not like a material without
@@ -220,11 +220,11 @@ def fmtMaterial(mat):
             'type':'reduced polynomial',
             'constants': [6.79E-03, 5.40E-01, -1.11, 10.65, -7.27, 1.63, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
           }
-      
+
     - 'ANISOTROPIC HYPERELASTIC':
- 
+
     - 'USER':
-  
+
     """
 
     ## ========================
@@ -240,35 +240,35 @@ def fmtMaterial(mat):
     ## depvar = nr of dependand variables (24 for the nitinol umat)
     ## elasticity=user
     ## constants= list  of int sorted abaqus parameter
-    
+
     ## ============================
     ## Additional parametrer
     ## plastic: list([yield stress, eq. plastic strain])
     ## """
     if mat.name is None or mat.name in materialswritten:
         return ""
-    
+
     out ="*MATERIAL, NAME=%s\n" % mat.name
     materialswritten.append(mat.name)
     print(materialswritten)
-    
+
     if mat.elasticity is None or mat.elasticity == 'linear':
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
             mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
 
         out += '*ELASTIC\n%s,%s\n' % (float(mat.young_modulus), float(mat.poisson_ratio))
-    
+
     elif mat.elasticity.lower() == 'hyperelastic':
         out += "*HYPERELASTIC, %s" % mat.type.upper()
-        
-        if mat.type.lower() == 'ogden':     
+
+        if mat.type.lower() == 'ogden':
             if 'order' in mat:
                 order=mat.order
             else:
                 order=len(mat.constants)/3.
             if order%3!=0 :
                 raise ValueError,"Wrong number of parameters"
-        
+
         if mat.type.lower() == 'polynomial':
             ord=(-5. + (25.+8.*len(mat.constants))**0.5)/2. # Nparameters = ((N+1)*(N+2))/2 + N-1 --> Inverse to find order N
             if 'order' in mat:
@@ -277,7 +277,7 @@ def fmtMaterial(mat):
                 order=ord
             if int(ord)!=order:
                     raise ValueError,"Wrong number of parameters"
-                
+
         if mat.type.lower() == 'reduced polynomial':
             if 'order' in mat:
                 order=mat.order
@@ -285,20 +285,20 @@ def fmtMaterial(mat):
                 order=len(mat.constants)/2.
             if len(mat.constants)%2!=0:
                 raise ValueError,"Wrong number of parameters"
-        
+
         out += ", N=%i\n" %order
         out += fmtData(mat.constants)
-    
+
     elif mat.elasticity.lower() == 'anisotropic hyperelastic':
         out += "*ANISOTROPIC HYPERELASTIC, HOLZAPFEL\n"
         #TO DO: add possibility to define local orientations!!!"
-            
+
     elif mat.elasticity.lower() == 'user':
         if mat.depvar is not None:
             out += "*DEPVAR\n%s\n" % mat.depvar
         out += "*USER MATERIAL, CONSTANTS=%s\n" % len(mat.constants)
         out += fmtData(mat.constants)
-    
+
     if mat.density is not None:
         out += "*DENSITY\n%s\n" % float(mat.density)
 
@@ -310,7 +310,7 @@ def fmtMaterial(mat):
         ## if mat.plastic.shape[1] > 8:
         ##     raise ValueError,"Plastic data array should have max. 8 columns"
         out += fmtData(mat.plastic)
-    
+
     if mat.damping is not None:
         if mat.damping == 'yes':
             out += "*DAMPING"
@@ -338,10 +338,10 @@ def fmtFrameSection(el,setname):
     """Write a frame section for the named element set.
 
     Recognized data fields in the property record:
-    
+
     - sectiontype GENERAL:
 
-      - cross_section 
+      - cross_section
       - moment_inertia_11
       - moment_inertia_12
       - moment_inertia_22
@@ -360,7 +360,7 @@ def fmtFrameSection(el,setname):
 
       - young_modulus
       - shear_modulus
-      
+
     - optional:
 
       - density: density of the material
@@ -389,7 +389,7 @@ def fmtFrameSection(el,setname):
         out += fmtData(el.orientation)
     else:
         out += '\n'
-     
+
     out += fmtData([float(el.young_modulus),float(el.shear_modulus)])
 
     return out
@@ -401,10 +401,10 @@ def fmtGeneralBeamSection(el,setname):
     To specify a beam section when numerical integration over the section is not required.
 
     Recognized data fields in the property record:
-    
+
     - sectiontype GENERAL:
 
-      - cross_section 
+      - cross_section
       - moment_inertia_11
       - moment_inertia_12
       - moment_inertia_22
@@ -422,7 +422,7 @@ def fmtGeneralBeamSection(el,setname):
 
       - young_modulus
       - shear_modulus or poisson_ration
-      
+
     - optional:
 
       - density: density of the material (required in Abaqus/Explicit)
@@ -448,7 +448,7 @@ def fmtGeneralBeamSection(el,setname):
         out += "%s,%s,%s\n" % tuple(el.orientation)
     else:
         out += '\n'
-     
+
     out += "%s, %s \n" % (float(el.young_modulus),float(el.shear_modulus))
 
     return out
@@ -460,12 +460,12 @@ def fmtBeamSection(el,setname):
     To specify a beam section when numerical integration over the section is required.
 
     Recognized data fields in the property record:
-    
+
     - all sectiontypes: material
-    
+
     - sectiontype GENERAL:
 
-      - cross_section 
+      - cross_section
       - moment_inertia_11
       - moment_inertia_12
       - moment_inertia_22
@@ -482,7 +482,7 @@ def fmtBeamSection(el,setname):
       - width, height
       - intpoints1 (number of integration points in the first direction) optional
       - intpoints2 (number of integration points in the second direction) optional
-      
+
     """
     out = ""
 
@@ -518,8 +518,12 @@ def fmtBeamSection(el,setname):
 def fmtConnectorSection(el,setname):
     """Write a connector section.
 
+    Required:
+
+    - `sectiontype`: JOIN, HINGE, ...
+
     Optional data:
-    
+
     - `behavior` : connector behavior name
     - `orient`  : connector orientation
     """
@@ -538,7 +542,7 @@ def fmtConnectorSection(el,setname):
 def fmtConnectorBehavior(prop):
     """ Write a connector behavior.
     Implemented: Elasticity,  Stop
-    Examples: 
+    Examples:
     Elasticity
     P.Prop(name='connbehavior1',ConnectorBehavior='',Elasticity=dict(
     component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
@@ -564,7 +568,7 @@ def fmtSpring(el,setname):
     """Write a spring of type spring.
 
     Optional data:
-    
+
     - `springstiffness` : spring stiffness (force (S11) per relative displacement (E11))
     """
     out = ""
@@ -580,7 +584,7 @@ def fmtDashpot(el,setname):
     """Write a dashpot.
 
     Optional data:
-    
+
     - `dashpotcoefficient` : dashpot coefficient (force (S11) per relative velocity (ER11, only produced in Standard))
     """
     out = ""
@@ -590,21 +594,21 @@ def fmtDashpot(el,setname):
         out += '\n%s\n' % float(el.dashpotcoefficient)
 
     return out
-    
+
 
 #
 # BV: removed composite, if anyone uses it: create a fmtCompositeSection
 #
 def fmtSolidSection(el,setname,matname):
     """Format the SOLID SECTION keyword.
-    
+
     Required:
 
     - setname
     - matname
 
     Optional:
-    
+
     - orientation
     - controls
 
@@ -612,12 +616,12 @@ def fmtSolidSection(el,setname,matname):
     a string which is added as is to the command. Data are added below
     the command. All other items besides name, options and data are formatted
     as extra command options.
-    
+
     Example::
 
      P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,controls=dict(name='StentControl',hourglass='enhanced'))
     """
-    out = "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,matname) 
+    out = "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,matname)
     if el.orientation is not None:
         out += ", ORIENTATION=%s" % el.orientation.name
     if el.controls is not None:
@@ -636,20 +640,20 @@ def fmtSolidSection(el,setname,matname):
 
         if el.controls.data is not None:
            out += fmtData(el.controls.data)
-        
+
     return out
 
 
 def fmtShellSection(el,setname,matname):
     """Format the shell SHELL SECTION keyword.
-    
+
     Required:
-    
+
     - setname
     - matname
-    
+
     Optional:
-    
+
     - transverseshearstiffness
     - offset (for contact surface SPOS or 0.5, SNEG or -0.5)
     """
@@ -668,7 +672,7 @@ def fmtShellSection(el,setname,matname):
         out += "*TRANSVERSE SHEAR STIFFNESS\n" + fmtData(el.transverseshearstiffness)
     return out
 
- 
+
 def fmtSurface(prop):
     """Format the surface definitions.
 
@@ -678,7 +682,7 @@ def fmtSurface(prop):
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
     - label: face or edge identifier (only required for surftype = 'ELEMENT')
-    
+
     This label can be a string, or a list of strings. This allows to use
     different identifiers for the different elements in the surface. Thus::
 
@@ -690,7 +694,7 @@ def fmtSurface(prop):
       1, S1
       2, S2,
       3, S1
-      7, S3 
+      7, S3
     """
     out = ''
     for p in prop:
@@ -716,7 +720,7 @@ def fmtAnalyticalSurface(prop):
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
     - label: face or edge identifier (only required for surftype = 'NODE')
-    
+
     Example:
 
     >>> P.Prop(name='AnalySurf', nodeset = 'REFNOD', analyticalsurface='')
@@ -725,20 +729,20 @@ def fmtAnalyticalSurface(prop):
     for p in prop:
         out += "*RIGID BODY, ANALYTICAL SURFACE = %s, REFNOD=%s\n" % (p.name,p.nodeset)
     return out
- 
+
 def fmtSurfaceInteraction(prop):
     """Format the interactions.
-    
+
     Required:
-    
+
     -name
-    
+
     Optional:
-    
+
     - cross_section (for node based interaction)
     - friction : friction coeff or 'rough'
     - surface behavior: no separation
-    - surface behavior: pressureoverclosure 
+    - surface behavior: pressureoverclosure
     """
     out = ''
     for p in prop:
@@ -755,7 +759,7 @@ def fmtSurfaceInteraction(prop):
             print("writing Surface Behavior")
             if p.noseparation == True:
                 out += ", no separation"
-            if p.pressureoverclosure:	
+            if p.pressureoverclosure:
                 if p.pressureoverclosure[0] == 'soft':
                     out += ", pressure-overclosure=%s\n" % p.pressureoverclosure[1]
                     out += "%s" % fmtData(p.pressureoverclosure[2:])
@@ -769,25 +773,25 @@ def fmtSurfaceInteraction(prop):
 
 def fmtGeneralContact(prop):
     """Format the general contact.
-    
+
     Only implemented on model level
-    
+
     Required:
 
     - interaction: interaction properties: name or Dict
-    
+
     Optional:
-    
+
     - Exclusions (exl)
     - Extra (extra). Example ::
 
         extra = "*CONTACT CONTROLS ASSIGNMENT, TYPE=SCALE PENALTY\\n, , 1.e3\\n"
 
     Example:
-    
+
       >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[
       ['surf11', 'surf12'],['surf21',surf22]])
-    
+
     """
     out = ''
     for p in prop:
@@ -795,8 +799,8 @@ def fmtGeneralContact(prop):
             intername = p.generalinteraction
         else:
             intername = p.generalinteraction.name
-            out += fmtSurfaceInteraction([p.generalinteraction])            
-        out += "*Contact\n" 
+            out += fmtSurfaceInteraction([p.generalinteraction])
+        out += "*Contact\n"
         out += "*Contact Inclusions, ALL EXTERIOR\n"
         if p.exl:
             out += "*Contact Exclusions\n"
@@ -817,11 +821,11 @@ def fmtContactPair(prop):
     - master: master surface
     - slave: slave surface
     - interaction: interaction properties : name or Dict
-    
+
     Example:
-    
+
     >>> P.Prop(name='contact0',interaction=Interaction(name ='contactprop',
-    surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001]), 
+    surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001]),
     master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
     """
     out = ''
@@ -831,7 +835,7 @@ def fmtContactPair(prop):
         else:
             intername = p.interaction.name
             out += fmtSurfaceInteraction([p.interaction])
-            
+
         out += "*Contact Pair, interaction=%s" % intername
         if p.contacttype is not None:
             out += ", type=%s\n" % p.contacttype
@@ -842,24 +846,24 @@ def fmtContactPair(prop):
 
 def fmtConstraint(prop):
     """Format Tie constraint
-    
+
     Required:
-    
+
     -name
     -adjust (yes or no)
     -slave
     -master
-    
+
     Optional:
 
     -type (surf2surf, node2surf)
     -positiontolerance
     -no rotation
-    
+
     Example:
 
-    >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no', 
-    master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
+    >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no',
+    master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')
     """
     out =''
     for p in prop:
@@ -874,10 +878,10 @@ def fmtConstraint(prop):
         out +="%s, %s\n" % (p.slave, p.master)
     return out
 
-	
+
 def fmtInitialConditions(prop):
     """Format initial conditions
-    
+
     Required:
 
     -type
@@ -888,19 +892,19 @@ def fmtInitialConditions(prop):
 
       P.Prop(initialcondition='', nodes ='Nall', type = 'TEMPERATURE', data = 37.)
     """
-    
+
     for p in prop:
         out ="*Initial Conditions, type = %s\n" % p.type
         out +="%s,%.2f\n" % (p.nodes, p.data)
     return out
-    
+
 
 def fmtOrientation(prop):
     """Format the orientation.
 
     Optional:
-    
-    - definition 
+
+    - definition
     - system: coordinate system
     - a: a first point
     - b: a second point
@@ -924,26 +928,26 @@ def fmtOrientation(prop):
 
 def fmtEquation(prop):
     """Format multi-point constraint using an equation
-    
+
     Required:
-    
+
     - equation
-    
+
     Equation should be a list, which contains the different terms of the equation.
     Each term is again a list with three values:
-    
+
     - First value: node number
     - Second value: degree of freedom
     - Third value: coefficient
-    
+
     Example::
 
       P.nodeProp(equation=[[209,1,1],[32,1,-1]])
-    
+
     This forces the displacement in Y-direction of nodes 209 and 32 to
     be equal.
     """
-    
+
     out = ''
     nofs = 1
     for p in prop:
@@ -953,15 +957,15 @@ def fmtEquation(prop):
             dof = i[1]+1
             out += "%s, %s, %s\n" % (i[0]+nofs,dof,i[2])
     return out
-            
-            
+
+
 
 
 def fmtMass(prop):
     """Format mass
 
     Required:
-    
+
     - mass : mass magnitude
     - set : name of the element set on which mass is applied
     """
@@ -970,12 +974,12 @@ def fmtMass(prop):
         out +='*MASS, ELSET={0}\n'.format(p.name)
         out +='{0}\n'.format(p.mass)
     return out
-    
+
 def fmtInertia(prop):
     """Format rotary inertia
 
     Required:
-    
+
     - inertia : inertia tensor i11, i22, i33, i12, i13, i23
     - set : name of the element set on which inertia is applied
     """
@@ -990,15 +994,15 @@ def fmtInertia(prop):
 ## The following output sections with possibly large data
 ## are written directly to file.
 ##########################################################
- 
+
 def writeNodes(fil,nodes,name='Nall',nofs=1):
     """Write nodal coordinates.
 
-    The nodes are added to the named node set. 
+    The nodes are added to the named node set.
     If a name different from 'Nall' is specified, the nodes will also
     be added to a set named 'Nall'.
     The nofs specifies an offset for the node numbers.
-    The default is 1, because Abaqus numbering starts at 1.  
+    The default is 1, because Abaqus numbering starts at 1.
     """
     fil.write('*NODE, NSET=%s\n' % name)
     for i,n in enumerate(nodes):
@@ -1011,7 +1015,7 @@ def writeElems(fil,elems,type,name='Eall',eid=None,eofs=1,nofs=1):
     """Write element group of given type.
 
     elems is the list with the element node numbers.
-    The elements are added to the named element set. 
+    The elements are added to the named element set.
     If a name different from 'Eall' is specified, the elements will also
     be added to a set named 'Eall'.
     The eofs and nofs specify offsets for element and node numbers.
@@ -1047,7 +1051,7 @@ def writeSet(fil,type,name,set,ofs=1):
         for i in set+ofs:
             fil.write("%d,\n" % i)
 
-    
+
 spring_elems = ['SPRINGA', ]
 dashpot_elems = ['DASHPOTA', ]
 connector_elems = ['CONN3D2','CONN2D2']
@@ -1088,7 +1092,7 @@ shell_elems = [
     'S8R','S8R5',
     'S9R5',
     'STRI3',
-    'STRI65', 
+    'STRI65',
     'SC8R']
 surface_elems = [
     'SFM3D3',
@@ -1119,7 +1123,7 @@ def writeSection(fil,prop):
     mat = el.material
     if mat is not None:
         fil.write(fmtMaterial(mat))
-            
+
     if eltype in connector_elems:
         fil.write(fmtConnectorSection(el,setname))
 
@@ -1131,7 +1135,7 @@ def writeSection(fil,prop):
 
     elif eltype in frame_elems:
         fil.write(fmtFrameSection(el,setname))
-            
+
     elif eltype in truss_elems:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
@@ -1156,7 +1160,7 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in shell_elems:
         fil.write(fmtShellSection(el,setname,mat.name))
-    
+
     ############
     ## SURFACE elements
     ##########################
@@ -1166,7 +1170,7 @@ def writeSection(fil,prop):
                 fil.write("""*SURFACE SECTION, ELSET=%s, DENSITY=%s \n""" % (setname, el.density))
             else:
                 fil.write("""*SURFACE SECTION, ELSET=%s \n""" % setname)
-    
+
     ############
     ## MEMBRANE elements
     ##########################
@@ -1184,7 +1188,7 @@ def writeSection(fil,prop):
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
                 fil.write(fmtSolidSection(el,setname,mat.name))
-            
+
     ############
     ## 2D SOLID elements
     ##########################
@@ -1192,7 +1196,7 @@ def writeSection(fil,prop):
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
                 fil.write(fmtSolidSection(el,setname,mat.name))
-            
+
     ############
     ## RIGID elements
     ##########################
@@ -1229,50 +1233,50 @@ def writeBoundaries(fil,prop):
 
     prop is a list of node property records that should be scanned for
     bound attributes to write. prop contains
-    
+
     REQUIRED
     -bound  : a string (for prescribed conditions)
-                : a list of 6 integer (of values 0 or 1). where 1 the boundary is written 
+                : a list of 6 integer (of values 0 or 1). where 1 the boundary is written
                 : a list of tuple ( )
     OPTIONAL
     -ampl     : an amplitude name
     -extra    : Dict type.It has keys name equal to the ABAQUS keywords and value equal to parameter setting
                 if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
-    
+
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
     previous steps remain in effect.
-    
+
     EXAMPLES
     P.nodeProp(tag='init',set=arange(100),name='catheter',bound='pinned')
-    
+
     P.nodeProp(tag='init',set=arange(100),name='catheter',bound=[0,1,1,0,0,0])
-    
+
     !!!!This works like writeDisplacements
     ampname='amp'
     times = [0,1];values = [0,1]
     amp = Amplitude(data=column_stack([times,values]))
     P.Prop(amplitude=amp,name=ampname)
     P.nodeProp(tag='step1',set='catheter',bound=[(0,5.3),(1,3.5)],ampl=ampname)
-    
+
     extra= Dict({'user':''})
     P.nodeProp(tag='step1',set='catheter',bound=[(0,5.4),(1,3.5)],extra=extra)
     """
     for p in prop:
         setname = nsetName(p)
         fil.write("*BOUNDARY")
-        
+
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
 
         if p.op is not None:
-            fil.write(", OP=%s" % p.op)  
-                    
+            fil.write(", OP=%s" % p.op)
+
         if p.extra is not None:
            fil.write(fmtOptions(p.extra))
-           
+
         fil.write("\n")
-        
+
         if isinstance(p.bound,str):
             fil.write("%s, %s\n" % (setname,p.bound))
         elif isInt(p.bound[0]):
@@ -1291,7 +1295,7 @@ def writeDisplacements(fil,prop,dtype='DISPLACEMENT'):
 
     prop is a list of node property records that should be scanned for
     displ attributes to write.
-    
+
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
     previous steps remain in effect.
@@ -1302,7 +1306,7 @@ def writeDisplacements(fil,prop,dtype='DISPLACEMENT'):
         setname = nsetName(p)
         fil.write("*BOUNDARY, TYPE=%s" % dtype)
         if p.op is not None:
-            fil.write(", OP=%s" % p.op)                    
+            fil.write(", OP=%s" % p.op)
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
@@ -1334,11 +1338,11 @@ def writeCloads(fil,prop,op='NEW'):
 def writeCommaList(fil,*args):
     """Write a list of values comma-separated to fil"""
     fil.write(', '.join([str(i) for i in args]))
-              
-    
+
+
 def writeDloads(fil,prop,op='NEW'):
     """Write Dloads.
-    
+
     prop is a list of elem property records having an attribute dload.
 
     By default, the loads are applied as new values in the current step.
@@ -1355,11 +1359,11 @@ def writeDloads(fil,prop,op='NEW'):
             data += p.dload.dir
         writeCommaList(fil,*data)
         fil.write('\n')
-              
+
 
 def writeDsloads(fil,prop,op='NEW'):
     """Write Dsloads.
-    
+
     prop is a list property records having an attribute dsload
 
     By default, the loads are applied as new values in the current step.
@@ -1385,7 +1389,7 @@ def writeAmplitude(fil,prop):
                 fil.write("\n")
         if i % 4 != 3:
             fil.write("\n")
-        
+
 
 ### Output requests ###################################
 # Output: goes to the .odb file (for postprocessing with Abaqus/CAE)
@@ -1502,7 +1506,7 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
     - `freq` is the output frequency in increments (0 = no output)
 
     Extra arguments:
-    
+
     - `pos`: Position of the points in the elements at which the results are
       written. Should be one of:
 
@@ -1510,9 +1514,9 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
       - 'CENTROIDAL'
       - 'NODES'
       - 'AVERAGED AT NODES'
-      
+
       Non-default values are only available for ABAQUS/Standard.
-      
+
     Extra arguments for output='PRINT':
 
     - `summary`: if True, a summary with minimum and maximum is written
@@ -1550,7 +1554,7 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
         fil.write(", TIME MARKS=YES")
     fil.write("\n")
 
-    
+
 
 #~ Fi this function works like the previous one(if extra is a str)
 # but now extra can be also a list of Dict .This is more convenient  if more addictional lines
@@ -1558,19 +1562,19 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 # This function is very similar to writeStepExtra maybe can be merged
 def writeModelProps(fil,prop):
     """_ BAD STRUCTURE Write model props for this step
-    
-    extra : str 
+
+    extra : str
              : list of Dict. each Dict is a new line.Only 2 keys are dedicated
-                
+
                 REQUIRED
                     -keyword =  abaqus keyword name
-                    
+
                 OPTIONAL
                     -data = list or array of numerical data for any additional data line
-                
+
                     All other keys have name equal to the ABAQUS keywords and value equal to parameter setting
                     if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
-                
+
                 EXAMPLE
                 P.Prop(tag='step1',extra='*CONTACT CONTROLS , AUTOMATIC TOLERANCES\n')
                 P.Prop(tag='step1',extra=[Dict({'keyword':'CONTACT CONTROLS','AUTOMATIC TOLERANCES':''})])
@@ -1606,15 +1610,15 @@ def writeStepExtra(fil,extra):
         fil.write(cmd.upper())
 ##################################################
 ## Some classes to store all the required information
-################################################## 
-        
+##################################################
+
 #FI- SBD The Step Class has been changed. most of the keywords have been removed.
 # we kept the analysis values has they were before, but we added three new kewords
 # in which to store all the parameter (see Example).The default values for riks buckle have been removed
 # but we left infos in the documentation.
-#At the moment we didn t find any exception at least for what we used so far 
+#At the moment we didn t find any exception at least for what we used so far
 #but maybe the stepOption=Dict(),analysisOption=Dict(),extra=str added keywords
-# can be all tuple (Dict, list/array) for any additional line of values to be added. 
+# can be all tuple (Dict, list/array) for any additional line of values to be added.
 # lines
 #         if res and self.analysis == 'EXPLICIT':
 #            writeFileOutput(fil,resfreq,timemarks)
@@ -1628,13 +1632,13 @@ class Step(Dict):
     In Abaqus, a step is the smallest logical entity in the simulation
     history. It is typically a time step in a dynamic simulation, but it
     can also describe different loading states in a (quasi-)static simulation.
-    
+
     Our Step class holds all the data describing the global step parameters.
     It combines the Abaqus 'STEP', 'STATIC', 'DYNAMIC' and 'BUCKLE' keyword
     commands (and even some more global parameter setting commands).
 
     Parameters:
-    
+
     - `analysis`: the analysis type, one of: 'STATIC', 'DYNAMIC', 'EXPLICIT',
       'PERTURBATION', 'BUCKLE', 'RIKS'
     - `time`: either
@@ -1645,7 +1649,7 @@ class Step(Dict):
       - for LANCZOS: a list of 5 values
       - for RIKS: a list of 8 values
       In most cases, only the step time should be specified.
-      
+
     - `nlgeom`: True or False (default). If True, the analysis will be
       geometrically non-linear. For Analysis type 'RIKS', `nlgeom` is set
       True, for 'BUCKLE' it is set False, 'PERTURBATION' ignores `nlgeom`.
@@ -1654,39 +1658,39 @@ class Step(Dict):
       as their `tag` attribute will be included in this step.
     - `out` and `res`: specific output/result records for this step. They
       come in addition to the global ones.
-      
+
     - stepOption is a  Dict of optional parameters to be added at a step level at the FIRST line. it is placed after the *STEP keyword i.e
         *STEP, NLGEOM=YES,INC=10000,UNSYMM = YES
         It has keys name equal to the ABAQUS keywords and value equal to parameter setting
         if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
-    
+
     - subheading is a string printed as an additionanal subheading (not important normally)
-    
+
     - analysisOption is a  Dict of optional parameters to be added at a step level at the SECOND line. it is placed after the analysis keyword i.e
         *STATIC, STABILIZE=0.0002,CONTINUE=NO
         with keys name equal to the ABAQUS keywords and value equal to parameter setting
         if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
-    
+
     -extra : str  for any extra keyword to be added at a step level after the time line
               : list of Dict for any extra keyword to be added at a step level after the time line. Each Dict is a separate line (see example below)
 
                 Only 2 keys are dedicated:
-                
+
                 REQUIRED
                     -keyword =  abaqus keyword name
-                
+
                 OPTIONAL
                     -data = list or array of numerical data for any additional data line
-                
+
                 All the other keys are optional and must have name equal to the ABAQUS keywords and value equal to parameter setting
                 if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
-    
-    
+
+
     Examples on stepOption ,  analysisOption, extra
-    
+
     stepOption standard analysis, not needed for explicit
         Dict({'UNSYMM':'YES'/'NO','CONVERT SDI':'YES'/'NO','AMPLITUDE':'STEP'/'RAMP','INC':100})
-    
+
     analysisOption:
         static, riks
             Dict({'STABILIZE':0.0002,'CONTINUE':'NO'/'YES','ALLSDTOL':0.05,'DIRECT':'NO STOP','FACTOR':1.,'INCR':0.1 (for riks)})
@@ -1697,24 +1701,24 @@ class Step(Dict):
             'IMPROVED DT METHOD'='NO'/'YES','SCALE FACTOR':1.})
         buckle
             Dict({'EIGENSOLVER':'SUBSPACE'})
-    
+
     extra:
         extra='*BULK VISCOSITY\n0.12, 0.06\n'
-        
+
         extra=[Dict({'keyword':'BULK VISCOSITY','data':[0.12, 0.06]})]
-        
-    
+
+
     """
 
     analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
-    
+
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom=False,
                  subheading=None,tags=None,name=None,out=[],res=[],
                  stepOptions=None,analysisOptions=None,extra=None):
         """Create a new analysis step."""
-        
-        
+
+
         self.analysis = analysis.upper()
 
         self.name = name
@@ -1731,7 +1735,7 @@ class Step(Dict):
         if nlgeom == 'NO':
             nlgeom = False
         self.nlgeom = nlgeom
-        
+
         self.tags = tags
         self.out = out
         self.res = res
@@ -1745,7 +1749,7 @@ class Step(Dict):
         """Write a load step.
 
         propDB is the properties database to use.
-        
+
         Except for the step data itself, this will also write the passed
         output and result requests.
         out is a list of Output-instances.
@@ -1760,15 +1764,15 @@ class Step(Dict):
 
         if self.nlgeom:
             cmd += ', NLGEOM=%s' % self.nlgeom
-        
+
         if self.stepOptions is not None:
             cmd+=fmtOptions(self.stepOptions)
         cmd += '\n'
         fil.write(cmd)
-        
+
         if self.subheading is not None:
             fil.write(self.subheading+'\n')
-        
+
         if self.analysis =='STATIC':
             fil.write("*STATIC")
         elif self.analysis == 'EXPLICIT':
@@ -1781,19 +1785,19 @@ class Step(Dict):
             fil.write("*STATIC")
         elif self.analysis == 'RIKS':
             fil.write("*STATIC, RIKS")
-        
+
         cmd=''
         if self.analysisOptions is not None:
             cmd+=fmtOptions(self.analysisOptions)
         cmd+='\n'
-        fil.write(cmd)             
-        
-        #~ fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
-        fil.write(fmtData(self.time))              
-        
+        fil.write(cmd)
+
+        #~ fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))
+        fil.write(fmtData(self.time))
+
         if self.extra is not None:
             writeStepExtra(fil,self.extra)
-        
+
         prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
             pf.message("  Writing step boundary conditions")
@@ -1808,7 +1812,7 @@ class Step(Dict):
             if prop:
                 pf.message("  Writing step %s" % aname.lower())
                 writeDisplacements(fil,prop,dtype=aname)
-        
+
         prop = propDB.getProp('n',tag=self.tags,attr=['cload'])
         if prop:
             pf.message("  Writing step cloads")
@@ -1836,7 +1840,7 @@ class Step(Dict):
                 writeNodeOutput(fil,**i)
             elif i.kind == 'E':
                 writeElemOutput(fil,**i)
-                
+
         if res and self.analysis == 'EXPLICIT':
             writeFileOutput(fil,resfreq,timemarks)
         for i in res + self.res:
@@ -1846,13 +1850,13 @@ class Step(Dict):
                 writeElemResult(fil,**i)
         fil.write("*END STEP\n")
 
-#FI-SDB Remove **options the OUTPUT class 
+#FI-SDB Remove **options the OUTPUT class
 # should be used only extra but examples are needed
 class Output(Dict):
     """A request for output to .odb and history.
 
     Parameters:
-    
+
     - `type`: 'FIELD' or 'HISTORY'
     - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
     - `extra`: an extra string to be added to the command line. This
@@ -1860,18 +1864,18 @@ class Output(Dict):
       The string will be appended to the command line preceded by a comma.
 
     For kind=='':
-    
+
     - `variable`: 'ALL', 'PRESELECT' or ''
-          
+
     For kind=='NODE' or 'ELEMENT':
-    
+
     - `keys`: a list of output identifiers (compatible with kind type)
     - `set`: a single item or a list of items, where each item is either
       a property number or a node/element set name for which the results
       should be written. If no set is specified, the default is 'Nall'
       for kind=='NODE' and 'Eall' for kind='ELEMENT'
     """
-    
+
     def __init__(self,kind=None,keys=None,set=None,type='FIELD',variable='PRESELECT',extra='',**options):
         """ Create a new output request."""
         if 'history' in options:
@@ -1907,7 +1911,7 @@ class Result(Dict):
     """A request for output of results on nodes or elements.
 
     Parameters:
-        
+
     - `kind`: 'NODE' or 'ELEMENT' (first character suffices)
     - `keys`: a list of output identifiers (compatible with kind type)
     - `set`: a single item or a list of items, where each item is either
@@ -1927,7 +1931,7 @@ class Result(Dict):
     # for Abaqus/Explicit
     nintervals = 1
     timemarks = False
-    
+
     def __init__(self,kind,keys,set=None,output='FILE',freq=1,time=False,
                  **kargs):
         """Create new result request."""
@@ -1954,12 +1958,12 @@ class Interaction(Dict):
         self.surfacebehavior = surfacebehavior
         self.noseparation = noseparation
         self.pressureoverclosure = pressureoverclosure
-        
+
 ############################################################ AbqData
-        
+
 class AbqData(object):
     """Contains all data required to write the Abaqus input file.
-        
+
     - `model` : a :class:`Model` instance.
     - `prop`  : the `Property` database.
     - `nprop` : the node property numbers to be used for by-prop properties.
@@ -1971,7 +1975,7 @@ class AbqData(object):
       The default is to apply ALL boundary conditions initially.
       Specify a (possibly non-existing) tag to override the default.
     """
-    
+
     def __init__(self,model,prop,nprop=None,eprop=None,steps=[],res=[],out=[],bound=None):
         """Create new AbqData."""
         if not isinstance(model,Model) or not isinstance(prop,PropertyDB):
@@ -2008,21 +2012,22 @@ class AbqData(object):
             jobname,filename = abqInputNames(jobname)
             fil = open(filename,'w')
             pf.message("Writing to file %s" % (filename))
-        
+
         fil.write(fmtHeading("""Model: %s     Date: %s      Created by pyFormex
-Script: %s 
+Script: %s
 %s
 """ % (jobname, datetime.now(), pf.scriptName, header)))
 
         if create_part:
             fil.write("*PART, name=Part-0\n")
-        
+
         nnod = self.model.nnodes()
         pf.message("Writing %s nodes" % nnod)
         writeNodes(fil,self.model.coords)
 
         pf.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
+            print("NODE SET",p)
             if p.set is not None:
                 # set is directly specified
                 set = p.set
@@ -2035,7 +2040,7 @@ Script: %s
             else:
                 # default is all nodes
                 set = range(self.model.nnodes())
-                
+
             setname = nsetName(p)
             writeSet(fil,'NSET',setname,set)
 
@@ -2080,7 +2085,7 @@ Script: %s
                             writeSet(fil,'ELSET',grpname,[subsetname])
             else:
                 writeSet(fil,'ELSET',p.name,p.set)
-                    
+
         pf.message("Total number of elements: %s" % telems)
         if nelems != telems:
             pf.message("!! Number of elements written: %s !!" % nelems)
@@ -2102,17 +2107,17 @@ Script: %s
             fil.write("*END ASSEMBLY\n")
 
         pf.message("Writing global model properties")
-        
+
         prop = self.prop.getProp('',attr=['mass'])
         if prop:
             pf.message("Writing masses")
             fil.write(fmtMass(prop))
-        
+
         prop = self.prop.getProp('',attr=['inertia'])
         if prop:
             pf.message("Writing rotary inertia")
             fil.write(fmtInertia(prop))
-        
+
         prop = self.prop.getProp('',attr=['amplitude'])
         if prop:
             pf.message("Writing amplitudes")
@@ -2122,7 +2127,7 @@ Script: %s
         if prop:
             pf.message("Writing orientations")
             fil.write(fmtOrientation(prop))
-            
+
         prop = self.prop.getProp('',attr=['ConnectorBehavior'])
         if prop:
             pf.message("Writing Connector Behavior")
@@ -2137,29 +2142,29 @@ Script: %s
         if prop:
             pf.message("Writing surfaces")
             fil.write(fmtSurface(prop))
-            
+
         prop = self.prop.getProp('',attr=['analyticalsurface'])
         if prop:
             pf.message("Writing analytical surfaces")
             fil.write(fmtAnalyticalSurface(prop))
-            
+
         prop = self.prop.getProp('',attr=['interaction'])
-        if prop:       
+        if prop:
             pf.message("Writing contact pairs")
             fil.write(fmtContactPair(prop))
 
         prop = self.prop.getProp('',attr=['generalinteraction'])
-        if prop:  
+        if prop:
                 pf.message("Writing general contact")
                 fil.write(fmtGeneralContact(prop))
-                
+
         prop = self.prop.getProp('',attr=['constraint'])
-        if prop:  
+        if prop:
                 pf.message("Writing constraints")
                 fil.write(fmtConstraint(prop))
-                
+
         prop = self.prop.getProp('',attr=['initialcondition'])
-        if prop:  
+        if prop:
                 pf.message("Writing initial conditions")
                 fil.write(fmtInitialConditions(prop))
 
@@ -2167,7 +2172,7 @@ Script: %s
         if prop:
             pf.message("Writing initial boundary conditions")
             writeBoundaries(fil,prop)
-    
+
         pf.message("Writing steps")
         for step in self.steps:
             step.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
@@ -2177,7 +2182,7 @@ Script: %s
         pf.message("Wrote Abaqus input file %s" % filename)
 
 
-    
+
 ##################################################
 ## Some convenience functions
 ##################################################
@@ -2203,7 +2208,7 @@ def exportMesh(filename,mesh,eltype=None,header=''):
     fil.close()
     pf.message("Abaqus file %s written." % filename)
 
-    
+
 ##################################################
 ## Test
 ##################################################
@@ -2223,5 +2228,5 @@ if __name__ == "script" or __name__ == "draw":
 
     TestwriteFormatLines()
 
-    
+
 # End
