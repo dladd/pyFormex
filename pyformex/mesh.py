@@ -1099,26 +1099,42 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
     # BV: I'm not sure that we need this. Looks like it can or should
     # be replaced with a method applied on the BorderMesh
     #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
-    def matchFaces(self,mesh):
-        """_Match faces of mesh with faces of self.
+    def matchLowerEntitiesMesh(self,mesh,level=-1):
+        """_Match lower entity of mesh with the lower entity of self.
 
         self and Mesh can be same eltype meshes or different eltype but of the
         same hierarchical type (i.e. hex8-quad4 or tet4 - tri3)
         and are both without duplicates.
 
         Returns the indices array of the elems of self that matches
-        the faces of mesh, and the matched face number
+        the lower entity of mesh, and the matched lower entity number
         """
-        sel = self.elType().getEntities(2)
+        if level < 0:
+            level = m1.elType().ndim + level
+            
+        sel = self.elType().getEntities(level)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
-        fm=Mesh(self.coords,self.getFaces())
-        mesh=Mesh(mesh.coords,mesh.getFaces())
-        c=fm.matchCentroids(mesh)
+        fm = Mesh(self.coords,self.getLowerEntities(level,unique=True))
+        mesh = Mesh(mesh.coords,mesh.getLowerEntities(level,unique=True))
+        c = fm.matchCentroids(mesh)
         hiinv = hiinv[c]
-        hpos=matchIndex(c,hi).reshape(hi.shape)
+        hpos = matchIndex(c,hi).reshape(hi.shape)
         enr =  unique(hiinv[hiinv >= 0])  # element number
         fnr=column_stack(where(hpos!=-1)) # face number
+        return enr,fnr
+    
+    def matchFaces(self,mesh):
+        """_Match faces of mesh with faces of self.
+
+        self and Mesh can be same eltype meshes or different eltype but of the
+        same hierarchical type (i.e. hex8-quad4 or tet4 - tri3)
+        and are both without duplicates.
+        
+        eturns the indices array of the elems of self that matches
+        the faces of mesh, and the matched face number
+        """
+        enr,fnr = self.matchLowerEntitiesMesh(mesh,level=2)
         return enr,fnr
 
 
