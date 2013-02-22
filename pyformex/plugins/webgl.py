@@ -138,10 +138,7 @@ class WebGL(List):
             print("  Exporting with settings %s" % kargs)
             self.add(obj=o,**kargs)
         ca = cv.camera
-        #import coords
-        #pos = coords.Coords(ca.ctr)
-        #pos += [0.,0.,ca.dist]
-        self.view(position=ca.getPosition(),focus=ca.getCenter())
+        self.camera(position=ca.getPosition(),focus=ca.getCenter())
 
 
     def add(self,**kargs):
@@ -201,7 +198,7 @@ class WebGL(List):
             print("Not added because no file:",kargs)
 
 
-    def view(self,**kargs):
+    def camera(self,**kargs):
         """Set the camera position and direction.
 
         This takes two (optional) keyword parameters:

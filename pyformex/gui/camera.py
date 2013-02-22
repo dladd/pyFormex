@@ -198,7 +198,7 @@ class Camera(object):
 
     def getPosition(self):
         """Return the position of the camera."""
-        return self.trl+self.ctr
+        return self.toWorld([0.,0.,self.dist])
 
     def lock(self,onoff=True):
         """Lock/unlock a camera.

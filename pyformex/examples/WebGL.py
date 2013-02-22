@@ -73,7 +73,7 @@ def run():
 
     C.color = 'yellow'
     C.caption = 'A cylinder'
-    T.alpha = 0.8
+    C.alpha = 0.8
     C.control = ['visible','opacity']
 
     export({'sphere':S,'cone':T,'cylinder':C})
