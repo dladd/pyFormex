@@ -387,7 +387,7 @@ class Connectivity(ndarray):
         return ML
 
 
-    def testDuplicate(self,permutations=True):
+    def testDuplicate(self,permutations=True, return_multiplicity=False):
         """Test the Connectivity list for duplicates.
 
         By default, duplicates are elements that consist of the same set of
@@ -395,11 +395,13 @@ class Connectivity(ndarray):
         will only find the duplicate rows that have matching values at
         every position.
 
-        This function returns a tuple with two arrays:
+        This function returns a tuple with two arrays and optionally a dictionary:
 
         - an index used to sort the elements
         - a flags array with the value True for indices of the unique elements
           and False for those of the duplicates.
+        - if return_multiplicity is True it returns also an extra dict with
+          multiplicities as keys and a list of elements as value.
 
         Example:
 
@@ -411,9 +413,9 @@ class Connectivity(ndarray):
            [0 1 2]
            [0 2 1]
            [0 3 2]]
-          >>> ind,ok = conn.testDuplicate()
-          >>> print(ind,ok)
-          [3 4 0 1 2 5] [ True False  True  True False False]
+          >>> ind,ok,D = conn.testDuplicate(return_multiplicity=True)
+          >>> print(ind,ok,D)
+          [3 4 0 1 2 5] [ True False  True  True False False] {'1': array([0]), '3': array([1, 2, 5]), '2': array([3, 4])}
           >>> print(ok.cumsum())
           [1 1 2 3 3 3]
 
@@ -428,6 +430,15 @@ class Connectivity(ndarray):
         ok = (C != roll(C,1,axis=0)).any(axis=1)
         if not ok[0]: # all duplicates -> should result in one unique element
             ok[0] = True
+        if return_multiplicity:
+            cs = ok.cumsum()-1
+            mult, uniq = multiplicity(cs)
+            D={}
+            for m in unique(mult):
+                sel = where(mult==m)[0]
+                w=ind[in1d(cs,sel)]
+                D.update({'%d'%m:w})
+            return ind,ok, D
         return ind,ok
 
 
