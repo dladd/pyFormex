@@ -28,6 +28,7 @@
 from __future__ import print_function
 
 from numpy import *
+import arraytools as at
 
 inverse = linalg.linalg.inv
 multiply = dot
@@ -118,7 +119,7 @@ class Camera(object):
         matrix, rather than as three angles. Therefore we store the camera
         position and orientation as follows:
 
-        - `ctr`: `[ x,y,z ]` : the reference point of the camera:
+        - `focus`: `[ x,y,z ]` : the reference point of the camera:
           this is always a point on the viewing axis. Usually, it is set to
           the center of the scene you are looking at.
         - `dist`: distance of the camera to the reference point.
@@ -169,9 +170,9 @@ class Camera(object):
     def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=1.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
         self.locked = False
-        self.setCenter(*center)
-        self.setRotation(long,lat,twist)
+        self.focus = center
         self.dist = dist
+        self.setRotation(long,lat,twist)
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
         self.area = None
@@ -182,15 +183,25 @@ class Camera(object):
         self.tracking = False
         self.m = self.p = self.v = None
 
-    # Use only these access functions to make implementation changes easier
 
-    def getCenter(self):
-        """Return the camera reference point (the scene center)."""
-        return self.ctr
+    @property
+    def focus(self):
+        """Return the camera reference (focus) point (the scene center)."""
+        return self._focus
 
-    def getRot(self):
-        """Return the camera rotation matrix."""
-        return self.rot
+    @focus.setter
+    def focus(self,vector):
+        """Set the camera reference point (the focus point).
+
+        The focus is the point the camer is looking at. It is a point on
+        the camera's optical axis.
+
+        - `vector`: (3,) float array: the global coordinates of the focus.
+
+        """
+        if not self.locked:
+            self._focus = at.checkArray(vector,(3,),'f')
+            self.viewChanged = True
 
 
     @property
@@ -207,6 +218,10 @@ class Camera(object):
                 self.viewChanged = True
 
 
+    def getRot(self):
+        """Return the camera rotation matrix."""
+        return self.rot
+
     def getPosition(self):
         """Return the position of the camera."""
         return self.toWorld([0.,0.,self.dist])
@@ -220,13 +235,6 @@ class Camera(object):
         views from different angles.
         """
         self.locked = bool(onoff)
-
-
-    def setCenter(self,x,y,z):
-        """Set the center of the camera in global cartesian coordinates."""
-        if not self.locked:
-            self.ctr = [x,y,z]
-            self.viewChanged = True
 
 
     def setAngles(self,angles):
@@ -260,7 +268,7 @@ class Camera(object):
     def report(self):
         """Return a report of the current camera settings."""
         return """Camera Settings:
-  Center: %s
+  Focus: %s
   Distance: %s
   Rotation Matrix:
   %s
@@ -268,7 +276,7 @@ class Camera(object):
   Aspect Ratio: %s
   Area: %s, %s
   Near/Far Clip: %s, %s
-""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
+""" % (self.focus,self.dist,self.rot,self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
 
 
     def dolly(self,val):
@@ -287,41 +295,37 @@ class Camera(object):
             self.viewChanged = True
 
 
-    def pan(self,val,axis=0):
-        """Rotate the camera around axis through its eye.
+    ## def pan(self,val,axis=0):
+    ##     """Rotate the camera around axis through its eye.
 
-        The camera is rotated around an axis through the eye point.
-        For axes 0 and 1, this will move the center, creating a panning
-        effect. The default axis is parallel to the y-axis, resulting in
-        horizontal panning. For vertical panning (axis=1) a convenience
-        alias tilt is created.
-        For axis = 2 the operation is equivalent to the rotate operation.
-        """
-        if not self.locked:
-            if axis==0 or axis ==1:
-
-                ## rot = rotationMatrix(val,axis)
-
-                ## eye = self.getPosition()
-                ## eye[axis] = (eye[axis] + val) % 360
-                ## center = diff(eye,sphericalToCartesian(eye))
-                self.setCenter(*center)
-            elif axis==2:
-                self.twist = (self.twist + val) % 360
-            self.viewChanged = True
+    ##     The camera is rotated around an axis through the eye point.
+    ##     For axes 0 and 1, this will move the center, creating a panning
+    ##     effect. The default axis is parallel to the y-axis, resulting in
+    ##     horizontal panning. For vertical panning (axis=1) a convenience
+    ##     alias tilt is created.
+    ##     For axis = 2 the operation is equivalent to the rotate operation.
+    ##     """
+    ##     if not self.locked:
+    ##         if axis==0 or axis ==1:
+    ##             pos = self.getPosition()
+    ##             self.eye[axis] = (self.eye[axis] + val) % 360
+    ##             self.focus = diff(pos,sphericalToCartesian(self.eye))
+    ##         elif axis==2:
+    ##             self.twist = (self.twist + val) % 360
+    ##         self.viewChanged = True
 
 
-    def tilt(self,val):
-        """Rotate the camera up/down around its own horizontal axis.
+    ## def tilt(self,val):
+    ##     """Rotate the camera up/down around its own horizontal axis.
 
-        The camera is rotated around and perpendicular to the plane of the
-        y-axis and the viewing axis. This has the effect of a vertical pan.
-        A positive value tilts the camera up, shifting the scene down.
-        The value is specified in degrees.
-        """
-        if not self.locked:
-            self.pan(val,1)
-            self.viewChanged = True
+    ##     The camera is rotated around and perpendicular to the plane of the
+    ##     y-axis and the viewing axis. This has the effect of a vertical pan.
+    ##     A positive value tilts the camera up, shifting the scene down.
+    ##     The value is specified in degrees.
+    ##     """
+    ##     if not self.locked:
+    ##         self.pan(val,1)
+    ##         self.viewChanged = True
 
 
     def move(self,dx,dy,dz):
@@ -331,8 +335,8 @@ class Camera(object):
         vector. This has the effect of moving the scene in opposite direction.
         """
         if not self.locked:
-            x,y,z = self.ctr
-            self.setCenter(x+dx,y+dy,z+dz)
+            self.focus += [dx,dy,dz]
+
 
 ##    def truck(self,dx,dy,dz):
 ##        """Move the camera translation vector in local coordinates.
@@ -370,7 +374,7 @@ class Camera(object):
             GL.glTranslatef(0,0,-self.dist)
             GL.glRotatef(val,vx,vy,vz)
             GL.glMultMatrixf(self.rot)
-            dx,dy,dz = self.getCenter()
+            dx,dy,dz = self.focus
             GL.glTranslatef(-dx,-dy,-dz)
             self.saveModelView()
 
@@ -400,7 +404,7 @@ class Camera(object):
             # rotate according to current rotation matrix
             GL.glMultMatrixf(self.rot)
             # translate to center
-            dx,dy,dz = self.getCenter()
+            dx,dy,dz = self.focus
             GL.glTranslatef(-dx,-dy,-dz)
 
 

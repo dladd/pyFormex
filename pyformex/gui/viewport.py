@@ -441,9 +441,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             if self.trackfunc:
-                #print "PRESS",self.trackfunc,pf.canvas.camera.ctr
+                #print "PRESS",self.trackfunc,pf.canvas.camera.focus
                 pf.canvas.camera.setTracking(True)
-                x,y,z = pf.canvas.camera.ctr
+                x,y,z = pf.canvas.camera.focus
                 self.zplane = pf.canvas.project(x,y,z,True)[2]
                 #print 'ZPLANE',self.zplane
                 self.trackfunc(x,y,self.zplane)

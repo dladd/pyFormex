@@ -1757,7 +1757,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
 
     delay(saved)
     pf.GUI.enableButtons(pf.GUI.actions,['Continue'],saved1)
-    pf.canvas.camera.setCenter(*center)
+    pf.canvas.camera.focus = center
     pf.canvas.camera.dist = length(center-eye)
     pf.canvas.update()
 

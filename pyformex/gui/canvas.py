@@ -1191,8 +1191,7 @@ class Canvas(object):
             self.setBbox(bbox)
 
             X0,X1 = self.bbox
-            center = 0.5*(X0+X1)
-            self.camera.setCenter(*center)
+            self.camera.focus = 0.5*(X0+X1)
 
         # set camera angles
         if type(angles) is str:

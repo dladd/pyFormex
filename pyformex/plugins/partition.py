@@ -50,11 +50,11 @@ def prepare(V):
 
 def testview(F,V,P):
     global VA,waiting
-    p = array(pf.canvas.camera.getCenter())
+    p = array(pf.canvas.camera.focus)
     waiting = True
     while waiting:
         pf.app.processEvents()
-    p -= array(pf.canvas.camera.getCenter())
+    p -= array(pf.canvas.camera.focus)
     print("TRANSLATE: %s" % p)
     m = pf.canvas.camera.getRot()
     P += p
