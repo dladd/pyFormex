@@ -224,7 +224,7 @@ class Camera(object):
 
     def getPosition(self):
         """Return the position of the camera."""
-        return self.toWorld([0.,0.,self.dist])
+        return self.toWorld([0.,0.,0.])
 
     def lock(self,onoff=True):
         """Lock/unlock a camera.
@@ -469,17 +469,28 @@ class Camera(object):
         return [ a/v[3] for a in v[0:3] ]
 
 
-    def toWorld(self,v,trl=False):
+    ## def toWorld(self,v,trl=False):
+    ##     """Transform a vertex from camera to world coordinates.
+
+    ##     The specified vector can have 3 or 4 (homogoneous) components.
+    ##     This uses the currently saved rotation matrix.
+    ##     """
+    ##     a = inverse(array(self.rot))
+    ##     if len(v) == 3:
+    ##         v = v + [ 1. ]
+    ##     v = multiply(array(v),a)
+    ##     return v[0:3] / v[3]
+
+    # TO MATRIX4?
+    def toWorld(self,v):
         """Transform a vertex from camera to world coordinates.
 
+        This multiplies
         The specified vector can have 3 or 4 (homogoneous) components.
         This uses the currently saved rotation matrix.
         """
-        a = inverse(array(self.rot))
-        if len(v) == 3:
-            v = v + [ 1. ]
-        v = multiply(array(v),a)
-        return v[0:3] / v[3]
+        v = at.checkArray(v,(3,),'f') + [0.,0.,self.dist]
+        return dot(v,transpose(self.rot[:3,:3])) + self.focus
 
 
     def setLens(self,fovy=None,aspect=None):

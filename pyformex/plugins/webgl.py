@@ -128,7 +128,7 @@ class WebGL(List):
         print("Exporting %s actors from current scene" % len(cv.actors))
         for i,a in enumerate(cv.actors):
             o = a.object
-            print("OBJDICT = %s" % sorted(dir(o)))
+            #print("OBJDICT = %s" % sorted(dir(o)))
             atype = type(a).__name__
             otype = type(o).__name__
             print("Actor %s: %s %s Shape=(%s,%s) Color=%s"% (i,atype,otype,o.nelems(),o.nplex(),a.color))

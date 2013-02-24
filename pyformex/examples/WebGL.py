@@ -81,6 +81,8 @@ def run():
     draw([S,T,C])
     zoomAll()
     rotRight(30.)
+    camera = pf.canvas.camera
+    print("Camera focus: %s; position %s" % (camera.focus, camera.getPosition()))
 
     if checkWorkdir():
         # Export everything to webgl
