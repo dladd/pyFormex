@@ -970,7 +970,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         zoom operation. The action is one of PRESS, MOVE or RELEASE.
         """
         if action == PRESS:
-            self.state = [self.camera.getDist(),self.camera.area.tolist(),pf.cfg['gui/dynazoom']]
+            self.state = [self.camera.dist,self.camera.area.tolist(),pf.cfg['gui/dynazoom']]
 
         elif action == MOVE:
             w,h = self.getSize()

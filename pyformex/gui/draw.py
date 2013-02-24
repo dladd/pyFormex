@@ -1659,19 +1659,19 @@ def twistRight(factor=None):
     pf.canvas.update()
 
 def transLeft(factor=None):
-    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    val = pan_factor(factor) * pf.canvas.camera.dist
     pf.canvas.camera.translate(-val,0,0,pf.cfg['draw/localaxes'])
     pf.canvas.update()
 def transRight(factor=None):
-    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    val = pan_factor(factor) * pf.canvas.camera.dist
     pf.canvas.camera.translate(+val,0,0,pf.cfg['draw/localaxes'])
     pf.canvas.update()
 def transDown(factor=None):
-    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    val = pan_factor(factor) * pf.canvas.camera.dist
     pf.canvas.camera.translate(0,-val,0,pf.cfg['draw/localaxes'])
     pf.canvas.update()
 def transUp(factor=None):
-    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    val = pan_factor(factor) * pf.canvas.camera.dist
     pf.canvas.camera.translate(0,+val,0,pf.cfg['draw/localaxes'])
     pf.canvas.update()
 def dollyIn(factor=None):
