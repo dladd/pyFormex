@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -27,13 +27,13 @@
 """
 from __future__ import print_function
 
-from OpenGL import GL,GLU
+from OpenGL import GL
 from colors import *
 from formex import *
 from drawable import *
 from text import *
 import gluttext
- 
+
 ### Marks ###############################################
 
 class Mark(Drawable):
@@ -44,7 +44,7 @@ class Mark(Drawable):
     - `pos` : 3D point where the mark will be drawn
     - `draw()` : method to draw the mark
     """
-    
+
     def __init__(self,pos,nolight=True,**kargs):
         self.pos = pos
         Drawable.__init__(self,nolight=nolight,**kargs)
@@ -69,7 +69,7 @@ class AxesMark(Mark):
 
 class TextMark(Mark):
     """A text drawn at a 3D position."""
-    
+
     def __init__(self,pos,text,color=None,font='sans',size=18,**kargs):
         Mark.__init__(self,pos,**kargs)
         self.text = text
@@ -91,7 +91,7 @@ class TextMark(Mark):
 
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
-    
+
     def __init__(self,pos,val,color=black,font='sans',size=18,leader='',gravity='',**kargs):
         """Create a number list.
 

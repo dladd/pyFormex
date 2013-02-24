@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -31,7 +31,6 @@ rendering of text on an OpenGL canvas.
 from __future__ import print_function
 
 import OpenGL.GL as GL
-import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 
 #from drawable import *
@@ -104,11 +103,11 @@ def glutFont(font):
     """Return GLUT font designation for the named font.
 
     The recognized font names are:
-    
+
     - fixed: '9x15', '8x13',
     - times-roman: 'tr10', 'tr24'
     - helvetica:   'hv10', 'hv12',  'hv18'
-    
+
     If an unrecognized string is given, the default is 'hv18'.
     """
     return GLUTFONTS.get(font,GLUTFONTS['hv18'])
@@ -169,7 +168,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
       respect to the insert position. It can be a combination of one of the
       characters 'N or 'S' to specify the vertical positon, and 'W' or 'E'
       for the horizontal. The default(empty) string will center the text.
-      
+
     """
     if type(text) is str:
         text = text.split('\n')
@@ -178,7 +177,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
     fontheight = glutFontHeight(font)
     spacing *= fontheight
     width = max(widths)
-    height = spacing*nlines 
+    height = spacing*nlines
 
     x,y = float(x),float(y)
     if 'S' in gravity:
@@ -188,7 +187,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
     else:
         yi = y + height/2
 
-    
+
     for t,w in zip(text,widths):
         if 'E' in gravity:
             xi = x

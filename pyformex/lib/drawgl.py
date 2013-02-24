@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -34,7 +34,7 @@ from __future__ import print_function
 
 # There should be no other imports here than OpenGL and numpy
 import pyformex as pf
-from OpenGL import GL,GLU
+from OpenGL import GL
 from numpy import *
 
 accelerated = False
@@ -53,7 +53,7 @@ def glColor(color,alpha=1.0):
     if alpha == 1.0:
         GL.glColor3fv(color)
     else:
-        GL.glColor4fv(append(color,alpha)) 
+        GL.glColor4fv(append(color,alpha))
 
 
 def glObjType(nplex):
@@ -62,7 +62,7 @@ def glObjType(nplex):
     except:
         return GL.GL_POLYGON
 
-                    
+
 def draw_polygons(x,n,c,t,alpha,objtype):
     """Draw a collection of polygons.
 
@@ -93,7 +93,7 @@ def draw_polygons(x,n,c,t,alpha,objtype):
         objtype = glObjType(nplex)
 
     pf.debug("nelems=%s, nplex=%s, ndn=%s, ndc=%s, ndt=%s, objtype=%s"%(nelems,nplex,ndn,ndc,ndt,objtype),pf.DEBUG.DRAW)
-    
+
     simple = nplex <= 4 and objtype == glObjType(nplex)
     if simple:
         GL.glBegin(objtype)
@@ -110,9 +110,9 @@ def draw_polygons(x,n,c,t,alpha,objtype):
                 if ndc == 3:
                     glColor(c[i,j],alpha)
                 if ndt == 2:
-                    GL.glTexCoord2fv(t[j]) 
+                    GL.glTexCoord2fv(t[j])
                 elif ndt == 3:
-                    GL.glTexCoord2fv(t[i,j]) 
+                    GL.glTexCoord2fv(t[i,j])
                 GL.glVertex3fv(x[i,j])
         GL.glEnd()
 
@@ -131,9 +131,9 @@ def draw_polygons(x,n,c,t,alpha,objtype):
                 if ndc == 3:
                     glColor(c[i,j],alpha)
                 if ndt == 2:
-                    GL.glTexCoord2fv(t[j]) 
+                    GL.glTexCoord2fv(t[j])
                 elif ndt == 3:
-                    GL.glTexCoord2fv(t[i,j]) 
+                    GL.glTexCoord2fv(t[i,j])
                 GL.glVertex3fv(x[i,j])
             GL.glEnd()
 
@@ -149,7 +149,7 @@ def pick_polygons(x,objtype):
     if objtype < 0:
         objtype = glObjType(nplex)
 
-    for i,xi in enumerate(x): 
+    for i,xi in enumerate(x):
         GL.glPushName(i)
         GL.glBegin(objtype)
         for xij in xi:
@@ -157,7 +157,7 @@ def pick_polygons(x,objtype):
         GL.glEnd()
         GL.glPopName()
 
-        
+
 def draw_polygon_elems(x,e,n,c,t,alpha,objtype):
     """Draw a collection of polygon elements.
 
@@ -171,7 +171,7 @@ def draw_polygon_elems(x,e,n,c,t,alpha,objtype):
     objtype : GL Object type (-1 = auto)
     """
     draw_polygons(x[e],n,c,t,alpha,objtype)
-    
+
 
 def pick_polygon_elems(x,e,objtype):
     """Mimics draw_polygon_elems for picking purposes.
@@ -181,5 +181,5 @@ def pick_polygon_elems(x,e,objtype):
     objtype : GL Object type (-1 = auto)
     """
     pick_polygons(x[e],objtype)
-    
+
 ### End

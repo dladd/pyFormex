@@ -29,7 +29,7 @@ from __future__ import print_function
 
 import pyformex as pf
 import sys
-from OpenGL import GL,GLU
+from OpenGL import GL
 
 from drawable import *
 from formex import *
