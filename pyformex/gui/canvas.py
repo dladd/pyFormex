@@ -1229,7 +1229,7 @@ class Canvas(object):
                 return
             if dist <= 0.0:
                 dist = 1.0
-            self.camera.setDist(dist)
+            self.camera.dist = dist
 
             ## print "vsize,dist = %s, %s" % (vsize,dist)
             ## near,far = 0.01*dist,100.*dist

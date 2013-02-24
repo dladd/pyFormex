@@ -984,7 +984,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 elif method == 'dolly':
                     d = utils.stuur(value,[0,state,size],[5,1,0.2],1.2)
                     #pf.debug(d)
-                    self.camera.setDist(d*self.state[0])
+                    self.camera.dist = d*self.state[0]
 
             self.update()
 

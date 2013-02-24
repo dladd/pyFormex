@@ -64,7 +64,7 @@ def run():
     S.color = red
     S.alpha = 0.7
     S.caption = 'A sphere'
-    S.control = ['visible','opacity']
+    S.control = ['visible','opacity','color']
 
     T.color = blue
     T.caption = 'A cone'
@@ -74,7 +74,7 @@ def run():
     C.color = 'yellow'
     C.caption = 'A cylinder'
     C.alpha = 0.8
-    C.control = ['visible','opacity']
+    C.control = ['visible','opacity','color']
 
     export({'sphere':S,'cone':T,'cylinder':C})
 

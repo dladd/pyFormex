@@ -171,7 +171,7 @@ class Camera(object):
         self.locked = False
         self.setCenter(*center)
         self.setRotation(long,lat,twist)
-        self.setDist(dist)
+        self.dist = dist
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
         self.area = None
@@ -192,9 +192,20 @@ class Camera(object):
         """Return the camera rotation matrix."""
         return self.rot
 
-    def getDist(self):
+
+    @property
+    def dist(self):
         """Return the camera distance."""
-        return self.dist
+        return self._dist
+
+    @dist.setter
+    def dist(self,dist):
+        """Set the camera distance."""
+        if not self.locked:
+            if dist > 0.0 and dist != inf:
+                self._dist = dist
+                self.viewChanged = True
+
 
     def getPosition(self):
         """Return the position of the camera."""
@@ -246,15 +257,6 @@ class Camera(object):
             self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
             self.viewChanged = True
 
-
-    def setDist(self,dist):
-        """Set the distance."""
-        if not self.locked:
-            if dist > 0.0 and dist != inf:
-                self.dist = dist
-                self.viewChanged = True
-
-
     def report(self):
         """Return a report of the current camera settings."""
         return """Camera Settings:
@@ -280,7 +282,7 @@ class Camera(object):
         a dolly operation.
         """
         if not self.locked:
-            self.setDist(self.getDist() * val)
+            self.dist *= val
             #print("DIST %s" % self.dist)
             self.viewChanged = True
 
