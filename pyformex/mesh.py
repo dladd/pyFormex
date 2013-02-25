@@ -740,14 +740,19 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         return unique(brd)
 
 
-    def peel(self):
+    def peel(self, nodal=False):
         """Return a Mesh with the border elements removed.
 
-        This is a convenient shorthand for ::
+        If nodal is True all elements connected to a border node are removed.
+        If nodal is False, it is a convenient shorthand for ::
 
           self.cselect(self.getBorderElems())
         """
-        return self.cselect(self.getBorderElems())
+        if nodal:
+            brd=self.elems.connectedTo(self.getBorderNodes())
+        else:
+            brd=self.getBorderElems()
+        return self.cselect(brd)
 
 
     def getFreeEdgesMesh(self,compact=True):
