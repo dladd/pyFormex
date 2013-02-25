@@ -476,6 +476,7 @@ class AppMenu(menu.Menu):
 
         """
         from gui.draw import layout,reset,sleep
+        from gui import widgets
         pf.GUI.enableButtons(pf.GUI.actions,['Stop'],True)
         if last is None:
             last = len(self.files)
@@ -488,6 +489,9 @@ class AppMenu(menu.Menu):
             r.shuffle(files)
         print("Running %s examples" % len(files))
         print(files)
+        save = widgets.input_timeout
+        pf.GUI.drawlock.free()
+        widgets.input_timeout = 1.0
         for f in files:
             while pf.scriptlock:
                 print("RUNALL WAITING BECAUSE OF SCRIPT LOCK")
@@ -504,6 +508,8 @@ class AppMenu(menu.Menu):
             if script.exitrequested:
                 break
         tcount = len(files)
+        widgets.input_timeout = save
+        pf.GUI.drawlock.allow()
         if recursive and (count < 0 or tcount < count):
             for m in self._submenus_:
                 n = m.runAll(recursive=recursive,random=random,count=count-tcount)

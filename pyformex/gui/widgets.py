@@ -122,17 +122,15 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
         if timeout >= 0.0:
             pf.debug("ADDING TIMEOUT %s,%s" % (timeout,timeoutfunc))
             timer = QtCore.QTimer()
-            if type(timeoutfunc) is str:
-                timer.connect(timer,QtCore.SIGNAL("timeout()"),widget,QtCore.SLOT(timeoutfunc))
-            else:
-                timer.timeout.connect(timeoutfunc)
+            timer.timeout.connect(timeoutfunc)
             timer.setSingleShot(True)
             timeout = int(1000*timeout)
             timer.start(timeout)
             widget.timer = timer  # make sure this timer stays alive
             pf.debug("TIMER STARTED")
     except:
-        raise ValueError,"Could not start the timeout timer"
+        raise
+        #raise ValueError,"Could not start the timeout timer"
 
 
 def setExpanding(w):
@@ -713,14 +711,8 @@ class InputCombo(InputItem):
         self._choices_ = []
         self.setChoices(choices)
         if callable(onselect):
-            #
             # BEWARE: onselect now returns index of selection instead of string
-            #
             self.input.currentIndexChanged['QString'].connect(onselect)
-            #
-            # BV REMOVED THIS BECAUSE NOT DOCUMENTED WHAT IT SHOULD DO
-            # if callable(func):
-            #     self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
         self.setValue(value)
         self.layout().insertWidget(1,self.input)
 
@@ -1592,27 +1584,26 @@ class InputDialog(QtGui.QDialog):
                             tgt.enabled_by = [(src,val)]
                         signal = None
                         if isinstance(src,InputBool):
-                            signal = QtCore.SIGNAL("stateChanged(int)")
-                            #print "SIGNAL",signal
+                            signal = src.input.stateChanged[int]
                         elif isinstance(src,InputRadio):
                             utils.warn('radio_enabler')
                             # BV: this does not work
-                            signal = QtCore.SIGNAL("buttonClicked(int)")
+                            #signal = src.input.buttonClicked[int]
                         elif isinstance(src,InputCombo):
-                            signal = QtCore.SIGNAL("currentIndexChanged(int)")
+                            signal = src.input.currentIndexChanged[int]
                         elif isinstance(src,InputGroup):
-                            signal = QtCore.SIGNAL("clicked(bool)")
+                            signal = src.input.clicked[bool]
                         else:
                             raise ValueError,"Can not enable from a %s input field" % type(src.input)
 
 
                         if signal:
-                            init_signals.append((src.input,signal))
-                            src.connect(src.input,signal,tgt.enableItem)
+                            init_signals.append(signal)
+                            signal.connect(tgt.enableItem)
 
         # emit the signal to adjust initial state
-        for src,signal in init_signals:
-            src.emit(signal,0)
+        for signal in init_signals:
+            signal.emit(0)
 
 
     def add_items(self,items,form,prefix=''):
@@ -1969,7 +1960,7 @@ def updateOldDialogItems(data,newdata):
 
 
 
-#####################################################################
+####################################################################
 ########### Specialized Widgets #####################################
 #####################################################################
 
@@ -2286,7 +2277,7 @@ class ArrayModel(QtCore.QAbstractTableModel):
                     return False
                 r,c = [index.row(),index.column()]
                 self._data[r,c] = value
-                self.emit(QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.dataChanged.emit(index,index) #not sure if needed
                 return True
             except:
                 raise
@@ -2953,7 +2944,7 @@ class MessageBox(QtGui.QMessageBox):
         if default is None:
             default = actions[-1]
         updateText(self,text,format)
-        icon = self.getIcon(level) 
+        icon = self.getIcon(level)
         if icon:
             self.setIcon(icon)
 
@@ -2962,7 +2953,7 @@ class MessageBox(QtGui.QMessageBox):
             if a == default:
                 self.setDefaultButton(b)
 
-        addTimeOut(self,timeout,"accept()")
+        addTimeOut(self,timeout,self.accept)
         self.checks = []
         if check:
             self.checks.append(self.addCheck(check))
@@ -2971,11 +2962,11 @@ class MessageBox(QtGui.QMessageBox):
         if level == 'info':
             return self.Information
         elif level == 'warning':
-            return self.Warning    
+            return self.Warning
         elif level == 'error':
-            return self.Critical 
+            return self.Critical
         elif level == 'question':
-            return self.Question 
+            return self.Question
 
 
     def addCheck(self,text):
@@ -3082,7 +3073,7 @@ class TextBox(QtGui.QDialog):
             # font.setStyle(QtGui.QFont.StyleNormal)
             self.setFont(font)
 
-        addTimeOut(self,timeout,"accept()")
+        addTimeOut(self,timeout,self.accept)
 
     def getResult(self):
         return self.exec_() == ACCEPTED
@@ -3141,7 +3132,7 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
                     slot = (parent,Reject)
                 else:
                     slot = (parent,Reject)
-            b.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+            b.clicked.connect(*slot)
             if n == default.lower():
                 b.setDefault(True)
             layout.addWidget(b)

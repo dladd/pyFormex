@@ -1285,14 +1285,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        # pf.GUI.signals.WAKEUP.emit()
-        # Done byt the top level (GUI) ??
+        pf.GUI.signals.WAKEUP.emit()
+        #or is this done by the top level (GUI) ??
         # Move all of these to GUI ??
         if e.key() == ESC:
-            self.emit(CANCEL,())
+            pf.GUI.signals.CANCEL.emit()
             e.accept()
         elif e.key() == ENTER or e.key() == RETURN:
-            self.emit(DONE,())
+            pf.GUI.signals.DONE.emit()
             e.accept()
         else:
             e.ignore()

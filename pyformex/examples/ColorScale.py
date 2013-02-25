@@ -132,7 +132,6 @@ def close():
         dialog.close()
         dialog = None
     # Release script lock
-    print("RELEASE LOCK")
     scriptRelease(__file__)
 
 
@@ -143,7 +142,6 @@ def timeOut():
     dialog timeout.
     Most users can simply ignore this.
     """
-    print("COLORSCALE TIMEOUT")
     show()
     close()
 

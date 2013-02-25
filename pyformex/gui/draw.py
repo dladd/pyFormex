@@ -1585,6 +1585,7 @@ def pause(timeout=None,msg=None):
         timeout = widgets.input_timeout
     R = Repeater(_continue_,timeout,sleep=0.1)
     R.start()
+    pf.GUI.drawlock.release()
 
 
 ################### EXPERIMENTAL STUFF: AVOID! ###############

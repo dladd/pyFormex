@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -117,7 +117,7 @@ def partition(Fin,prop=0):
     Returns the cutplanes in an array with shape (ncuts,2,3), where
       (i,0,:) is a point in the plane i and
       (i,1,:) is the normal vector on the plane i .
-    
+
     As a side effect, the properties of the input Formex will be changed
     to flag the parts between successive cut planes by incrementing
     property values.
@@ -155,14 +155,14 @@ def partition(Fin,prop=0):
 
     cut_planes = []
 
-    QtCore.QObject.connect(pf.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+    pf.GUI.signals.WAKEUP.connect(wakeup)
 
     linewidth(2)
     w,h = pf.canvas.width(),pf.canvas.height()
     fgcolor('magenta')
     SD = decors.Line(w/2,0,w/2,h)
     decorate(SD)
-    
+
     fgcolor(colors.black)
 
     V,P,N = prepare(V)
@@ -182,14 +182,14 @@ def partition(Fin,prop=0):
             V,P,N = prepare(V)
         else:
             break
-        
-    QtCore.QObject.disconnect(pf.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+
+    pf.GUI.signals.WAKEUP.disconnect(wakeup)
     clear()
     draw(F)
     Fin.setProp(F.prop)
     return array(cut_planes)
 
-   
+
 def savePartitions(F):
     print("Current dir is %s" % os.getcwd())
     if ack("Save the partitioned Formex?"):
@@ -199,7 +199,7 @@ def savePartitions(F):
     if ack("Reread/draw the partitioned Formex?"):
         F = readFormex('part.fmx')
         draw(F)
-    
+
 
     d = splitProp(F,'part')
     export(d)
@@ -207,6 +207,6 @@ def savePartitions(F):
     if ack("Save the partitions separately?"):
         for (k,v) in d.iteritems():
             writeFormex(v,"%s.fmx"%k)
-   
+
 
 # End

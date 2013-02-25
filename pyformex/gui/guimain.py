@@ -410,10 +410,9 @@ class Gui(QtGui.QMainWindow):
         self.signals.FULLSCREEN.connect(self.fullScreen)
 
         # Set up hot keys: hitting the key will emit the corresponding signal
-        from signals import Qt
         self.hotkey  = {
-#            Qt.Key_F2: SAVE,
-            Qt.Key_F5: self.signals.FULLSCREEN,
+            QtCore.Qt.Key_F2: self.signals.SAVE,
+            QtCore.Qt.Key_F5: self.signals.FULLSCREEN,
             }
 
 
@@ -1393,9 +1392,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # and moved this up into GUI init
     pf.GUI.board.redirect(pf.cfg['gui/redirect'])
 
-
-    # Activate F5 as fullscreen switcher
-    #signals.onSignal(signals.FULLSCREEN,fullscreen)
 
     pf.GUI.update()
 

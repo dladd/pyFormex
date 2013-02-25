@@ -159,62 +159,62 @@ shows how to use QPainter to print an image.</p>
     def createActions(self):
         self.openAct = QtGui.QAction(tr("&Open..."),self)
         self.openAct.setShortcut(tr("Ctrl+O"))
-        self.connect(self.openAct,QtCore.SIGNAL('triggered()'),self.openfile)
+        self.openAct.triggered.connect(self.openfile)
 
         self.printAct = QtGui.QAction(tr("&Print..."),self)
         self.printAct.setShortcut(tr("Ctrl+P"))
         self.printAct.setEnabled(False)
-        self.connect(self.printAct,QtCore.SIGNAL('triggered()'),self.print_)
+        self.printAct.triggered.connect(self.print_)
 
 
         self.zoomInAct = QtGui.QAction(tr("Zoom &In (25%)"),self)
         self.zoomInAct.setShortcut(tr("Ctrl++"))
         self.zoomInAct.setEnabled(False)
-        self.connect(self.zoomInAct,QtCore.SIGNAL('triggered()'),self.zoomIn)
+        self.zoomInAct.triggered.connect(self.zoomIn)
 
         self.zoomOutAct = QtGui.QAction(tr("Zoom &Out (25%)"),self)
         self.zoomOutAct.setShortcut(tr("Ctrl+-"))
         self.zoomOutAct.setEnabled(False)
-        self.connect(self.zoomOutAct,QtCore.SIGNAL('triggered()'),self.zoomOut)
+        self.zoomOutAct.triggered.connect(self.zoomOut)
 
         self.normalSizeAct = QtGui.QAction(tr("&Normal Size"),self)
         self.normalSizeAct.setShortcut(tr("Ctrl+S"))
         self.normalSizeAct.setEnabled(False)
-        self.connect(self.normalSizeAct,QtCore.SIGNAL('triggered()'),self.normalSize)
+        self.normalSizeAct.triggered.connect(self.normalSize)
 
         self.fitToImageAct = QtGui.QAction(tr("Fit &Window to Image"),self)
         self.fitToImageAct.setShortcut(tr("Ctrl+W"))
         self.fitToImageAct.setEnabled(False)
         #self.fitToImageAct.setCheckable(True)
-        self.connect(self.fitToImageAct,QtCore.SIGNAL('triggered()'),self.fitToImage)
+        self.fitToImageAct.triggered.connect(self.fitToImage)
 
         self.fitToWindowAct = QtGui.QAction(tr("&Fit Image to Window"),self)
         self.fitToWindowAct.setShortcut(tr("Ctrl+F"))
         self.fitToWindowAct.setEnabled(False)
         self.fitToWindowAct.setCheckable(True)
-        self.connect(self.fitToWindowAct,QtCore.SIGNAL('triggered()'),self.fitToWindow)
+        self.fitToWindowAct.triggered.connect(self.fitToWindow)
 
         self.aboutAct = QtGui.QAction(tr("&About"),self)
-        self.connect(self.aboutAct,QtCore.SIGNAL('triggered()'),self.about)
+        self.aboutAct.triggered.connect(self.about)
 
         if isinstance(self.parent,QtGui.QApplication):
 
             self.exitAct = QtGui.QAction(tr("E&xit"),self)
             self.exitAct.setShortcut(tr("Ctrl+Q"))
-            self.connect(self.exitAct,QtCore.SIGNAL('triggered()'),self.close)
+            self.exitAct.triggered.connect(self.close)
 
             self.aboutQtAct = QtGui.QAction(tr("About &Qt"),self)
-            self.connect(self.aboutQtAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('aboutQt()'))
+            self.aboutQtAct.triggered.connect(self.parent.aboutQt)
 
         elif isinstance(self.parent,QtGui.QDialog):
 
             self.acceptAct = QtGui.QAction(tr("&Accept"),self)
             self.acceptAct.setShortcut(tr("Ctrl+A"))
-            self.connect(self.acceptAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('accept()'))
+            self.acceptAct.triggered.connect(self.parent.accept)
 
             self.rejectAct = QtGui.QAction(tr("&Reject"),self)
             self.rejectAct.setShortcut(tr("Ctrl+Q"))
-            self.connect(self.rejectAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('reject()'))
+            self.rejectAct.triggered.connect(self.parent.reject)
 
 
     def createMenus(self):

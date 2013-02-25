@@ -359,7 +359,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
     # Leave multisave mode if no filename or starting new multisave mode
     if multisave and (filename is None or multi):
         pf.message("Leave multisave mode")
-        QtCore.QObject.disconnect(pf.GUI,QtCore.SIGNAL("Save"),saveNext)
+        pf.GUI.signals.SAVE.disconnect(saveNext)
         multisave = None
 
     if filename is None:
@@ -378,9 +378,8 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
         if os.path.exists(names.peek()):
             next = names.next()
         pf.message("Start multisave mode to files: %s (%s)" % (names.name,format))
-        #print(hotkey)
         if hotkey:
-             QtCore.QObject.connect(pf.GUI,QtCore.SIGNAL("Save"),saveNext)
+             pf.GUI.signals.SAVE.connect(saveNext)
              if verbose:
                  pf.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % pf.cfg['keys/save'])
         multisave = (names,format,quality,size,window,border,hotkey,autosave,rootcrop)
@@ -446,7 +445,6 @@ def changeBackgroundColorXPM(fn,color):
         if l.startswith('"%s c ' % c):
             t[i] = '"%s c None",\n' % c
             break
-    #print t
     f = open(fn,'w')
     f.writelines(t)
     f.close()

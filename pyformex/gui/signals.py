@@ -31,37 +31,14 @@ from __future__ import print_function
 import pyformex as pf
 
 from gui import QtCore
-Qt = QtCore.Qt
-QObject = QtCore.QObject
+
+# These have to disappear
 SIGNAL = QtCore.SIGNAL
-QThread = QtCore.QThread
 
 # signals
 CANCEL = SIGNAL("Cancel")   # cancel the operation, undoing it
 DONE   = SIGNAL("Done")     # accept and finish the operation
-REDRAW = SIGNAL("Redraw")   # redraw a preview state
-WAKEUP = SIGNAL("Wakeup")   # wake up from a sleep state
 TIMEOUT = SIGNAL("Timeout") # terminate what was going on
-SAVE = SIGNAL("Save")       #
-FULLSCREEN = SIGNAL("Fullscreen")    #
-
-keypress_signal = {
-    Qt.Key_F2: SAVE,
-    Qt.Key_F5: FULLSCREEN,
-    }
-
-
-def onSignal(signal,function,widget=None):
-    """Connect a function to a signal"""
-    if widget is None:
-        widget = pf.GUI
-    QObject.connect(widget,signal,function)
-
-def offSignal(signal,function,widget=None):
-    """Disconnect a function from a signal"""
-    if widget is None:
-        widget = pf.GUI
-    QObject.disconnect(widget,signal,function)
 
 
 from gui import Signal

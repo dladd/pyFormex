@@ -141,10 +141,10 @@ def addCameraButtons(toolbar):
         if len(but) < 4 or but[3]:
             b.setAutoRepeat(True)
             b.setAutoRepeatDelay(500)
-            QtCore.QObject.connect(b,QtCore.SIGNAL("released()"),a,QtCore.SLOT("trigger()"))
+            b.released.connect(a.trigger)
         if len(but) >= 5:
             b.setCheckable(but[4])
-            b.connect(b,QtCore.SIGNAL("released()"),QtCore.SLOT("toggle()"))
+            b.released.connect(a.toggle)
 
         b.setToolTip(but[0])
 
