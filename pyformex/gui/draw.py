@@ -54,12 +54,7 @@ from plugins import trisurface,tools,fe
 
 from script import *
 from colors import *
-from signals import *
 from formex import *
-
-# these are already imported in script
-#from mesh import Mesh
-#from plugins.trisurface import TriSurface
 from coordsys import CoordinateSystem
 
 #################### Interacting with the user ###############################
@@ -1332,9 +1327,6 @@ def renderMode(mode,light=None):
     - flatwire
     - smooth_avg
     """
-    #print "DRAW.RENDERMODE"
-    #print "CANVAS %s" % pf.canvas
-    #print "MODE %s" % pf.canvas.rendermode
     # ERROR The following redraws twice !!!
     pf.canvas.setRenderMode(mode,light)
     pf.canvas.update()
@@ -1342,7 +1334,6 @@ def renderMode(mode,light=None):
     toolbar.updateTransparencyButton()
     toolbar.updateLightButton()
     pf.GUI.processEvents()
-    #print "DONE DRAW>RENDERMODE"
 
 
 def wireframe():

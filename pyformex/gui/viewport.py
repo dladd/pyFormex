@@ -261,6 +261,8 @@ class CanvasMouseHandler(object):
 ################# Single Interactive OpenGL Canvas ###############
 
 
+
+
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """A canvas for OpenGL rendering.
 
@@ -283,10 +285,20 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     selection_filters = [ 'none', 'single', 'closest', 'connected', 'closest-connected' ]
 
+    # private signal class
+    class Communicate(QtCore.QObject):
+        CANCEL = Signal()
+        DONE   = Signal()
+
 
     def __init__(self,*args,**kargs):
         """Initialize an empty canvas."""
         QtOpenGL.QGLWidget.__init__(self,*args)
+        # Define our privatee signals
+        self.signals = self.Communicate()
+        self.CANCEL = self.signals.CANCEL
+        self.DONE   = self.signals.DONE
+        #
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -501,8 +513,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(LEFT,self.mouse_pick,CTRL)
             self.setMouse(RIGHT,self.emit_done)
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
-            self.connect(self,DONE,self.accept_selection)
-            self.connect(self,CANCEL,self.cancel_selection)
+            self.DONE.connect(self.accept_selection)
+            self.CANCEL.connect(self.cancel_selection)
             self.selection_mode = mode
             self.selection_front = None
 
@@ -535,8 +547,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.resetMouse(LEFT,CTRL)
         self.resetMouse(RIGHT)
         self.resetMouse(RIGHT,SHIFT)
-        self.disconnect(self,DONE,self.accept_selection)
-        self.disconnect(self,CANCEL,self.cancel_selection)
+        self.DONE.disconnect(self.accept_selection)
+        self.CANCEL.disconnect(self.cancel_selection)
         self.selection_mode = None
         pf.debug("FINISH SELECTION DONE",pf.DEBUG.GUI)
 
@@ -703,8 +715,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMouse(LEFT,self.mouse_draw)
         self.setMouse(RIGHT,self.emit_done)
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
-        self.connect(self,DONE,self.accept_draw)
-        self.connect(self,CANCEL,self.cancel_draw)
+        self.DONE.connect(self.accept_draw)
+        self.CANCEL.connect(self.cancel_draw)
         self.drawmode = mode
         self.zplane = zplane
         self.drawing = Coords(coords)
@@ -714,8 +726,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.resetMouse(LEFT)
         self.resetMouse(RIGHT)
         self.resetMouse(RIGHT,SHIFT)
-        self.disconnect(self,DONE,self.accept_selection)
-        self.disconnect(self,CANCEL,self.cancel_selection)
+        self.DONE.disconnect(self.accept_draw)
+        self.CANCEL.disconnect(self.cancel_draw)
         self.drawmode = None
 
     def accept_draw(self,clear=False):
@@ -767,60 +779,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.selection_busy = False
 
 ##########################################################################
-
-    def start_drawing(self,mode):
-        """Start an interactive line drawing mode."""
-        pf.debug("START DRAWING MODE",pf.DEBUG.GUI)
-        self.setMouse(LEFT,self.mouse_draw_line)
-        self.setMouse(RIGHT,self.emit_done)
-        self.setMouse(RIGHT,self.emit_cancel,SHIFT)
-        self.connect(self,DONE,self.accept_drawing)
-        self.connect(self,CANCEL,self.cancel_drawing)
-        #self.setCursorShape('pick')
-        self.drawing_mode = mode
-        self.edit_mode = None
-        self.drawing = empty((0,2,2),dtype=int)
-
-    def wait_drawing(self):
-        """Wait for the user to interactively draw a line."""
-        self.drawing_timer = QtCore.QThread
-        self.drawing_busy = True
-        while self.drawing_busy:
-            self.drawing_timer.msleep(20)
-            pf.app.processEvents()
-
-    def finish_drawing(self):
-        """End an interactive drawing mode."""
-        pf.debug("END DRAWING MODE",pf.DEBUG.GUI)
-        #self.setCursorShape('default')
-        self.resetMouse(LEFT)
-        self.resetMouse(RIGHT)
-        self.resetMouse(RIGHT,SHIFT)
-        self.disconnect(self,DONE,self.accept_selection)
-        self.disconnect(self,CANCEL,self.cancel_selection)
-        self.drawing_mode = None
-
-    def accept_drawing(self,clear=False):
-        """Cancel an interactive drawing mode.
-
-        If clear == True, the current drawing is cleared.
-        """
-        pf.debug("CANCEL DRAWING MODE",pf.DEBUG.GUI)
-        self.drawing_accepted = True
-        if clear:
-            self.drawing = empty((0,2,2),dtype=int)
-            self.drawing_accepted = False
-        self.drawing_canceled = True
-        self.drawing_busy = False
-
-    def cancel_drawing(self):
-        """Cancel an interactive drawing mode and clear the drawing."""
-        self.accept_drawing(clear=True)
-
-    def edit_drawing(self,mode):
-        """Edit an interactive drawing."""
-        self.edit_mode = mode
-        self.drawing_busy = False
+ # line drwaing mode #
 
     def drawLinesInter(self,mode='line',oneshot=False,func=None):
         """Interactively draw lines on the canvas.
@@ -860,6 +819,60 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             func(self.drawing)
         self.finish_drawing()
         return self.drawing
+
+    def start_drawing(self,mode):
+        """Start an interactive line drawing mode."""
+        pf.debug("START DRAWING MODE",pf.DEBUG.GUI)
+        self.setMouse(LEFT,self.mouse_draw_line)
+        self.setMouse(RIGHT,self.emit_done)
+        self.setMouse(RIGHT,self.emit_cancel,SHIFT)
+        self.DONE.connect(self.accept_drawing)
+        self.CANCEL.connect(self.cancel_drawing)
+        #self.setCursorShape('pick')
+        self.drawing_mode = mode
+        self.edit_mode = None
+        self.drawing = empty((0,2,2),dtype=int)
+
+    def wait_drawing(self):
+        """Wait for the user to interactively draw a line."""
+        self.drawing_timer = QtCore.QThread
+        self.drawing_busy = True
+        while self.drawing_busy:
+            self.drawing_timer.msleep(20)
+            pf.app.processEvents()
+
+    def finish_drawing(self):
+        """End an interactive drawing mode."""
+        pf.debug("END DRAWING MODE",pf.DEBUG.GUI)
+        #self.setCursorShape('default')
+        self.resetMouse(LEFT)
+        self.resetMouse(RIGHT)
+        self.resetMouse(RIGHT,SHIFT)
+        self.DONE.disconnect(self.accept_drawing)
+        self.CANCEL.disconnect(self.cancel_drawing)
+        self.drawing_mode = None
+
+    def accept_drawing(self,clear=False):
+        """Cancel an interactive drawing mode.
+
+        If clear == True, the current drawing is cleared.
+        """
+        pf.debug("CANCEL DRAWING MODE",pf.DEBUG.GUI)
+        self.drawing_accepted = True
+        if clear:
+            self.drawing = empty((0,2,2),dtype=int)
+            self.drawing_accepted = False
+        self.drawing_canceled = True
+        self.drawing_busy = False
+
+    def cancel_drawing(self):
+        """Cancel an interactive drawing mode and clear the drawing."""
+        self.accept_drawing(clear=True)
+
+    def edit_drawing(self,mode):
+        """Edit an interactive drawing."""
+        self.edit_mode = mode
+        self.drawing_busy = False
 
 
 ######## QtOpenGL interface ##############################
@@ -1006,14 +1019,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         This is equivalent to pressing the ENTER button."""
         if action == RELEASE:
-            self.emit(DONE,())
+            self.DONE.emit()
 
     def emit_cancel(self,x,y,action):
         """Emit a CANCEL event by clicking the mouse.
 
         This is equivalent to pressing the ESC button."""
         if action == RELEASE:
-            self.emit(CANCEL,())
+            self.CANCEL.emit()
 
 
     def draw_state_rect(self,x,y):
@@ -1286,13 +1299,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     # event handler.
     def keyPressEvent (self,e):
         pf.GUI.signals.WAKEUP.emit()
-        #or is this done by the top level (GUI) ??
-        # Move all of these to GUI ??
         if e.key() == ESC:
-            pf.GUI.signals.CANCEL.emit()
+            self.CANCEL.emit()
             e.accept()
         elif e.key() == ENTER or e.key() == RETURN:
-            pf.GUI.signals.DONE.emit()
+            self.DONE.emit()
             e.accept()
         else:
             e.ignore()

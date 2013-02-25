@@ -393,8 +393,8 @@ class DAction(QtGui.QAction):
         if icon:
             self.setIcon(icon)
         if signal is None:
-            self.c = Communicate()
-            signal = self.c.CLICKED
+            self.signals = Communicate()
+            signal = self.signals.CLICKED
         self.signal = signal
         if data is None:
             data = name

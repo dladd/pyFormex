@@ -537,9 +537,13 @@ def updateAppdirs():
 def updateDrawWait():
     pf.GUI.drawwait = pf.cfg['draw/wait']
 
+def updateQt4Bindings():
+    pf.warning("You changed the Python Qt4 bindings setting to '%s'.\nThis setting will only become active after you restart pyFormex." % pf.cfg['gui/bindings'])
+
 
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
+    'gui/bindings':updateQt4Bindings,
     'gui/coordsbox':coordsbox,
     'gui/timeoutbutton':timeoutbutton,
     'gui/showfocus':updateCanvas,
