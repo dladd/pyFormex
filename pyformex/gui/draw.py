@@ -1559,10 +1559,16 @@ def pause(timeout=None,msg=None):
     When the pause statement is executed, execution of the pyformex script
     is suspended until some external event forces it to proceed again.
     Clicking the PLAY, STEP or CONTINUE button will produce such an event.
+
+    - `timeout`: float: if specified, the pause will only last for this
+      many seconds. It can still be interrupted by the STEP buttons.
+
+    - `msg`: string: a message to write to the board to explain the user
+      about the pause
     """
     from drawlock import Repeater
     def _continue_():
-        return pf.GUI.drawlock.locked
+        return not pf.GUI.drawlock.locked
 
     if msg is None and timeout is None:
         msg = "Use the Play/Step/Continue button to proceed"
@@ -1577,8 +1583,8 @@ def pause(timeout=None,msg=None):
         pf.GUI.drawlock.locked = True
     if timeout is None:
         timeout = widgets.input_timeout
-    R = Repeater(_continue_,timeout)
-    #R.start()
+    R = Repeater(_continue_,timeout,sleep=0.1)
+    R.start()
 
 
 ################### EXPERIMENTAL STUFF: AVOID! ###############
@@ -1587,6 +1593,7 @@ def pause(timeout=None,msg=None):
 def sleep(duration,granularity=0.01):
     from drawlock import Repeater
     R = Repeater(None,duration,sleep=granularity)
+    R.start()
 
 
 ########################## print information ################################

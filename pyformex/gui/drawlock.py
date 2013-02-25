@@ -117,7 +117,7 @@ class Repeater(object):
 
     - the called function returns a value that evaluates to True
     - a specified time has elapsed
-    - a number of executins has been reached
+    - a number of executions has been reached
     - and external event stops the execution
 
     Parameters:
@@ -143,7 +143,7 @@ class Repeater(object):
     - or else, with the value returned by the function.
 
     """
-    def __init__(self,func,duration=-1,maxcount=-1,sleep=0,*args,**kargs):
+    def __init__(self,func,duration=-1,maxcount=-1,sleep=0):
         """Create a new repeater"""
         pf.debug("REPEAT: %s, %s" % (duration,maxcount),pf.DEBUG.SCRIPT)
         self.exitcode = False
@@ -152,8 +152,8 @@ class Repeater(object):
         self.maxcount = maxcount
         self.sleep = sleep
 
-    ## def start(self):
-    ##     """Start repeated execution"""
+    def start(self,*args,**kargs):
+        """Start repeated execution"""
         timer = None
         if self.duration >= 0:
             timer = threading.Timer(self.duration,self.timeOut)
@@ -161,10 +161,12 @@ class Repeater(object):
         self.exitcode = 0
         count = 0
         while not self.exitcode:
+            pf.debug("Loop Exitcode %s, Count: %s" % (self.exitcode,count),pf.DEBUG.SCRIPT)
             pf.app.processEvents()
             if callable(self.func):
                 self.exitcode = self.func(*args,**kargs)
-                break
+                if self.exitcode:
+                    break
             count += 1
             if self.maxcount >= 0 and count >= self.maxcount:
                 self.exitcode = 3
