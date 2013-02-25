@@ -430,7 +430,7 @@ def sourceFiles(relative=False,symlinks=True,extended=False):
     path = pf.cfg['pyformexdir']
     if relative:
         path = os.path.relpath(path)
-    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'],symlinks=symlinks)
+    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib','opengl'],includefiles=['.*\.py$'],symlinks=symlinks)
     if extended:
         searchdirs = [ i[1] for i in pf.cfg['appdirs'] + pf.cfg['scriptdirs'] ]
         for path in set(searchdirs):
