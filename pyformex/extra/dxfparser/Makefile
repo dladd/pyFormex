@@ -45,7 +45,7 @@ libdir:= $(prefix)/lib
 # where to install the documentation
 docdir:= $(prefix)/share/doc
 # where to install the manpages
-docdir:= $(prefix)/share/man/man1
+mandir:= $(prefix)/share/man/man1
 
 #####################################################################
 
@@ -54,6 +54,7 @@ PKG:= dxfparser
 BINDIR:= $(DESTDIR)$(bindir)
 LIBDIR:= $(DESTDIR)$(libdir)
 DOCDIR:= $(DESTDIR)$(docdir)
+MANDIR:= $(DESTDIR)$(mandir)
 
 CC:= gcc $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS)
 INSTALL:= $(SU) install

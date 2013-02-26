@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -53,7 +53,7 @@ elif sys.version_info >= (3, 0):
 
 # define the things to include
 from manifest import *
-             
+
 # The acceleration libraries
 LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
@@ -64,7 +64,7 @@ ext_modules = [Extension('pyformex/lib/%s'%m,
 
 
 class BuildFailed(Exception):
-    
+
     def __init__(self):
         self.cause = sys.exc_info()[1] # work around py 2/3 different syntax
 
@@ -75,9 +75,9 @@ def status_msgs(*msgs):
         print(msg)
     print('*' * 75)
 
-      
+
 class build_py(_build_py):
-     
+
     def build_package_data (self):
         """Copy data files into build directory
 
@@ -121,7 +121,7 @@ class sdist(_sdist):
         self.write_manifest()
 
 
- 
+
 def run_setup(with_cext):
     global OTHER_DATA
     kargs = {}
@@ -134,7 +134,7 @@ def run_setup(with_cext):
 
     import numpy
     INCLUDE.append(numpy.get_include()),
-     
+
     PKG_DATA = [
         'pyformexrc',
         'icons/README',
@@ -146,21 +146,21 @@ def run_setup(with_cext):
         'data/*',
         'extra/*/*',
         ]
-    
+
     PKG_DATA += [ i[9:] for i in DOC_FILES ]
     setup(cmdclass={
         'build_py': build_py,
         'sdist':sdist
         },
           name='pyformex',
-          version='0.9.0-a1',
+          version='0.9.0a1',
           description='program to create 3D geometry from Python scripts.',
           long_description="""
     pyFormex can be used to generate, transform and manipulate large
     geometrical models of 3D structures by sequences of mathematical operations.
     Unlike traditional CAD systems, pyFormex provides a powerful (Python based)
-    scripting language as the basic user input, making it very well suited 
-    for automated and repeated (parametric) design procedures. 
+    scripting language as the basic user input, making it very well suited
+    for automated and repeated (parametric) design procedures.
     It provides a wide range of operations on meshes, like STL type triangulated
     surfaces and FEA or CFD grids. Nurbs curves and surfaces are under
     development.

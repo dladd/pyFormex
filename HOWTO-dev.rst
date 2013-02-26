@@ -1368,7 +1368,7 @@ They will need to be tuned for the release.
 
 - Install needed software packages for the build process::
 
-    apt-get install debhelper devscripts
+    apt-get install debhelper devscripts python-all-dev
 
   Furthermore you also need to have installed all dependencies for the build,
   as declared in the variables `Build-Depends` and `Build-Depends-Indep` in
