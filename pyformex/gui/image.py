@@ -166,11 +166,16 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
             w,h = size
         except:
             w,h = wc,hc
-        if (w,h) == (wc,hc):
+        if True: #(w,h) == (wc,hc):
+            # Always, because other way does not work reliably
             # Save directly from current rendering
             pf.debug("Saving image from canvas with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
+            if (w,h) != (wc,hc):
+                canvas.resize(w,h)
             GL.glFlush()
             qim = canvas.grabFrameBuffer(withAlpha=False)
+            if (w,h) != (wc,hc):
+                canvas.resize(wc,hc)
         else:
             pf.debug("Saving image from virtual buffer with size %sx%s" % (w,h),pf.DEBUG.IMAGE)
             vcanvas = QtOpenGL.QGLFramebufferObject(w,h)
