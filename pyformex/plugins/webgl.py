@@ -112,8 +112,8 @@ class WebGL(List):
     def __init__(self):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
-        self.script = "http://get.goXTK.com/xtk_edge.js"
-        self.guiscript = "http://get.goXTK.com/xtk_xdat.gui.js"
+        self.script = pf.cfg['webgl/xtkscript']
+        self.guiscript = pf.cfg['webgl/guiscript']
         self._camera = None
         self.gui = []
 
@@ -194,6 +194,9 @@ class WebGL(List):
             if 'control' in kargs:
                 self.gui.append((kargs['name'],kargs.get('caption',''),kargs['control']))
                 del kargs['control']
+            elif pf.cfg['webgl/autogui']:
+                # autogui
+                self.gui.append((kargs['name'],kargs.get('caption',''),controller_format.keys()))
         else:
             print("Not added because no file:",kargs)
 

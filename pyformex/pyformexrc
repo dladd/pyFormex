@@ -283,4 +283,13 @@ cmd_calculix = 'ccx -i $F'
 matdb = os.path.join(datadir,'materials.db')
 secdb = os.path.join(datadir,'sections.db')
 
+
+[webgl]
+xtkscript = "http://get.goXTK.com/xtk_edge.js"
+# The following reads color stl
+#xtk = "http://feops.ugent.be/pub/xtk/xtk.js"
+guiscript = "http://get.goXTK.com/xtk_xdat.gui.js"
+autogui = True
+
+
 #End
