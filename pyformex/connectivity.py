@@ -554,6 +554,51 @@ class Connectivity(ndarray):
         return order
 
 
+    def renumber(self,start=0):
+        """Renumber the nodes to a consecutive integer range.
+
+        The node numbers in the table are changed thus that they
+        form a consecutive integer range starting from the specified
+        value.
+
+        Returns a tuple:
+
+        - `elems`: the renumbered connectivity
+        - `oldnrs`: The sorted list of unique (old) node numbers. The new
+          node numbers are assigned in order of increasing old node numbers,
+          thus the old node number for new node number `i` can be found
+          at position `i - start`.
+
+        Example:
+
+          >>> e,n = Connectivity([[0,2],[1,4],[4,2]]).renumber(7)
+          >>> print(e,n)
+          [[ 7  9]
+           [ 8 10]
+           [10  9]] [0 1 2 4]
+        """
+        nodes = asarray(unique(self))
+        if nodes.size == 0:
+            elems = self
+
+        else:
+            old = arange(nodes.max()+1)
+            if nodes.shape[0] == old.shape[0]:
+                # we have a consecutive range
+                if nodes[0] == start:
+                    # numbering is ok, keep
+                    elems = self
+                else:
+                    # add the correct offset
+                    elems = self + (start-nodes[0])
+            else:
+                # need to renumber
+                elems = inverseUniqueIndex(nodes)[self] + start
+                elems = Connectivity(elems,eltype=self.eltype)
+
+        return elems,nodes
+
+
     def inverse(self):
         """Return the inverse index of a Connectivity table.
 
