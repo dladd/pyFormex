@@ -229,4 +229,38 @@ def vtkPointInsideObject(S,P,tol=0.):
 
 
 
+
+def vtkIntersectWithSegment(surf,lines,tol=0.0):
+    """
+    Computes the intersection of surf with lines.
+    Returns a list of the intersection points lists and of the element number of surf where the point lies.
+    The position in the list is equal to the line number. If there is no intersection with the correspondent
+    lists are empty
+    
+    Parameters:
+        surf :  can be Formex, Mesh or TriSurface
+        lines : a mesh of segments
+
+    """
+    from vtk import vtkOBBTree
+    
+    surf = convert2VPD(surf,clean=False)
+    loc = vtkOBBTree()
+    loc.SetDataSet(vm)
+    loc.SetTolerance(tol)
+    loc.BuildLocator()
+    loc.Update()
+    cellids = [[],]*lines.nelems()
+    pts = [[],]*lines.nelems()
+    for i in range(lines.nelems())[:40]:
+        ptstmp = vtkPoints()
+        cellidstmp = vtkIdList()
+        loc.IntersectWithLine(lines.coords[lines.elems][i][1],lines.coords[lines.elems][i][0],ptstmp, cellidstmp)
+        if cellidstmp.GetNumberOfIds():
+            cellids[i] = [cellidstmp.GetId(j) for j in range(cellidstmp.GetNumberOfIds())]
+            pts[i] = Coords(v2n(ptstmp.GetData()).squeeze())
+    loc.FreeSearchStructure()
+    del loc
+    return pts,cellids
+
 # End
