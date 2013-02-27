@@ -163,7 +163,6 @@ def _add_extra_Mesh_methods():
         avgval = val
 
         for j in range(iter):
-            print(j)
             avgval = sum(avgval[nadj]*inadj, axis=1)/lnadj # multiplying by inadj set to zero the values where nadj==-1
             if ival!=None:
                 avgval[where(ival!=True)] = val[where(ival!=True)]

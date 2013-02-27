@@ -32,7 +32,6 @@ This module provides the basic interface to convert data structures between
 vtk and pyFormex.
 """
 
-from vtk import *
 from vtk.util.numpy_support import numpy_to_vtk as n2v
 from vtk.util.numpy_support import vtk_to_numpy as v2n
 from vtk.util.numpy_support import create_vtk_array as cva
@@ -61,6 +60,7 @@ def cleanVPD(vpd):
 
     Returns the cleaned vtkPolydata.
     """
+    from vtk import vtkCleanPolyData
     cleaner=vtkCleanPolyData()
     cleaner.SetInput(vpd)
     cleaner.Update()
@@ -83,6 +83,7 @@ def convert2VPD(M,clean=False):
 
     Returns a vtkPolyData.
     """
+    from vtk import vtkPolyData,vtkPoints,vtkIdTypeArray,vtkCellArray
     
     print('STARTING CONVERSION FOR DATA OF TYPE %s '%type(M))
     
@@ -153,6 +154,8 @@ def convertVPD2Triangles(vpd):
 
     Returns
     """
+    from vtk import vtkTriangleFilter
+    
     triangles = vtkTriangleFilter()
     triangles.SetInput(vpd)
     triangles.Update()
@@ -205,6 +208,8 @@ def convertFromVPD(vpd):
 
 def vtkPointInsideObject(S,P,tol=0.):
     """vtk function to test which of the points P are inside surface S"""
+    
+    from vtk import vtkSelectEnclosedPoints
     
     vpp = convert2VPD(P)
     vps =convert2VPD(S,clean=False)
