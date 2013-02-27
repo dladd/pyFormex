@@ -336,6 +336,39 @@ def convertGeometryFile():
 
 ##################### properties ##########################
 
+
+def setAttributes():
+    """Set the attributes of a collection."""
+    FL = selection.check()
+    if FL:
+        name = selection.names[0]
+        F = FL[0]
+        try:
+            color = F.color
+        except:
+            color = 'black'
+        try:
+            alpha = F.alpha
+        except:
+            alpha = 0.7
+        try:
+            visible = F.visible
+        except:
+            visible = True
+        res = askItems([
+            _I('caption',name),
+            _I('color',color,itemtype='color'),
+            _I('alpha',alpha,itemtype='fslider',min=0.0,max=1.0),
+            _I('visible',visible,itemtype='bool'),
+            ])
+        if res:
+            color = res['color']
+            print(color)
+            for F in FL:
+                F.color = color
+            selection.draw()
+
+
 def printDataSize():
     for s in selection.names:
         S = named(s)
@@ -1057,8 +1090,9 @@ def create_menu():
             ('&Bounding Box',selection.printbbox),
             ('&Type and Size',printDataSize),
             ]),
+        ("Set &Attributes ",setAttributes),
         ("&Annotations ",[
-            ("&Names",selection.toggleNames,dict(checkable=True)),
+             ("&Names",selection.toggleNames,dict(checkable=True)),
             ("&Elem Numbers",selection.toggleNumbers,dict(checkable=True)),
             ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True,checked=selection.hasNodeNumbers())),
             ("&Free Edges",selection.toggleFreeEdges,dict(checkable=True,checked=selection.hasFreeEdges())),

@@ -623,9 +623,11 @@ class TriSurface(Mesh):
                 data,color = fileread.read_stl_bin(fn)
                 S = TriSurface(data[:,1:])
                 if color:
-                    from gui.draw import colorindex
-                    p = colorindex(color)
-                    S.setProp(p)
+                    print(color)
+                    #from gui.draw import colorindex
+                    #p = colorindex(color)
+                    #S.setProp(p)
+                    S.color = color
                 return S
             except:
                 print("Could not read as binary stl, will try conversion")

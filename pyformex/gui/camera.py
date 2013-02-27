@@ -203,6 +203,9 @@ class Camera(object):
             self._focus = at.checkArray(vector,(3,),'f')
             self.viewChanged = True
 
+    # compatibility
+    ctr = focus
+
 
     @property
     def dist(self):
@@ -225,6 +228,9 @@ class Camera(object):
     def getPosition(self):
         """Return the position of the camera."""
         return self.toWorld([0.,0.,0.])
+
+    def upVector(self):
+        return self.rot[:3,1].reshape(3)
 
     def lock(self,onoff=True):
         """Lock/unlock a camera.
@@ -269,14 +275,16 @@ class Camera(object):
         """Return a report of the current camera settings."""
         return """Camera Settings:
   Focus: %s
+  Position: %s
   Distance: %s
   Rotation Matrix:
   %s
+  Up Vector: %s
   Field of View y: %s
   Aspect Ratio: %s
   Area: %s, %s
   Near/Far Clip: %s, %s
-""" % (self.focus,self.dist,self.rot,self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
+""" % (self.focus,self.getPosition(),self.dist,self.rot,self.upVector(),self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
 
 
     def dolly(self,val):

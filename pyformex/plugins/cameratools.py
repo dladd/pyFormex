@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -37,8 +37,8 @@ from utils import stuur
 dialog = None
 
 def getCameraSettings(cam):
-    return dict([ (k,getattr(cam,k)) for k in ['ctr','dist','rot','fovy','aspect','area','near','far']])
-    
+    return dict([ (k,getattr(cam,k)) for k in ['focus','dist','rot','fovy','aspect','area','near','far']])
+
 
 def apply():
     global dialog
@@ -48,7 +48,7 @@ def apply():
     cam = pf.canvas.camera
     cam.setClip(settings['near'],settings['far'])
     pf.canvas.update()
-    
+
 
 def close():
     global dialog
@@ -86,8 +86,8 @@ def showCameraTool():
     settings['far'] = cam.far/cam.dist
 
     dialog = Dialog(store=settings, items=[
-        _I('ctr',text='Center',itemtype='point',tooltip='The center of the scene where the camera is looking at.'),
-        _I('dist',text='Distance',tooltip='The distance of the camera to the center of the scene.'),
+        _I('focus',text='Focus',itemtype='point',tooltip='The point where the camera is looking at.'),
+        _I('dist',text='Distance',tooltip='The distance of the camera to the focus point.'),
         _I('fovy',text='Field of View',tooltip='The vertical opening angle of the camera lens.'),
         _I('aspect',text='Aspect ratio',tooltip='The ratio of the vertical over the horizontal lens opening angles.'),
 #        _I('area',text='Visible area',tooltip='Relative part of the camera area that is visible in the viewport.'),
@@ -102,10 +102,10 @@ def showCameraTool():
     dialog.show()
 
     cam.modelview_callback = updateSettings
-    
+
 
 if __name__ == 'draw':
     showCameraTool()
     dialog.timeout = close
-    
+
 # End

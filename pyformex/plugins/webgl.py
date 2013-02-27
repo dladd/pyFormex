@@ -41,7 +41,7 @@ import utils
 from olist import List, intersection
 from mydict import Dict
 import os
-from arraytools import checkFloat
+from arraytools import checkFloat,checkArray
 
 
 # Formatting a controller for an attribute
@@ -59,10 +59,11 @@ def saneSettings(k):
     """Sanitize sloppy settings for JavaScript output"""
     ok = {}
     try:
-        color = k['color']
-        color = [color[0],color[1],color[2]]
-        ok['color'] = color
+        print(k['color'])
+        ok['color'] = checkArray(k['color'],(3,),'f')
+        print(ok['color'])
     except:
+        raise
         pass
     try:
         ok['alpha'] = checkFloat(k['alpha'],0.,1.)
@@ -109,13 +110,14 @@ class WebGL(List):
     The create model uses the XTK toolkit from http://www.goXTK.com.
     """
 
-    def __init__(self):
+    def __init__(self,name='Scene1'):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
         self.script = pf.cfg['webgl/xtkscript']
         self.guiscript = pf.cfg['webgl/guiscript']
         self._camera = None
         self.gui = []
+        self.name = str(name)
 
 
     def addScene(self):
@@ -138,7 +140,8 @@ class WebGL(List):
             print("  Exporting with settings %s" % kargs)
             self.add(obj=o,**kargs)
         ca = cv.camera
-        self.camera(position=ca.getPosition(),focus=ca.focus)
+        #self.camera(position=ca.getPosition(),focus=ca.focus,up=ca.upVector())
+        self.camera(focus=[0.,0.,0.],position=ca.getPosition()-ca.focus,up=ca.upVector())
 
 
     def add(self,**kargs):
@@ -174,6 +177,7 @@ class WebGL(List):
         if not 'name' in kargs:
             kargs['name'] = 'm%s' % len(self)
         if 'obj' in kargs:
+            # A pyFormex object.
             try:
                 obj = kargs['obj']
                 obj = obj.toMesh()
@@ -187,18 +191,25 @@ class WebGL(List):
                 return
             if obj:
                 if not 'file' in kargs:
-                    kargs['file'] = '%s.stl' % kargs['name']
+                    kargs['file'] = '%s_%s.stl' % (self.name,kargs['name'])
                 obj.write(kargs['file'],'stlb')
-        if 'file' in kargs:
-            self.append(Dict(kargs))
-            if 'control' in kargs:
-                self.gui.append((kargs['name'],kargs.get('caption',''),kargs['control']))
-                del kargs['control']
-            elif pf.cfg['webgl/autogui']:
-                # autogui
-                self.gui.append((kargs['name'],kargs.get('caption',''),controller_format.keys()))
-        else:
-            print("Not added because no file:",kargs)
+        elif 'file' in kargs:
+            # The name of an STL file
+            fn = kargs['file']
+            if fn.endswith('.stl') and os.path.exists(fn):
+                # We should copy to current directory!
+                pass
+            else:
+                return
+        # OK, we can add it
+        self.append(Dict(kargs))
+        if 'control' in kargs:
+            # Move the 'control' paramaeters to gui
+            self.gui.append((kargs['name'],kargs.get('caption',''),kargs['control']))
+            del kargs['control']
+        elif pf.cfg['webgl/autogui']:
+            # Add autogui
+            self.gui.append((kargs['name'],kargs.get('caption',''),controller_format.keys()))
 
 
     def camera(self,**kargs):
@@ -252,13 +263,23 @@ r.onShowtime = function() {
 var gui = new dat.GUI();
 """
         for name,caption,attrs in self.gui:
-            guiname = "%sgui" % name
+            guiname = "gui_%s" % name
             if not caption:
                 caption = name
             s += "var %s = gui.addFolder('%s');\n" % (guiname,caption)
             for attr in attrs:
-                s += "var %sController = %s.%s;\n" % (name,guiname,self.format_gui_controller(name,attr))
-            s += "%s.open();\n" % guiname
+                cname = "%s_%s" % (guiname,attr)
+                s += "var %s = %s.%s;\n" % (cname,guiname,self.format_gui_controller(name,attr))
+            #s += "%s.open();\n" % guiname
+
+
+        # add camera gui
+        guiname = "gui_camera"
+        s += """
+var %s = gui.addFolder('Camera');
+var %s_reset = %s.add(r.camera,'reset');
+""".replace('%s',guiname)
+
 
         s += "}\n\n"
         return s
@@ -269,7 +290,7 @@ var gui = new dat.GUI();
         return  '<script type="text/javascript" src="%s"></script>\n' % script
 
 
-    def export(self,name,title=None,description=None,keywords=None,author=None,createdby=False):
+    def export(self,name=None,title=None,description=None,keywords=None,author=None,createdby=False):
         """Export the WebGL scene.
 
         Parameters:
@@ -283,6 +304,8 @@ var gui = new dat.GUI();
         'author' to be included in the .html file. The first two have
         defaults if not specified.
         """
+        if name is None:
+            name = self.name
         if title is None:
             title = '%s WebGL example, created by pyFormex' % name
         if description is None:

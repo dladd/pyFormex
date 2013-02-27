@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -56,7 +56,7 @@ def editFormex(F,name):
         if type(p) is str:
             p = eval(p)
         e = res['eltype']
-        
+
         print(x)
         print(p)
         print(e)
@@ -84,7 +84,7 @@ def _init_():
 def printall():
     """Print all global variable names."""
     print(listAll(sort=True))
-    
+
 
 def printval():
     """Print selected global variables."""
@@ -96,7 +96,7 @@ def printbbox():
     """Print selected global variables."""
     database.ask()
     database.printbbox()
-    
+
 
 def keep_():
     """Forget global variables."""
@@ -158,7 +158,7 @@ def delete_all():
         forgetAll()
 
 
-        
+
 
 def dos2unix():
     fn = askFilename(multi=True)
@@ -175,8 +175,8 @@ def unix2dos():
             message("Converting file to DOS: %s" % f)
             utils.unix2dos(f)
 
-        
-    
+
+
 ##################### planes ##########################
 
 planes = objects.DrawableObjects(clas=Plane)
@@ -210,7 +210,7 @@ def createPlaneCoordsPointNormal():
         export({name:P})
         draw(P)
 
-    
+
 def createPlaneCoords3Points():
     res = askItems([('Name',pname.next()),
                     ('Point 1',(0.,0.,0.)),
@@ -228,7 +228,7 @@ def createPlaneCoords3Points():
         P = Plane(pts,size=s)
         export({name:P})
         draw(P)
-    
+
 
 def createPlaneVisual3Points():
     res = askItems([('Name',pname.next()),
@@ -270,7 +270,7 @@ def pick_points():
     set_selection('point')
 def pick_edges():
     set_selection('edge')
-    
+
 def query_actors():
     query('actor')
 def query_elements():
@@ -307,12 +307,12 @@ def edit_point(pt):
         dia.acceptData()
         res = dia.results
         return [ res[i] for i in 'xyz' ]
-        
+
     dia = widgets.InputDialog(
         items = [_I(x=x,y=y,z=z),]
         )
     dia.show()
-    
+
 
 def edit_points(K):
     if K.obj_type == 'point':
@@ -322,8 +322,8 @@ def edit_points(K):
             ind = K[k]
             print("CHANGING points %s of object %s" % (ind,n))
             print(o[ind])
-        
-   
+
+
 def setpropCollection(K,prop):
     """Set the property of a collection.
 
@@ -337,7 +337,7 @@ def setpropCollection(K,prop):
         for o in obj:
             if hasattr(o,'setProp'):
                 o.setProp(prop)
-            
+
     elif K.obj_type in ['element','point']:
         for k in K.keys():
             a = pf.canvas.actors[k]
@@ -412,7 +412,7 @@ def partition_selection():
             return
     partitionCollection(selection)
     highlightPartitions(selection)
-    
+
 
 def get_partition():
     """Select some partitions from the current selection and show the result."""
@@ -428,7 +428,7 @@ def get_partition():
         prop = res['property']
         getPartition(selection,prop)
         highlightPartitions(selection)
-    
+
 
 def export_selection():
     if selection is None:
@@ -453,7 +453,7 @@ def export_selection():
             export({name:sel})
         elif opt == 'S':
             export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
-     
+
 
 def sendMail():
     import sendmail
@@ -461,7 +461,7 @@ def sendMail():
     if not sender:
         warning("You have to configure your email settings first")
         return
-    
+
     res = askItems([
         _I('sender',sender,text="From:",readonly=True),
         _I('to','',text="To:"),
@@ -477,12 +477,12 @@ def sendMail():
     to = res['to'].split(',')
     cc = res['cc'].split(',')
     sendmail.sendmail(message=msg,sender=res['sender'],to=to+cc)
-    print("Mail has been sent to %s" % to) 
+    print("Mail has been sent to %s" % to)
     if cc:
         print("  with copy to %s" % cc)
 
 ###################### images #############################
-        
+
 def selectImage(extra_items=[]):
     """Open a dialog to read an image file.
 
@@ -490,7 +490,7 @@ def selectImage(extra_items=[]):
     global image
     from gui.widgets import ImageView
     from plugins.imagearray import resizeImage
-    
+
     # some default values
     filename = getcfg('datadir')+'/butterfly.png'
     w,h = 200,200
@@ -529,7 +529,7 @@ def selectImage(extra_items=[]):
             w = int(w*scale)
             h = int(h*scale)
         return w,h
-    
+
     res = askItems([
         _I('filename',filename,text='Image file',itemtype='button',func=select_image),
         _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
@@ -589,11 +589,11 @@ def create_menu():
         ("Send &Mail",sendMail),
         ("---",None),
         ("&Create Plane",[
-            ("Coordinates", 
+            ("Coordinates",
                 [("Point and normal", createPlaneCoordsPointNormal),
                 ("Three points", createPlaneCoords3Points),
-                ]), 
-            ("Visually", 
+                ]),
+            ("Visually",
                 [("Three points", createPlaneVisual3Points),
                 ]),
             ]),

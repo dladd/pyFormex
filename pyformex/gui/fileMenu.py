@@ -546,10 +546,11 @@ def exportWebGL():
     if fn:
         pf.message("Exporting surface model to %s" % fn)
         pf.GUI.setBusy()
-        W = WebGL()
-        W.addScene()
         fn = os.path.basename(fn)
-        W.export(fn,'Two spheres and a cone',createdby=50)
+        name = utils.projectName(fn)
+        W = WebGL(name)
+        W.addScene()
+        W.export(title='Two spheres and a cone',createdby=50)
         pf.GUI.setBusy(False)
         if draw.ack("Show the scene in your browser?"):
             fn = os.path.join(os.getcwd(),fn)
