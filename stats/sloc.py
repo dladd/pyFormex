@@ -6,7 +6,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -32,7 +32,7 @@ Create a sloccount report for the pyformex tagged releases.
 
 print __doc__
 from pyformex.flatkeydb import FlatDB
-from pyformex.utils import runCommand,removeTree
+from pyformex.utils import removeTree
 
 import os,sys,commands,datetime
 
@@ -44,7 +44,7 @@ dbfile = os.path.join(curdir,'pyformex-releases.fdb')
 if not os.path.exists(dbfile):
     print("The dbfile %s does not exist"%dbfile)
     sys.exit()
-    
+
 DB = FlatDB(req_keys=['tag','date','rev'],beginrec = 'release',endrec = '')
 
 DB.readFile(dbfile)
@@ -57,7 +57,7 @@ tmpdir = '_sloccount_'
 workdir = os.path.join(curdir,tmpdir)
 
 
-def runCmd(cmd):
+def Cmd(cmd):
     print cmd
     return commands.getstatusoutput(cmd)
 
@@ -65,7 +65,6 @@ def runCmd(cmd):
 def sloccount(rel):
     """Create a sloccount report for release"""
     tag = rel['tag']
-    rev = rel['rev']
     print "Processing release %s" % tag
 
     slocfile = "pyformex.sloc.%s" % tag
@@ -74,34 +73,33 @@ def sloccount(rel):
         return
 
     if not os.path.exists(workdir):
-        cmd = "svn co svn://svn.savannah.nongnu.org/pyformex/trunk -r%s %s" % (rev,tmpdir)
-        runCmd(cmd)
+        os.mkdir(workdir)
+        Cmd("cd %s;git clone git://git.savannah.nongnu.org/pyformex.git" % workdir)
 
-    cmd = "cd %s;svn up -r%s" % (tmpdir,rev)
-    runCmd(cmd)
+    Cmd("cd %s/pyformex;git co release-%s" % (tmpdir,tag))
 
     pyfdir = os.path.join(tmpdir,'pyformex')
     if not os.path.isdir(pyfdir):
         pyfdir = tmpdir
     print "SLOCCOUNTING %s" % pyfdir
-    cmd = "sloccount %s > %s" % (pyfdir,slocfile)
-    runCmd(cmd)
+    Cmd("sloccount %s > %s" % (pyfdir,slocfile))
 
-    
+
+
 
 
 for release in keys:
     sloccount(DB[release])
-    if os.path.exists(workdir):
-        try:
-            removeTree(workdir)
-        except:
-            print("Could not remove workdir")
+    ## if os.path.exists(workdir):
+    ##     try:
+    ##         removeTree(workdir)
+    ##     except:
+    ##         print("Could not remove workdir")
 
 # Now, create some statistics
 
 def extract(filename):
-    res,out = runCmd("awk -f slocstats.awk %s" % filename)
+    res,out = Cmd("awk -f slocstats.awk %s" % filename)
     if res:
         raise ValueError,"Error extracting data"
     return dict([ DB.splitKeyValue(line) for line in out.split('\n') ])
@@ -176,6 +174,6 @@ fil = open(gnufile,'w')
 fil.write(gnu)
 fil.close()
 
-runCommand('gnuplot %s && display %s' % (gnufile,outfile))
+Cmd('gnuplot %s && display %s' % (gnufile,outfile))
 
 # End
