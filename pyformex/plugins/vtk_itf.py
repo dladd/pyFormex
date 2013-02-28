@@ -252,7 +252,7 @@ def vtkIntersectWithSegment(surf,lines,tol=0.0):
     loc.Update()
     cellids = [[],]*lines.nelems()
     pts = [[],]*lines.nelems()
-    for i in range(lines.nelems())[:40]:
+    for i in range(lines.nelems()):
         ptstmp = vtkPoints()
         cellidstmp = vtkIdList()
         loc.IntersectWithLine(lines.coords[lines.elems][i][1],lines.coords[lines.elems][i][0],ptstmp, cellidstmp)
