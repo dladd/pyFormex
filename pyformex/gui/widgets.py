@@ -32,7 +32,7 @@ Qt widgets directly.
 from __future__ import print_function
 
 import os,types
-from gui import QtCore, QtGui
+from gui import QtCore, QtGui, Slot
 import pyformex as pf
 import colors
 import odict,mydict,olist
@@ -1267,14 +1267,11 @@ class InputForm(QtGui.QVBoxLayout):
     in which items can be layed out using tab pages.
     """
 
-    def __init__(self,spacing=0):
+    def __init__(self):
         """Initialize the InputForm."""
         QtGui.QVBoxLayout.__init__(self)
         self.tabs = []      # list of tab widgets in this form
         self.last = None    # last added itemtype
-        if spacing >= 0:
-            self.setSpacing(spacing)
-        print("SPACING: %s" % self.spacing())
 
 
 class ScrollForm(QtGui.QScrollArea):
@@ -3090,6 +3087,16 @@ class TextBox(QtGui.QDialog):
 
 ############################# Button box ###########################
 
+if not pf.options.pyside:
+    # In pyqt4, the clicked signal always sends a bool
+    # We therefore provide a stripper function
+    # We make the fist argument optional in case we get a case
+    # that does not send the bool
+    def stripFirstArg(func):
+        def strippedFunc(bool=False):
+            return func()
+        return strippedFunc
+
 
 def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
                      parent=None):
@@ -3138,6 +3145,9 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
                     slot = parent.reject
                 else:
                     slot = parent.reject
+            if not pf.options.pyside:
+                # strip the bool arg off
+                slot = stripFirstArg(slot)
             b.clicked.connect(slot)
             if n == default.lower():
                 b.setDefault(True)

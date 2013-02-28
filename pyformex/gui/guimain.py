@@ -232,7 +232,6 @@ class Gui(QtGui.QMainWindow):
         #self.statusbar.setContentsMargins(0,0,0,0)
         #widgets.addEffect(self.statusbar,color=(255,0,0))
         self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openExistingProject)])
-        #self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
         self.curfile = widgets.ButtonBox('',[('Script:',toggleAppScript),('None',fileMenu.openScript)])
         self.curdir = widgets.ButtonBox('Cwd:',[('None',draw.askDirname)])
         self.canPlay = False
