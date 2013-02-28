@@ -57,9 +57,9 @@ ACCEPTED = QtGui.QDialog.Accepted
 REJECTED = QtGui.QDialog.Rejected
 TIMEOUT = -1        # the return value if a widget timed out
 
-# slots
-Accept = QtCore.SLOT("accept()")
-Reject = QtCore.SLOT("reject()")
+## # slots
+## Accept = QtCore.SLOT("accept()")
+## Reject = QtCore.SLOT("reject()")
 
 # QT List selection mode
 selection_mode = {
@@ -245,11 +245,13 @@ class InputItem(QtGui.QWidget):
     def __init__(self,name,*args,**kargs):
         """Create a widget with a horizontal box layout"""
         QtGui.QWidget.__init__(self,*args)
+        #addStyle(self,bgcolor='red')
         layout = QtGui.QHBoxLayout()
-        #layout.setSpacing(0)
-        if not pf.options.pyside:
+        #if not pf.options.pyside:
             # PySide does not have this setMargin
-            layout.setMargin(0)
+        #layout.setMargin(0)
+        s = pf.cfg['gui/spacing']
+        layout.setContentsMargins(s,s,s,s)
         self.setLayout(layout)
         spacer = kargs.get('spacer','')
         if 'l' in spacer:
@@ -275,6 +277,7 @@ class InputItem(QtGui.QWidget):
             ##     layout.addStretch()
             if 'c' in spacer:
                 layout.addStretch()
+
 
         if 'data' in kargs:
             self.data = kargs['data']
@@ -1264,11 +1267,14 @@ class InputForm(QtGui.QVBoxLayout):
     in which items can be layed out using tab pages.
     """
 
-    def __init__(self):
+    def __init__(self,spacing=0):
         """Initialize the InputForm."""
         QtGui.QVBoxLayout.__init__(self)
         self.tabs = []      # list of tab widgets in this form
         self.last = None    # last added itemtype
+        if spacing >= 0:
+            self.setSpacing(spacing)
+        print("SPACING: %s" % self.spacing())
 
 
 class ScrollForm(QtGui.QScrollArea):
@@ -3124,15 +3130,15 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
                 b = QtGui.QPushButton(name,parent)
             n = name.lower()
             if len(a) > 1 and callable(a[1]):
-                slot = (a[1],)
+                slot = a[1]
             elif parent:
                 if n == 'ok':
-                    slot = (parent,Accept)
+                    slot = parent.accept
                 elif n == 'cancel':
-                    slot = (parent,Reject)
+                    slot = parent.reject
                 else:
-                    slot = (parent,Reject)
-            b.clicked.connect(*slot)
+                    slot = parent.reject
+            b.clicked.connect(slot)
             if n == default.lower():
                 b.setDefault(True)
             layout.addWidget(b)
@@ -3143,10 +3149,12 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
 def addEffect(w,color=None):
     if color is not None:
         effect = QtGui.QGraphicsColorizeEffect()
-        effect.setColor(QtGui.QColor(*color))
+        effect.setColor(QtGui.QColor(color))
         w.setGraphicsEffect(effect)
 
-
+def addStyle(w,bgcolor=None):
+    if bgcolor is not None:
+        w.setStyleSheet("background-color:%s;" % bgcolor)
 
 
 class ButtonBox(QtGui.QWidget):

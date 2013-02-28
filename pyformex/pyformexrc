@@ -112,6 +112,7 @@ history_max = 20
 splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['geometry_menu']
 style = "Plastique"
+spacing = 2         # defines spacing between items in input dialogs
 size=(800,600)
 bdsize=size
 pos=(0,0)
