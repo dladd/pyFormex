@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -26,7 +26,7 @@
 """NurbsCurve
 
 This example illustrates the use of the NurbsCurve class from the nurbs
-plugin. 
+plugin.
 """
 from __future__ import print_function
 _status = 'checked'
@@ -38,17 +38,17 @@ from gui.draw import *
 import simple
 from plugins.curve import *
 from plugins.nurbs import *
-    
+
 
 def drawThePoints(N,n,color=None):
     umin = N.knots[N.degree]
     umax = N.knots[-N.degree-1]
     #print "Umin = %s, Umax = %s" % (umin,umax)
     u = umin + arange(n+1) * (umax-umin) / float(n)
-    P = N.pointsAt(u)    
+    P = N.pointsAt(u)
     draw(P,color=color,marksize=5)
     drawNumbers(P,color=color)
-    
+
     XD = N.derivs(u,5)[:4]
     if XD.shape[-1] == 4:
         XD = XD.toCoords()
@@ -77,7 +77,7 @@ def drawThePoints(N,n,color=None):
     draw(connect([Formex(x),Formex(x3t)]),color=red,linewidth=5)
 
 
-def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Clear=False):
+def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Clear=False,showpoints=False,npoints=10):
     if Clear:
         clear()
 
@@ -106,7 +106,8 @@ def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Cle
     else:
         N = globalInterpolationCurve(X,degree=degree,strategy=strategy)
     draw(N,color=red)
-    #drawThePoints(N,11,color=black)
+    if showpoints:
+        drawThePoints(N,npoints,color=black)
 
 
 dialog = None
@@ -162,15 +163,17 @@ predefined = [
     '151783',
     'ABCDABCD',
     ]
-    
+
 data_items = [
     _I('points',text='Point set',choices=predefined),
     _I('pointtype',text='Point type',itemtype='select',choices=['Control','OnCurve']),
-    _I('degree',2),
+    _I('degree',3),
     _I('strategy',0.5),
     _I('closed',False),
     _I('blended',True,enabled=False),
     _I('weighted',False),
+    _I('showpoints',False,text='Show Frenet vectors'),
+    _I('npoints',20,text='Number of curve points'),
     _I('Clear',True),
     ]
 input_enablers = [
@@ -180,6 +183,7 @@ input_enablers = [
     ('pointtype','Control','weighted'),
     ('closed',False,'blended'),
 #    ('blended',True,'closed'),
+    ('showpoints',True,'npoints'),
     ]
 
 
@@ -198,16 +202,16 @@ def run():
         actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
         default = 'Show',
         )
-    
+
     if '_Nurbs_data_' in pf.PF:
         dialog.updateData(pf.PF['_Nurbs_data_'])
 
     dialog.timeout = timeOut
     dialog.show()
 
-    # Block other scripts 
+    # Block other scripts
     scriptLock(__file__)
-       
+
 
 if __name__ == 'draw':
     run()

@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -44,14 +44,14 @@ import olist
 #
 class Coords4(ndarray):
     """A collection of points represented by their homogeneous coordinates.
-    
+
     While most of the pyFormex implementation is based on the 3D Cartesian
     coordinates class :class:`Coords`, some applications may benefit from using
     homogeneous coordinates. The class :class:`Coords4` provides some basic
     functions and conversion to and from cartesian coordinates.
     Through the conversion, all other pyFormex functions, such as
     transformations, are available.
-    
+
     :class:`Coords4` is implemented as a float type :class:`numpy.ndarray`
     whose last axis has a length equal to 4.
     Each set of 4 values (x,y,z,w) along the last axis represents a
@@ -60,7 +60,7 @@ class Coords4(ndarray):
     (x/w, y/w, z/w). A zero w-value represents a point at infinity.
     Converting such points to :class:`Coords` will result in Inf or NaN
     values in the resulting object.
-    
+
     The float datatype is only checked at creation time. It is the
     responsibility of the user to keep this consistent throughout the
     lifetime of the object.
@@ -69,7 +69,7 @@ class Coords4(ndarray):
     :class:`numpy.ndarray`.
 
     Parameters:
-        
+
     `data`: array_like
       If specified, data should evaluate to an array of floats, with the
       length of its last axis not larger than 4. When equal to four, each
@@ -94,7 +94,7 @@ class Coords4(ndarray):
       used if possible, e.g. if a correctly shaped and typed
       :class:`numpy.ndarray` is specified.
     """
-            
+
     def __new__(cls, data=None, w=None, dtyp=Float, copy=False):
         """Create a new instance of :class:`Coords4`."""
         if data is None:
@@ -103,14 +103,14 @@ class Coords4(ndarray):
         else:
             # turn the data into an array, and copy if requested
             ar = array(data, dtype=dtyp, copy=copy)
-            
+
         if ar.shape[-1] in [3,4]:
             pass
         elif ar.shape[-1] in [1,2]:
             # make last axis length 3, adding 0 values
             ar = growAxis(ar,3-ar.shape[-1],-1)
         elif ar.shape[-1] == 0:
-            # allow empty coords objects 
+            # allow empty coords objects
             ar = ar.reshape(0,3)
         else:
             raise ValueError,"Expected a length 1,2,3 or 4 for last array axis"
@@ -127,7 +127,7 @@ class Coords4(ndarray):
         # Denormalize if w is specified
         if w is not None:
             self.deNormalize(w)
- 
+
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(cls)
 
@@ -171,7 +171,7 @@ class Coords4(ndarray):
     def toCoords(self):
         """Convert homogeneous coordinates to cartesian coordinates.
 
-        Returns: 
+        Returns:
 
         A :class:`Coords` object with the cartesian coordinates
         of the points. Points at infinity (w=0) will result in
@@ -203,7 +203,7 @@ class Coords4(ndarray):
         """Return the w-plane"""
         return self[...,3]
 
-    
+
     def bbox(self):
         """Return the bounding box of a set of points.
 
@@ -222,13 +222,13 @@ class Geometry4(object):
     def scale(self,*args,**kargs):
         self.coords[...,:3] = Coords(self.coords[...,:3]).scale(*args,**kargs)
         return self
-    
+
 
 #######################################################
 ## NURBS CURVES ##
 
 #    3*0    -     2*1     -    3*2    : 8 = 5+3
-#    nctrl = nparts * degree + 1 
+#    nctrl = nparts * degree + 1
 #    nknots = nctrl + degree + 1
 #    nknots = (nparts+1) * degree + 2
 #
@@ -241,13 +241,13 @@ class Geometry4(object):
 #    3      2       7       11
 #    3      3      10       14
 #    3      4      13       17
-#    4      1       5       10 
+#    4      1       5       10
 #    4      2       9       14
 #    4      3      13       18
 #    5      1       6       12
 #    5      2      11       17
 #    5      3      16       22
-#    6      1       7       14       
+#    6      1       7       14
 #    6      2      13       20
 #    7      1       8       16
 #    8      1       9       18
@@ -267,7 +267,7 @@ class NurbsCurve(Geometry4):
     are only defined upon a multiplicative constant and will be normalized
     to set the last value to 1.
     Sensible default values are constructed automatically by calling
-    :func:`knotVector`. 
+    :func:`knotVector`.
 
     If no knots are given and no degree is specified, the degree is set to
     the number of control points - 1 if the curve is blended. If not blended,
@@ -276,7 +276,7 @@ class NurbsCurve(Geometry4):
     """
 
     N_approx = 100
-#    
+#
 #    order (2,3,4,...) = degree+1 = min. number of control points
 #    ncontrol >= order
 #    nknots = order + ncontrol >= 2*order
@@ -284,12 +284,12 @@ class NurbsCurve(Geometry4):
 #    convenient solutions:
 #    OPEN:
 #      nparts = (ncontrol-1) / degree
-#      nintern = 
-#    
+#      nintern =
+#
     def __init__(self,control,degree=None,wts=None,knots=None,closed=False,blended=True):
         self.closed = closed
         nctrl = len(control)
-        
+
         if degree is None:
             if knots is None:
                 degree = nctrl-1
@@ -328,11 +328,11 @@ class NurbsCurve(Geometry4):
             knots = knots / knots[-1]
 
         nknots = knots.shape[0]
-        
+
         if nknots != nctrl+order:
             raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
 
-       
+
         self.coords = control
         self.knots = knots
         self.degree = degree
@@ -341,7 +341,7 @@ class NurbsCurve(Geometry4):
 
     def order(self):
         return len(self.knots)-len(self.coords)
-        
+
     def bbox(self):
         """Return the bounding box of the NURBS curve.
 
@@ -350,7 +350,7 @@ class NurbsCurve(Geometry4):
 
 
     def __str__(self):
-        return """NURBS Curve, degree = %s, nctrl = %s, nknots = %s 
+        return """NURBS Curve, degree = %s, nctrl = %s, nknots = %s
   Control points:
 %s,
   knots = %s
@@ -367,7 +367,7 @@ class NurbsCurve(Geometry4):
 
         Returns (nu,3) shaped Coords with nu points at the specified
         parametric values.
-        
+
         """
         ctrl = self.coords.astype(double)
         knots = self.knots.astype(double)
@@ -387,20 +387,20 @@ class NurbsCurve(Geometry4):
             pts = Coords(pts)
         return pts
 
-    
+
     def derivs(self,at,d=1):
         """Returns the points and derivatives up to d at parameter values at"""
         if type(at) is int:
             u = uniformParamValues(at,self.knots[0],self.knots[-1])
         else:
             u = at
-            
+
         # sanitize arguments for library call
         ctrl = self.coords.astype(double)
         knots = self.knots.astype(double)
         u = asarray(u).astype(double)
         d = int(d)
-        
+
         try:
             pts = nurbs.curveDerivs(ctrl,knots,u,d)
             if isnan(pts).any():
@@ -438,7 +438,7 @@ class NurbsCurve(Geometry4):
         u is a vector with knot parameter values to be inserted into the
         curve. The control points are adapted to keep the curve unchanged.
 
-        Returns: 
+        Returns:
 
         A Nurbs curve equivalent with the original but with the
         specified knot values inserted in the knot vector, and the control
@@ -465,7 +465,7 @@ class NurbsCurve(Geometry4):
         u is a vector with knot parameter values to be inserted into the
         curve. The control points are adapted to keep the curve unchanged.
 
-        Returns: 
+        Returns:
 
         A Nurbs curve equivalent with the original but with the
         specified knot values inserted in the knot vector, and the control
@@ -483,7 +483,7 @@ class NurbsCurve(Geometry4):
         If no `ntot` is given, the curve is approximated by a PolyLine
         through equidistant `ndiv+1` point in parameter space. These points
         may be far from equidistant in Cartesian space.
-        
+
         If `ntot` is given, a second approximation is computed with `ntot`
         straight segments of nearly equal length. The lengths are computed
         based on the first approximation with `ndiv` segments.
@@ -503,7 +503,7 @@ class NurbsCurve(Geometry4):
         """Graphical representation"""
         from gui.actors import NurbsActor
         return NurbsActor(self,**kargs)
-    
+
 
 #######################################################
 ## NURBS Surface ##
@@ -529,7 +529,7 @@ class NurbsSurface(Geometry4):
     .. warning:: This is a class under development!
 
     """
-    
+
     def __init__(self,control,degree=(None,None),wts=None,knots=(None,None),closed=(False,False),blended=(True,True)):
 
         self.closed = closed
@@ -544,7 +544,7 @@ class NurbsSurface(Geometry4):
             kn = knots[d]
             bl = blended[d]
             cl = closed[d]
-            
+
             if deg is None:
                 if kn is None:
                     deg = nctrl-1
@@ -557,7 +557,7 @@ class NurbsSurface(Geometry4):
                 # make degree changeable
                 degree = list(degree)
                 degree[d] = deg
-                
+
             order = deg+1
 
             if nctrl < order:
@@ -577,7 +577,7 @@ class NurbsSurface(Geometry4):
                 self.uknots = kn
             else:
                 self.vknots = kn
-                
+
         self.coords = control
         self.degree = degree
         self.closed = closed
@@ -586,7 +586,7 @@ class NurbsSurface(Geometry4):
     def order(self):
         return (self.uknots.shape[0]-self.coords.shape[1],
                 self.vknots.shape[0]-self.coords.shape[0])
-        
+
     def bbox(self):
         """Return the bounding box of the NURBS surface.
 
@@ -604,7 +604,7 @@ class NurbsSurface(Geometry4):
 
         Returns (nu,3) shaped Coords with `nu` points at the specified
         parametric values.
-        
+
         """
         ctrl = self.coords.astype(double)
         U = self.vknots.astype(double)
@@ -636,13 +636,13 @@ class NurbsSurface(Geometry4):
         - `m`: tuple of two int values (mu,mv). The points and derivatives up
           to order mu in u direction and mv in v direction are returned.
 
-        Returns: 
+        Returns:
 
         (nu+1,nv+1,nu,3) shaped Coords with `nu` points at the
         specified parametric values. The slice (0,0,:,:) contains the
         points.
-        
-        """     
+
+        """
         # sanitize arguments for library call
         ctrl = self.coords.astype(double)
         U = self.vknots.astype(double)
@@ -651,7 +651,7 @@ class NurbsSurface(Geometry4):
         mu,mv = m
         mu = int(mu)
         mv = int(mv)
-        
+
         try:
             pts = nurbs.surfaceDerivs(ctrl,U,V,u,mu,mv)
             if isnan(pts).any():
@@ -667,7 +667,7 @@ class NurbsSurface(Geometry4):
         else:
             pts = Coords(pts)
         return pts
-        
+
 
     def actor(self,**kargs):
         """Graphical representation"""
@@ -683,9 +683,9 @@ def globalInterpolationCurve(Q,degree=3,strategy=0.5):
 
     Given an ordered set of points Q, the globalInterpolationCurve
     is a NURBS curve of the given degree, passing through all the
-    points. 
+    points.
 
-    Returns: 
+    Returns:
 
     A NurbsCurve through the given point set. The number of
     control points is the same as the number of input points.
@@ -729,7 +729,7 @@ def globalInterpolationCurve(Q,degree=3,strategy=0.5):
     P = linalg.solve(A,Q)
     #print "P = ",P
     return NurbsCurve(P,knots=U,degree=degree)
-    
+
 
 def uniformParamValues(n,umin=0.0,umax=1.0):
     """Create a set of uniformly distributed parameter values in a range.
@@ -742,15 +742,15 @@ def uniformParamValues(n,umin=0.0,umax=1.0):
     - `umin`, `umax`: float: start and end value of the interval. Default
       interval is [0.0..1.0].
 
-    Returns: 
+    Returns:
 
     A float array with n+1 equidistant values in the range umin..umax.
     For n > 0, both of the endpoints are included. For n=0, a single
     value at the center of the interval will be returned. For n<0, an
     empty array is returned.
-    
+
     Example:
-    
+
     >>> uniformParamValues(4).tolist()
     [0.0, 0.25, 0.5, 0.75, 1.0]
     >>> uniformParamValues(0).tolist()
@@ -794,7 +794,7 @@ def knotVector(nctrl,degree,blended=True,closed=False):
     the knots, thus the curve is smooth, but the curvature may be discontinuous.
     There is an extra requirement in this case: ``nctrl`` sohuld be a multiple
     of ``degree`` plus 1.
-    
+
     Example:
 
     >>> print knotVector(7,3)
@@ -826,7 +826,7 @@ def toCoords4(x):
 
     `x`: :class:`Coords`
       Array with cartesian coordinates.
-       
+
     Returns a Coords4 object corresponding to the input cartesian coordinates.
     """
     return Coords4(x)
@@ -872,7 +872,7 @@ def deCasteljou(P,u):
     approximations. The first one is the set of control points, the last one
     is the point on the Bezier curve.
 
-    This function works with Coords as well as Coords4 points. 
+    This function works with Coords as well as Coords4 points.
     """
     n = P.shape[0]-1
     C = [P]
@@ -888,16 +888,28 @@ def curveToNurbs(B):
     return NurbsCurve(B.coords,degree=B.degree,closed=B.closed,blended=False)
 
 curve.BezierSpline.toNurbs = curveToNurbs
-    
+
 
 def frenet(d1,d2,d3=None):
     """Returns the 3 Frenet vectors and the curvature.
 
-    d1,d2 are the first and second derivatives at points of a curve.
-    d3, if given, is the third derivative. 
-    Returns 3 normalized vectors along tangent, normal, binormal
-    plus the curvature.
-    if d3 is give, also returns the torsion of the curve.
+    Parameters:
+
+    - `d1`: first derivative at `npts` points of a nurbs curve
+    - `d2`: second derivative at `npts` points of a nurbs curve
+    - `d3`: (optional) third derivative at `npts` points of a nurbs curve
+
+    The derivatives of the nurbs curve are normally obtained from
+    :func:`NurbsCurve.deriv`.
+
+    Returns:
+
+    - `T`: normalized tangent vector to the curve at `npts` points
+    - `N`: normalized normal vector to the curve at `npts` points
+    - `B`: normalized binormal vector to the curve at `npts` points
+    - `k`: curvature of the curve at `npts` points
+    - `t`: (only if `d3` was specified) torsion of the curve at `npts` points
+
     """
     l = length(d1)
     # What to do when l is 0? same as with k?
@@ -918,7 +930,7 @@ def frenet(d1,d2,d3=None):
     k = m / l**3
     if d3 is None:
         return e1,e2,e3,k
-    # compute torsion    
+    # compute torsion
     t = dotpr(d1,cross(d2,d3)) / dotpr(d1,d2)
     return e1,e2,e3,k,t
 
