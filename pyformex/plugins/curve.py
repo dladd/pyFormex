@@ -531,6 +531,48 @@ class PolyLine(Curve):
             return d,w
         else:
             return d
+
+    def transportNormals(self, firstnormal=None):
+        """
+        Return unit transport normals.
+        
+        `firstnormal` is the normal of the first point.
+        
+        Each point of the polyline is equipped with 3 orthogonal vectors:
+        tangent (T), normal (N) and binormal (B). These vectors define a
+        coordinate system that re-orient while walking on the polyline and
+        try to minimize the twist angle. The user can specify the normal of the 
+        first point. The tangent of the last point set equal to the
+        penultimate.
+        
+        At the moment it works only with open PolyLines.
+        
+        To visualize the vectors:
+    
+        drawVectors(PL.coords,T,size=1.,nolight=True,color='red')
+        drawVectors(PL.coords,N,size=1.,nolight=True,color='green')
+        drawVectors(PL.coords,B,size=1.,nolight=True,color='blue')
+    
+        """
+        if self.closed:
+            raise ValueError,"transportNormals are not yet implemented for CLOSED polylines"
+        T=self.directions()
+        if firstnormal==None:
+            N=Coords(anyPerpendicularVector(T[0]))
+        else:
+            N=Coords(firstnormal)
+            ra=rotationAngle(N,T[0],m=None,angle_spec=DEG)[0]
+            if abs(ra-90.)>1.e-3:
+                warning('the given initial normal is not perpendicular to the tangent!')
+        for t in T[1:]:
+            b=cross(N[-1], t)
+            N=N.append([cross(t, b)])
+        N=normalize(N)
+        ra=rotationAngle(N,T,m=None,angle_spec=DEG)[0]
+        if sum(abs(ra-90.)>1.e-3)>0:
+            warning('some upvectors are not perpendicular to the tangent!!')
+        B=cross(N, T)
+        return T,N,B 
        
 
     def roll(self,n):
