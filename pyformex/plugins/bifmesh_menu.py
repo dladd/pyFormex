@@ -93,7 +93,9 @@ def getData(*args):
             res = res[0]
         return res
     except:
+        print(args)
         error("I could not find all the data")
+        raise
 
 def getDataItem(data,item):
     """Return an item from a dict"""
@@ -102,11 +104,11 @@ def getDataItem(data,item):
 
 def drawOption(item):
     """Return draw option"""
-    return getDataItem('draw_options',item)
+    return _draw_options[item]
 
 def sliceData(item):
     """Return slice data"""
-    return getDataItem('slice_data',item)
+    return _slice_data[item]
 
 
 def vecbisectrix(p0, p1, cx):
@@ -700,8 +702,13 @@ def surfMesh():
 
 def divideControlLines():
     """Divide the control lines."""
-    br,slice_data = getData('branch','slice_data')
-
+    br = getData('branch')
+    try:
+        slice_data = named(_slice_data_name)
+        print("1",slice_data)
+    except:
+        slice_data = _slice_data
+        print("2",slice_data)
     npcent = slice_data['nslice']
     cl = [ br[i].approx(ntot=npcent[i//2]) for i in range(len(br))]
 
@@ -766,38 +773,38 @@ def centerlines():
     #if drawOption('visual'):
     drawCenterLines()
 
-_draw_options = [
-    ['visual',False],
-    ['numbers',False],
-    ['fill_cross',False],
-    ['fill_surf',False],
-    ]
-try:
-    updateData(_draw_options,named(_draw_options_name))
-except:
-    export({_draw_options_name:dict(_draw_options)})
-
+_draw_options = {
+    'visual': False,
+    'numbers': False,
+    'fill_cross': False,
+    'fill_surf': False,
+    }
 
 def inputDrawOptions():
-    res = askItems(_draw_options)
+    """Input the drawing options"""
+    try:
+        _draw_options.update(named(_draw_options_name))
+    except:
+        pass
+    res = askItems(_draw_options.items())
     if res:
+        _draw_options.update(res)
         export({_draw_options_name:res})
 
-_slice_data = [
-    ['nslice', [10, 10, 10]],
-    ]
-try:
-    updateData(_slice_data,named(_slice_data_name))
-except:
-    export({_slice_data_name:dict(_slice_data)})
 
+_slice_data = {
+    'nslice': [10, 10, 10],
+    }
 
 def inputSlicingParameters():
     """Input the slicing parameters"""
-
-    res = askItems(_slice_data, caption='long cuts')
-
+    try:
+        _slice_data.update(named(_slice_data_name))
+    except:
+        pass
+    res = askItems(_slice_data.items())
     if res:
+        _slice_data.update(res)
         export({_slice_data_name:res})
 
 
@@ -1013,6 +1020,7 @@ def example():
 
     if not nextStep('Notice the order of the input points!\n\n4. Create the Center Lines'):
         return
+    inputSlicingParameters()
     centerlines()
 
     if not nextStep('5. Slice the bifurcation'):
@@ -1068,9 +1076,9 @@ def create_menu():
         ("&1.  Import Bifurcation Geometry",importGeometry),
         ("&2.  Input Central Point",inputCentralPoint),
         ("&3.  Input Helper Lines",inputControlLines),
-        ("&4.  Create Center Lines",centerlines),
-        ("&5a. Input Slicing Parameters",inputSlicingParameters),
-        ("&5b. Slice the bifurcation",sliceIt),
+        ("&4a. Input Slicing Parameters",inputSlicingParameters),
+        ("&4b.  Create Center Lines",centerlines),
+        ("&5. Slice the bifurcation",sliceIt),
         ("&6.  Create Spline Mesh",splineIt),
         ("&7a. Input Longitudinal Seeds",inputLongitudinalSeeds),
         ("&7b. Seed Longitudinal Splines",seedLongitudinalSplines),
