@@ -954,11 +954,21 @@ def readArray(file,dtype,shape,sep=' '):
 
     This uses :func:`numpy.fromfile` to read an array with known shape and
     data type from an open file.
-    The sep parameter can be specified as in fromfile.
+    The sep parameter can be specified as in `numpy.fromfile`.
+    If an empty string is given as separator, the data is read in
+    binary mode. In that case (only) an extra '\n' after the data
+    will be stripped off.
     """
     shape = asarray(shape)
     size = shape.prod()
-    return fromfile(file=file,dtype=dtype,count=size,sep=sep).reshape(shape)
+    data = fromfile(file=file,dtype=dtype,count=size,sep=sep).reshape(shape)
+    if sep == '':
+        pos = file.tell()
+        byte = file.read(1)
+        if not ord(byte) == 10:
+            # not a newline: push back
+            file.seek(pos)
+    return data
 
 
 def writeArray(file,array,sep=' '):

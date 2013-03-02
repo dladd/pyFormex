@@ -213,12 +213,14 @@ def importGeometry(select=True,draw=True,ftype=None):
         #selection.readFromFile(fn)
         print("Items read: %s" % [ "%s(%s)" % (k,res[k].__class__.__name__) for k in res])
         if select:
+            print("SET SELECTION")
             selection.set(res.keys())
-            print(selection.names)
+            #print(selection.names)
             surface_menu.selection.set([n for n in selection.names if isinstance(named(n),TriSurface)])
-            print(surface_menu.selection.names)
+            #print(surface_menu.selection.names)
 
             if draw:
+                print("DRAW SELECTION")
                 selection.draw()
                 zoomAll()
 
@@ -281,7 +283,7 @@ def readInp(fn=None):
         return
 
 
-def writeGeometry(obj,filename,filetype=None,shortlines=False):
+def writeGeometry(obj,filename,filetype=None,sep=' ',shortlines=False):
     """Write the geometry items in objdict to the specified file.
 
     """
@@ -293,7 +295,7 @@ def writeGeometry(obj,filename,filetype=None,shortlines=False):
     if filetype in [ 'pgf', 'pgf.gz', 'pyf' ]:
         # Can write anything
         if filetype in [ 'pgf', 'pgf.gz' ]:
-            res = writeGeomFile(filename,obj,shortlines=shortlines)
+            res = writeGeomFile(filename,obj,sep=sep,shortlines=shortlines)
 
     else:
         error("Don't know how to export in '%s' format" % filetype)
@@ -301,7 +303,7 @@ def writeGeometry(obj,filename,filetype=None,shortlines=False):
     return res
 
 
-def exportGeometry(types=['pgf','all'],shortlines=False):
+def exportGeometry(types=['pgf','all'],sep=' ',shortlines=False):
     """Write geometry to file."""
     drawable.ask()
     if not drawable.check():
@@ -312,7 +314,7 @@ def exportGeometry(types=['pgf','all'],shortlines=False):
     fn = askNewFilename(cur=cur,filter=filter)
     if fn:
         message("Writing geometry file %s" % fn)
-        res = writeGeometry(drawable.odict(),fn,shortlines=shortlines)
+        res = writeGeometry(drawable.odict(),fn,sep=sep,shortlines=shortlines)
         pf.message("Contents: %s" % res)
 
 
@@ -320,6 +322,8 @@ def exportPgf():
     exportGeometry(['pgf'])
 def exportPgfShortlines():
     exportGeometry(['pgf'],shortlines=True)
+def exportPgfBinary():
+    exportGeometry(['pgf'],sep='')
 def exportOff():
     exportGeometry(['off'])
 
@@ -1071,6 +1075,7 @@ def create_menu():
             ]),
         ("&Export ",[
             (utils.fileDescription('pgf'),exportPgf),
+            ("pyFormex Geometry File (binary)",exportPgfBinary),
             ("pyFormex Geometry File with short lines",exportPgfShortlines),
             ("Object File Format (.off)",exportOff),
             ]),

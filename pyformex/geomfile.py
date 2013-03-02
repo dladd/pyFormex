@@ -438,7 +438,7 @@ class GeometryFile(object):
 
         ndim = 3
         x = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
-        e = readArray(self.fil,Float,(nelems,nplex),sep=sep)
+        e = readArray(self.fil,Int,(nelems,nplex),sep=sep)
         if props:
             p = readArray(self.fil,Int,(nelems,),sep=sep)
         else:
