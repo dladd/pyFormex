@@ -113,7 +113,7 @@ class WebGL(List):
     def __init__(self,name='Scene1'):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
-        self.script = pf.cfg['webgl/xtkscript']
+        self.script = pf.cfg['webgl/script']
         self.guiscript = pf.cfg['webgl/guiscript']
         self._camera = None
         self.gui = []

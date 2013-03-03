@@ -116,6 +116,10 @@ def settings():
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
         res['gui/actionbuttons'] = [ t for t in _actionbuttons if res['_gui/%sbutton'%t ] ]
+        if res['webgl/script'] == 'custom':
+            res['webgl/script'] = res['_webgl_script']
+        if res['webgl/guiscript'] == 'custom':
+            res['webgl/guiscript'] = res['_webgl_guiscript']
         updateSettings(res)
         plugins.loadConfiguredPlugins()
 
@@ -135,7 +139,7 @@ def settings():
     def changeAppDirs():
         changeDirs('appdirs')
 
-
+    enablers = []
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
     # Use _ to avoid adding these items in the config
@@ -146,7 +150,6 @@ def settings():
     appearance = [
         _I('gui/style',pf.app.currentStyle(),choices=pf.app.getStyles()),
         _I('gui/font',pf.app.font().toString(),'font'),
-        _I('gui/bindings',bindings_current,choices=bindings_choices,tooltip="The Python bindings with the Qt4 library. Your choice will only be honored after restarting pyFormex"),
         ]
 
     toolbartip = "Currently, changing the toolbar position will only be in effect when you restart pyFormex"
@@ -175,6 +178,20 @@ def settings():
         _I('mail/server',pf.cfg.get('mail/server','localhost'),text="Outgoing mail server")
         ]
 
+    xtkscripts = ["http://feops.ugent.be/pub/xtk/xtk.js", "http://get.goXTK.com/xtk_edge.js", "http://get.goXTK.com/xtk_release_10.js", 'custom']
+    guiscripts = ["http://get.goXTK.com/xtk_xdat.gui.js", 'custom']
+    webgl_settings = [
+        _I('webgl/script',pf.cfg['webgl/script'],text='XTK base script',choices=xtkscripts),
+        _I('_webgl_script','',text='Custom XTK URL'),
+        _I('webgl/guiscript',pf.cfg['webgl/guiscript'],text='GUI base script',choices=guiscripts),
+        _I('_webgl_guiscript','',text='Custom GUI URL'),
+        _I('webgl/autogui',pf.cfg['webgl/autogui'],text='Always add a standard GUI'),
+        ]
+    enablers.extend([
+        ('webgl/script','custom','_webgl_script'),
+        ('webgl/guiscript','custom','_webgl_guiscript'),
+        ])
+
     dia = widgets.InputDialog(
         caption='pyFormex Settings',
         store=pf.cfg,
@@ -195,7 +212,13 @@ def settings():
                 _I('plot2d',text="Prefered 2D plot library",choices=['gnuplot','matplotlib']),
                 _I('commands',text='Use commands module instead of subprocess',tooltip="If checked, pyFormex will use the Python 'commands' module for the execution of external commands. The default (unchecked) is to use the 'subprocess' module. If you notice a lot of command failures, or even hangups, you may want to switch."),
                 ],
-             ),
+               ),
+            _T('Startup',[
+                _I('_info_01_','The settings on this page will only become active after restarting pyFormex',itemtype='info'),
+                _I('gui/bindings',bindings_current,choices=bindings_choices,tooltip="The Python bindings for the Qt4 library"),
+                _I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
+                viewer,
+                ]),
             _T('GUI',[
                 _G('Appearance',appearance),
                 _G('Components',toolbars+actionbuttons+[
@@ -206,13 +229,10 @@ def settings():
                     _I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
                     ],
                  ),
-                _I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
-                viewer,
                 ]),
             _T('Canvas',[
                 _I('_not_active_','The canvas settings can be set from the Viewport Menu',itemtype='info',text=''),
-                ],
-              ),
+                ]),
             _T('Drawing',[
                 _I('draw/rendermode',pf.cfg['draw/rendermode'],choices=canvas.CanvasSettings.RenderProfiles),
                 _I('draw/wait',pf.cfg['draw/wait']),
@@ -222,17 +242,16 @@ def settings():
                 _I('_info_00_',itemtype='info',text='Changes to the options below will only become effective after restarting pyFormex!'),
                 _I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
                 _I('draw/quadsurf',text='Draw as quadratic surfaces',itemtype='list',check=True,choices=elementTypes(2)+elementTypes(3),tooltip='Surface and volume elements checked here will be drawn as quadratic surfaces whenever possible.'),
-                ]
-              ),
+                ]),
             _T('Mouse',mouse_settings),
             _T('Plugins',plugin_items),
+            _T('WebGL',webgl_settings),
             _T('Environment',[
                 _G('Mail',mail_settings),
 #                _G('Jobs',jobs_settings),
                 ]),
             ],
-        enablers =[
-            ],
+        enablers=enablers,
         actions=[
             ('Close',close),
             ('Accept and Save',acceptAndSave),
