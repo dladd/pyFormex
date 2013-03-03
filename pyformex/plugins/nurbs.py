@@ -33,6 +33,7 @@ from coords import *
 from lib import nurbs
 from plugins import curve
 from pyformex import options
+from pyformex import utils
 import olist
 
 
