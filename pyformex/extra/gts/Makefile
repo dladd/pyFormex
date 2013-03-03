@@ -85,7 +85,7 @@ gts%: %.c
 install: $(PRG) $(MAN)
 	$(INSTALLDIR) $(BINDIR)
 	$(INSTALLBIN) $(PRG) $(BINDIR)
-	$(INSTALLDATA) $(MAN) $(MANDIR)/$(MAN)
+	$(INSTALLDATA) $(MAN) $(MANDIR)
 
 manpages: $(MAN)
 

@@ -1,5 +1,5 @@
 .. $Id$    -*- rst -*-
-  
+
 ..
   This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,29 +8,49 @@
   Project page:  http://savannah.nongnu.org/projects/pyformex/
   Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 pyFormex 0.9.0  Releasenotes
 ============================
 
 This is a collection of the most prominent changes in pyFormex 0.9.0
 compared to release 0.8.8. The 0.8.9 release was nearly identical to
-0.8.8 (mostly bug fixing).
+0.8.8 (mostly fixing some bugs).
+
+Most important new things:
+
+- pyFormex source is now in a git repository
+- WebGL export
+- PySide as Python bindings for Qt4
+- DICOM images can be imported
+- marching cubes algorithm
+- VTK, VMTK interfaces
+- fullscreen mode
+
+
+Installation
+------------
+- installation of development version using git::
+
+    git clone git://git.savannah.nongnu.org/pyformex.git
+
+- pyFormex now also works with PySide as alternative for PyQt4.
+  PySide is another set of Python bindings for Qt4
 
 
 Gui
@@ -41,164 +61,65 @@ Gui
   remain possible. Another F5 press switch back to normal (window) mode.
 
 
-
-pyFormex 0.8.8  Releasenotes
-============================
-
-This is a collection of the most prominent changes in pyFormex 0.8.8
-compared to the previous release 0.8.6. Note that there is no official
-release numbered 0.8.7.
-
-There are a lot of new features is in this release, as well as some
-code reorganizations and bug fixes. The most important new features are:
-
-- a new model for user applications. Besides the classical pyFormex *script*, 
-  there is now also a pyFormex *app*, which can be loaded and used like
-  a Python module. See below (Scripting) for details.
-- Gianluca De Santis donated his vascular sweeping mesher, allowing the 
-  creation of hexahedral meshes in bifuracted arteries.
-- Preparations have started for porting pyFormex to Python3. As of this
-  release pyFormex enforces the use of the print function instead of the print
-  statement. Users may convert their existing scripts with the command::
-
-    2to3 -f print -wn *.py   
-
-  Some other issues will be handled transparently by a compatibility module.
-
-Installation
-------------
-- The installation procedure for (some of) the extra packages has been
-  changed. They now rely more on installed or installable packages from
-  your distribution. This will allow to create binary packages for them.
-
-- We have set up a local repository where intermediate releases in Debian
-  package format can be found. Add the following to your 
-  `/etc/apt/sources.list` if you want to use it::
-
-    deb http://bumps.ugent.be/repos/debian/ sid main
-    deb-src http://bumps.ugent.be/repos/debian/ sid main
-
-
-Gui
----
-- Script/Apps menus have alphabetical classification in multiple groups
-
-
 Command line
 ------------
-- two options (debug, debulevel) to support the debug level setting. See
-  man page or `pyformex --help`.
 
 
 Core
 ----
-- adjacency.py: new module holding a specialized Adjacency class. This replaces
-  and extends some methods that were previously available in connectivity.py.
-  The Adjacency class provides general front progression algorithms.
-- track.py: new module defining the classes TrackedDict and TrackedList. These
-  are like the corresponding Python dict and list, but with tracking 
-  facilities added, allowing to know whether or not changes have been applied
-  to the contents. 
-- fileread.py: a collection of general functions for reading geometrical data
-  from a file. It is mostly intended to be used by specific file format
-  converters/importers.
-- olist.py: new list manipulation functions `remove` and `toFront`. 
-- olist.List: new *experimental* class which allows execution of a method
-  on each of its members. 
-- Implemented debug levels, allowing debug messages to be switched on/off.  
-- arraytools: new functions: concat, complement, sortSubsets, multiplicity,
-  unitDivisor, uniformParamValues
-  In `vectorRotation`, upvec now defaults to None.
-- project: Project is now a TrackedDict
-- connectivity.Connectivity: a mask can be used to construct partial adjacency
-  arrays.
-- coords.py: new functions bboxIntersection, testBbox, align. 
-  New Coords methods: apt, sort, boxes
-- Mesh: many new, expanded and revised methods
-
-
-Gui 
----
-- Application menu, containing all examples.
+- GeomFile: pyFormex pgf format now allows binary format
+- Mesh.peel: peels element from the border
+- arraytools: checkFloat, checkInt, pprint
+- direct export/import of binary STL files
+- export/import STL files with color
+- some external commands can be run parallel
 
 
 Drawing
 -------
-New functions: drawPrincipal, drawImage
+- Camera: provide correct camera position
+- Geometric objects can get attributes set that will be honored on drawing.
+  Currently: caption, color, opacity, visible
+
 
 Scripting
 ---------
-Scripting is the most important feature of pyFormex and has been available
-right from the beginning. Now there is a new model for user application: `app`.
-While the syntactic rules for apps are only slighly different from those of 
-the classical scripts, the execution engine functions quite diferently. Apps
-are imported as Python modules. The app source should define a 'run'
-method to be executed when run by pyFormex. The outermost code is only 
-executed once (when the module is loaded).
+- pause and sleep functions improved
+- new mkdir and pwdir functions, changed chdir
 
-The main purposes of the new app model are twofold:
 
-- allow an applications to easily import definitions from another app,
-- allow an application to be run from a compiled file, with having the .py 
-  source available.
-
-By sticking to some simple rules (as shown in the template.py), 
-a single source file may be used either as a script or as an app. 
-
+Widgets
+-------
+- new input items: InputFile, InputTable
+- Array and Table widgets can be edited
 
 
 Plugin menus
 ------------
-- geometry menu: has been extended and now contains integrated parts from the
-  former specialized Formex, Mesh and Surface menus.
-- dxf_menu: new, contains functionality for reading and writing .DXF
-  files. Currently limited to line type objects (line, polyline, arc, circle),
-  but easily expandable.
-- postproc menu now allows timestepping through the subsequent results
-- bifmesh menu: new, specialized menu to create hexahedral meshes in 
-  bifurcated arteries
+
 
 Plugins
 -------
-- isosurface: performs the marching cubes algorithm to create a 3D surface
-  from a series of scan images
-- vascularsweepingmesher: Gianluca De Santis' vascular sweeping mesher
-- dxf plugin has been extended with new functionality for reading and writing 
-  .DXF files. 
-  Currently limited to line type objects (line, polyline, arc, circle),
-  but easily expandable.
-- nurbs: some extra functions
-- trisurface.TriSurface: new methods: perimeters, quality; moved gts functions
-  to pyformex_gts
-- new plugin pyformex_gts: contains all the functionality using the GTS library
-  and external gts commands.
-- new plugin meshlist, defining a MeshList class. Consider using the olist.List
-  class instead.
-
+- imagearray: now also reads (stacks of) DICOM images
+- isosurface: construct 3D surface from 2D images, including marching cubes
+  algorithm
+- WebGL: new plugin allowing to create and export WebGL models directly
+  from pyFormex. WebGL models can directly be viewed in 3D with a browser
+  supporting WebGL (firefox, chrome).
+- ccxinp: input of Calculix and Abaqus .inp files
+- curve: PolyLine.movingFrenet computes Frenet frame along curve.
+- vtk_itf and vmtk_itf: interfaces with vtk and vmtk
 
 Extra
 -----
-The installation procedure for (some of) the extra software has been changed.
-A Makefile is used and `make all` should perform the installation.
-
-- gts: now makes used of standard installed GTS library. It only creates some
-  external commands that make use of the library.
-- dxfparser: now also reads Circle objects from a .DXF file. 
 
 
 Examples
 --------
-New examples: Nurbs, FeBol, FePlast, FontForge, Icosahedron, Texture, 
-NonManifold, Boolean, NurbsDecompose, Icons, Inside, Manantiales, 
-Isosurface, Voxelize
-
-Many of the examples have been adapted to the new app style. Others need
-further work
+- WebGL example
 
 
 Data
 ----
-The data directory contains a modified teapot model and a model of an arterial
-bifurcation.
 
 .. End

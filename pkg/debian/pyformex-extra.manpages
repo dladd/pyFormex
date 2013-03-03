@@ -1,1 +1,2 @@
-pyformex/extra/*/*.1
+debian/tmp/usr/share/man/man1/gts*.1
+debian/tmp/usr/share/man/man1/pyformex-*.1
