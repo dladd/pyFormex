@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -39,9 +39,9 @@ from plugins.curve import *
 from plugins.nurbs import *
 from odict import ODict
 
-ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
-point_color = [ 'black','white' ] 
-        
+ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ]
+point_color = [ 'black','white' ]
+
 open_or_closed = { True:'A closed', False:'An open' }
 
 TA = None
@@ -56,7 +56,7 @@ curvetypes = [
 ]
 
 
-def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,approx,cutWP=False,scale=None,directions=False):
+def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,approx,cutWP=False,scale=None,directions=False,frenet=False):
     global S,TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -104,15 +104,25 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,appr
     else:
         draw(S,color=ctype_color[im],nolight=True)
 
-    
+
     if directions:
         t = arange(2*S.nparts+1)*0.5
         ipts = S.pointsAt(t)
         draw(ipts)
         idir = S.directionsAt(t)
         drawVectors(ipts,0.2*idir)
-        
-    
+
+    if frenet and (ctype == 'PolyLine' or approx):
+        if approx:
+            C = PL
+        else:
+            C = S
+        T,N,B = C.movingFrenet()[:3]
+        drawVectors(C.coords,T,size=1.,nolight=True,color='red')
+        drawVectors(C.coords,N,size=1.,nolight=True,color='green')
+        drawVectors(C.coords,B,size=1.,nolight=True,color='blue')
+
+
 
 dataset = [
     Coords([[1., 0., 0.],[0., 1., 0.],[-1., 0., 0.],  [0., -1., 0.]]),
@@ -131,14 +141,14 @@ dataset = [
     ]
 
 _items = [
-    _I('DataSet','0',choices=map(str,range(len(dataset)))), 
+    _I('DataSet','0',choices=map(str,range(len(dataset)))),
     _I('CurveType',choices=curvetypes),
     _I('Closed',False),
     _I('Degree',3,min=1,max=3),
     _I('Curl',1./3.),
     _I('EndCurvatureZero',False),
     _G('Approximation',[
-        _I('Ndiv',4),
+        _I('Ndiv',40),
         _I('SpreadEvenly',False),
         _I('Ntot',40),
         ],checked=False),
@@ -148,6 +158,7 @@ _items = [
 #    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
     _I('Clear',True),
     _I('ShowDirections',False),
+    _I('ShowFrenetFrame',False),
     _I('CutWithPlane',False),
     ]
 
@@ -189,7 +200,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,Approximation,CutWithPlane,Scale,ShowDirections)
+        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,Approximation,CutWithPlane,Scale,ShowDirections,ShowFrenetFrame)
         setDrawOptions({'bbox':None})
 
 def showAll():
@@ -199,7 +210,7 @@ def timeOut():
     showAll()
     wait()
     close()
-    
+
 
 def run():
     global dialog
@@ -216,7 +227,7 @@ def run():
 
     dialog.timeout = timeOut
     dialog.show()
-    # Block other scripts 
+    # Block other scripts
     scriptLock(__file__)
 
 
