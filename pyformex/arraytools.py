@@ -853,7 +853,7 @@ def checkFloat(value,min=None,max=None):
             raise
         return a
     except:
-        raise ValueError,"Expected a float in the range(%s, %s), got: %s" % (value)
+        raise ValueError,"Expected a float in the range(%s, %s), got: %s" % (min,max,value)
 
 
 def checkArray(a,shape=None,kind=None,allow=None):
