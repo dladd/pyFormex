@@ -3087,16 +3087,6 @@ class TextBox(QtGui.QDialog):
 
 ############################# Button box ###########################
 
-if not pf.options.pyside:
-    # In pyqt4, the clicked signal always sends a bool
-    # We therefore provide a stripper function
-    # We make the fist argument optional in case we get a case
-    # that does not send the bool
-    def stripFirstArg(func):
-        def strippedFunc(bool=False):
-            return func()
-        return strippedFunc
-
 
 def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
                      parent=None):
@@ -3118,6 +3108,16 @@ def addActionButtons(layout,actions=[('Cancel',),('OK',)],default=None,
 
     Returns a horizontal box layout with the buttons.
     """
+    if not pf.options.pyside:
+        # In pyqt4, the clicked signal always sends a bool
+        # We therefore provide a stripper function
+        # We make the fist argument optional in case we get a case
+        # that does not send the bool
+        def stripFirstArg(func):
+            def strippedFunc(bool=False):
+                return func()
+            return strippedFunc
+
     if actions is None:
         actions = [('Cancel',),('OK',)]
     if actions and default is None:

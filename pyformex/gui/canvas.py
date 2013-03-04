@@ -36,7 +36,11 @@ from OpenGL import GL,GLU
 from formex import length
 from drawable import saneColor,glColor
 import colors
-if pf.options.opengl2:
+try:
+    opengl2 = pf.options.opengl2
+except:
+    opengl2 = False
+if opengl2:
     from opengl import camera
 else:
     import camera

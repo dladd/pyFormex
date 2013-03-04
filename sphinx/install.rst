@@ -1,5 +1,5 @@
 .. $Id$
-  
+
 ..
   This file is part of pyFormex 0.8.9  (Fri Nov  9 10:49:51 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,22 +8,22 @@
   Project page:  http://savannah.nongnu.org/projects/pyformex/
   Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 .. include:: defines.inc
 .. include:: links.inc
@@ -36,7 +36,7 @@ Installing pyFormex
 
 .. topic:: Abstract
 
-   This document explains the different ways for obtaining a running 
+   This document explains the different ways for obtaining a running
    pyFormex installation. You will learn how to obtain pyFormex, how
    to install it, and how to get it running.
 
@@ -47,9 +47,9 @@ Choose installation type
 ========================
 
 There are several ways to get a running installation of pyFormex, and you may
-choose the most appropriate method for you, depending on your needs, your current 
+choose the most appropriate method for you, depending on your needs, your current
 infrastructure and your computer knowledge. We will describe them in detail in
-this document, and advice you on which method might be the best in your case. 
+this document, and advice you on which method might be the best in your case.
 
 .. note:: **pyFormex on non-Linux systems**
 
@@ -57,8 +57,8 @@ this document, and advice you on which method might be the best in your case.
   GNU/Linux platform. The :ref:`sec:pyformex-nonlinux` section holds information
   on how pyFormex can be run on other platforms.
 
-Let's first give you an overview of the most important pros and cons of the 
-different install methods. 
+Let's first give you an overview of the most important pros and cons of the
+different install methods.
 
 :ref:`sec:debian-packages`:
 
@@ -68,7 +68,7 @@ different install methods.
 +-------------------------------+-------------------------------------------+
 | PROS                          |   CONS                                    |
 +===============================+===========================================+
-|  - Stable                     |  - Debian GNU/Linux required              |
+|  - Stable                     |  - Debian GNU/Linux required [#debian]_   |
 |  - Well supported             |  - Root access required                   |
 |  - Easy install procedure     |  - May be missing latest features         |
 |  - Automatic installation of  |                                           |
@@ -77,6 +77,9 @@ different install methods.
 |  - Easy removal procecure     |                                           |
 |  - Site-wide install          |                                           |
 +-------------------------------+-------------------------------------------+
+
+.. [#debian] Installing the Debian packages may also work on Debian derivatives
+   like Ubuntu and Mint.
 
 :ref:`sec:official-release`:
 
@@ -119,7 +122,7 @@ different install methods.
 |   required          |   (and root access) may be required        |
 |                     | - Less stable                              |
 +---------------------+--------------------------------------------+
- 
+
 
 :ref:`sec:bumpix-live-linux`:
 
@@ -142,7 +145,7 @@ To sum it up:
 
 - Unless you want to help with the development, or you absolutely
   need some of the latest features or bugfixes, or you just can not
-  meet the requirements, the latest :ref:`sec:debian-packages` or 
+  meet the requirements, the latest :ref:`sec:debian-packages` or
   :ref:`sec:official-release` source tarballs are
   what you want to go for. They give you the highest degree of
   stability and support and come packed in an archive, with an easy install
@@ -172,7 +175,7 @@ If you are running Debian GNU/Linux, or have the opportunity to install
 it, then (by far) the most easy install method is to use the packages
 in the official Debian repositories. Currently pyFormex packages are available for Debian sid and wheezy releases. Be sure to also install the precompiled acceleration libraries::
 
-  apt-get install pyformex-lib
+  apt-get install pyformex pyformex-lib
 
 This single command will install pyFormex and all its dependencies. Some extra
 functionalities may be installable from a separate package::
@@ -180,15 +183,18 @@ functionalities may be installable from a separate package::
   apt-get install pyformex-extra
 
 If you need a more recent version of pyFormex then the one available in the official repositories, you may try your luck with our `local package repository`_.
-It contains debian format packages of intermediate releases and test packages for the official releases. 
+It contains debian format packages of intermediate releases and test packages for the official releases.
 To access our package repository from your normal package manager, add the following lines to your `/etc/apt/sources.list`::
 
-   deb http://bumps.ugent.be/repos/debian/ sid main
-   deb-src http://bumps.ugent.be/repos/debian/ sid main
+  deb http://bumps.ugent.be/repos/debian/ sid main
+  deb-src http://bumps.ugent.be/repos/debian/ sid main
 
-and then do ``apt-get update``. The public key used to sign the packages is
-available from http://bumps.ugent.be/repos/pyformex-pubkey.gpg.
+You can add the key used to sign the packages to the apt keyring with the following command::
 
+  wget -O - http://bumps.ugent.be/repos/pyformex-pubkey.gpg | apt-key add -
+
+Then do ``apt-get update``. Now you can use the above commands to install
+the latest alpha release.
 
 
 
@@ -199,14 +205,14 @@ Official release
 
 pyFormex is software under development, and many users run it directly from
 the latest development sources. This holds a certain risk however, because the development version may at times become unstable or incompatible with previous versions and thus break your applications.
-At regular times we therefore create official releases, which provide a more stable and better documented and supported version, together with an easy install procedure. 
+At regular times we therefore create official releases, which provide a more stable and better documented and supported version, together with an easy install procedure.
 
 If you can meet the requirements for using an officially packed release, and you can not use the :ref:`sec:debian-packages`, this is the recommended way to install pyFormex. All the software packages needed to compile and run pyFormex can be obtained for free.
 
 To install an official pyFormex release, you need a working GNU/Linux system, root (administrator) privileges to the system, and you need to make sure that the dependencies listed below are installed first on the system. Furthermore, you need the usual GNU development tools (gcc, make).
 
 If you need to install a new GNU/Linux system from scratch, and have the choice to pick any distribution, we highly recommend `Debian GNU/Linux`_ or derivatives.
-This is because most of the pyFormex development is done on Debian systems, 
+This is because most of the pyFormex development is done on Debian systems,
 and we will give you `precise install instructions`_ for this system.
 Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. Furthermore, as of pyFormex version 0.8.6, we provide official :ref:`sec:debian-packages`, making installation really a no-brainer.
 
@@ -214,7 +220,7 @@ Most popular GNU/Linux distributions provide appropriately packed recent version
 of the dependencies, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
 you can find the source packages.
 
- 
+
 .. _sec:dependencies:
 
 Dependencies
@@ -223,7 +229,7 @@ Dependencies
 In order to install an official release package of pyFormex, you need to have the following installed (and working) on your computer:
 
 **Python** (http://www.python.org)
-   Version 2.5 or higher (2.6 or 2.7 is recommended). Nearly all GNU/Linux distributions come with Python installed, so this should be no major obstacle. 
+   Version 2.5 or higher (2.6 or 2.7 is recommended). Nearly all GNU/Linux distributions come with Python installed, so this should be no major obstacle.
 
 **NumPy** (http://www.numpy.org)
    Version 1.0 or higher. NumPy is the package used for efficient
@@ -232,8 +238,8 @@ In order to install an official release package of pyFormex, you need to have th
 **Qt4** (http://www.trolltech.com/products/qt)
    The widget toolkit on which the pyFormex Graphical User Interface (GUI) was built.
 
-**PyQt4** (http://www.riverbankcomputing.co.uk/pyqt/index.php) 
-   The Python bindings for Qt4. 
+**PyQt4** (http://www.riverbankcomputing.co.uk/pyqt/index.php)
+   The Python bindings for Qt4.
 
 **PyOpenGL** (http://pyopengl.sourceforge.net/)
    Python bindings for OpenGL, used for drawing and manipulating the
@@ -247,14 +253,14 @@ install by hand.
 Currently we recommend to install the whole package including the GUI.
 Most probably you will want to visualize your structures and for that you need the GUI anyway.
 
-Additionally, we recommend you to also install the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures . 
+Additionally, we recommend you to also install the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures .
 
 
 .. _`precise install instructions`:
 
 Installing dependencies on `Debian GNU/Linux`
 ..............................................
-Debian users should just have to install the packages ``python-numpy``, ``python-opengl`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` as dependency. Also, for compiling the acceleration library, you should install 
+Debian users should just have to install the packages ``python-numpy``, ``python-opengl`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` as dependency. Also, for compiling the acceleration library, you should install
 ``python-dev`` and ``libglu1-mesa-dev``. This command will do it all::
 
   apt-get install python-numpy python-opengl python-qt4-gl python-dev libglu1-mesa-dev
@@ -270,7 +276,7 @@ Download pyFormex
 
 Official pyFormex releases can be downloaded from this website:
 `Releases`_. As of the writing of this manual, the latest
-release is |latest|. 
+release is |latest|.
 
 pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. See :ref:`sec:installation-linux` for how to proceed further with the downloaded file.
 
@@ -292,12 +298,12 @@ and execute the following command with root privileges::
 
    python setup.py install --prefix=/usr/local
 
-This will install pyFormex under ``/usr/local/``. 
+This will install pyFormex under ``/usr/local/``.
 You can change the prefix to install pyFormex in some other place.
 
 The installation procedure installs everything into a single
 directory, and creates a symlink to the executable in
-``/usr/local/bin``. You can use the command :: 
+``/usr/local/bin``. You can use the command ::
 
    pyformex --whereami
 
@@ -305,7 +311,7 @@ to find out where pyFormex is installed.
 
 Finally, a pyFormex tarball installation can usually be removed by giving the command ::
 
-   pyformex --remove 
+   pyformex --remove
 
 and answering 'yes' to the question.  You may
 want to do this before installing a new version, especially if you
@@ -331,13 +337,13 @@ installation of these external packages. Currently, there is an
 install procedure for the following packages:
 
 .. warning:: We provide these installation procedures for your
-   convenience, but take no responsibility for them working correctly.  
+   convenience, but take no responsibility for them working correctly.
 
 **gl2ps**
    This package allows to save the OpenGL rendering to a file in
    vector format. Currently supported are ``eps``, ``pdf`` and
    ``svg``. Our install procedure provides the necessary Python
-   interface and installs the gl2ps library at the same time. 
+   interface and installs the gl2ps library at the same time.
 
 **gts**
    This package (Gnu Triangluted Surfaces) implements a library of
@@ -350,7 +356,7 @@ install procedure for the following packages:
 
 **tetgen**
    This package provides a high quality tetrahedral mesher. pyFormex
-   has some import and export functions for the specific ``tetgen`` file formats. 
+   has some import and export functions for the specific ``tetgen`` file formats.
    Since ``tetgen`` is only distributed in source form, we provide this
    install procedure to help with the compile/install.
 
@@ -368,10 +374,10 @@ directory where you unpacked the pyFormex distribution:
 ``cd pyformex-version``. Then go to the ``pyformex/external``
 subdirectory, where you will find a subdirectory for each of the
 above packages. Go into the directory of the package you wish to
-install and execute the following commands (install may require 
+install and execute the following commands (install may require
 root privileges)::
 
-  make 
+  make
   make install
 
 In some case there is no ``Makefile`` provided but an install script instead.
@@ -380,7 +386,7 @@ Then you can just do::
   ./install.sh all
 
 All these procedures will install under ``/usr/local``. If you wish to
-change this, you will have to change the ``Makefile`` or install procedure. 
+change this, you will have to change the ``Makefile`` or install procedure.
 The install procedures can also be used to perform only part of the
 installation process. Thus, ``./install.sh get unpack`` will
 only download and unpack that package. See the README files and the
@@ -407,7 +413,7 @@ These alpha releases can be downloaded from the developer `FTP site`_
 or from our `local FTP server`_. The latter may be slower, but
 you may find there some old releases or release candidates that are not
 available on the official server.
-They install just like the :ref:`sec:official-release`. 
+They install just like the :ref:`sec:official-release`.
 
 Again, as a Debian user, you may be extra lucky: we usually create Debian
 :ref:`sec:debian-packages` from these alpha releases and make them available on our `local package repository`_.
@@ -419,23 +425,23 @@ Development version
 ===================
 
 If the install procedures for the packaged releases do not work for
-you, or if you want to have the absolutely latest features and bug fixes, 
+you, or if you want to have the absolutely latest features and bug fixes,
 then you can run pyFormex directly from the development sources.
 Obviously, the pyFormex developers use this method, but there are also
 several normal users who prefer this, because it allows for easy
 updating to the latest version.
 
-.. note: The pyFormex project has recently migrated from Subversion to git as 
+.. note: The pyFormex project has recently migrated from Subversion to git as
    its version control system. The Subversion repository is still accessible,
    but does not contain the latest revisions. See below for checking out the
    source from the Subversion repository
 
 
 To run pyFormex from the development sources you need to have the same
-dependencies installed as for the :ref:`sec:official-release`. 
-Furthermore, you need the `git`_ revision control system. 
-You can check whether you have it by trying the command ``git``. 
-If you do not have the command, you should first install it. 
+dependencies installed as for the :ref:`sec:official-release`.
+Furthermore, you need the `git`_ revision control system.
+You can check whether you have it by trying the command ``git``.
+If you do not have the command, you should first install it.
 Debian and Ubuntu users can just do ``apt-get install git``.
 
 Now you can anonymously check out the latest pyFormex version
@@ -446,7 +452,7 @@ command::
 
 This will create a directory ``pyformex`` with the full source.
 
-.. note: If you already have a directory or file named ``pyformex`` in your 
+.. note: If you already have a directory or file named ``pyformex`` in your
    current path, the git command will not overwrite it.
 
 Now you can directly run pyFormex from the created ``pyformex`` directory::
@@ -456,24 +462,24 @@ Now you can directly run pyFormex from the created ``pyformex`` directory::
 
 The first time you run the command, it will start with compiling the pyFormex
 acceleration libraries. When that has finished, the pyFormex GUI will start,
-running directly from your checked out source. 
+running directly from your checked out source.
 The next time you run the command, the library will not be
 recompiled, unless some updates have been made to the files, making the
-already compiled versions out of date. 
+already compiled versions out of date.
 
 You can make the ``pyformex/pyformex`` command
 executable from anywhere by creating a symlink under one of the
-directories in your ``PATH`` environment variable. 
+directories in your ``PATH`` environment variable.
 Many GNU/Linux distributions add ``/home/USER/bin`` to the user's path.
 Thus the following command is suitable in most cases::
- 
+
   ln -sfn BASEDIR/pyformex/pyformex /home/USER/bin
 
-where ``BASEDIR`` is the full path to the directory where you checked out the 
+where ``BASEDIR`` is the full path to the directory where you checked out the
 source.
 
 The pyFormex repository contains a lot of files that are only needed and
-interesting for the pyFormex developers. As a normal user you may want to 
+interesting for the pyFormex developers. As a normal user you may want to
 remove this extra overhead in your copy. To do so, run the `sparse_checkout`
 script from the checkout directory::
 
@@ -482,13 +488,13 @@ script from the checkout directory::
 You can update your pyFormex installation at any time to the latest
 version by issuing the command ::
 
-  git pull 
+  git pull
 
 in your ``BASEDIR`` directory. You can even roll back to any older revision of
 pyFormex. Just remember that after updating your sources, the compiled
 libraries could be out of sync with your new sources. Normally pyFormex
-will rebuild the libraries the next time you start it. 
-If you ever want to rebuild the libraries without starting the ``pyformex`` 
+will rebuild the libraries the next time you start it.
+If you ever want to rebuild the libraries without starting the ``pyformex``
 program, you can use the command ``make lib`` from inside ``BASEDIR``.
 
 
@@ -504,8 +510,8 @@ you should install Subversion first. Debian and Ubuntu users can just
 do ``apt-get install subversion``.
 
 Now you can anonymously check out the latest pyFormex version
-from the `SVN Source code`_ repository at the `Project page`_. 
-If you are not a pyFormex developer, the suggested commands for this checkout 
+from the `SVN Source code`_ repository at the `Project page`_.
+If you are not a pyFormex developer, the suggested commands for this checkout
 are::
 
   svn co svn://svn.savannah.nongnu.org/pyformex/trunk --depth files MYDIR
@@ -521,11 +527,11 @@ a new directory ``trunk`` will be created in the current path.
 Instead of the above two commands, you could also use the following single
 command to check out the whole trunk, but that would download a lot of extra
 files which are only useful for pyFormex developers, not for normal users ::
-  
+
   svn co svn://svn.savannah.nongnu.org/pyformex/trunk MYDIR
 
 Now change into the created ``MYDIR`` directory, where you can execute
-the command ``pyformex/pyformex`` and proceed as explained above for a 
+the command ``pyformex/pyformex`` and proceed as explained above for a
 checkout of the git repository.
 
 
@@ -539,7 +545,7 @@ installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex `Support tracker`_), you can still run pyFormex by
 using a `Bumpix Live GNU/Linux`_ system. `Bumpix Live` is a full featured
 Debian GNU/Linux system including pyFormex that can be run from a single
-removable medium such as a CD or a USB key. 
+removable medium such as a CD or a USB key.
 Installation instructions can be found in :doc:`bumpix`.
 
 Alternatively,
@@ -554,7 +560,7 @@ sticks with the ``pyformex.org`` logo at a cost hardly exceeding that
 of production and distribution.
 If you think this is the right choice for you, just `email us`_ for a quotation.
 
-Further guidelines for using the BuMPix system can be found in :doc:`bumpix`. 
+Further guidelines for using the BuMPix system can be found in :doc:`bumpix`.
 
 
 .. _sec:pyformex-nonlinux:
@@ -583,14 +589,14 @@ non-Linux platforms.  There has already been a successful attempt with
 a rather old version, but with recent versions nobody has (yet) taken
 the bother to try it.
 
-.. note:: **pyFormex on Windows** 
-   Lately there have been some successful attempts to get the basic 
-   functionality of pyFormex running on Windows. Thomas Praet has 
+.. note:: **pyFormex on Windows**
+   Lately there have been some successful attempts to get the basic
+   functionality of pyFormex running on Windows. Thomas Praet has
    compiled `this document
-   <ftp://bumps.ugent.be/pub/pyformex/Install_pyFormex_on_Windows.html>`_ 
+   <ftp://bumps.ugent.be/pub/pyformex/Install_pyFormex_on_Windows.html>`_
    on how to proceed.
    Submit a request on the `Support tracker`_ if you need any help.
- 
+
 
 There may be a few things that have to be changed to successfully run
 pyFormex on other platforms (especially on Windows), but it should all

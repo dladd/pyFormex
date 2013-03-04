@@ -1237,9 +1237,9 @@ Things that have to be done by the project manager
 
 Extra needed packages:
 
-- cvs, for the pyFormex website at Savannah
+- cvs, for the pyFormex website at Savannah::
 
-  apt-get install cvs
+    apt-get install cvs
 
 Make file(s) public
 -------------------
