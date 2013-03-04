@@ -62,7 +62,8 @@ known_modules = {
      }
 
 known_externals = {
-    'abaqus': ('abaqus info=sys|head -n2|tail -n1', 'Abaqus (\S+)'),
+#  NOTE: abaqus command may hang longtime on checking the license server
+#    'abaqus': ('abaqus info=sys|head -n2|tail -n1', 'Abaqus (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
     'calculix': ('ccx -v','.*version (\S+)'),
     'calix': ('calix --version','CALIX-(\S+)'),
@@ -265,7 +266,9 @@ def checkExternal(name=None,command=None,answer=None,quiet=False):
         if answer is None:
             answer = ans
 
+    pf.debug("Check %s\n%s" % (name,command),pf.DEBUG.DETECT)
     out = system(command)[1]
+    pf.debug("Output:\n%s" % (out),pf.DEBUG.DETECT)
     m = re.match(answer,out)
     if m:
         version = m.group(1)

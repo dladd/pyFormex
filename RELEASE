@@ -1,5 +1,5 @@
 # pyFormex version
 VERSION=0.9.0
 # Unless you are creating an official release, a tail should be added
-# to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
-RELEASE=${VERSION}a1
+# to the ${VERSION},starting with a ~ character
+RELEASE=${VERSION}~a1
