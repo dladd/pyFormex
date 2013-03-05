@@ -1164,6 +1164,17 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
           [[0 2]
            [1 3]
            [3 2]]
+          >>> M = Mesh(x,[[0,2],[1,3],[3,2]])
+          >>> M = M.compact()
+          >>> print(M.coords)
+          [[ 0.  0.  0.]
+           [ 1.  0.  0.]
+           [ 2.  0.  0.]
+           [ 3.  0.  0.]]
+          >>> print(M.elems)
+          [[0 2]
+           [1 3]
+           [3 2]]
 
         """
         if self.nelems() == 0:
@@ -1171,8 +1182,14 @@ Mesh: %s nodes, %s elems, plexitude %s, ndim %s, eltype: %s
         else:
             elems,nodes = self.elems.renumber()
             if elems is self.elems:
+                # node numbering is compact
+                if self.coords.shape[0] > len(nodes):
+                    # remove extraneous nodes
+                    self.coords = self.coords[:len(nodes)]
+                # numbering has not been changed, safe to use same object
                 ret = self
             else:
+                # numbering has been changed, return new object
                 coords = self.coords[nodes]
                 ret = self.__class__(coords,elems,prop=self.prop,eltype=self.elType())
         return ret
