@@ -533,7 +533,7 @@ class PolyLine(Curve):
             return d
 
 
-    def movingFrenet(self,firstnormal=None):
+    def movingFrenet(self,firstnormal=None, avgdir=True):
         """Return a Frenet frame along the curve.
 
         The Frenet frame consists of a system of three orthogonal vectors:
@@ -548,6 +548,11 @@ class PolyLine(Curve):
           at the first point of the curve. If not specified, the vector is
           taken as the shortest direction through the set of 10 first
           points.
+        
+        - `avgdir`: if True (default) the average tangent directions are taken.
+        If False and the curve is not closed, the last Frenet frame is set equal
+        to the penultimate.
+
 
         Returns:
 
@@ -556,16 +561,29 @@ class PolyLine(Curve):
         - `B`: normalized binormal vector to the curve at `npts` points
 
         At the moment it works only with open PolyLines.
+        
+        ###################GDS:
+        NB `firstnormal` is not in the TN plane, but it is in the 
+        TB (tangent-binormal) plane. Indeed, if you try:
+        
+        T, N, B=x.movingFrenet(firstnormal=None)
+        T1, N1, B1=x.movingFrenet(firstnormal=-B[0])
+        diff= abs(concatenate([T-T1,N-N1,B-B1])).max()
+        print (diff) #is nearly 0.
+        ########################
 
         """
         import geomtools
-        T = self.avgDirections()
+        if avgdir:
+            T = self.avgDirections()
+        else:
+            T = self.directions()
         N = zeros(T.shape)
         if firstnormal is None:
-            n = min(self.npoints(),10)
+            ##n = min(self.npoints(),10)#GDS what is it?
             N[-1] = geomtools.smallestDirection(self.coords[:10])
         else:
-            N[-1] = cross(T[-1],upvector)
+            N[-1] = cross(T[-1],firstnormal)
 
         N[-1] = normalize(N[-1])
         for i,t in enumerate(T):
