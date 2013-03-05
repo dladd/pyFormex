@@ -218,13 +218,6 @@ def warning(message):
 def showInfo(message):
     print("pyFormex Info: "+message)
 
-##def log(s):
-##    """Display a message in the terminal."""
-##    print(s)
-
-# message is the preferred function to send text info to the user.
-# The default message handler is set here.
-# Best candidates are log/info
 message = pf.message
 
 def system(cmdline,result='output'):

@@ -140,8 +140,7 @@ class WebGL(List):
             print("  Exporting with settings %s" % kargs)
             self.add(obj=o,**kargs)
         ca = cv.camera
-        #self.camera(position=ca.getPosition(),focus=ca.focus,up=ca.upVector())
-        self.camera(focus=[0.,0.,0.],position=ca.getPosition()-ca.focus,up=ca.upVector())
+        self.camera(focus=[0.,0.,0.],position=ca.eye-ca.focus,up=ca.upVector())
 
 
     def add(self,**kargs):

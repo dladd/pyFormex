@@ -203,9 +203,6 @@ class Camera(object):
             self._focus = at.checkArray(vector,(3,),'f')
             self.viewChanged = True
 
-    # compatibility
-    ctr = focus
-
 
     @property
     def dist(self):
@@ -225,12 +222,22 @@ class Camera(object):
         """Return the camera rotation matrix."""
         return self.rot
 
-    def getPosition(self):
-        """Return the position of the camera."""
+
+    @property
+    def eye(self):
+        """Return the absolute position of the camera."""
         return self.toWorld([0.,0.,0.])
+
+
+    @property
+    def position(self):
+        """Return the position of the camera relative to the focus."""
+        return self.eye - self.focus
+
 
     def upVector(self):
         return self.rot[:3,1].reshape(3)
+
 
     def lock(self,onoff=True):
         """Lock/unlock a camera.
@@ -284,7 +291,7 @@ class Camera(object):
   Aspect Ratio: %s
   Area: %s, %s
   Near/Far Clip: %s, %s
-""" % (self.focus,self.getPosition(),self.dist,self.rot,self.upVector(),self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
+""" % (self.focus,self.eye,self.dist,self.rot,self.upVector(),self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
 
 
     def dolly(self,val):
@@ -315,7 +322,7 @@ class Camera(object):
     ##     """
     ##     if not self.locked:
     ##         if axis==0 or axis ==1:
-    ##             pos = self.getPosition()
+    ##             pos = self.eye
     ##             self.eye[axis] = (self.eye[axis] + val) % 360
     ##             self.focus = diff(pos,sphericalToCartesian(self.eye))
     ##         elif axis==2:
@@ -355,7 +362,7 @@ class Camera(object):
 ##          second coordinate : pedestal up,
 ##          third  coordinate : dolly out.
 ##        """
-##        #pos = self.getPosition()
+##        pos = self.eye
 ##        ang = self.getAngles()
 ##        tr = [dx,dy,dz]
 ##        for i in [1,0,2]:
