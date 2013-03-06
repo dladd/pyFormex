@@ -533,7 +533,35 @@ class PolyLine(Curve):
             return d
 
 
-    def movingFrenet(self,firstnormal=None, avgdir=True):
+    def _compensate(self,end=0,cosangle=0.5):
+        """_Compensate an end discontinuity over a piece of curve.
+
+        An end discontinuity in the curve is smeared out over a part of
+        the curve where no sharp angle occur with cosangle < 0.5
+        """
+        v = self.vectors()
+        print("VECTORS",v)
+        cosa = vectorPairCosAngle(roll(v,1,axis=0),v)
+        print("COSA",cosa)
+        L = self.lengths()
+        if end < 0:
+            L = L[::-1]
+            cosa = roll(cosa,-1)[::-1]
+        print(len(L),L)
+        for i in range(1,len(L)):
+            if cosa[i] <= cosangle:
+                break
+        print("HOLDING AT i=%s" % i)
+        L = L[:i]
+        print(len(L),L)
+        L = L[::-1].cumsum()
+        comp = L / L[-1]
+        comp = comp[::-1]
+        print("COMP",comp)
+        return comp
+
+
+    def movingFrenet(self,upvector=None,avgdir=True,compensate=False):
         """Return a Frenet frame along the curve.
 
         The Frenet frame consists of a system of three orthogonal vectors:
@@ -544,46 +572,105 @@ class PolyLine(Curve):
 
         Parameters:
 
-        - `firstnormal`: (3,) vector: a vector in the (tangent,normal) plane
-          at the first point of the curve. If `firstnormal` is already perpendicular
-          to the tangent, it will be the first normal vector (N[0]), otherwise N[0]
-          will be on the (tangent,`firstnormal`) plane. 
-          If not specified, the vector is taken as the shortest direction 
+        - `upvector`: (3,) vector: a vector normal to the (tangent,normal)
+          plane at the first point of the curve. It defines the binormal at
+          the first point. If not specified it is set to the shorted distance
           through the set of 10 first points.
-        
-        - `avgdir`: if True (default) the average tangent directions are taken.
-        If False and the curve is not closed, the last Frenet frame is set equal
-        to the penultimate.
+        - `avgdir`: bool: if True (default), the tangential vector is set to
+          the average direction of the two segments ending at a node.
+          If False, the tangent vectors will be those of the line segment
+          starting at the points.
+        - `compensate`: bool: If True, adds a compensation algorithm if the
+          curve is closed. For a closed curve the moving Frenet
+          algorithm can be continued back to the first point. If the resulting
+          binormial does not coincide with the starting one, some torsion is
+          added to the end portions of the curve to make the two binormals
+          coincide.
 
+          This feature is off by default because it is currently experimental
+          and is likely to change in future.
+          It may also form the base for setting the starting as well as the
+          ending binormal.
 
         Returns:
 
         - `T`: normalized tangent vector to the curve at `npts` points
         - `N`: normalized normal vector to the curve at `npts` points
         - `B`: normalized binormal vector to the curve at `npts` points
-
-        At the moment it works only with open PolyLines.
-        
         """
         import geomtools
         if avgdir:
             T = self.avgDirections()
         else:
             T = self.directions()
-        N = zeros(T.shape)
-        if firstnormal is None:
-            N[-1] = geomtools.smallestDirection(self.coords[:10])
-        else:
-            N[-1] = cross(cross(T[0],firstnormal), T[0])
+        B = zeros(T.shape)
+        if upvector is None:
+            upvector = geomtools.smallestDirection(self.coords[:10])
 
-        N[-1] = normalize(N[-1])
+        B[-1] = normalize(upvector)
         for i,t in enumerate(T):
-            N[i] = cross(t, cross(N[i-1], t))
+            B[i] = cross(t, cross(B[i-1], t))
+            if isnan(B[i]).any():
+                # if we can not compute binormal, keep previous
+                B[i] = B[i-1]
 
-        N = normalize(N)
-        if isnan(N).any():
-            print("Some normals not defined")
-        B = cross(N, T)
+        T = normalize(T)
+        B = normalize(B)
+
+        if self.closed and compensate:
+            import arraytools as at
+            import geomtools as gt
+            from gui.draw import drawVectors
+            print(len(T))
+            print(T[0],B[0])
+            print(T[-1],B[-1])
+            P0 = self.coords[0]
+            if avgdir:
+                T0 = T[0]
+            else:
+                T0 = T[-1]
+            B0 = cross(T0, cross(B[-1], T0))
+            N0 = cross(B0,T0)
+            drawVectors(P0,T0,size=2.,nolight=True,color='magenta')
+            drawVectors(P0,N0,size=2.,nolight=True,color='yellow')
+            drawVectors(P0,B0,size=2.,nolight=True,color='cyan')
+            print("DIFF",B[0],B0)
+            if length(cross(B[0],B0)) < 1.e-5:
+                print("NO NEED FOR COMPENSATION")
+            else:
+                PM,BM = gt.intersectionLinesPWP(P0,T[0],P0,T0,mode='pair')
+                PM = PM[0]
+                MB = BM[0]
+                if length(BM) < 1.e-5:
+                    print("NORMAL PLANES COINCIDE")
+                    BM = (B0 + B[0])/2
+
+                print("COMPENSATED B0: %s" % BM)
+                print("Compensate at start")
+                print(BM,B[0])
+                a = at.vectorPairAngle(B[0],BM) / DEG
+                print("ANGLE to compensate: %s" % a)
+                sa = sign(at.projection(cross(B[0],BM),T[0]))
+                print("Sign of angle: %s" % sa)
+                a *= sa
+                torsion = a * self._compensate(0)
+                print("COMPENSATION ANGLE",torsion)
+                for i in range(len(torsion)):
+                    B[i] = Coords(B[i]).rotate(torsion[i],axis=T[i])
+
+                print("Compensate at end")
+                print(BM,B0)
+                a = at.vectorPairAngle(B0,BM) / DEG
+                print("ANGLE to compensate: %s" % a)
+                sa = sign(at.projection(cross(BM,B0),T[-1]))
+                print("Sign of angle: %s" % sa)
+                a *= sa
+                torsion = a * self._compensate(-1)
+                print("COMPENSATION ANGLE",torsion)
+                for i in range(len(torsion)):
+                    B[-i] = Coords(B[-i]).rotate(torsion[i],axis=T[-i])
+
+        N = cross(B,T)
         return T,N,B
 
 
@@ -601,7 +688,7 @@ class PolyLine(Curve):
 
 
     def atLength(self, div):
-        """Returns the parameter values for relative curve lengths div.
+        """Returns the parameter values at given relative curve length.
 
         ``div`` is a list of relative curve lengths (from 0.0 to 1.0).
         As a convenience, a single integer value may be specified,

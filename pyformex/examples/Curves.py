@@ -39,6 +39,7 @@ from plugins.curve import *
 from plugins.nurbs import *
 from odict import ODict
 
+
 ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ]
 point_color = [ 'black','white' ]
 
@@ -56,7 +57,7 @@ curvetypes = [
 ]
 
 
-def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,approx,cutWP=False,scale=None,directions=False,frenet=False):
+def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,approx,cutWP=False,scale=None,frenet=False,avgdir=True,upvector=None):
     global S,TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -105,22 +106,28 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,appr
         draw(S,color=ctype_color[im],nolight=True)
 
 
-    if directions:
-        t = arange(2*S.nparts+1)*0.5
-        ipts = S.pointsAt(t)
-        draw(ipts)
-        idir = S.directionsAt(t)
-        drawVectors(ipts,0.2*idir)
+    ## if directions:
+    ##     t = arange(2*S.nparts+1)*0.5
+    ##     ipts = S.pointsAt(t)
+    ##     draw(ipts)
+    ##     idir = S.directionsAt(t)
+    ##     drawVectors(ipts,0.2*idir)
 
     if frenet and (ctype == 'PolyLine' or approx):
         if approx:
             C = PL
         else:
             C = S
-        T,N,B = C.movingFrenet()[:3]
+        T,N,B = C.movingFrenet(upvector=upvector,avgdir=avgdir)[:3]
         drawVectors(C.coords,T,size=1.,nolight=True,color='red')
         drawVectors(C.coords,N,size=1.,nolight=True,color='green')
         drawVectors(C.coords,B,size=1.,nolight=True,color='blue')
+        if  C.closed:
+            T,N,B = C.movingFrenet(upvector=upvector,avgdir=avgdir,compensate=True)[:3]
+            drawVectors(C.coords,T,size=1.,nolight=True,color='magenta')
+            drawVectors(C.coords,N,size=1.,nolight=True,color='yellow')
+            drawVectors(C.coords,B,size=1.,nolight=True,color='cyan')
+        print(T,N,B)
 
 
 
@@ -137,7 +144,7 @@ dataset = [
             [3., -3., 1.]]),
     Coords([[0., 1., 0.],[0., 0.1, 0.],[0.1, 0., 0.],  [1., 0., 0.]]),
     Coords([[0., 1., 0.],[0.,0.,0.],[0.,0.,0.],[1., 0., 0.]]),
-    #Coords([[0., 1., 0.],[1., 0., 0.]]),
+    Coords([[0.,0.,0.],[1.,0.,0.],[1.,1.,1.],[0.,1.,0.]]).scale(3),
     ]
 
 _items = [
@@ -148,7 +155,7 @@ _items = [
     _I('Curl',1./3.),
     _I('EndCurvatureZero',False),
     _G('Approximation',[
-        _I('Ndiv',40),
+        _I('Ndiv',4),
         _I('SpreadEvenly',False),
         _I('Ntot',40),
         ],checked=False),
@@ -157,14 +164,19 @@ _items = [
     _I('Scale',[1.0,1.0,1.0]),
 #    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
     _I('Clear',True),
-    _I('ShowDirections',False),
-    _I('ShowFrenetFrame',False),
+    _G('FrenetFrame',[
+        _I('AvgDirections',True),
+        _I('AutoUpVector',True),
+        _I('UpVector',[0.,0.,1.]),
+        ],checked=False),
     _I('CutWithPlane',False),
     ]
 
 _enablers = [
     ('CurveType','BezierSpline','Degree','Curl','EndCurvatureZero'),
     ('SpreadEvenly',True,'Ntot'),
+#    ('ShowFrenetFrame',True,'AvgDirections','AutoUpVector'),
+    ('AutoUpVector',False,'UpVector'),
     ]
 
 
@@ -190,8 +202,11 @@ def close():
 
 def show(all=False):
     dialog.acceptData()
-    globals().update(dialog.results)
-    export({'_Curves_data_':dialog.results})
+    res = dialog.results
+    if res['AutoUpVector']:
+        res['UpVector'] = None
+    globals().update(res)
+    export({'_Curves_data_':res})
     if Clear:
         clear()
     if all:
@@ -200,7 +215,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,Approximation,CutWithPlane,Scale,ShowDirections,ShowFrenetFrame)
+        drawCurve(Type,int(DataSet),Closed,Degree,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,Approximation,CutWithPlane,Scale,FrenetFrame,AvgDirections,UpVector)
         setDrawOptions({'bbox':None})
 
 def showAll():
