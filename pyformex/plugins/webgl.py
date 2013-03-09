@@ -41,7 +41,7 @@ import utils
 from olist import List, intersection
 from mydict import Dict
 import os
-from arraytools import checkFloat,checkArray
+from arraytools import checkFloat,checkArray,checkInt
 
 
 # Formatting a controller for an attribute
@@ -59,12 +59,16 @@ def saneSettings(k):
     """Sanitize sloppy settings for JavaScript output"""
     ok = {}
     try:
-        print(k['color'])
         ok['color'] = checkArray(k['color'],(3,),'f')
-        print(ok['color'])
     except:
-        raise
-        pass
+        try:
+            c = checkInt(k['color'][0])
+            print("COLOR INDEX %s" % c)
+            colormap = pf.canvas.settings.colormap
+            ok['color'] = colormap[c % len(colormap)]
+        except:
+            print("Unexpected color: %s" % k['color'])
+
     try:
         ok['alpha'] = checkFloat(k['alpha'],0.,1.)
     except:
@@ -90,6 +94,7 @@ def properties(o):
     return utils.selectDict(o.__dict__,keys)
 
 
+
 class WebGL(List):
     """A 3D geometry model for export to WebGL.
 
@@ -113,9 +118,14 @@ class WebGL(List):
     def __init__(self,name='Scene1'):
         """Create a new (empty) WebGL model."""
         List.__init__(self)
-        self.script = pf.cfg['webgl/script']
-        self.guiscript = pf.cfg['webgl/guiscript']
         self._camera = None
+        if pf.cfg['webgl/devel']:
+            self.scripts = [
+                os.path.join(pf.cfg['webgl/devpath'],'lib/closure-library/closure/goog/base.js'),
+                os.path.join(pf.cfg['webgl/devpath'],'xtk-deps.js')
+                ]
+        else:
+            self.scripts = [ pf.cfg['webgl/script'] ]
         self.gui = []
         self.name = str(name)
 
@@ -284,11 +294,6 @@ var %s_reset = %s.add(r.camera,'reset');
         return s
 
 
-    def html_addscript(self,script):
-        """Add a script file to the html"""
-        return  '<script type="text/javascript" src="%s"></script>\n' % script
-
-
     def export(self,name=None,title=None,description=None,keywords=None,author=None,createdby=False):
         """Export the WebGL scene.
 
@@ -302,6 +307,8 @@ var %s_reset = %s.add(r.camera,'reset');
         You can also set the meta tags 'description', 'keywords' and
         'author' to be included in the .html file. The first two have
         defaults if not specified.
+
+        Returns the name of the exported htmlfile.
         """
         if name is None:
             name = self.name
@@ -350,10 +357,14 @@ r.render();
         if author:
             s += '<meta name="author" content="%s">\n' % author
         s += "<title>%s</title>\n" % title
-        s += self.html_addscript(self.script)
+
         if self.gui:
-            s += self.html_addscript(self.guiscript)
-        s += self.html_addscript(jsname)
+            self.scripts.append(pf.cfg['webgl/guiscript'])
+        self.scripts.append(jsname)
+
+        for scr in self.scripts:
+            s += '<script type="text/javascript" src="%s"></script>\n' % scr
+
         s += """
 </head>
 <body>"""
@@ -372,6 +383,8 @@ r.render();
         with open(htmlname,'w') as htmlfile:
             htmlfile.write(s)
         print("Exported WebGL model to %s" % os.path.abspath(htmlname))
+
+        return htmlname
 
 
 def surface2webgl(S,name,caption=None):

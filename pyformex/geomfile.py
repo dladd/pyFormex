@@ -45,9 +45,14 @@ class GeometryFile(object):
     """A class to handle files in the pyFormex Geometry File format.
 
     The pyFormex Geometry File format allows the storage of most of the
-    geometrical objects inside pyFormex, as well as some of their attributes.
+    geometrical objects in pyFormex, as well as some of their attributes,
+    to an external file and to read it back, even with other versions
+    of the program or with other software.
 
-    If `file` is a string, a file with that name is opened with the
+    See http://pyformex.org/documentation/file_format for a full description
+    of the file format.
+
+    If `fil` is a string, a file with that name is opened with the
     specified `mode`. If no mode is specified, 'r' will be used for
     existing files and 'w' for new files.
     Else, `file` should be an already open file.

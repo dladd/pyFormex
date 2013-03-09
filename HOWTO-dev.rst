@@ -1331,7 +1331,7 @@ First, create the distribution and test it out locally: both the installation pr
 - Put the documentation on the web site ::
 
    make pubdoc
-   make listwww
+   ./publish
    # now add the missing files by hand : cvs add FILE
    make commit
 
@@ -1354,6 +1354,31 @@ First, create the distribution and test it out locally: both the installation pr
    svn ci -m 'Bump version after release'
 
 Well, that was easy, uh? ~)_do build
+
+
+Change the pyFormex website
+---------------------------
+
+The top tree of the website (everything not under Documentation) has its
+source files in the `website` directory. It uses mostly rest and sphinx,
+just like the documentation. To create the website::
+
+  cd website
+  make html
+
+Look at the result under the _build subdirectory. Some links (notably to
+the documentation) will not work from the local files.
+If the result is ok, it can be published as follows::
+
+  make pub
+
+This moves the resulting files to the `www` subdirectory, which is a
+cvs mirror of the website. Upload the files just as for the documentation::
+
+   cd ..
+   ./publish
+   # now add the missing files by hand : cvs add FILE
+   make commit
 
 
 Creating (official) Debian packages
@@ -1440,31 +1465,6 @@ In the pyformex pkg subdirectory, after creating the signed debian packages,
 do::
 
   reprepro -b /net/bumps/var/www/repos/debian include unstable pyformex_$VERSION_amd64.changes
-
-
-
-Using the local debian repository
-=================================
-
-.. note:: This belongs in the pyFormex install guide.
-
-Our local repository contains unofficial debian packages for intermediate releases and some extra packages that are not in the official Debian repositories.
-
-These packages are constructed with the same quality as the official packages.
-
-To access our local repository, add the following to your `/etc/apt/sources.list`::
-
-  deb http://bumps.ugent.be/repos/debian/ sid main
-
-Install the key that was used to sign the packages, you can do::
-
-  wget -O - http://bumps.ugent.be/repos/pyformex-pubkey.gpg | apt-key add -
-
-Then, to install all the latest pyformex packages, just do::
-
-   apt-get update
-   apt-get pyformex pyformex-lib pyformex-extra
-
 
 
 .. End

@@ -117,7 +117,7 @@ def settings():
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
         res['gui/actionbuttons'] = [ t for t in _actionbuttons if res['_gui/%sbutton'%t ] ]
         if res['webgl/script'] == 'custom':
-            res['webgl/script'] = res['_webgl_script']
+            res['webgl/script'] = 'file:'+res['_webgl_script']
         if res['webgl/guiscript'] == 'custom':
             res['webgl/guiscript'] = res['_webgl_guiscript']
         updateSettings(res)
@@ -161,6 +161,10 @@ def settings():
         _I('_gui/%sbutton'%t,t in pf.cfg['gui/actionbuttons'],text="%s Button" % t.capitalize()) for t in _actionbuttons
         ]
 
+    # callback to set a filename
+    def changeFilename(fn):
+        fn = draw.askImageFile(fn)
+        return fn
 
     cur = pf.cfg['gui/splash']
 #    if not cur:
@@ -182,14 +186,17 @@ def settings():
     guiscripts = ["http://get.goXTK.com/xtk_xdat.gui.js", 'custom']
     webgl_settings = [
         _I('webgl/script',pf.cfg['webgl/script'],text='XTK base script',choices=xtkscripts),
-        _I('_webgl_script','',text='Custom XTK URL'),
+        _I('_webgl_script','',text='Custom XTK URL',itemtype='button',func=changeFilename),
         _I('webgl/guiscript',pf.cfg['webgl/guiscript'],text='GUI base script',choices=guiscripts),
         _I('_webgl_guiscript','',text='Custom GUI URL'),
         _I('webgl/autogui',pf.cfg['webgl/autogui'],text='Always add a standard GUI'),
+        _I('webgl/devel',pf.cfg['webgl/devel'],text='Use a source XTK version'),
+        _I('webgl/devpath',pf.cfg['webgl/devpath'],text='Path to the XTK source'),
         ]
     enablers.extend([
         ('webgl/script','custom','_webgl_script'),
         ('webgl/guiscript','custom','_webgl_guiscript'),
+        ('webgl/devel',True,'webgl/devpath'),
         ])
 
     dia = widgets.InputDialog(

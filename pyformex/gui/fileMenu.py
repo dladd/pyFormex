@@ -550,7 +550,7 @@ def exportWebGL():
         name = utils.projectName(fn)
         W = WebGL(name)
         W.addScene()
-        W.export(title='Two spheres and a cone',createdby=50)
+        fn = W.export(title="%s WebGL model"%name,createdby=50)
         pf.GUI.setBusy(False)
         if draw.ack("Show the scene in your browser?"):
             fn = os.path.join(os.getcwd(),fn)

@@ -34,7 +34,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex file formats &mdash; pyFormex 0.9.0-a1 documentation</title>
+    <title>pyFormex file formats &mdash; pyFormex 0.9.0~a1 documentation</title>
 
     
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
@@ -43,7 +43,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9.0-a1',
+        VERSION:     '0.9.0~a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -52,7 +52,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex 0.9.0-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex 0.9.0~a1 documentation" href="index.html" />
     <link rel="next" title="BuMPix Live GNU/Linux system" href="bumpix.html" />
     <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
@@ -82,7 +82,7 @@
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex 0.9.0~a1 documentation</a> &gt;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -103,7 +103,16 @@
 <li><a class="reference internal" href="#">pyFormex file formats</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#pyformex-project-file-format">pyFormex Project File Format</a></li>
-<li><a class="reference internal" href="#pyformex-geometry-file-format-1-2">pyFormex Geometry File Format 1.2</a></li>
+<li><a class="reference internal" href="#pyformex-geometry-file-format-1-6">pyFormex Geometry File Format 1.6</a><ul>
+<li><a class="reference internal" href="#general-principles">General principles</a></li>
+<li><a class="reference internal" href="#detailed-layout">Detailed layout</a><ul>
+<li><a class="reference internal" href="#object-type-specific-fields">Object type specific fields</a></li>
+<li><a class="reference internal" href="#optional-fields">Optional fields</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -154,7 +163,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">February 19, 2013</td>
+<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">March 09, 2013</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Version:</th><td class="field-body">0.9.0</td>
 </tr>
@@ -196,48 +205,129 @@ the file can only be read back by pyFormex itself.</p>
 <p>The format of the project file is therefore currently not further documented.
 See <a class="reference internal" href="projects.html"><em>Using Projects</em></a> for the use of project files from within pyFormex.</p>
 </div>
-<div class="section" id="pyformex-geometry-file-format-1-2">
-<span id="sec-geometry-file-format"></span><h2>pyFormex Geometry File Format 1.2<a class="headerlink" href="#pyformex-geometry-file-format-1-2" title="Permalink to this headline">¶</a></h2>
-<p>This describes the pyFormex Geometry File Format version 1.2 as drawn on
-2010-01-04. The version numbering is such that implementations of a later
+<div class="section" id="pyformex-geometry-file-format-1-6">
+<span id="sec-geometry-file-format"></span><h2>pyFormex Geometry File Format 1.6<a class="headerlink" href="#pyformex-geometry-file-format-1-6" title="Permalink to this headline">¶</a></h2>
+<p>This describes the pyFormex Geometry File Format (PGF) version 1.6 as
+drafted on 2013-03-10 and being used in pyFormex 0.9.0.
+The version numbering is such that implementations of a later
 version are able to read an older version with the same major numbering.
-Thus, the 1.2 version still can read version 1.0 and 1.1 files.</p>
+Thus, the 1.6 version can still read version 1.5 files.</p>
 <p>The prefered filename extension for pyFormex geometry files is &#8216;.pgf&#8217;,
-though this is not a requirement and the previously used &#8216;.formex&#8217; is
-certainly as valid as any other.</p>
-<p>The pyFormex Geometry File starts with a header line identify the file
-type and version, and possibly specifying some global variables:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Formex File Format 1.1 (http://pyformex.org)</span>
+though this is not a requirement.</p>
+<div class="section" id="general-principles">
+<h3>General principles<a class="headerlink" href="#general-principles" title="Permalink to this headline">¶</a></h3>
+<p>The PGF format consists of a sequence of records of two types: comment
+lines and data blocks. A record always ends with a newline character,
+but not all newline characters are record separators: data blocks may
+include multiple newlines as part of the data.</p>
+<p>Comment records are ascii and start with a &#8216;#&#8217; character. Comment records
+are mostly used to announce the type and amount of data in the following
+data block(s). This is done by comment line containing a sequence of
+&#8216;key=value&#8217; statements, separated by semicolons (&#8216;;&#8217;).</p>
+<p>Data blocks can be either ascii or binary, and are always announced by
+specially crafted comment lines preceding them. Note that even binary
+data blocks get a newline character at the end, to mark the end of the
+record.</p>
+</div>
+<div class="section" id="detailed-layout">
+<h3>Detailed layout<a class="headerlink" href="#detailed-layout" title="Permalink to this headline">¶</a></h3>
+<p>The pyFormex Geometry File starts with a header comment line identify
+the file type and version, and possibly specifying some global variables.
+For the version 1.6 format the first line may look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># pyFormex Geometry File (http://pyformex.org) version=&#39;1.6&#39;; sep=&#39; &#39;</span>
 </pre></div>
 </div>
-<p>The remainder of the file contains one or more data blocks, each of which
-consists of a header line followed by the numerical data. The header line
-starts with a &#8216;#&#8217;. The remainder of the line is a sequence of &#8216;keyword=value&#8217;
-strings separated with a semicolon and optional whitespace, such as in the
-following example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># nelems=692; nplex=2; props=True; eltype=None; sep=&#39; &#39;</span>
+<p>The version number is used to read back legacy formats in newer versions
+of pyFormex. The <cite>sep = &#8216; &#8216;</cite> defines the default data separator for
+data blocks that do not specify it (see below).</p>
+<p>The remainder of the file is a sequence of comment lines announcing
+data blocks, followed by those data blocks. The announcement line
+provides information about the number, type and size of data blocks
+that follow. This makes it possible to write and read the data using
+high speed functions (like <cite>numpy.tofile</cite> and <cite>numpy.fromfile</cite>) and without
+having to test any contents of the data.
+The data block information in the announcement line is provided by a number
+of &#8216;key=value&#8217; strings separated with a semicolon and optional whitespace.</p>
+<div class="section" id="object-type-specific-fields">
+<h4>Object type specific fields<a class="headerlink" href="#object-type-specific-fields" title="Permalink to this headline">¶</a></h4>
+<p>For each object type that can be stored, there are some required fields
+and data blocks. In the examples below, <cite>&lt;int&gt;</cite> stands for an integer number,
+<cite>&lt;str&gt;</cite> for a string, and <cite>&lt;bool&gt;</cite> for either <cite>True</cite> or <cite>False</cite>.</p>
+<ul>
+<li><p class="first">Formex: the announcement provides at least:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># objtype=&#39;Formex&#39;; nelems=&lt;int&gt;; nplex=&lt;int&gt;</span>
 </pre></div>
 </div>
-<p>The keywords in the data header specify the type and amount of that that
-will be read, and how they will be structured in arrays and converted to
-pyFormex objects. The example above specifies a Formex of plexitude 2 having
-692 elements with no specific element type but possessin property numbers.
-The separator used in the data is a single space.</p>
-<ul class="simple">
-<li>comment lines, stating with a &#8216;#&#8217;, but maybe holding invaluable information
-for the interpretation of the rest of the data,</li>
-<li>data blocks.</li>
+<p>The data block following this line should contain exactly <cite>nelems*nplex*3</cite>
+floating point values: the 3 coordinates of the <cite>nplex</cite> points of the
+<cite>nelems</cite> elements of the Formex.</p>
+</li>
+<li><p class="first">Mesh: the announcement contains at least:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># objtype=&#39;Mesh&#39;; ncoords=&lt;int&gt;; nelems=&lt;int&gt;; nplex=&lt;int&gt;</span>
+</pre></div>
+</div>
+<p>In this case two data blocks will follow: first <cite>ncoords*3</cite> float values
+with the coordinates of the nodes; then a block with <cite>nelems*nplex</cite>
+integer values: the connectivity table of the mesh.</p>
+</li>
+<li><p class="first">Curve:</p>
+</li>
 </ul>
-<p>Data blocks are written using <tt class="xref py py-func docutils literal"><span class="pre">numpy.tofile()</span></tt> and read back with
-<tt class="xref py py-func docutils literal"><span class="pre">numpy.fromfile()</span></tt>. All data items in a block are of the same type
-and are written as ASCII strings, separated by a constant string. The
-separator can be specified by the user and defaults to a single space,
-so that all data of a single block are written on one line, separated
-by a blank. When reading, newline characters will be silently ignored
-or used as a separator character as well. As a special case, if an
-empty string is specified as separator, the data will be written in
-binary mode.</p>
-<p>Each data block is preceded with a comments line with the following structure:</p>
+</div>
+<div class="section" id="optional-fields">
+<h4>Optional fields<a class="headerlink" href="#optional-fields" title="Permalink to this headline">¶</a></h4>
+<p>The announcement line may contain other fields, usually to define extra
+attributes for the object:</p>
+<ul class="simple">
+<li><cite>props=&lt;bool&gt;</cite> : If the value is True, another data block with <cite>nelems</cite>
+integer values follows. These are the property numbers of the object.</li>
+<li><cite>eltype=&lt;str&gt;</cite> : Can also have the special value None. If specified and
+not None, it will be used to set the element type of the object.</li>
+<li><cite>name=&lt;str&gt;</cite> : Name of the object. If specified, pyFormex will use this
+value as a key when returning the restored object.</li>
+<li><cite>sep=&lt;str&gt;</cite> : This field defines how the data are stored. If it is not
+defined, the value from the file header is used.<ul>
+<li>An empty string means that the data blocks are written in binary.
+Floating point values are stored as little-endian 4byte floats, while
+integer values are stored as 4 byte integers.</li>
+<li>Any other string makes the data being written in ascii mode, with the
+specified string used as a separator between any two values. When
+reading a PGF file, extra whitespace and newlines appearing around the
+separator are silently ignored.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>The following pyFormex script creates a PGF file containing two objects,
+a Formex with one square, and a Mesh with two triangles:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;4:0123&#39;</span><span class="p">)</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="s">&#39;3:112.34&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">toMesh</span><span class="p">()</span>
+<span class="n">writeGeomFile</span><span class="p">(</span><span class="s">&#39;test.pgf&#39;</span><span class="p">,[</span><span class="n">F</span><span class="p">,</span><span class="n">M</span><span class="p">],</span><span class="n">sep</span><span class="o">=</span><span class="s">&#39;, &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Mesh has property numbers defined on it, the Formex doesn&#8217;t.
+The data are written in ascii mode with &#8216;, &#8216; as separator.
+Here is the resulting contents of the file &#8216;test.pgf&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># pyFormex Geometry File (http://pyformex.org) version=&#39;1.6&#39;; sep=&#39;, &#39;</span>
+<span class="c"># objtype=&#39;Formex&#39;; nelems=1; nplex=4; props=False; eltype=None; sep=&#39;, &#39;</span>
+<span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span>
+<span class="c"># objtype=&#39;Mesh&#39;; ncoords=4; nelems=2; nplex=3; props=True; eltype=&#39;tri3&#39;; sep=&#39;, &#39;</span>
+<span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span>
+<span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This file contains two objects: a Formex and a Mesh. The Formex has 1 element
+of plexitude 4 and no property numbers. Following its announcement is a single
+data block with 1x4x3 = 12 coordinate values.
+The Mesh contains 2 elements of plexitude 3, has element type &#8216;tri3&#8217; and
+contains property numbers. Following the announcement are three data blocks:
+first the 4*3 nodal coordinates, then the 2*3 = 6 entries in the connectivity
+table, and finally 2 property numbers.</p>
+</div>
 </div>
 </div>
 
@@ -262,14 +352,14 @@ binary mode.</p>
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              >previous</a> |</li>
-        <li><a href="index.html">pyFormex 0.9.0-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex 0.9.0~a1 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
     <span class="left">
         &copy; Copyright 2004-2012, Benedict Verhegghe.
     </span>
-      Last updated on Feb 19, 2013.
+      Last updated on Mar 09, 2013.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </span>

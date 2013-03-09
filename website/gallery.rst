@@ -1,5 +1,5 @@
 .. $Id$    -*- rst -*-
-  
+
 ..
   This file is part of the pyFormex project.
   pyFormex is a tool for generating, manipulating and transforming 3D
@@ -8,27 +8,27 @@
   Project page:  https://savannah.nongnu.org/projects/pyformex/
   Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
-  
-  
+
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
-  
-  
+
+
 
 .. include:: <isonum.txt>
 .. include:: defines.inc
 .. include:: links.inc
- 
+
 .. index:: Gallery
 
 Gallery
@@ -50,19 +50,20 @@ what pyFormex can do for you.
    applications
    screenshots
    videos
+   webgl
    pdfs
 
 
 Want other examples?
 ....................
-The pyFormex distribution (see the `Install manual <doc/install.html>`_) 
-contains a wide collection of example scripts, 
+The pyFormex distribution (see the `Install manual <doc/install.html>`_)
+contains a wide collection of example scripts,
 with levels ranging from beginner to
 advanced. Running these examples gives a nice overview of some
-functionalities of pyFormex. 
+functionalities of pyFormex.
 
 As an extra bonus, here's a movie of a roof structure created by
-pyFormex. 
+pyFormex.
 Click the reload button of your browser to see the movie play (again).
 
 .. image:: images/roof-movie.gif

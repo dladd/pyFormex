@@ -956,7 +956,7 @@ def readArray(file,dtype,shape,sep=' '):
     data type from an open file.
     The sep parameter can be specified as in `numpy.fromfile`.
     If an empty string is given as separator, the data is read in
-    binary mode. In that case (only) an extra '\n' after the data
+    binary mode. In that case (only) an extra '\\n' after the data
     will be stripped off.
     """
     shape = asarray(shape)
