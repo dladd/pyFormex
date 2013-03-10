@@ -61,7 +61,7 @@ class GeometryFile(object):
     Geometry classes can provide the facility
     """
 
-    _version_ = '1.6'
+    _version_ = '1.7'
 
     def __init__(self,fil,mode=None,sep=' ',ifmt=' ',ffmt=' '):
         """Create the GeometryFile object."""
@@ -175,6 +175,7 @@ class GeometryFile(object):
                 writefunc(geom,name,sep)
             except:
                 warning("Error while writing objects of type %s to geometry file: skipping" % type(geom))
+                raise
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -211,7 +212,8 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),sep)
+        hasnorm = hasattr(F,'normals') and isinstance(F.normals,ndarray) and F.normals.shape == (F.nelems(),F.nplex(),3)
+        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; normals=%s; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),hasnorm,sep)
         if name:
             head += "; name='%s'" % name
         self.fil.write(head+'\n')
@@ -219,6 +221,8 @@ class GeometryFile(object):
         self.writeData(F.elems,sep)
         if hasprop:
             self.writeData(F.prop,sep)
+        if hasnorm:
+            self.writeData(F.normals,sep)
 
 
     def writeTriSurface(self,F,name=None,sep=None):
@@ -376,7 +380,7 @@ class GeometryFile(object):
             if objtype == 'Formex':
                 obj = self.readFormex(nelems,nplex,props,eltype,sep)
             elif objtype in ['Mesh','TriSurface']:
-                obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep,objtype)
+                obj = self.readMesh(ncoords,nelems,nplex,props,eltype,normals,sep,objtype)
             elif objtype == 'PolyLine':
                 obj = self.readPolyLine(ncoords,closed,sep)
             elif objtype == 'BezierSpline':
@@ -427,7 +431,7 @@ class GeometryFile(object):
         return Formex(f,p,eltype)
 
 
-    def readMesh(self,ncoords,nelems,nplex,props,eltype,sep,objtype='Mesh'):
+    def readMesh(self,ncoords,nelems,nplex,props,eltype,normals,sep,objtype='Mesh'):
         """Read a Mesh from a pyFormex geometry file.
 
         The following arrays are read from the file:
@@ -455,6 +459,9 @@ class GeometryFile(object):
             except:
                 clas = globals()[objtype]
             M = clas(M)
+        if normals:
+            n = readArray(self.fil,Float,(nelems,nplex,ndim),sep=sep)
+            M.normals = n
         return M
 
 

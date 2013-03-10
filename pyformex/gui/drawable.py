@@ -161,22 +161,18 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
     #print("LIGHTING %s, AVGNORMALS %s" % (lighting,avgnormals))
     if lighting and objtype==-1:
         if normals is None:
-            #print("Computing normals",pf.DEBUG.DRAW)
+            pf.debug("Computing normals",pf.DEBUG.DRAW)
             if avgnormals and e is not None:
-                n = interpolateNormals(x,e,treshold=pf.cfg['render/avgnormaltreshold'])
+                n = geomtools.averageNormals(x,e,treshold=pf.cfg['render/avgnormaltreshold'])
             else:
                 if e is None:
                     n = geomtools.polygonNormals(x)
                 else:
                     n = geomtools.polygonNormals(x[e])
-                #print("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
+                pf.debug("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
         else:
-            try:
-                n = asarray(normals)
-                if not (n.ndim in [2,3] and n.shape[0] == nelems and n.shape[-1] == 3):
-                    raise
-            except:
-                raise ValueError,"""Invalid normals specified"""
+            print("NORMALS=%s"% normals)
+            n = checkArray(normals,(nelems,-1,3),'f')
 
     # Texture
     if texture is not None:
@@ -618,7 +614,7 @@ def color_multiplex(color,nparts):
     return color.reshape(-1,3)
 
 
-def draw_faces(x,e,color=None,alpha=1.0,texture=None,texc=None,lighting=False,avgnormals=False,objtype=-1):
+def draw_faces(x,e,color=None,alpha=1.0,texture=None,texc=None,normals=None,lighting=False,avgnormals=False,objtype=-1):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -651,7 +647,7 @@ def draw_faces(x,e,color=None,alpha=1.0,texture=None,texc=None,lighting=False,av
             color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
             pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape),pf.DEBUG.DRAW)
 
-    drawPolygons(x,e,color,alpha,texture,texc,None,lighting,avgnormals,objtype=objtype)
+    drawPolygons(x,e,color,alpha,texture,texc,normals,lighting,avgnormals,objtype=objtype)
 
 
 def drawEdges(x,e,edges,eltype,color=None):
@@ -703,7 +699,7 @@ def drawEdges(x,e,edges,eltype,color=None):
             draw_faces(coords,elems,color,1.0)
 
 
-def drawFaces(x,e,faces,eltype,color=None,alpha=1.0,texture=None,texc=None,lighting=False,avgnormals=False):
+def drawFaces(x,e,faces,eltype,color=None,alpha=1.0,texture=None,texc=None,normals=None,lighting=False,avgnormals=False):
     """Draw the faces of a geometry.
 
     This function draws the faces of a geometry collection, usually of a higher
@@ -744,7 +740,7 @@ def drawFaces(x,e,faces,eltype,color=None,alpha=1.0,texture=None,texc=None,light
             drawQuadraticSurfaces(coords,elems,color)
         else:
             #print "USING POLYGON"
-            draw_faces(coords,elems,color,alpha,texture,texc,lighting,avgnormals)
+            draw_faces(coords,elems,color,alpha,texture,texc,normals,lighting,avgnormals)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -843,53 +839,6 @@ def nodalSum2(val,elems,tol):
     ##     misc.averageDirection(k,tol)
     ##     val[wi] = k
     print("TIME %s \n" % t.seconds())
-
-
-def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
-    """Compute the nodal sum of values defined on elements.
-
-    val is a (nelems,nplex,nval) array of values defined at points of elements.
-    elems is a (nelems,nplex) array with nodal ids of all points of elements.
-
-    The return value is a (nelems,nplex,nval) array where each value is
-    replaced with the sum of its value at that node.
-    If avg=True, the values are replaced with the average instead.
-    If return_all==True(default), returns an array with shape (nelems,nplex,3),
-    else, returns an array with shape (maxnodenr+1,3). In the latter case,
-    nodes not occurring in elems will have all zero values.
-
-    If a direction_tolerance is specified and nval > 1, values will only be
-    summed if their direction is close (projection of one onto the other is
-    higher than the specified tolerance).
-    """
-    if val.ndim != 3:
-        val.reshape(val.shape+(1,))
-    if elems.shape != val.shape[:2]:
-        raise RuntimeError,"shape of val and elems does not match"
-    val = val.astype(float32)
-    elems = elems.astype(int32)
-    if val.shape[2] > 1 and direction_treshold is not None:
-        #nodalSum2(val,elems,direction_treshold)
-        val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
-    else:
-        val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
-    return val
-
-
-def interpolateNormals(coords,elems,atNodes=False,treshold=None):
-    """Interpolate normals in all points of elems.
-
-    coords is a (ncoords,3) array of nodal coordinates.
-    elems is an (nel,nplex) array of element connectivity.
-
-    The default return value is an (nel,nplex,3) array with the averaged
-    unit normals in all points of all elements.
-    If atNodes == True, a more compact array with the unique averages
-    at the nodes is returned.
-    """
-    n = geomtools.polygonNormals(coords[elems])
-    n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
-    return normalize(n)
 
 
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):

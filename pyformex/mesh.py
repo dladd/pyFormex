@@ -247,6 +247,22 @@ class Mesh(Geometry):
         return self
 
 
+    def setNormals(self,normals=None):
+        """Set/Remove the normals of the mesh.
+
+        """
+        import geomtools as gt
+        if normals is None:
+            pass
+        elif normals == 'auto':
+            normals = gt.polygonNormals(self.coords[self.elems])
+        elif normals == 'avg':
+            normals = gt.averageNormals(self.coords,self.elems)
+        else:
+            normals = checkArray(normals,(self.nelems(),self.nplex(),3),'f')
+        self.normals = normals
+
+
     def __getitem__(self,i):
         """Return element i of the Mesh.
 

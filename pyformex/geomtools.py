@@ -183,11 +183,7 @@ def projectedArea(x,dir):
     if type(dir) is int:
         dir = unitVector(dir)
     x1 = roll(x,-1,axis=0)
-##    print x.dtype
-##    print Coords(dir).dtype
     area = vectorTripleProduct(Coords(dir),x,x1)
-##    print area.dtype
-##    print area.sum() / 2
     return 0.5 * area.sum()
 
 
@@ -214,6 +210,23 @@ def polygonNormals(x):
     n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
     #print "NANs: %s" % isnan(n).sum()
     return n
+
+
+def averageNormals(coords,elems,atNodes=False,treshold=None):
+    """Compute average normals at all points of elems.
+
+    coords is a (ncoords,3) array of nodal coordinates.
+    elems is an (nel,nplex) array of element connectivity.
+
+    The default return value is an (nel,nplex,3) array with the averaged
+    unit normals in all points of all elements.
+    If atNodes == True, a more compact array with the unique averages
+    at the nodes is returned.
+    """
+    n = polygonNormals(coords[elems])
+    n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
+    return normalize(n)
+
 
 def triangleInCircle(x):
     """Compute the incircles of the triangles x

@@ -65,16 +65,19 @@ def run():
     S.alpha = 0.7
     S.caption = 'A sphere'
     S.control = ['visible','opacity','color']
+    S.setNormals('avg')
 
     T.color = blue
     T.caption = 'A cone'
     T.alpha = 1.0
     T.control = ['visible','opacity','color']
+    #S.setNormals('auto')
 
     C.color = 'yellow'
     C.caption = 'A cylinder'
     C.alpha = 0.8
     C.control = ['visible','opacity','color']
+    #S.setNormals('auto')
 
     export({'sphere':S,'cone':T,'cylinder':C})
 

@@ -438,6 +438,7 @@ class GeomActor(Actor):
 
         # Store a reference to the drawn object
         self.object = data
+        self.normals = None
 
         if isinstance(data,GeomActor):
             self.coords = data.coords
@@ -448,6 +449,8 @@ class GeomActor(Actor):
             self.coords = data.coords
             self.elems = data.elems
             self.eltype = data.elName()
+            if hasattr(data,'normals'):
+                self.normals = data.normals
 
         elif isinstance(data,Formex):
             self.coords = data.coords
@@ -726,12 +729,12 @@ class GeomActor(Actor):
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
 
-                    drawFaces(self.coords,self.elems,faces,faces.eltype,color,alpha,self.texture,None,lighting,avgnormals)
+                    drawFaces(self.coords,self.elems,faces,faces.eltype,color,alpha,self.texture,None,self.normals,lighting,avgnormals)
 
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
-                        drawFaces(self.coords,self.elems,faces,faces.eltype,bkcolor,bkalpha,None,None,lighting,avgnormals)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,bkcolor,bkalpha,None,None,self.normals,lighting,avgnormals)
                         GL.glDisable(GL.GL_CULL_FACE)
 
 
