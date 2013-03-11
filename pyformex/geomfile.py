@@ -213,21 +213,20 @@ class GeometryFile(object):
             sep = self.sep
         hasprop = F.prop is not None
         hasnorm = hasattr(F,'normals') and isinstance(F.normals,ndarray) and F.normals.shape == (F.nelems(),F.nplex(),3)
+        color = ''
         if hasattr(F,'color'):
             Fc = F.color
-            if Fc is None:
-                color = ''
-            elif isinstance(Fc,ndarray):
+            if isinstance(Fc,ndarray):
                 if Fc.shape == (3,):
-                    pass
+                    color = str(Fc)
                 elif Fc.shape == (F.nelems(),3):
-                    pass
+                    color = 'element'
                 elif Fc.shape == (F.nelems(),F.nplex(),3):
-                    pass
+                    color = 'vertex'
                 else:
                     raise ValueError,"Incorrect color shape: %s" % Fc.shape
 
-        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; normals=%s; color=%r; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),hasnorm,sep)
+        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; normals=%s; color=%r; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),hasnorm,color,sep)
         if name:
             head += "; name='%s'" % name
         self.fil.write(head+'\n')
