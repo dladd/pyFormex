@@ -213,7 +213,21 @@ class GeometryFile(object):
             sep = self.sep
         hasprop = F.prop is not None
         hasnorm = hasattr(F,'normals') and isinstance(F.normals,ndarray) and F.normals.shape == (F.nelems(),F.nplex(),3)
-        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; normals=%s; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),hasnorm,sep)
+        if hasattr(F,'color'):
+            Fc = F.color
+            if Fc is None:
+                color = ''
+            elif isinstance(Fc,ndarray):
+                if Fc.shape == (3,):
+                    pass
+                elif Fc.shape == (F.nelems(),3):
+                    pass
+                elif Fc.shape == (F.nelems(),F.nplex(),3):
+                    pass
+                else:
+                    raise ValueError,"Incorrect color shape: %s" % Fc.shape
+
+        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; normals=%s; color=%r; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.elName(),hasnorm,sep)
         if name:
             head += "; name='%s'" % name
         self.fil.write(head+'\n')
@@ -354,8 +368,12 @@ class GeometryFile(object):
         while True:
             objtype = 'Formex' # the default obj type
             obj = None
+            nelems = None
+            ncoords = None
             sep = self.sep
             name = None
+            normals = None
+            color = None
             s = self.fil.readline()
 
             if len(s) == 0:   # end of file
@@ -372,6 +390,12 @@ class GeometryFile(object):
             try:
                 exec(s[1:].strip())
             except:
+                nelems = None
+
+            if nelems is None and ncoords is None:
+                # For historical reasons, this is a certain way to test
+                # that no geom data block is following
+                print("SKIPPING %s" % s)
                 continue  # not a legal header: skip
 
             debug("Reading object of type %s" % objtype,DEBUG.INFO)
