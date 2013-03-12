@@ -130,6 +130,21 @@ class WebGL(List):
         self.name = str(name)
 
 
+    def objdict(self,clas=None):
+        """Return a dict with the objects in this model.
+
+        Returns a dict with the name:object pairs in the model. Objects
+        that have no name are disregarded.
+        """
+        obj = [ o for o in self if hasattr(o,'name') ]
+        if clas:
+            obj = [ o for o in obj if isinstance(o,clas) ]
+        print("OBJDICT: %s" % len(obj))
+        print([type(o) for o in obj])
+        print(obj)
+        return obj
+
+
     def addScene(self):
         """Add the current OpenGL scene to the WebGL model.
 
@@ -213,7 +228,7 @@ class WebGL(List):
         # OK, we can add it
         self.append(Dict(kargs))
         if 'control' in kargs:
-            # Move the 'control' paramaeters to gui
+            # Move the 'control' parameters to gui
             self.gui.append((kargs['name'],kargs.get('caption',''),kargs['control']))
             del kargs['control']
         elif pf.cfg['webgl/autogui']:
@@ -292,6 +307,13 @@ var %s_reset = %s.add(r.camera,'reset');
 
         s += "}\n\n"
         return s
+
+
+    def exportPGF(self,fn,sep=''):
+        """Export the current scene to a pgf file"""
+        from plugins.geometry_menu import writeGeometry
+        res = writeGeometry(self.objdict(),fn,sep=sep)
+        return res
 
 
     def export(self,name=None,title=None,description=None,keywords=None,author=None,createdby=False):

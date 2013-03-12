@@ -169,9 +169,9 @@ def drawPolygons(x,e,color=None,alpha=1.0,texture=None,t=None,normals=None,light
                     n = geomtools.polygonNormals(x)
                 else:
                     n = geomtools.polygonNormals(x[e])
-                pf.debug("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
+                #pf.debug("NORMALS:%s" % str(n.shape),pf.DEBUG.DRAW)
         else:
-            print("NORMALS=%s"% normals)
+            #print("NORMALS=%s"% normals)
             n = checkArray(normals,(nelems,-1,3),'f')
 
     # Texture
