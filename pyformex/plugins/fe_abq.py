@@ -1209,6 +1209,8 @@ def writeSection(fil,prop):
             out = "*RIGID BODY, ELSET=%s, REFNODE=%s" % (setname,el.refnode)
             if el.density is not None:
                 out += ", DENSITY=%s" % el.density
+            if el.thickness is not None:
+                out += "\n%s" % el.thickness
             out += '\n'
             fil.write(out)
 
