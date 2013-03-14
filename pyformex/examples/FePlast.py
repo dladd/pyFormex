@@ -265,7 +265,7 @@ def run():
 
     data = AbqData(FEM,prop=P,steps=simsteps,res=result,bound=['init'])
 
-    fn = askNewFilename(filter='*.inp',timeout=4)
+    fn = askNewFilename(pf.cfg['workdir']+'/feplast.inp',filter='*.inp')
     if fn:
         data.write(jobname=fn,group_by_group=True)
 

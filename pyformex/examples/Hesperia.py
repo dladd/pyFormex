@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,7 +30,7 @@ from __future__ import print_function
 _status = 'unchecked'
 _level = 'advanced'
 _topics = ['geometry', 'FEA', 'domes', 'surface']
-_techniques = ['menu', 'dialog', 'persistence', 'color'] 
+_techniques = ['menu', 'dialog', 'persistence', 'color']
 
 from gui.draw import *
 
@@ -72,7 +72,7 @@ def howto():
    For a Calpy job: use the hesperia menu
 """)
 
-         
+
 def createGeometry():
     global F
     # Construct a triangle of an icosahedron oriented with a vertex in
@@ -120,7 +120,7 @@ def createGeometry():
     # Ratio of the height of the isosceles triangle over the icosaeder edge length.
     c = 0.5*tand(54.)
     angle = arccosd(tand(54.)/sqrt(3.))
-    pf.message("Rotation Ratio: %s; Angle: %s degrees" % (c,angle)) 
+    pf.message("Rotation Ratio: %s; Angle: %s degrees" % (c,angle))
     F = F.rotate(angle,0)
     clear()
     draw(F,colormap=['black','magenta','yellow','black'])
@@ -142,7 +142,7 @@ def createGeometry():
     # The base circle goes through bottom corner of n-th row,
     # which will be the first point of the first triangle of the n-th row.
     # Draw the point to check it.
-    
+
     i = (n-1)*n/2
     P = F[i][0]
     draw(Formex([P]),marksize=10,bbox='last')
@@ -155,7 +155,7 @@ def createGeometry():
     F = F.translate([0.,0.,-z])
     clear()
     draw(F)
- 
+
     # Draw the base circle
     H = simple.circle().scale(rb)
     draw(H)
@@ -243,7 +243,7 @@ def saveProperties(fn = None):
     if fn:
         F.prop.tofile(fn,sep=',')
 
-        
+
 def readProperties(fn = None):
     """Read properties from file."""
     if not fn:
@@ -265,7 +265,7 @@ def connections(elems):
     equal to the index of the list.
     """
     return [ (i,list(where(elems==i)[0])) for i in unique(elems.flat) ]
-    
+
 
 #####################################################################
 
@@ -277,7 +277,7 @@ def createFrameModel():
     """
     wireframe()
     lights(False)
-    
+
     # Turn the Formex structure into a TriSurface
     # This guarantees that element i of the Formex is element i of the TriSurface
     S = TriSurface(F)
@@ -307,14 +307,14 @@ def createFrameModel():
 
 
     warning("Beware! This script is currently under revision.")
-    
+
     conn = connections(quadtri)
     print(conn)
 
     # Filter out the single connection edges
     internal = [ c[0] for c in conn if len(c[1]) > 1 ]
     print("Internal edges in quadrilaterals: %s" % internal)
-    
+
     E = Formex(nodes[edges],1)
     E.prop[internal] = 6
     wireframe()
@@ -343,7 +343,7 @@ def createFrameModel():
     I12 = 0
     J = 4 * A**2 / (2*(b+h)/t)
 
-    tube = { 
+    tube = {
         'name':'tube',
         'cross_section': A,
         'moment_inertia_11': I1,
@@ -387,7 +387,7 @@ def createFrameModel():
     nlc = 0
     for lc in [ 'Steel','Glass','Snow' ]:
         if res[lc]:
-            nlc += 1 
+            nlc += 1
     NODLoad = zeros((nlc,S.ncoords(),3))
 
     nlc = 0
@@ -399,7 +399,7 @@ def createFrameModel():
         for e,L in zip(tubes,barL):
             NODLoad[nlc,e] += [ 0., 0., - L * lwgt / 2 ]
         nlc += 1
-        
+
     if res['Glass']:
         # the GLASS weight
         wgt = 450e-6 # N/mm**2
@@ -407,7 +407,7 @@ def createFrameModel():
         for e,a in zip(S.elems,area):
             NODLoad[nlc,e] += [ 0., 0., - a * wgt / 3 ]
         nlc += 1
-        
+
     if res['Snow']:
         # NON UNIFORM SNOW
         fn = '../data/hesperia-nieve.prop'
@@ -435,9 +435,9 @@ def createFrameModel():
     # Upper structure
     nnodes = nodes.shape[0]              # node number offset
     ntubes = tubes.shape[0]              # element number offset
-    
-    PDB.elemProp(set=arange(ntubes),section=tubesection,eltype='FRAME3D')    
-    
+
+    PDB.elemProp(set=arange(ntubes),section=tubesection,eltype='FRAME3D')
+
     # Create support systems (vertical beams)
     bot2 = bot + [ 0.,0.,-200.]         # new nodes 200mm below bot
     botnodes2 = arange(botnodes.shape[0]) + nnodes  # node numbers
@@ -446,7 +446,7 @@ def createFrameModel():
     elems = concatenate([tubes,supports])
     ## !!!
     ## THIS SHOULD BE FIXED !!!
-    supportsection = ElemSection(material=steel,section={ 
+    supportsection = ElemSection(material=steel,section={
         'name':'support',
         'cross_section': A,
         'moment_inertia_11': I1,
@@ -461,14 +461,14 @@ def createFrameModel():
 
 ##     # Radial movement only
 ##     np_fixed = NodeProperty(1,bound=[0,1,1,0,0,0],coords='cylindrical',coordset=[0,0,0,0,0,1])
-    
+
 ##     # No movement, since we left out the ring beam
 ##     for i in botnodes:
 ##         NodeProperty(i,bound=[1,1,1,0,0,0],coords='cylindrical',coordset=[0,0,0,0,0,1])
 
 ##     np_central_loaded = NodeProperty(3, displacement=[[1,radial_displacement]],coords='cylindrical',coordset=[0,0,0,0,0,1])
 ##     #np_transf = NodeProperty(0,coords='cylindrical',coordset=[0,0,0,0,0,1])
-    
+
     # Draw the supports
     S = connect([Formex(bot),Formex(bot2)])
     draw(S,color='black')
@@ -488,7 +488,7 @@ def createShellModel():
     It is supposed here that the Geometry has been created and is available
     as a global variable F.
     """
-    
+
     # Turn the Formex structure into a TriSurface
     # This guarantees that element i of the Formex is element i of the TriSurface
     S = TriSurface(F)
@@ -502,7 +502,7 @@ def createShellModel():
     # Shell section and material properties
     # VALUES SHOULD BE SET CORRECTLY
 
-    glass_plate = { 
+    glass_plate = {
         'name': 'glass_plate',
         'sectiontype': 'shell',
         'thickness': 18,
@@ -520,7 +520,7 @@ def createShellModel():
 
     PDB = PropertyDB()
     # All elements have same property:
-    PDB.elemProp(set=arange(len(elems)),section=glasssection,eltype='STRI3')    
+    PDB.elemProp(set=arange(len(elems)),section=glasssection,eltype='STRI3')
 
     # Calculate the nodal loads
 
@@ -540,7 +540,7 @@ def createShellModel():
         # add the GLASS weight
         wgt = 450e-6 # N/mm**2
         # Or, calculate weight from density:
-        # wgt = glass_plate['thickness'] * glass['density'] * 9810 
+        # wgt = glass_plate['thickness'] * glass['density'] * 9810
         # assemble uniform glass load
         for e,a in zip(S.elems,area):
             NODLoad[e] += [ 0., 0., - a * wgt / 3 ]
@@ -573,13 +573,13 @@ def createShellModel():
     print(bbot2.shape)
     S = Formex(bbot2)
     draw(S)
-    
+
 ##     np_central_loaded = NodeProperty(3, displacement=[[1,radial_displacement]],coords='cylindrical',coordset=[0,0,0,0,0,1])
 ##     #np_transf = NodeProperty(0,coords='cylindrical',coordset=[0,0,0,0,0,1])
 
 ##     # Radial movement only
 ##     np_fixed = NodeProperty(1,bound=[0,1,1,0,0,0],coords='cylindrical',coordset=[0,0,0,0,0,1])
-    
+
     # Since we left out the ring beam, we enforce no movement at the botnodes
     bc = PDB.nodeProp(set=botnodes,bound=[1,1,1,0,0,0],csys=CoordSystem('C',[0,0,0,0,0,1]))
 
@@ -594,7 +594,7 @@ def createShellModel():
 
 #####################################################################
 #### Analyze the structure using Abaqus ####
-    
+
 def createAbaqusInput():
     """Write the Abaqus input file.
 
@@ -611,7 +611,7 @@ def createAbaqusInput():
     except:
         warning("I could not find the finite element model.\nMaybe you should try to create it first?")
         return
-    
+
     # ask job name from user
     res = askItems([('JobName','hesperia_shell')])
     if not res:
@@ -634,7 +634,7 @@ def createAbaqusInput():
 
     step1 = Step(time=[1.,1.,0.01,1.],nlgeom='no',tags=[1])
     step2 = Step(time=[1.,1.,0.01,1.],nlgeom='no',tags=[2])
-    
+
     model = Model(nodes,elems)
 
     AbqData(model,prop,[step1,step2],out=out,res=res).write(jobname)
@@ -680,7 +680,7 @@ def runCalpyAnalysis():
     except:
         warning("I could not find the finite element model.\nMaybe you should try to create it first?")
         return
-    
+
     # ask job name from user
     res = askItems([('JobName','hesperia_frame'),('Verbose Mode',False)])
     if not res:
@@ -691,7 +691,7 @@ def runCalpyAnalysis():
         print("No Job Name: bailing out")
         return
     verbose = res['Verbose Mode']
-   
+
     nnod = FE.nodes.shape[0]
     nel = FE.elems.shape[0]
     print("Number of nodes: %s" % nnod)
@@ -708,7 +708,7 @@ def runCalpyAnalysis():
 
     # We extract the materials/sections from the property database
     matprops = FE.prop.getProp(kind='e',attr=['section'])
-    
+
     # Beam Properties in Calpy consist of 7 values:
     #   E, G, rho, A, Izz, Iyy, J
     # The beam y-axis lies in the plane of the 3 nodes i,j,k.
@@ -719,11 +719,11 @@ def runCalpyAnalysis():
                   mat.moment_inertia_11,
                   mat.moment_inertia_22,
                   mat.moment_inertia_12,
-                  ] for mat in matprops]) 
+                  ] for mat in matprops])
     if verbose:
         print("Calpy.materials")
         print(mats)
-    
+
     # Create element definitions:
     # In calpy, each beam element is represented by 4 integer numbers:
     #    i j k matnr,
@@ -738,10 +738,10 @@ def runCalpyAnalysis():
     for i,mat in enumerate(matprops):  # proces in same order as above!
         matnr[mat.set] = i+1
     elements = concatenate([FE.elems + 1,         # the normal node numbers
-                            nnod * ones(shape=(nel,1),dtype=int), # extra node  
+                            nnod * ones(shape=(nel,1),dtype=int), # extra node
                             matnr.reshape((-1,1))],  # mat number
                            axis=1)
-  
+
     if verbose:
         print("Calpy.elements")
         print(elements)
@@ -833,7 +833,7 @@ def postCalpy():
         warning("I could not find the finite element model and/or the calpy results. Maybe you should try to first create them?")
         raise
         return
-    
+
     # The frc array returns element forces and has shape
     #  (nelems,nforcevalues,nloadcases)
     # nforcevalues = 8 (Nx,Vy,Vz,Mx,My1,Mz1,My2,Mz2)
@@ -886,8 +886,8 @@ def postCalpy():
             dscale = niceNumber(1./(siz1/siz0).max())
 
         if animate:
-            dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
-        
+            dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape)
+
         # Get the scalar element result values from the frc array.
         val = val1 = txt = None
         if frcindex <= 5:
@@ -927,7 +927,7 @@ def create_menu():
         ]
     return menu.Menu('Hesperia',items=MenuData,parent=pf.GUI.menu,before='help')
 
- 
+
 def show_menu():
     """Show the menu."""
     if not pf.GUI.menu.item('Hesperia'):
@@ -955,7 +955,6 @@ def run():
     # However, during development, you might want to change the menu's
     # actions will pyFormex is running, so a 'reload' action seems
     # more appropriate.
-    chdir(__file__)
     clear()
     reload_menu()
 

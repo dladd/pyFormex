@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -86,13 +86,13 @@ def create():
 
     if refine > S.nedges():
         S = S.refine(refine)
-    
+
     draw(S, color='red')
 
     if not S.isClosedManifold():
         warning("This is not a closed manifold surface. Try another.")
         return None,None
-    
+
     # Create points
 
     if points == 'grid':
@@ -109,7 +109,7 @@ def create():
 
     return S,P
 
-    
+
 def testInside(S,P,method):
     """Test which of the points P are inside surface S"""
 
@@ -123,9 +123,9 @@ def testInside(S,P,method):
     if method == 'vtk' and not utils.hasModule('vtk'):
         warn("You need to install python-vtk!")
         return
-    
+
     ind = S.inside(P,method=method)
-        
+
     print("%sinside: %s points / %s faces: found %s inside points in %s seconds" % (method,P.nelems(),S.nelems(),len(ind),t.seconds()))
 
     if len(ind) > 0:
@@ -137,13 +137,11 @@ def run():
     clear()
     smooth()
 
-    chdir(__file__)
-
     if getData():
         S,P = create()
         if S:
             testInside(S,P,method)
-    
+
 
 if __name__ == 'draw':
     run()

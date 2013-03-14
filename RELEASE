@@ -2,4 +2,4 @@
 VERSION=0.9.0
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION},starting with a ~ character
-RELEASE=${VERSION}~a3
+RELEASE=${VERSION}~a4
