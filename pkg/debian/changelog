@@ -1,14 +1,14 @@
-pyformex (0.9.0~a1-1) unstable; urgency=low
+pyformex (0.9.0~a3-2) unstable; urgency=low
+
+  * Fix patch of pyformex script
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Thu, 14 Mar 2013 17:00:12 +0100
+
+pyformex (0.9.0~a3-1) unstable; urgency=low
 
   * Test upcoming release
 
- -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Tue, 26 Feb 2013 21:15:18 +0100
-
-pyformex (0.8.9r5-1) unstable; urgency=low
-
-  * Interim release for Cujae
-
- -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Tue, 13 Nov 2012 20:58:28 +0100
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Thu, 14 Mar 2013 09:45:56 +0100
 
 pyformex (0.8.9-1) unstable; urgency=low
 

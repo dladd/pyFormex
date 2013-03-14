@@ -77,6 +77,13 @@ def status_msgs(*msgs):
 
 
 class build_py(_build_py):
+    description = "Custom build_py preserving file mode in bin subdirectory. Also provides the install_type user option."
+
+    ## user_options = [ ('install-type=', None, "Set the installation type. Default R. Should be set to D when creating distribution specific packages.") ]
+
+    ## def initialize_options(self):
+    ##     _build_py.initialize_options(self)
+    ##     self.install_type = 'R'
 
     def build_package_data (self):
         """Copy data files into build directory
@@ -153,7 +160,7 @@ def run_setup(with_cext):
         'sdist':sdist
         },
           name='pyformex',
-          version='0.9.0~a1',
+          version='0.9.0~a3',
           description='program to create 3D geometry from Python scripts.',
           long_description="""
     pyFormex can be used to generate, transform and manipulate large
@@ -171,6 +178,7 @@ def run_setup(with_cext):
           author='Benedict Verhegghe',
           author_email='benedict.verhegghe@ugent.be',
           url='http://pyformex.org',
+          download_url='http://download.savannah.gnu.org/releases/pyformex/',
           license='GNU General Public License (GPL)',
           packages=[
               'pyformex',

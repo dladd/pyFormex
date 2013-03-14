@@ -1,4 +1,4 @@
-#!/usr/bin/make -f       
+#!/usr/bin/make -f
 # -*- makefile -*-
 # debian/rules  for pyFormex, using debhelper.
 
@@ -14,6 +14,8 @@ include /usr/share/dpkg/buildflags.mk
 	dh $@ --with python2
 
 build:
+	@echo "=== Patching ==="
+	sed -i "s/installtype =.*/installtype = 'D'/" $(CURDIR)/pyformex/pyformex
 	@echo "=== Building ==="
 	dh_auto_build
 	@echo "=== Building extra ==="
@@ -55,7 +57,7 @@ override_dh_python2:
 		find $(CURDIR)/debian/pyformex -name $$FILENAME.js -print \
                 -exec ln -sf /usr/share/javascript/$$FILENAME/$$FILENAME.js {} \; \
 		; done; fi
-	# Link documentation 
+	# Link documentation
 	set -e; if [ -d "debian/pyformex" ]; then \
 		mkdir $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc; \
 		ln -sf /usr/share/doc/pyformex/html $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc/html; \

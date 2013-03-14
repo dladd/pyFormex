@@ -9,20 +9,61 @@
 
 TEMPLATES=debian/
 
+
+usage() {
+    cat << EOF
+Usage: $(basename $0) [ -r RELEASE ]  CMD...
+Where CMD is one of:
+  clean : clean the current unpack directories to allow new build
+ unpack : Unpacks the current .tar.gz release from dist
+  build : test-build the Debian packages for the current release
+  final : sign-build the Debian packages for the current release
+ upload : upload the Debian packages to Debian mentors
+ pkglst : create list of files in the packages
+
+
+The normal chain in creating the packages is:
+  _do clean
+  _do unpack
+  _do build
+
+When starting on a new release, use:
+  _do prepare
+  _do unpack
+  _do build
+
+When the packages are ready, create the final with:
+  _do clean
+  _do unpack
+  _do final
+
+EOF
+}
+
 setup() {
     PYFDIR=pyformex-$RELEASE
-    echo "Working on $PYFDIR"
-    
+
     if [ "$RELEASE" = "$VERSION" ]; then
-	echo "This is an official release"
+	reltype="official"
 	SOURCE=../dist/pyformex/pyformex-$RELEASE.tar.gz
     else
-	echo "This is an interim release"
+	reltype="interim"
 	SOURCE=../dist/pyformex-$RELEASE.tar.gz
     fi
+    echo "Working on $PYFDIR ($reltype release)"
     ORIG=pyformex_$RELEASE.orig.tar.gz
-    
+
     [ -f $PYFDIR/debian/changelog ] && PKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
+}
+
+
+# Prepare for a new release
+prepare() {
+    dch -v $RELEASE-1
+}
+# Prepare for a package fix
+preparefix() {
+    dch -i
 }
 
 unpack() {
@@ -64,11 +105,35 @@ final() {
 }
 
 
-upload() {
+# return the name of the changes file
+getchanges() {
     PKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
-    CHANGES=pyformex_${PKGVER}_amd64.changes
+    echo "pyformex_${PKGVER}_amd64.changes"
+}
+
+
+upload() {
+    CHANGES=$(getchanges)
     echo Uploading ${CHANGES}
     [ -f "$CHANGES" ] && dput mentors $CHANGES
+}
+
+
+REPOHOST=bumps
+REPOPATH=/var/www/repos/debian
+REPO=${REPOHOST}:${REPOPATH}/incoming
+uploadlocal() {
+    rsync *_$RELEASE[.-]* $REPO -avn
+    read -p "Do you want to upload these packages ?" ans
+    if [ "$ans" = "y" -o "$ans" = "Y" ]; then
+	rsync *_$RELEASE[.-]* $REPO -av
+    fi
+}
+
+publocal() {
+    CHANGES=$(getchanges)
+    echo Publishing ${CHANGES}
+    ssh ${REPOHOST} reprepro -b ${REPOPATH} include sid ${REPOPATH}/incoming/${CHANGES}
 }
 
 
@@ -79,20 +144,22 @@ clean() {
 }
 
 
+# Remove workdir
 distclean() {
     clean
     rm -rf $PYFDIR
 }
 
-## This is not recommended, we use -alpha dists in between
-# Best:
-#   _do unpack
-#   remove the added 'alpha' entries from changelog 
-#   dch -i
-#   copy the new changelog to pkg/debian
-#
 
-bump() {
+# Remove all: workdir + packages
+mrproper() {
+    distclean
+    rm -f *_$RELEASE[.-]*
+}
+
+## This does not work yet
+
+_bump() {
     OLDPKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
     ARCHDIR=uploaded/${OLDPKGVER}
     mkdir $ARCHDIR && mv pyformex_${PKGVER}[_.]* $ARCHDIR
@@ -111,6 +178,7 @@ bump() {
 }
 
 setup
+[ -n "$1" ] || { echo "For help about usage: _do usage" ; exit; }
 for cmd in "$@"; do
     $cmd
 done

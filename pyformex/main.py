@@ -158,7 +158,7 @@ def printcfg(key):
 
 def remove_pyFormex(pyformexdir,bindir):
     """Remove the pyFormex installation."""
-    if pf.installtype == 'P':
+    if pf.installtype == 'D':
         print("It looks like this version of pyFormex was installed from a distribution package. You should use your distribution's package tools to remove the pyFormex installation.")
         return
 
@@ -178,17 +178,20 @@ You will need proper permissions to actually delete the files.
 """ % (pyformexdir,bindir))
     s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
     if s == 'yes':
+        import glob
         print("Removing %s" % pyformexdir)
         utils.removeTree(pyformexdir)
         script = os.path.join(bindir,'pyformex')
-        egginfo = "%s-%s.egg-info" % (pyformexdir,pf.__version__.replace('-','_'))
+        scripts = glob.glob(script+'-*')
+        egginfo = "%s-%s*.egg-info" % (pyformexdir,pf.__version__.replace('~','_'))
+        egginfo = glob.glob(egginfo)
         datadir = os.path.commonprefix(['/usr/local/share',pyformexdir])
         datadir = os.path.join(datadir,'share')
         data = utils.prefixFiles(datadir,['man/man1/pyformex.1',
                                           'applications/pyformex.desktop',
                                           'pixmaps/pyformex-64x64.png',
                                           'pixmaps/pyformex.xpm'])
-        for f in [ script,egginfo ] + data:
+        for f in [ script ] + scripts + egginfo + data:
             if os.path.exists(f):
                 print("Removing %s" % f)
                 os.remove(f)

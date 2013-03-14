@@ -125,7 +125,7 @@ FTPLOCAL= bumps:/var/ftp/pub/pyformex
 # ftp server on Savannah
 FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
-.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs pubrelease
+.PHONY: dist sdist signdist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs pubrelease
 
 ##############################
 
@@ -176,9 +176,9 @@ bumpversion:
 
 # This increases the tail only: minor number or alpha number
 bumprelease:
-	@OLD=$$(expr "${RELEASE}" : '.*r\([0-9])*\)$$'); \
+	@OLD=$$(expr "${RELEASE}" : '.*~a\([0-9])*\)$$'); \
 	 if [ -z "$$OLD" ]; then NEW=1; else NEW=$$(expr $$OLD + 1); fi; \
-	 sed -i "/^RELEASE=/s|}.*|}r$$NEW|" RELEASE
+	 sed -i "/^RELEASE=/s|}.*|}~a$$NEW|" RELEASE
 	make version
 	@echo "Bumped Release to $$(grep VERSION= RELEASE), $$(grep RELEASE= RELEASE)"
 
@@ -226,16 +226,22 @@ stampstaticdirs: Stamp.staticdir
 # Create the distribution
 dist: manpages ${PKGDIR}/${LATEST} clean
 
+# Sign the distribution
+signdist: ${PKGDIR}/${PKGVER}.sig
+
 ${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
 ${PKGDIR}/${PKGVER}: RELEASE
+	make sdist
+
+sdist:
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
 	python manifest_check.py
 
 ${PKGDIR}/${PKGVER}.sig: ${PKGDIR}/${PKGVER}
-	cd ${PKGDIR}; gpg -b --use-agent ${PKGVER}
+	cd ${PKGDIR}; gpg -b ${PKGVER}
 
 # Create all our manpages
 manpages:
@@ -243,14 +249,13 @@ manpages:
 	make -C pyformex/extra manpages
 
 # Publish the distribution to our ftp server
-
 publocal: ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig ${FTPLOCAL}
 
 
 # Move the create tar.gz to the public directory
-pubrelease: ${PKGDIR}/${PKGVER}
-	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PUBDIR}
+pubrelease: ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig
+	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PKGDIR}/${PKGVER}.sig ${PUBDIR}
 	ln -s pyformex/${LATEST} ${PKGDIR}
 
 # and sign the packages
@@ -270,8 +275,7 @@ register:
 upload:
 	python setup.py sdist upload --show-response
 
-# Tag the release in the svn repository
-# THIS WILL ONLY WORK IF YOU HAVE YOUR USER NAME CONFIGURED IN .ssh/config
+# Tag the release in the git repository
 tag:
 	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svn.savannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 

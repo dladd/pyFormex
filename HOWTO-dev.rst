@@ -1404,9 +1404,22 @@ They will need to be tuned for the release.
 - Go to the `pkg` directory. The `_do` procedure should always be executed
   from here.
 
-- Set new version::
+- Prepare the package creation. This will set an entry in the debian/changelog
+  file. If the package to be created is for a new pyFormex version/release,
+  use::
 
-    dch -i
+    _do prepare
+
+  If the new package is a fix for the previous package of the same pyFormex
+  release, use::
+
+    _do preparefix
+
+  Then carefully edit the changelog file, respecting all whitespace.
+
+  - Replace UNRELEASED with unstable.
+  - Add the reason for the new package next to the *
+  - Remove all entries below that have a ~a field in the release.
 
 - Unpack latest release::
 

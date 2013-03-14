@@ -32,7 +32,7 @@ from __future__ import print_function
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.9.0~a1"
+__version__ = "0.9.0~a3"
 __revision__ = __version__
 Version = 'pyFormex %s' % __version__
 
@@ -53,15 +53,6 @@ if sys.hexversion < 0x03000000:
 else:
     from compat_3k import *
 
-
-# Installation type. Should be one of:
-# 'R(elease)': installed from a released tarball with the included install
-#              procedure. This is the default.
-# 'S(ource)' : running directly from the checked out source tree. This is set
-#              during startup after detection.
-# 'P(ackage)': installed from a distribution package. The packager should set
-#              this to 'P' before packaging the files.
-installtype = 'R'
 
 # The GUI parts
 app_started = False
