@@ -1125,6 +1125,51 @@ Quality: %s .. %s
         return TriSurface(coordsNew,self.getElems(),prop=self.prop)
 
 
+    def medianDualMesh(self):
+        """Return the median dual mesh (MDM).
+        
+        It creates a new triangular mesh where all triangles with prop `p` 
+        represent the MDM region around the original surface node `p`. It returns 
+        the MDM and the node-based area of the original surface.
+        NB: the total node-based area is equal to the original surface area.
+        
+        For info:
+        http://users.led-inc.eu/~phk/mesh-dualmesh.html
+        
+        Example:
+        
+        from elements import Quad4
+        view('front')
+        smooth()
+        S=Mesh(Quad4).convert('tri3-r').convert('quad4').convert('tri3-r')
+        S=S.fuse().compact()
+        S=TriSurface(S)
+        St=S.trl(0,-S.coords[:, 0].max()*1.5)
+        draw(St, mode='wireframe')
+        drawNumbers(St.coords)
+        ##compute the dual and node beased areas
+        Q, nodalAreas=S.medianDualMesh()
+        draw(Q, mode='smooth')
+        draw(Q.withProp([3]), linewidth=3, mode='wireframe', ontop=True)
+        draw(S.coords[3:4].trl(2, 0.001), marksize=10, color='black', ontop=True, mode='flat')
+        draw(S.coords, color='white', marksize=5)
+        zoomAll()
+        drawNumbers(S.coords)
+        print (nodalAreas)
+        print (S.area())
+        print(nodalAreas.sum())#the total nodal-based area is equal to the total face-based area
+        """
+        
+        Q=self.convert('quad4')     
+        nconn = Q.nodeConnections()[range(self.ncoords())]
+        p=zeros(Q.nelems(), dtype=int)
+        for i, conn in enumerate(nconn):
+            p[conn[conn>0]]=i
+        Q=Q.setProp(p)
+        nodalAreas = asarray([Q.withProp(i).area() for i in range(len(Q.propSet()))])
+        return Q, nodalAreas
+    
+    
     ## def reflect(self,*args,**kargs):
     ##     """Reflect the Surface in direction dir against plane at pos.
 
