@@ -1,11 +1,11 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
+##  This file is part of pyFormex
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -183,11 +183,11 @@ pyformex.help: ../pyformex/pyformex
 
 # Transfer the html docs to doc
 svndoc:
-	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
+	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC}
 
 # Transfer the files to www for publication
 
-pub: 
+pub:
 	rsync _build/html/* ../www --exclude CVS --exclude .svn --delete -av
 
 pubpdf: ${PDF}

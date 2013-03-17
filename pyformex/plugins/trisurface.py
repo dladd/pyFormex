@@ -421,7 +421,7 @@ class TriSurface(Mesh):
 
     def __init__(self,*args,**kargs):
         """Create a new surface."""
-        self.areas = self.normals = None
+        self.areas = self._fnormals = None
         self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
@@ -694,9 +694,9 @@ class TriSurface(Mesh):
 
         The values are returned and saved in the object.
         """
-        if self.areas is None or self.normals is None:
-            self.areas,self.normals = geomtools.areaNormals(self.coords[self.elems])
-        return self.areas,self.normals
+        if self.areas is None or self._fnormals is None:
+            self.areas,self._fnormals = geomtools.areaNormals(self.coords[self.elems])
+        return self.areas,self._fnormals
 
 
     def facetArea(self):
