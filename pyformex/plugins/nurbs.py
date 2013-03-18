@@ -890,6 +890,12 @@ def curveToNurbs(B):
 
 curve.BezierSpline.toNurbs = curveToNurbs
 
+def polylineToNurbs(B):
+    """Convert a PolyLine to NurbsCurve"""
+    return NurbsCurve(B.coords,degree=1,closed=B.closed,blended=False)
+
+curve.PolyLine.toNurbs = polylineToNurbs
+
 
 def frenet(d1,d2,d3=None):
     """Returns the 3 Frenet vectors and the curvature.

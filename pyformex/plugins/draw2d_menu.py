@@ -5,7 +5,7 @@
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
 ##  Project page:  http://savannah.nongnu.org/projects/pyformex/
-##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright 2004-2012 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -35,7 +35,7 @@ from __future__ import print_function
 
 from draw2d import *
 from geometry_menu import *
-    
+
 ################################## Menu #############################
 
 _menu = 'Draw'
@@ -43,7 +43,6 @@ _menu = 'Draw'
 def create_menu(before='help'):
     """Create the menu."""
     MenuData = [
-        ("&Select drawable",drawable.ask),
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),
@@ -87,7 +86,7 @@ def reload_menu():
 
 def test_menu():
     print("TEST2")
-    
+
 ####################################################################
 
 if __name__ == "draw":

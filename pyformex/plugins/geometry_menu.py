@@ -92,11 +92,9 @@ def autoName(clas):
 # We put these in an init function to allow --testmodule to run without GUI
 
 def _init_():
-    global drawable,selection,drawAll
+    global selection
     global selection_F,selection_M,selection_TS,selection_PL,selection_NC,setSelection,drawSelection
-    drawable = pf.GUI.drawable
     selection = pf.GUI.selection['geometry']
-    drawAll = drawable.draw
 
 
 def geomList():
@@ -305,8 +303,8 @@ def writeGeometry(obj,filename,filetype=None,sep=' ',shortlines=False):
 
 def exportGeometry(types=['pgf','all'],sep=' ',shortlines=False):
     """Write geometry to file."""
-    drawable.ask()
-    if not drawable.check():
+    selection.ask()
+    if not selection.check():
         return
 
     filter = utils.fileDescription(types)
@@ -314,7 +312,7 @@ def exportGeometry(types=['pgf','all'],sep=' ',shortlines=False):
     fn = askNewFilename(cur=cur,filter=filter)
     if fn:
         message("Writing geometry file %s" % fn)
-        res = writeGeometry(drawable.odict(),fn,sep=sep,shortlines=shortlines)
+        res = writeGeometry(selection.odict(),fn,sep=sep,shortlines=shortlines)
         pf.message("Contents: %s" % res)
 
 
@@ -1216,4 +1214,3 @@ if __name__ == 'draw':
 
 
 # End
-

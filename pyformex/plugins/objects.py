@@ -315,8 +315,8 @@ class DrawableObjects(Objects):
       No annotation functions are activated by default.
 
     """
-    def __init__(self,*args,**kargs):
-        Objects.__init__(self,*args,**kargs)
+    def __init__(self,**kargs):
+        Objects.__init__(self,**kargs)
         self.autodraw = False
         self.shrink = None
         self.annotations = set() # Active annotations
@@ -488,4 +488,3 @@ elif __name__ == "__main__":
     print(__doc__)
 
 # End
-

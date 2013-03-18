@@ -41,7 +41,7 @@ from coords import *
 from geometry import Geometry
 from formex import Formex,connect
 from mesh import Mesh
-from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP,anyPerpendicularVector,rotationAngle
+import geomtools as gt
 import utils
 
 ##############################################################################
@@ -74,7 +74,6 @@ class Curve(Geometry):
 
     :sub_points_2:
     :sub_directions_2:
-
 
     """
 
@@ -257,11 +256,21 @@ class Curve(Geometry):
     def approx(self,ndiv=None,ntot=None):
         """Return a PolyLine approximation of the curve
 
-        If no `ntot` is given, the curve is approximated by `ndiv`
-        straight segments over each part of the curve.
-        If `ntot` is given, the curve is approximated by `ntot`
-        straight segments over the total curve. This is based on a
-        first approximation with ndiv segments over each part.
+        Parameters:
+
+        - `ndiv`: int: number of straight segments to use over each part
+          of the curve. This is only used if
+        - `ntot`: int: number of straight segments to use over the total
+          length of the curve.
+
+        Returns a PolyLine approximation for the curve.
+        `C.approx(ndiv=n)` returns an approximation with `ndiv` segments
+        over each part of the curve. This may results in segments with
+        very different lengths.
+        `C.approx(ntot=n)` returns an approximation with `ntot` segments
+        over the total length of the curve. This produces more equally
+        sized segments, but the internal end points of the curve parts may
+        not be on the approximating Polyline.
         """
         if ndiv is None:
             ndiv = self.N_approx
@@ -273,6 +282,50 @@ class Curve(Geometry):
             X = PL.pointsAt(at)
             PL = PolyLine(X,closed=PL.closed)
         return PL.setProp(self.prop)
+
+
+    def frenet(self,ndiv=None,ntot=None,upvector=None,avgdir=True,compensate=False):
+        """Return points and Frenet frame along the curve.
+
+        A PolyLine approximation for the curve is constructed, using the
+        :meth:`Curve.approx()` method with the arguments `ndiv` and `ntot`.
+        Then Frenet frames are constructed with :meth:`PolyLine.movingFrenet`
+        using the remaining arguments.
+        The resulting PolyLine points and Frenet frames are returned.
+
+        Parameters:
+
+        - `upvector`: (3,) vector: a vector normal to the (tangent,normal)
+          plane at the first point of the curve. It defines the binormal at
+          the first point. If not specified it is set to the shorted distance
+          through the set of 10 first points.
+        - `avgdir`: bool: if True (default), the tangential vector is set to
+          the average direction of the two segments ending at a node.
+          If False, the tangent vectors will be those of the line segment
+          starting at the points.
+        - `compensate`: bool: If True, adds a compensation algorithm if the
+          curve is closed. For a closed curve the moving Frenet
+          algorithm can be continued back to the first point. If the resulting
+          binormial does not coincide with the starting one, some torsion is
+          added to the end portions of the curve to make the two binormals
+          coincide.
+
+          This feature is off by default because it is currently experimental
+          and is likely to change in future.
+          It may also form the base for setting the starting as well as the
+          ending binormal.
+
+        Returns:
+
+        - `P`: a Coords with `npts` points on the curve
+        - `T`: normalized tangent vector to the curve at `npts` points
+        - `N`: normalized normal vector to the curve at `npts` points
+        - `B`: normalized binormal vector to the curve at `npts` points
+        """
+        PL = self.approx(ndiv,ntot)
+        X = PL.coords
+        T,N,B = PL._movingFrenet(upvector=upvector,avgdir=avgdir,compensate=compensate)
+        return X,T,N,B
 
 
     def approximate(self,nseg,equidistant=True,npre=100):
@@ -289,7 +342,7 @@ class Curve(Geometry):
           approximation is currently required to compute curve lengths.
 
         .. note:: This is an alternative for Curve.approx, and may replace it
-           completely in future.
+           in future.
         """
         if equidistant:
             S = self.approximate(npre,equidistant=False)
@@ -533,6 +586,36 @@ class PolyLine(Curve):
             return d
 
 
+    def approximate(self,nseg,equidistant=True,npre=100):
+        """Approximate a PolyLine with a PolyLine of n segments
+
+        Parameters:
+
+        - `nseg`: number of straight segments of the resulting PolyLine
+        - `equidistant`: if True (default) the points are spaced almost
+          equidistantly over the curve. If False, the points are spread
+          equally over the parameter space.
+        - `npre`: only used when `equidistant` is True: number of segments
+          per part of the curve used in the pre-approximation. This pre-
+          approximation is currently required to compute curve lengths.
+
+        .. note:: This is an alternative for Curve.approx, and may replace it
+           in future.
+        """
+        if equidistant:
+            S = self.approximate(npre,equidistant=False)
+            at = S.atLength(nseg)
+        else:
+            S = self
+            at = arange(nseg+1) * float(S.nparts) / nseg
+        if self.closed:
+            at = at[:-1]
+        print("AT VALUES: %s" % at)
+        X = S.pointsAt(at)
+        PL = PolyLine(X,closed=S.closed)
+        return PL.setProp(self.prop)
+
+
     def _compensate(self,end=0,cosangle=0.5):
         """_Compensate an end discontinuity over a piece of curve.
 
@@ -561,7 +644,7 @@ class PolyLine(Curve):
         return comp
 
 
-    def movingFrenet(self,upvector=None,avgdir=True,compensate=False):
+    def _movingFrenet(self,upvector=None,avgdir=True,compensate=False):
         """Return a Frenet frame along the curve.
 
         The Frenet frame consists of a system of three orthogonal vectors:
@@ -598,14 +681,13 @@ class PolyLine(Curve):
         - `N`: normalized normal vector to the curve at `npts` points
         - `B`: normalized binormal vector to the curve at `npts` points
         """
-        import geomtools
         if avgdir:
             T = self.avgDirections()
         else:
             T = self.directions()
         B = zeros(T.shape)
         if upvector is None:
-            upvector = geomtools.smallestDirection(self.coords[:10])
+            upvector = gt.smallestDirection(self.coords[:10])
 
         B[-1] = normalize(upvector)
         for i,t in enumerate(T):
@@ -619,7 +701,6 @@ class PolyLine(Curve):
 
         if self.closed and compensate:
             import arraytools as at
-            import geomtools as gt
             from gui.draw import drawVectors
             print(len(T))
             print(T[0],B[0])
@@ -761,7 +842,7 @@ class PolyLine(Curve):
 
         for j in w:
             #print "%s -- %s" % (i,j)
-            P = intersectionPointsSWP(self.coords[j:j+2],p,n,mode='pair')[0]
+            P = gt.intersectionPointsSWP(self.coords[j:j+2],p,n,mode='pair')[0]
             #print "%s -- %s cuts at %s" % (j,j+1,P)
             x = Coords.concatenate([Q,self.coords[i:j+1],P])
             #print "%s + %s + %s = %s" % (Q.shape[0],j-i,P.shape[0],x.shape[0])
@@ -834,7 +915,7 @@ class PolyLine(Curve):
         if not self.closed:
             q = q[:-1]
         m = self.vectors()
-        t = intersectionTimesLWP(q,m,p,n)
+        t = gt.intersectionTimesLWP(q,m,p,n)
         t = t.transpose((1,0))
         x = q[newaxis,:] + t[:,:,newaxis] * m[newaxis,:]
         inside = (t >= 0.) * (t <= 1.)
@@ -1556,7 +1637,7 @@ class Arc3(Curve):
         if self.coords.shape != (3,3):
             raise ValueError,"Expected 3 points"
 
-        r,C,n = triangleCircumCircle(self.coords.reshape(-1,3,3))
+        r,C,n = gt.triangleCircumCircle(self.coords.reshape(-1,3,3))
         self.radius,self.center,self.normal = r[0],C[0],n[0]
         self.angles = vectorPairAngle(Coords([1.,0.,0.]),self.coords-self.center)
         print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
@@ -1600,8 +1681,8 @@ class Arc(Curve):
                 self.normal = unitVector(cross(v[0],v[2]))
             except:
                 pf.warning("The three points defining the Arc seem to be colinear: I will use a random orientation.")
-                self.normal = anyPerpendicularVector(v[0])
-            self._angles = rotationAngle(Coords([1.,0.,0.]).rotate(vectorRotation([0.,0.,1.],self.normal)),self.coords[[0,2]]-self._center,self.normal,RAD)
+                self.normal = gt.anyPerpendicularVector(v[0])
+            self._angles = gt.rotationAngle(Coords([1.,0.,0.]).rotate(vectorRotation([0.,0.,1.],self.normal)),self.coords[[0,2]]-self._center,self.normal,RAD)
         else:
             if center is None:
                 center = [0.,0.,0.]
@@ -1734,23 +1815,23 @@ Formex.toCurve = convertFormexToCurve
 
 ##############################################################################
 #
-# DEPRECATED
+# DEPRECATED; REMOVED in 0.9.0
 #
-class Polygon(PolyLine):
-    @utils.deprecation('depr_polygon')
-    def __init__(self,coords=[]):
-        PolyLine.__init__(self,coords,closed=True)
+## class Polygon(PolyLine):
+##     @utils.deprecation('depr_polygon')
+##     def __init__(self,coords=[]):
+##         PolyLine.__init__(self,coords,closed=True)
 
-    def area(self,project=None):
-        from geomtools import polygonArea
-        return polygonArea(self.coords,project)
+##     def area(self,project=None):
+##         from geomtools import polygonArea
+##         return polygonArea(self.coords,project)
 
 
-class QuadBezierSpline(BezierSpline):
-    @utils.deprecation('depr_quadbezier')
-    def __init__(self,coords,**kargs):
-        """Create a natural spline through the given points."""
-        kargs['degree'] = 2
-        BezierSpline.__init__(self,coords,**kargs)
+## class QuadBezierSpline(BezierSpline):
+##     @utils.deprecation('depr_quadbezier')
+##     def __init__(self,coords,**kargs):
+##         """Create a natural spline through the given points."""
+##         kargs['degree'] = 2
+##         BezierSpline.__init__(self,coords,**kargs)
 
 # End

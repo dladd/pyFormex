@@ -113,21 +113,21 @@ def drawCurve(ctype,dset,closed,degree,endcond,curl,ndiv,ntot,extend,spread,appr
     ##     idir = S.directionsAt(t)
     ##     drawVectors(ipts,0.2*idir)
 
-    if frenet and (ctype == 'PolyLine' or approx):
+    if frenet:
         if approx:
             C = PL
         else:
             C = S
-        T,N,B = C.movingFrenet(upvector=upvector,avgdir=avgdir)[:3]
-        drawVectors(C.coords,T,size=1.,nolight=True,color='red')
-        drawVectors(C.coords,N,size=1.,nolight=True,color='green')
-        drawVectors(C.coords,B,size=1.,nolight=True,color='blue')
+        X,T,N,B = C.frenet(upvector=upvector,avgdir=avgdir)[:4]
+        drawVectors(X,T,size=1.,nolight=True,color='red')
+        drawVectors(X,N,size=1.,nolight=True,color='green')
+        drawVectors(X,B,size=1.,nolight=True,color='blue')
         if  C.closed:
-            T,N,B = C.movingFrenet(upvector=upvector,avgdir=avgdir,compensate=True)[:3]
-            drawVectors(C.coords,T,size=1.,nolight=True,color='magenta')
-            drawVectors(C.coords,N,size=1.,nolight=True,color='yellow')
-            drawVectors(C.coords,B,size=1.,nolight=True,color='cyan')
-        print(T,N,B)
+            X,T,N,B = C.frenet(upvector=upvector,avgdir=avgdir,compensate=True)[:4]
+            drawVectors(X,T,size=1.,nolight=True,color='magenta')
+            drawVectors(X,N,size=1.,nolight=True,color='yellow')
+            drawVectors(X,B,size=1.,nolight=True,color='cyan')
+        #print(T,N,B)
 
 
 
@@ -162,7 +162,6 @@ _items = [
     _I('ExtendAtStart',0.0),
     _I('ExtendAtEnd',0.0),
     _I('Scale',[1.0,1.0,1.0]),
-#    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
     _I('Clear',True),
     _G('FrenetFrame',[
         _I('AvgDirections',True),
@@ -175,7 +174,6 @@ _items = [
 _enablers = [
     ('CurveType','BezierSpline','Degree','Curl','EndCurvatureZero'),
     ('SpreadEvenly',True,'Ntot'),
-#    ('ShowFrenetFrame',True,'AvgDirections','AutoUpVector'),
     ('AutoUpVector',False,'UpVector'),
     ]
 

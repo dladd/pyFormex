@@ -103,8 +103,8 @@ warn_dxf_export = "pyFormex currently only exports DXF entities of type 'LINE'. 
 
 depr_image2numpy_arg = "The use of the `expand` parameter in image2numpy is deprecated. Use the `indexed` parameter instead."
 depr_mpattern = "\nFunction mpattern() is deprecated: use xpattern() instead."
-depr_polygon = "The curve.Polygon class is deprecated. Use curve.Polyline(closed=True) or polygon.Polygon instead."
-depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."
+## depr_polygon = "The curve.Polygon class is deprecated. Use curve.Polyline(closed=True) or polygon.Polygon instead."
+## depr_quadbezier = "The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead."
 
 #depr_widgets_selection = "widgets.Selection is deprecated. Use widgets.ListSelection."
 #depr_compat_input = "The use of compatInputItem is deprecated. Use simpleInputItem instead."
