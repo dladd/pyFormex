@@ -14,12 +14,18 @@
 *.py[oc]
 *.1
 MANIFEST
+pyformex-DEV*
+HOWTO-dev.pdf
 
 # compiled docs
 ###############
 sphinx/ref/*.rst
 sphinx/_build/
 sphinx/*.help
+
+# compiled packages
+###################
+pkg/pyformex*
 
 # foreign directories
 #####################

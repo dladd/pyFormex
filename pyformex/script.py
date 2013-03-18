@@ -48,6 +48,14 @@ from plugins.trisurface import TriSurface
 
 import threading,os,copy,re,time
 
+############### DEBUGGING MEMORY LEAKS
+#try:
+#    from pympler import tracker
+#    _memtracker = tracker.SummaryTracker()
+#except:
+#    _memtracker = None
+################
+
 ######################### Exceptions #########################################
 
 class _Exit(Exception):
@@ -306,6 +314,10 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     pf.scriptName = name
     exitall = False
 
+    memu = memUsed()
+    vmsiz = vmSize()
+    pf.debug("MemUsed = %s; vmSize = %s" % (memu,vmsiz),pf.DEBUG.MEM)
+
     #starttime = time.clock()
     try:
         try:
@@ -340,6 +352,9 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         scriptRelease('__auto__') # release the lock
         if pf.GUI:
             pf.GUI.stopRun()
+
+    pf.debug("MemUsed = %s; vmSize = %s" % (memUsed(),vmSize()),pf.DEBUG.MEM)
+    pf.debug("Diff MemUsed = %s; diff vmSize = %s" % (memUsed()-memu,vmSize()-vmsiz),pf.DEBUG.MEM)
 
     if exitall:
         pf.debug("Calling quit() from playscript",pf.DEBUG.SCRIPT)
@@ -704,10 +719,13 @@ def printLoadedApps():
     print(', '.join([ "%s (%s)" % (k,r) for k,r in zip(loaded,refcnt)]))
 
 
+# THis is not a good way of computing memory usage
 def vmSize():
     import os
-    return os.popen('ps h o vsize %s'%os.getpid()).read().strip()
+    return int(os.popen('ps h o vsize %s'%os.getpid()).read().strip())
 
+def memUsed():
+    return utils.memory_report()['MemUsed']
 
 def printVMem(msg='MEMORY'):
     print('%s: VmSize=%skB'%(msg,vmSize()))

@@ -1319,6 +1319,10 @@ def refreshDict(d,src):
     d.update(selectDict(src,d))
 
 
+def inverseDict(d):
+    return dict([(v,k) for k,v in d.items()])
+
+
 def sortedKeys(d):
     """Returns the sorted keys of a dict.
 
@@ -1392,8 +1396,23 @@ def interrogate(item):
         print("%s %s"% i)
 
 
-def inverseDict(d):
-    return dict([(v,k) for k,v in d.items()])
+def memory_report(keys=None):
+    """Return info about memory usage"""
+    sta,out,err = system('cat /proc/meminfo')
+    res = {}
+    for line in out.split('\n'):
+        try:
+            k,v = line.split(':')
+            k = k.strip()
+            v = v.replace('kB','').strip()
+            res[k] = int(v)
+        except:
+            break
+    res['MemUsed'] = res['MemTotal'] - res['MemFree'] - res['Buffers'] - res['Cached']
+    if keys:
+        res = selectDict(res,keys)
+    return res
+
 
 _warn_category = { 'U': UserWarning, 'D':DeprecationWarning }
 
