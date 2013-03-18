@@ -1242,6 +1242,7 @@ def writeBoundaries(fil,prop):
                 : a list of tuple ( )
     OPTIONAL
     -ampl     : an amplitude name
+    -op       : 'NEW' to remove previous conditions; 'MOD' to add to and/or modify previous conditions
     -extra    : Dict type.It has keys name equal to the ABAQUS keywords and value equal to parameter setting
                 if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
 
@@ -1317,7 +1318,7 @@ def writeDisplacements(fil,prop,dtype='DISPLACEMENT'):
             fil.write("%s, %s, %s, %s\n" % (setname,dof,dof,v[1]))
 
 
-def writeCloads(fil,prop,op='NEW'):
+def writeCloads(fil,prop):
     """Write cloads.
 
     prop is a list of node property records that should be scanned for
@@ -1328,7 +1329,9 @@ def writeCloads(fil,prop,op='NEW'):
     """
     for p in prop:
         setname = nsetName(p)
-        fil.write("*CLOAD, OP=%s" % op)
+        fil.write("*CLOAD")
+        if p.op is not None:
+            fil.write(", OP=%s" % p.op)
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
@@ -1342,7 +1345,7 @@ def writeCommaList(fil,*args):
     fil.write(', '.join([str(i) for i in args]))
 
 
-def writeDloads(fil,prop,op='NEW'):
+def writeDloads(fil,prop):
     """Write Dloads.
 
     prop is a list of elem property records having an attribute dload.
@@ -1352,7 +1355,9 @@ def writeDloads(fil,prop,op='NEW'):
     """
     for p in prop:
         setname = esetName(p)
-        fil.write("*DLOAD, OP=%s" % op)
+        fil.write("*DLOAD")
+        if p.op is not None:
+            fil.write(", OP=%s" % p.op)
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
@@ -1363,7 +1368,7 @@ def writeDloads(fil,prop,op='NEW'):
         fil.write('\n')
 
 
-def writeDsloads(fil,prop,op='NEW'):
+def writeDsloads(fil,prop):
     """Write Dsloads.
 
     prop is a list property records having an attribute dsload
@@ -1372,7 +1377,9 @@ def writeDsloads(fil,prop,op='NEW'):
     The user can set op='MOD' to add the loads to already existing ones.
     """
     for p in prop:
-        fil.write("*DSLOAD, OP=%s" % op)
+        fil.write("*DSLOAD")
+        if p.op is not None:
+            fil.write(", OP=%s" % p.op)
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
